@@ -133,6 +133,8 @@
       <DependentUpon>Resources.SqlServer.tt</DependentUpon>
     </Compile>
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="Utilities\EdmFunctionExtensions.cs" />
+    <Compile Include="Utilities\FuncExtensions.cs" />
     <Compile Include="Utilities\IDictionaryExtensions.cs" />
     <Compile Include="SqlGen\ISqlFragment.cs" />
     <Compile Include="SqlGen\JoinSymbol.cs" />
@@ -158,7 +160,10 @@
     <Compile Include="SqlSpatialServices.Generated.cs" />
     <Compile Include="SqlTypesAssembly.cs" />
     <Compile Include="SqlVersion.cs" />
+    <Compile Include="Utilities\PrimitiveTypeExtensions.cs" />
     <Compile Include="Utilities\RuntimeFailureMethods.cs" />
+    <Compile Include="Utilities\Throw.cs" />
+    <Compile Include="Utilities\TypeUsageExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml" />

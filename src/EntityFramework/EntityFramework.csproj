@@ -938,7 +938,6 @@
     <Compile Include="Spatial\DbSpatialServices.cs" />
     <Compile Include="Spatial\DefaultSpatialServices.cs" />
     <Compile Include="Spatial\ExtensionMethods.cs" />
-    <Compile Include="Spatial\Internal\SpatialExceptions.cs" />
     <Compile Include="Spatial\SpatialHelpers.cs" />
     <None Include="Properties\Resources.Migrate.cs">
       <DependentUpon>Resources.Migrate.tt</DependentUpon>

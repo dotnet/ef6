@@ -1,9 +1,9 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.Spatial.Internal;
+    using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
@@ -24,6 +24,10 @@ namespace System.Data.Entity.SqlServer
 
         [NonSerialized]
         private readonly Lazy<SqlTypesAssembly> _sqlTypesAssemblySingleton;
+
+        internal SqlSpatialServices()
+        {
+        }
 
         private SqlSpatialServices(Func<SqlTypesAssembly> getSqlTypes)
         {
@@ -84,7 +88,9 @@ namespace System.Data.Entity.SqlServer
 
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
-            wellKnownValue.CheckNull("wellKnownValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(wellKnownValue, "wellKnownValue");
 
             object result = null;
             if (wellKnownValue.WellKnownText != null)
@@ -97,7 +103,7 @@ namespace System.Data.Entity.SqlServer
             }
             else
             {
-                throw SpatialExceptions.WellKnownGeographyValueNotValid("wellKnownValue");
+                throw new ArgumentException(Strings.Spatial_WellKnownGeographyValueNotValid, "wellKnownValue");
             }
 
             return result;
@@ -105,7 +111,10 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GeographyFromProviderValue(object providerValue)
         {
-            providerValue.CheckNull("providerValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(providerValue, "providerValue");
+
             var normalizedProviderValue = NormalizeProviderValue(providerValue, SqlTypes.SqlGeographyType);
             return SqlTypes.IsSqlGeographyNull(normalizedProviderValue) ? null : CreateGeography(this, normalizedProviderValue);
         }
@@ -142,34 +151,40 @@ namespace System.Data.Entity.SqlServer
                     }
                 }
 
-                throw SpatialExceptions.SqlSpatialServices_ProviderValueNotSqlType(expectedSpatialType);
+                throw new ArgumentException(Strings.SqlSpatialServices_ProviderValueNotSqlType(expectedSpatialType.AssemblyQualifiedName), "providerValue");
             }
 
             return providerValue;
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeographyWellKnownValue CreateWellKnownValue(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+
             var spatialValue = geographyValue.AsSpatialValue();
 
             var result = CreateWellKnownValue(
                 spatialValue,
-                () => SpatialExceptions.CouldNotCreateWellKnownGeographyValueNoSrid("geographyValue"),
-                () => SpatialExceptions.CouldNotCreateWellKnownGeographyValueNoWkbOrWkt("geographyValue"),
+                () => (Exception)new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid, "geographyValue"),
+                () => (Exception)new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt, "geographyValue"),
                 (srid, wkb, wkt) => new DbGeographyWellKnownValue
-                                        {
-                                            CoordinateSystemId = srid,
-                                            WellKnownBinary = wkb,
-                                            WellKnownText = wkt
-                                        });
+                {
+                    CoordinateSystemId = srid,
+                    WellKnownBinary = wkb,
+                    WellKnownText = wkt
+                });
 
             return result;
         }
 
         public override object CreateProviderValue(DbGeometryWellKnownValue wellKnownValue)
         {
-            wellKnownValue.CheckNull("wellKnownValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(wellKnownValue, "wellKnownValue");
 
             object result = null;
             if (wellKnownValue.WellKnownText != null)
@@ -182,7 +197,7 @@ namespace System.Data.Entity.SqlServer
             }
             else
             {
-                throw SpatialExceptions.WellKnownGeometryValueNotValid("wellKnownValue");
+                throw new ArgumentException(Strings.Spatial_WellKnownGeometryValueNotValid, "wellKnownValue");
             }
 
             return result;
@@ -190,26 +205,33 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)
         {
-            providerValue.CheckNull("providerValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(providerValue, "providerValue");
+
             var normalizedProviderValue = NormalizeProviderValue(providerValue, SqlTypes.SqlGeometryType);
             return SqlTypes.IsSqlGeometryNull(normalizedProviderValue) ? null : CreateGeometry(this, normalizedProviderValue);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+
             var spatialValue = geometryValue.AsSpatialValue();
 
             var result = CreateWellKnownValue(
                 spatialValue,
-                () => SpatialExceptions.CouldNotCreateWellKnownGeometryValueNoSrid("geometryValue"),
-                () => SpatialExceptions.CouldNotCreateWellKnownGeometryValueNoWkbOrWkt("geometryValue"),
+                () => (Exception)new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid, "geometryValue"),
+                () => (Exception)new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt, "geometryValue"),
                 (srid, wkb, wkt) => new DbGeometryWellKnownValue
-                                        {
-                                            CoordinateSystemId = srid,
-                                            WellKnownBinary = wkb,
-                                            WellKnownText = wkt
-                                        });
+                {
+                    CoordinateSystemId = srid,
+                    WellKnownBinary = wkb,
+                    WellKnownText = wkt
+                });
 
             return result;
         }
@@ -293,10 +315,6 @@ namespace System.Data.Entity.SqlServer
         }
 
         #endregion
-
-        // TODO private void RequireMinimumVersion(double versionRequired)
-        // TODO {
-        // TODO}
 
         #region Argument Conversion (conversion to SQL Server Types)
 

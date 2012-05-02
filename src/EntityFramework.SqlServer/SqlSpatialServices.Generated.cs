@@ -2,11 +2,13 @@
 {
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     internal sealed partial class SqlSpatialServices : DbSpatialServices
-    {        
+    {
         public override DbGeography GeographyFromText(string geographyText)
         {
             object sqlGeographyText = ConvertToSqlString(geographyText, "geographyText");
@@ -149,7 +151,10 @@
 
         public override int GetCoordinateSystemId(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = ipi_SqlGeography_STSrid.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlInt32ToInt(result);
@@ -157,143 +162,175 @@
 
         public override string GetSpatialTypeName(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STGeometryType.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STGeometryType.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlStringToString(result);
         }
 
         public override int GetDimension(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STDimension.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STDimension.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlInt32ToInt(result);
         }
 
         public override byte[] AsBinary(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STAsBinary.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STAsBinary.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlBytesToBinary(result);
         }
 
         public override string AsGml(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_AsGml.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_AsGml.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlXmlToString(result);
         }
 
         public override string AsText(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STAsText.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STAsText.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlCharsToString(result);
         }
 
         public override bool GetIsEmpty(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STIsEmpty.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STIsEmpty.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool SpatialEquals(DbGeography geographyValue1, DbGeography geographyValue2)
+        public override bool SpatialEquals(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geographyValue1.CheckNull("geographyValue1");
-            object sqlGeographyValue1 = ConvertToSqlValue(geographyValue1, "geographyValue1");
-            object sqlGeographyValue2 = ConvertToSqlValue(geographyValue2, "geographyValue2");
-            object result = imi_SqlGeography_STEquals.Value.Invoke(sqlGeographyValue1, new object[] { sqlGeographyValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STEquals.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Disjoint(DbGeography geographyValue1, DbGeography geographyValue2)
+        public override bool Disjoint(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geographyValue1.CheckNull("geographyValue1");
-            object sqlGeographyValue1 = ConvertToSqlValue(geographyValue1, "geographyValue1");
-            object sqlGeographyValue2 = ConvertToSqlValue(geographyValue2, "geographyValue2");
-            object result = imi_SqlGeography_STDisjoint.Value.Invoke(sqlGeographyValue1, new object[] { sqlGeographyValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STDisjoint.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Intersects(DbGeography geographyValue1, DbGeography geographyValue2)
+        public override bool Intersects(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geographyValue1.CheckNull("geographyValue1");
-            object sqlGeographyValue1 = ConvertToSqlValue(geographyValue1, "geographyValue1");
-            object sqlGeographyValue2 = ConvertToSqlValue(geographyValue2, "geographyValue2");
-            object result = imi_SqlGeography_STIntersects.Value.Invoke(sqlGeographyValue1, new object[] { sqlGeographyValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STIntersects.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return ConvertSqlBooleanToBoolean(result);
         }
 
         public override DbGeography Buffer(DbGeography geographyValue, double distance)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = imi_SqlGeography_STBuffer.Value.Invoke(sqlGeographyValue, new object[] { distance });
             return this.GeographyFromProviderValue(result);
         }
 
-        public override double Distance(DbGeography geographyValue1, DbGeography geographyValue2)
+        public override double Distance(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geographyValue1.CheckNull("geographyValue1");
-            object sqlGeographyValue1 = ConvertToSqlValue(geographyValue1, "geographyValue1");
-            object sqlGeographyValue2 = ConvertToSqlValue(geographyValue2, "geographyValue2");
-            object result = imi_SqlGeography_STDistance.Value.Invoke(sqlGeographyValue1, new object[] { sqlGeographyValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STDistance.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return ConvertSqlDoubleToDouble(result);
         }
 
-        public override DbGeography Intersection(DbGeography geographyValue1, DbGeography geographyValue2)
+        public override DbGeography Intersection(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geographyValue1.CheckNull("geographyValue1");
-            object sqlGeographyValue1 = ConvertToSqlValue(geographyValue1, "geographyValue1");
-            object sqlGeographyValue2 = ConvertToSqlValue(geographyValue2, "geographyValue2");
-            object result = imi_SqlGeography_STIntersection.Value.Invoke(sqlGeographyValue1, new object[] { sqlGeographyValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STIntersection.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return this.GeographyFromProviderValue(result);
         }
 
-        public override DbGeography Union(DbGeography geographyValue1, DbGeography geographyValue2)
+        public override DbGeography Union(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geographyValue1.CheckNull("geographyValue1");
-            object sqlGeographyValue1 = ConvertToSqlValue(geographyValue1, "geographyValue1");
-            object sqlGeographyValue2 = ConvertToSqlValue(geographyValue2, "geographyValue2");
-            object result = imi_SqlGeography_STUnion.Value.Invoke(sqlGeographyValue1, new object[] { sqlGeographyValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STUnion.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return this.GeographyFromProviderValue(result);
         }
 
-        public override DbGeography Difference(DbGeography geometryValue1, DbGeography geometryValue2)
+        public override DbGeography Difference(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeography_STDifference.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STDifference.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return this.GeographyFromProviderValue(result);
         }
 
-        public override DbGeography SymmetricDifference(DbGeography geometryValue1, DbGeography geometryValue2)
+        public override DbGeography SymmetricDifference(DbGeography geographyValue, DbGeography otherGeography)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeography_STSymDifference.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
+            object sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
+            object sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
+            object result = imi_SqlGeography_STSymDifference.Value.Invoke(sqlgeographyValue, new object[] { sqlotherGeography });
             return this.GeographyFromProviderValue(result);
         }
 
         public override int? GetElementCount(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STNumGeometries.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STNumGeometries.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
         }
 
         public override DbGeography ElementAt(DbGeography geographyValue, int nValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = imi_SqlGeography_STGeometryN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
             return this.GeographyFromProviderValue(result);
@@ -301,7 +338,9 @@
 
         public override double? GetLatitude(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = ipi_SqlGeography_Lat.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -309,7 +348,9 @@
 
         public override double? GetLongitude(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = ipi_SqlGeography_Long.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -317,7 +358,9 @@
 
         public override double? GetElevation(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = ipi_SqlGeography_Z.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -325,7 +368,9 @@
 
         public override double? GetMeasure(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = ipi_SqlGeography_M.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -333,47 +378,59 @@
 
         public override double? GetLength(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STLength.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STLength.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
         public override DbGeography GetStartPoint(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STStartPoint.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STStartPoint.Value.Invoke(sqlGeographyValue, new object[] { });
             return this.GeographyFromProviderValue(result);
         }
 
         public override DbGeography GetEndPoint(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STEndPoint.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STEndPoint.Value.Invoke(sqlGeographyValue, new object[] { });
             return this.GeographyFromProviderValue(result);
         }
 
         public override bool? GetIsClosed(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STIsClosed.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STIsClosed.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlBooleanToNullableBoolean(result);
         }
 
         public override int? GetPointCount(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STNumPoints.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STNumPoints.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
         }
 
         public override DbGeography PointAt(DbGeography geographyValue, int nValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             object result = imi_SqlGeography_STPointN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
             return this.GeographyFromProviderValue(result);
@@ -381,9 +438,11 @@
 
         public override double? GetArea(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geographyValue, "geographyValue");
             object sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            object result = imi_SqlGeography_STArea.Value.Invoke(sqlGeographyValue, new object[] {  });
+            object result = imi_SqlGeography_STArea.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
@@ -529,7 +588,9 @@
 
         public override int GetCoordinateSystemId(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = ipi_SqlGeometry_STSrid.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlInt32ToInt(result);
@@ -537,237 +598,293 @@
 
         public override string GetSpatialTypeName(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STGeometryType.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STGeometryType.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlStringToString(result);
         }
 
         public override int GetDimension(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STDimension.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STDimension.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToInt(result);
         }
 
         public override DbGeometry GetEnvelope(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STEnvelope.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STEnvelope.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override byte[] AsBinary(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STAsBinary.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STAsBinary.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBytesToBinary(result);
         }
 
         public override string AsGml(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_AsGml.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_AsGml.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlXmlToString(result);
         }
 
         public override string AsText(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STAsText.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STAsText.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlCharsToString(result);
         }
 
         public override bool GetIsEmpty(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STIsEmpty.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STIsEmpty.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
         }
 
         public override bool GetIsSimple(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STIsSimple.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STIsSimple.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
         }
 
         public override DbGeometry GetBoundary(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STBoundary.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STBoundary.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override bool GetIsValid(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STIsValid.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STIsValid.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool SpatialEquals(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool SpatialEquals(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STEquals.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STEquals.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Disjoint(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Disjoint(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STDisjoint.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STDisjoint.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Intersects(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Intersects(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STIntersects.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STIntersects.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Touches(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Touches(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STTouches.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STTouches.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Crosses(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Crosses(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STCrosses.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STCrosses.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Within(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Within(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STWithin.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STWithin.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Contains(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Contains(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STContains.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STContains.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Overlaps(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override bool Overlaps(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STOverlaps.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STOverlaps.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlBooleanToBoolean(result);
         }
 
-        public override bool Relate(DbGeometry geometryValue1, DbGeometry geometryValue2, string matrix)
+        public override bool Relate(DbGeometry geometryValue, DbGeometry otherGeometry, string matrix)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STRelate.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2, matrix });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STRelate.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry, matrix });
             return ConvertSqlBooleanToBoolean(result);
         }
 
         public override DbGeometry Buffer(DbGeometry geometryValue, double distance)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = imi_SqlGeometry_STBuffer.Value.Invoke(sqlGeometryValue, new object[] { distance });
             return this.GeometryFromProviderValue(result);
         }
 
-        public override double Distance(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override double Distance(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STDistance.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STDistance.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return ConvertSqlDoubleToDouble(result);
         }
 
         public override DbGeometry GetConvexHull(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STConvexHull.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STConvexHull.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry Intersection(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override DbGeometry Intersection(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STIntersection.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STIntersection.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return this.GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry Union(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override DbGeometry Union(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STUnion.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STUnion.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return this.GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry Difference(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override DbGeometry Difference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STDifference.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STDifference.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return this.GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry SymmetricDifference(DbGeometry geometryValue1, DbGeometry geometryValue2)
+        public override DbGeometry SymmetricDifference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            geometryValue1.CheckNull("geometryValue1");
-            object sqlGeometryValue1 = ConvertToSqlValue(geometryValue1, "geometryValue1");
-            object sqlGeometryValue2 = ConvertToSqlValue(geometryValue2, "geometryValue2");
-            object result = imi_SqlGeometry_STSymDifference.Value.Invoke(sqlGeometryValue1, new object[] { sqlGeometryValue2 });
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
+            object sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
+            object sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
+            object result = imi_SqlGeometry_STSymDifference.Value.Invoke(sqlgeometryValue, new object[] { sqlotherGeometry });
             return this.GeometryFromProviderValue(result);
         }
 
         public override int? GetElementCount(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STNumGeometries.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STNumGeometries.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
         }
 
         public override DbGeometry ElementAt(DbGeometry geometryValue, int nValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = imi_SqlGeometry_STGeometryN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
             return this.GeometryFromProviderValue(result);
@@ -775,7 +892,9 @@
 
         public override double? GetXCoordinate(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = ipi_SqlGeometry_STX.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -783,7 +902,9 @@
 
         public override double? GetYCoordinate(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = ipi_SqlGeometry_STY.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -791,7 +912,9 @@
 
         public override double? GetElevation(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = ipi_SqlGeometry_Z.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -799,7 +922,9 @@
 
         public override double? GetMeasure(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = ipi_SqlGeometry_M.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -807,55 +932,69 @@
 
         public override double? GetLength(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STLength.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STLength.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
         public override DbGeometry GetStartPoint(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STStartPoint.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STStartPoint.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override DbGeometry GetEndPoint(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STEndPoint.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STEndPoint.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override bool? GetIsClosed(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STIsClosed.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STIsClosed.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToNullableBoolean(result);
         }
 
         public override bool? GetIsRing(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STIsRing.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STIsRing.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToNullableBoolean(result);
         }
 
         public override int? GetPointCount(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STNumPoints.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STNumPoints.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
         }
 
         public override DbGeometry PointAt(DbGeometry geometryValue, int nValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = imi_SqlGeometry_STPointN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
             return this.GeometryFromProviderValue(result);
@@ -863,47 +1002,59 @@
 
         public override double? GetArea(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STArea.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STArea.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
         public override DbGeometry GetCentroid(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STCentroid.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STCentroid.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override DbGeometry GetPointOnSurface(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STPointOnSurface.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STPointOnSurface.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override DbGeometry GetExteriorRing(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STExteriorRing.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STExteriorRing.Value.Invoke(sqlGeometryValue, new object[] { });
             return this.GeometryFromProviderValue(result);
         }
 
         public override int? GetInteriorRingCount(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            object result = imi_SqlGeometry_STNumInteriorRing.Value.Invoke(sqlGeometryValue, new object[] {  });
+            object result = imi_SqlGeometry_STNumInteriorRing.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
         }
 
         public override DbGeometry InteriorRingAt(DbGeometry geometryValue, int nValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            // Cannot use Contract.Requires here because this is an override and the contract always
+            // gets compiled out in release builds.
+            Throw.IfNull(geometryValue, "geometryValue");
             object sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             object result = imi_SqlGeometry_STInteriorRingN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
             return this.GeometryFromProviderValue(result);
@@ -1134,232 +1285,232 @@
 
         private void InitializeMemberInfo()
         {
-            this.smi_SqlGeography_Parse              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member Parse"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STGeomFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STPointFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STLineFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STPolyFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STMPointFromText   = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STMLineFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STMPolyFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_Parse = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member Parse"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPointFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STLineFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPolyFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPointFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMLineFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPolyFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromText"); return result; }, isThreadSafe: true);
             this.smi_SqlGeography_STGeomCollFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STGeomFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STPointFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STLineFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STPolyFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STMPointFromWKB    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STMLineFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STMPolyFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_STGeomCollFromWKB  = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeography_GeomFromGml        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member GeomFromGml"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeography_STSrid             = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member STSrid"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STGeometryType     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryType"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STDimension        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDimension"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STAsBinary         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsBinary"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_AsGml              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member AsGml"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STAsText           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsText"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STIsEmpty          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsEmpty"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STEquals           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEquals", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEquals"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STDisjoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDisjoint", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDisjoint"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STIntersects       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersects", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersects"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STBuffer           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STBuffer"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STDistance         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDistance", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDistance"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STIntersection     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersection", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersection"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STUnion            = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STUnion", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STUnion"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STDifference       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDifference"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STSymDifference    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STSymDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STSymDifference"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STNumGeometries    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumGeometries"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STGeometryN        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryN"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeography_Lat                = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Lat"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Lat"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeography_Long               = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Long"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Long"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeography_Z                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Z"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeography_M                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member M"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STLength           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLength"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STStartPoint       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STStartPoint"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STEndPoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEndPoint"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STIsClosed         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsClosed"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STNumPoints        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumPoints"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STPointN           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointN"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeography_STArea             = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STArea"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_Parse              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member Parse"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STGeomFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STPointFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STLineFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STPolyFromText     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STMPointFromText   = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STMLineFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STMPolyFromText    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPointFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STLineFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STPolyFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPointFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMLineFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STMPolyFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STMPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_STGeomCollFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeomCollFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeography_GeomFromGml = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member GeomFromGml"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_STSrid = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member STSrid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STGeometryType = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryType"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDimension = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDimension"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STAsBinary = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsBinary"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_AsGml = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member AsGml"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STAsText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STAsText"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIsEmpty = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsEmpty"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STEquals = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEquals", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEquals"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDisjoint = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDisjoint", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDisjoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIntersects = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersects", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersects"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STBuffer = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STBuffer"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDistance = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDistance", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDistance"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIntersection = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIntersection", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIntersection"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STUnion = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STUnion", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STUnion"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STDifference = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STSymDifference = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STSymDifference", SqlTypes.SqlGeographyType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STSymDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STNumGeometries = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumGeometries"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STGeometryN = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STGeometryN"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_Lat = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Lat"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Lat"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_Long = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Long"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Long"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_Z = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member Z"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeography_M = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeographyProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeography member M"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STLength = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STLength"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STStartPoint = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STStartPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STEndPoint = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STEndPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STIsClosed = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STIsClosed"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STNumPoints = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STNumPoints"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STPointN = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STPointN"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeography_STArea = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeographyMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeography member STArea"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_Parse = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("Parse", SqlTypes.SqlStringType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member Parse"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPointFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STLineFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPolyFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPointFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMLineFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromText"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPolyFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromText"); return result; }, isThreadSafe: true);
             this.smi_SqlGeometry_STGeomCollFromText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromText", SqlTypes.SqlCharsType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromText"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STGeomFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STPointFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STLineFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STPolyFromWKB      = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STMPointFromWKB    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STMLineFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STMPolyFromWKB     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_STGeomCollFromWKB  = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromWKB"); return result; }, isThreadSafe: true);
-            this.smi_SqlGeometry_GeomFromGml        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member GeomFromGml"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeometry_STSrid             = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STSrid"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STGeometryType     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryType"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STDimension        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDimension"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STEnvelope         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEnvelope"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEnvelope"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STAsBinary         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsBinary"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_AsGml              = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member AsGml"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STAsText           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsText"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIsEmpty          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsEmpty"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIsSimple         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsSimple"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsSimple"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STBoundary         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBoundary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBoundary"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIsValid          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsValid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsValid"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STEquals           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEquals", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEquals"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STDisjoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDisjoint", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDisjoint"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIntersects       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersects", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersects"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STTouches          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STTouches", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STTouches"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STCrosses          = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCrosses", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCrosses"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STWithin           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STWithin", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STWithin"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STContains         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STContains", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STContains"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STOverlaps         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STOverlaps", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STOverlaps"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STRelate           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STRelate", SqlTypes.SqlGeometryType, typeof(string)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STRelate"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STBuffer           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBuffer"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STDistance         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDistance", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDistance"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STConvexHull       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STConvexHull"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STConvexHull"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIntersection     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersection", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersection"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STUnion            = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STUnion", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STUnion"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STDifference       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDifference"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STSymDifference    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STSymDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STSymDifference"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STNumGeometries    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumGeometries"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STGeometryN        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryN"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeometry_STX                = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STX"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STX"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeometry_STY                = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STY"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STY"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeometry_Z                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member Z"); return result; }, isThreadSafe: true);
-            this.ipi_SqlGeometry_M                  = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member M"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STLength           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLength"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STStartPoint       = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STStartPoint"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STEndPoint         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEndPoint"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIsClosed         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsClosed"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STIsRing           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsRing"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STNumPoints        = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumPoints"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STPointN           = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointN"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STArea             = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STArea"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STCentroid         = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCentroid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCentroid"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STPointOnSurface   = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointOnSurface"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointOnSurface"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STExteriorRing     = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STExteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STExteriorRing"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STNumInteriorRing  = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumInteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumInteriorRing"); return result; }, isThreadSafe: true);
-            this.imi_SqlGeometry_STInteriorRingN    = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STInteriorRingN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STInteriorRingN"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPointFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STLineFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STPolyFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPointFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPointFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPointFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMLineFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMLineFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMLineFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STMPolyFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STMPolyFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STMPolyFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_STGeomCollFromWKB = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("STGeomCollFromWKB", SqlTypes.SqlBytesType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeomCollFromWKB"); return result; }, isThreadSafe: true);
+            this.smi_SqlGeometry_GeomFromGml = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryStaticMethod("GeomFromGml", SqlTypes.SqlXmlType, typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member GeomFromGml"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_STSrid = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STSrid"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STSrid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STGeometryType = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryType"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryType"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDimension = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDimension"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDimension"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STEnvelope = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEnvelope"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEnvelope"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STAsBinary = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsBinary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsBinary"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_AsGml = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("AsGml"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member AsGml"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STAsText = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STAsText"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STAsText"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsEmpty = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsEmpty"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsEmpty"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsSimple = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsSimple"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsSimple"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STBoundary = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBoundary"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBoundary"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsValid = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsValid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsValid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STEquals = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEquals", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEquals"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDisjoint = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDisjoint", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDisjoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIntersects = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersects", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersects"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STTouches = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STTouches", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STTouches"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STCrosses = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCrosses", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCrosses"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STWithin = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STWithin", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STWithin"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STContains = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STContains", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STContains"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STOverlaps = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STOverlaps", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STOverlaps"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STRelate = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STRelate", SqlTypes.SqlGeometryType, typeof(string)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STRelate"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STBuffer = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STBuffer", typeof(double)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STBuffer"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDistance = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDistance", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDistance"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STConvexHull = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STConvexHull"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STConvexHull"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIntersection = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIntersection", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIntersection"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STUnion = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STUnion", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STUnion"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STDifference = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STSymDifference = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STSymDifference", SqlTypes.SqlGeometryType); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STSymDifference"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STNumGeometries = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumGeometries"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumGeometries"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STGeometryN = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STGeometryN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STGeometryN"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_STX = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STX"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STX"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_STY = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("STY"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member STY"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_Z = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("Z"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member Z"); return result; }, isThreadSafe: true);
+            this.ipi_SqlGeometry_M = new Lazy<PropertyInfo>(() => { PropertyInfo result = FindSqlGeometryProperty("M"); Debug.Assert(result != null, "Could not retrieve PropertyInfo for SqlGeometry member M"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STLength = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STLength"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STLength"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STStartPoint = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STStartPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STStartPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STEndPoint = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STEndPoint"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STEndPoint"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsClosed = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsClosed"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsClosed"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STIsRing = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STIsRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STIsRing"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STNumPoints = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumPoints"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumPoints"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STPointN = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointN"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STArea = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STArea"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STArea"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STCentroid = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STCentroid"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STCentroid"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STPointOnSurface = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STPointOnSurface"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STPointOnSurface"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STExteriorRing = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STExteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STExteriorRing"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STNumInteriorRing = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STNumInteriorRing"); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STNumInteriorRing"); return result; }, isThreadSafe: true);
+            this.imi_SqlGeometry_STInteriorRingN = new Lazy<MethodInfo>(() => { MethodInfo result = FindSqlGeometryMethod("STInteriorRingN", typeof(int)); Debug.Assert(result != null, "Could not retrieve MethodInfo for SqlGeometry member STInteriorRingN"); return result; }, isThreadSafe: true);
         }
 
         private void InitializeMemberInfo(SqlSpatialServices from)
         {
-            this.smi_SqlGeography_Parse              = from.smi_SqlGeography_Parse;
-            this.smi_SqlGeography_STGeomFromText     = from.smi_SqlGeography_STGeomFromText;
-            this.smi_SqlGeography_STPointFromText    = from.smi_SqlGeography_STPointFromText;
-            this.smi_SqlGeography_STLineFromText     = from.smi_SqlGeography_STLineFromText;
-            this.smi_SqlGeography_STPolyFromText     = from.smi_SqlGeography_STPolyFromText;
-            this.smi_SqlGeography_STMPointFromText   = from.smi_SqlGeography_STMPointFromText;
-            this.smi_SqlGeography_STMLineFromText    = from.smi_SqlGeography_STMLineFromText;
-            this.smi_SqlGeography_STMPolyFromText    = from.smi_SqlGeography_STMPolyFromText;
+            this.smi_SqlGeography_Parse = from.smi_SqlGeography_Parse;
+            this.smi_SqlGeography_STGeomFromText = from.smi_SqlGeography_STGeomFromText;
+            this.smi_SqlGeography_STPointFromText = from.smi_SqlGeography_STPointFromText;
+            this.smi_SqlGeography_STLineFromText = from.smi_SqlGeography_STLineFromText;
+            this.smi_SqlGeography_STPolyFromText = from.smi_SqlGeography_STPolyFromText;
+            this.smi_SqlGeography_STMPointFromText = from.smi_SqlGeography_STMPointFromText;
+            this.smi_SqlGeography_STMLineFromText = from.smi_SqlGeography_STMLineFromText;
+            this.smi_SqlGeography_STMPolyFromText = from.smi_SqlGeography_STMPolyFromText;
             this.smi_SqlGeography_STGeomCollFromText = from.smi_SqlGeography_STGeomCollFromText;
-            this.smi_SqlGeography_STGeomFromWKB      = from.smi_SqlGeography_STGeomFromWKB;
-            this.smi_SqlGeography_STPointFromWKB     = from.smi_SqlGeography_STPointFromWKB;
-            this.smi_SqlGeography_STLineFromWKB      = from.smi_SqlGeography_STLineFromWKB;
-            this.smi_SqlGeography_STPolyFromWKB      = from.smi_SqlGeography_STPolyFromWKB;
-            this.smi_SqlGeography_STMPointFromWKB    = from.smi_SqlGeography_STMPointFromWKB;
-            this.smi_SqlGeography_STMLineFromWKB     = from.smi_SqlGeography_STMLineFromWKB;
-            this.smi_SqlGeography_STMPolyFromWKB     = from.smi_SqlGeography_STMPolyFromWKB;
-            this.smi_SqlGeography_STGeomCollFromWKB  = from.smi_SqlGeography_STGeomCollFromWKB;
-            this.smi_SqlGeography_GeomFromGml        = from.smi_SqlGeography_GeomFromGml;
-            this.ipi_SqlGeography_STSrid             = from.ipi_SqlGeography_STSrid;
-            this.imi_SqlGeography_STGeometryType     = from.imi_SqlGeography_STGeometryType;
-            this.imi_SqlGeography_STDimension        = from.imi_SqlGeography_STDimension;
-            this.imi_SqlGeography_STAsBinary         = from.imi_SqlGeography_STAsBinary;
-            this.imi_SqlGeography_AsGml              = from.imi_SqlGeography_AsGml;
-            this.imi_SqlGeography_STAsText           = from.imi_SqlGeography_STAsText;
-            this.imi_SqlGeography_STIsEmpty          = from.imi_SqlGeography_STIsEmpty;
-            this.imi_SqlGeography_STEquals           = from.imi_SqlGeography_STEquals;
-            this.imi_SqlGeography_STDisjoint         = from.imi_SqlGeography_STDisjoint;
-            this.imi_SqlGeography_STIntersects       = from.imi_SqlGeography_STIntersects;
-            this.imi_SqlGeography_STBuffer           = from.imi_SqlGeography_STBuffer;
-            this.imi_SqlGeography_STDistance         = from.imi_SqlGeography_STDistance;
-            this.imi_SqlGeography_STIntersection     = from.imi_SqlGeography_STIntersection;
-            this.imi_SqlGeography_STUnion            = from.imi_SqlGeography_STUnion;
-            this.imi_SqlGeography_STDifference       = from.imi_SqlGeography_STDifference;
-            this.imi_SqlGeography_STSymDifference    = from.imi_SqlGeography_STSymDifference;
-            this.imi_SqlGeography_STNumGeometries    = from.imi_SqlGeography_STNumGeometries;
-            this.imi_SqlGeography_STGeometryN        = from.imi_SqlGeography_STGeometryN;
-            this.ipi_SqlGeography_Lat                = from.ipi_SqlGeography_Lat;
-            this.ipi_SqlGeography_Long               = from.ipi_SqlGeography_Long;
-            this.ipi_SqlGeography_Z                  = from.ipi_SqlGeography_Z;
-            this.ipi_SqlGeography_M                  = from.ipi_SqlGeography_M;
-            this.imi_SqlGeography_STLength           = from.imi_SqlGeography_STLength;
-            this.imi_SqlGeography_STStartPoint       = from.imi_SqlGeography_STStartPoint;
-            this.imi_SqlGeography_STEndPoint         = from.imi_SqlGeography_STEndPoint;
-            this.imi_SqlGeography_STIsClosed         = from.imi_SqlGeography_STIsClosed;
-            this.imi_SqlGeography_STNumPoints        = from.imi_SqlGeography_STNumPoints;
-            this.imi_SqlGeography_STPointN           = from.imi_SqlGeography_STPointN;
-            this.imi_SqlGeography_STArea             = from.imi_SqlGeography_STArea;
-            this.smi_SqlGeometry_Parse              = from.smi_SqlGeometry_Parse;
-            this.smi_SqlGeometry_STGeomFromText     = from.smi_SqlGeometry_STGeomFromText;
-            this.smi_SqlGeometry_STPointFromText    = from.smi_SqlGeometry_STPointFromText;
-            this.smi_SqlGeometry_STLineFromText     = from.smi_SqlGeometry_STLineFromText;
-            this.smi_SqlGeometry_STPolyFromText     = from.smi_SqlGeometry_STPolyFromText;
-            this.smi_SqlGeometry_STMPointFromText   = from.smi_SqlGeometry_STMPointFromText;
-            this.smi_SqlGeometry_STMLineFromText    = from.smi_SqlGeometry_STMLineFromText;
-            this.smi_SqlGeometry_STMPolyFromText    = from.smi_SqlGeometry_STMPolyFromText;
+            this.smi_SqlGeography_STGeomFromWKB = from.smi_SqlGeography_STGeomFromWKB;
+            this.smi_SqlGeography_STPointFromWKB = from.smi_SqlGeography_STPointFromWKB;
+            this.smi_SqlGeography_STLineFromWKB = from.smi_SqlGeography_STLineFromWKB;
+            this.smi_SqlGeography_STPolyFromWKB = from.smi_SqlGeography_STPolyFromWKB;
+            this.smi_SqlGeography_STMPointFromWKB = from.smi_SqlGeography_STMPointFromWKB;
+            this.smi_SqlGeography_STMLineFromWKB = from.smi_SqlGeography_STMLineFromWKB;
+            this.smi_SqlGeography_STMPolyFromWKB = from.smi_SqlGeography_STMPolyFromWKB;
+            this.smi_SqlGeography_STGeomCollFromWKB = from.smi_SqlGeography_STGeomCollFromWKB;
+            this.smi_SqlGeography_GeomFromGml = from.smi_SqlGeography_GeomFromGml;
+            this.ipi_SqlGeography_STSrid = from.ipi_SqlGeography_STSrid;
+            this.imi_SqlGeography_STGeometryType = from.imi_SqlGeography_STGeometryType;
+            this.imi_SqlGeography_STDimension = from.imi_SqlGeography_STDimension;
+            this.imi_SqlGeography_STAsBinary = from.imi_SqlGeography_STAsBinary;
+            this.imi_SqlGeography_AsGml = from.imi_SqlGeography_AsGml;
+            this.imi_SqlGeography_STAsText = from.imi_SqlGeography_STAsText;
+            this.imi_SqlGeography_STIsEmpty = from.imi_SqlGeography_STIsEmpty;
+            this.imi_SqlGeography_STEquals = from.imi_SqlGeography_STEquals;
+            this.imi_SqlGeography_STDisjoint = from.imi_SqlGeography_STDisjoint;
+            this.imi_SqlGeography_STIntersects = from.imi_SqlGeography_STIntersects;
+            this.imi_SqlGeography_STBuffer = from.imi_SqlGeography_STBuffer;
+            this.imi_SqlGeography_STDistance = from.imi_SqlGeography_STDistance;
+            this.imi_SqlGeography_STIntersection = from.imi_SqlGeography_STIntersection;
+            this.imi_SqlGeography_STUnion = from.imi_SqlGeography_STUnion;
+            this.imi_SqlGeography_STDifference = from.imi_SqlGeography_STDifference;
+            this.imi_SqlGeography_STSymDifference = from.imi_SqlGeography_STSymDifference;
+            this.imi_SqlGeography_STNumGeometries = from.imi_SqlGeography_STNumGeometries;
+            this.imi_SqlGeography_STGeometryN = from.imi_SqlGeography_STGeometryN;
+            this.ipi_SqlGeography_Lat = from.ipi_SqlGeography_Lat;
+            this.ipi_SqlGeography_Long = from.ipi_SqlGeography_Long;
+            this.ipi_SqlGeography_Z = from.ipi_SqlGeography_Z;
+            this.ipi_SqlGeography_M = from.ipi_SqlGeography_M;
+            this.imi_SqlGeography_STLength = from.imi_SqlGeography_STLength;
+            this.imi_SqlGeography_STStartPoint = from.imi_SqlGeography_STStartPoint;
+            this.imi_SqlGeography_STEndPoint = from.imi_SqlGeography_STEndPoint;
+            this.imi_SqlGeography_STIsClosed = from.imi_SqlGeography_STIsClosed;
+            this.imi_SqlGeography_STNumPoints = from.imi_SqlGeography_STNumPoints;
+            this.imi_SqlGeography_STPointN = from.imi_SqlGeography_STPointN;
+            this.imi_SqlGeography_STArea = from.imi_SqlGeography_STArea;
+            this.smi_SqlGeometry_Parse = from.smi_SqlGeometry_Parse;
+            this.smi_SqlGeometry_STGeomFromText = from.smi_SqlGeometry_STGeomFromText;
+            this.smi_SqlGeometry_STPointFromText = from.smi_SqlGeometry_STPointFromText;
+            this.smi_SqlGeometry_STLineFromText = from.smi_SqlGeometry_STLineFromText;
+            this.smi_SqlGeometry_STPolyFromText = from.smi_SqlGeometry_STPolyFromText;
+            this.smi_SqlGeometry_STMPointFromText = from.smi_SqlGeometry_STMPointFromText;
+            this.smi_SqlGeometry_STMLineFromText = from.smi_SqlGeometry_STMLineFromText;
+            this.smi_SqlGeometry_STMPolyFromText = from.smi_SqlGeometry_STMPolyFromText;
             this.smi_SqlGeometry_STGeomCollFromText = from.smi_SqlGeometry_STGeomCollFromText;
-            this.smi_SqlGeometry_STGeomFromWKB      = from.smi_SqlGeometry_STGeomFromWKB;
-            this.smi_SqlGeometry_STPointFromWKB     = from.smi_SqlGeometry_STPointFromWKB;
-            this.smi_SqlGeometry_STLineFromWKB      = from.smi_SqlGeometry_STLineFromWKB;
-            this.smi_SqlGeometry_STPolyFromWKB      = from.smi_SqlGeometry_STPolyFromWKB;
-            this.smi_SqlGeometry_STMPointFromWKB    = from.smi_SqlGeometry_STMPointFromWKB;
-            this.smi_SqlGeometry_STMLineFromWKB     = from.smi_SqlGeometry_STMLineFromWKB;
-            this.smi_SqlGeometry_STMPolyFromWKB     = from.smi_SqlGeometry_STMPolyFromWKB;
-            this.smi_SqlGeometry_STGeomCollFromWKB  = from.smi_SqlGeometry_STGeomCollFromWKB;
-            this.smi_SqlGeometry_GeomFromGml        = from.smi_SqlGeometry_GeomFromGml;
-            this.ipi_SqlGeometry_STSrid             = from.ipi_SqlGeometry_STSrid;
-            this.imi_SqlGeometry_STGeometryType     = from.imi_SqlGeometry_STGeometryType;
-            this.imi_SqlGeometry_STDimension        = from.imi_SqlGeometry_STDimension;
-            this.imi_SqlGeometry_STEnvelope         = from.imi_SqlGeometry_STEnvelope;
-            this.imi_SqlGeometry_STAsBinary         = from.imi_SqlGeometry_STAsBinary;
-            this.imi_SqlGeometry_AsGml              = from.imi_SqlGeometry_AsGml;
-            this.imi_SqlGeometry_STAsText           = from.imi_SqlGeometry_STAsText;
-            this.imi_SqlGeometry_STIsEmpty          = from.imi_SqlGeometry_STIsEmpty;
-            this.imi_SqlGeometry_STIsSimple         = from.imi_SqlGeometry_STIsSimple;
-            this.imi_SqlGeometry_STBoundary         = from.imi_SqlGeometry_STBoundary;
-            this.imi_SqlGeometry_STIsValid          = from.imi_SqlGeometry_STIsValid;
-            this.imi_SqlGeometry_STEquals           = from.imi_SqlGeometry_STEquals;
-            this.imi_SqlGeometry_STDisjoint         = from.imi_SqlGeometry_STDisjoint;
-            this.imi_SqlGeometry_STIntersects       = from.imi_SqlGeometry_STIntersects;
-            this.imi_SqlGeometry_STTouches          = from.imi_SqlGeometry_STTouches;
-            this.imi_SqlGeometry_STCrosses          = from.imi_SqlGeometry_STCrosses;
-            this.imi_SqlGeometry_STWithin           = from.imi_SqlGeometry_STWithin;
-            this.imi_SqlGeometry_STContains         = from.imi_SqlGeometry_STContains;
-            this.imi_SqlGeometry_STOverlaps         = from.imi_SqlGeometry_STOverlaps;
-            this.imi_SqlGeometry_STRelate           = from.imi_SqlGeometry_STRelate;
-            this.imi_SqlGeometry_STBuffer           = from.imi_SqlGeometry_STBuffer;
-            this.imi_SqlGeometry_STDistance         = from.imi_SqlGeometry_STDistance;
-            this.imi_SqlGeometry_STConvexHull       = from.imi_SqlGeometry_STConvexHull;
-            this.imi_SqlGeometry_STIntersection     = from.imi_SqlGeometry_STIntersection;
-            this.imi_SqlGeometry_STUnion            = from.imi_SqlGeometry_STUnion;
-            this.imi_SqlGeometry_STDifference       = from.imi_SqlGeometry_STDifference;
-            this.imi_SqlGeometry_STSymDifference    = from.imi_SqlGeometry_STSymDifference;
-            this.imi_SqlGeometry_STNumGeometries    = from.imi_SqlGeometry_STNumGeometries;
-            this.imi_SqlGeometry_STGeometryN        = from.imi_SqlGeometry_STGeometryN;
-            this.ipi_SqlGeometry_STX                = from.ipi_SqlGeometry_STX;
-            this.ipi_SqlGeometry_STY                = from.ipi_SqlGeometry_STY;
-            this.ipi_SqlGeometry_Z                  = from.ipi_SqlGeometry_Z;
-            this.ipi_SqlGeometry_M                  = from.ipi_SqlGeometry_M;
-            this.imi_SqlGeometry_STLength           = from.imi_SqlGeometry_STLength;
-            this.imi_SqlGeometry_STStartPoint       = from.imi_SqlGeometry_STStartPoint;
-            this.imi_SqlGeometry_STEndPoint         = from.imi_SqlGeometry_STEndPoint;
-            this.imi_SqlGeometry_STIsClosed         = from.imi_SqlGeometry_STIsClosed;
-            this.imi_SqlGeometry_STIsRing           = from.imi_SqlGeometry_STIsRing;
-            this.imi_SqlGeometry_STNumPoints        = from.imi_SqlGeometry_STNumPoints;
-            this.imi_SqlGeometry_STPointN           = from.imi_SqlGeometry_STPointN;
-            this.imi_SqlGeometry_STArea             = from.imi_SqlGeometry_STArea;
-            this.imi_SqlGeometry_STCentroid         = from.imi_SqlGeometry_STCentroid;
-            this.imi_SqlGeometry_STPointOnSurface   = from.imi_SqlGeometry_STPointOnSurface;
-            this.imi_SqlGeometry_STExteriorRing     = from.imi_SqlGeometry_STExteriorRing;
-            this.imi_SqlGeometry_STNumInteriorRing  = from.imi_SqlGeometry_STNumInteriorRing;
-            this.imi_SqlGeometry_STInteriorRingN    = from.imi_SqlGeometry_STInteriorRingN;
+            this.smi_SqlGeometry_STGeomFromWKB = from.smi_SqlGeometry_STGeomFromWKB;
+            this.smi_SqlGeometry_STPointFromWKB = from.smi_SqlGeometry_STPointFromWKB;
+            this.smi_SqlGeometry_STLineFromWKB = from.smi_SqlGeometry_STLineFromWKB;
+            this.smi_SqlGeometry_STPolyFromWKB = from.smi_SqlGeometry_STPolyFromWKB;
+            this.smi_SqlGeometry_STMPointFromWKB = from.smi_SqlGeometry_STMPointFromWKB;
+            this.smi_SqlGeometry_STMLineFromWKB = from.smi_SqlGeometry_STMLineFromWKB;
+            this.smi_SqlGeometry_STMPolyFromWKB = from.smi_SqlGeometry_STMPolyFromWKB;
+            this.smi_SqlGeometry_STGeomCollFromWKB = from.smi_SqlGeometry_STGeomCollFromWKB;
+            this.smi_SqlGeometry_GeomFromGml = from.smi_SqlGeometry_GeomFromGml;
+            this.ipi_SqlGeometry_STSrid = from.ipi_SqlGeometry_STSrid;
+            this.imi_SqlGeometry_STGeometryType = from.imi_SqlGeometry_STGeometryType;
+            this.imi_SqlGeometry_STDimension = from.imi_SqlGeometry_STDimension;
+            this.imi_SqlGeometry_STEnvelope = from.imi_SqlGeometry_STEnvelope;
+            this.imi_SqlGeometry_STAsBinary = from.imi_SqlGeometry_STAsBinary;
+            this.imi_SqlGeometry_AsGml = from.imi_SqlGeometry_AsGml;
+            this.imi_SqlGeometry_STAsText = from.imi_SqlGeometry_STAsText;
+            this.imi_SqlGeometry_STIsEmpty = from.imi_SqlGeometry_STIsEmpty;
+            this.imi_SqlGeometry_STIsSimple = from.imi_SqlGeometry_STIsSimple;
+            this.imi_SqlGeometry_STBoundary = from.imi_SqlGeometry_STBoundary;
+            this.imi_SqlGeometry_STIsValid = from.imi_SqlGeometry_STIsValid;
+            this.imi_SqlGeometry_STEquals = from.imi_SqlGeometry_STEquals;
+            this.imi_SqlGeometry_STDisjoint = from.imi_SqlGeometry_STDisjoint;
+            this.imi_SqlGeometry_STIntersects = from.imi_SqlGeometry_STIntersects;
+            this.imi_SqlGeometry_STTouches = from.imi_SqlGeometry_STTouches;
+            this.imi_SqlGeometry_STCrosses = from.imi_SqlGeometry_STCrosses;
+            this.imi_SqlGeometry_STWithin = from.imi_SqlGeometry_STWithin;
+            this.imi_SqlGeometry_STContains = from.imi_SqlGeometry_STContains;
+            this.imi_SqlGeometry_STOverlaps = from.imi_SqlGeometry_STOverlaps;
+            this.imi_SqlGeometry_STRelate = from.imi_SqlGeometry_STRelate;
+            this.imi_SqlGeometry_STBuffer = from.imi_SqlGeometry_STBuffer;
+            this.imi_SqlGeometry_STDistance = from.imi_SqlGeometry_STDistance;
+            this.imi_SqlGeometry_STConvexHull = from.imi_SqlGeometry_STConvexHull;
+            this.imi_SqlGeometry_STIntersection = from.imi_SqlGeometry_STIntersection;
+            this.imi_SqlGeometry_STUnion = from.imi_SqlGeometry_STUnion;
+            this.imi_SqlGeometry_STDifference = from.imi_SqlGeometry_STDifference;
+            this.imi_SqlGeometry_STSymDifference = from.imi_SqlGeometry_STSymDifference;
+            this.imi_SqlGeometry_STNumGeometries = from.imi_SqlGeometry_STNumGeometries;
+            this.imi_SqlGeometry_STGeometryN = from.imi_SqlGeometry_STGeometryN;
+            this.ipi_SqlGeometry_STX = from.ipi_SqlGeometry_STX;
+            this.ipi_SqlGeometry_STY = from.ipi_SqlGeometry_STY;
+            this.ipi_SqlGeometry_Z = from.ipi_SqlGeometry_Z;
+            this.ipi_SqlGeometry_M = from.ipi_SqlGeometry_M;
+            this.imi_SqlGeometry_STLength = from.imi_SqlGeometry_STLength;
+            this.imi_SqlGeometry_STStartPoint = from.imi_SqlGeometry_STStartPoint;
+            this.imi_SqlGeometry_STEndPoint = from.imi_SqlGeometry_STEndPoint;
+            this.imi_SqlGeometry_STIsClosed = from.imi_SqlGeometry_STIsClosed;
+            this.imi_SqlGeometry_STIsRing = from.imi_SqlGeometry_STIsRing;
+            this.imi_SqlGeometry_STNumPoints = from.imi_SqlGeometry_STNumPoints;
+            this.imi_SqlGeometry_STPointN = from.imi_SqlGeometry_STPointN;
+            this.imi_SqlGeometry_STArea = from.imi_SqlGeometry_STArea;
+            this.imi_SqlGeometry_STCentroid = from.imi_SqlGeometry_STCentroid;
+            this.imi_SqlGeometry_STPointOnSurface = from.imi_SqlGeometry_STPointOnSurface;
+            this.imi_SqlGeometry_STExteriorRing = from.imi_SqlGeometry_STExteriorRing;
+            this.imi_SqlGeometry_STNumInteriorRing = from.imi_SqlGeometry_STNumInteriorRing;
+            this.imi_SqlGeometry_STInteriorRingN = from.imi_SqlGeometry_STInteriorRingN;
         }
 
     }

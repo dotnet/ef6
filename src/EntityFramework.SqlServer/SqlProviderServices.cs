@@ -11,6 +11,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.SqlGen;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -124,9 +125,9 @@ namespace System.Data.Entity.SqlServer
                     {
                         parameterType = queryParameter.Value.ShallowCopy(
                             new FacetValues
-                                {
-                                    Unicode = false
-                                });
+                            {
+                                Unicode = false
+                            });
                     }
                     else
                     {
@@ -165,9 +166,8 @@ namespace System.Data.Entity.SqlServer
             // Ensure a value that can be used with SqlParameter
             value = EnsureSqlParameterValue(value);
 
-            if (TypeSemantics.IsPrimitiveType(parameterType, PrimitiveTypeKind.String)
-                ||
-                TypeSemantics.IsPrimitiveType(parameterType, PrimitiveTypeKind.Binary))
+            if (parameterType.IsPrimitiveType(PrimitiveTypeKind.String)
+                || parameterType.IsPrimitiveType(PrimitiveTypeKind.Binary))
             {
                 var size = GetParameterSize(parameterType, ((parameter.Direction & ParameterDirection.Output) == ParameterDirection.Output));
                 if (!size.HasValue)
@@ -342,7 +342,7 @@ namespace System.Data.Entity.SqlServer
             var result = new SqlParameter(name, value);
 
             // .Direction
-            var direction = MetadataHelper.ParameterModeToParameterDirection(mode);
+            var direction = ParameterModeToParameterDirection(mode);
             if (result.Direction != direction)
             {
                 result.Direction = direction;
@@ -389,7 +389,7 @@ namespace System.Data.Entity.SqlServer
             }
             else
             {
-                var typeKind = MetadataHelper.GetPrimitiveTypeKind(type);
+                var typeKind = ((PrimitiveType)type.EdmType).PrimitiveTypeKind;
                 if (typeKind == PrimitiveTypeKind.String)
                 {
                     result.Size = GetDefaultStringMaxLength(version, sqlDbType);
@@ -411,13 +411,36 @@ namespace System.Data.Entity.SqlServer
             }
 
             // .IsNullable
-            var isNullable = TypeSemantics.IsNullable(type);
+            var isNullable = type.IsNullable();
             if (isOutParam || isNullable != result.IsNullable)
             {
                 result.IsNullable = isNullable;
             }
 
             return result;
+        }
+
+        // Returns ParameterDirection corresponding to given ParameterMode
+        private static ParameterDirection ParameterModeToParameterDirection(ParameterMode mode)
+        {
+            switch (mode)
+            {
+                case ParameterMode.In:
+                    return ParameterDirection.Input;
+
+                case ParameterMode.InOut:
+                    return ParameterDirection.InputOutput;
+
+                case ParameterMode.Out:
+                    return ParameterDirection.Output;
+
+                case ParameterMode.ReturnValue:
+                    return ParameterDirection.ReturnValue;
+
+                default:
+                    Debug.Fail("unrecognized mode " + mode.ToString());
+                    return default(ParameterDirection);
+            }
         }
 
         /// <summary>
@@ -464,7 +487,7 @@ namespace System.Data.Entity.SqlServer
             TypeUsage type, bool isOutParam, SqlVersion version, out int? size, out byte? precision, out byte? scale, out string udtName)
         {
             // only supported for primitive type
-            var primitiveTypeKind = MetadataHelper.GetPrimitiveTypeKind(type);
+            var primitiveTypeKind = ((PrimitiveType)type.EdmType).PrimitiveTypeKind;
 
             size = default(int?);
             precision = default(byte?);
@@ -663,7 +686,7 @@ namespace System.Data.Entity.SqlServer
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
             byte precision;
-            if (TypeHelpers.TryGetPrecision(type, out precision))
+            if (type.TryGetPrecision(out precision))
             {
                 return precision;
             }
@@ -680,7 +703,7 @@ namespace System.Data.Entity.SqlServer
         private static byte? GetScale(TypeUsage type)
         {
             byte scale;
-            if (TypeHelpers.TryGetScale(type, out scale))
+            if (type.TryGetScale(out scale))
             {
                 return scale;
             }
@@ -710,18 +733,13 @@ namespace System.Data.Entity.SqlServer
                 // Specific type depends on whether the string is a unicode string and whether it is a fixed length string.
                 // By default, assume widest type (unicode) and most common type (variable length)
                 bool unicode;
-                bool fixedLength;
-                if (!TypeHelpers.TryGetIsFixedLength(type, out fixedLength))
-                {
-                    fixedLength = false;
-                }
 
-                if (!TypeHelpers.TryGetIsUnicode(type, out unicode))
+                if (!type.TryGetIsUnicode(out unicode))
                 {
                     unicode = true;
                 }
 
-                if (fixedLength)
+                if (type.IsFixedLength())
                 {
                     dbType = (unicode ? SqlDbType.NChar : SqlDbType.Char);
                 }
@@ -743,13 +761,8 @@ namespace System.Data.Entity.SqlServer
                 PrimitiveTypeKind.Binary == ((PrimitiveType)type.EdmType).PrimitiveTypeKind, "only valid for binary type");
 
             // Specific type depends on whether the binary value is fixed length. By default, assume variable length.
-            bool fixedLength;
-            if (!TypeHelpers.TryGetIsFixedLength(type, out fixedLength))
-            {
-                fixedLength = false;
-            }
 
-            return fixedLength ? SqlDbType.Binary : SqlDbType.VarBinary;
+            return type.IsFixedLength() ? SqlDbType.Binary : SqlDbType.VarBinary;
         }
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
@@ -786,10 +799,10 @@ namespace System.Data.Entity.SqlServer
 
             UsingMasterConnection(
                 sqlConnection, conn =>
-                                   {
-                                       // create database
-                                       CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
-                                   });
+                {
+                    // create database
+                    CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
+                });
 
             // Create database already succeeded. If there is a failure from this point on, the user should be informed.
             try
@@ -800,10 +813,10 @@ namespace System.Data.Entity.SqlServer
 
                 UsingConnection(
                     sqlConnection, conn =>
-                                       {
-                                           // create database objects
-                                           CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
-                                       });
+                    {
+                        // create database objects
+                        CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
+                    });
             }
             catch (Exception e)
             {
@@ -982,13 +995,13 @@ namespace System.Data.Entity.SqlServer
                     var databaseDoesNotExistInSysTables = false;
                     UsingMasterConnection(
                         sqlConnection, conn =>
-                                           {
-                                               var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                               var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
-                                                   fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                                               var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                                               databaseDoesNotExistInSysTables = (result == 0);
-                                           });
+                        {
+                            var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                            var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
+                                fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                            var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
+                            databaseDoesNotExistInSysTables = (result == 0);
+                        });
                     if (databaseDoesNotExistInSysTables)
                     {
                         return false;
@@ -1007,13 +1020,13 @@ namespace System.Data.Entity.SqlServer
             var databaseExistsInSysTables = false;
             UsingMasterConnection(
                 sqlConnection, conn =>
-                                   {
-                                       var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                       var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
-                                           databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                                       var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                                       databaseExistsInSysTables = (result > 0);
-                                   });
+                {
+                    var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                    var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
+                        databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                    var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
+                    databaseExistsInSysTables = (result > 0);
+                });
             return databaseExistsInSysTables;
         }
 
@@ -1055,20 +1068,20 @@ namespace System.Data.Entity.SqlServer
                 var databaseNames = new List<string>();
                 UsingMasterConnection(
                     sqlConnection, conn =>
-                                       {
-                                           var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                           var getDatabaseNamesScript =
-                                               SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
-                                                   fullFileName, sqlVersion == SqlVersion.Sql8);
-                                           var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
-                                           using (var reader = command.ExecuteReader())
-                                           {
-                                               while (reader.Read())
-                                               {
-                                                   databaseNames.Add(reader.GetString(0));
-                                               }
-                                           }
-                                       });
+                    {
+                        var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                        var getDatabaseNamesScript =
+                            SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
+                                fullFileName, sqlVersion == SqlVersion.Sql8);
+                        var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                databaseNames.Add(reader.GetString(0));
+                            }
+                        }
+                    });
                 if (databaseNames.Count > 0)
                 {
                     foreach (var databaseName in databaseNames)
@@ -1081,7 +1094,7 @@ namespace System.Data.Entity.SqlServer
                     throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);
                 }
             }
-                // neither initial catalog nor attachDB file name are specified
+            // neither initial catalog nor attachDB file name are specified
             else
             {
                 throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
@@ -1151,10 +1164,10 @@ namespace System.Data.Entity.SqlServer
         private static void UsingMasterConnection(SqlConnection sqlConnection, Action<SqlConnection> act)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString)
-                                        {
-                                            InitialCatalog = "master",
-                                            AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
-                                        };
+            {
+                InitialCatalog = "master",
+                AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
+            };
 
             try
             {

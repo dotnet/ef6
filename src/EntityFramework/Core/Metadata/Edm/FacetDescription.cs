@@ -8,9 +8,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Class for representing a FacetDescription object
     /// </summary>
-    public sealed class FacetDescription
+    public class FacetDescription
     {
         #region Constructors
+
+        internal FacetDescription()
+        {
+        }
 
         internal FacetDescription(
             string facetName,
@@ -112,7 +116,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets the name of this facet
         /// </summary>
-        public string FacetName
+        public virtual string FacetName
         {
             get { return _facetName; }
         }
@@ -159,7 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Gets whether the value of this facet must be constant
         /// </summary>
-        public bool IsConstant
+        public virtual bool IsConstant
         {
             get { return _isConstant; }
         }

@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -510,7 +511,7 @@ namespace System.Data.Entity.SqlServer
 
         internal object ConvertToSqlTypesGeography(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Contract.Requires(geographyValue != null);
             var result = GetSqlTypesSpatialValue(geographyValue.AsSpatialValue(), SqlGeographyType);
             return result;
         }
@@ -529,7 +530,8 @@ namespace System.Data.Entity.SqlServer
 
         internal object ConvertToSqlTypesGeometry(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            Contract.Requires(geometryValue != null);
+
             var result = GetSqlTypesSpatialValue(geometryValue.AsSpatialValue(), SqlGeometryType);
             return result;
         }

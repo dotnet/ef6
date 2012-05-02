@@ -4,18 +4,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading;
 
     /// <summary>
     /// Represents the Edm Row Type
     /// </summary>
-    public sealed class RowType : StructuralType
+    public class RowType : StructuralType
     {
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
         private readonly InitializerMetadata _initializerMetadata;
 
         #region Constructors
+
+        internal RowType()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of RowType class with the given list of members
@@ -30,6 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Initializes a RowType with the given members and initializer metadata 
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal RowType(IEnumerable<EdmProperty> properties, InitializerMetadata initializerMetadata)
             : base(
                 GetRowTypeIdentityFromProperties(CheckProperties(properties), initializerMetadata), EdmConstants.TransientNamespace,
@@ -79,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns just the properties from the collection
         /// of members on this type
         /// </summary>
-        public ReadOnlyMetadataCollection<EdmProperty> Properties
+        public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
             get
             {

@@ -230,4 +230,25 @@
   <data name="SqlGen_ParameterForSkipNotSupportedOnSql8" xml:space="preserve">
     <value>Parameters as arguments to a SKIP sub-clause in a query, or a SkipExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005.</value>
   </data>
+  <data name="Spatial_WellKnownGeographyValueNotValid" xml:space="preserve">
+    <value>The specified DbWellKnownGeographyValue does not contain either Well-Known Text or Well-Known Binary.</value>
+  </data>
+  <data name="Spatial_WellKnownGeometryValueNotValid" xml:space="preserve">
+    <value>The specified DbWellKnownGeometryValue does not contain either Well-Known Text or Well-Known Binary.</value>
+  </data>
+  <data name="SqlSpatialServices_ProviderValueNotSqlType" xml:space="preserve">
+    <value>The specified provider value is not compatible with this spatial services implementation. A value is required of type '{0}'.</value>
+  </data>
+  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid" xml:space="preserve">
+    <value>A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeography value.</value>
+  </data>
+  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt" xml:space="preserve">
+    <value>The specified DbGeography value did not provide either Well-Known Binary or Well-Known Text.</value>
+  </data>
+  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid" xml:space="preserve">
+    <value>A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeometry value.</value>
+  </data>
+  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt" xml:space="preserve">
+    <value>The specified DbGeometry value did not provide either Well-Known Binary or Well-Known Text.</value>
+  </data>
 </root>

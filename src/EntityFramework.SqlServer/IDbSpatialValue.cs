@@ -4,6 +4,8 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.Utilities;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Adapter interface to make working with instances of <see cref="DbGeometry"/> or <see cref="DbGeography"/> easier.  
@@ -16,7 +18,6 @@ namespace System.Data.Entity.SqlServer
     internal interface IDbSpatialValue
     {
         bool IsGeography { get; }
-        PrimitiveTypeKind PrimitiveType { get; }
         object ProviderValue { get; }
         int? CoordinateSystemId { get; }
         string WellKnownText { get; }
@@ -36,10 +37,8 @@ namespace System.Data.Entity.SqlServer
         /// <returns>An instance of <see cref="IDbSpatialValue"/> that wraps the specified geography value</returns>
         internal static IDbSpatialValue AsSpatialValue(this DbGeography geographyValue)
         {
-            if (geographyValue == null)
-            {
-                return null;
-            }
+            Contract.Requires(geographyValue != null);
+
             return new DbGeographyAdapter(geographyValue);
         }
 
@@ -51,46 +50,21 @@ namespace System.Data.Entity.SqlServer
         /// <returns>An instance of <see cref="IDbSpatialValue"/> that wraps the specified geometry value</returns>
         internal static IDbSpatialValue AsSpatialValue(this DbGeometry geometryValue)
         {
-            if (geometryValue == null)
-            {
-                return null;
-            }
+            Contract.Requires(geometryValue != null);
+
             return new DbGeometryAdapter(geometryValue);
         }
     }
 
-    internal struct DbGeographyAdapter : IDbSpatialValue
+    internal class DbGeographyAdapter : IDbSpatialValue
     {
-        private readonly DbGeography value;
+        private readonly DbGeography _value;
 
-        internal DbGeographyAdapter(DbGeography geomValue)
+        internal DbGeographyAdapter(DbGeography value)
         {
-            value = geomValue;
-        }
+            Contract.Requires(value != null);
 
-        private TResult NullIfNotImplemented<TResult>(Func<DbGeography, TResult> accessor)
-            where TResult : class
-        {
-            try
-            {
-                return accessor(value);
-            }
-            catch (NotImplementedException)
-            {
-                return null;
-            }
-        }
-
-        private int? NullIfNotImplemented(Func<DbGeography, int> accessor)
-        {
-            try
-            {
-                return accessor(value);
-            }
-            catch (NotImplementedException)
-            {
-                return null;
-            }
+            _value = value;
         }
 
         public bool IsGeography
@@ -98,39 +72,33 @@ namespace System.Data.Entity.SqlServer
             get { return true; }
         }
 
-        public PrimitiveTypeKind PrimitiveType
-        {
-            get { return PrimitiveTypeKind.Geography; }
-        }
-
         public object ProviderValue
         {
-            get { return NullIfNotImplemented(geog => geog.ProviderValue); }
+            get { return FuncExtensions.NullIfNotImplemented(() => _value.ProviderValue); }
         }
 
         public int? CoordinateSystemId
         {
-            get { return NullIfNotImplemented(geog => geog.CoordinateSystemId); }
+            get { return FuncExtensions.NullIfNotImplemented<int?>(() => _value.CoordinateSystemId); }
         }
 
         public string WellKnownText
         {
             get
             {
-                return NullIfNotImplemented(geog => geog.AsTextIncludingElevationAndMeasure())
-                       ?? NullIfNotImplemented(geog => geog.AsText());
-                    // better than nothing if the provider doesn't support AsTextIncludingElevationAndMeasure
+                return FuncExtensions.NullIfNotImplemented(() => _value.Provider.AsTextIncludingElevationAndMeasure(_value))
+                       ?? FuncExtensions.NullIfNotImplemented(() => _value.AsText());
             }
         }
 
         public byte[] WellKnownBinary
         {
-            get { return NullIfNotImplemented(geog => geog.AsBinary()); }
+            get { return FuncExtensions.NullIfNotImplemented(() => _value.AsBinary()); }
         }
 
         public string GmlString
         {
-            get { return NullIfNotImplemented(geog => geog.AsGml()); }
+            get { return FuncExtensions.NullIfNotImplemented(() => _value.AsGml()); }
         }
 
         public Exception NotSqlCompatible()
@@ -139,38 +107,15 @@ namespace System.Data.Entity.SqlServer
         }
     }
 
-    internal struct DbGeometryAdapter : IDbSpatialValue
+    internal class DbGeometryAdapter : IDbSpatialValue
     {
-        private readonly DbGeometry value;
+        private readonly DbGeometry _value;
 
-        internal DbGeometryAdapter(DbGeometry geomValue)
+        internal DbGeometryAdapter(DbGeometry value)
         {
-            value = geomValue;
-        }
+            Contract.Requires(value != null);
 
-        private TResult NullIfNotImplemented<TResult>(Func<DbGeometry, TResult> accessor)
-            where TResult : class
-        {
-            try
-            {
-                return accessor(value);
-            }
-            catch (NotImplementedException)
-            {
-                return null;
-            }
-        }
-
-        private int? NullIfNotImplemented(Func<DbGeometry, int> accessor)
-        {
-            try
-            {
-                return accessor(value);
-            }
-            catch (NotImplementedException)
-            {
-                return null;
-            }
+            _value = value;
         }
 
         public bool IsGeography
@@ -178,39 +123,33 @@ namespace System.Data.Entity.SqlServer
             get { return false; }
         }
 
-        public PrimitiveTypeKind PrimitiveType
-        {
-            get { return PrimitiveTypeKind.Geometry; }
-        }
-
         public object ProviderValue
         {
-            get { return NullIfNotImplemented(geom => geom.ProviderValue); }
+            get { return FuncExtensions.NullIfNotImplemented(() => _value.ProviderValue); }
         }
 
         public int? CoordinateSystemId
         {
-            get { return NullIfNotImplemented(geom => geom.CoordinateSystemId); }
+            get { return FuncExtensions.NullIfNotImplemented<int?>(() => _value.CoordinateSystemId); }
         }
 
         public string WellKnownText
         {
             get
             {
-                return NullIfNotImplemented(geom => geom.AsTextIncludingElevationAndMeasure())
-                       ?? NullIfNotImplemented(geom => geom.AsText());
-                    // better than nothing if the provider doesn't support AsTextIncludingElevationAndMeasure
+                return FuncExtensions.NullIfNotImplemented(() => _value.Provider.AsTextIncludingElevationAndMeasure(_value))
+                       ?? FuncExtensions.NullIfNotImplemented(() => _value.AsText());
             }
         }
 
         public byte[] WellKnownBinary
         {
-            get { return NullIfNotImplemented(geom => geom.AsBinary()); }
+            get { return FuncExtensions.NullIfNotImplemented(() => _value.AsBinary()); }
         }
 
         public string GmlString
         {
-            get { return NullIfNotImplemented(geom => geom.AsGml()); }
+            get { return FuncExtensions.NullIfNotImplemented(() => _value.AsGml()); }
         }
 
         public Exception NotSqlCompatible()

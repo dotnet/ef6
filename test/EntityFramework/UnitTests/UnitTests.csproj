@@ -93,7 +93,6 @@
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
-
     <Compile Include="Core\Common\CommandTrees\BasicExpressionVisitorTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionRebinderTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DefaultExpressionVisitorTests.cs" />
@@ -154,10 +153,18 @@
     <Compile Include="Migrations\Sql\SqlServerMigrationSqlGeneratorTests.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdaterTests.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreatorTests.cs" />
+    <Compile Include="Spatial\DbGeographyTests.cs" />
+    <Compile Include="Spatial\DbGeometryTests.cs" />
+    <Compile Include="SqlServer\IDbSpatialValueTests.cs" />
     <Compile Include="SqlServer\SqlGen\DmlSqlGeneratorTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlFunctionCallHandlerTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlGeneratorTests.cs" />
+    <Compile Include="SqlServer\SqlSpatialServicesTests.cs" />
+    <Compile Include="SqlServer\Utilities\EdmFunctionExtensionsTests.cs" />
+    <Compile Include="SqlServer\Utilities\FuncExtensionsTests.cs" />
     <Compile Include="SqlServer\Utilities\IDictionaryExtensionsTests.cs" />
+    <Compile Include="SqlServer\Utilities\PrimitiveTypeExtensionsTests.cs" />
+    <Compile Include="SqlServer\Utilities\TypeUsageExtensionsTests.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerLinqIntegrationTests.cs" />
     <Compile Include="Utilities\DynamicEqualityComparerTests.cs" />
     <Compile Include="Migrations\Utilities\EmptyContextTests.cs" />

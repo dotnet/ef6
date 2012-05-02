@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets/Sets the name of the facet
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public String Name
+        public virtual String Name
         {
             get { return _facetDescription.FacetName; }
         }

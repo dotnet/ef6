@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Returns just the properties from the collection
         /// of members on this type
         /// </summary>
-        public ReadOnlyMetadataCollection<EdmProperty> Properties
+        public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
             get
             {

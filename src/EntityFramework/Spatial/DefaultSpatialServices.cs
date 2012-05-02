@@ -1,6 +1,6 @@
 namespace System.Data.Entity.Spatial
 {
-    using System.Data.Entity.Spatial.Internal;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Spatial
             var expectedValue = providerValue as ReadOnlySpatialValues;
             if (expectedValue == null)
             {
-                throw SpatialExceptions.ProviderValueNotCompatibleWithSpatialServices();
+                throw new ArgumentException(Strings.Spatial_ProviderValueNotCompatibleWithSpatialServices, "providerValue");
             }
             return expectedValue;
         }
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Spatial
                     return expectedValue;
                 }
             }
-            throw SpatialExceptions.GeographyValueNotCompatibleWithSpatialServices("geographyValue");
+            throw new ArgumentException(Strings.Spatial_GeographyValueNotCompatibleWithSpatialServices, "geographyValue");
         }
 
         private static ReadOnlySpatialValues CheckCompatible(DbGeometry geometryValue)
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Spatial
                     return expectedValue;
                 }
             }
-            throw SpatialExceptions.GeometryValueNotCompatibleWithSpatialServices("geometryValue");
+            throw new ArgumentException(Strings.Spatial_GeometryValueNotCompatibleWithSpatialServices, "geometryValue");
         }
 
         #region Geography API
@@ -119,11 +119,11 @@ namespace System.Data.Entity.Spatial
             geographyValue.CheckNull("geographyValue");
             var backingValue = CheckCompatible(geographyValue);
             return new DbGeographyWellKnownValue
-                       {
-                           CoordinateSystemId = backingValue.CoordinateSystemId,
-                           WellKnownBinary = backingValue.CloneBinary(),
-                           WellKnownText = backingValue.Text
-                       };
+            {
+                CoordinateSystemId = backingValue.CoordinateSystemId,
+                WellKnownBinary = backingValue.CloneBinary(),
+                WellKnownText = backingValue.Text
+            };
         }
 
         #region Static Constructors - Well Known Binary (WKB)
@@ -479,11 +479,11 @@ namespace System.Data.Entity.Spatial
             geometryValue.CheckNull("geometryValue");
             var backingValue = CheckCompatible(geometryValue);
             return new DbGeometryWellKnownValue
-                       {
-                           CoordinateSystemId = backingValue.CoordinateSystemId,
-                           WellKnownBinary = backingValue.CloneBinary(),
-                           WellKnownText = backingValue.Text
-                       };
+            {
+                CoordinateSystemId = backingValue.CoordinateSystemId,
+                WellKnownBinary = backingValue.CloneBinary(),
+                WellKnownText = backingValue.Text
+            };
         }
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)

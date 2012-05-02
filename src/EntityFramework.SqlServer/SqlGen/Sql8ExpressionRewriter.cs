@@ -6,8 +6,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
 
     /// <summary>
     /// Rewrites an expression tree to make it suitable for translation to SQL appropriate for SQL Server 2000
@@ -299,22 +301,22 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="flattenedProperties"></param>
         private void FlattenProperties(DbExpression input, IList<DbPropertyExpression> flattenedProperties)
         {
-            IList<EdmProperty> properties = TypeHelpers.GetProperties(input.ResultType);
-            Debug.Assert(properties.Count != 0, "No nested properties when FlattenProperties called?");
+            var properties = input.ResultType.GetProperties();
+            Debug.Assert(properties.Any(), "No nested properties when FlattenProperties called?");
 
-            for (var i = 0; i < properties.Count; i++)
+            foreach (var property in properties)
             {
                 var propertyInput = input;
 
-                var propertyExpression = propertyInput.Property(properties[i]);
-                if (TypeSemantics.IsPrimitiveType(properties[i].TypeUsage))
+                var propertyExpression = propertyInput.Property(property);
+                if (BuiltInTypeKind.PrimitiveType == property.TypeUsage.EdmType.BuiltInTypeKind)
                 {
                     flattenedProperties.Add(propertyExpression);
                 }
                 else
                 {
                     Debug.Assert(
-                        TypeSemantics.IsEntityType(properties[i].TypeUsage) || TypeSemantics.IsRowType(properties[i].TypeUsage),
+                        BuiltInTypeKind.EntityType == property.TypeUsage.EdmType.BuiltInTypeKind || BuiltInTypeKind.RowType == property.TypeUsage.EdmType.BuiltInTypeKind,
                         "The input to FlattenProperties is not of EntityType or RowType?");
 
                     FlattenProperties(propertyExpression, flattenedProperties);

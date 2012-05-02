@@ -1,19 +1,25 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
     /// Represents the Edm Collection Type
     /// </summary>
-    public sealed class CollectionType : EdmType
+    public class CollectionType : EdmType
     {
         #region Constructors
+
+        internal CollectionType()
+        {
+        }
 
         /// <summary>
         /// The constructor for constructing a CollectionType object with the element type it contains
         /// </summary>
         /// <param name="elementType">The element type that this collection type contains</param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal CollectionType(EdmType elementType)
             : this(TypeUsage.Create(elementType))
         {
@@ -25,6 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="elementType">The element type that this collection type contains</param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal CollectionType(TypeUsage elementType)
             : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(elementType, "elementType")),
                 EdmConstants.TransientNamespace, elementType.EdmType.DataSpace)
@@ -55,7 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// The type of the element that this collection type contains
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
-        public TypeUsage TypeUsage
+        public virtual TypeUsage TypeUsage
         {
             get { return _typeUsage; }
         }

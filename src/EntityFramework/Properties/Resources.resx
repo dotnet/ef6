@@ -5184,29 +5184,8 @@
   <data name="Spatial_ProviderValueNotCompatibleWithSpatialServices" xml:space="preserve">
     <value>The specified provider value is not compatible with this spatial services implementation.</value>
   </data>
-  <data name="Spatial_WellKnownGeographyValueNotValid" xml:space="preserve">
-    <value>The specified DbWellKnownGeographyValue does not contain either Well-Known Text or Well-Known Binary.</value>
-  </data>
-  <data name="Spatial_WellKnownGeometryValueNotValid" xml:space="preserve">
-    <value>The specified DbWellKnownGeometryValue does not contain either Well-Known Text or Well-Known Binary.</value>
-  </data>
   <data name="Spatial_WellKnownValueSerializationPropertyNotDirectlySettable" xml:space="preserve">
     <value>The WellKnownValue property is intended to support serialization and deserialization and should not be set directly.</value>
-  </data>
-  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid" xml:space="preserve">
-    <value>A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeography value.</value>
-  </data>
-  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt" xml:space="preserve">
-    <value>The specified DbGeography value did not provide either Well-Known Binary or Well-Known Text.</value>
-  </data>
-  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid" xml:space="preserve">
-    <value>A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeometry value.</value>
-  </data>
-  <data name="SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt" xml:space="preserve">
-    <value>The specified DbGeometry value did not provide either Well-Known Binary or Well-Known Text.</value>
-  </data>
-  <data name="SqlSpatialServices_ProviderValueNotSqlType" xml:space="preserve">
-    <value>The specified provider value is not compatible with this spatial services implementation. A value is required of type '{0}'.</value>
   </data>
   <data name="EntityConnectionString_Name" xml:space="preserve">
     <value>The connection name in the connection string.</value>

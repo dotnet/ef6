@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// List of item attributes on this type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.MetadataProperty, true)]
-        public ReadOnlyMetadataCollection<MetadataProperty> MetadataProperties
+        public virtual ReadOnlyMetadataCollection<MetadataProperty> MetadataProperties
         {
             get
             {

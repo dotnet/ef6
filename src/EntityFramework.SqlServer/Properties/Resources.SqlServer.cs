@@ -307,6 +307,62 @@ namespace System.Data.Entity.SqlServer.Resources
         {
             get { return EntityRes.GetString(EntityRes.SqlGen_ParameterForSkipNotSupportedOnSql8); }
         }
+
+        /// <summary>
+        /// A string like "The specified DbWellKnownGeographyValue does not contain either Well-Known Text or Well-Known Binary."
+        /// </summary>
+        internal static string Spatial_WellKnownGeographyValueNotValid
+        {
+            get { return EntityRes.GetString(EntityRes.Spatial_WellKnownGeographyValueNotValid); }
+        }
+
+        /// <summary>
+        /// A string like "The specified DbWellKnownGeometryValue does not contain either Well-Known Text or Well-Known Binary."
+        /// </summary>
+        internal static string Spatial_WellKnownGeometryValueNotValid
+        {
+            get { return EntityRes.GetString(EntityRes.Spatial_WellKnownGeometryValueNotValid); }
+        }
+
+        /// <summary>
+        /// A string like "The specified provider value is not compatible with this spatial services implementation. A value is required of type '{0}'."
+        /// </summary>
+        internal static string SqlSpatialServices_ProviderValueNotSqlType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.SqlSpatialServices_ProviderValueNotSqlType, p0);
+        }
+
+        /// <summary>
+        /// A string like "A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeography value."
+        /// </summary>
+        internal static string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid
+        {
+            get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid); }
+        }
+
+        /// <summary>
+        /// A string like "The specified DbGeography value did not provide either Well-Known Binary or Well-Known Text."
+        /// </summary>
+        internal static string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt
+        {
+            get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt); }
+        }
+
+        /// <summary>
+        /// A string like "A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeometry value."
+        /// </summary>
+        internal static string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid
+        {
+            get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid); }
+        }
+
+        /// <summary>
+        /// A string like "The specified DbGeometry value did not provide either Well-Known Binary or Well-Known Text."
+        /// </summary>
+        internal static string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt
+        {
+            get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt); }
+        }
     } 
 
     /// <summary>
@@ -408,6 +464,13 @@ namespace System.Data.Entity.SqlServer.Resources
         internal const string SqlGen_CanonicalFunctionNotSupportedPriorSql10 = "SqlGen_CanonicalFunctionNotSupportedPriorSql10";
         internal const string SqlGen_ParameterForLimitNotSupportedOnSql8 = "SqlGen_ParameterForLimitNotSupportedOnSql8";
         internal const string SqlGen_ParameterForSkipNotSupportedOnSql8 = "SqlGen_ParameterForSkipNotSupportedOnSql8";
+        internal const string Spatial_WellKnownGeographyValueNotValid = "Spatial_WellKnownGeographyValueNotValid";
+        internal const string Spatial_WellKnownGeometryValueNotValid = "Spatial_WellKnownGeometryValueNotValid";
+        internal const string SqlSpatialServices_ProviderValueNotSqlType = "SqlSpatialServices_ProviderValueNotSqlType";
+        internal const string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid = "SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid";
+        internal const string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt = "SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt";
+        internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid";
+        internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt";
         
         static EntityRes loader = null;
         ResourceManager resources;

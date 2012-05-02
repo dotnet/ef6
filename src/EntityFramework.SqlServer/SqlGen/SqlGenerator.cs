@@ -13,6 +13,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -533,7 +534,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // Literals will not be converted to parameters.
 
             ISqlFragment result;
-            if (TypeSemantics.IsCollectionType(targetTree.Query.ResultType))
+            if (BuiltInTypeKind.CollectionType == targetTree.Query.ResultType.EdmType.BuiltInTypeKind)
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
                 Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
@@ -714,7 +715,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbCastExpression e)
         {
-            if (Helper.IsSpatialType(e.ResultType))
+            if (e.ResultType.IsSpatialType())
             {
                 return e.Argument.Accept(this);
             }
@@ -741,7 +742,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             SqlBuilder result;
 
             // Don't try to optimize the comparison, if one of the sides isn't of type string.
-            if (TypeSemantics.IsPrimitiveType(e.Left.ResultType, PrimitiveTypeKind.String))
+            if (e.Left.ResultType.IsPrimitiveType(PrimitiveTypeKind.String))
             {
                 // Check if the Comparison expression is a candidate for compensation in order to optimize store performance.
                 _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
@@ -764,7 +765,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 case DbExpressionKind.GreaterThanOrEquals:
                     result = VisitComparisonExpression(" >= ", e.Left, e.Right);
                     break;
-                    // The parser does not generate the expression kind below.
+                // The parser does not generate the expression kind below.
                 case DbExpressionKind.NotEquals:
                     result = VisitComparisonExpression(" <> ", e.Left, e.Right);
                     break;
@@ -843,7 +844,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var functionExpr = (DbFunctionExpression)expr;
                 var function = functionExpr.Function;
 
-                if (!TypeHelpers.IsCanonicalFunction(function)
+                if (!function.IsCanonicalFunction()
                     && !SqlFunctionCallHandler.IsStoreFunction(function))
                 {
                     return false;
@@ -883,9 +884,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static bool MatchSourcePatternForForcingNonUnicode(DbExpression argument)
         {
             bool isUnicode;
-            return (argument.ExpressionKind == DbExpressionKind.Property) &&
-                   (TypeHelpers.TryGetIsUnicode(argument.ResultType, out isUnicode)) &&
-                   (!isUnicode);
+            return argument.ExpressionKind == DbExpressionKind.Property &&
+                   argument.ResultType.TryGetIsUnicode(out isUnicode) &&
+                   !isUnicode;
         }
 
         /// <summary>
@@ -899,7 +900,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var expressionKind = argument.ExpressionKind;
             var type = argument.ResultType;
 
-            if (!TypeSemantics.IsPrimitiveType(type, PrimitiveTypeKind.String))
+            if (!type.IsPrimitiveType(PrimitiveTypeKind.String))
             {
                 return false;
             }
@@ -907,7 +908,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return (expressionKind == DbExpressionKind.Constant ||
                     expressionKind == DbExpressionKind.ParameterReference ||
                     expressionKind == DbExpressionKind.Null) &&
-                   (!TypeHelpers.TryGetBooleanFacetValue(type, DbProviderManifest.UnicodeFacetName, out isUnicode));
+                   !type.TryGetFacetValue(DbProviderManifest.UnicodeFacetName, out isUnicode);
         }
 
         /// <summary>
@@ -923,11 +924,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
 
             var resultType = e.ResultType;
-            PrimitiveTypeKind typeKind;
             // Model Types can be (at the time of this implementation):
             //      Binary, Boolean, Byte, Date, DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, Time
-            if (TypeHelpers.TryGetPrimitiveTypeKind(resultType, out typeKind))
+            if (resultType.IsPrimitiveType())
             {
+                var typeKind = resultType.GetPrimitiveTypeKind();
                 switch (typeKind)
                 {
                     case PrimitiveTypeKind.Int32:
@@ -980,7 +981,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         result.Append(
                             EscapeSingleQuote(
                                 ((DateTimeOffset)e.Value).ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture), false
-                                /* IsUnicode */));
+                            /* IsUnicode */));
                         result.Append(", 121)");
                         break;
 
@@ -1038,7 +1039,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     case PrimitiveTypeKind.String:
                         bool isUnicode;
 
-                        if (!TypeHelpers.TryGetIsUnicode(e.ResultType, out isUnicode))
+                        if (!e.ResultType.TryGetIsUnicode(out isUnicode))
                         {
                             // If the unicode facet is not specified, if needed force non-unicode, otherwise default to unicode.
                             isUnicode = !_forceNonUnicode;
@@ -1063,6 +1064,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private void AppendSpatialConstant(SqlBuilder result, IDbSpatialValue spatialValue)
         {
+            Contract.Requires(result != null);
+            Contract.Requires(spatialValue != null);
+
             // Spatial constants are represented by calls to a static constructor function. The attempt is made to extract an
             // appropriate representation from the value (which may not implement the required methods). If an SRID value and
             // a text, binary or GML representation of the spatial value can be extracted, the the corresponding function call
@@ -1215,7 +1219,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             if (!IsCompatible(result, e.ExpressionKind))
             {
                 Symbol fromSymbol;
-                var inputType = TypeHelpers.GetElementTypeUsage(e.Argument.ResultType);
+                var inputType = e.Argument.ResultType.GetElementTypeUsage();
                 result = CreateNewSelectStatement(result, "distinct", inputType, out fromSymbol);
                 AddFromSymbol(result, "distinct", fromSymbol, false);
             }
@@ -1470,7 +1474,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             // The enumerator is shared by both the keys and the aggregates,
             // so, we do not close it in between.
-            var groupByType = TypeHelpers.GetEdmType<RowType>(TypeHelpers.GetEdmType<CollectionType>(e.ResultType).TypeUsage);
+            var groupByType = (RowType)((CollectionType)e.ResultType.EdmType).TypeUsage.EdmType;
 
             //SQL Server does not support arbitrarily complex expressions inside aggregates, 
             // and requires keys to have reference to the input scope, 
@@ -1740,7 +1744,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             if (!IsCompatible(result, e.ExpressionKind))
             {
-                var inputType = TypeHelpers.GetElementTypeUsage(e.Argument.ResultType);
+                var inputType = e.Argument.ResultType.GetElementTypeUsage();
 
                 result = CreateNewSelectStatement(result, "top", inputType, out fromSymbol);
                 AddFromSymbol(result, "top", fromSymbol, false);
@@ -1765,7 +1769,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbNewInstanceExpression e)
         {
-            if (TypeSemantics.IsCollectionType(e.ResultType))
+            if (BuiltInTypeKind.CollectionType == e.ResultType.EdmType.BuiltInTypeKind)
             {
                 return VisitCollectionConstructor(e);
             }
@@ -1813,7 +1817,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 {
                     var forceNonUnicodeLocal = _forceNonUnicode; // Save flag
                     // Don't try to optimize the comparison, if one of the sides isn't of type string.
-                    if (TypeSemantics.IsPrimitiveType(comparisonExpression.Left.ResultType, PrimitiveTypeKind.String))
+                    if (comparisonExpression.Left.ResultType.IsPrimitiveType(PrimitiveTypeKind.String))
                     {
                         _forceNonUnicode = CheckIfForceNonUnicodeRequired(comparisonExpression);
                     }
@@ -1848,7 +1852,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // Use the narrowest type possible - especially for strings where we don't want 
             // to produce unicode strings always.
             //
-            Debug.Assert(Helper.IsPrimitiveType(type.EdmType), "Type must be primitive type");
+            Debug.Assert(BuiltInTypeKind.PrimitiveType == type.EdmType.BuiltInTypeKind, "Type must be primitive type");
             var primitiveType = type.EdmType as PrimitiveType;
             switch (primitiveType.PrimitiveTypeKind)
             {
@@ -1898,7 +1902,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         internal static IDictionary<DbExpression, IList<DbExpression>> HasBuiltMapForIn(DbOrExpression expression)
         {
             var map = new Dictionary<DbExpression, IList<DbExpression>>(new KeyFieldExpressionComparer());
-            
+
             // Note that map may not be empty even if HasBuiltMapForIn below returns false, but if
             // it does return true then map is known to be not empty.
             return HasBuiltMapForIn(expression, map) ? map : null;
@@ -1944,7 +1948,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 //
                 var forceNonUnicodeOnQualifyingValues = false;
                 var forceNonUnicodeOnKey = false;
-                if (TypeSemantics.IsPrimitiveType(key.ResultType, PrimitiveTypeKind.String))
+                if (key.ResultType.IsPrimitiveType(PrimitiveTypeKind.String))
                 {
                     forceNonUnicodeOnQualifyingValues = MatchSourcePatternForForcingNonUnicode(key);
                     forceNonUnicodeOnKey = !forceNonUnicodeOnQualifyingValues && MatchTargetPatternForForcingNonUnicode(key)
@@ -2673,7 +2677,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             //The only aggregate function with different name is Big_Count
             //Note: If another such function is to be added, a dictionary should be created
-            if (TypeHelpers.IsCanonicalFunction(functionAggregate.Function)
+            if (functionAggregate.Function.IsCanonicalFunction()
                 && String.Equals(functionAggregate.Function.Name, "BigCount", StringComparison.Ordinal))
             {
                 aggregateResult.Append("COUNT_BIG");
@@ -2790,17 +2794,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 expression,
                 exp => exp.ExpressionKind != expressionKind,
                 exp =>
+                {
+                    //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
+                    // a DbArithmeticExpression with 2 arguments.
+                    var binaryExpression = exp as DbBinaryExpression;
+                    if (binaryExpression != null)
                     {
-                        //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
-                        // a DbArithmeticExpression with 2 arguments.
-                        var binaryExpression = exp as DbBinaryExpression;
-                        if (binaryExpression != null)
-                        {
-                            return new[] { binaryExpression.Left, binaryExpression.Right };
-                        }
-                        var arithmeticExpression = (DbArithmeticExpression)exp;
-                        return arithmeticExpression.Arguments;
+                        return new[] { binaryExpression.Left, binaryExpression.Right };
                     }
+                    var arithmeticExpression = (DbArithmeticExpression)exp;
+                    return arithmeticExpression.Arguments;
+                }
                 );
 
             argumentList.AddRange(result);
@@ -2940,7 +2944,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 if (!IsCompatible(result, DbExpressionKind.Element))
                 {
                     Symbol fromSymbol;
-                    var inputType = TypeHelpers.GetElementTypeUsage(elementExpr.Argument.ResultType);
+                    var inputType = elementExpr.Argument.ResultType.GetElementTypeUsage();
 
                     result = CreateNewSelectStatement(result, "element", inputType, out fromSymbol);
                     AddFromSymbol(result, "element", fromSymbol, false);
@@ -2950,9 +2954,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             // Otherwise simply build this out as a union-all ladder
-            var collectionType = TypeHelpers.GetEdmType<CollectionType>(e.ResultType);
+            var collectionType = (CollectionType)e.ResultType.EdmType;
             Debug.Assert(collectionType != null);
-            var isScalarElement = TypeSemantics.IsPrimitiveType(collectionType.TypeUsage);
+            var isScalarElement = BuiltInTypeKind.PrimitiveType == collectionType.TypeUsage.EdmType.BuiltInTypeKind;
 
             var resultSql = new SqlBuilder();
             var separator = "";
@@ -3293,7 +3297,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 for (var i = 0; i < e.Arguments.Count; ++i)
                 {
                     var argument = e.Arguments[i];
-                    if (TypeSemantics.IsRowType(argument.ResultType))
+                    if (BuiltInTypeKind.RowType == argument.ResultType.EdmType.BuiltInTypeKind)
                     {
                         // We do not support nested records or other complex objects.
                         throw new NotSupportedException();
@@ -3372,7 +3376,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 selectStatement.From.AppendLine();
                 selectStatement.From.Append(") ");
 
-                var fromSymbol = new Symbol("X", TypeHelpers.GetElementTypeUsage(left.ResultType), leftSelectStatement.OutputColumns, true);
+                var fromSymbol = new Symbol("X", left.ResultType.GetElementTypeUsage(), leftSelectStatement.OutputColumns, true);
                 AddFromSymbol(selectStatement, null, fromSymbol, false);
 
                 return selectStatement;
@@ -3427,7 +3431,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         // if sym is ScalarType means we are at base case in the
                         // recursion and there are not columns to add, just skip
                         if ((sym.Type == null)
-                            || TypeSemantics.IsPrimitiveType(sym.Type))
+                            || BuiltInTypeKind.PrimitiveType == sym.Type.EdmType.BuiltInTypeKind)
                         {
                             continue;
                         }
@@ -3504,13 +3508,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
 
                 if ((symbol.Type == null)
-                    || TypeSemantics.IsPrimitiveType(symbol.Type))
+                    || BuiltInTypeKind.PrimitiveType == symbol.Type.EdmType.BuiltInTypeKind)
                 {
                     AddColumn(selectStatement, symbol, columnList, columnDictionary, "X");
                 }
                 else
                 {
-                    foreach (var property in TypeHelpers.GetProperties(symbol.Type))
+                    foreach (var property in symbol.Type.GetProperties())
                     {
                         AddColumn(selectStatement, symbol, columnList, columnDictionary, property.Name);
                     }
@@ -3851,7 +3855,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         internal static string GenerateSqlForStoreType(SqlVersion sqlVersion, TypeUsage storeTypeUsage)
         {
-            Debug.Assert(Helper.IsPrimitiveType(storeTypeUsage.EdmType), "Type must be primitive type");
+            Debug.Assert(BuiltInTypeKind.PrimitiveType == storeTypeUsage.EdmType.BuiltInTypeKind, "Type must be primitive type");
 
             var typeName = storeTypeUsage.EdmType.Name;
             var hasFacet = false;
@@ -3864,18 +3868,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
             switch (primitiveTypeKind)
             {
                 case PrimitiveTypeKind.Binary:
-                    if (!TypeHelpers.IsFacetValueConstant(storeTypeUsage, DbProviderManifest.MaxLengthFacetName))
+                    if (!storeTypeUsage.MustFacetBeConstant(DbProviderManifest.MaxLengthFacetName))
                     {
-                        hasFacet = TypeHelpers.TryGetMaxLength(storeTypeUsage, out maxLength);
+                        hasFacet = storeTypeUsage.TryGetMaxLength(out maxLength);
                         Debug.Assert(hasFacet, "Binary type did not have MaxLength facet");
                         typeName = typeName + "(" + maxLength.ToString(CultureInfo.InvariantCulture) + ")";
                     }
                     break;
 
                 case PrimitiveTypeKind.String:
-                    if (!TypeHelpers.IsFacetValueConstant(storeTypeUsage, DbProviderManifest.MaxLengthFacetName))
+                    if (!storeTypeUsage.MustFacetBeConstant(DbProviderManifest.MaxLengthFacetName))
                     {
-                        hasFacet = TypeHelpers.TryGetMaxLength(storeTypeUsage, out maxLength);
+                        hasFacet = storeTypeUsage.TryGetMaxLength(out maxLength);
                         Debug.Assert(hasFacet, "String type did not have MaxLength facet");
                         typeName = typeName + "(" + maxLength.ToString(CultureInfo.InvariantCulture) + ")";
                     }
@@ -3894,12 +3898,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     break;
 
                 case PrimitiveTypeKind.Decimal:
-                    if (!TypeHelpers.IsFacetValueConstant(storeTypeUsage, DbProviderManifest.PrecisionFacetName))
+                    if (!storeTypeUsage.MustFacetBeConstant(DbProviderManifest.PrecisionFacetName))
                     {
-                        hasFacet = TypeHelpers.TryGetPrecision(storeTypeUsage, out decimalPrecision);
+                        hasFacet = storeTypeUsage.TryGetPrecision(out decimalPrecision);
                         Debug.Assert(hasFacet, "decimal must have precision facet");
                         Debug.Assert(decimalPrecision > 0, "decimal precision must be greater than zero");
-                        hasFacet = TypeHelpers.TryGetScale(storeTypeUsage, out decimalScale);
+                        hasFacet = storeTypeUsage.TryGetScale(out decimalScale);
                         Debug.Assert(hasFacet, "decimal must have scale facet");
                         Debug.Assert(decimalPrecision >= decimalScale, "decimalPrecision must be greater or equal to decimalScale");
                         typeName = typeName + "(" + decimalPrecision + "," + decimalScale + ")";
@@ -4005,9 +4009,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 case DbExpressionKind.Distinct:
                     return result.Select.Top == null
-                           // #494803: The projection after distinct may not project all 
-                           // columns used in the Order By
-                           // Improvement: Consider getting rid of the Order By instead
+                        // #494803: The projection after distinct may not project all 
+                        // columns used in the Order By
+                        // Improvement: Consider getting rid of the Order By instead
                            && result.OrderBy.IsEmpty;
 
                 case DbExpressionKind.Filter:
@@ -4033,8 +4037,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     // a subset of the input columns
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
-                           // SQLBUDT #513640 - If distinct is specified, the projection may affect
-                           // the cardinality of the results, thus a new statement must be started.
+                        // SQLBUDT #513640 - If distinct is specified, the projection may affect
+                        // the cardinality of the results, thus a new statement must be started.
                            && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Skip:
@@ -4047,10 +4051,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
                            && result.OrderBy.IsEmpty
-                           // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
-                           // to be in the same statement as the Sort (see comment above for the Project case).
-                           // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
-                           // we need to start a new statement. 
+                        // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
+                        // to be in the same statement as the Sort (see comment above for the Project case).
+                        // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
+                        // we need to start a new statement. 
                            && !result.Select.IsDistinct;
 
                 default:
@@ -4109,7 +4113,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private SqlSelectStatement VisitExpressionEnsureSqlStatement(
             DbExpression e, bool addDefaultColumns, bool markAllDefaultColumnsAsUsed)
         {
-            Debug.Assert(TypeSemantics.IsCollectionType(e.ResultType));
+            Debug.Assert(BuiltInTypeKind.CollectionType == e.ResultType.EdmType.BuiltInTypeKind);
 
             SqlSelectStatement result;
             switch (e.ExpressionKind)
@@ -4137,12 +4141,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         case DbExpressionKind.CrossApply:
                         case DbExpressionKind.OuterApply:
                             // #490026: It used to be type = e.ResultType. 
-                            type = TypeHelpers.GetElementTypeUsage(e.ResultType);
+                            type = e.ResultType.GetElementTypeUsage();
                             break;
 
                         default:
-                            Debug.Assert(TypeSemantics.IsCollectionType(e.ResultType));
-                            type = TypeHelpers.GetEdmType<CollectionType>(e.ResultType).TypeUsage;
+                            Debug.Assert(BuiltInTypeKind.CollectionType == e.ResultType.EdmType.BuiltInTypeKind);
+                            type = ((CollectionType)e.ResultType.EdmType).TypeUsage;
                             break;
                     }
 

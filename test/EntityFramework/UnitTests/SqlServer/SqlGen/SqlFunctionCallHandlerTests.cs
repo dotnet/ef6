@@ -250,11 +250,17 @@
 
         private static Mock<EdmFunction> CreateMockEdmFunction(string functionName)
         {
+            var mockProperty = new Mock<MetadataProperty>();
+            mockProperty.Setup(m => m.Name).Returns("DataSpace");
+            mockProperty.Setup(m => m.Value).Returns(DataSpace.CSpace);
+            
             var mockEdmFunction = new Mock<EdmFunction>();
             mockEdmFunction.Setup(m => m.FullName).Returns(functionName);
             mockEdmFunction.Setup(m => m.NamespaceName).Returns(functionName.Split('.')[0]);
             mockEdmFunction.Setup(m => m.Name).Returns(functionName.Split('.')[1]);
             mockEdmFunction.Setup(m => m.DataSpace).Returns(DataSpace.CSpace);
+            mockEdmFunction.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
 
             return mockEdmFunction;
         }

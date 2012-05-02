@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets the FacetDescriptions for this type
         /// </summary>
         /// <returns>The FacetDescritions for this type.</returns>
-        public ReadOnlyCollection<FacetDescription> FacetDescriptions
+        public virtual ReadOnlyCollection<FacetDescription> FacetDescriptions
         {
             get { return ProviderManifest.GetFacetDescriptions(this); }
         }

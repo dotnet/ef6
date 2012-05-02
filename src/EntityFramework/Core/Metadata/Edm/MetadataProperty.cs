@@ -5,9 +5,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Class representing a metadata attribute for an item
     /// </summary>
-    public sealed class MetadataProperty : MetadataItem
+    public class MetadataProperty : MetadataItem
     {
         #region Constructors
+
+        internal MetadataProperty()
+        {
+        }
 
         /// <summary>
         /// The constructor for MetadataProperty taking in a name, a TypeUsage object, and a value for the attribute
@@ -83,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Gets/Sets the name of this MetadataProperty
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -97,7 +101,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the MetadataProperty instance is in readonly state</exception>
         [MetadataProperty(typeof(Object), false)]
-        public object Value
+        public virtual object Value
         {
             get
             {

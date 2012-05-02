@@ -9,6 +9,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -56,7 +57,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static readonly Dictionary<string, string> GeometryRenamedInstanceMethodFunctionDictionary =
             InitializeRenamedGeometryInstanceMethodFunctions();
 
-        private static readonly ISet<string> DatepartKeywords = 
+        private static readonly ISet<string> DatepartKeywords =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
                     "year", "yy", "yyyy",
@@ -564,12 +565,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private static ISqlFragment HandleSpatialFromTextFunction(SqlGenerator sqlgen, DbFunctionExpression functionExpression)
         {
-            var functionNameWithSrid = (TypeSemantics.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
-                                            ? "geometry::STGeomFromText"
-                                            : "geography::STGeomFromText");
-            var functionNameWithoutSrid = (TypeSemantics.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
-                                               ? "geometry::Parse"
-                                               : "geography::Parse");
+            var functionNameWithSrid = functionExpression.ResultType.IsPrimitiveType(PrimitiveTypeKind.Geometry)
+                                           ? "geometry::STGeomFromText"
+                                           : "geography::STGeomFromText";
+            var functionNameWithoutSrid = functionExpression.ResultType.IsPrimitiveType(PrimitiveTypeKind.Geometry)
+                                              ? "geometry::Parse"
+                                              : "geography::Parse";
 
             if (functionExpression.Arguments.Count == 2)
             {
@@ -586,18 +587,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             return HandleSpatialStaticMethodFunctionAppendSrid(
                 sqlgen, functionExpression,
-                (TypeSemantics.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
-                     ? "geometry::GeomFromGml"
-                     : "geography::GeomFromGml"));
+                functionExpression.ResultType.IsPrimitiveType(PrimitiveTypeKind.Geometry)
+                    ? "geometry::GeomFromGml"
+                    : "geography::GeomFromGml");
         }
 
         private static ISqlFragment HandleSpatialFromBinaryFunction(SqlGenerator sqlgen, DbFunctionExpression functionExpression)
         {
             return HandleSpatialStaticMethodFunctionAppendSrid(
                 sqlgen, functionExpression,
-                (TypeSemantics.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
-                     ? "geometry::STGeomFromWKB"
-                     : "geography::STGeomFromWKB"));
+                functionExpression.ResultType.IsPrimitiveType(PrimitiveTypeKind.Geometry)
+                    ? "geometry::STGeomFromWKB"
+                    : "geography::STGeomFromWKB");
         }
 
         private static readonly DbExpression defaultGeographySridExpression =
@@ -615,9 +616,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
             else
             {
-                var sridExpression = (TypeSemantics.IsPrimitiveType(functionExpression.ResultType, PrimitiveTypeKind.Geometry)
-                                          ? defaultGeometrySridExpression
-                                          : defaultGeographySridExpression);
+                var sridExpression = functionExpression.ResultType.IsPrimitiveType(PrimitiveTypeKind.Geometry)
+                                         ? defaultGeometrySridExpression
+                                         : defaultGeographySridExpression;
                 var result = new SqlBuilder();
                 result.Append(functionName);
                 WriteFunctionArguments(sqlgen, functionExpression.Arguments.Concat(new[] { sridExpression }), result);
@@ -671,7 +672,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private static bool IsSpecialCanonicalFunction(DbFunctionExpression e)
         {
-            return TypeHelpers.IsCanonicalFunction(e.Function)
+            return e.Function.IsCanonicalFunction()
                    && CanonicalFunctionHandlers.ContainsKey(e.Function.Name);
         }
 
@@ -683,16 +684,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private static bool IsSpatialCanonicalFunction(DbFunctionExpression e, out PrimitiveTypeKind spatialTypeKind)
         {
-            if (TypeHelpers.IsCanonicalFunction(e.Function))
+            if (e.Function.IsCanonicalFunction())
             {
-                if (Helper.IsSpatialType(e.ResultType, out spatialTypeKind))
+                if (e.ResultType.IsSpatialType(out spatialTypeKind))
                 {
                     return true;
                 }
 
                 foreach (var functionParameter in e.Function.Parameters)
                 {
-                    if (Helper.IsSpatialType(functionParameter.TypeUsage, out spatialTypeKind))
+                    if (functionParameter.TypeUsage.IsSpatialType(out spatialTypeKind))
                     {
                         return true;
                     }
@@ -759,18 +760,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             return WrapWithCast(
                 returnType, result =>
-                                {
-                                    if (functionName == null)
-                                    {
-                                        WriteFunctionName(result, e.Function);
-                                    }
-                                    else
-                                    {
-                                        result.Append(functionName);
-                                    }
+                {
+                    if (functionName == null)
+                    {
+                        WriteFunctionName(result, e.Function);
+                    }
+                    else
+                    {
+                        result.Append(functionName);
+                    }
 
-                                    HandleFunctionArgumentsDefault(sqlgen, e, result);
-                                });
+                    HandleFunctionArgumentsDefault(sqlgen, e, result);
+                });
         }
 
         private static ISqlFragment WrapWithCast(string returnType, Action<SqlBuilder> toWrap)
@@ -919,7 +920,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 Debug.Assert(
                     functionExpression.Function.Parameters.Count > 0
-                    && Helper.IsSpatialType(functionExpression.Function.Parameters[0].TypeUsage),
+                    && functionExpression.Function.Parameters[0].TypeUsage.IsSpatialType(),
                     "Instance property function does not have instance parameter?");
                 return WriteInstanceFunctionCall(
                     sqlgen, instancePropertyName, functionExpression, isPropertyAccess: true, castReturnTypeTo: null);
@@ -929,7 +930,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // Default translation pattern is instance method; the instance method name may differ from that of the spatial canonical function
                 Debug.Assert(
                     functionExpression.Function.Parameters.Count > 0
-                    && Helper.IsSpatialType(functionExpression.Function.Parameters[0].TypeUsage),
+                    && functionExpression.Function.Parameters[0].TypeUsage.IsSpatialType(),
                     "Instance method function does not have instance parameter?");
                 string effectiveFunctionName;
                 if (!renamedInstanceMethodsMap.TryGetValue(functionExpression.Function.Name, out effectiveFunctionName))
@@ -964,27 +965,27 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             return WrapWithCast(
                 castReturnTypeTo, result =>
-                                      {
-                                          var instanceExpression = functionExpression.Arguments[0];
+                {
+                    var instanceExpression = functionExpression.Arguments[0];
 
-                                          // Write the instance - if this is another function call, it need not be enclosed in parentheses.
-                                          if (instanceExpression.ExpressionKind
-                                              != DbExpressionKind.Function)
-                                          {
-                                              sqlgen.ParenthesizeExpressionIfNeeded(instanceExpression, result);
-                                          }
-                                          else
-                                          {
-                                              result.Append(instanceExpression.Accept(sqlgen));
-                                          }
-                                          result.Append(".");
-                                          result.Append(functionName);
+                    // Write the instance - if this is another function call, it need not be enclosed in parentheses.
+                    if (instanceExpression.ExpressionKind
+                        != DbExpressionKind.Function)
+                    {
+                        sqlgen.ParenthesizeExpressionIfNeeded(instanceExpression, result);
+                    }
+                    else
+                    {
+                        result.Append(instanceExpression.Accept(sqlgen));
+                    }
+                    result.Append(".");
+                    result.Append(functionName);
 
-                                          if (!isPropertyAccess)
-                                          {
-                                              WriteFunctionArguments(sqlgen, functionExpression.Arguments.Skip(1), result);
-                                          }
-                                      });
+                    if (!isPropertyAccess)
+                    {
+                        WriteFunctionArguments(sqlgen, functionExpression.Arguments.Skip(1), result);
+                    }
+                });
         }
 
         /// <summary>
@@ -1384,9 +1385,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             string typeName = null;
             var isDateTimeOffset = false;
 
-            PrimitiveTypeKind typeKind;
-            var isPrimitiveType = TypeHelpers.TryGetPrimitiveTypeKind(e.Arguments[0].ResultType, out typeKind);
-            Debug.Assert(isPrimitiveType, "Expecting primitive type as input parameter to TruncateTime");
+            var typeKind = e.Arguments[0].ResultType.GetPrimitiveTypeKind();
 
             if (typeKind == PrimitiveTypeKind.DateTime)
             {
@@ -1612,7 +1611,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static ISqlFragment HandleCanonicalFunctionAbs(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             // Convert the call to Abs(Byte) to a no-op, since Byte is an unsigned type. 
-            if (TypeSemantics.IsPrimitiveType(e.Arguments[0].ResultType, PrimitiveTypeKind.Byte))
+            if (e.Arguments[0].ResultType.IsPrimitiveType(PrimitiveTypeKind.Byte))
             {
                 var result = new SqlBuilder();
                 result.Append(e.Arguments[0].Accept(sqlgen));
@@ -1889,7 +1888,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // specified, both store and canonical functions have this attribute), 
             // then the function name should not be quoted; 
             // additionally, no namespace should be used.
-            if (TypeHelpers.IsCanonicalFunction(function))
+            if (function.IsCanonicalFunction())
             {
                 result.Append(storeFunctionName.ToUpperInvariant());
             }
@@ -1920,7 +1919,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         internal static bool IsStoreFunction(EdmFunction function)
         {
-            return function.BuiltInAttribute && !TypeHelpers.IsCanonicalFunction(function);
+            return function.BuiltInAttribute && !function.IsCanonicalFunction();
         }
 
         /// <summary>
@@ -1987,7 +1986,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 return false;
             }
 
-            return e.Arguments.Any(t => TypeSemantics.IsPrimitiveType(t.ResultType, type));
+            return e.Arguments.Any(t => t.ResultType.IsPrimitiveType(type));
         }
     }
 }

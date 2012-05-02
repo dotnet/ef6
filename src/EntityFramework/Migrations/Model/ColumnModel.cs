@@ -213,7 +213,13 @@ namespace System.Data.Entity.Migrations.Model
             Contract.Requires(typeUsage != null);
             Contract.Requires(other != null);
 
-            foreach (var facetName in new[] { "MaxLength", "Precision", "Scale" })
+            foreach (var facetName in
+                new[]
+                    {
+                        DbProviderManifest.MaxLengthFacetName,
+                        DbProviderManifest.PrecisionFacetName,
+                        DbProviderManifest.ScaleFacetName
+                    })
             {
                 Facet facet, otherFacet;
                 if (!typeUsage.Facets.TryGetValue(facetName, true, out facet)

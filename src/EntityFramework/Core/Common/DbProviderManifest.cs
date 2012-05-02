@@ -33,52 +33,53 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         /// Name of the MaxLength Facet
         /// </summary>
-        internal const string MaxLengthFacetName = "MaxLength";
+        public const string MaxLengthFacetName = "MaxLength";
 
         /// <summary>
         /// Name of the Unicode Facet
         /// </summary>
-        internal const string UnicodeFacetName = "Unicode";
+        public const string UnicodeFacetName = "Unicode";
 
         /// <summary>
         /// Name of the FixedLength Facet
         /// </summary>
-        internal const string FixedLengthFacetName = "FixedLength";
+        public const string FixedLengthFacetName = "FixedLength";
 
         /// <summary>
         /// Name of the Precision Facet
         /// </summary>
-        internal const string PrecisionFacetName = "Precision";
+        public const string PrecisionFacetName = "Precision";
 
         /// <summary>
         /// Name of the Scale Facet
         /// </summary>
-        internal const string ScaleFacetName = "Scale";
+        public const string ScaleFacetName = "Scale";
 
         /// <summary>
         /// Name of the Nullable Facet
         /// </summary>
-        internal const string NullableFacetName = "Nullable";
+        public const string NullableFacetName = "Nullable";
 
         /// <summary>
         /// Name of the DefaultValue Facet
         /// </summary>
-        internal const string DefaultValueFacetName = "DefaultValue";
+        public const string DefaultValueFacetName = "DefaultValue";
 
         /// <summary>
         /// Name of the Collation Facet
         /// </summary>
-        internal const string CollationFacetName = "Collation";
+        public const string CollationFacetName = "Collation";
 
         /// <summary>
         /// Name of the SRID Facet
         /// </summary>
-        internal const string SridFacetName = "SRID";
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Srid")]
+        public const string SridFacetName = "SRID";
 
         /// <summary>
         /// Name of the IsStrict Facet
         /// </summary>
-        internal const string IsStrictFacetName = "IsStrict";
+        public const string IsStrictFacetName = "IsStrict";
 
         /// <summary>
         /// Returns the namespace used by this provider manifest

@@ -6,6 +6,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -181,15 +182,15 @@ namespace System.Data.Entity.SqlServer
                     //Remove the Katmai types for both Sql8 and Sql9
                     primitiveTypes.RemoveAll(
                         delegate(PrimitiveType primitiveType)
-                            {
-                                var name = primitiveType.Name.ToLowerInvariant();
-                                return name.Equals("time", StringComparison.Ordinal) ||
-                                       name.Equals("date", StringComparison.Ordinal) ||
-                                       name.Equals("datetime2", StringComparison.Ordinal) ||
-                                       name.Equals("datetimeoffset", StringComparison.Ordinal) ||
-                                       name.Equals("geography", StringComparison.Ordinal) ||
-                                       name.Equals("geometry", StringComparison.Ordinal);
-                            }
+                        {
+                            var name = primitiveType.Name.ToLowerInvariant();
+                            return name.Equals("time", StringComparison.Ordinal) ||
+                                   name.Equals("date", StringComparison.Ordinal) ||
+                                   name.Equals("datetime2", StringComparison.Ordinal) ||
+                                   name.Equals("datetimeoffset", StringComparison.Ordinal) ||
+                                   name.Equals("geography", StringComparison.Ordinal) ||
+                                   name.Equals("geometry", StringComparison.Ordinal);
+                        }
                         );
                     //Remove the types that won't work in Sql8
                     if (_version == SqlVersion.Sql8)
@@ -197,10 +198,10 @@ namespace System.Data.Entity.SqlServer
                         // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
                         primitiveTypes.RemoveAll(
                             delegate(PrimitiveType primitiveType)
-                                {
-                                    var name = primitiveType.Name.ToLowerInvariant();
-                                    return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
-                                }
+                            {
+                                var name = primitiveType.Name.ToLowerInvariant();
+                                return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
+                            }
                             );
                     }
                     _primitiveTypes = primitiveTypes.AsReadOnly();
@@ -237,9 +238,8 @@ namespace System.Data.Entity.SqlServer
         private static bool IsKatmaiOrNewer(EdmFunction edmFunction)
         {
             // Spatial types are only supported from Katmai onward; any functions using them must therefore also be Katmai or newer.
-            if ((edmFunction.ReturnParameter != null && Helper.IsSpatialType(edmFunction.ReturnParameter.TypeUsage))
-                ||
-                edmFunction.Parameters.Any(p => Helper.IsSpatialType(p.TypeUsage)))
+            if ((edmFunction.ReturnParameter != null && edmFunction.ReturnParameter.TypeUsage.IsSpatialType())
+                || edmFunction.Parameters.Any(p => p.TypeUsage.IsSpatialType()))
             {
                 return true;
             }
@@ -360,7 +360,7 @@ namespace System.Data.Entity.SqlServer
 
             switch (storeTypeName)
             {
-                    // for some types we just go with simple type usage with no facets
+                // for some types we just go with simple type usage with no facets
                 case "tinyint":
                 case "smallint":
                 case "bigint":
@@ -373,28 +373,28 @@ namespace System.Data.Entity.SqlServer
 
                 case "varchar":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
-                    isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
+                    isUnbounded = !storeType.TryGetMaxLength(out maxLength);
                     isUnicode = false;
                     isFixedLen = false;
                     break;
 
                 case "char":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
-                    isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
+                    isUnbounded = !storeType.TryGetMaxLength(out maxLength);
                     isUnicode = false;
                     isFixedLen = true;
                     break;
 
                 case "nvarchar":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
-                    isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
+                    isUnbounded = !storeType.TryGetMaxLength(out maxLength);
                     isUnicode = true;
                     isFixedLen = false;
                     break;
 
                 case "nchar":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
-                    isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
+                    isUnbounded = !storeType.TryGetMaxLength(out maxLength);
                     isUnicode = true;
                     isFixedLen = true;
                     break;
@@ -418,13 +418,13 @@ namespace System.Data.Entity.SqlServer
 
                 case "binary":
                     newPrimitiveTypeKind = PrimitiveTypeKind.Binary;
-                    isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
+                    isUnbounded = !storeType.TryGetMaxLength(out maxLength);
                     isFixedLen = true;
                     break;
 
                 case "varbinary":
                     newPrimitiveTypeKind = PrimitiveTypeKind.Binary;
-                    isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
+                    isUnbounded = !storeType.TryGetMaxLength(out maxLength);
                     isFixedLen = false;
                     break;
 
@@ -448,8 +448,8 @@ namespace System.Data.Entity.SqlServer
                     {
                         byte precision;
                         byte scale;
-                        if (TypeHelpers.TryGetPrecision(storeType, out precision)
-                            && TypeHelpers.TryGetScale(storeType, out scale))
+                        if (storeType.TryGetPrecision(out precision)
+                            && storeType.TryGetScale(out scale))
                         {
                             return TypeUsage.CreateDecimalTypeUsage(edmPrimitiveType, precision, scale);
                         }
@@ -578,13 +578,13 @@ namespace System.Data.Entity.SqlServer
                 case PrimitiveTypeKind.Decimal: // decimal, numeric, smallmoney, money
                     {
                         byte precision;
-                        if (!TypeHelpers.TryGetPrecision(edmType, out precision))
+                        if (!edmType.TryGetPrecision(out precision))
                         {
                             precision = 18;
                         }
 
                         byte scale;
-                        if (!TypeHelpers.TryGetScale(edmType, out scale))
+                        if (!edmType.TryGetScale(out scale))
                         {
                             scale = 0;
                         }
@@ -596,7 +596,7 @@ namespace System.Data.Entity.SqlServer
                     {
                         var isFixedLength = null != facets[FixedLengthFacetName].Value && (bool)facets[FixedLengthFacetName].Value;
                         var f = facets[MaxLengthFacetName];
-                        var isMaxLength = Helper.IsUnboundedFacetValue(f) || null == f.Value || (int)f.Value > binaryMaxSize;
+                        var isMaxLength = f.IsUnbounded || null == f.Value || (int)f.Value > binaryMaxSize;
                         var maxLength = !isMaxLength ? (int)f.Value : Int32.MinValue;
 
                         TypeUsage tu;
@@ -636,7 +636,7 @@ namespace System.Data.Entity.SqlServer
                         var f = facets[MaxLengthFacetName];
                         // maxlen is true if facet value is unbounded, the value is bigger than the limited string sizes *or* the facet
                         // value is null. this is needed since functions still have maxlength facet value as null
-                        var isMaxLength = Helper.IsUnboundedFacetValue(f) || null == f.Value
+                        var isMaxLength = f.IsUnbounded || null == f.Value
                                           || (int)f.Value > (isUnicode ? nvarcharMaxSize : varcharMaxSize);
                         var maxLength = !isMaxLength ? (int)f.Value : Int32.MinValue;
 

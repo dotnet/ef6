@@ -1,19 +1,25 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
     /// Class representing a ref type
     /// </summary>
-    public sealed class RefType : EdmType
+    public class RefType : EdmType
     {
         #region Constructors
+
+        internal RefType()
+        {
+        }
 
         /// <summary>
         /// The constructor for constructing a RefType object with the entity type it references
         /// </summary>
         /// <param name="entityType">The entity type that this ref type references</param>
         /// <exception cref="System.ArgumentNullException">Thrown if entityType argument is null</exception>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal RefType(EntityType entityType)
             : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(entityType, "entityType")),
                 EdmConstants.TransientNamespace, entityType.DataSpace)
@@ -44,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// The entity type that this ref type references
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
-        public EntityTypeBase ElementType
+        public virtual EntityTypeBase ElementType
         {
             get { return _elementType; }
         }

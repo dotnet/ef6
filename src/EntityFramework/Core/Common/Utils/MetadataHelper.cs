@@ -691,17 +691,6 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        // requires: typeUsage wraps a primitive type
-        internal static PrimitiveTypeKind GetPrimitiveTypeKind(TypeUsage typeUsage)
-        {
-            Debug.Assert(
-                null != typeUsage && null != typeUsage.EdmType && typeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
-
-            var primitiveType = (PrimitiveType)typeUsage.EdmType;
-
-            return primitiveType.PrimitiveTypeKind;
-        }
-
         // determines whether the given member is a key of an entity set
         internal static bool IsPartOfEntityTypeKey(EdmMember member)
         {
@@ -902,17 +891,17 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static byte GetPrecision(this TypeUsage type)
         {
-            return type.GetFacetValue<byte>("Precision");
+            return type.GetFacetValue<byte>(DbProviderManifest.PrecisionFacetName);
         }
 
         internal static byte GetScale(this TypeUsage type)
         {
-            return type.GetFacetValue<byte>("Scale");
+            return type.GetFacetValue<byte>(DbProviderManifest.ScaleFacetName);
         }
 
         internal static int GetMaxLength(this TypeUsage type)
         {
-            return type.GetFacetValue<int>("MaxLength");
+            return type.GetFacetValue<int>(DbProviderManifest.MaxLengthFacetName);
         }
 
         internal static T GetFacetValue<T>(this TypeUsage type, string facetName)
