@@ -132,5 +132,18 @@ namespace LinqFunctionStubsGenerator
 
             return sqlFunctionParameterNames;
         }
+
+        public static int Main(string[] args)
+        {
+            if(args.Length != 1 || string.IsNullOrEmpty(args[0]))
+            {
+                Console.WriteLine("Usage:\nFunctionStubGenerator.exe targetPath");
+                return 1;
+            }
+
+            Generate(args[0]);
+
+            return 0;
+        }
     }
 }

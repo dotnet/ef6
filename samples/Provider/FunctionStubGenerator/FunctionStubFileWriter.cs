@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------- 
 
 using System;
+using System.Data.Spatial;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -352,8 +353,10 @@ namespace LinqFunctionStubsGenerator
         /// <returns>True of input type is nullable, false otherwise</returns>
         private  Boolean IsNullableType(Type parameterType)
         {
-            return ((parameterType == typeof(Byte[])) ||
-                    (parameterType == typeof(String)));
+            return parameterType == typeof (Byte[]) ||
+                   parameterType == typeof (String) ||
+                   typeof (DbGeometry).IsAssignableFrom(parameterType) ||
+                   typeof (DbGeography).IsAssignableFrom(parameterType);
         }
 
         /// <summary>

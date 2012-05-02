@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleEntityFrameworkProvider", "SampleEntityFrameworkProvider\SampleEntityFrameworkProvider.csproj", "{EBA0B8A0-6C00-44C2-A8F0-394069B9486B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AC400458-A998-4D85-8C2B-5F1194CFDB8A} = {AC400458-A998-4D85-8C2B-5F1194CFDB8A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindEFModel", "NorthwindEFModel\NorthwindEFModel.csproj", "{59F48ED5-9591-45A2-B2D6-EC461985CE85}"
 EndProject
