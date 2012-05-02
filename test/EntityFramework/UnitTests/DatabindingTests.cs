@@ -685,7 +685,7 @@
         [Fact]
         public void ToBindingList_throws_when_given_null_ObservableCollection()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.ToBindingList<FakeEntity>(null)).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => ObservableCollectionExtensions.ToBindingList<FakeEntity>(null)).ParamName);
         }
 
         [Fact]
@@ -819,7 +819,7 @@
         [Fact]
         public void Load_throws_when_given_null_query()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.Load(null)).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Load(null)).ParamName);
         }
 
         [Fact]

@@ -18,13 +18,13 @@
         [Fact]
         public void AsNoTracking_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.AsNoTracking<FakeEntity>(null)).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.AsNoTracking<FakeEntity>(null)).ParamName);
         }
 
         [Fact]
         public void Non_generic_AsNoTracking_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.AsNoTracking(null)).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.AsNoTracking(null)).ParamName);
         }
 
         #endregion

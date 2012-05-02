@@ -222,7 +222,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Executes the command and returns a data reader for reading the results
         /// </summary>
-        /// <returns>A data readerobject</returns>
+        /// <returns>An EntityDataReader object</returns>
         public new EntityDataReader ExecuteReader()
         {
             return ExecuteReader(CommandBehavior.Default);
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
         /// <param name="behavior">The behavior to use when executing the command</param>
-        /// <returns>A data readerobject</returns>
+        /// <returns>An EntityDataReader object</returns>
         /// <exception cref="InvalidOperationException">For stored procedure commands, if called
         /// for anything but an entity collection result</exception>
         public new EntityDataReader ExecuteReader(CommandBehavior behavior)
@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// Executes the command and returns a data reader for reading the results
         /// </summary>
         /// <param name="behavior">The behavior to use when executing the command</param>
-        /// <returns>A data readerobject</returns>
+        /// <returns>A DbDataReader object</returns>
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
             return ExecuteReader(behavior);

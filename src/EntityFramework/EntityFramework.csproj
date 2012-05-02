@@ -64,6 +64,7 @@
     <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
     <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
     <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
+    <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -1203,6 +1204,7 @@
     <Compile Include="Internal\ModelHashCalculator.cs" />
     <Compile Include="Internal\MockingProxies\ObjectContextProxy.cs" />
     <Compile Include="Internal\RepositoryBase.cs" />
+    <Compile Include="IQueryableExtensions.cs" />
     <Compile Include="MigrateDatabaseToLatestVersion`.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilder.cs" />
     <Compile Include="Migrations\Builders\TableBuilder.cs" />
@@ -1285,6 +1287,7 @@
     <Compile Include="Migrations\Sql\SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdater.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreator.cs" />
+    <Compile Include="ObservableCollectionExtensions.cs" />
     <Compile Include="Spatial\DbGeography.cs" />
     <Compile Include="Spatial\DbGeographyWellKnownValue.cs" />
     <Compile Include="Spatial\DbGeometry.cs" />
@@ -1429,7 +1432,6 @@
     <Compile Include="CreateDatabaseIfNotExists`.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbContext.cs" />
-    <Compile Include="DbExtensions.cs" />
     <Compile Include="DbModelBuilder.cs" />
     <Compile Include="DbModelBuilderVersion.cs" />
     <Compile Include="DbModelBuilderVersionAttribute.cs" />

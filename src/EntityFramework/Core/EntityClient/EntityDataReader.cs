@@ -444,7 +444,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Move the reader to the next result set when reading a batch of statements
         /// </summary>
-        /// <returns>true if there are more result sets</returns>
+        /// <returns>
+        /// true if there are more result sets;
+        /// false otherwise
+        /// </returns>
         public override bool NextResult()
         {
             try
@@ -460,7 +463,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Move the reader to the next row of the current result set
         /// </summary>
-        /// <returns>true if there are more rows</returns>
+        /// <returns>
+        /// true if there are more rows;
+        /// false otherwise
+        /// </returns>
         public override bool Read()
         {
             return _storeDataReader.Read();
@@ -483,7 +489,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (null == _storeExtendedDataRecord)
             {
                 Debug.Assert(FieldCount == 0, "we have fields but no metadata?");
-            
+
                 // for a query with no results, any request is out of range...
                 throw new ArgumentOutOfRangeException("i");
             }

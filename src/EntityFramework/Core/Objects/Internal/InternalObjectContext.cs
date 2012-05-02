@@ -2789,7 +2789,7 @@
         /// Execute a command against the database server that does not return a sequence of objects.
         /// The command is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <param name="command">The command specified in the server's native query language.</param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>A single integer return value</returns>
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
@@ -2805,21 +2805,6 @@
             {
                 ReleaseConnection();
             }
-        }
-
-        /// <summary>
-        /// Execute the sequence returning query against the database server. 
-        /// The query is specified using the server's native query language, such as SQL.
-        /// </summary>
-        /// <typeparam name="TElement">The element type of the result sequence.</typeparam>
-        /// <param name="query">The query specified in the server's native query language.</param>
-        /// <param name="parameters">The parameter values to use for the query.</param>
-        /// <returns>An IEnumerable sequence of objects.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "tadam: Generic parameters are required for strong-typing of the return type.")]
-        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
-        {
-            return ExecuteStoreQueryInternal<TElement>(commandText, null /*entitySetName*/, MergeOption.AppendOnly, parameters);
         }
 
         /// <summary>

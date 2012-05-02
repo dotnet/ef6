@@ -719,7 +719,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         public void Load()
         {
-            CheckOwnerNull();
+            // CheckOwnerNull is called in the impementation
             Load(DefaultMergeOption);
         }
 
@@ -728,9 +728,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         public abstract void Load(MergeOption mergeOption);
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void DeferredLoad()
         {
             if (_wrappedOwner != null && _wrappedOwner != NullEntityWrapper.NullWrapper &&

@@ -123,7 +123,6 @@
                 VerifyMethod(
                     c => c.SaveChanges(default(SaveOptions)),
                     m => m.SaveChanges(It.IsAny<SaveOptions>()));
-                ////TryGetObjectByKey(EntityKey key, out object value)
                 VerifyMethod(
                     c => c.ExecuteFunction<DummyEntity>("Foo", default(MergeOption), new ObjectParameter[0]),
                     m => m.ExecuteFunction<DummyEntity>(It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<ObjectParameter[]>()));
@@ -142,9 +141,6 @@
                 VerifyMethod(
                     c => c.ExecuteStoreCommand(default(string), default(object[])),
                     m => m.ExecuteStoreCommand(It.IsAny<string>(), It.IsAny<object[]>()));
-                VerifyMethod(
-                    c => c.ExecuteStoreQuery<DummyEntity>(default(string), default(object[])),
-                    m => m.ExecuteStoreQuery<DummyEntity>(It.IsAny<string>(), It.IsAny<object[]>()));
                 VerifyMethod(
                     c => c.ExecuteStoreQuery<DummyEntity>(default(string), "Foo", default(MergeOption), default(object[])),
                     m => m.ExecuteStoreQuery<DummyEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()));

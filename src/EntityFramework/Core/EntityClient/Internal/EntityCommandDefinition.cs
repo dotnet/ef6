@@ -47,7 +47,7 @@
         #region constructors
 
         /// <summary>
-        /// don't let this be constructed publicly;
+        /// Creates a new instance of <see cref="EntityCommandDefinition"/>.
         /// </summary>
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
@@ -287,6 +287,8 @@
 
         #endregion
 
+        #region properties
+
         /// <summary>
         /// Property to expose the known parameters for the query, so the Command objects 
         /// constructor can poplulate it's parameter collection from.
@@ -303,8 +305,6 @@
         {
             get { return _entitySets; }
         }
-
-        #region public API
 
         /// <summary>
         /// Create a DbCommand object from the definition, that can be executed

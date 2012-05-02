@@ -79,19 +79,19 @@
         [Fact]
         public void String_Include_with_null_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => DbExtensions.Include(FakeDbQuery, (string)null)).Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(FakeDbQuery, (string)null)).Message);
         }
 
         [Fact]
         public void String_Include_with_empty_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => DbExtensions.Include(FakeDbQuery, "")).Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(FakeDbQuery, "")).Message);
         }
 
         [Fact]
         public void String_Include_with_whitespace_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => DbExtensions.Include(FakeDbQuery, " ")).Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(FakeDbQuery, " ")).Message);
         }
 
         [Fact]
@@ -115,19 +115,19 @@
         [Fact]
         public void Non_generic_String_Include_with_null_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => DbExtensions.Include(FakeNonGenericDbQuery, (string)null)).Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(FakeNonGenericDbQuery, (string)null)).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_empty_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => DbExtensions.Include(FakeNonGenericDbQuery, "")).Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(FakeNonGenericDbQuery, "")).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_whitespace_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => DbExtensions.Include(FakeNonGenericDbQuery, " ")).Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(FakeNonGenericDbQuery, " ")).Message);
         }
 
         [Fact]
@@ -139,19 +139,19 @@
         [Fact]
         public void String_Include_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.Include(null, "SomePath")).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include(null, "SomePath")).ParamName);
         }
 
         [Fact]
         public void Lambda_Include_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbExtensions.Include<FakeEntity, int>(null, e => e.Id)).ParamName);
+            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include<FakeEntity, int>(null, e => e.Id)).ParamName);
         }
 
         #endregion

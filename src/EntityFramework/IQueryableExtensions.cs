@@ -1,7 +1,6 @@
-namespace System.Data.Entity
+﻿namespace System.Data.Entity
 {
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
+    using System;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -11,7 +10,7 @@ namespace System.Data.Entity
     using System.Linq;
     using System.Linq.Expressions;
 
-    public static class DbExtensions
+    public static class IQueryableExtensions
     {
         #region Include
 
@@ -246,24 +245,6 @@ namespace System.Data.Entity
                     asDisposable.Dispose();
                 }
             }
-        }
-
-        #endregion
-
-        #region ToBindingList
-
-        /// <summary>
-        ///     Returns an <see cref = "BindingList{T}" /> implementation that stays in sync with the given <see cref = "ObservableCollection{T}" />.
-        /// </summary>
-        /// <typeparam name = "T">The element type.</typeparam>
-        /// <param name = "source">The collection that the binding list will stay in sync with.</param>
-        /// <returns>The binding list.</returns>
-        public static BindingList<T> ToBindingList<T>(this ObservableCollection<T> source) where T : class
-        {
-            Contract.Requires(source != null);
-
-            var asLocalView = source as DbLocalView<T>;
-            return asLocalView != null ? asLocalView.BindingList : new ObservableBackedBindingList<T>(source);
         }
 
         #endregion

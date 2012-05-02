@@ -735,8 +735,8 @@ namespace System.Data.Entity.Core.Objects
         /// Persists all updates to the store.
         /// </summary>
         /// <returns>
-        ///   the number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///   in the ObjectStateManager when SaveChanges was called.
+        /// The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
+        /// in the ObjectStateManager when SaveChanges was called.
         /// </returns>
         public Int32 SaveChanges()
         {
@@ -744,16 +744,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   Persists all updates to the store.
-        ///   This API is obsolete.  Please use SaveChanges(SaveOptions options) instead.
-        ///   SaveChanges(true) is equivalent to SaveChanges() -- That is it detects changes and
-        ///      accepts all changes after save.
-        ///   SaveChanges(false) detects changes but does not accept changes after save.
+        /// Persists all updates to the store.
+        /// This API is obsolete.  Please use SaveChanges(SaveOptions options) instead.
+        /// SaveChanges(true) is equivalent to SaveChanges() -- That is it detects changes and
+        /// accepts all changes after save.
+        /// SaveChanges(false) detects changes but does not accept changes after save.
         /// </summary>
         /// <param name="acceptChangesDuringSave">if false, user must call AcceptAllChanges</param>/>
         /// <returns>
-        ///   the number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///   in the ObjectStateManager when SaveChanges was called.
+        /// The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
+        /// in the ObjectStateManager when SaveChanges was called.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
@@ -769,10 +769,10 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Persists all updates to the store.
         /// </summary>
-        /// <param name="options">describes behavior options of SaveChanges</param>
+        /// <param name="options">Describes behavior options of SaveChanges</param>
         /// <returns>
-        ///   the number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///   in the ObjectStateManager processed by SaveChanges.
+        /// The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
+        /// in the ObjectStateManager processed by SaveChanges.
         /// </returns>
         public virtual Int32 SaveChanges(SaveOptions options)
         {
@@ -962,7 +962,7 @@ namespace System.Data.Entity.Core.Objects
         /// Execute a command against the database server that does not return a sequence of objects.
         /// The command is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <param name="command">The command specified in the server's native query language.</param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>A single integer return value</returns>
         public int ExecuteStoreCommand(string commandText, params object[] parameters)
@@ -971,37 +971,33 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Execute the sequence returning query against the database server. 
+        /// Execute the sequence returning query against the database server.
         /// The query is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <typeparam name="TElement">The element type of the result sequence.</typeparam>
-        /// <param name="query">The query specified in the server's native query language.</param>
+        /// <param name="commandText">The query specified in the server's native query language.</param>
         /// <param name="parameters">The parameter values to use for the query.</param>
-        /// <returns>An IEnumerable sequence of objects.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "tadam: Generic parameters are required for strong-typing of the return type.")]
+        /// <returns>An enumeration of objects of type <typeparamref name="TElement"/>.</returns>
         public ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
-            return _internalObjectContext.ExecuteStoreQuery<TElement>(commandText, parameters);
+            return ExecuteStoreQuery<TElement>(commandText, MergeOption.AppendOnly, parameters);
         }
 
         /// <summary>
         /// Execute the sequence returning query against the database server. 
         /// The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <typeparam name="TEntity">The element type of the resulting sequence</typeparam>
-        /// <param name="reader">The DbDataReader to translate</param>
+        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
+        /// <param name="commandText">The DbDataReader to translate</param>
         /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
         /// <param name="mergeOption">Merge option to use for entity results.</param>
-        /// <returns>The translated sequence of objects</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
-        public ObjectResult<TEntity> ExecuteStoreQuery<TEntity>(
+        /// <returns>An enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        public ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
-            return _internalObjectContext.ExecuteStoreQuery<TEntity>(commandText, entitySetName, mergeOption, parameters);
+            return _internalObjectContext.ExecuteStoreQuery<TElement>(commandText, entitySetName, mergeOption, parameters);
         }
 
         /// <summary>
@@ -1011,8 +1007,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="reader">The DbDataReader to translate</param>
         /// <param name="mergeOption">Merge option to use for entity results.</param>
         /// <returns>The translated sequence of objects</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
         public ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
         {
             return _internalObjectContext.Translate<TElement>(reader);
