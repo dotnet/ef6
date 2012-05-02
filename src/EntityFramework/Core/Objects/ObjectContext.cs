@@ -16,6 +16,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq;
     using System.Linq.Expressions;
     using System.Runtime.Versioning;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
@@ -744,6 +746,27 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public Task<Int32> SaveChangesAsync()
+        {
+            return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
+        }
+
+        /// <summary>
         /// Persists all updates to the store.
         /// This API is obsolete.  Please use SaveChanges(SaveOptions options) instead.
         /// SaveChanges(true) is equivalent to SaveChanges() -- That is it detects changes and
@@ -777,6 +800,29 @@ namespace System.Data.Entity.Core.Objects
         public virtual Int32 SaveChanges(SaveOptions options)
         {
             return _internalObjectContext.SaveChanges(options);
+        }
+
+        /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <param name="options">Describes behavior options of SaveChanges</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public Task<Int32> SaveChangesAsync(SaveOptions options)
+        {
+            return SaveChangesAsync(options, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <param name="options">Describes behavior options of SaveChanges</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

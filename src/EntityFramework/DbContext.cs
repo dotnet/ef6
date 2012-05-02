@@ -9,6 +9,9 @@ namespace System.Data.Entity
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     A DbContext instance represents a combination of the Unit Of Work and Repository patterns such that
@@ -273,6 +276,29 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        ///     Saves all changes made in this context to the underlying database.
+        /// </summary>
+        /// <returns>The number of objects written to the underlying database.</returns>
+        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        public Task<int> SaveChangesAsync()
+        {
+            return SaveChangesAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of SaveChanges, which
+        ///     saves all changes made in this context to the underlying database.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task that contains the number of objects written to the underlying database.</returns>
+        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         ///     Returns the Entity Framework ObjectContext that is underlying this context.
         /// </summary>
         /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
@@ -341,6 +367,38 @@ namespace System.Data.Entity
             Contract.Requires(entityEntry != null);
 
             return (entityEntry.State & (EntityState.Added | EntityState.Modified)) != 0;
+        }
+
+        /// <summary>
+        ///     Evaluates the provided query expression asynchronusly.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the query result.</typeparam>
+        /// <param name="expression">Query expression to evaluate.</param>
+        /// <returns>A Task containg the result of the query expression evaluation.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<TResult> QueryAsync<TResult>(Expression<Func<TResult>> expression)
+        {
+            Contract.Requires(expression != null);
+
+            return QueryAsync(expression, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Evaluates the provided query expression asynchronusly.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the query result.</typeparam>
+        /// <param name="expression">Query expression to evaluate.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containg the result of the query expression evaluation.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<TResult> QueryAsync<TResult>(Expression<Func<TResult>> expression, CancellationToken cancellationToken)
+        {
+            Contract.Requires(expression != null);
+
+            throw new NotImplementedException();
         }
 
         /// <summary>

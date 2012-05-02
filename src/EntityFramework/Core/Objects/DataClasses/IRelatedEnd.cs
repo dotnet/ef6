@@ -3,6 +3,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Collections;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents one end of a relationship.
@@ -49,10 +51,27 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         void Load();
 
         /// <summary>
+        /// An asynchronous version of Load, which
+        /// loads the related entity or entities into the related end using the default merge option.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        Task LoadAsync(CancellationToken cancellationToken);
+
+        /// <summary>
         /// Loads the related entity or entities into the related end using the specified merge option.
         /// </summary>
         /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
         void Load(MergeOption mergeOption);
+
+        /// <summary>
+        /// An asynchronous version of Load, which
+        /// loads the related entity or entities into the related end using the specified merge option.
+        /// </summary>
+        /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
         /// <summary>
         /// Adds an entity to the related end.  If the owner is

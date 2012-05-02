@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
+    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable<object>
     {
         #region Fields and constructors
 
@@ -67,6 +67,20 @@ namespace System.Data.Entity.Infrastructure
         IEnumerator IEnumerable.GetEnumerator()
         {
             return InternalQuery.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        /// </summary>
+        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<object> IDbAsyncEnumerable<object>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

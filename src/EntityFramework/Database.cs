@@ -11,6 +11,8 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     An instances of this class is obtained from an <see cref = "DbContext" /> object and can be used
@@ -469,6 +471,41 @@
             Contract.Requires(parameters != null);
 
             return _internalContext.ExecuteSqlCommand(sql, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteSqlCommand, which
+        ///     executes the given DDL/DML command against the database.
+        /// </summary>
+        /// <param name = "sql">The command string.</param>
+        /// <param name = "parameters">The parameters to apply to the command string.</param>
+        /// <returns>A Task containing the result returned by the database after executing the command.</returns>
+        public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Contract.Requires(parameters != null);
+
+            return ExecuteSqlCommandAsync(sql, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteSqlCommand, which
+        ///     executes the given DDL/DML command against the database.
+        /// </summary>
+        /// <param name = "sql">The command string.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "parameters">The parameters to apply to the command string.</param>
+        /// <returns>A Task containing the result returned by the database after executing the command.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "sql"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parameters")]
+        public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Contract.Requires(parameters != null);
+
+            throw new NotImplementedException();
         }
 
         #endregion

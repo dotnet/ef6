@@ -841,6 +841,7 @@
     <Compile Include="Core\Objects\DataClasses\IEntityWithKey.cs" />
     <Compile Include="Core\Objects\DataClasses\IEntityWithRelationships.cs" />
     <Compile Include="Core\Objects\DataClasses\IRelatedEnd.cs" />
+    <Compile Include="Core\Objects\DataClasses\IRelatedEndExtensions.cs" />
     <Compile Include="Core\Objects\DataClasses\IRelationshipFixer.cs" />
     <Compile Include="Core\Objects\DataClasses\RelatedEnd.cs" />
     <Compile Include="Core\Objects\DataClasses\RelationshipFixer.cs" />
@@ -1176,14 +1177,18 @@
     <Compile Include="DbFunctions.cs" />
     <Compile Include="Edm\Common\INamedDataModelItemExtensions.cs" />
     <Compile Include="Edm\Db\DbConstraintMetadata.cs" />
+    <Compile Include="DbSetExtensions.cs" />
     <Compile Include="Edm\EdmEnumType.cs" />
     <Compile Include="Edm\EdmEnumTypeMember.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidationRule`.cs" />
     <Compile Include="EntityState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerator.cs" />
     <Compile Include="Infrastructure\DbConnectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Infrastructure\IDbAsyncEnumeratorExtensions.cs" />
     <Compile Include="Infrastructure\LocalDbConnectionFactory.cs" />
     <Compile Include="Internal\ClonedObjectContext.cs" />
     <Compile Include="Internal\ConfigFile\DatabaseInitializerElement.cs" />

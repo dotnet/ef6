@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
 
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Core.Objects
     /// is returned from ObjectQuery&lt;T&gt;.Execute method.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public sealed class ObjectResult<T> : ObjectResult, IEnumerable<T>
+    public sealed class ObjectResult<T> : ObjectResult, IEnumerable<T>, IDbAsyncEnumerable<T>
     {
         private Shaper<T> _shaper;
         private DbDataReader _reader;
@@ -69,6 +70,19 @@ namespace System.Data.Entity.Core.Objects
             var result = shaper.GetEnumerator();
             return result;
         }
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        /// </summary>
+        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         /// <summary>
         /// Performs tasks associated with freeing, releasing, or resetting resources. 

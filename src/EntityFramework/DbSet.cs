@@ -9,6 +9,8 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     A non-generic version of <see cref = "DbSet{T}" /> which can be used when the type of entity
@@ -51,6 +53,44 @@
         /// <exception cref = "InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
         public abstract object Find(params object[] keyValues);
+
+        /// <summary>
+        ///     An asynchronous version of Find, which
+        ///     finds an entity with the given primary key values.
+        ///     If an entity with the given primary key values exists in the context, then it is
+        ///     returned immediately without making a request to the store.  Otherwise, a request
+        ///     is made to the store for an entity with the given primary key values and this entity,
+        ///     if found, is attached to the context and returned.  If no entity is found in the
+        ///     context or the store, then null is returned.
+        /// </summary>
+        /// <remarks>
+        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// </remarks>
+        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
+        /// <returns>A Task containing the entity found, or null.</returns>
+        public Task<object> FindAsync(params object[] keyValues)
+        {
+            return FindAsync(CancellationToken.None, keyValues);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Find, which
+        ///     finds an entity with the given primary key values.
+        ///     If an entity with the given primary key values exists in the context, then it is
+        ///     returned immediately without making a request to the store.  Otherwise, a request
+        ///     is made to the store for an entity with the given primary key values and this entity,
+        ///     if found, is attached to the context and returned.  If no entity is found in the
+        ///     context or the store, then null is returned.
+        /// </summary>
+        /// <remarks>
+        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// </remarks>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
+        /// <returns>A Task containing the entity found, or null.</returns>
+        public abstract Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
 
         #endregion
 

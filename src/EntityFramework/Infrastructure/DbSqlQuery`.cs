@@ -16,7 +16,7 @@
     ///     See <see cref = "DbSqlQuery" /> for a non-generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class DbSqlQuery<TEntity> : IEnumerable<TEntity>, IListSource
+    public class DbSqlQuery<TEntity> : IEnumerable<TEntity>, IListSource, IDbAsyncEnumerable<TEntity>
         where TEntity : class
     {
         #region Constructors and fields
@@ -52,6 +52,20 @@
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable implementation
+
+        /// <summary>
+        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        /// </summary>
+        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

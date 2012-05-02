@@ -7,6 +7,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal.Linq;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     A DbSet represents the collection of all entities in the context, or that can be queried from the
@@ -63,6 +65,33 @@ namespace System.Data.Entity
         public TEntity Find(params object[] keyValues)
         {
             return _internalSet.Find(keyValues);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Find, which
+        ///     finds an entity with the given primary key values.
+        ///     If an entity with the given primary key values exists in the context, then it is
+        ///     returned immediately without making a request to the store.  Otherwise, a request
+        ///     is made to the store for an entity with the given primary key values and this entity,
+        ///     if found, is attached to the context and returned.  If no entity is found in the
+        ///     context or the store, then null is returned.
+        /// </summary>
+        /// <remarks>
+        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// </remarks>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
+        /// <returns>A Task containing the entity found, or null.</returns>
+        /// <exception cref = "InvalidOperationException">Thrown if multiple entities exist in the context with the primary key values given.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
+        public Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

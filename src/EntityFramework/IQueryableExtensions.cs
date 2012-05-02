@@ -1,6 +1,7 @@
-﻿namespace System.Data.Entity
+namespace System.Data.Entity
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -9,6 +10,8 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public static class IQueryableExtensions
     {
@@ -245,6 +248,117 @@
                     asDisposable.Dispose();
                 }
             }
+        }
+
+        #endregion
+
+        #region ForEachAsync
+
+        /// <summary>
+        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        /// </summary>
+        /// <param name="source">The source query.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        public static Task ForEachAsync(this IQueryable source, Action<object> action)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(action != null);
+
+            return source.ForEachAsync(action, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        /// </summary>
+        /// <param name="source">The source query.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        public static Task ForEachAsync(this IQueryable source, Action<object> action, CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(action != null);
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        /// </summary>
+        /// <typeparam name = "T">The type of entity being queried.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(action != null);
+
+            return source.ForEachAsync(action, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        /// </summary>
+        /// <typeparam name = "T">The type of entity being queried.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action, CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(action != null);
+
+            throw new NotImplementedException();
+        }
+        
+        #endregion
+
+        #region ToListAsync
+
+        /// <summary>
+        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchrously.
+        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <returns>A List<T> that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
+        {
+            Contract.Requires(source != null);
+
+            return source.ToListAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchrously.
+        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A List<T> that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+
+            throw new NotImplementedException();
         }
 
         #endregion

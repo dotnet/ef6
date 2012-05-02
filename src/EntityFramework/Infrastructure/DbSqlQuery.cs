@@ -16,7 +16,7 @@
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public class DbSqlQuery : IEnumerable, IListSource
+    public class DbSqlQuery : IEnumerable, IListSource, IDbAsyncEnumerable<object>
     {
         #region Constructors and fields
 
@@ -44,6 +44,20 @@
         public IEnumerator GetEnumerator()
         {
             return _internalQuery.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable implementation
+
+        /// <summary>
+        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        /// </summary>
+        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<object> IDbAsyncEnumerable<object>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -5,19 +5,22 @@ namespace System.Data.Entity.Core.Objects
     using System.ComponentModel;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///   This class implements strongly-typed queries at the object-layer through
     ///   Entity SQL text and query-building helper methods. 
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public partial class ObjectQuery<T> : ObjectQuery, IEnumerable<T>, IQueryable<T>, IOrderedQueryable<T>, IListSource
+    public partial class ObjectQuery<T> : ObjectQuery, IEnumerable<T>, IQueryable<T>, IOrderedQueryable<T>, IListSource, IDbAsyncEnumerable<T>
     {
         internal ObjectQuery(ObjectQueryState queryState)
             : base(queryState)
@@ -40,6 +43,47 @@ namespace System.Data.Entity.Core.Objects
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             return GetResults(mergeOption);
+        }
+
+        /// <summary>
+        ///   An asynchronous version of Execute, which
+        ///   allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <returns>
+        ///   A Task containing an enumerable for the ObjectQuery results.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
+        {
+            return ExecuteAsync(mergeOption, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///   An asynchronous version of Execute, which
+        ///   allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///   The token to monitor for cancellation requests.
+        /// </param>
+        /// <returns>
+        ///   A Task containing an enumerable for the ObjectQuery results.
+        /// </returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            EntityUtil.CheckArgumentMergeOption(mergeOption);
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -78,6 +122,20 @@ namespace System.Data.Entity.Core.Objects
                 disposableEnumerable.Dispose();
                 throw;
             }
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable<T> implementation
+
+        /// <summary>
+        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        /// </summary>
+        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

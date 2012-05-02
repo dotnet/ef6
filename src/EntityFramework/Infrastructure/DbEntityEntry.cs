@@ -7,6 +7,8 @@
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     A non-generic version of the <see cref = "DbEntityEntry{T}" /> class.
@@ -90,6 +92,33 @@
         {
             var storeValues = _internalEntityEntry.GetDatabaseValues();
             return storeValues == null ? null : new DbPropertyValues(storeValues);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of GetDatabaseValues, which
+        ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        ///     Note that changing the values in the returned dictionary will not update the values in the database.
+        ///     If the entity is not found in the database then null is returned.
+        /// </summary>
+        /// <returns>A Task that contains the store values.</returns>
+        public Task<DbPropertyValues> GetDatabaseValuesAsync()
+        {
+            return GetDatabaseValuesAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of GetDatabaseValues, which
+        ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        ///     Note that changing the values in the returned dictionary will not update the values in the database.
+        ///     If the entity is not found in the database then null is returned.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task that contains the store values.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        public Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

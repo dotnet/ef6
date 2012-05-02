@@ -11,6 +11,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Collection of entities modeling a particular EDM construct
@@ -210,6 +212,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // do not fire the AssociationChanged event here,
             // once it is fired in one level deeper, (at Internal void Load(IEnumerable<T>)), you don't need to add the event at other
             // API that call (Internal void Load(IEnumerable<T>))
+        }
+
+        /// <summary>
+        /// An asynchronous version of Load, which
+        /// loads the related entity or entities into the related end using the specified merge option.
+        /// </summary>
+        /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

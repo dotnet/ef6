@@ -5,6 +5,8 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Versioning;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
     using IsolationLevel = System.Data.IsolationLevel;
 
@@ -190,6 +192,17 @@ namespace System.Data.Entity.Core.EntityClient
         public override void Open()
         {
             _internalEntityConnection.Open();
+        }
+
+        /// <summary>
+        /// An asynchronous version of Open, which
+        /// establishes a connection to the data store by calling the Open method on the underlying data provider
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override Task OpenAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

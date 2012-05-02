@@ -3,8 +3,11 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     An instance of this internal class is created whenever an instance of the public <see cref = "DbSet{TEntity}" />
@@ -92,6 +95,16 @@
         public override object Find(params object[] keyValues)
         {
             return _internalSet.Find(keyValues);
+        }
+
+        /// <summary>
+        ///     See comments in <see cref = "DbSet{TEntity}" />.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
+        public override Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
