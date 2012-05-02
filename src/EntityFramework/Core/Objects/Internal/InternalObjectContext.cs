@@ -2,7 +2,6 @@
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
@@ -48,7 +47,7 @@
         private EntityConnection _connection;
 
         private readonly MetadataWorkspace _workspace;
-        private ObjectStateManager _cache;
+        private ObjectStateManager _objectStateManager;
         private ClrPerspective _perspective;
         private readonly bool _createdConnection;
         private bool _openedConnection; // whether or not the context opened the connection to do an operation
@@ -118,6 +117,7 @@
         /// <exception cref="ArgumentException">either connectionString or defaultContainerName is invalid</exception>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For ObjectContext method. But the paths are not created in this method.
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         internal InternalObjectContext(string connectionString, string defaultContainerName)
             : this(connectionString)
         {
@@ -133,6 +133,7 @@
         /// </summary>
         /// <param name="connection">connection to the store</param>
         /// <param name="defaultContainerName">the name of the default entity container</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         internal InternalObjectContext(EntityConnection connection, string defaultContainerName)
             : this(connection)
         {
@@ -144,57 +145,68 @@
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
-        private InternalObjectContext(EntityConnection connection, bool isConnectionConstructor)
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+        internal InternalObjectContext(
+            EntityConnection connection, 
+            bool isConnectionConstructor, 
+            bool skipInitializeConnection = false, 
+            bool skipInitializeWorkspace = false,
+            bool skipInitializeContextOptions = false)
         {
-            if (connection == null)
+            if (!skipInitializeConnection)
             {
-                throw new ArgumentNullException("connection");
-            }
-
-            _entityWrapperFactory = new EntityWrapperFactory();
-
-            _connection = connection;
-
-            _connection.StateChange += ConnectionStateChange;
-
-            // Ensure a valid connection
-            var connectionString = connection.ConnectionString;
-            if (connectionString == null || connectionString.Trim().Length == 0)
-            {
-                throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", null) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", null);
-            }
-
-            try
-            {
-                _workspace = RetrieveMetadataWorkspaceFromConnection();
-            }
-            catch (InvalidOperationException e)
-            {
-                // Intercept exceptions retrieving workspace, and wrap exception in appropriate
-                // message based on which constructor pattern is being used.
-                throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", e) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", e);
-            }
-
-            // Register the O and OC metadata
-            if (null != _workspace)
-            {
-                // register the O-Loader
-                if (!_workspace.IsItemCollectionAlreadyRegistered(DataSpace.OSpace))
+                if (connection == null)
                 {
-                    var itemCollection = new ObjectItemCollection();
-                    _workspace.RegisterItemCollection(itemCollection);
+                    throw new ArgumentNullException("connection");
                 }
 
-                // have the OC-Loader registered by asking for it
-                _workspace.GetItemCollection(DataSpace.OCSpace);
+            _connection = connection;
+            _connection.StateChange += ConnectionStateChange;
+            _entityWrapperFactory = new EntityWrapperFactory();
+                // Ensure a valid connection
+                var connectionString = connection.ConnectionString;
+                if (connectionString == null || connectionString.Trim().Length == 0)
+                {
+                    throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", null) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", null);
+                }
             }
 
-            // load config file properties
-            var value = ConfigurationManager.AppSettings[UseLegacyPreserveChangesBehavior];
-            var useV35Behavior = false;
-            if (Boolean.TryParse(value, out useV35Behavior))
+            if (!skipInitializeWorkspace)
             {
-                ContextOptions.UseLegacyPreserveChangesBehavior = useV35Behavior;
+                try
+                {
+                    _workspace = RetrieveMetadataWorkspaceFromConnection();
+                }
+                catch (InvalidOperationException e)
+                {
+                    // Intercept exceptions retrieving workspace, and wrap exception in appropriate
+                    // message based on which constructor pattern is being used.
+                    throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", e) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", e);
+                }
+
+                // Register the O and OC metadata
+                if (null != _workspace)
+                {
+                    // register the O-Loader
+                    if (!_workspace.IsItemCollectionAlreadyRegistered(DataSpace.OSpace))
+                    {
+                        var itemCollection = new ObjectItemCollection();
+                        _workspace.RegisterItemCollection(itemCollection);
+                    }
+
+                    // have the OC-Loader registered by asking for it
+                    _workspace.GetItemCollection(DataSpace.OCSpace);
+                }
+            }
+            if (!skipInitializeContextOptions)
+            {
+                // load config file properties
+                var value = ConfigurationManager.AppSettings[UseLegacyPreserveChangesBehavior];
+                var useV35Behavior = false;
+                if (Boolean.TryParse(value, out useV35Behavior))
+                {
+                    ContextOptions.UseLegacyPreserveChangesBehavior = useV35Behavior;
+                }
             }
         }
 
@@ -212,7 +224,7 @@
         /// Gets the connection to the store.
         /// </summary>
         /// <exception cref="ObjectDisposedException">If the <see cref="ObjectContext"/> instance has been disposed.</exception>
-        public DbConnection Connection
+        public virtual DbConnection Connection
         {
             get
             {
@@ -228,7 +240,7 @@
         /// <summary>
         /// Gets or sets the default container name.
         /// </summary>
-        public string DefaultContainerName
+        public virtual string DefaultContainerName
         {
             get
             {
@@ -251,7 +263,7 @@
         /// <summary>
         /// Gets the metadata workspace associated with this ObjectContext.
         /// </summary>
-        public MetadataWorkspace MetadataWorkspace
+        public virtual MetadataWorkspace MetadataWorkspace
         {
             get { return _workspace; }
         }
@@ -263,18 +275,19 @@
         {
             get
             {
-                if (_cache == null)
+                if (_objectStateManager == null)
                 {
-                    _cache = new ObjectStateManager(_workspace);
+                    _objectStateManager = new ObjectStateManager(_workspace);
                 }
-                return _cache;
+
+                return _objectStateManager;
             }
         }
 
         /// <summary>
         /// ClrPerspective based on the MetadataWorkspace.
         /// </summary>
-        internal ClrPerspective Perspective
+        internal virtual ClrPerspective Perspective
         {
             get
             {
@@ -282,6 +295,7 @@
                 {
                     _perspective = new ClrPerspective(_workspace);
                 }
+
                 return _perspective;
             }
         }
@@ -291,16 +305,16 @@
         /// A null value indicates that the default value of the underlying provider
         /// will be used.
         /// </summary>
-        public int? CommandTimeout
+        public virtual int? CommandTimeout
         {
             get { return _queryTimeout; }
             set
             {
-                if (value.HasValue
-                    && value < 0)
+                if (value.HasValue && value < 0)
                 {
                     throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout, "value");
                 }
+
                 _queryTimeout = value;
             }
         }
@@ -316,6 +330,7 @@
                 {
                     _queryProvider = new ObjectQueryProvider(this.ObjectContextWrapper);
                 }
+
                 return _queryProvider;
             }
         }
@@ -324,7 +339,7 @@
         /// Whether or not we are in the middle of materialization
         /// Used to suppress operations such as lazy loading that are not allowed during materialization
         /// </summary>
-        internal bool InMaterialization { get; set; }
+        internal virtual bool InMaterialization { get; set; }
 
         /// <summary>
         /// Get <see cref="ObjectContextOptions"/> instance that contains options 
@@ -334,12 +349,12 @@
         /// Instance of <see cref="ObjectContextOptions"/> for the current ObjectContext.
         /// This value will never be null.
         /// </value>
-        public ObjectContextOptions ContextOptions
+        public virtual ObjectContextOptions ContextOptions
         {
             get { return _options; }
         }
 
-        internal CollectionColumnMap ColumnMapBuilder { get; set; }
+        internal virtual CollectionColumnMap ColumnMapBuilder { get; set; }
 
         internal virtual EntityWrapperFactory EntityWrapperFactory
         {
@@ -354,7 +369,7 @@
         /// AcceptChanges on all associated entries in the ObjectStateManager so their resultant state is either unchanged or detached.
         /// </summary>
         /// <returns></returns>
-        public void AcceptAllChanges()
+        public virtual void AcceptAllChanges()
         {
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
 
@@ -479,7 +494,7 @@
         /// </summary>
         /// <param name="entitySetName">entitySetName the Object to be added. It might be qualifed with container name </param>
         /// <param name="entity">Object to be added.</param>
-        public void AddObject(string entitySetName, object entity)
+        public virtual void AddObject(string entitySetName, object entity)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -569,7 +584,7 @@
         /// <param name="setName">EntitySet name for the Object to be added. It may be qualified with container name</param>
         /// <param name="containerName">Container name for the Object to be added.</param>
         /// <param name="argumentName">Name of the argument passed to a public method, for use in exceptions.</param>
-        internal void AddSingleObject(EntitySet entitySet, IEntityWrapper wrappedEntity, string argumentName)
+        internal virtual void AddSingleObject(EntitySet entitySet, IEntityWrapper wrappedEntity, string argumentName)
         {
             var key = wrappedEntity.GetEntityKeyFromEntity();
             if (null != (object)key)
@@ -604,7 +619,7 @@
             // Find PK values in referenced principals and use these to set FK values
             entry.FixupFKValuesFromNonAddedReferences();
 
-            _cache.FixupReferencesByForeignKeys(entry);
+            ObjectStateManager.FixupReferencesByForeignKeys(entry);
             wrappedEntity.TakeSnapshotOfRelationships(entry);
         }
 
@@ -617,7 +632,7 @@
         /// </remarks>
         /// <param name="entity">The source entity on which the relationship is defined</param>
         /// <param name="navigationProperty">The name of the property to load</param>
-        public void LoadProperty(object entity, string navigationProperty)
+        public virtual void LoadProperty(object entity, string navigationProperty)
         {
             var wrappedEntity = WrapEntityAndCheckContext(entity, "property");
             wrappedEntity.RelationshipManager.GetRelatedEnd(navigationProperty).Load();
@@ -633,7 +648,7 @@
         /// <param name="entity">The source entity on which the relationship is defined</param>
         /// <param name="navigationProperty">The name of the property to load</param>
         /// <param name="mergeOption">The merge option to use for the load</param>
-        public void LoadProperty(object entity, string navigationProperty, MergeOption mergeOption)
+        public virtual void LoadProperty(object entity, string navigationProperty, MergeOption mergeOption)
         {
             var wrappedEntity = WrapEntityAndCheckContext(entity, "property");
             wrappedEntity.RelationshipManager.GetRelatedEnd(navigationProperty).Load(mergeOption);
@@ -653,7 +668,7 @@
         /// <param name="entity">The source entity on which the relationship is defined</param>
         /// <param name="selector">A LINQ expression specifying the property to load</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector)
+        public virtual void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector)
         {
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
             // but if we still need to throw, then we should still throw an ArgumentException to avoid a breaking change.
@@ -679,7 +694,7 @@
         /// <param name="selector">A LINQ expression specifying the property to load</param>
         /// <param name="mergeOption">The merge option to use for the load</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector, MergeOption mergeOption)
+        public virtual void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector, MergeOption mergeOption)
         {
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
             // but if we still need to throw, then we should still throw an ArgumentException to avoid a breaking change.
@@ -741,7 +756,7 @@
         /// </summary>
         /// <param name="entitySetName">name of EntitySet of entity to be updated</param>
         /// <param name="currentEntity">object with modified properties</param>
-        public TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
+        public virtual TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
         {
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, this.ObjectContextWrapper);
 
@@ -783,7 +798,7 @@
         /// <param name="entitySetName">name of EntitySet of entity to be updated</param>
         /// <param name="originalEntity">object with original values</param>
         /// <returns>updated entity</returns>
-        public TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
+        public virtual TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
             var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, this.ObjectContextWrapper);
@@ -809,8 +824,7 @@
 
             // Check if the entity is already in the cache
             var ose = ObjectStateManager.FindEntityEntry(key);
-            if (ose == null
-                || ose.IsKeyEntry)
+            if (ose == null || ose.IsKeyEntry)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_EntityNotTrackedOrHasTempKey);
             }
@@ -843,7 +857,7 @@
         /// </summary>
         /// <param name="entitySetName">EntitySet name for the Object to be attached. It may be qualified with container name</param>        
         /// <param name="entity"></param>
-        public void AttachTo(string entitySetName, object entity)
+        public virtual void AttachTo(string entitySetName, object entity)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -930,7 +944,7 @@
         /// </summary>
         /// <param name="entity">Entity to be attached.</param>
         /// <param name="entitySet">"Computed" entity set.</param>
-        internal void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet)
+        internal virtual void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
             Debug.Assert(wrappedEntity != null, "entity wrapper shouldn't be null");
             Debug.Assert(wrappedEntity.Entity != null, "entity shouldn't be null");
@@ -1052,7 +1066,7 @@
         /// <param name="entitySetName">entity set of the entity</param>
         /// <param name="entity">entity</param>
         /// <returns>new instance of entity key</returns>
-        public EntityKey CreateEntityKey(string entitySetName, object entity)
+        public virtual EntityKey CreateEntityKey(string entitySetName, object entity)
         {
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -1065,7 +1079,7 @@
             return ObjectStateManager.CreateEntityKey(entitySet, entity);
         }
 
-        internal EntitySet GetEntitySetFromName(string entitySetName)
+        internal virtual EntitySet GetEntitySetFromName(string entitySetName)
         {
             string setName;
             string containerName;
@@ -1109,7 +1123,7 @@
         /// single EntitySet for the specified type. Throws exception if more than one type is found.
         /// </summary>
         /// <typeparam name="TEntity">Entity type for the requested ObjectSet</typeparam>
-        public ObjectSet<TEntity> CreateObjectSet<TEntity>()
+        public virtual ObjectSet<TEntity> CreateObjectSet<TEntity>()
             where TEntity : class
         {
             var entitySet = GetEntitySetForType(typeof(TEntity), "TEntity");
@@ -1198,7 +1212,7 @@
         /// <param name="entitySetName">
         /// EntitySet to use for the ObjectSet. Can be fully-qualified or unqualified if the DefaultContainerName is set.
         /// </param>
-        public ObjectSet<TEntity> CreateObjectSet<TEntity>(string entitySetName)
+        public virtual ObjectSet<TEntity> CreateObjectSet<TEntity>(string entitySetName)
             where TEntity : class
         {
             var entitySet = GetEntitySetForNameAndType(entitySetName, typeof(TEntity), "TEntity");
@@ -1240,11 +1254,6 @@
         /// <exception cref="ObjectDisposedException">If the <see cref="ObjectContext"/> instance has been disposed.</exception>
         internal virtual void EnsureConnection()
         {
-            if (_connection == null)
-            {
-                throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
-            }
-
             if (ConnectionState.Closed == Connection.State)
             {
                 Connection.Open();
@@ -1400,7 +1409,7 @@
         /// for each EnsureConnection call.
         /// </summary>
         /// <exception cref="ObjectDisposedException">If the <see cref="ObjectContext"/> instance has been disposed.</exception>
-        internal void ReleaseConnection()
+        internal virtual void ReleaseConnection()
         {
             if (_connection == null)
             {
@@ -1425,7 +1434,7 @@
             }
         }
 
-        internal void EnsureMetadata()
+        internal virtual void EnsureMetadata()
         {
             if (!MetadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
             {
@@ -1470,7 +1479,7 @@
         /// <param name="queryString">the query string to be executed</param>
         /// <param name="parameters">parameters to pass to the query</param>
         /// <returns>an ObjectQuery instance, ready to be executed</returns>
-        public ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
+        public virtual ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
         {
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -1520,7 +1529,7 @@
                 throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
             }
 
-            var connectionWorkspace = _connection.GetMetadataWorkspace(false /* initializeAllConnections */);
+            var connectionWorkspace = _connection.GetMetadataWorkspace(initializeAllCollections: false);
             Debug.Assert(connectionWorkspace != null, "EntityConnection.MetadataWorkspace is null.");
 
             // Create our own workspace
@@ -1533,7 +1542,7 @@
         /// Marks an object for deletion from the cache.
         /// </summary>
         /// <param name="entity">Object to be deleted.</param>
-        public void DeleteObject(object entity)
+        public virtual void DeleteObject(object entity)
         {
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             // This method and ObjectSet.DeleteObject are expected to have identical behavior except for the extra validation ObjectSet
@@ -1551,7 +1560,7 @@
         /// <param name="expectedEntitySet">
         /// EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet.
         /// </param>
-        internal void DeleteObject(object entity, EntitySet expectedEntitySet)
+        internal virtual void DeleteObject(object entity, EntitySet expectedEntitySet)
         {
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
             if (cacheEntry == null || !ReferenceEquals(cacheEntry.Entity, entity))
@@ -1579,14 +1588,15 @@
         /// Detach entity from the cache.
         /// </summary>
         /// <param name="entity">Object to be detached.</param>
-        public void Detach(object entity)
+        public virtual void Detach(object entity)
         {
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+            
             // This method and ObjectSet.DetachObject are expected to have identical behavior except for the extra validation ObjectSet
             // requests by passing a non-null expectedEntitySetName. Any changes to this method are expected to be made in the common
             // internal overload below that ObjectSet also uses, unless there is a specific reason why a behavior is desired when the
             // call comes from ObjectContext only.
-            Detach(entity, null /*expectedEntitySet*/);
+            Detach(entity, expectedEntitySet: null);
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
         }
 
@@ -1597,7 +1607,7 @@
         /// <param name="expectedEntitySet">
         /// EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet.
         /// </param>        
-        internal void Detach(object entity, EntitySet expectedEntitySet)
+        internal virtual void Detach(object entity, EntitySet expectedEntitySet)
         {
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
 
@@ -1653,9 +1663,9 @@
                     }
                     _connection = null; // Marks this object as disposed.
                     _adapter = null;
-                    if (_cache != null)
+                    if (_objectStateManager != null)
                     {
-                        _cache.Dispose();
+                        _objectStateManager.Dispose();
                     }
                 }
 
@@ -1673,7 +1683,7 @@
         /// <returns>the appropriate EntitySet</returns>
         /// <exception cref="InvalidOperationException">the entity set could not be found for the given name</exception>
         /// <exception cref="InvalidOperationException">the entity container could not be found for the given name</exception>
-        internal EntitySet GetEntitySet(string entitySetName, string entityContainerName)
+        internal virtual EntitySet GetEntitySet(string entitySetName, string entityContainerName)
         {
             EntityContainer container = null;
 
@@ -1751,7 +1761,7 @@
             }
         }
 
-        internal TypeUsage GetTypeUsage(Type entityCLRType)
+        internal virtual TypeUsage GetTypeUsage(Type entityCLRType)
         {
             // Register the assembly so the type information will be sure to be loaded in metadata
             MetadataWorkspace.ImplicitLoadAssemblyForType(entityCLRType, Assembly.GetCallingAssembly());
@@ -1775,7 +1785,7 @@
         /// </summary>
         /// <param name="key">Key of the object to be found.</param>
         /// <returns>Entity object.</returns>
-        public object GetObjectByKey(EntityKey key)
+        public virtual object GetObjectByKey(EntityKey key)
         {
             var entitySet = key.GetEntitySet(MetadataWorkspace);
             Debug.Assert(entitySet != null, "Key's EntitySet should not be null in the MetadataWorkspace");
@@ -1806,7 +1816,7 @@
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">collection is null</exception>
         /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
-        public void Refresh(RefreshMode refreshMode, IEnumerable collection)
+        public virtual void Refresh(RefreshMode refreshMode, IEnumerable collection)
         {
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             try
@@ -1829,7 +1839,7 @@
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">entity is null</exception>
         /// <exception cref="ArgumentException">entity is not attached to this context</exception>
-        public void Refresh(RefreshMode refreshMode, object entity)
+        public virtual void Refresh(RefreshMode refreshMode, object entity)
         {
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             try
@@ -2164,10 +2174,9 @@
                 ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
             var connection = (EntityConnection)Connection;
 
+            // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
             if (0 < entriesAffected)
             {
-                // else fast exit if no changes to save to avoids interacting with or starting of new transactions
-
                 // get data adapter
                 if (_adapter == null)
                 {
@@ -2176,6 +2185,7 @@
                     {
                         _adapter = sp.GetService(typeof(IEntityAdapter)) as IEntityAdapter;
                     }
+
                     if (_adapter == null)
                     {
                         throw new InvalidOperationException(Strings.ObjectContext_InvalidDataAdapter);
@@ -2253,14 +2263,7 @@
                     {
                         // If AcceptAllChanges throw - let's inform user that changes in database were committed 
                         // and that Context and Database can be in inconsistent state.
-
-                        // We should not be wrapping all exceptions
-                        if (EntityUtil.IsCatchableExceptionType(e))
-                        {
-                            throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
-                        }
-
-                        throw;
+                        throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
                     }
                 }
             }
@@ -2278,7 +2281,7 @@
         /// <param name="value">Out param for the object.</param>
         /// <returns>True if the object was found, false otherwise.</returns>
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate")]
-        public bool TryGetObjectByKey(EntityKey key, out object value)
+        public virtual bool TryGetObjectByKey(EntityKey key, out object value)
         {
             // try the cache first
             EntityEntry entry;
@@ -2370,7 +2373,7 @@
         /// <exception cref="ArgumentException">If function is null or empty</exception>
         /// <exception cref="InvalidOperationException">If function is invalid (syntax,
         /// does not exist, refers to a function with return type incompatible with T)</exception>
-        public ObjectResult<TElement> ExecuteFunction<TElement>(
+        public virtual ObjectResult<TElement> ExecuteFunction<TElement>(
             string functionName, MergeOption mergeOption, params ObjectParameter[] parameters)
         {
             EdmFunction functionImport;
@@ -2399,7 +2402,7 @@
         /// <exception cref="ArgumentException">If function is null or empty</exception>
         /// <exception cref="InvalidOperationException">If function is invalid (syntax,
         /// does not exist, refers to a function with return type incompatible with T)</exception>
-        public int ExecuteFunction(string functionName, params ObjectParameter[] parameters)
+        public virtual int ExecuteFunction(string functionName, params ObjectParameter[] parameters)
         {
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
@@ -2498,7 +2501,7 @@
         /// <summary>
         ///  Get the materializer for the resultSetIndexth result set of storeReader.
         /// </summary>
-        internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
+        internal virtual ObjectResult<TElement> MaterializedDataRecord<TElement>(
             EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyMetadataCollection<EntitySet> entitySets,
             EdmType[] edmTypes, MergeOption mergeOption)
         {
@@ -2691,7 +2694,7 @@
         // var types = from entityType in ospaceItems.GetItems<EntityType>() select ospaceItems.GetClrType(entityType)
         // TODO: List of names possibly better than CreateProxyTypes:
         // LoadEntityTypeMetadata (this disrupts the sematics of the sample methods above, since it implies we load metadata)
-        public void CreateProxyTypes(IEnumerable<Type> types)
+        public virtual void CreateProxyTypes(IEnumerable<Type> types)
         {
             var ospaceItems = (ObjectItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.OSpace);
 
@@ -2725,7 +2728,7 @@
         /// <remarks>
         /// The type <typeparamref name="T"/> must have an OSpace EntityType representation.
         /// </remarks>
-        public T CreateObject<T>()
+        public virtual T CreateObject<T>()
             where T : class
         {
             T instance = null;
@@ -2788,7 +2791,7 @@
         /// <param name="command">The command specified in the server's native query language.</param>
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>A single integer return value</returns>
-        public int ExecuteStoreCommand(string commandText, params object[] parameters)
+        public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
             EnsureConnection();
 
@@ -2813,7 +2816,7 @@
         /// <returns>An IEnumerable sequence of objects.</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "tadam: Generic parameters are required for strong-typing of the return type.")]
-        public ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
+        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
             return ExecuteStoreQueryInternal<TElement>(commandText, null /*entitySetName*/, MergeOption.AppendOnly, parameters);
         }
@@ -2829,7 +2832,7 @@
         /// <returns>The translated sequence of objects</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
-        public ObjectResult<TEntity> ExecuteStoreQuery<TEntity>(
+        public virtual ObjectResult<TEntity> ExecuteStoreQuery<TEntity>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
@@ -2889,7 +2892,7 @@
         /// <returns>The translated sequence of objects</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
-        public ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
+        public virtual ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
         {
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
@@ -2914,7 +2917,7 @@
         /// <returns>The translated sequence of objects</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
-        public ObjectResult<TEntity> Translate<TEntity>(DbDataReader reader, string entitySetName, MergeOption mergeOption)
+        public virtual ObjectResult<TEntity> Translate<TEntity>(DbDataReader reader, string entitySetName, MergeOption mergeOption)
         {
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
@@ -3044,7 +3047,7 @@
         /// Creates the database using the current store connection and the metadata in the StoreItemCollection. Most of the actual work
         /// is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
-        public void CreateDatabase()
+        public virtual void CreateDatabase()
         {
             var storeConnection = _connection.StoreConnection;
             var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
@@ -3055,7 +3058,7 @@
         /// Deletes the database that is specified as the database in the current store connection. Most of the actual work
         /// is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
-        public void DeleteDatabase()
+        public virtual void DeleteDatabase()
         {
             var storeConnection = _connection.StoreConnection;
             var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
@@ -3066,7 +3069,7 @@
         /// Checks if the database that is specified as the database in the current store connection exists on the store. Most of the actual work
         /// is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
-        public bool DatabaseExists()
+        public virtual bool DatabaseExists()
         {
             var storeConnection = _connection.StoreConnection;
             var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
@@ -3077,7 +3080,7 @@
         /// Creates the sql script that can be used to create the database for the metadata in the StoreItemCollection. Most of the actual work
         /// is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
-        public String CreateDatabaseScript()
+        public virtual String CreateDatabaseScript()
         {
             var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
             var targetProviderManifestToken = GetStoreItemCollection().StoreProviderManifestToken;

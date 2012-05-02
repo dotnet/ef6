@@ -708,6 +708,7 @@
     <Compile Include="Core\Objects\Internal\IEntityKeyStrategy.cs" />
     <Compile Include="Core\Objects\Internal\IEntityWrapper.cs" />
     <Compile Include="Core\Objects\Internal\InternalObjectContext.cs" />
+    <Compile Include="Core\Objects\Internal\InternalObjectStateManager.cs" />
     <Compile Include="Core\Objects\Internal\IPropertyAccessorStrategy.cs" />
     <Compile Include="Core\Objects\Internal\LazyLoadBehavior.cs" />
     <Compile Include="Core\Objects\Internal\LightweightEntityWrapper.cs" />

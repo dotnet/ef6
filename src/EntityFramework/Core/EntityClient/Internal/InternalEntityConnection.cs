@@ -465,7 +465,7 @@
         /// <summary>
         /// Gets the current transaction that this connection is enlisted in
         /// </summary>
-        internal EntityTransaction CurrentTransaction
+        internal virtual EntityTransaction CurrentTransaction
         {
             get
             {
@@ -489,7 +489,7 @@
         /// the actual transaction status. However it can happen that the transaction has already been disposed and trying to get
         /// transaction status will cause ObjectDisposedException. This would also mean that the transaction has completed and can be reset.
         /// </remarks>
-        internal bool EnlistedInUserTransaction
+        internal virtual bool EnlistedInUserTransaction
         {
             get
             {
@@ -652,7 +652,7 @@
         /// </summary>
         /// <param name="isolationLevel">The isolation level of the transaction</param>
         /// <returns>An object representing the new transaction</returns>
-        internal DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
+        internal virtual DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
             if (CurrentTransaction != null)
             {

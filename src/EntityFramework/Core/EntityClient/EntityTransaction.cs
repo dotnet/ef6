@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class representing a transaction for the conceptual layer
@@ -23,6 +24,8 @@ namespace System.Data.Entity.Core.EntityClient
         internal EntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
             : this(new InternalEntityTransaction(connection, storeTransaction))
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeTransaction != null);
         }
 
         internal EntityTransaction(InternalEntityTransaction internalEntityTransaction)

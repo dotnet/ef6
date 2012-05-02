@@ -3,7 +3,6 @@
     using System.Data.Common;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     internal class InternalEntityTransaction : IDisposable
     {
@@ -18,9 +17,6 @@
         /// <param name="storeTransaction">The underlying transaction object</param>
         internal InternalEntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
         {
-            Contract.Requires(connection != null);
-            Contract.Requires(storeTransaction != null);
-
             _connection = connection;
             _storeTransaction = storeTransaction;
         }
@@ -34,7 +30,7 @@
         /// <summary>
         /// The connection object owning this transaction object
         /// </summary>
-        public EntityConnection Connection
+        public virtual EntityConnection Connection
         {
             get
             {
@@ -46,7 +42,7 @@
         /// <summary>
         /// The connection object owning this transaction object
         /// </summary>
-        internal DbConnection DbConnection
+        internal virtual DbConnection DbConnection
         {
             get
             {
@@ -58,7 +54,7 @@
         /// <summary>
         /// The isolation level of this transaction
         /// </summary>
-        public IsolationLevel IsolationLevel
+        public virtual IsolationLevel IsolationLevel
         {
             get { return _storeTransaction.IsolationLevel; }
         }
@@ -66,7 +62,7 @@
         /// <summary>
         /// Gets the DbTransaction for the underlying provider transaction
         /// </summary>
-        internal DbTransaction StoreTransaction
+        internal virtual DbTransaction StoreTransaction
         {
             get { return _storeTransaction; }
         }
@@ -74,7 +70,7 @@
         /// <summary>
         /// Commits the transaction
         /// </summary>
-        public void Commit()
+        public virtual void Commit()
         {
             try
             {
@@ -96,7 +92,7 @@
         /// <summary>
         /// Rolls back the transaction
         /// </summary>
-        public void Rollback()
+        public virtual void Rollback()
         {
             try
             {
@@ -149,7 +145,5 @@
                 _connection.ClearCurrentTransaction();
             }
         }
-
-
     }
 }

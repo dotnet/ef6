@@ -184,7 +184,7 @@
         /// <returns>The item collection for the given space</returns>
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If ItemCollection has not been registered for the space passed in</exception>
-        public ItemCollection GetItemCollection(DataSpace dataSpace)
+        public virtual ItemCollection GetItemCollection(DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection;
@@ -200,7 +200,7 @@
         /// <exception cref="System.ArgumentNullException">if collection argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If there is an ItemCollection that has already been registered for collection's space passed in</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void RegisterItemCollection(ItemCollection collection)
+        public virtual void RegisterItemCollection(ItemCollection collection)
         {
             Contract.Requires(collection != null);
 
@@ -344,7 +344,7 @@
         /// is for metadata caching to make the workspace marking a particular cache entry is still in used
         /// </summary>
         /// <param name="token"></param>
-        internal void AddMetadataEntryToken(object token)
+        internal virtual void AddMetadataEntryToken(object token)
         {
             if (_cacheTokens == null)
             {
@@ -359,7 +359,7 @@
         /// </summary>
         /// <param name="assembly">The assembly from which to load metadata</param>
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
-        public void LoadFromAssembly(Assembly assembly)
+        public virtual void LoadFromAssembly(Assembly assembly)
         {
             LoadFromAssembly(assembly, null);
         }
@@ -370,7 +370,7 @@
         /// <param name="assembly">The assembly from which to load metadata</param>
         /// <param name="logLoadMessage">The delegate for logging the load messages</param>
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
-        public void LoadFromAssembly(Assembly assembly, Action<string> logLoadMessage)
+        public virtual void LoadFromAssembly(Assembly assembly, Action<string> logLoadMessage)
         {
             Contract.Requires(assembly != null);
             var collection = (ObjectItemCollection)GetItemCollection(DataSpace.OSpace);
@@ -407,7 +407,7 @@
         /// </summary>
         /// <param name="type">The type's assembly is loaded into the OSpace ItemCollection</param>
         /// <param name="callingAssembly">The assembly and its referenced assemblies to load when type is insuffiecent</param>
-        internal void ImplicitLoadAssemblyForType(Type type, Assembly callingAssembly)
+        internal virtual void ImplicitLoadAssemblyForType(Type type, Assembly callingAssembly)
         {
             // this exists separately from LoadFromAssembly so that we can handle generics, like IEnumerable<Product>
             Debug.Assert(null != type, "null type");
@@ -457,7 +457,7 @@
         /// </summary>
         /// <param name="type">The CSPace type to verify its OSpace counterpart is loaded</param>
         /// <param name="callingAssembly">The assembly and its referenced assemblies to load when type is insuffiecent</param>
-        internal void ImplicitLoadFromEntityType(EntityType type, Assembly callingAssembly)
+        internal virtual void ImplicitLoadFromEntityType(EntityType type, Assembly callingAssembly)
         {
             // used by ObjectContext.*GetObjectByKey when the clr type is not available
             // so we check the OCMap to find the clr type else attempt to autoload the OSpace from callingAssembly
@@ -491,7 +491,7 @@
         /// <exception cref="System.ArgumentNullException">if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have an item with the given identity</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public T GetItem<T>(string identity, DataSpace dataSpace) where T : GlobalItem
+        public virtual T GetItem<T>(string identity, DataSpace dataSpace) where T : GlobalItem
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetItem<T>(identity, ignoreCase: false);
@@ -506,7 +506,7 @@
         /// <param name="item"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">if identity or space argument is null</exception>
-        public bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
+        public virtual bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
         {
             item = null;
             var collection = GetItemCollection(space, false);
@@ -527,7 +527,7 @@
         /// <exception cref="System.ArgumentNullException">if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have an item with the given identity</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public T GetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace) where T : GlobalItem
+        public virtual T GetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace) where T : GlobalItem
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetItem<T>(identity, ignoreCase);
@@ -543,7 +543,7 @@
         /// <param name="item"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">if identity or space argument is null</exception>
-        public bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
+        public virtual bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
         {
             item = null;
             var collection = GetItemCollection(dataSpace, false);
@@ -560,7 +560,7 @@
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If ItemCollection has not been registered for the space passed in</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public ReadOnlyCollection<T> GetItems<T>(DataSpace dataSpace) where T : GlobalItem
+        public virtual ReadOnlyCollection<T> GetItems<T>(DataSpace dataSpace) where T : GlobalItem
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetItems<T>();
@@ -578,7 +578,7 @@
         /// <exception cref="System.ArgumentNullException">if name or namespaceName arguments passed in are null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public EdmType GetType(string name, string namespaceName, DataSpace dataSpace)
+        public virtual EdmType GetType(string name, string namespaceName, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetType(name, namespaceName, ignoreCase: false);
@@ -593,7 +593,7 @@
         /// <param name="type">The type that needs to be filled with the return value</param>
         /// <returns>Returns false if no match found.</returns>
         /// <exception cref="System.ArgumentNullException">if name, namespaceName or space argument is null</exception>
-        public bool TryGetType(string name, string namespaceName, DataSpace dataSpace, out EdmType type)
+        public virtual bool TryGetType(string name, string namespaceName, DataSpace dataSpace, out EdmType type)
         {
             type = null;
             var collection = GetItemCollection(dataSpace, false);
@@ -613,7 +613,7 @@
         /// <exception cref="System.ArgumentNullException">if name or namespaceName arguments passed in are null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public EdmType GetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace)
+        public virtual EdmType GetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetType(name, namespaceName, ignoreCase);
@@ -629,7 +629,7 @@
         /// <param name="type">The type that needs to be filled with the return value</param>
         /// <returns>Returns null if no match found.</returns>
         /// <exception cref="System.ArgumentNullException">if name, namespaceName or space argument is null</exception>
-        public bool TryGetType(
+        public virtual bool TryGetType(
             string name, string namespaceName, bool ignoreCase,
             DataSpace dataSpace, out EdmType type)
         {
@@ -649,7 +649,7 @@
         /// <exception cref="System.ArgumentNullException">if name argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a EntityContainer with the given name</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public EntityContainer GetEntityContainer(string name, DataSpace dataSpace)
+        public virtual EntityContainer GetEntityContainer(string name, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetEntityContainer(name);
@@ -662,7 +662,7 @@
         /// <param name="dataSpace"></param>
         /// <param name="entityContainer"></param>
         /// <exception cref="System.ArgumentNullException">if either space or name arguments is null</exception>
-        public bool TryGetEntityContainer(string name, DataSpace dataSpace, out EntityContainer entityContainer)
+        public virtual bool TryGetEntityContainer(string name, DataSpace dataSpace, out EntityContainer entityContainer)
         {
             entityContainer = null;
             // null check exists in call stack, but throws for "identity" not "name"
@@ -683,7 +683,7 @@
         /// <exception cref="System.ArgumentNullException">if name argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a EntityContainer with the given name</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public EntityContainer GetEntityContainer(string name, bool ignoreCase, DataSpace dataSpace)
+        public virtual EntityContainer GetEntityContainer(string name, bool ignoreCase, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetEntityContainer(name, ignoreCase);
@@ -697,7 +697,7 @@
         /// <param name="dataSpace"></param>
         /// <param name="entityContainer"></param>
         /// <exception cref="System.ArgumentNullException">if name or space argument is null</exception>
-        public bool TryGetEntityContainer(
+        public virtual bool TryGetEntityContainer(
             string name, bool ignoreCase,
             DataSpace dataSpace, out EntityContainer entityContainer)
         {
@@ -722,7 +722,7 @@
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a EdmFunction with the given functionName</exception>
         /// <exception cref="System.ArgumentException">If the name or namespaceName is empty</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public ReadOnlyCollection<EdmFunction> GetFunctions(string name, string namespaceName, DataSpace dataSpace)
+        public virtual ReadOnlyCollection<EdmFunction> GetFunctions(string name, string namespaceName, DataSpace dataSpace)
         {
             return GetFunctions(name, namespaceName, dataSpace, false /*ignoreCase*/);
         }
@@ -742,7 +742,7 @@
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a EdmFunction with the given functionName</exception>
         /// <exception cref="System.ArgumentException">If the name or namespaceName is empty</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public ReadOnlyCollection<EdmFunction> GetFunctions(
+        public virtual ReadOnlyCollection<EdmFunction> GetFunctions(
             string name,
             string namespaceName,
             DataSpace dataSpace,
@@ -768,7 +768,7 @@
         /// <param name="function">The function that needs to be returned</param>
         /// <returns> The function as specified in the function key or null</returns>
         /// <exception cref="System.ArgumentNullException">if name, namespaceName, parameterTypes or space argument is null</exception>
-        internal bool TryGetFunction(
+        internal virtual bool TryGetFunction(
             string name,
             string namespaceName,
             TypeUsage[] parameterTypes,
@@ -793,7 +793,7 @@
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If ItemCollection has not been registered for the space passed in</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(DataSpace dataSpace)
+        public virtual ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetItems<PrimitiveType>();
@@ -807,7 +807,7 @@
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If ItemCollection has not been registered for the space passed in</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        public ReadOnlyCollection<GlobalItem> GetItems(DataSpace dataSpace)
+        public virtual ReadOnlyCollection<GlobalItem> GetItems(DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetItems<GlobalItem>();
@@ -822,7 +822,7 @@
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         /// <exception cref="System.InvalidOperationException">If ItemCollection has not been registered for the space passed in</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
-        internal PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, DataSpace dataSpace)
+        internal virtual PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return collection.GetMappedPrimitiveType(primitiveTypeKind);
@@ -837,7 +837,7 @@
         /// <param name="mappingSpace">space for which you want to get the mapped type</param>
         /// <param name="map"></param>
         /// <returns>Returns false if no match found.</returns>
-        internal bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
+        internal virtual bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
         {
             map = null;
             var collection = GetItemCollection(mappingSpace, false);
@@ -851,7 +851,7 @@
         /// <param name="typeSpace">The dataspace that the type for which map needs to be returned belongs to</param>
         /// <param name="dataSpace">space for which you want to get the mapped type</param>
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
-        internal Map GetMap(string identity, DataSpace typeSpace, DataSpace dataSpace)
+        internal virtual Map GetMap(string identity, DataSpace typeSpace, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return ((MappingItemCollection)collection).GetMap(identity, typeSpace);
@@ -863,7 +863,7 @@
         /// <param name="item"></param>
         /// <param name="dataSpace">space for which you want to get the mapped type</param>
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
-        internal Map GetMap(GlobalItem item, DataSpace dataSpace)
+        internal virtual Map GetMap(GlobalItem item, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
             return ((MappingItemCollection)collection).GetMap(item);
@@ -876,7 +876,7 @@
         /// <param name="dataSpace">space for which you want to get the mapped type</param>
         /// <param name="map"></param>
         /// <returns>Returns false if no match found.</returns>
-        internal bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
+        internal virtual bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
         {
             map = null;
             var collection = GetItemCollection(dataSpace, false);
@@ -903,7 +903,7 @@
         /// <param name="collection">The collection registered for the specified dataspace, if any</param>
         /// <returns><c>true</c> if an item collection is currently registered for the specified space; otherwise <c>false</c>.</returns>
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
-        public bool TryGetItemCollection(DataSpace dataSpace, out ItemCollection collection)
+        public virtual bool TryGetItemCollection(DataSpace dataSpace, out ItemCollection collection)
         {
             collection = GetItemCollection(dataSpace, false);
             return (null != collection);
@@ -916,7 +916,7 @@
         /// <param name="dataSpace"></param>
         /// <param name="required">if true, will throw</param>
         /// <exception cref="ArgumentException">Thrown if required and mapping space is not valid or registered</exception>
-        internal ItemCollection GetItemCollection(DataSpace dataSpace, bool required)
+        internal virtual ItemCollection GetItemCollection(DataSpace dataSpace, bool required)
         {
             ItemCollection collection;
             switch (dataSpace)
@@ -959,7 +959,7 @@
         /// </summary>
         /// <param name="edmSpaceType">The CSpace type to look up</param>
         /// <returns>The OSpace type mapped to the supplied argument</returns>
-        public StructuralType GetObjectSpaceType(StructuralType edmSpaceType)
+        public virtual StructuralType GetObjectSpaceType(StructuralType edmSpaceType)
         {
             return GetObjectSpaceType<StructuralType>(edmSpaceType);
         }
@@ -974,7 +974,7 @@
         /// <param name="objectSpaceType">The OSpace type mapped to the supplied argument</param>
         /// <returns>true on success, false on failure</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public bool TryGetObjectSpaceType(StructuralType edmSpaceType, out StructuralType objectSpaceType)
+        public virtual bool TryGetObjectSpaceType(StructuralType edmSpaceType, out StructuralType objectSpaceType)
         {
             return TryGetObjectSpaceType<StructuralType>(edmSpaceType, out objectSpaceType);
         }
@@ -986,7 +986,7 @@
         /// </summary>
         /// <param name="edmSpaceType">The CSpace type to look up</param>
         /// <returns>The OSpace type mapped to the supplied argument</returns>
-        public EnumType GetObjectSpaceType(EnumType edmSpaceType)
+        public virtual EnumType GetObjectSpaceType(EnumType edmSpaceType)
         {
             return GetObjectSpaceType<EnumType>(edmSpaceType);
         }
@@ -1001,7 +1001,7 @@
         /// <param name="objectSpaceType">The OSpace type mapped to the supplied argument</param>
         /// <returns>true on success, false on failure</returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public bool TryGetObjectSpaceType(EnumType edmSpaceType, out EnumType objectSpaceType)
+        public virtual bool TryGetObjectSpaceType(EnumType edmSpaceType, out EnumType objectSpaceType)
         {
             return TryGetObjectSpaceType<EnumType>(edmSpaceType, out objectSpaceType);
         }
@@ -1077,7 +1077,7 @@
         /// </summary>
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <returns>The CSpace type mapped to the OSpace parameter</returns>
-        public StructuralType GetEdmSpaceType(StructuralType objectSpaceType)
+        public virtual StructuralType GetEdmSpaceType(StructuralType objectSpaceType)
         {
             return GetEdmSpaceType<StructuralType>(objectSpaceType);
         }
@@ -1090,7 +1090,7 @@
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <param name="edmSpaceType">The mapped CSpace type</param>
         /// <returns>true on success, false on failure</returns>
-        public bool TryGetEdmSpaceType(StructuralType objectSpaceType, out StructuralType edmSpaceType)
+        public virtual bool TryGetEdmSpaceType(StructuralType objectSpaceType, out StructuralType edmSpaceType)
         {
             return TryGetEdmSpaceType<StructuralType>(objectSpaceType, out edmSpaceType);
         }
@@ -1102,7 +1102,7 @@
         /// </summary>
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <returns>The CSpace type mapped to the OSpace parameter</returns>
-        public EnumType GetEdmSpaceType(EnumType objectSpaceType)
+        public virtual EnumType GetEdmSpaceType(EnumType objectSpaceType)
         {
             return GetEdmSpaceType<EnumType>(objectSpaceType);
         }
@@ -1115,7 +1115,7 @@
         /// <param name="objectSpaceType">The OSpace type to look up</param>
         /// <param name="edmSpaceType">The mapped CSpace type</param>
         /// <returns>true on success, false on failure</returns>
-        public bool TryGetEdmSpaceType(EnumType objectSpaceType, out EnumType edmSpaceType)
+        public virtual bool TryGetEdmSpaceType(EnumType objectSpaceType, out EnumType edmSpaceType)
         {
             return TryGetEdmSpaceType<EnumType>(objectSpaceType, out edmSpaceType);
         }
@@ -1190,7 +1190,7 @@
         ///// </summary>
         ///// <param name="extent"></param>
         ///// <returns></returns>
-        internal DbQueryCommandTree GetCqtView(EntitySetBase extent)
+        internal virtual DbQueryCommandTree GetCqtView(EntitySetBase extent)
         {
             return GetGeneratedView(extent).GetCommandTree();
         }
@@ -1198,7 +1198,7 @@
         /// <summary>
         /// Returns generated update or query view for the given extent.
         /// </summary>
-        internal GeneratedView GetGeneratedView(EntitySetBase extent)
+        internal virtual GeneratedView GetGeneratedView(EntitySetBase extent)
         {
             var collection = GetItemCollection(DataSpace.CSSpace, true);
             return ((StorageMappingItemCollection)collection).GetGeneratedView(extent, this.MetadataWorkspaceWrapper);
@@ -1209,7 +1209,7 @@
         /// </summary>
         /// <param name="extent"></param>
         /// <returns></returns>
-        internal bool TryGetGeneratedViewOfType(
+        internal virtual bool TryGetGeneratedViewOfType(
             EntitySetBase extent, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
             var collection = GetItemCollection(DataSpace.CSSpace, true);
@@ -1223,7 +1223,7 @@
         /// Throws internal error for functions without definition.
         /// Passes thru exception occured during definition generation.
         /// </summary>
-        internal DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
+        internal virtual DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {
             var collection = GetItemCollection(DataSpace.CSpace, true);
             return ((EdmItemCollection)collection).GetGeneratedFunctionDefinition(function);
@@ -1235,7 +1235,7 @@
         /// <param name="functionImport">Function import (function declared in a model entity container)</param>
         /// <param name="targetFunctionMapping">Function target mapping (function to which the import is mapped in the target store)</param>
         /// <returns>true if a mapped target function exists; false otherwise</returns>
-        internal bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping targetFunctionMapping)
+        internal virtual bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping targetFunctionMapping)
         {
             Debug.Assert(null != functionImport);
             var entityContainerMaps = GetItems<StorageEntityContainerMapping>(DataSpace.CSSpace);
@@ -1257,7 +1257,7 @@
         /// processing changes to C-space extents.
         /// </summary>
         /// <returns></returns>
-        internal ViewLoader GetUpdateViewLoader()
+        internal virtual ViewLoader GetUpdateViewLoader()
         {
             if (_itemsCSSpace != null)
             {
@@ -1272,7 +1272,7 @@
         /// </summary>
         /// <param name="edmSpaceTypeUsage"></param>
         /// <returns></returns>
-        internal TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
+        internal virtual TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
             Contract.Requires(edmSpaceTypeUsage != null);
             Debug.Assert(edmSpaceTypeUsage.EdmType != null, "The TypeUsage object does not have an EDMType.");
@@ -1324,7 +1324,7 @@
         /// </summary>
         /// <param name="other">Other workspace.</param>
         /// <returns>true is C, S and CS collections are equivalent</returns>
-        internal bool IsInternalMetadataWorkspaceCSCompatible(InternalMetadataWorkspace other)
+        internal virtual bool IsInternalMetadataWorkspaceCSCompatible(InternalMetadataWorkspace other)
         {
             Debug.Assert(
                 IsItemCollectionAlreadyRegistered(DataSpace.CSSpace) &&
@@ -1342,24 +1342,11 @@
         }
 
         /// <summary>
-        /// Clear all the metadata cache entries
-        /// </summary>
-        public static void ClearCache()
-        {
-            MetadataCache.Clear();
-            ObjectItemCollection.ViewGenerationAssemblies.Clear();
-            using (var cache = AssemblyCache.AquireLockedAssemblyCache())
-            {
-                cache.Clear();
-            }
-        }
-
-        /// <summary>
         /// Creates a new Metadata workspace sharing the (currently defined) item collections
         /// and tokens for caching purposes.
         /// </summary>
         /// <returns></returns>
-        internal InternalMetadataWorkspace ShallowCopy()
+        internal virtual InternalMetadataWorkspace ShallowCopy()
         {
             var copy = (InternalMetadataWorkspace)MemberwiseClone();
             if (null != copy._cacheTokens)
@@ -1368,26 +1355,6 @@
             }
 
             return copy;
-        }
-
-        /// <summary>
-        /// Returns the canonical Model TypeUsage for a given PrimitiveTypeKind
-        /// </summary>
-        /// <param name="primitiveTypeKind">PrimitiveTypeKind for which a canonical TypeUsage is expected</param>
-        /// <returns>a canonical model TypeUsage</returns>
-        internal static TypeUsage GetCanonicalModelTypeUsage(PrimitiveTypeKind primitiveTypeKind)
-        {
-            return EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveTypeKind);
-        }
-
-        /// <summary>
-        /// Returns the Model PrimitiveType for a given primitiveTypeKind
-        /// </summary>
-        /// <param name="primitiveTypeKind">a PrimitiveTypeKind for which a Model PrimitiveType is expected</param>
-        /// <returns>Model PrimitiveType</returns>
-        internal static PrimitiveType GetModelPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
-        {
-            return EdmProviderManifest.Instance.GetPrimitiveType(primitiveTypeKind);
         }
 
         // GetRequiredOriginalValueMembers and GetRelevantMembersForUpdate return list of "interesting" members for the given EntitySet/EntityType
@@ -1413,7 +1380,7 @@
         /// This method is marked as obsolete since it does not support partial update scenarios as it does not return 
         /// members from group 5 and changing it to return these members would be a breaking change.
         /// </remarks>
-        public IEnumerable<EdmMember> GetRequiredOriginalValueMembers(EntitySetBase entitySet, EntityTypeBase entityType)
+        public virtual IEnumerable<EdmMember> GetRequiredOriginalValueMembers(EntitySetBase entitySet, EntityTypeBase entityType)
         {
             return GetInterestingMembers(
                 entitySet, entityType, StorageMappingItemCollection.InterestingMembersKind.RequiredOriginalValueMembers);
@@ -1432,7 +1399,7 @@
         /// - if <paramref name="partialUpdateSupported"/> is <c>true</c>: 1, 2, 3, 3.1, 5, 6, 7 (see group descriptions above)
         /// See DevDiv bugs #124460 and #272992 for more details.
         /// </remarks>
-        public ReadOnlyCollection<EdmMember> GetRelevantMembersForUpdate(
+        public virtual ReadOnlyCollection<EdmMember> GetRelevantMembersForUpdate(
             EntitySetBase entitySet, EntityTypeBase entityType, bool partialUpdateSupported)
         {
             return GetInterestingMembers(
@@ -1498,13 +1465,13 @@
         /// <summary>
         /// Returns the QueryCacheManager hosted by this metadata workspace instance
         /// </summary>
-        internal QueryCacheManager GetQueryCacheManager()
+        internal virtual QueryCacheManager GetQueryCacheManager()
         {
             Debug.Assert(null != _itemsSSpace, "_itemsSSpace must not be null");
             return _itemsSSpace.QueryCacheManager;
         }
 
-        internal Guid MetadataWorkspaceId
+        internal virtual Guid MetadataWorkspaceId
         {
             get
             {
@@ -1512,6 +1479,7 @@
                 {
                     _metadataWorkspaceId = Guid.NewGuid();
                 }
+
                 return _metadataWorkspaceId;
             }
         }
