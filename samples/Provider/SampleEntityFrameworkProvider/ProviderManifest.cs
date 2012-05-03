@@ -415,7 +415,7 @@ namespace SampleEntityFrameworkProvider
                             scale = 0;
                         }
 
-                        return TypeUsage.CreateDecimalTypeUsage(StoreTypeNameToStorePrimitiveType["extDecimal"], precision, scale);
+                        return TypeUsage.CreateDecimalTypeUsage(StoreTypeNameToStorePrimitiveType["decimal"], precision, scale);
                     }
 
                 case PrimitiveTypeKind.Binary: // binary, varbinary, varbinary(max), image, timestamp, rowversion
@@ -512,6 +512,26 @@ namespace SampleEntityFrameworkProvider
                     }
 
                     return TypeUsage.CreateDefaultTypeUsage(preserveSeconds ? StoreTypeNameToStorePrimitiveType["datetime"] : StoreTypeNameToStorePrimitiveType["smalldatetime"]);
+
+                case PrimitiveTypeKind.Geography:
+                case PrimitiveTypeKind.GeographyPoint:
+                case PrimitiveTypeKind.GeographyLineString:
+                case PrimitiveTypeKind.GeographyPolygon:
+                case PrimitiveTypeKind.GeographyMultiPoint:
+                case PrimitiveTypeKind.GeographyMultiLineString:
+                case PrimitiveTypeKind.GeographyMultiPolygon:
+                case PrimitiveTypeKind.GeographyCollection:
+                    return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["geography"]);
+
+                case PrimitiveTypeKind.Geometry:
+                case PrimitiveTypeKind.GeometryPoint:
+                case PrimitiveTypeKind.GeometryLineString:
+                case PrimitiveTypeKind.GeometryPolygon:
+                case PrimitiveTypeKind.GeometryMultiPoint:
+                case PrimitiveTypeKind.GeometryMultiLineString:
+                case PrimitiveTypeKind.GeometryMultiPolygon:
+                case PrimitiveTypeKind.GeometryCollection:
+                    return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["geometry"]);
 
                 default:
                     throw new NotSupportedException(String.Format("There is no store type corresponding to the EDM type '{0}' of primitive type '{1}'.", edmType, primitiveType.PrimitiveTypeKind));
