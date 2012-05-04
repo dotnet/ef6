@@ -2,13 +2,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -942,7 +940,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 string castResultType = null;
                 if (effectiveFunctionName == "AsGml")
                 {
-                    castResultType = sqlgen.DefaultStringTypeName;
+                    castResultType = "nvarchar(max)";
                 }
                 return WriteInstanceFunctionCall(
                     sqlgen, effectiveFunctionName, functionExpression, isPropertyAccess: false, castReturnTypeTo: castResultType);
@@ -1697,8 +1695,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 searchParamBuilder.Append("%");
             }
 
-            var escapedSearchParamExpression = new DbConstantExpression(
-                constSearchParamExpression.ResultType, searchParamBuilder.ToString());
+            var escapedSearchParamExpression = constSearchParamExpression.ResultType.Constant(searchParamBuilder.ToString());
             result.Append(escapedSearchParamExpression.Accept(sqlgen));
 
             // If escaping did occur (special characters were found), then append the escape character used.

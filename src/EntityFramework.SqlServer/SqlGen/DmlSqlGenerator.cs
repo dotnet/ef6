@@ -4,12 +4,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -288,16 +288,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Generates T-SQL describing a member
         // Requires: member must belong to an entity type (a safe requirement for DML
         // SQL gen, where we only access table columns)
-        private static string GenerateMemberTSql(EdmMember member)
+        internal static string GenerateMemberTSql(EdmMember member)
         {
-            var entityType = (EntityType)member.DeclaringType;
-            string sql;
-            if (!entityType.TryGetMemberSql(member, out sql))
-            {
-                sql = SqlGenerator.QuoteIdentifier(member.Name);
-                entityType.SetMemberSql(member, sql);
-            }
-            return sql;
+            return SqlGenerator.QuoteIdentifier(member.Name);
         }
 
         /// <summary>
@@ -610,27 +603,25 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // we know we won't hit this code unless there is no function defined for this
                 // ModificationOperation, so if this EntitySet is using a DefiningQuery, instead
                 // of a table, that is an error
-                if (expression.Target.DefiningQuery != null)
+                if (expression.Target.GetMetadataPropertyValue<string>("DefiningQuery") != null)
                 {
                     string missingCudElement;
-                    if (_commandTree.CommandTreeKind
-                        == DbCommandTreeKind.Delete)
+                    if (_commandTree is DbDeleteCommandTree)
                     {
-                        missingCudElement = StorageMslConstructs.DeleteFunctionElement;
+                        missingCudElement = "DeleteFunction";
                     }
-                    else if (_commandTree.CommandTreeKind
-                             == DbCommandTreeKind.Insert)
+                    else if (_commandTree is DbInsertCommandTree)
                     {
-                        missingCudElement = StorageMslConstructs.InsertFunctionElement;
+                        missingCudElement = "InsertFunction";
                     }
                     else
                     {
-                        Debug.Assert(_commandTree.CommandTreeKind == DbCommandTreeKind.Update, "did you add a new option?");
-                        missingCudElement = StorageMslConstructs.UpdateFunctionElement;
+                        Contract.Assert(_commandTree is DbUpdateCommandTree);
+                        missingCudElement = "UpdateFunction";
                     }
                     throw new UpdateException(
                         Strings.Update_SqlEntitySetWithoutDmlFunctions(
-                            expression.Target.Name, missingCudElement, StorageMslConstructs.ModificationFunctionMappingElement));
+                            expression.Target.Name, missingCudElement, "ModificationFunctionMapping"));
                 }
 
                 _commandText.Append(SqlGenerator.GetTargetTSql(expression.Target));

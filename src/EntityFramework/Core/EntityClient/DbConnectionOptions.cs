@@ -4,7 +4,6 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Versioning;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -87,68 +86,6 @@
         internal string this[string keyword]
         {
             get { return (string)_parsetable[keyword]; }
-        }
-
-        // SxS notes:
-        // * this method queries "DataDirectory" value from the current AppDomain.
-        //   This string is used for to replace "!DataDirectory!" values in the connection string, it is not considered as an "exposed resource".
-        // * This method uses GetFullPath to validate that root path is valid, the result is not exposed out.
-        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
-        [ResourceExposure(ResourceScope.None)]
-        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
-        internal static string ExpandDataDirectory(string keyword, string value)
-        {
-            string fullPath = null;
-            if ((null != value)
-                && value.StartsWith(DataDirectory, StringComparison.OrdinalIgnoreCase))
-            {
-                // find the replacement path
-                var rootFolderObject = AppDomain.CurrentDomain.GetData("DataDirectory");
-                var rootFolderPath = (rootFolderObject as string);
-                if ((null != rootFolderObject)
-                    && (null == rootFolderPath))
-                {
-                    throw new InvalidOperationException(Strings.ADP_InvalidDataDirectory);
-                }
-                else if (rootFolderPath == string.Empty)
-                {
-                    rootFolderPath = AppDomain.CurrentDomain.BaseDirectory;
-                }
-                if (null == rootFolderPath)
-                {
-                    rootFolderPath = "";
-                }
-
-                // We don't know if rootFolderpath ends with '\', and we don't know if the given name starts with onw
-                var fileNamePosition = DataDirectory.Length; // filename starts right after the '|datadirectory|' keyword
-                var rootFolderEndsWith = (0 < rootFolderPath.Length) && rootFolderPath[rootFolderPath.Length - 1] == '\\';
-                var fileNameStartsWith = (fileNamePosition < value.Length) && value[fileNamePosition] == '\\';
-
-                // replace |datadirectory| with root folder path
-                if (!rootFolderEndsWith
-                    && !fileNameStartsWith)
-                {
-                    // need to insert '\'
-                    fullPath = rootFolderPath + '\\' + value.Substring(fileNamePosition);
-                }
-                else if (rootFolderEndsWith && fileNameStartsWith)
-                {
-                    // need to strip one out
-                    fullPath = rootFolderPath + value.Substring(fileNamePosition + 1);
-                }
-                else
-                {
-                    // simply concatenate the strings
-                    fullPath = rootFolderPath + value.Substring(fileNamePosition);
-                }
-
-                // verify root folder path is a real path without unexpected "..\"
-                if (!EntityUtil.GetFullPath(fullPath).StartsWith(rootFolderPath, StringComparison.Ordinal))
-                {
-                    throw new ArgumentException(Strings.ADP_InvalidConnectionOptionValue(keyword));
-                }
-            }
-            return fullPath;
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]

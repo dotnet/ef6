@@ -218,38 +218,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        internal string StoreFunctionNameAttribute
+        public string StoreFunctionNameAttribute
         {
             get { return _storeFunctionNameAttribute; }
         }
 
         [MetadataProperty(typeof(ParameterTypeSemantics), false)]
-        internal ParameterTypeSemantics ParameterTypeSemanticsAttribute
+        public ParameterTypeSemantics ParameterTypeSemanticsAttribute
         {
             get { return _parameterTypeSemantics; }
         }
 
         // Function attribute parameters
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
-        internal bool AggregateAttribute
+        public bool AggregateAttribute
         {
             get { return GetFunctionAttribute(FunctionAttributes.Aggregate); }
         }
 
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
-        internal virtual bool BuiltInAttribute
+        public virtual bool BuiltInAttribute
         {
             get { return GetFunctionAttribute(FunctionAttributes.BuiltIn); }
         }
 
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
-        internal bool IsFromProviderManifest
+        public bool IsFromProviderManifest
         {
             get { return GetFunctionAttribute(FunctionAttributes.IsFromProviderManifest); }
         }
 
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
-        internal bool NiladicFunctionAttribute
+        public bool NiladicFunctionAttribute
         {
             get { return GetFunctionAttribute(FunctionAttributes.NiladicFunction); }
         }
@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        internal string Schema
+        public string Schema
         {
             get { return _schemaName; }
         }

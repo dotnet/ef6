@@ -7,9 +7,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a single row delete operation expressed as a canonical command tree.
     /// </summary>
-    public sealed class DbDeleteCommandTree : DbModificationCommandTree
+    public class DbDeleteCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;
+
+        internal DbDeleteCommandTree()
+        {
+        }
 
         internal DbDeleteCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate)
             : base(metadata, dataSpace, target)
@@ -40,7 +44,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _predicate; }
         }
 
-        internal override DbCommandTreeKind CommandTreeKind
+        public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Delete; }
         }

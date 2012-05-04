@@ -1,10 +1,8 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
@@ -40,7 +38,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
             Debug.Assert(originalTree != null, "OriginalTree is null");
             var rewriter = new Sql8ExpressionRewriter(originalTree.MetadataWorkspace);
             var newQuery = rewriter.VisitExpression(originalTree.Query);
-            return DbQueryCommandTree.FromValidExpression(originalTree.MetadataWorkspace, originalTree.DataSpace, newQuery);
+
+#if DEBUG
+            return new DbQueryCommandTree(originalTree.MetadataWorkspace, originalTree.DataSpace, newQuery);
+#else
+            return new DbQueryCommandTree(originalTree.MetadataWorkspace, originalTree.DataSpace, newQuery, validate: false);
+#endif
         }
 
         #endregion

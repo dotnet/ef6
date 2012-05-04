@@ -205,17 +205,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _queryCacheManager; }
         }
 
-        internal DbProviderFactory StoreProviderFactory
+        public DbProviderFactory StoreProviderFactory
         {
             get { return _providerFactory; }
         }
 
-        internal virtual DbProviderManifest StoreProviderManifest
+        public virtual DbProviderManifest StoreProviderManifest
         {
             get { return _providerManifest; }
         }
 
-        internal string StoreProviderManifestToken
+        public string StoreProviderManifestToken
         {
             get { return _providerManifestToken; }
         }
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
+        public virtual ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
         {
             return _primitiveTypeMaps.GetTypes();
         }

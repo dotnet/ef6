@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Describes the different "kinds" (classes) of command trees.
     /// </summary>
-    internal enum DbCommandTreeKind
+    public enum DbCommandTreeKind
     {
         Query,
         Update,
@@ -30,6 +30,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         // Metadata collection
         private readonly MetadataWorkspace _metadata;
         private readonly DataSpace _dataSpace;
+
+        internal DbCommandTree()
+        {
+        }
 
         /// <summary>
         /// Initializes a new command tree with a given metadata workspace.
@@ -82,7 +86,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the kind of this command tree.
         /// </summary>
-        internal abstract DbCommandTreeKind CommandTreeKind { get; }
+        public abstract DbCommandTreeKind CommandTreeKind { get; }
 
         /// <summary>
         /// Gets the name and type of each parameter declared on the command tree.
@@ -93,7 +97,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the metadata workspace used by this command tree.
         /// </summary>
-        internal MetadataWorkspace MetadataWorkspace
+        public MetadataWorkspace MetadataWorkspace
         {
             get { return _metadata; }
         }
@@ -101,7 +105,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the data space in which metadata used by this command tree must reside.
         /// </summary>
-        internal DataSpace DataSpace
+        public DataSpace DataSpace
         {
             get { return _dataSpace; }
         }

@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="edmType">EdmType for which to create a type usage</param>
         /// <param name="facets">facets to be copied into the new TypeUsage</param>
         /// <returns>new TypeUsage instance</returns>
-        internal static TypeUsage Create(EdmType edmType, IEnumerable<Facet> facets)
+        public static TypeUsage Create(EdmType edmType, IEnumerable<Facet> facets)
         {
             return new TypeUsage(edmType, facets);
         }

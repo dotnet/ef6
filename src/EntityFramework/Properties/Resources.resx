@@ -4563,8 +4563,8 @@
   <data name="ADP_ConnectionStringSyntax" xml:space="preserve">
     <value>Format of the initialization string does not conform to specification starting at index {0}.</value>
   </data>
-  <data name="ADP_InvalidConnectionOptionValue" xml:space="preserve">
-    <value>Invalid value for key '{0}'.</value>
+  <data name="ExpandingDataDirectoryFailed" xml:space="preserve">
+    <value>Expansion of |DataDirectory| failed while processing the connection string. Ensure that |DataDirectory| is set to a valid fully-qualified path.</value>
   </data>
   <data name="ADP_InvalidDataDirectory" xml:space="preserve">
     <value>The DataDirectory substitute is not a string.</value>

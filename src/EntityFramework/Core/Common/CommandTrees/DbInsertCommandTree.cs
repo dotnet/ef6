@@ -15,10 +15,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// When the <see cref="Returning"/> property is set, the command returns a reader; otherwise,
     /// it returns a scalar value indicating the number of rows affected.
     /// </summary>
-    public sealed class DbInsertCommandTree : DbModificationCommandTree
+    public class DbInsertCommandTree : DbModificationCommandTree
     {
         private readonly ReadOnlyModificationClauses _setClauses;
         private readonly DbExpression _returning;
+
+        internal DbInsertCommandTree()
+        {
+        }
 
         internal DbInsertCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, ReadOnlyModificationClauses setClauses,
@@ -56,7 +60,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _returning; }
         }
 
-        internal override DbCommandTreeKind CommandTreeKind
+        public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Insert; }
         }

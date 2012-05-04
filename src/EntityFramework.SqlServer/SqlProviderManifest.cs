@@ -11,6 +11,7 @@ namespace System.Data.Entity.SqlServer
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Xml;
 
@@ -71,24 +72,29 @@ namespace System.Data.Entity.SqlServer
 
         #region Private Methods
 
-        private static XmlReader GetProviderManifest()
+        private static XmlReader GetXmlResource(string resourceName)
         {
-            return DbProviderServices.GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml");
+            return XmlReader.Create(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName), null, resourceName);
         }
 
-        private static XmlReader GetStoreSchemaMapping(string mslName)
+        internal static XmlReader GetProviderManifest()
         {
-            return DbProviderServices.GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + mslName + ".msl");
+            return GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml");
         }
 
-        private XmlReader GetStoreSchemaDescription(string ssdlName)
+        internal static XmlReader GetStoreSchemaMapping(string mslName)
+        {
+            return GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + mslName + ".msl");
+        }
+
+        internal XmlReader GetStoreSchemaDescription(string ssdlName)
         {
             if (_version == SqlVersion.Sql8)
             {
-                return DbProviderServices.GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + ssdlName + "_Sql8.ssdl");
+                return GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + ssdlName + "_Sql8.ssdl");
             }
 
-            return DbProviderServices.GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + ssdlName + ".ssdl");
+            return GetXmlResource("System.Data.Resources.SqlClient.SqlProviderServices." + ssdlName + ".ssdl");
         }
 
         #endregion
@@ -524,7 +530,7 @@ namespace System.Data.Entity.SqlServer
             var primitiveType = edmType.EdmType as PrimitiveType;
             if (primitiveType == null)
             {
-                throw new ArgumentException(Strings.ProviderDoesNotSupportType(edmType.Identity));
+                throw new ArgumentException(Strings.ProviderDoesNotSupportType(edmType.EdmType.Name));
             }
 
             var facets = edmType.Facets;
@@ -554,7 +560,7 @@ namespace System.Data.Entity.SqlServer
                 case PrimitiveTypeKind.GeographyMultiLineString:
                 case PrimitiveTypeKind.GeographyMultiPolygon:
                 case PrimitiveTypeKind.GeographyCollection:
-                    return GetStorePrimitiveTypeIfPostSql9("geography", edmType.Identity, primitiveType.PrimitiveTypeKind);
+                    return GetStorePrimitiveTypeIfPostSql9("geography", edmType.EdmType.Name, primitiveType.PrimitiveTypeKind);
 
                 case PrimitiveTypeKind.Geometry:
                 case PrimitiveTypeKind.GeometryPoint:
@@ -564,7 +570,7 @@ namespace System.Data.Entity.SqlServer
                 case PrimitiveTypeKind.GeometryMultiLineString:
                 case PrimitiveTypeKind.GeometryMultiPolygon:
                 case PrimitiveTypeKind.GeometryCollection:
-                    return GetStorePrimitiveTypeIfPostSql9("geometry", edmType.Identity, primitiveType.PrimitiveTypeKind);
+                    return GetStorePrimitiveTypeIfPostSql9("geometry", edmType.EdmType.Name, primitiveType.PrimitiveTypeKind);
 
                 case PrimitiveTypeKind.Guid:
                     return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["uniqueidentifier"]);
@@ -713,16 +719,16 @@ namespace System.Data.Entity.SqlServer
                 case PrimitiveTypeKind.DateTime:
                     return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["datetime"]);
                 case PrimitiveTypeKind.DateTimeOffset:
-                    return GetStorePrimitiveTypeIfPostSql9("datetimeoffset", edmType.Identity, primitiveType.PrimitiveTypeKind);
+                    return GetStorePrimitiveTypeIfPostSql9("datetimeoffset", edmType.EdmType.Name, primitiveType.PrimitiveTypeKind);
                 case PrimitiveTypeKind.Time:
-                    return GetStorePrimitiveTypeIfPostSql9("time", edmType.Identity, primitiveType.PrimitiveTypeKind);
+                    return GetStorePrimitiveTypeIfPostSql9("time", edmType.EdmType.Name, primitiveType.PrimitiveTypeKind);
 
                 default:
-                    throw new NotSupportedException(Strings.NoStoreTypeForEdmType(edmType.Identity, primitiveType.PrimitiveTypeKind));
+                    throw new NotSupportedException(Strings.NoStoreTypeForEdmType(edmType.EdmType.Name, primitiveType.PrimitiveTypeKind));
             }
         }
 
-        private TypeUsage GetStorePrimitiveTypeIfPostSql9(string storeTypeName, string edmTypeIdentity, PrimitiveTypeKind primitiveTypeKind)
+        private TypeUsage GetStorePrimitiveTypeIfPostSql9(string storeTypeName, string nameForException, PrimitiveTypeKind primitiveTypeKind)
         {
             if ((SqlVersion != SqlVersion.Sql8)
                 && (SqlVersion != SqlVersion.Sql9))
@@ -731,7 +737,7 @@ namespace System.Data.Entity.SqlServer
             }
             else
             {
-                throw new NotSupportedException(Strings.NoStoreTypeForEdmType(edmTypeIdentity, primitiveTypeKind));
+                throw new NotSupportedException(Strings.NoStoreTypeForEdmType(nameForException, primitiveTypeKind));
             }
         }
 

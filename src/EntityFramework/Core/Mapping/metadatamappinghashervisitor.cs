@@ -280,7 +280,6 @@
 
             #region Inner data visit
 
-            AddObjectContentToHashBuilder(associationSet.CachedProviderSql);
             // Name is coverd by Identity
             AddObjectContentToHashBuilder(associationSet.Identity);
             AddObjectContentToHashBuilder(associationSet.Schema);

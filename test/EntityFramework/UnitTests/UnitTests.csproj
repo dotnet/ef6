@@ -92,6 +92,7 @@
     <Compile Include="CommandLine\_TestHelpers\TwoPropsWithSameSwitch.cs" />
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
+    <Compile Include="Core\Common\DbProviderServicesTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
     <Compile Include="Core\Common\CommandTrees\BasicExpressionVisitorTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionRebinderTests.cs" />
@@ -160,7 +161,9 @@
     <Compile Include="SqlServer\SqlGen\SqlFunctionCallHandlerTests.cs" />
     <Compile Include="SqlServer\SqlGen\SqlGeneratorTests.cs" />
     <Compile Include="SqlServer\SqlSpatialServicesTests.cs" />
+    <Compile Include="SqlServer\Utilities\DbExpressionExtensionsTests.cs" />
     <Compile Include="SqlServer\Utilities\EdmFunctionExtensionsTests.cs" />
+    <Compile Include="SqlServer\Utilities\MetadataItemExtensionsTests.cs" />
     <Compile Include="SqlServer\Utilities\FuncExtensionsTests.cs" />
     <Compile Include="SqlServer\Utilities\IDictionaryExtensionsTests.cs" />
     <Compile Include="SqlServer\Utilities\PrimitiveTypeExtensionsTests.cs" />

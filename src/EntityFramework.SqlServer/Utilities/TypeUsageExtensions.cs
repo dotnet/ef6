@@ -209,5 +209,22 @@
             spatialType = default(PrimitiveTypeKind);
             return false;
         }
+
+        internal static TypeUsage ForceNonUnicode(this TypeUsage typeUsage)
+        {
+            // Obtain a non-unicode facet
+            var nonUnicodeString = TypeUsage.CreateStringTypeUsage(
+                (PrimitiveType)typeUsage.EdmType,
+                isUnicode: false,
+                isFixedLength: false);
+
+            // Copy all existing facets except replace the non-unicode facet
+            return TypeUsage.Create(
+                typeUsage.EdmType,
+                typeUsage.Facets
+                    .Where(f => f.Name != DbProviderManifest.UnicodeFacetName)
+                    .Union(
+                        nonUnicodeString.Facets.Where(f => f.Name == DbProviderManifest.UnicodeFacetName)));
+        }
     }
 }

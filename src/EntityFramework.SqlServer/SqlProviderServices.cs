@@ -5,11 +5,9 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
@@ -118,21 +116,12 @@ namespace System.Data.Entity.SqlServer
                 }
                 else
                 {
-                    TypeUsage parameterType;
-                    if ((paramsToForceNonUnicode != null)
-                        && //Reached when a Function Command Tree is passed an incorrect parameter name by the user.
-                        (paramsToForceNonUnicode.Contains(queryParameter.Key)))
-                    {
-                        parameterType = queryParameter.Value.ShallowCopy(
-                            new FacetValues
-                            {
-                                Unicode = false
-                            });
-                    }
-                    else
-                    {
-                        parameterType = queryParameter.Value;
-                    }
+                    //Reached when a Function Command Tree is passed an incorrect parameter name by the user.
+                    var parameterType = paramsToForceNonUnicode != null
+                                        && paramsToForceNonUnicode.Contains(queryParameter.Key)
+                                            ? queryParameter.Value.ForceNonUnicode()
+                                            : queryParameter.Value;
+                 
                     const bool preventTruncation = false;
                     parameter = CreateSqlParameter(
                         queryParameter.Key, parameterType, ParameterMode.In, DBNull.Value, preventTruncation, sqlVersion);
@@ -929,14 +918,9 @@ namespace System.Data.Entity.SqlServer
         /// <returns></returns>
         private static string GetMdfFileName(string attachDBFile)
         {
-            Debug.Assert(!string.IsNullOrEmpty(attachDBFile));
+            Contract.Requires(!string.IsNullOrEmpty(attachDBFile));
 
-            //Handle the case when attachDBFilename starts with |DataDirectory|
-            var dataFileName = DbConnectionOptions.ExpandDataDirectory("AttachDBFilename", attachDBFile);
-
-            //Handle the other cases
-            dataFileName = dataFileName ?? attachDBFile;
-            return dataFileName;
+            return ExpandDataDirectory(attachDBFile);
         }
 
         /// <summary>

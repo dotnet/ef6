@@ -11430,11 +11430,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Invalid value for key '{0}'."
+        /// A string like "Expansion of |DataDirectory| failed while processing the connection string. Ensure that |DataDirectory| is set to a valid fully-qualified path."
         /// </summary>
-        internal static string ADP_InvalidConnectionOptionValue(object p0)
+        internal static string ExpandingDataDirectoryFailed
         {
-            return EntityRes.GetString(EntityRes.ADP_InvalidConnectionOptionValue, p0);
+            get { return EntityRes.GetString(EntityRes.ExpandingDataDirectoryFailed); }
         }
 
         /// <summary>
@@ -16023,7 +16023,7 @@ namespace System.Data.Entity.Resources
         internal const string EntityParameterNull = "EntityParameterNull";
         internal const string EntityParameterCollectionRemoveInvalidObject = "EntityParameterCollectionRemoveInvalidObject";
         internal const string ADP_ConnectionStringSyntax = "ADP_ConnectionStringSyntax";
-        internal const string ADP_InvalidConnectionOptionValue = "ADP_InvalidConnectionOptionValue";
+        internal const string ExpandingDataDirectoryFailed = "ExpandingDataDirectoryFailed";
         internal const string ADP_InvalidDataDirectory = "ADP_InvalidDataDirectory";
         internal const string ADP_InvalidMultipartNameDelimiterUsage = "ADP_InvalidMultipartNameDelimiterUsage";
         internal const string ADP_InvalidSizeValue = "ADP_InvalidSizeValue";

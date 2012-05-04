@@ -70,8 +70,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
         private RowType _keyRow;
-        private Dictionary<EdmMember, string> _memberSql;
-        private readonly object _memberSqlLock = new object();
 
         #endregion
 
@@ -97,42 +95,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(
                 Helper.IsEdmProperty(member) || Helper.IsNavigationProperty(member),
                 "Only members of type Property may be added to Entity types.");
-        }
-
-        /// <summary>
-        /// Get SQL description of a member of this entity type.
-        /// Requires: member must belong to this type
-        /// </summary>
-        /// <param name="member">Member for which to retrieve SQL</param>
-        /// <param name="sql">Outputs SQL describing this member</param>
-        /// <returns>Whether sql is cached for this member</returns>
-        internal bool TryGetMemberSql(EdmMember member, out string sql)
-        {
-            Debug.Assert(Members.Contains(member));
-            sql = null;
-            return null != _memberSql && _memberSql.TryGetValue(member, out sql);
-        }
-
-        /// <summary>
-        /// Sets SQL describing a member of this entity type.
-        /// Requires: member must belong to this type
-        /// </summary>
-        /// <param name="member">Member for which to set SQL</param>
-        /// <param name="sql">SQL describing this member</param>
-        internal void SetMemberSql(EdmMember member, string sql)
-        {
-            Debug.Assert(Members.Contains(member));
-
-            // initialize dictionary on first use
-            lock (_memberSqlLock)
-            {
-                if (null == _memberSql)
-                {
-                    _memberSql = new Dictionary<EdmMember, string>();
-                }
-
-                _memberSql[member] = sql;
-            }
         }
 
         #endregion

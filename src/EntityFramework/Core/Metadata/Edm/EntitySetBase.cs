@@ -93,12 +93,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal string DefiningQuery { get; set; }
 
         /// <summary>
-        /// Get and set by the provider only as a convientent place to 
-        /// store the created sql fragment that represetnts this entity set
-        /// </summary>
-        internal string CachedProviderSql { get; set; }
-
-        /// <summary>
         /// Gets/Sets the name of this entity set
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>

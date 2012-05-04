@@ -4,12 +4,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
-
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -339,41 +337,19 @@ namespace System.Data.Entity.SqlServer.SqlGen
             get { return SqlVersionUtils.IsPreKatmai(SqlVersion); }
         }
 
-        private MetadataWorkspace metadataWorkspace;
-
-        internal MetadataWorkspace Workspace
-        {
-            get { return metadataWorkspace; }
-        }
-
-        private TypeUsage integerType;
+        private TypeUsage _integerType;
 
         internal TypeUsage IntegerType
         {
             get
             {
-                if (integerType == null)
+                if (_integerType == null)
                 {
-                    integerType = GetPrimitiveType(PrimitiveTypeKind.Int64);
+                    _integerType =
+                        TypeUsage.CreateDefaultTypeUsage(
+                            StoreItemCollection.GetPrimitiveTypes().First(t => t.PrimitiveTypeKind == PrimitiveTypeKind.Int64));
                 }
-                return integerType;
-            }
-        }
-
-        private string defaultStringTypeName;
-
-        internal string DefaultStringTypeName
-        {
-            get
-            {
-                if (defaultStringTypeName == null)
-                {
-                    defaultStringTypeName =
-                        GetSqlPrimitiveType(
-                            TypeUsage.CreateStringTypeUsage(
-                                MetadataWorkspace.GetModelPrimitiveType(PrimitiveTypeKind.String), isUnicode: true, isFixedLength: false));
-                }
-                return defaultStringTypeName;
+                return _integerType;
             }
         }
 
@@ -418,7 +394,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType,
             out HashSet<string> paramsToForceNonUnicode)
         {
-            SqlGenerator sqlGen;
             commandType = CommandType.Text;
             parameters = null;
             paramsToForceNonUnicode = null;
@@ -426,8 +401,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             switch (tree.CommandTreeKind)
             {
                 case DbCommandTreeKind.Query:
-                    sqlGen = new SqlGenerator(sqlVersion);
-                    return sqlGen.GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode);
+                    return new SqlGenerator(sqlVersion).GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode);
 
                 case DbCommandTreeKind.Insert:
                     return DmlSqlGenerator.GenerateInsertSql((DbInsertCommandTree)tree, sqlVersion, out parameters);
@@ -439,13 +413,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return DmlSqlGenerator.GenerateUpdateSql((DbUpdateCommandTree)tree, sqlVersion, out parameters);
 
                 case DbCommandTreeKind.Function:
-                    sqlGen = new SqlGenerator(sqlVersion);
                     return GenerateFunctionSql((DbFunctionCommandTree)tree, out commandType);
 
                 default:
                     //We have covered all command tree kinds
                     Debug.Assert(false, "Unknown command tree kind");
-                    parameters = null;
                     return null;
             }
         }
@@ -521,9 +493,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
             }
 
-            metadataWorkspace = targetTree.MetadataWorkspace;
             // needed in Private Type Helpers section bellow
-            _storeItemCollection = (StoreItemCollection)Workspace.GetItemCollection(DataSpace.SSpace);
+            _storeItemCollection = (StoreItemCollection)targetTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
 
             selectStatementStack = new Stack<SqlSelectStatement>();
             isParentAJoinStack = new Stack<bool>();
@@ -1049,7 +1020,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                     default:
                         // all known scalar types should been handled already.
-                        throw new NotSupportedException(Strings.NoStoreTypeForEdmType(resultType.Identity, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
+                        throw new NotSupportedException(Strings.NoStoreTypeForEdmType(resultType.EdmType.Name, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
                 }
             }
             else
@@ -1304,39 +1275,33 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         internal static string GetTargetTSql(EntitySetBase entitySetBase)
         {
-            if (null == entitySetBase.CachedProviderSql)
+            var definingQuery = entitySetBase.GetMetadataPropertyValue<string>("DefiningQuery");
+            if (definingQuery != null)
             {
-                if (null == entitySetBase.DefiningQuery)
-                {
-                    // construct escaped T-SQL referencing entity set
-                    var builder = new StringBuilder(50);
-                    if (!string.IsNullOrEmpty(entitySetBase.Schema))
-                    {
-                        builder.Append(QuoteIdentifier(entitySetBase.Schema));
-                        builder.Append(".");
-                    }
-                    else
-                    {
-                        builder.Append(QuoteIdentifier(entitySetBase.EntityContainer.Name));
-                        builder.Append(".");
-                    }
-
-                    if (!string.IsNullOrEmpty(entitySetBase.Table))
-                    {
-                        builder.Append(QuoteIdentifier(entitySetBase.Table));
-                    }
-                    else
-                    {
-                        builder.Append(QuoteIdentifier(entitySetBase.Name));
-                    }
-                    entitySetBase.CachedProviderSql = builder.ToString();
-                }
-                else
-                {
-                    entitySetBase.CachedProviderSql = "(" + entitySetBase.DefiningQuery + ")";
-                }
+                return "(" + definingQuery + ")";
             }
-            return entitySetBase.CachedProviderSql;
+            // construct escaped T-SQL referencing entity set
+            var builder = new StringBuilder(50);
+
+            var schema = entitySetBase.GetMetadataPropertyValue<string>("Schema");
+            if (!string.IsNullOrEmpty(schema))
+            {
+                builder.Append(QuoteIdentifier(schema));
+                builder.Append(".");
+            }
+            else
+            {
+                builder.Append(QuoteIdentifier(entitySetBase.EntityContainer.Name));
+                builder.Append(".");
+            }
+
+            var table = entitySetBase.GetMetadataPropertyValue<string>("Table");
+            builder.Append(
+                string.IsNullOrEmpty(table)
+                    ? QuoteIdentifier(entitySetBase.Name)
+                    : QuoteIdentifier(table));
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -2764,8 +2729,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (kind != DbExpressionKind.Or &&
                 kind != DbExpressionKind.And &&
-                kind != DbExpressionKind.Plus
-                &&
+                kind != DbExpressionKind.Plus &&
                 kind != DbExpressionKind.Multiply)
             {
                 return new[] { left, right };
@@ -2790,22 +2754,22 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static void ExtractAssociativeArguments(
             DbExpressionKind expressionKind, List<DbExpression> argumentList, DbExpression expression)
         {
-            var result = Helpers.GetLeafNodes(
-                expression,
-                exp => exp.ExpressionKind != expressionKind,
-                exp =>
-                {
-                    //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
-                    // a DbArithmeticExpression with 2 arguments.
-                    var binaryExpression = exp as DbBinaryExpression;
-                    if (binaryExpression != null)
-                    {
-                        return new[] { binaryExpression.Left, binaryExpression.Right };
-                    }
-                    var arithmeticExpression = (DbArithmeticExpression)exp;
-                    return arithmeticExpression.Arguments;
-                }
-                );
+            var result =
+                expression.GetLeafNodes(
+                    expressionKind,
+                    exp =>
+                        {
+                            //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
+                            // a DbArithmeticExpression with 2 arguments.
+                            var binaryExpression = exp as DbBinaryExpression;
+                            if (binaryExpression != null)
+                            {
+                                return new[] { binaryExpression.Left, binaryExpression.Right };
+                            }
+                            var arithmeticExpression = (DbArithmeticExpression)exp;
+                            return arithmeticExpression.Arguments;
+                        }
+                    );
 
             argumentList.AddRange(result);
         }
@@ -3847,7 +3811,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private string GetSqlPrimitiveType(TypeUsage type)
         {
-            Debug.Assert(type.EdmType.DataSpace == DataSpace.CSpace, "Type must be in cSpace");
+            Contract.Assert(type.EdmType.GetMetadataPropertyValue<DataSpace>("DataSpace") == DataSpace.CSpace);
 
             var storeTypeUsage = _storeItemCollection.StoreProviderManifest.GetStoreType(type);
             return GenerateSqlForStoreType(sqlVersion, storeTypeUsage);
@@ -4254,17 +4218,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 sb.Append(HexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(HexDigits[binaryArray[i] & 0x0F]);
             }
             return sb.ToString();
-        }
-
-        private TypeUsage GetPrimitiveType(PrimitiveTypeKind modelType)
-        {
-            TypeUsage type = null;
-            var mappedType = _storeItemCollection.GetMappedPrimitiveType(modelType);
-
-            Debug.Assert(mappedType != null, "Could not get type usage for primitive type");
-
-            type = TypeUsage.CreateDefaultTypeUsage(mappedType);
-            return type;
         }
 
         /// <summary>

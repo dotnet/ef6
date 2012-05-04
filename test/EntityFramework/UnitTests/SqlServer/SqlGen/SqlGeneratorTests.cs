@@ -1,6 +1,7 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -12,6 +13,77 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
     public class SqlGeneratorTests
     {
+        public class IntegerType
+        {
+            [Fact]
+            public void IntegerType_returns_64_bit_integer_type()
+            {
+                var mockType = new Mock<PrimitiveType>();
+                mockType.Setup(m => m.PrimitiveTypeKind).Returns(PrimitiveTypeKind.Int64);
+
+                var mockItemCollection = new Mock<StoreItemCollection>();
+                mockItemCollection.Setup(m => m.GetPrimitiveTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new[] { mockType.Object }));
+
+                var mockSqlGenerator = new Mock<SqlGenerator> { CallBase = true };
+                mockSqlGenerator.Setup(m => m.StoreItemCollection).Returns(mockItemCollection.Object);
+
+                Assert.Same(mockType.Object, mockSqlGenerator.Object.IntegerType.EdmType);
+            }
+        }
+
+        public class GetTargetTSql
+        {
+            [Fact]
+            public void GetTargetTSql_uses_defining_query_if_set()
+            {
+                var mockProperty = new Mock<MetadataProperty>();
+                mockProperty.Setup(m => m.Name).Returns("DefiningQuery");
+                mockProperty.Setup(m => m.Identity).Returns("DefiningQuery");
+                mockProperty.Setup(m => m.Value).Returns("Run Run Run");
+
+                var mockSet = new Mock<EntitySetBase>();
+                mockSet.Setup(m => m.MetadataProperties).Returns(
+                    new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+
+                Assert.Equal("(Run Run Run)", SqlGenerator.GetTargetTSql(mockSet.Object));
+            }
+
+            [Fact]
+            public void GetTargetTSql_uses_schema_and_table_name_if_defining_query_not_set()
+            {
+                var mockSchemaProperty = new Mock<MetadataProperty>();
+                mockSchemaProperty.Setup(m => m.Name).Returns("Schema");
+                mockSchemaProperty.Setup(m => m.Identity).Returns("Schema");
+                mockSchemaProperty.Setup(m => m.Value).Returns("Velvet");
+
+                var mockTableProperty = new Mock<MetadataProperty>();
+                mockTableProperty.Setup(m => m.Name).Returns("Table");
+                mockTableProperty.Setup(m => m.Identity).Returns("Table");
+                mockTableProperty.Setup(m => m.Value).Returns("Underground");
+
+                var mockSet = new Mock<EntitySetBase>();
+                mockSet.Setup(m => m.MetadataProperties).Returns(
+                    new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockSchemaProperty.Object, mockTableProperty.Object }));
+
+                Assert.Equal("[Velvet].[Underground]", SqlGenerator.GetTargetTSql(mockSet.Object));
+            }
+
+            [Fact]
+            public void GetTargetTSql_uses_container_and_set_name_if_schema_table_and_defining_query_not_set()
+            {
+                var mockContainer = new Mock<EntityContainer>();
+                mockContainer.Setup(m => m.Name).Returns("Boots");
+
+                var mockSet = new Mock<EntitySetBase>();
+                mockSet.Setup(m => m.MetadataProperties).Returns(
+                    new ReadOnlyMetadataCollection<MetadataProperty>(new MetadataProperty[0]));
+                mockSet.Setup(m => m.Name).Returns("Leather");
+                mockSet.Setup(m => m.EntityContainer).Returns(mockContainer.Object);
+
+                Assert.Equal("[Boots].[Leather]", SqlGenerator.GetTargetTSql(mockSet.Object));
+            }
+        }
+
         public class KeyFieldExpressionComparer
         {
             [Fact]

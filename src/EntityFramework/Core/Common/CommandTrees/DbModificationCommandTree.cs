@@ -15,6 +15,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly DbExpressionBinding _target;
         private ReadOnlyCollection<DbParameterReferenceExpression> _parameters;
 
+        internal DbModificationCommandTree()
+        {
+        }
+
         internal DbModificationCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target)
             : base(metadata, dataSpace)
         {

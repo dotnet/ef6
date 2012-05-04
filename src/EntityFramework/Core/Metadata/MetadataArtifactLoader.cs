@@ -1,7 +1,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.IO;
@@ -461,19 +461,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
-                    // See if the path contains the |DataDirectory| macro that we need to
-                    // expand. Note that ExpandDataDirectory() won't process the path unless
-                    // it begins with the macro.
-                    //
-                    var fullPath = DbConnectionOptions.ExpandDataDirectory(
-                        EntityConnectionStringBuilder.MetadataParameterName, // keyword ("Metadata")
-                        path // value
-                        );
-
-                    // ExpandDataDirectory() returns null if it doesn't find the macro in its
-                    // argument.
-                    //
-                    if (fullPath != null)
+                    // See if the path contains the |DataDirectory| macro that we need to expand.
+                    var fullPath = DbProviderServices.ExpandDataDirectory(path);
+                    if (!path.Equals(fullPath, StringComparison.Ordinal))
                     {
                         path = fullPath;
                         getFullPath = false;

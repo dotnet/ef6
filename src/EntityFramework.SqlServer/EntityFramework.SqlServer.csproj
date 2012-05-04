@@ -133,7 +133,9 @@
       <DependentUpon>Resources.SqlServer.tt</DependentUpon>
     </Compile>
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="Utilities\DbExpressionExtensions.cs" />
     <Compile Include="Utilities\EdmFunctionExtensions.cs" />
+    <Compile Include="Utilities\MetdataItemExtensions.cs" />
     <Compile Include="Utilities\FuncExtensions.cs" />
     <Compile Include="Utilities\IDictionaryExtensions.cs" />
     <Compile Include="SqlGen\ISqlFragment.cs" />
@@ -179,6 +181,27 @@
     </None>
     <EmbeddedResource Include="Properties\Resources.SqlServer.resx">
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml">
+      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

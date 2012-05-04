@@ -18,11 +18,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         // Parameter information (will be retrieved from the query expression of the command tree during construction)
         private ReadOnlyCollection<DbParameterReferenceExpression> _parameters;
 
-        private DbQueryCommandTree(
-            MetadataWorkspace metadata,
-            DataSpace dataSpace,
-            DbExpression query,
-            bool validate)
+        /// <summary>
+        /// Constructs a new DbQueryCommandTree that uses the specified metadata workspace.
+        /// </summary>
+        /// <param name="metadata">The metadata workspace that the command tree should use.</param>
+        /// <param name="dataSpace">The logical 'space' that metadata in the expressions used in this command tree must belong to.</param>
+        /// <param name="query">A <see cref="DbExpression"/> that defines the logic of the query.</param>
+        /// <param name="validate">When set to false the validation of the tree is turned off.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="metadata"/> or <paramref name="query"/> is null</exception>
+        /// <exception cref="ArgumentException"><paramref name="dataSpace"/> does not represent a valid data space</exception>
+        public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, bool validate)
             : base(metadata, dataSpace)
         {
             // Ensure the query expression is non-null
@@ -60,7 +65,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _query; }
         }
 
-        internal override DbCommandTreeKind CommandTreeKind
+        public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Query; }
         }

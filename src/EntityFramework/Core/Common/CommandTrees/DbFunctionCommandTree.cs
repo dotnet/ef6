@@ -72,7 +72,7 @@
             get { return _resultType; }
         }
 
-        internal override DbCommandTreeKind CommandTreeKind
+        public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Function; }
         }

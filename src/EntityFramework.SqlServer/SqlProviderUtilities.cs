@@ -4,6 +4,7 @@
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -11,7 +12,6 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Data.Entity.SqlServer.Utilities;
 
     internal class SqlProviderUtilities
     {
@@ -192,19 +192,19 @@
             return unencodedStringBuilder.ToString();
         }
 
+        internal static string GetSchemaName(EntitySet entitySet)
+        {
+            return entitySet.GetMetadataPropertyValue<string>("Schema") ?? entitySet.EntityContainer.Name;
+        }
+
+        internal static string GetTableName(EntitySet entitySet)
+        {
+            return entitySet.GetMetadataPropertyValue<string>("Table") ?? entitySet.Name;
+        }
+
         #endregion
 
         #region Private Methods
-
-        private static string GetSchemaName(EntitySet entitySet)
-        {
-            return entitySet.Schema ?? entitySet.EntityContainer.Name;
-        }
-
-        private static string GetTableName(EntitySet entitySet)
-        {
-            return entitySet.Table ?? entitySet.Name;
-        }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.SqlServer.SqlDdlBuilder.AppendSql(System.String)")]
@@ -249,7 +249,7 @@
         private void AppendCreateTable(EntitySet entitySet)
         {
             // If the entity set has defining query, skip it
-            if (entitySet.DefiningQuery != null)
+            if (entitySet.GetMetadataPropertyValue<string>("DefiningQuery") != null)
             {
                 AppendSql("-- Ignoring entity set with defining query: ");
                 AppendIdentifier(entitySet, AppendIdentifierEscapeNewLine);

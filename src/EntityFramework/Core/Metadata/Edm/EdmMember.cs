@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns the declaring type of the member
         /// </summary>
-        public StructuralType DeclaringType
+        public virtual StructuralType DeclaringType
         {
             get { return _declaringType; }
         }

@@ -933,9 +933,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <summary>
     /// Represents a 'scan' of all elements of a given entity set.
     /// </summary>
-    public sealed class DbScanExpression : DbExpression
+    public class DbScanExpression : DbExpression
     {
         private readonly EntitySetBase _targetSet;
+
+        internal DbScanExpression()
+        {
+        }
 
         internal DbScanExpression(TypeUsage collectionOfEntityType, EntitySetBase entitySet)
             : base(DbExpressionKind.Scan, collectionOfEntityType)
@@ -948,7 +952,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         /// Gets the metadata for the referenced entity or relationship set.
         /// </summary>
-        public EntitySetBase Target
+        public virtual EntitySetBase Target
         {
             get { return _targetSet; }
         }

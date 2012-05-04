@@ -15,11 +15,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// When the <see cref="Returning"/> property is set, the command returns a reader; otherwise,
     /// it returns a scalar indicating the number of rows affected.
     /// </summary>
-    public sealed class DbUpdateCommandTree : DbModificationCommandTree
+    public class DbUpdateCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;
         private readonly DbExpression _returning;
         private readonly ReadOnlyModificationClauses _setClauses;
+
+        internal DbUpdateCommandTree()
+        {
+        }
 
         internal DbUpdateCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate,
@@ -80,7 +84,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _predicate; }
         }
 
-        internal override DbCommandTreeKind CommandTreeKind
+        public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Update; }
         }

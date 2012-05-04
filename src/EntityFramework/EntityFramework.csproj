@@ -1432,24 +1432,6 @@
     <EmbeddedResource Include="Resources\System\Data\MappingSpecification\System.Data.Resources.CSMSL_3.xsd">
       <LogicalName>System.Data.Resources.CSMSL_3.xsd</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition.ssdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3.ssdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinitionVersion3_Sql8.ssdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaDefinition_Sql8.ssdl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMapping.msl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.StoreSchemaMappingVersion3.msl</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\System\Data\System.Data.Resources.DbProviderServices.ConceptualSchemaDefinition.csdl">
       <LogicalName>System.Data.Resources.DbProviderServices.ConceptualSchemaDefinition.csdl</LogicalName>
     </EmbeddedResource>
@@ -1458,9 +1440,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\System\Data\System.Data.Resources.ProviderServices.ProviderManifest.xsd">
       <LogicalName>System.Data.Resources.ProviderServices.ProviderManifest.xsd</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System\Data\SqlClient\System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml">
-      <LogicalName>System.Data.Resources.SqlClient.SqlProviderServices.ProviderManifest.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

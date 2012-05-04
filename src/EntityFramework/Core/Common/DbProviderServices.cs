@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Spatial;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Reflection;
     using System.Xml;
@@ -424,6 +425,62 @@ namespace System.Data.Entity.Core.Common
         protected virtual void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportDeleteDatabase);
+        }
+
+        /// <summary>
+        /// Expands |DataDirectory| in the given path if it begins with |DataDirectory| and returns the expanded path,
+        /// or returns the given string if it does not start with |DataDirectory|.
+        /// </summary>
+        /// <param name="path">The path to expand.</param>
+        /// <returns>The expanded path.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
+        public static string ExpandDataDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path)
+                || !path.StartsWith(DbConnectionOptions.DataDirectory, StringComparison.OrdinalIgnoreCase))
+            {
+                return path;
+            }
+
+            // find the replacement path
+            var rootFolderObject = AppDomain.CurrentDomain.GetData("DataDirectory");
+            var rootFolderPath = rootFolderObject as string;
+            if ((null != rootFolderObject)
+                && (null == rootFolderPath))
+            {
+                throw new InvalidOperationException(Strings.ADP_InvalidDataDirectory);
+            }
+
+            if (rootFolderPath == String.Empty)
+            {
+                rootFolderPath = AppDomain.CurrentDomain.BaseDirectory;
+            }
+
+            if (null == rootFolderPath)
+            {
+                rootFolderPath = String.Empty;
+            }
+
+            // Make sure that the paths have exactly one "\" between them
+            path = path.Substring(DbConnectionOptions.DataDirectory.Length);
+            if (path.StartsWith(@"\", StringComparison.Ordinal))
+            {
+                path = path.Substring(1);
+            }
+
+            var fixedRoot = rootFolderPath.EndsWith(@"\", StringComparison.Ordinal)
+                                ? rootFolderPath
+                                : rootFolderPath + @"\";
+
+            path = fixedRoot + path;
+
+            // Verify root folder path is a real path without unexpected "..\"
+            if (!EntityUtil.GetFullPath(path).StartsWith(rootFolderPath, StringComparison.Ordinal))
+            {
+                throw new ArgumentException(Strings.ExpandingDataDirectoryFailed);
+            }
+
+            return path;
         }
     }
 }
