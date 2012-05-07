@@ -35,7 +35,7 @@ Changes from Beta2:
 	SqlGenerator:
 	  Fixed NPE in Visit(DbConstantExpression)
 	  Fixed bug with parentheses and multiple function arguments in HandleFunctionArgumentsDefault 
-	  HandleCanonicalFunctionLength doesn't use hack with LEN('.') anymore
+	  HandleCanonicalFunctionLength no longer compensates for LEN SQL function not counting trailing whitespaces
 	  Changed logic converting PrimitiveType to sql type in GetSqlPrimitiveType
 	  WriteFunctionName uses schema name to create quoted function name
 
@@ -71,7 +71,7 @@ Changes in .NET Framework 4 Beta2
 Changes in Entity Framework 5 (.NET Framework 4.5 required)
     
 	Updated the provider to support features introduced in Entity Framework 5:
-	    - CSDL/MSL/SSDL artifacts moved to version 3.0
+		- CSDL/MSL/SSDL artifacts moved to version 3.0
 		- Added support for spatial types and functions
 		- Added tests to verify that stored procedures with multiple resultset work with the provider
 		- Added tests to verify that Table Valued Functions work with the provider
