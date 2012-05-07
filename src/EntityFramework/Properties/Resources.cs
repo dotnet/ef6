@@ -3352,9 +3352,9 @@ namespace System.Data.Entity.Resources
         /// <summary>
         /// A string like "Unable to determine rows affected. The value of parameter '{0}' is not convertible to '{1}'."
         /// </summary>
-        internal static string Update_UnableToConvertRowsAffectedParameterToInt32(object p0, object p1)
+        internal static string Update_UnableToConvertRowsAffectedParameter(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.Update_UnableToConvertRowsAffectedParameterToInt32, p0, p1);
+            return EntityRes.GetString(EntityRes.Update_UnableToConvertRowsAffectedParameter, p0, p1);
         }
 
         /// <summary>
@@ -14549,6 +14549,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// UpdateException with message like "Unable to determine rows affected. The value of parameter '{0}' is not convertible to '{1}'."
+        /// </summary>
+        internal static Exception Update_UnableToConvertRowsAffectedParameter(object p0, object p1)
+        {
+            return new UpdateException(Strings.Update_UnableToConvertRowsAffectedParameter(p0, p1));
+        }
+
+        /// <summary>
         /// MappingException with message like "The type '{0}'('{1}') of the member '{2}' in the conceptual  type '{3}' doesn't match with the type '{4}'('{5}') of the member '{6}' on the object side type '{7}'."
         /// </summary>
         internal static Exception Mapping_Default_OCMapping_Member_Type_Mismatch(object p0, object p1, object p2, object p3, object p4, object p5, object p6, object p7)
@@ -15205,7 +15213,7 @@ namespace System.Data.Entity.Resources
         internal const string Update_MissingResultColumn = "Update_MissingResultColumn";
         internal const string Update_NullReturnValueForNonNullableMember = "Update_NullReturnValueForNonNullableMember";
         internal const string Update_ReturnValueHasUnexpectedType = "Update_ReturnValueHasUnexpectedType";
-        internal const string Update_UnableToConvertRowsAffectedParameterToInt32 = "Update_UnableToConvertRowsAffectedParameterToInt32";
+        internal const string Update_UnableToConvertRowsAffectedParameter = "Update_UnableToConvertRowsAffectedParameter";
         internal const string Update_MappingNotFound = "Update_MappingNotFound";
         internal const string Update_ModifyingIdentityColumn = "Update_ModifyingIdentityColumn";
         internal const string Update_GeneratedDependent = "Update_GeneratedDependent";

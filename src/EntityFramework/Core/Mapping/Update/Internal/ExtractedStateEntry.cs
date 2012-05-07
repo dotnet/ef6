@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Represents the data contained in a StateEntry using internal data structures
@@ -13,9 +14,19 @@
         internal readonly PropagatorResult Current;
         internal readonly IEntityStateEntry Source;
 
+        internal ExtractedStateEntry(EntityState state, PropagatorResult original, PropagatorResult current, IEntityStateEntry source)
+        {
+            State = state;
+            Original = original;
+            Current = current;
+            Source = source;
+        }
+
         internal ExtractedStateEntry(UpdateTranslator translator, IEntityStateEntry stateEntry)
         {
-            Debug.Assert(null != stateEntry, "stateEntry must not be null");
+            Contract.Requires(translator != null);
+            Contract.Requires(stateEntry != null);
+
             State = stateEntry.State;
             Source = stateEntry;
 
@@ -44,7 +55,7 @@
                         stateEntry, ModifiedPropertiesBehavior.AllModified);
                     break;
                 default:
-                    Debug.Fail("unexpected IEntityStateEntry.State for entity " + stateEntry.State);
+                    Contract.Assert(false, "Unexpected IEntityStateEntry.State for entity " + stateEntry.State);
                     Original = null;
                     Current = null;
                     break;

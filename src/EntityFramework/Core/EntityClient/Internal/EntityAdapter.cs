@@ -42,7 +42,7 @@
         /// Gets of sets the command timeout for update operations. If null, indicates that the default timeout
         /// for the provider should be used.
         /// </summary>
-        Int32? IEntityAdapter.CommandTimeout { get; set; }
+        public Int32? CommandTimeout { get; set; }
 
         /// <summary>
         /// Persist modifications described in the given cache.
@@ -74,7 +74,8 @@
                 throw new InvalidOperationException(Strings.EntityClient_ClosedConnectionForUpdate);
             }
 
-            return UpdateTranslator.Update(entityCache, this);
+            var updateTranslator = new UpdateTranslator(entityCache, this);
+            return updateTranslator.Update();
         }
 
         /// <summary>

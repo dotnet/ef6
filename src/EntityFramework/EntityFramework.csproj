@@ -591,7 +591,6 @@
     <Compile Include="Core\Mapping\Update\Internal\PropagatorFlags.cs" />
     <Compile Include="Core\Mapping\Update\Internal\PropagatorResult.cs" />
     <Compile Include="Core\Mapping\Update\Internal\RecordConverter.cs" />
-    <Compile Include="Core\Mapping\Update\Internal\RelationshipConstraintValidator.cs" />
     <Compile Include="Core\Mapping\Update\Internal\SourceInterpreter.cs" />
     <Compile Include="Core\Mapping\Update\Internal\TableChangeProcessor.cs" />
     <Compile Include="Core\Mapping\Update\Internal\UndirectedGraph.cs" />
