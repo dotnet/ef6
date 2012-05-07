@@ -266,13 +266,10 @@
     <Compile Include="Core\Common\Utils\ThreadSafeList.cs" />
     <Compile Include="Core\Common\Utils\TrailingSpaceComparer.cs" />
     <Compile Include="Core\Common\Utils\TreePrinter.cs" />
-    <Compile Include="Core\EntityClient\DbConnectionOptions.cs" />
     <Compile Include="Core\EntityClient\DbParameterCollectionHelper.cs" />
-    <Compile Include="Core\EntityClient\EntityAdapter.cs" />
     <Compile Include="Core\EntityClient\EntityCommand.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core\EntityClient\EntityCommandDefinition.cs" />
     <Compile Include="Core\EntityClient\EntityConnection.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -281,11 +278,13 @@
     <Compile Include="Core\EntityClient\EntityParameter.cs" />
     <Compile Include="Core\EntityClient\EntityParameterCollection.cs" />
     <Compile Include="Core\EntityClient\EntityProviderFactory.cs" />
-    <Compile Include="Core\EntityClient\EntityProviderServices.cs" />
     <Compile Include="Core\EntityClient\EntityTransaction.cs" />
-    <Compile Include="Core\EntityClient\Internal\InternalEntityAdapter.cs" />
+    <Compile Include="Core\EntityClient\Internal\DbConnectionOptions.cs" />
+    <Compile Include="Core\EntityClient\Internal\EntityProviderServices.cs" />
+    <Compile Include="Core\EntityClient\Internal\IEntityAdapter.cs" />
+    <Compile Include="Core\EntityClient\Internal\EntityAdapter.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityCommand.cs" />
-    <Compile Include="Core\EntityClient\Internal\InternalEntityCommandDefinition.cs" />
+    <Compile Include="Core\EntityClient\Internal\EntityCommandDefinition.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityConnection.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityParameter.cs" />
     <Compile Include="Core\EntityClient\Internal\InternalEntityTransaction.cs" />
@@ -369,7 +368,6 @@
     <Compile Include="Core\EntityResCategoryAttribute.cs" />
     <Compile Include="Core\EntityResDescriptionAttribute.cs" />
     <Compile Include="Core\EntitySqlException.cs" />
-    <Compile Include="Core\IEntityAdapter.cs" />
     <Compile Include="Core\IEntityStateEntry.cs" />
     <Compile Include="Core\IEntityStateManager.cs" />
     <Compile Include="Core\IExtendedDataRecord.cs" />

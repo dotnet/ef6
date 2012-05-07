@@ -18,7 +18,7 @@
     using System.Linq;
     using System.Text;
 
-    internal class InternalEntityCommandDefinition
+    internal class EntityCommandDefinition : DbCommandDefinition
     {
         #region internal state
 
@@ -52,7 +52,7 @@
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal InternalEntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
         {
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
@@ -61,8 +61,7 @@
 
             try
             {
-                if (DbCommandTreeKind.Query
-                    == commandTree.CommandTreeKind)
+                if (DbCommandTreeKind.Query == commandTree.CommandTreeKind)
                 {
                     // Next compile the plan for the command tree
                     var mappedCommandList = new List<ProviderCommandInfo>();
@@ -168,7 +167,7 @@
         /// <summary>
         /// Constructor for testing/mocking purposes.
         /// </summary>
-        internal InternalEntityCommandDefinition()
+        internal EntityCommandDefinition()
         {
         }
 
@@ -289,12 +288,6 @@
         #endregion
 
         /// <summary>
-        /// Wrapper on the parent class, for accessing its protected members (via proxy method) 
-        /// or when the parent class is a parameter to another method/constructor
-        /// </summary>
-        internal EntityCommandDefinition EntityCommandDefinitionWrapper { get; set; }
-
-        /// <summary>
         /// Property to expose the known parameters for the query, so the Command objects 
         /// constructor can poplulate it's parameter collection from.
         /// </summary>
@@ -317,14 +310,22 @@
         /// Create a DbCommand object from the definition, that can be executed
         /// </summary>
         /// <returns></returns>
-        public virtual DbCommand CreateCommand()
+        public override DbCommand CreateCommand()
         {
-            return new EntityCommand(this.EntityCommandDefinitionWrapper);
+            return new EntityCommand(this);
         }
 
         #endregion
 
         #region internal methods
+
+        /// <summary>
+        /// Creates ColumnMap for result assembly using the given reader.
+        /// </summary>
+        internal ColumnMap CreateColumnMap(DbDataReader storeDataReader)
+        {
+            return CreateColumnMap(storeDataReader, 0);
+        }
 
         /// <summary>
         /// Creates ColumnMap for result assembly using the given reader's resultSetIndexth result set.
@@ -673,6 +674,5 @@
         }
 
         #endregion
-
     }
 }

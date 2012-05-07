@@ -4,6 +4,9 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics;
 
+    /// <summary>
+    /// See comments on <see cref="EntityTransaction"/> class.
+    /// </summary>
     internal class InternalEntityTransaction : IDisposable
     {
         private bool _disposed = false;
@@ -28,7 +31,7 @@
         internal EntityTransaction EntityTransactionWrapper { get; set; }
 
         /// <summary>
-        /// The connection object owning this transaction object
+        /// See comments on <see cref="EntityTransaction"/> class.
         /// </summary>
         public virtual EntityConnection Connection
         {
@@ -40,7 +43,7 @@
         }
 
         /// <summary>
-        /// The connection object owning this transaction object
+        /// See comments on <see cref="EntityTransaction"/> class.
         /// </summary>
         internal virtual DbConnection DbConnection
         {
@@ -52,7 +55,7 @@
         }
 
         /// <summary>
-        /// The isolation level of this transaction
+        /// See comments on <see cref="EntityTransaction"/> class.
         /// </summary>
         public virtual IsolationLevel IsolationLevel
         {
@@ -60,7 +63,7 @@
         }
 
         /// <summary>
-        /// Gets the DbTransaction for the underlying provider transaction
+        /// See comments on <see cref="EntityTransaction"/> class.
         /// </summary>
         internal virtual DbTransaction StoreTransaction
         {
@@ -68,7 +71,7 @@
         }
 
         /// <summary>
-        /// Commits the transaction
+        /// See comments on <see cref="EntityTransaction"/> class.
         /// </summary>
         public virtual void Commit()
         {
@@ -90,7 +93,7 @@
         }
 
         /// <summary>
-        /// Rolls back the transaction
+        /// See comments on <see cref="EntityTransaction"/> class.
         /// </summary>
         public virtual void Rollback()
         {

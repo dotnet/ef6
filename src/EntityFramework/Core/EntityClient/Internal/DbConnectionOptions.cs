@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Core.EntityClient
+﻿namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Collections;
     using System.Data.Entity.Resources;
@@ -43,7 +43,7 @@
 
 #if DEBUG
         private const string ConnectionStringValidKeyPattern = "^(?![;\\s])[^\\p{Cc}]+(?<!\\s)$";
-                             // key not allowed to start with semi-colon or space or contain non-visible characters or end with space
+        // key not allowed to start with semi-colon or space or contain non-visible characters or end with space
 
         private const string ConnectionStringValidValuePattern = "^[^\u0000]*$"; // value not allowed to contain embedded null   
         private static readonly Regex ConnectionStringValidKeyRegex = new Regex(ConnectionStringValidKeyPattern, RegexOptions.Compiled);
@@ -334,7 +334,7 @@
                 }
                 buffer.Append(currentChar);
             }
-            ParserExit:
+        ParserExit:
             switch (parserState)
             {
                 case ParserState.Key:

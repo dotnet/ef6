@@ -14,6 +14,9 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    /// <summary>
+    /// See comments on <see cref="EntityCommand"/> class.
+    /// </summary>
     internal class InternalEntityCommand
     {
         #region Fields
@@ -40,7 +43,7 @@
         #endregion
 
         /// <summary>
-        /// Constructs the EntityCommand object not yet associated to a connection object
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public InternalEntityCommand(EntityDataReaderFactory factory = null)
         {
@@ -59,9 +62,8 @@
         }
 
         /// <summary>
-        /// Constructs the EntityCommand object with the given eSQL statement, but not yet associated to a connection object
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <param name="statement">The eSQL command text to execute</param>
         public InternalEntityCommand(string statement, EntityDataReaderFactory factory = null)
             : this(factory)
         {
@@ -70,10 +72,8 @@
         }
 
         /// <summary>
-        /// Constructs the EntityCommand object with the given eSQL statement and the connection object to use
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <param name="statement">The eSQL command text to execute</param>
-        /// <param name="connection">The connection object</param>
         public InternalEntityCommand(string statement, EntityConnection connection, EntityDataReaderFactory factory = null)
             : this(statement, factory)
         {
@@ -82,11 +82,8 @@
         }
 
         /// <summary>
-        /// Constructs the EntityCommand object with the given eSQL statement and the connection object to use
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <param name="statement">The eSQL command text to execute</param>
-        /// <param name="connection">The connection object</param>
-        /// <param name="transaction">The transaction object this command executes in</param>
         public InternalEntityCommand(string statement, EntityConnection connection, EntityTransaction transaction, EntityDataReaderFactory factory = null)
             : this(statement, connection, factory)
         {
@@ -95,9 +92,8 @@
         }
 
         /// <summary>
-        /// Internal constructor used by EntityCommandDefinition
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <param name="commandDefinition">The prepared command definition that can be executed using this EntityCommand</param>
         internal InternalEntityCommand(EntityCommandDefinition commandDefinition, EntityDataReaderFactory factory = null)
             : this(factory)
         {
@@ -120,11 +116,8 @@
         }
 
         /// <summary>
-        /// Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefition. This 
-        /// constructor is used by ObjectQueryExecution plan to execute an ObjectQuery.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <param name="connection">The connection against which this EntityCommand should execute</param>
-        /// <param name="commandDefinition">The prepared command definition that can be executed using this EntityCommand</param>
         internal InternalEntityCommand(EntityConnection connection, EntityCommandDefinition entityCommandDefinition, EntityDataReaderFactory factory = null)
             : this(entityCommandDefinition, factory)
         {
@@ -138,7 +131,7 @@
         internal EntityCommand EntityCommandWrapper { get; set; }
 
         /// <summary>
-        /// The connection object used for executing the command
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual EntityConnection Connection
         {
@@ -160,7 +153,7 @@
         }
 
         /// <summary>
-        /// The eSQL statement to execute, only one of the command tree or the command text can be set, not both
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual string CommandText
         {
@@ -199,7 +192,7 @@
         }
 
         /// <summary>
-        /// The command tree to execute, only one of the command tree or the command text can be set, not both.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual DbCommandTree CommandTree
         {
@@ -244,7 +237,7 @@
         }
 
         /// <summary>
-        /// Get or set the time in seconds to wait for the command to execute
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual int CommandTimeout
         {
@@ -277,7 +270,7 @@
         }
 
         /// <summary>
-        /// The type of command being executed, only applicable when the command is using an eSQL statement and not the tree
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual CommandType CommandType
         {
@@ -298,7 +291,7 @@
         }
 
         /// <summary>
-        /// The collection of parameters for this command
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual EntityParameterCollection Parameters
         {
@@ -306,7 +299,7 @@
         }
 
         /// <summary>
-        /// The transaction object used for executing the command
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual EntityTransaction Transaction
         {
@@ -323,7 +316,7 @@
         }
 
         /// <summary>
-        /// Gets or sets how command results are applied to the DataRow when used by the Update method of a DbDataAdapter
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual UpdateRowSource UpdatedRowSource
         {
@@ -336,7 +329,7 @@
         }
 
         /// <summary>
-        /// Hidden property used by the designers
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual bool DesignTimeVisible
         {
@@ -350,7 +343,7 @@
         }
 
         /// <summary>
-        /// Enables/Disables query plan caching for this EntityCommand
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual bool EnablePlanCaching
         {
@@ -363,13 +356,8 @@
         }
 
         /// <summary>
-        /// Executes the command and returns a data reader for reading the results. May only
-        /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <param name="behavior">The behavior to use when executing the command</param>
-        /// <returns>A data readerobject</returns>
-        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
-        /// for anything but an entity collection result</exception>
         public virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
             Prepare(); // prepare the query first
@@ -383,9 +371,8 @@
         }
 
         /// <summary>
-        /// Executes the command and discard any results returned from the command
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <returns>Number of rows affected</returns>
         public virtual int ExecuteNonQuery()
         {
             return ExecuteScalar(
@@ -398,9 +385,8 @@
         }
 
         /// <summary>
-        /// Executes the command and return the first column in the first row of the result, extra results are ignored
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <returns>The result in the first column in the first row</returns>
         public virtual object ExecuteScalar()
         {
             return ExecuteScalar(
@@ -428,7 +414,7 @@
         }
 
         /// <summary>
-        /// Clear out any "compile" state
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         internal virtual void Unprepare()
         {
@@ -440,7 +426,7 @@
         }
 
         /// <summary>
-        /// Creates a prepared version of this command
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         public virtual void Prepare()
         {
@@ -550,10 +536,8 @@
         }
 
         /// <summary>
-        /// Get the command definition for the command; will construct one if there is not already
-        /// one constructed, which means it will prepare the command on the client.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <returns>the command definition</returns>
         internal virtual EntityCommandDefinition GetCommandDefinition()
         {
             var entityCommandDefinition = _commandDefinition;
@@ -575,9 +559,8 @@
         }
 
         /// <summary>
-        /// Returns the store command text.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <returns></returns>
         [Browsable(false)]
         public virtual string ToTraceString()
         {
@@ -699,10 +682,8 @@
         }
 
         /// <summary>
-        /// Returns a dictionary of parameter name and parameter typeusage in s-space from the entity parameter 
-        /// collection given by the user.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        /// <returns></returns>
         internal virtual Dictionary<string, TypeUsage> GetParameterTypeUsage()
         {
             Debug.Assert(null != _parameters, "_parameters must not be null");
@@ -753,7 +734,7 @@
         }
 
         /// <summary>
-        /// Call only when the reader associated with this command is closing. Copies parameter values where necessary.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         internal virtual void NotifyDataReaderClosing()
         {
@@ -772,8 +753,7 @@
         }
 
         /// <summary>
-        /// Tells the EntityCommand about the underlying store provider command in case it needs to pull parameter values
-        /// when the reader is closing.
+        /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
         internal virtual void SetStoreProviderCommand(DbCommand storeProviderCommand)
         {

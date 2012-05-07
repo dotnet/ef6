@@ -15,6 +15,9 @@
     using System.Transactions;
     using IsolationLevel = System.Data.IsolationLevel;
 
+    /// <summary>
+    /// See comments on <see cref="EntityConnection"/> class.
+    /// </summary>
     internal class InternalEntityConnection : IDisposable
     {
        #region Constants
@@ -60,24 +63,20 @@
         private MetadataArtifactLoader _artifactLoader;
 
         /// <summary>
-        /// Constructs the EntityConnection object with a connection not yet associated to a particular store
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        [ResourceExposure(ResourceScope.None)] // We are not exposing any resource
+        [ResourceExposure(ResourceScope.None)]
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
-        // For EntityConnection constructor. But since the connection string we pass in is an Empty String,
-        // we consume the resource and do not expose it any further.        
         public InternalEntityConnection()
             : this(String.Empty)
         {
         }
 
         /// <summary>
-        /// Constructs the EntityConnection object with a connection string
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        /// <param name="connectionString">The connection string, may contain a list of settings for the connection or
-        /// just the name of the connection to use</param>
-        [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
-        [ResourceConsumption(ResourceScope.Machine)] // For ChangeConnectionString method call. But the paths are not created in this method.
+        [ResourceExposure(ResourceScope.Machine)]
+        [ResourceConsumption(ResourceScope.Machine)]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         public InternalEntityConnection(string connectionString)
         {
@@ -85,9 +84,8 @@
         }
 
         /// <summary>
-        /// Constructs the EntityConnection from Metadata loaded in memory
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        /// <param name="workspace">Workspace containing metadata information.</param>
         public InternalEntityConnection(MetadataWorkspace workspace, DbConnection connection)
             : this(workspace, connection, false)
         {
@@ -144,7 +142,7 @@
         internal EntityConnection EntityConnectionWrapper { get; set; }
 
         /// <summary>
-        /// Get or set the entity connection string associated with this connection object
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public virtual string ConnectionString
@@ -241,7 +239,7 @@
         }
 
         /// <summary>
-        /// Get the time to wait when attempting to establish a connection before ending the try and generating an error
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public virtual int ConnectionTimeout
@@ -270,7 +268,7 @@
         }
 
         /// <summary>
-        /// Gets the ConnectionState property of the EntityConnection
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public virtual ConnectionState State
@@ -303,7 +301,7 @@
         }
 
         /// <summary>
-        /// Gets the name or network address of the data source to connect to
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public virtual string DataSource
@@ -332,7 +330,7 @@
         }
 
         /// <summary>
-        /// Gets a string that contains the version of the data store to which the client is connected
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public virtual string ServerVersion
@@ -366,7 +364,7 @@
         }
 
         /// <summary>
-        /// Gets the DbProviderFactory for the underlying provider
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         internal virtual DbProviderFactory StoreProviderFactory
         {
@@ -374,7 +372,7 @@
         }
 
         /// <summary>
-        /// Gets the DbConnection for the underlying provider connection
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         public virtual DbConnection StoreConnection
         {
@@ -382,7 +380,7 @@
         }
 
         /// <summary>
-        /// Gets the metadata workspace used by this connection
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         internal virtual MetadataWorkspace GetMetadataWorkspace()
         {
@@ -401,8 +399,11 @@
             return false;
         }
 
-        [ResourceExposure(ResourceScope.None)] // The resource( path name) is not exposed to the callers of this method
-        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)] // For SplitPaths call and we pick the file names from class variable.
+        /// <summary>
+        /// See comments on <see cref="EntityConnection"/> class.
+        /// </summary>
+        [ResourceExposure(ResourceScope.None)] 
+        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
         internal virtual MetadataWorkspace GetMetadataWorkspace(bool initializeAllCollections)
         {
             Debug.Assert(
@@ -463,7 +464,7 @@
         }
 
         /// <summary>
-        /// Gets the current transaction that this connection is enlisted in
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         internal virtual EntityTransaction CurrentTransaction
         {
@@ -481,14 +482,8 @@
         }
 
         /// <summary>
-        /// Whether the user has enlisted in transaction using EnlistTransaction method
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        /// <remarks>
-        /// To avoid threading issues the <see cref="_enlistedTransaction"/> field is not reset when the transaction is completed.
-        /// Therefore it is possible that the transaction has completed but the field is not null. As a result we need to check 
-        /// the actual transaction status. However it can happen that the transaction has already been disposed and trying to get
-        /// transaction status will cause ObjectDisposedException. This would also mean that the transaction has completed and can be reset.
-        /// </remarks>
         internal virtual bool EnlistedInUserTransaction
         {
             get
@@ -506,7 +501,7 @@
         }
 
         /// <summary>
-        /// Establish a connection to the data store by calling the Open method on the underlying data provider
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         public virtual void Open()
         {
@@ -634,7 +629,7 @@
         }
 
         /// <summary>
-        /// Close the connection to the data store
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         public virtual void Close()
         {
@@ -648,10 +643,8 @@
         }
 
         /// <summary>
-        /// Begins a database transaction
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        /// <param name="isolationLevel">The isolation level of the transaction</param>
-        /// <returns>An object representing the new transaction</returns>
         internal virtual DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
             if (CurrentTransaction != null)
@@ -695,9 +688,8 @@
         }
 
         /// <summary>
-        /// Enlist in the given transaction
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        /// <param name="transaction">The transaction object to enlist into</param>
         public virtual void EnlistTransaction(Transaction transaction)
         {
             if (_storeConnection == null)
@@ -1124,7 +1116,7 @@
         }
 
         /// <summary>
-        /// Clears the current DbTransaction for this connection
+        /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
         internal virtual void ClearCurrentTransaction()
         {

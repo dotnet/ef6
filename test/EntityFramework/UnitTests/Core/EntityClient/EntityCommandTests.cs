@@ -205,9 +205,9 @@
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
 
-                var internalEntityCommandDefinitionMock = new Mock<InternalEntityCommandDefinition>(MockBehavior.Strict);
-                internalEntityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
-                internalEntityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
+                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict);
+                entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
+                entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                     Returns(storeDataReader).
                     Callback((EntityCommand ec, CommandBehavior cb) =>
                         {
@@ -215,8 +215,7 @@
                             passedCommandbehavior = cb;
                         });
 
-                var entityCommandDefinition = new EntityCommandDefinition(internalEntityCommandDefinitionMock.Object);
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinition);
+                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinitionMock.Object);
                 var entityCommand = new EntityCommand(internalEntityCommand);
 
                 var commandBehavior = CommandBehavior.SequentialAccess;
@@ -224,7 +223,7 @@
 
                 Assert.Same(entityCommand, passedEntityCommand);
                 Assert.Equal(passedCommandbehavior, commandBehavior);
-                internalEntityCommandDefinitionMock.Verify(m => m.Execute(entityCommand, commandBehavior), Times.Once());
+                entityCommandDefinitionMock.Verify(m => m.Execute(entityCommand, commandBehavior), Times.Once());
             }
 
             [Fact]
@@ -235,9 +234,9 @@
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
 
-                var internalEntityCommandDefinitionMock = new Mock<InternalEntityCommandDefinition>(MockBehavior.Strict);
-                internalEntityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
-                internalEntityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
+                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict);
+                entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
+                entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                     Returns(storeDataReader).
                     Callback((EntityCommand ec, CommandBehavior cb) =>
                     {
@@ -245,10 +244,9 @@
                         passedCommandbehavior = cb;
                     });
 
-                var entityCommandDefinition = new EntityCommandDefinition(internalEntityCommandDefinitionMock.Object);
                 var entityDataReaderFactoryMock = new Mock<System.Data.Entity.Core.EntityClient.Internal.InternalEntityCommand.EntityDataReaderFactory>();
 
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
+                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinitionMock.Object, entityDataReaderFactoryMock.Object);
                 var entityCommand = new EntityCommand(internalEntityCommand);
                 var commandBehavior = CommandBehavior.SequentialAccess;
 
@@ -344,13 +342,12 @@
         private static EntityCommandDefinition InitializeEntityCommandDefinition()
         {
             var storeDataReader = new Mock<DbDataReader>().Object;
-            var internalEntityCommandDefinitionMock = new Mock<InternalEntityCommandDefinition>(MockBehavior.Strict);
-            internalEntityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
-            internalEntityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
+            var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict);
+            entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
+            entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                 Returns(storeDataReader);
-            var entityCommandDefinition = new EntityCommandDefinition(internalEntityCommandDefinitionMock.Object);
 
-            return entityCommandDefinition;
+            return entityCommandDefinitionMock.Object;
         }
     }
 }

@@ -11,6 +11,9 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    /// <summary>
+    /// See comments on <see cref="EntityParameter"/> class.
+    /// </summary>
     internal class InternalEntityParameter
     {
         private string _parameterName;
@@ -130,7 +133,7 @@
         }
 
         /// <summary>
-        /// The name of the parameter
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public string ParameterName
         {
@@ -158,7 +161,7 @@
         }
 
         /// <summary>
-        /// The type of the parameter, EdmType may also be set, and may provide more detailed information.
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public DbType DbType
         {
@@ -204,10 +207,7 @@
         }
 
         /// <summary>
-        /// The type of the parameter, expressed as an EdmType.
-        /// May be null (which is what it will be if unset).  This means
-        /// that the DbType contains all the type information.
-        /// Non-null values must not contradict DbType (only restate or specialize).
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public EdmType EdmType
         {
@@ -225,7 +225,7 @@
         }
 
         /// <summary>
-        /// The precision of the parameter if the parameter is a floating point type
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public byte Precision
         {
@@ -242,7 +242,7 @@
         }
 
         /// <summary>
-        /// The scale of the parameter if the parameter is a floating point type
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public byte Scale
         {
@@ -259,7 +259,7 @@
         }
 
         /// <summary>
-        /// The value of the parameter
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public object Value
         {
@@ -297,7 +297,7 @@
         }
 
         /// <summary>
-        /// Gets whether this collection has been changed since the last reset
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsDirty
         {
@@ -305,7 +305,7 @@
         }
 
         /// <summary>
-        /// Indicates whether the DbType property has been set by the user;
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsDbTypeSpecified
         {
@@ -313,7 +313,7 @@
         }
 
         /// <summary>
-        /// Indicates whether the Direction property has been set by the user;
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsDirectionSpecified
         {
@@ -321,7 +321,7 @@
         }
 
         /// <summary>
-        /// Indicates whether the IsNullable property has been set by the user;
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsIsNullableSpecified
         {
@@ -329,7 +329,7 @@
         }
 
         /// <summary>
-        /// Indicates whether the Precision property has been set by the user;
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsPrecisionSpecified
         {
@@ -337,7 +337,7 @@
         }
 
         /// <summary>
-        /// Indicates whether the Scale property has been set by the user;
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsScaleSpecified
         {
@@ -345,13 +345,16 @@
         }
 
         /// <summary>
-        /// Indicates whether the Size property has been set by the user;
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal bool IsSizeSpecified
         {
             get { return _size.HasValue; }
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         [RefreshProperties(RefreshProperties.All)]
         [EntityResCategory(EntityRes.DataCategory_Data)]
         [EntityResDescription(EntityRes.DbParameter_Direction)]
@@ -382,6 +385,9 @@
             }
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         public bool IsNullable
         {
             get
@@ -392,6 +398,9 @@
             set { _isNullable = value; }
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         [EntityResCategory(EntityRes.DataCategory_Data)]
         [EntityResDescription(EntityRes.DbParameter_Size)]
         public int Size
@@ -428,6 +437,9 @@
             }
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceColumn)]
         public string SourceColumn
@@ -440,12 +452,18 @@
             set { _sourceColumn = value; }
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         public bool SourceColumnNullMapping
         {
             get { return _sourceColumnNullMapping; }
             set { _sourceColumnNullMapping = value; }
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceVersion)]
         public DataRowVersion SourceVersion
@@ -472,7 +490,7 @@
         }
 
         /// <summary>
-        /// Resets the DbType property to its original settings
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         public void ResetDbType()
         {
@@ -504,10 +522,8 @@
         }
 
         /// <summary>
-        /// Get the type usage for this parameter in model terms.
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
-        /// <returns>The type usage for this parameter</returns>
-        //NOTE: Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution
         internal TypeUsage GetTypeUsage()
         {
             TypeUsage typeUsage;
@@ -543,7 +559,7 @@
         }
 
         /// <summary>
-        /// Reset the dirty flag on the collection
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
         internal void ResetIsDirty()
         {
@@ -624,20 +640,25 @@
             destination._scale = _scale;
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         internal void CopyTo(InternalEntityParameter destination)
         {
             CloneHelper(destination);
         }
 
         /// <summary>
-        /// Clones this parameter object
+        /// See comments on <see cref="EntityParameter"/> class.
         /// </summary>
-        /// <returns>The new cloned object</returns>
         internal InternalEntityParameter Clone()
         {
             return new InternalEntityParameter(this);
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         internal object CompareExchangeParent(object value, object comparand)
         {
             var parent = _parent;
@@ -649,11 +670,17 @@
             return parent;
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         internal void ResetParent()
         {
             _parent = null;
         }
 
+        /// <summary>
+        /// See comments on <see cref="EntityParameter"/> class.
+        /// </summary>
         public override string ToString()
         {
             return ParameterName;

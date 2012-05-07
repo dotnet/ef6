@@ -5,17 +5,20 @@
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    
-    internal class InternalEntityAdapter
+
+    internal class EntityAdapter : IEntityAdapter
     {
         private bool _acceptChangesDuringUpdate = true;
         private EntityConnection _connection;
 
         /// <summary>
-        /// Wrapper on the parent class, for accessing its protected members (via proxy method) 
-        /// or when the parent class is a parameter to another method/constructor
+        /// Gets or sets the map connection used by this adapter.
         /// </summary>
-        internal EntityAdapter EntityAdapterWrapper { get; set; }
+        DbConnection IEntityAdapter.Connection
+        {
+            get { return Connection; }
+            set { Connection = (EntityConnection)value; }
+        }
 
         /// <summary>
         /// Gets or sets the map connection used by this adapter.
@@ -34,6 +37,12 @@
             get { return _acceptChangesDuringUpdate; }
             set { _acceptChangesDuringUpdate = value; }
         }
+
+        /// <summary>
+        /// Gets of sets the command timeout for update operations. If null, indicates that the default timeout
+        /// for the provider should be used.
+        /// </summary>
+        Int32? IEntityAdapter.CommandTimeout { get; set; }
 
         /// <summary>
         /// Persist modifications described in the given cache.
@@ -65,7 +74,7 @@
                 throw new InvalidOperationException(Strings.EntityClient_ClosedConnectionForUpdate);
             }
 
-            return UpdateTranslator.Update(entityCache, this.EntityAdapterWrapper);
+            return UpdateTranslator.Update(entityCache, this);
         }
 
         /// <summary>

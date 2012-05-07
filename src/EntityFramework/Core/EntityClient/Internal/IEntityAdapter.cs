@@ -1,4 +1,4 @@
-namespace System.Data.Entity.Core
+﻿namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Data.Common;
 
