@@ -123,8 +123,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DbGeographyAdapter.cs" />
+    <Compile Include="DbGeometryAdapter.cs" />
+    <Compile Include="Expressions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IDbSpatialValue.cs" />
+    <Compile Include="IDbSpatialValueExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="Properties\Resources.SqlServer.cs">
@@ -132,7 +136,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.SqlServer.tt</DependentUpon>
     </Compile>
+    <Compile Include="SqlDdlBuilder.cs" />
+    <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="SqlVersionUtils.cs" />
     <Compile Include="Utilities\DbExpressionExtensions.cs" />
     <Compile Include="Utilities\EdmFunctionExtensions.cs" />
     <Compile Include="Utilities\MetdataItemExtensions.cs" />
@@ -159,7 +166,6 @@
     <Compile Include="SqlProviderUtilities.cs" />
     <Compile Include="SqlSpatialDataReader.cs" />
     <Compile Include="SqlSpatialServices.cs" />
-    <Compile Include="SqlSpatialServices.Generated.cs" />
     <Compile Include="SqlTypesAssembly.cs" />
     <Compile Include="SqlVersion.cs" />
     <Compile Include="Utilities\PrimitiveTypeExtensions.cs" />

@@ -204,13 +204,4 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         #endregion
     }
-
-    internal enum AddErrorKind
-    {
-        Succeeded,
-
-        MissingNameError,
-
-        DuplicateNameError,
-    }
 }

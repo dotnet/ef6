@@ -3,19 +3,6 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Used for wrapping a boolean value as an object.
-    /// </summary>
-    internal class BoolWrapper
-    {
-        internal bool Value { get; set; }
-
-        internal BoolWrapper()
-        {
-            Value = false;
-        }
-    }
-
-    /// <summary>
     /// Tracks the usage of symbols. 
     /// When registering a symbol with the usage manager if an input symbol is specified,
     /// than the usage of the two is 'connected' - if one ever gets marked as used, 

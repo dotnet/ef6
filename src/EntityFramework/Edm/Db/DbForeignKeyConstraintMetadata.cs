@@ -4,11 +4,6 @@ namespace System.Data.Entity.Edm.Db
     using System.Data.Entity.Edm.Internal;
     using System.Diagnostics.CodeAnalysis;
 
-    internal abstract class DbConstraintMetadata
-        : DbNamedMetadataItem
-    {
-    }
-
     /// <summary>
     ///     Allows the construction and modification of a foreign key constraint sourced by a <see cref = "DbTableMetadata" /> instance.
     /// </summary>
@@ -42,22 +37,4 @@ namespace System.Data.Entity.Edm.Db
         /// </summary>
         public virtual DbOperationAction DeleteAction { get; set; }
     }
-
-    /*
-    internal class DbUniqueConstraintMetadata : DbConstraintMetadata
-    {
-        internal DbUniqueConstraintMetadata()
-        {
-        }
-
-        public virtual IList<DbTableColumnMetadata> UniqueColumns { get { return this.uniqueColumnsList.EnsureValue(); } set { this.uniqueColumnsList.SetValue(value); } }
-    }
-    
-    internal class DbRelationMetadata : DbNamedMetadataItem
-    {
-        public virtual DbTableMetadata PrincipalTable { get; set; }
-        public virtual DbUniqueConstraintMetadata PrincipalConstraint { get; set; } // If null, primary key is assumed
-        public virtual DbTableMetadata DependentTable { get; set; }
-        public virtual DbForeignKeyConstraintMetadata DependentConstraint { get; set; }
-    }*/
 }

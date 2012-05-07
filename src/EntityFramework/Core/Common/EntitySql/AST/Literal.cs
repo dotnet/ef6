@@ -5,23 +5,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Globalization;
 
     /// <summary>
-    /// Defines literal value kind, including the eSQL untyped NULL.
-    /// </summary>
-    internal enum LiteralKind
-    {
-        Number,
-        String,
-        UnicodeString,
-        Boolean,
-        Binary,
-        DateTime,
-        Time,
-        DateTimeOffset,
-        Guid,
-        Null
-    }
-
-    /// <summary>
     /// Represents a literal ast node.
     /// </summary>
     internal sealed class Literal : Node

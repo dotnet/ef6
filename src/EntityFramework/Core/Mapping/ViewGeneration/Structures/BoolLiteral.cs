@@ -3,15 +3,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Diagnostics;
-    using System.Linq;
     using System.Text;
     using DomainConstraint = System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>;
     using DomainVariable = System.Data.Entity.Core.Common.Utils.Boolean.DomainVariable<BoolLiteral, Constant>;
     using DomainBoolExpr =
         System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
-    using DomainNotExpr = System.Data.Entity.Core.Common.Utils.Boolean.NotExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>
-        ;
     using DomainTermExpr =
         System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
@@ -177,35 +173,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         #endregion
-    }
-
-    internal abstract class TrueFalseLiteral : BoolLiteral
-    {
-        internal override DomainBoolExpr GetDomainBoolExpression(MemberDomainMap domainMap)
-        {
-            // Essentially say that the variable can take values true or false and here its value is only true
-            IEnumerable<Constant> actualValues = new Constant[] { new ScalarConstant(true) };
-            IEnumerable<Constant> possibleValues = new Constant[] { new ScalarConstant(true), new ScalarConstant(false) };
-            var variableDomain = new Set<Constant>(possibleValues, Constant.EqualityComparer).MakeReadOnly();
-            var thisDomain = new Set<Constant>(actualValues, Constant.EqualityComparer).MakeReadOnly();
-
-            var result = MakeTermExpression(this, variableDomain, thisDomain);
-            return result;
-        }
-
-        internal override DomainBoolExpr FixRange(Set<Constant> range, MemberDomainMap memberDomainMap)
-        {
-            Debug.Assert(range.Count == 1, "For BoolLiterals, there should be precisely one value - true or false");
-            var scalar = (ScalarConstant)range.First();
-            var expr = GetDomainBoolExpression(memberDomainMap);
-
-            if ((bool)scalar.Value == false)
-            {
-                // The range of the variable was "inverted". Return a NOT of
-                // the expression
-                expr = new DomainNotExpr(expr);
-            }
-            return expr;
-        }
     }
 }

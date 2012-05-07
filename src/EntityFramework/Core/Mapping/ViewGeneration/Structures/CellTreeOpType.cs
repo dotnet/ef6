@@ -1,11 +1,6 @@
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     // This enum identifies for which side we are generating the view
-    internal enum ViewTarget
-    {
-        QueryView,
-        UpdateView
-    }
 
     // Different operations that are used in the CellTreeNode nodes
     internal enum CellTreeOpType

@@ -4,7 +4,6 @@ using LinqExpression = System.Linq.Expressions.Expression;
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -69,26 +68,5 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 .FirstOrDefault();
             return cqtExpression != null;
         }
-    }
-
-    /// <summary>
-    /// Class describing a LINQ parameter and its bound expression. For instance, in
-    /// 
-    /// products.Select(p => p.ID)
-    /// 
-    /// the 'products' query is the bound expression, and 'p' is the parameter.
-    /// </summary>
-    internal sealed class Binding
-    {
-        internal Binding(LinqExpression linqExpression, CqtExpression cqtExpression)
-        {
-            Contract.Requires(linqExpression != null);
-            Contract.Requires(cqtExpression != null);
-            LinqExpression = linqExpression;
-            CqtExpression = cqtExpression;
-        }
-
-        internal readonly LinqExpression LinqExpression;
-        internal readonly CqtExpression CqtExpression;
     }
 }

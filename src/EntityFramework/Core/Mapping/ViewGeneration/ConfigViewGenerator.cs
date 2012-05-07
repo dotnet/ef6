@@ -5,38 +5,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-    internal enum ViewGenMode
-    {
-        GenerateAllViews = 0,
-        OfTypeViews,
-        OfTypeOnlyViews
-    }
-
-    internal enum ViewGenTraceLevel
-    {
-        None = 0,
-        ViewsOnly,
-        Normal,
-        Verbose
-    }
-
-    internal enum PerfType
-    {
-        InitialSetup = 0,
-        CellCreation,
-        KeyConstraint,
-        ViewgenContext,
-        UpdateViews,
-        DisjointConstraint,
-        PartitionConstraint,
-        DomainConstraint,
-        ForeignConstraint,
-        QueryViews,
-        BoolResolution,
-        Unsatisfiability,
-        ViewParsing,
-    }
-
     /// <summary>
     /// This class holds some configuration information for the view generation code.
     /// </summary>

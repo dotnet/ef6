@@ -10,62 +10,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
 
-    internal class DiscriminatorMapInfo
-    {
-        internal EntityTypeBase RootEntityType;
-        internal bool IncludesSubTypes;
-        internal ExplicitDiscriminatorMap DiscriminatorMap;
-
-        internal DiscriminatorMapInfo(EntityTypeBase rootEntityType, bool includesSubTypes, ExplicitDiscriminatorMap discriminatorMap)
-        {
-            RootEntityType = rootEntityType;
-            IncludesSubTypes = includesSubTypes;
-            DiscriminatorMap = discriminatorMap;
-        }
-
-        /// <summary>
-        /// Merge the discriminatorMap info we just found with what we've already found.
-        /// 
-        /// In practice, if either the current or the new map is from an OfTypeOnly view, we
-        /// have to avoid the optimizations.
-        /// 
-        /// If we have a new map that is a superset of the current map, then we can just swap
-        /// the new map for the current one.
-        /// 
-        /// If the current map is tha super set of the new one ther's nothing to do.
-        /// 
-        /// (Of course, if neither has changed, then we really don't need to look)
-        /// </summary>
-        internal void Merge(EntityTypeBase neededRootEntityType, bool includesSubtypes, ExplicitDiscriminatorMap discriminatorMap)
-        {
-            // If what we've found doesn't exactly match what we are looking for we have more work to do
-            if (RootEntityType != neededRootEntityType
-                || IncludesSubTypes != includesSubtypes)
-            {
-                if (!IncludesSubTypes
-                    || !includesSubtypes)
-                {
-                    // If either the original or the new map is from an of-type-only view we can't
-                    // merge, we just have to not optimize this case.
-                    DiscriminatorMap = null;
-                }
-                if (TypeSemantics.IsSubTypeOf(RootEntityType, neededRootEntityType))
-                {
-                    // we're asking for a super type of existing type, and what we had is a proper 
-                    // subset of it -we can replace the existing item.
-                    RootEntityType = neededRootEntityType;
-                    DiscriminatorMap = discriminatorMap;
-                }
-                if (!TypeSemantics.IsSubTypeOf(neededRootEntityType, RootEntityType))
-                {
-                    // If either the original or the new map is from an of-type-only view we can't
-                    // merge, we just have to not optimize this case.
-                    DiscriminatorMap = null;
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// The PreProcessor module is responsible for performing any required preprocessing
     /// on the tree and gathering information before subsequent phases may be performed.
@@ -2494,63 +2438,5 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #endregion
-    }
-
-    /// <summary>
-    /// Finds the record (Row) types that we're projecting out of the query, and
-    /// ensures that we mark them as needing a nullable sentinel, so when we
-    /// flatten them later we'll have one added.
-    /// </summary>
-    internal class StructuredTypeNullabilityAnalyzer : ColumnMapVisitor<HashSet<string>>
-    {
-        internal static StructuredTypeNullabilityAnalyzer Instance = new StructuredTypeNullabilityAnalyzer();
-
-        /// <summary>
-        /// VarRefColumnMap
-        /// </summary>
-        /// <param name="columnMap"></param>
-        /// <param name="typesNeedingNullSentinel"></param>
-        /// <returns></returns>
-        internal override void Visit(VarRefColumnMap columnMap, HashSet<string> typesNeedingNullSentinel)
-        {
-            AddTypeNeedingNullSentinel(typesNeedingNullSentinel, columnMap.Type);
-            base.Visit(columnMap, typesNeedingNullSentinel);
-        }
-
-        /// <summary>
-        /// Recursively add any Row types to the list of types needing a sentinel.
-        /// </summary>
-        /// <param name="typesNeedingNullableSentinel"></param>
-        /// <param name="typeUsage"></param>
-        private static void AddTypeNeedingNullSentinel(HashSet<string> typesNeedingNullSentinel, TypeUsage typeUsage)
-        {
-            if (TypeSemantics.IsCollectionType(typeUsage))
-            {
-                AddTypeNeedingNullSentinel(typesNeedingNullSentinel, TypeHelpers.GetElementTypeUsage(typeUsage));
-            }
-            else
-            {
-                if (TypeSemantics.IsRowType(typeUsage)
-                    || TypeSemantics.IsComplexType(typeUsage))
-                {
-                    MarkAsNeedingNullSentinel(typesNeedingNullSentinel, typeUsage);
-                }
-                foreach (EdmMember m in TypeHelpers.GetAllStructuralMembers(typeUsage))
-                {
-                    AddTypeNeedingNullSentinel(typesNeedingNullSentinel, m.TypeUsage);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Marks the given typeUsage as needing a null sentinel. 
-        /// Call this method instead of calling Add over the HashSet directly, to ensure consistency.
-        /// </summary>
-        /// <param name="typesNeedingNullSentinel"></param>
-        /// <param name="typeUsage"></param>
-        internal static void MarkAsNeedingNullSentinel(HashSet<string> typesNeedingNullSentinel, TypeUsage typeUsage)
-        {
-            typesNeedingNullSentinel.Add(typeUsage.EdmType.Identity);
-        }
     }
 }

@@ -353,39 +353,4 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion // Internal members
     }
-
-    internal struct StateManagerValue
-    {
-        internal StateManagerMemberMetadata memberMetadata;
-        internal object userObject;
-        internal object originalValue;
-
-        internal StateManagerValue(StateManagerMemberMetadata metadata, object instance, object value)
-        {
-            memberMetadata = metadata;
-            userObject = instance;
-            originalValue = value;
-        }
-    }
-
-    internal enum ObjectStateValueRecord
-    {
-        OriginalReadonly = 0,
-        CurrentUpdatable = 1,
-        OriginalUpdatableInternal = 2,
-        OriginalUpdatablePublic = 3,
-    }
-
-    // This class is used in Referential Integrity Constraints feature.
-    // It is used to get around the problem of enumerating dictionary contents, 
-    // but allowing update of the value without breaking the enumerator.
-    internal sealed class IntBox
-    {
-        internal IntBox(int val)
-        {
-            this.Value = val;
-        }
-
-        internal int Value { get; set; }
-    }
 }

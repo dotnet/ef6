@@ -11,18 +11,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Describes the different "kinds" (classes) of command trees.
-    /// </summary>
-    public enum DbCommandTreeKind
-    {
-        Query,
-        Update,
-        Insert,
-        Delete,
-        Function,
-    }
-
-    /// <summary>
     /// DbCommandTree is the abstract base type for the Delete, Query, Insert and Update DbCommandTree types.
     /// </summary>
     public abstract class DbCommandTree
