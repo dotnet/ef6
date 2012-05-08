@@ -473,8 +473,15 @@ function Get-MigrationsStartUpProject($name, $fallbackName)
                     $startupProjectPath = Join-Path $solutionPath $startupProjectPath -Resolve
                 }
 
-                $startupProject = (Get-SolutionProjects) | ?{
-                    $fullName = $_.FullName
+                $startupProject = Get-SolutionProjects | ?{
+					try
+					{
+						$fullName = $_.FullName
+					}
+					catch [NotImplementedException]
+					{
+						return $false
+					}
 
                     if ($fullName -and $fullName.EndsWith('\'))
                     {
