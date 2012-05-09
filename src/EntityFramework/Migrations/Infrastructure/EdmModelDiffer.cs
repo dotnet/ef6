@@ -601,12 +601,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Facet facet;
             if (typeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, true, out facet)
+                && facet.Value != null
                 && (bool)facet.Value)
             {
                 column.IsFixedLength = true;
             }
 
             if (typeUsage.Facets.TryGetValue(DbProviderManifest.UnicodeFacetName, true, out facet)
+                && facet.Value != null
                 && !(bool)facet.Value)
             {
                 column.IsUnicode = false;
