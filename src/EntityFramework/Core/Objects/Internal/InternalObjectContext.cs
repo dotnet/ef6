@@ -2811,24 +2811,14 @@
         /// Execute the sequence returning query against the database server. 
         /// The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <typeparam name="TEntity">The element type of the resulting sequence</typeparam>
+        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
         /// <param name="reader">The DbDataReader to translate</param>
         /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
         /// <param name="mergeOption">Merge option to use for entity results.</param>
         /// <returns>The translated sequence of objects</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
-        public virtual ObjectResult<TEntity> ExecuteStoreQuery<TEntity>(
-            string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
-        {
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
-            return ExecuteStoreQueryInternal<TEntity>(commandText, entitySetName, mergeOption, parameters);
-        }
-
-        /// <summary>
-        /// See ExecuteStoreQuery method.
-        /// </summary>
-        private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
+        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type

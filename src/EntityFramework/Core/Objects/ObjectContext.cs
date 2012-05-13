@@ -1026,7 +1026,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>An enumeration of objects of type <typeparamref name="TElement"/>.</returns>
         public ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
-            return ExecuteStoreQuery<TElement>(commandText, MergeOption.AppendOnly, parameters);
+            return _internalObjectContext.ExecuteStoreQuery<TElement>(commandText, /*entitySetName:*/null, MergeOption.AppendOnly, parameters);
         }
 
         /// <summary>
