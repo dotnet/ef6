@@ -26,27 +26,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
         }
 
-        #endregion
-
-        #region Fields
-
-        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly RuntimeMethodHandle PropertyGetterHandle;
-
-        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly RuntimeMethodHandle PropertySetterHandle;
-
-        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
-        internal readonly RuntimeTypeHandle EntityDeclaringType;
-
-        /// <summary>cached dynamic method to get the property value from a CLR instance</summary> 
-        private Func<object, object> _memberGetter;
-
-        /// <summary>cached dynamic method to set a CLR property value on a CLR instance</summary> 
-        private Action<object, object> _memberSetter;
-
-        #endregion
-
         /// <summary>
         /// Initializes a new OSpace instance of the property class
         /// </summary>
@@ -72,6 +51,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        #endregion
+
+        #region Fields
+
+        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
+        internal readonly RuntimeMethodHandle PropertyGetterHandle;
+
+        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
+        internal readonly RuntimeMethodHandle PropertySetterHandle;
+
+        /// <summary>Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd</summary>
+        internal readonly RuntimeTypeHandle EntityDeclaringType;
+
+        /// <summary>cached dynamic method to get the property value from a CLR instance</summary> 
+        private Func<object, object> _memberGetter;
+
+        /// <summary>cached dynamic method to set a CLR property value on a CLR instance</summary> 
+        private Action<object, object> _memberSetter;
+
+        #endregion
+        
         /// <summary>
         /// Returns the kind of the type
         /// </summary>
