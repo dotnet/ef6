@@ -40,6 +40,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_keyOrdinals = InitializeKeyOrdinals(table);
         }
 
+        /// <summary>
+        /// For testing purposes only
+        /// </summary>
+        protected TableChangeProcessor()
+        { }
+
         #endregion
 
         #region Fields

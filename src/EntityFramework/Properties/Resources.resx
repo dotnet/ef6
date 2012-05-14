@@ -1533,7 +1533,7 @@
   <data name="Update_ReturnValueHasUnexpectedType" xml:space="preserve">
     <value>A store-generated value of type '{0}' could not be converted to a value of type '{1}' required for member '{2}' of type '{3}'.</value>
   </data>
-  <data name="Update_UnableToConvertRowsAffectedParameterToInt32" xml:space="preserve">
+  <data name="Update_UnableToConvertRowsAffectedParameter" xml:space="preserve">
     <value>Unable to determine rows affected. The value of parameter '{0}' is not convertible to '{1}'.</value>
   </data>
   <data name="Update_MappingNotFound" xml:space="preserve">

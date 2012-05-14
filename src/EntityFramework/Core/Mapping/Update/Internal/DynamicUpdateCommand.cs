@@ -13,34 +13,34 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    internal sealed class DynamicUpdateCommand : UpdateCommand
+    internal class DynamicUpdateCommand : UpdateCommand
     {
-        private readonly ModificationOperator m_operator;
-        private readonly TableChangeProcessor m_processor;
-        private readonly List<KeyValuePair<int, DbSetClause>> m_inputIdentifiers;
-        private readonly Dictionary<int, string> m_outputIdentifiers;
-        private readonly DbModificationCommandTree m_modificationCommandTree;
+        private readonly ModificationOperator _operator;
+        private readonly TableChangeProcessor _processor;
+        private readonly List<KeyValuePair<int, DbSetClause>> _inputIdentifiers;
+        private readonly Dictionary<int, string> _outputIdentifiers;
+        private readonly DbModificationCommandTree _modificationCommandTree;
 
-        internal DynamicUpdateCommand(
-            TableChangeProcessor processor, UpdateTranslator translator, ModificationOperator op,
-            PropagatorResult originalValues, PropagatorResult currentValues, DbModificationCommandTree tree,
-            Dictionary<int, string> outputIdentifiers)
-            : base(originalValues, currentValues)
+        internal DynamicUpdateCommand(TableChangeProcessor processor, UpdateTranslator translator,
+            ModificationOperator modificationOperator, PropagatorResult originalValues, PropagatorResult currentValues,
+            DbModificationCommandTree tree, Dictionary<int, string> outputIdentifiers)
+            : base(translator, originalValues, currentValues)
         {
-            Contract.Requires(processor != null); 
+            Contract.Requires(processor != null);
+            Contract.Requires(translator != null);
             Contract.Requires(tree != null);
 
-            m_processor = processor;
-            m_operator = op;
-            m_modificationCommandTree = tree;
-            m_outputIdentifiers = outputIdentifiers; // may be null (not all commands have output identifiers)
+            _processor = processor;
+            _operator = modificationOperator;
+            _modificationCommandTree = tree;
+            _outputIdentifiers = outputIdentifiers; // may be null (not all commands have output identifiers)
 
             // initialize identifier information (supports lateral propagation of server gen values)
-            if (ModificationOperator.Insert == op
-                || ModificationOperator.Update == op)
+            if (ModificationOperator.Insert == modificationOperator
+                || ModificationOperator.Update == modificationOperator)
             {
                 const int capacity = 2; // "average" number of identifiers per row
-                m_inputIdentifiers = new List<KeyValuePair<int, DbSetClause>>(capacity);
+                _inputIdentifiers = new List<KeyValuePair<int, DbSetClause>>(capacity);
 
                 foreach (var member in
                     Helper.PairEnumerations(
@@ -50,13 +50,12 @@
                     DbSetClause setter;
                     var identifier = member.Value.Identifier;
 
-                    if (PropagatorResult.NullIdentifier != identifier
-                        &&
-                        TryGetSetterExpression(tree, member.Key, op, out setter)) // can find corresponding setter
+                    if (PropagatorResult.NullIdentifier != identifier &&
+                        TryGetSetterExpression(tree, member.Key, modificationOperator, out setter)) // can find corresponding setter
                     {
                         foreach (var principal in translator.KeyManager.GetPrincipals(identifier))
                         {
-                            m_inputIdentifiers.Add(new KeyValuePair<int, DbSetClause>(principal, setter));
+                            _inputIdentifiers.Add(new KeyValuePair<int, DbSetClause>(principal, setter));
                         }
                     }
                 }
@@ -93,24 +92,29 @@
             return false;
         }
 
-        internal override long Execute(
-            UpdateTranslator translator, EntityConnection connection, Dictionary<int, object> identifierValues,
+        /// <summary>
+        ///     See comments in <see cref = "UpdateCommand" />.
+        /// </summary>
+        internal override long Execute(Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             // Compile command
-            using (var command = CreateCommand(translator, identifierValues))
+            using (var command = CreateCommand(identifierValues))
             {
+                var connection = Translator.Connection;
                 // configure command to use the connection and transaction for this session
-                command.Transaction = ((null != connection.CurrentTransaction) ? connection.CurrentTransaction.StoreTransaction : null);
+                command.Transaction = ((null == connection.CurrentTransaction)
+                                        ? null
+                                        : connection.CurrentTransaction.StoreTransaction);
                 command.Connection = connection.StoreConnection;
-                if (translator.CommandTimeout.HasValue)
+                if (Translator.CommandTimeout.HasValue)
                 {
-                    command.CommandTimeout = translator.CommandTimeout.Value;
+                    command.CommandTimeout = Translator.CommandTimeout.Value;
                 }
 
                 // Execute the query
                 int rowsAffected;
-                if (m_modificationCommandTree.HasReader)
+                if (_modificationCommandTree.HasReader)
                 {
                     // retrieve server gen results
                     rowsAffected = 0;
@@ -128,10 +132,9 @@
                                 var columnName = reader.GetName(ordinal);
                                 var member = members[columnName];
                                 object value;
-                                if (Helper.IsSpatialType(member.TypeUsage)
-                                    && !reader.IsDBNull(ordinal))
+                                if (Helper.IsSpatialType(member.TypeUsage) && !reader.IsDBNull(ordinal))
                                 {
-                                    value = SpatialHelpers.GetSpatialValue(translator.MetadataWorkspace, reader, member.TypeUsage, ordinal);
+                                    value = SpatialHelpers.GetSpatialValue(Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal);
                                 }
                                 else
                                 {
@@ -171,17 +174,17 @@
         /// <summary>
         /// Gets DB command definition encapsulating store logic for this command.
         /// </summary>
-        private DbCommand CreateCommand(UpdateTranslator translator, Dictionary<int, object> identifierValues)
+        protected virtual DbCommand CreateCommand(Dictionary<int, object> identifierValues)
         {
-            var commandTree = m_modificationCommandTree;
+            var commandTree = _modificationCommandTree;
 
             // check if any server gen identifiers need to be set
-            if (null != m_inputIdentifiers)
+            if (null != _inputIdentifiers)
             {
                 var modifiedClauses = new Dictionary<DbSetClause, DbSetClause>();
-                for (var idx = 0; idx < m_inputIdentifiers.Count; idx++)
+                for (var idx = 0; idx < _inputIdentifiers.Count; idx++)
                 {
-                    var inputIdentifier = m_inputIdentifiers[idx];
+                    var inputIdentifier = _inputIdentifiers[idx];
 
                     object value;
                     if (identifierValues.TryGetValue(inputIdentifier.Key, out value))
@@ -189,13 +192,13 @@
                         // reset the value of the identifier
                         var newClause = new DbSetClause(inputIdentifier.Value.Property, DbExpressionBuilder.Constant(value));
                         modifiedClauses[inputIdentifier.Value] = newClause;
-                        m_inputIdentifiers[idx] = new KeyValuePair<int, DbSetClause>(inputIdentifier.Key, newClause);
+                        _inputIdentifiers[idx] = new KeyValuePair<int, DbSetClause>(inputIdentifier.Key, newClause);
                     }
                 }
                 commandTree = RebuildCommandTree(commandTree, modifiedClauses);
             }
 
-            return translator.CreateCommand(commandTree);
+            return Translator.CreateCommand(commandTree);
         }
 
         private static DbModificationCommandTree RebuildCommandTree(
@@ -254,25 +257,25 @@
 
         internal ModificationOperator Operator
         {
-            get { return m_operator; }
+            get { return _operator; }
         }
 
         internal override EntitySet Table
         {
-            get { return m_processor.Table; }
+            get { return _processor.Table; }
         }
 
         internal override IEnumerable<int> InputIdentifiers
         {
             get
             {
-                if (null == m_inputIdentifiers)
+                if (null == _inputIdentifiers)
                 {
                     yield break;
                 }
                 else
                 {
-                    foreach (var inputIdentifier in m_inputIdentifiers)
+                    foreach (var inputIdentifier in _inputIdentifiers)
                     {
                         yield return inputIdentifier.Key;
                     }
@@ -284,11 +287,11 @@
         {
             get
             {
-                if (null == m_outputIdentifiers)
+                if (null == _outputIdentifiers)
                 {
                     return Enumerable.Empty<int>();
                 }
-                return m_outputIdentifiers.Keys;
+                return _outputIdentifiers.Keys;
             }
         }
 
@@ -334,12 +337,12 @@
             }
 
             // order by Container.Table
-            result = StringComparer.Ordinal.Compare(m_processor.Table.Name, other.m_processor.Table.Name);
+            result = StringComparer.Ordinal.Compare(_processor.Table.Name, other._processor.Table.Name);
             if (0 != result)
             {
                 return result;
             }
-            result = StringComparer.Ordinal.Compare(m_processor.Table.EntityContainer.Name, other.m_processor.Table.EntityContainer.Name);
+            result = StringComparer.Ordinal.Compare(_processor.Table.EntityContainer.Name, other._processor.Table.EntityContainer.Name);
             if (0 != result)
             {
                 return result;
@@ -348,9 +351,9 @@
             // order by table key
             var thisResult = (Operator == ModificationOperator.Delete ? OriginalValues : CurrentValues);
             var otherResult = (other.Operator == ModificationOperator.Delete ? other.OriginalValues : other.CurrentValues);
-            for (var i = 0; i < m_processor.KeyOrdinals.Length; i++)
+            for (var i = 0; i < _processor.KeyOrdinals.Length; i++)
             {
-                var keyOrdinal = m_processor.KeyOrdinals[i];
+                var keyOrdinal = _processor.KeyOrdinals[i];
                 var thisValue = thisResult.GetMemberValue(keyOrdinal).GetSimpleValue();
                 var otherValue = otherResult.GetMemberValue(keyOrdinal).GetSimpleValue();
                 result = ByValueComparer.Default.Compare(thisValue, otherValue);
@@ -362,9 +365,9 @@
 
             // If the result is still zero, it means key values are all the same. Switch to synthetic identifiers
             // to differentiate.
-            for (var i = 0; i < m_processor.KeyOrdinals.Length; i++)
+            for (var i = 0; i < _processor.KeyOrdinals.Length; i++)
             {
-                var keyOrdinal = m_processor.KeyOrdinals[i];
+                var keyOrdinal = _processor.KeyOrdinals[i];
                 var thisValue = thisResult.GetMemberValue(keyOrdinal).Identifier;
                 var otherValue = otherResult.GetMemberValue(keyOrdinal).Identifier;
                 result = thisValue - otherValue;
