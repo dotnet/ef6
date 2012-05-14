@@ -822,7 +822,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>A task representing the asynchronous operation</returns>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _internalObjectContext.SaveChangesAsync(options, cancellationToken);
         }
 
         #endregion

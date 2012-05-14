@@ -25,6 +25,8 @@
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -2271,6 +2273,14 @@
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             return entriesAffected;
+        }
+
+        /// <summary>
+        /// See comments on <see cref="ObjectContext"/> class.
+        /// </summary>
+        public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -202,7 +202,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>A task representing the asynchronous operation.</returns>
         public override Task OpenAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _internalEntityConnection.OpenAsync(cancellationToken);
         }
 
         /// <summary>

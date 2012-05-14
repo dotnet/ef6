@@ -12,6 +12,8 @@
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
     using IsolationLevel = System.Data.IsolationLevel;
 
@@ -531,6 +533,14 @@
 
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
             SetEntityClientConnectionStateToOpen();
+        }
+
+        /// <summary>
+        /// See comments on <see cref="EntityConnection"/> class.
+        /// </summary>
+        public virtual Task OpenAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

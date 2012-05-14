@@ -54,7 +54,11 @@
                 VerifyMethod(r => r.GetValues(Enumerable.Empty<object>().ToArray()), m => m.GetValues(It.IsAny<object[]>()));
                 VerifyMethod(r => r.IsDBNull(default(int)), m => m.IsDBNull(It.IsAny<int>()));
                 VerifyMethod(r => r.NextResult(), m => m.NextResult());
+                ////VerifyMethod(r => r.NextResultAsync(), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
+                ////VerifyMethod(r => r.NextResultAsync(default(CancellationToken)), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
                 VerifyMethod(r => r.Read(), m => m.Read());
+                ////VerifyMethod(r => r.ReadAsync(), m => m.ReadAsync(It.IsAny<CancellationToken>()));
+                ////VerifyMethod(r => r.ReadAsync(default(CancellationToken)), m => m.ReadAsync(It.IsAny<CancellationToken>()));
                 VerifyMethod(r => r.GetEnumerator(), m => m.GetEnumerator());
             }
 

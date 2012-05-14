@@ -300,7 +300,7 @@ namespace System.Data.Entity.Core.EntityClient
         SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public new Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _internalEntityCommand.ExecuteReaderAsync(behavior, cancellationToken);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>A task representing the asynchronous operation.</returns>
         public override Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _internalEntityCommand.ExecuteNonQueryAsync(cancellationToken);
         }
 
         /// <summary>

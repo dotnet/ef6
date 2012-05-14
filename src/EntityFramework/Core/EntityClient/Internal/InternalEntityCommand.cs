@@ -13,6 +13,8 @@
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// See comments on <see cref="EntityCommand"/> class.
@@ -373,6 +375,14 @@
         /// <summary>
         /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
+        public virtual Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// See comments on <see cref="EntityCommand"/> class.
+        /// </summary>
         public virtual int ExecuteNonQuery()
         {
             return ExecuteScalar(
@@ -382,6 +392,14 @@
                         CommandHelper.ConsumeReader(reader);
                         return reader.RecordsAffected;
                     });
+        }
+
+        /// <summary>
+        /// See comments on <see cref="EntityCommand"/> class.
+        /// </summary>
+        public virtual Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
