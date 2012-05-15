@@ -255,8 +255,8 @@ namespace System.Data.Entity
         #region ForEachAsync
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <param name="source">The source query.</param>
         /// <param name="action">The action to be executed.</param>
@@ -270,8 +270,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <param name="source">The source query.</param>
         /// <param name="action">The action to be executed.</param>
@@ -289,8 +289,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name = "T">The type of entity being queried.</typeparam>
         /// <param name="source">The source query.</param>
@@ -305,8 +305,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchrously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name = "T">The type of entity being queried.</typeparam>
         /// <param name="source">The source query.</param>
@@ -329,12 +329,12 @@ namespace System.Data.Entity
         #region ToListAsync
 
         /// <summary>
-        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchrously.
-        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The source query.</param>
-        /// <returns>A List<T> that contains elements from the input sequence.</returns>
+        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
@@ -344,13 +344,13 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchrously.
-        ///     If the underlying type doesn't support asynchrous enumeration it will be enumerated synchrously.
+        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The source query.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A List<T> that contains elements from the input sequence.</returns>
+        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
         SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

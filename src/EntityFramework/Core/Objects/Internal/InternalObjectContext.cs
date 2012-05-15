@@ -2818,6 +2818,14 @@
         }
 
         /// <summary>
+        /// See comments on <see cref="ObjectContext"/> class.
+        /// </summary>
+        public virtual Task<int> ExecuteStoreCommandAsync(string commandText, CancellationToken cancellationToken, params object[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Execute the sequence returning query against the database server. 
         /// The query is specified using the server's native query language, such as SQL.
         /// </summary>
@@ -2867,6 +2875,15 @@
                 ReleaseConnection();
                 throw;
             }
+        }
+
+        /// <summary>
+        /// See comments on <see cref="ObjectContext"/> class.
+        /// </summary>
+        public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText, string entitySetName,
+            MergeOption mergeOption, CancellationToken cancellationToken, params object[] parameters)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

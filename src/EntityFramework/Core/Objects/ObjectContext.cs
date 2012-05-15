@@ -1017,6 +1017,33 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
+        /// An asynchronous version of ExecuteStoreCommand, which
+        /// executes a command against the database server that does not return a sequence of objects.
+        /// The command is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing a single integer return value.</returns>
+        public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
+        {
+            return _internalObjectContext.ExecuteStoreCommandAsync(commandText, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreCommand, which
+        /// executes a command against the database server that does not return a sequence of objects.
+        /// The command is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a single integer return value.</returns>
+        public Task<int> ExecuteStoreCommandAsync(string commandText, CancellationToken cancellationToken, params object[] parameters)
+        {
+            return _internalObjectContext.ExecuteStoreCommandAsync(commandText, cancellationToken, parameters);
+        }
+
+        /// <summary>
         /// Execute the sequence returning query against the database server.
         /// The query is specified using the server's native query language, such as SQL.
         /// </summary>
@@ -1044,6 +1071,83 @@ namespace System.Data.Entity.Core.Objects
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
             return _internalObjectContext.ExecuteStoreQuery<TElement>(commandText, entitySetName, mergeOption, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// executes the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the result sequence.</typeparam>
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText, params object[] parameters)
+        {
+            return _internalObjectContext.ExecuteStoreQueryAsync<TElement>(commandText,
+                /*entitySetName:*/null, MergeOption.AppendOnly, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// executes the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the result sequence.</typeparam>
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText,
+            CancellationToken cancellationToken, params object[] parameters)
+        {
+            return _internalObjectContext.ExecuteStoreQueryAsync<TElement>(commandText,
+                /*entitySetName:*/null, MergeOption.AppendOnly, cancellationToken, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// execute the sequence returning query against the database server. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
+        /// <param name="commandText">The DbDataReader to translate</param>
+        /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
+        /// <param name="mergeOption">Merge option to use for entity results.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText,
+            string entitySetName, MergeOption mergeOption, params object[] parameters)
+        {
+            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+
+            return _internalObjectContext.ExecuteStoreQueryAsync<TElement>(commandText,
+                entitySetName, mergeOption, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// execute the sequence returning query against the database server. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
+        /// <param name="commandText">The DbDataReader to translate</param>
+        /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
+        /// <param name="mergeOption">Merge option to use for entity results.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText,
+            string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken, params object[] parameters)
+        {
+            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+
+            return _internalObjectContext.ExecuteStoreQueryAsync<TElement>(commandText,
+                entitySetName, mergeOption, cancellationToken, parameters);
         }
 
         /// <summary>

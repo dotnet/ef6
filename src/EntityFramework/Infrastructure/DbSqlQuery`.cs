@@ -5,6 +5,9 @@
     using System.ComponentModel;
     using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Represents a SQL query for entities that is created from a <see cref = "DbContext" /> 
@@ -64,6 +67,63 @@
         /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable extension methods
+
+        /// <summary>
+        ///     Enumerates the SQL query asynchronously and executes the provided action on each element.
+        /// </summary>
+        /// <param name="action">The action to be executed.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public Task ForEachAsync(Action<TEntity> action)
+        {
+            Contract.Requires(action != null);
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Enumerates the SQL query asynchronously and executes the provided action on each element.
+        /// </summary>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public Task ForEachAsync(Action<TEntity> action, CancellationToken cancellationToken)
+        {
+            Contract.Requires(action != null);
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Creates a <see cref = "List{TEntity}" /> from the SQL query by enumerating it asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public Task<List<TEntity>> ToListAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Creates a <see cref = "List{TEntity}" /> from the SQL query by enumerating it asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public Task<List<TEntity>> ToListAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

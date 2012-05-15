@@ -126,7 +126,7 @@
                     m => m.SaveChanges(It.IsAny<SaveOptions>()));
                 VerifyMethod(
                     c => c.SaveChangesAsync(default(SaveOptions)),
-                    m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), It.IsAny<CancellationToken>()));
+                    m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), CancellationToken.None));
                 VerifyMethod(
                     c => c.SaveChangesAsync(default(SaveOptions), default(CancellationToken)),
                     m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), It.IsAny<CancellationToken>()));
@@ -149,15 +149,29 @@
                     c => c.ExecuteStoreCommand(default(string), default(object[])),
                     m => m.ExecuteStoreCommand(It.IsAny<string>(), It.IsAny<object[]>()));
                 VerifyMethod(
-                    c => c.ExecuteStoreCommand(default(string), default(object[])),
-                    m => m.ExecuteStoreCommand(It.IsAny<string>(), It.IsAny<object[]>()));
+                    c => c.ExecuteStoreCommandAsync(default(string), default(object[])),
+                    m => m.ExecuteStoreCommandAsync(It.IsAny<string>(), CancellationToken.None, It.IsAny<object[]>()));
+                VerifyMethod(
+                    c => c.ExecuteStoreCommandAsync(default(string), default(CancellationToken), default(object[])),
+                    m => m.ExecuteStoreCommandAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()));
                 VerifyMethod(
                     c => c.ExecuteStoreQuery<DummyEntity>(default(string), "Foo", default(MergeOption), default(object[])),
                     m => m.ExecuteStoreQuery<DummyEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()));
                 VerifyMethod(
                     c => c.ExecuteStoreQuery<DummyEntity>(default(string), default(object[])),
                     m => m.ExecuteStoreQuery<DummyEntity>(It.IsAny<string>(), null, MergeOption.AppendOnly, It.IsAny<object[]>()));
-                
+                VerifyMethod(
+                    c => c.ExecuteStoreQueryAsync<DummyEntity>(default(string), "Foo", default(MergeOption), default(object[])),
+                    m => m.ExecuteStoreQueryAsync<DummyEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), CancellationToken.None, It.IsAny<object[]>()));
+                VerifyMethod(
+                    c => c.ExecuteStoreQueryAsync<DummyEntity>(default(string), "Foo", default(MergeOption), default(CancellationToken), default(object[])),
+                    m => m.ExecuteStoreQueryAsync<DummyEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()));
+                VerifyMethod(
+                    c => c.ExecuteStoreQueryAsync<DummyEntity>(default(string), default(object[])),
+                    m => m.ExecuteStoreQueryAsync<DummyEntity>(It.IsAny<string>(), null, MergeOption.AppendOnly, CancellationToken.None, It.IsAny<object[]>()));
+                VerifyMethod(
+                    c => c.ExecuteStoreQueryAsync<DummyEntity>(default(string), default(CancellationToken), default(object[])),
+                    m => m.ExecuteStoreQueryAsync<DummyEntity>(It.IsAny<string>(), null, MergeOption.AppendOnly, It.IsAny<CancellationToken>(), It.IsAny<object[]>()));
                 VerifyMethod(
                     c => c.Translate<DummyEntity>(default(DbDataReader)),
                     m => m.Translate<DummyEntity>(It.IsAny<DbDataReader>()));

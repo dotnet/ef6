@@ -11,6 +11,7 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -504,6 +505,38 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Evaluates the provided query expression asynchronusly.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the query result.</typeparam>
+        /// <param name="expression">Query expression to evaluate.</param>
+        /// <returns>A Task containg the result of the query expression evaluation.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<TResult> QueryAsync<TResult>(Expression<Func<TResult>> expression)
+        {
+            Contract.Requires(expression != null);
+
+            return QueryAsync(expression, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Evaluates the provided query expression asynchronusly.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the query result.</typeparam>
+        /// <param name="expression">Query expression to evaluate.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containg the result of the query expression evaluation.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<TResult> QueryAsync<TResult>(Expression<Func<TResult>> expression, CancellationToken cancellationToken)
+        {
+            Contract.Requires(expression != null);
 
             throw new NotImplementedException();
         }
