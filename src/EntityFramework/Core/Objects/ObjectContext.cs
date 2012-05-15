@@ -434,9 +434,9 @@ namespace System.Data.Entity.Core.Objects
         /// Apply original values to the entity.
         /// The entity to update is found based on key values of the <paramref name="originalEntity"/> entity and the given <paramref name="entitySetName"/>.
         /// </summary>
-        /// <param name="entitySetName">name of EntitySet of entity to be updated</param>
-        /// <param name="originalEntity">object with original values</param>
-        /// <returns>updated entity</returns>
+        /// <param name="entitySetName">Name of EntitySet of entity to be updated.</param>
+        /// <param name="originalEntity">Object with original values.</param>
+        /// <returns>Updated entity.</returns>
         public TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
         {
             Contract.Requires(originalEntity != null);
@@ -448,8 +448,8 @@ namespace System.Data.Entity.Core.Objects
         /// Attach entity graph into the context in the Unchanged state.
         /// This version takes entity which doesn't have to have a Key.
         /// </summary>
-        /// <param name="entitySetName">EntitySet name for the Object to be attached. It may be qualified with container name</param>        
-        /// <param name="entity"></param>
+        /// <param name="entitySetName">EntitySet name for the Object to be attached. It may be qualified with container name.</param>        
+        /// <param name="entity">The entity to be attached.</param>
         public void AttachTo(string entitySetName, object entity)
         {
             Contract.Requires(entity != null);
@@ -461,7 +461,7 @@ namespace System.Data.Entity.Core.Objects
         /// Attach entity graph into the context in the Unchanged state.
         /// This version takes entity which does have to have a non-temporary Key.
         /// </summary>
-        /// <param name="entity"></param>        
+        /// <param name="entity">The entity to be attached.</param>        
         public void Attach(IEntityWithKey entity)
         {
             Contract.Requires(entity != null);
@@ -489,11 +489,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Create entity key based on given entity set and values of given entity.
+        /// Create an entity key based on given entity set and values of given entity.
         /// </summary>
-        /// <param name="entitySetName">entity set of the entity</param>
-        /// <param name="entity">entity</param>
-        /// <returns>new instance of entity key</returns>
+        /// <param name="entitySetName">Entity set for the entity.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>New instance of <see cref="EntityKey"/> for the provided <paramref name="entity"/>.</returns>
         public EntityKey CreateEntityKey(string entitySetName, object entity)
         {
             Contract.Requires(entity != null);
@@ -661,11 +661,11 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Returns the EntitySet with the given name from given container.
         /// </summary>
-        /// <param name="entitySetName">name of entity set</param>
-        /// <param name="entityContainerName">name of container</param>
-        /// <returns>the appropriate EntitySet</returns>
-        /// <exception cref="InvalidOperationException">the entity set could not be found for the given name</exception>
-        /// <exception cref="InvalidOperationException">the entity container could not be found for the given name</exception>
+        /// <param name="entitySetName">Name of entity set.</param>
+        /// <param name="entityContainerName">Name of container.</param>
+        /// <returns>The appropriate EntitySet.</returns>
+        /// <exception cref="InvalidOperationException">The entity set could not be found for the given name.</exception>
+        /// <exception cref="InvalidOperationException">The entity container could not be found for the given name.</exception>
         internal EntitySet GetEntitySet(string entitySetName, string entityContainerName)
         {
             Contract.Requires(entitySetName != null);
@@ -820,7 +820,10 @@ namespace System.Data.Entity.Core.Objects
         /// does not exist, refers to a function with return type incompatible with T)</exception>
         public ObjectResult<TElement> ExecuteFunction<TElement>(string functionName, params ObjectParameter[] parameters)
         {
-            return ExecuteFunction<TElement>(functionName, MergeOption.AppendOnly, parameters);
+            Contract.Requires(parameters != null);
+            EntityUtil.CheckStringArgument(functionName, "function");
+
+            return _internalObjectContext.ExecuteFunction<TElement>(functionName, MergeOption.AppendOnly, parameters);
         }
 
         /// <summary>
@@ -900,7 +903,7 @@ namespace System.Data.Entity.Core.Objects
         // ObjectItemCollection ospaceItems = // retrieve item collection, ensure it is loaded
         // var types = from entityType in ospaceItems.GetItems<EntityType>() select ospaceItems.GetClrType(entityType)
         // TODO: List of names possibly better than CreateProxyTypes:
-        // LoadEntityTypeMetadata (this disrupts the sematics of the sample methods above, since it implies we load metadata)
+        // LoadEntityTypeMetadata (this disrupts the semantics of the sample methods above, since it implies we load metadata)
         public void CreateProxyTypes(IEnumerable<Type> types)
         {
             _internalObjectContext.CreateProxyTypes(types);
@@ -991,9 +994,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="commandText">The DbDataReader to translate</param>
         /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
         /// <param name="mergeOption">Merge option to use for entity results.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>An enumeration of objects of type <typeparamref name="TElement"/>.</returns>
-        public ObjectResult<TElement> ExecuteStoreQuery<TElement>(
-            string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
+        public ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, string entitySetName,
+            MergeOption mergeOption, params object[] parameters)
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
@@ -1003,10 +1007,10 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Translates the data from a DbDataReader into sequence of objects.
         /// </summary>
-        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
+        /// <typeparam name="TElement">The element type of the resulting sequence.</typeparam>
         /// <param name="reader">The DbDataReader to translate</param>
         /// <param name="mergeOption">Merge option to use for entity results.</param>
-        /// <returns>The translated sequence of objects</returns>
+        /// <returns>The translated sequence of objects.</returns>
         public ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
         {
             return _internalObjectContext.Translate<TElement>(reader);

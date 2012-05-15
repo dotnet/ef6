@@ -7,6 +7,7 @@
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Internal;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
@@ -42,15 +43,14 @@
             public void Methods_delegate_to_internal_class_correctly()
             {
                 VerifyMethod(
-                    c => c.AddObject(default(string), new object()), 
-                    m => m.AddObject(It.IsAny<string>(), It.IsAny<object>()));
-
+                    c => c.AddObject(default(string), new object()),
+                    m => m.AddObject(default(string), It.IsAny<object>()));
                 var entitySetMock = new Mock<EntitySet>();
                 var wrappedEntityMock = new Mock<IEntityWrapper>();
                 wrappedEntityMock.SetupGet(m => m.Entity).Returns(new object());
                 VerifyMethod(
-                    c => c.AddSingleObject(entitySetMock.Object, wrappedEntityMock.Object, default(string)), 
-                    m => m.AddSingleObject(It.IsAny<EntitySet>(), It.IsAny<IEntityWrapper>(), It.IsAny<string>()));
+                    c => c.AddSingleObject(entitySetMock.Object, wrappedEntityMock.Object, default(string)),
+                    m => m.AddSingleObject(entitySetMock.Object, wrappedEntityMock.Object, It.IsAny<string>()));
                 VerifyMethod(
                     c => c.LoadProperty(default(object), default(string)), 
                     m => m.LoadProperty(It.IsAny<object>(), It.IsAny<string>()));
@@ -64,92 +64,118 @@
                     c => c.LoadProperty<DummyEntity>(default(DummyEntity), default(Expression<Func<DummyEntity, object>>), default(MergeOption)),
                     m => m.LoadProperty<DummyEntity>(It.IsAny<DummyEntity>(), It.IsAny<Expression<Func<DummyEntity, object>>>(), It.IsAny<MergeOption>()));
                 VerifyMethod(
-                    c => c.ApplyCurrentValues<DummyEntity>("Foo", new DummyEntity()), 
-                    m => m.ApplyCurrentValues<DummyEntity>(It.IsAny<string>(), It.IsAny<DummyEntity>()));
+                    c => c.ApplyPropertyChanges("Foo", new DummyEntity()),
+                    m => m.ApplyCurrentValues<object>("Foo", It.IsAny<DummyEntity>()));
+                VerifyMethod(
+                    c => c.ApplyCurrentValues<DummyEntity>("Foo", new DummyEntity()),
+                    m => m.ApplyCurrentValues<DummyEntity>("Foo", It.IsAny<DummyEntity>()));
                 VerifyMethod(
                     c => c.ApplyOriginalValues<DummyEntity>(default(string), new DummyEntity()),
-                    m => m.ApplyOriginalValues<DummyEntity>(It.IsAny<string>(), It.IsAny<DummyEntity>()));
+                    m => m.ApplyOriginalValues<DummyEntity>(default(string), It.IsAny<DummyEntity>()));
+                var entityWithKeyMock = new Mock<IEntityWithKey>();
+                entityWithKeyMock.Setup(m => m.EntityKey).Returns(new EntityKey());
                 VerifyMethod(
-                    c => c.AttachTo(default(string), new object()), 
-                    m => m.AttachTo(It.IsAny<string>(), It.IsAny<object>()));
+                    c => c.Attach(entityWithKeyMock.Object),
+                    m => m.AttachTo(default(string), entityWithKeyMock.Object));
+                VerifyMethod(
+                    c => c.AttachTo(default(string), new object()),
+                    m => m.AttachTo(default(string), It.IsAny<object>()));
                 VerifyMethod(
                     c => c.AttachSingleObject(wrappedEntityMock.Object, entitySetMock.Object),
-                    m => m.AttachSingleObject(It.IsAny<IEntityWrapper>(), It.IsAny<EntitySet>()));
+                    m => m.AttachSingleObject(wrappedEntityMock.Object, entitySetMock.Object));
                 VerifyMethod(
                     c => c.CreateEntityKey("Foo", new object()),
-                    m => m.CreateEntityKey(It.IsAny<string>(), It.IsAny<object>()));
+                    m => m.CreateEntityKey("Foo", It.IsAny<object>()));
                 VerifyMethod(
-                    c => c.GetEntitySetFromName(default(string)), 
-                    m => m.GetEntitySetFromName(It.IsAny<string>()));
+                    c => c.GetEntitySetFromName(default(string)),
+                    m => m.GetEntitySetFromName(default(string)));
                 VerifyMethod(
                     c => c.CreateObjectSet<DummyEntity>(), 
                     m => m.CreateObjectSet<DummyEntity>());
                 VerifyMethod(
                     c => c.CreateObjectSet<DummyEntity>(default(string)),
-                    m => m.CreateObjectSet<DummyEntity>(It.IsAny<string>()));
+                    m => m.CreateObjectSet<DummyEntity>(default(string)));
                 VerifyMethod(c => c.EnsureConnection(), m => m.EnsureConnection());
                 VerifyMethod(c => c.ReleaseConnection(), m => m.ReleaseConnection());
                 VerifyMethod(c => c.EnsureMetadata(), m => m.EnsureMetadata());
                 VerifyMethod(
                     c => c.CreateQuery<DummyEntity>("Foo", new ObjectParameter[0]),
-                    m => m.CreateQuery<DummyEntity>(It.IsAny<string>(), It.IsAny<ObjectParameter[]>()));
+                    m => m.CreateQuery<DummyEntity>("Foo", It.IsAny<ObjectParameter[]>()));
                 VerifyMethod(
                     c => c.DeleteObject(default(object)),
-                    m => m.DeleteObject(It.IsAny<object>()));
+                    m => m.DeleteObject(default(object)));
                 VerifyMethod(
                     c => c.DeleteObject(new object(), default(EntitySet)),
-                    m => m.DeleteObject(It.IsAny<object>(), It.IsAny<EntitySet>()));
+                    m => m.DeleteObject(It.IsAny<object>(), default(EntitySet)));
                 VerifyMethod(
                     c => c.Detach(default(object)),
-                    m => m.Detach(It.IsAny<object>()));
+                    m => m.Detach(default(object)));
                 VerifyMethod(
                     c => c.Detach(new object(), default(EntitySet)),
-                    m => m.Detach(It.IsAny<object>(), It.IsAny<EntitySet>()));
+                    m => m.Detach(It.IsAny<object>(), default(EntitySet)));
                 VerifyMethod(
                     c => c.GetEntitySet("Foo", default(string)),
-                    m => m.GetEntitySet(It.IsAny<string>(), It.IsAny<string>()));
+                    m => m.GetEntitySet("Foo", default(string)));
                 VerifyMethod(
                     c => c.GetTypeUsage(default(Type)),
-                    m => m.GetTypeUsage(It.IsAny<Type>()));
+                    m => m.GetTypeUsage(default(Type)));
                 VerifyMethod(
                     c => c.GetObjectByKey(new EntityKey()),
                     m => m.GetObjectByKey(It.IsAny<EntityKey>()));
                 VerifyMethod(
                     c => c.Refresh(default(RefreshMode), Enumerable.Empty<object>()),
-                    m => m.Refresh(It.IsAny<RefreshMode>(), It.IsAny<IEnumerable>()));
+                    m => m.Refresh(default(RefreshMode), Enumerable.Empty<object>()));
                 VerifyMethod(
                     c => c.Refresh(default(RefreshMode), new object()),
-                    m => m.Refresh(It.IsAny<RefreshMode>(), It.IsAny<object>()));
+                    m => m.Refresh(default(RefreshMode), It.IsAny<object>()));
                 VerifyMethod(
                     c => c.SaveChanges(default(SaveOptions)),
-                    m => m.SaveChanges(It.IsAny<SaveOptions>()));
+                    m => m.SaveChanges(default(SaveOptions)));
+                VerifyMethod(
+                    c => c.ExecuteFunction<DummyEntity>("Foo", new ObjectParameter[0]),
+                    m => m.ExecuteFunction<DummyEntity>("Foo", MergeOption.AppendOnly, It.IsAny<ObjectParameter[]>()));
                 VerifyMethod(
                     c => c.ExecuteFunction<DummyEntity>("Foo", default(MergeOption), new ObjectParameter[0]),
-                    m => m.ExecuteFunction<DummyEntity>(It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<ObjectParameter[]>()));
+                    m => m.ExecuteFunction<DummyEntity>("Foo", default(MergeOption), It.IsAny<ObjectParameter[]>()));
                 VerifyMethod(
                     c => c.ExecuteFunction("Foo", new ObjectParameter[0]),
-                    m => m.ExecuteFunction(It.IsAny<string>(), It.IsAny<ObjectParameter[]>()));
+                    m => m.ExecuteFunction("Foo", It.IsAny<ObjectParameter[]>()));
                 VerifyMethod(
-                     c => c.MaterializedDataRecord<DummyEntity>(default(EntityCommand), default(DbDataReader), default(int), default(ReadOnlyMetadataCollection<EntitySet>), default(EdmType[]), default(MergeOption)),
-                     m => m.MaterializedDataRecord<DummyEntity>(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<int>(), It.IsAny<ReadOnlyMetadataCollection<EntitySet>>(), It.IsAny<EdmType[]>(), It.IsAny<MergeOption>()));
+                     c => c.MaterializedDataRecord<DummyEntity>(
+                         default(EntityCommand),
+                         default(DbDataReader),
+                         default(int),
+                         default(ReadOnlyMetadataCollection<EntitySet>),
+                         default(EdmType[]),
+                         default(MergeOption)),
+                     m => m.MaterializedDataRecord<DummyEntity>(
+                         default(EntityCommand),
+                         default(DbDataReader),
+                         default(int),
+                         default(ReadOnlyMetadataCollection<EntitySet>),
+                         default(EdmType[]),
+                         default(MergeOption)));
                 VerifyMethod(
                     c => c.CreateProxyTypes(default(IEnumerable<Type>)),
-                    m => m.CreateProxyTypes(It.IsAny<IEnumerable<Type>>()));
+                    m => m.CreateProxyTypes(default(IEnumerable<Type>)));
                 VerifyMethod(
                     c => c.CreateObject<DummyEntity>(),
                     m => m.CreateObject<DummyEntity>());
                 VerifyMethod(
                     c => c.ExecuteStoreCommand(default(string), default(object[])),
-                    m => m.ExecuteStoreCommand(It.IsAny<string>(), It.IsAny<object[]>()));
+                    m => m.ExecuteStoreCommand(default(string), default(object[])));
+                VerifyMethod(
+                    c => c.ExecuteStoreQuery<DummyEntity>(default(string), default(object[])),
+                    m => m.ExecuteStoreQuery<DummyEntity>(default(string), default(string), MergeOption.AppendOnly, default(object[])));
                 VerifyMethod(
                     c => c.ExecuteStoreQuery<DummyEntity>(default(string), "Foo", default(MergeOption), default(object[])),
-                    m => m.ExecuteStoreQuery<DummyEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()));
+                    m => m.ExecuteStoreQuery<DummyEntity>(default(string), "Foo", default(MergeOption), default(object[])));
                 VerifyMethod(
                     c => c.Translate<DummyEntity>(default(DbDataReader)),
-                    m => m.Translate<DummyEntity>(It.IsAny<DbDataReader>()));
+                    m => m.Translate<DummyEntity>(default(DbDataReader)));
                 VerifyMethod(
                     c => c.Translate<DummyEntity>(default(DbDataReader), "Foo", default(MergeOption)),
-                    m => m.Translate<DummyEntity>(It.IsAny<DbDataReader>(), It.IsAny<string>(), It.IsAny<MergeOption>()));
+                    m => m.Translate<DummyEntity>(default(DbDataReader), "Foo", default(MergeOption)));
                 VerifyMethod(c => c.CreateDatabase(), m => m.CreateDatabase());
                 VerifyMethod(c => c.DeleteDatabase(), m => m.DeleteDatabase());
                 VerifyMethod(c => c.DatabaseExists(), m => m.DatabaseExists());
