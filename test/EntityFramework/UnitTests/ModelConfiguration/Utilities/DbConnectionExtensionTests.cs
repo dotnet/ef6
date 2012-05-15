@@ -1,5 +1,6 @@
 namespace System.Data.Entity.ModelConfiguration.Utilities.UnitTests
 {
+    using System.Data.Common;
     using System.Data.Entity;
     using System.Data.SqlClient;
     using Xunit;
@@ -12,10 +13,10 @@ namespace System.Data.Entity.ModelConfiguration.Utilities.UnitTests
             Assert.Equal("System.Data.SqlClient", new SqlConnection().GetProviderInvariantName());
         }
 
-        //[Fact] DevDiv #260045
+        [Fact]
         public void GetProviderInvariantName_should_return_correct_name_when_generic_provider()
         {
-            Assert.Equal("My.Generic.Provider", new GenericConnection().GetProviderInvariantName());
+            Assert.Equal("My.Generic.Provider.DbProviderFactory", new GenericConnection<DbProviderFactory>().GetProviderInvariantName());
         }
     }
 }

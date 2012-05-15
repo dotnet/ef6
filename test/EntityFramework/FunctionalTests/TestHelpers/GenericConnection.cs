@@ -1,14 +1,13 @@
 namespace System.Data.Entity
 {
     using System;
-    using System.Data.Entity.Core;
     using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     
     #region Test Providers
 
-    public class GenericConnection : DbConnection
+    public class GenericConnection<T> : DbConnection
+        where T : DbProviderFactory
     {
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
@@ -59,6 +58,11 @@ namespace System.Data.Entity
         protected override DbCommand CreateDbCommand()
         {
             throw new NotImplementedException();
+        }
+
+        protected override DbProviderFactory DbProviderFactory
+        {
+            get { return GenericProviderFactory<T>.Instance; }
         }
     }
 
