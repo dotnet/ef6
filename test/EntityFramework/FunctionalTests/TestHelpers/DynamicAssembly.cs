@@ -12,7 +12,7 @@
 
     public class DynamicAssembly
     {
-        private readonly Dictionary<string, TypeBuilder> _typeBuilders = new Dictionary<string, TypeBuilder>();
+        private readonly Dictionary<string, Tuple<TypeBuilder, ConstructorBuilder>> _typeBuilders = new Dictionary<string, Tuple<TypeBuilder, ConstructorBuilder>>();
         private readonly Dictionary<string, DynamicType> _dynamicTypes = new Dictionary<string, DynamicType>();
         private readonly Dictionary<string, Type> _types = new Dictionary<string, Type>();
         private readonly List<Attribute> _attributes = new List<Attribute>();
@@ -73,38 +73,51 @@
             return builder;
         }
 
-        public void Compile()
+        public Assembly Compile()
+        {
+            return Compile(new AssemblyName(string.Format("DynamicEntities{0}", _assemblyCount)));
+        }
+
+        public Assembly Compile(AssemblyName assemblyName)
         {
             var assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    new AssemblyName(string.Format("DynamicEntities{0}", _assemblyCount)), AssemblyBuilderAccess.Run);
+                AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 
-            foreach (Attribute a in Attributes)
+            foreach (var attribute in Attributes)
             {
-                assemblyBuilder.SetCustomAttribute(AnnotationAttributeBuilder.Create(a));
+                assemblyBuilder.SetCustomAttribute(AnnotationAttributeBuilder.Create(attribute));
             }
 
-            var module = assemblyBuilder.DefineDynamicModule(string.Format("DynamicEntitiesModule{0}", _assemblyCount));
+            var moduleName = string.Format("DynamicEntitiesModule{0}.dll", _assemblyCount);
+            var module = assemblyBuilder.DefineDynamicModule(moduleName);
             _assemblyCount++;
 
-            foreach (DynamicType typeInfo in DynamicTypes)
+            foreach (var typeInfo in DynamicTypes)
             {
                 DefineType(module, typeInfo);
             }
 
-            foreach (DynamicType typeInfo in DynamicTypes)
+            foreach (var typeInfo in DynamicTypes)
             {
-                TypeBuilder typeBuilder = _typeBuilders[typeInfo.ClassName];
-                foreach (DynamicProperty propertyInfo in typeInfo.Properties)
+                var typeBuilder = _typeBuilders[typeInfo.ClassName];
+                
+                foreach (var fieldInfo in typeInfo.Fields)
                 {
-                    DefineProperty(typeBuilder, propertyInfo);
+                    DefineField(typeBuilder.Item1, typeBuilder.Item2, fieldInfo);
+                }
+
+                foreach (var propertyInfo in typeInfo.Properties)
+                {
+                    DefineProperty(typeBuilder.Item1, propertyInfo);
                 }
             }
 
             foreach (var t in _typeBuilders)
             {
-                _types.Add(t.Key, t.Value.CreateType());
+                _types.Add(t.Key, t.Value.Item1.CreateType());
             }
+
+            return assemblyBuilder;
         }
 
         public Type GetType(string typeName)
@@ -141,7 +154,7 @@
             }
             else if (typeInfo.BaseClass is DynamicType)
             {
-                baseClass = _typeBuilders[((DynamicType)typeInfo.BaseClass).ClassName];
+                baseClass = _typeBuilders[((DynamicType)typeInfo.BaseClass).ClassName].Item1;
             }
 
             TypeBuilder typeBuilder = module.DefineType(typeInfo.ClassName, typeAttributes, baseClass);
@@ -151,11 +164,34 @@
             }
 
             // Define the Ctor
-            if (typeInfo.CtorAccess != MemberAccess.None)
+            var constructorBuilder = typeInfo.CtorAccess == MemberAccess.None
+                ? null
+                : typeBuilder.DefineDefaultConstructor(GetMethodAttributes(false, typeInfo.CtorAccess));
+            
+            _typeBuilders.Add(typeInfo.ClassName, Tuple.Create(typeBuilder, constructorBuilder));
+        }
+
+        private void DefineField(TypeBuilder typeBuilder, ConstructorBuilder constructorBuilder, DynamicField fieldInfo)
+        {
+            var fieldAttributes = FieldAttributes.Public;
+            if (fieldInfo.Static)
             {
-                typeBuilder.DefineDefaultConstructor(GetMethodAttributes(false, typeInfo.CtorAccess));
+                fieldAttributes |= FieldAttributes.Static;
             }
-            _typeBuilders.Add(typeInfo.ClassName, typeBuilder);
+
+            var fieldType = _typeBuilders[fieldInfo.FieldType.ClassName].Item1;
+            var fieldBuilder = typeBuilder.DefineField(fieldInfo.FieldName, fieldType, fieldAttributes);
+
+            if (fieldInfo.SetInstancePattern)
+            {
+                var staticConstructorBuilder = typeBuilder.DefineConstructor(
+                    MethodAttributes.Public | MethodAttributes.Static, CallingConventions.Standard, Type.EmptyTypes);
+                var generator = staticConstructorBuilder.GetILGenerator();
+
+                generator.Emit(OpCodes.Newobj, constructorBuilder);
+                generator.Emit(OpCodes.Stsfld, fieldBuilder);
+                generator.Emit(OpCodes.Ret);
+            }
         }
 
         private void DefineProperty(TypeBuilder typeBuilder, DynamicProperty propertyInfo)
@@ -169,7 +205,7 @@
                 if (propertyInfo.ReferenceType != null)
                 {
                     propertyType =
-                        propertyInfo.CollectionType.MakeGenericType(_typeBuilders[propertyInfo.ReferenceType.ClassName]);
+                        propertyInfo.CollectionType.MakeGenericType(_typeBuilders[propertyInfo.ReferenceType.ClassName].Item1);
                 }
                 else
                 {
@@ -178,7 +214,7 @@
             }
             else if (propertyInfo.ReferenceType != null)
             {
-                propertyType = _typeBuilders[propertyInfo.ReferenceType.ClassName];
+                propertyType = _typeBuilders[propertyInfo.ReferenceType.ClassName].Item1;
                 switch (_dynamicTypes[propertyInfo.ReferenceType.ClassName].ClassAccess)
                 {
                     case MemberAccess.Private:
@@ -478,6 +514,41 @@
         }
     }
 
+    public class DynamicField
+    {
+        public DynamicType FieldType { get; set; }
+        public string FieldName { get; set; }
+        public bool Static { get; set; }
+        public bool SetInstancePattern { get; set; }
+
+        public DynamicField HasType(DynamicType propertyType)
+        {
+            FieldType = propertyType;
+            return this;
+        }
+
+        public DynamicField HasName(string propertyName)
+        {
+            FieldName = propertyName;
+            return this;
+        }
+
+        public DynamicField IsStatic()
+        {
+            Static = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the field up to match the Instance singleton pattern required by ADO.NET.
+        /// </summary>
+        public DynamicField IsInstance()
+        {
+            SetInstancePattern = true;
+            return this;
+        }
+    }
+
     public class DynamicType
     {
         private bool _isSealed = false;
@@ -486,6 +557,7 @@
         private object _baseClass = null;
         private string _className;
         private readonly Dictionary<string, DynamicProperty> _properties = new Dictionary<string, DynamicProperty>();
+        private readonly Dictionary<string, DynamicField> _fields = new Dictionary<string, DynamicField>();
         private MemberAccess _ctorAccess = MemberAccess.None;
         private readonly List<Attribute> _attributes = new List<Attribute>();
 
@@ -566,6 +638,17 @@
             return property;
         }
 
+        public DynamicField Field(string fieldName)
+        {
+            DynamicField field;
+            if (!_fields.TryGetValue(fieldName, out field))
+            {
+                field = new DynamicField { FieldName = fieldName };
+                _fields.Add(fieldName, field);
+            }
+            return field;
+        }
+
         public object BaseClass
         {
             get { return _baseClass; }
@@ -581,6 +664,11 @@
         public IEnumerable<DynamicProperty> Properties
         {
             get { return _properties.Values; }
+        }
+
+        public IEnumerable<DynamicField> Fields
+        {
+            get { return _fields.Values; }
         }
     }
 }

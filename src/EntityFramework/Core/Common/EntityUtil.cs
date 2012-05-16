@@ -684,102 +684,62 @@ namespace System.Data.Entity.Core
             return CheckArgumentNull(value, parameterName);
         }
 
-        // EntityConnectionStringBuilder
-
-        // Invalid Enumeration
-
         /// <summary>
         /// Given a provider factory, this returns the provider invariant name for the provider. 
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static bool TryGetProviderInvariantName(DbProviderFactory providerFactory, out string invariantName)
         {
             Debug.Assert(providerFactory != null);
 
-            var providerFactoryType = providerFactory.GetType();
-            var providerFactoryAssemblyName = new AssemblyName(providerFactoryType.Assembly.FullName);
+            var connectionProviderFactoryType = providerFactory.GetType();
+            var connectionProviderFactoryAssemblyName = new AssemblyName(
+                connectionProviderFactoryType.Assembly.FullName);
 
-            var infoTable = DbProviderFactories.GetFactoryClasses();
-
-            Debug.Assert(infoTable.Rows != null);
-
-            foreach (DataRow infoRow in infoTable.Rows)
+            foreach (DataRow row in DbProviderFactories.GetFactoryClasses().Rows)
             {
-                var infoRowAssemblyQualifiedTypeName = infoRow[AssemblyQualifiedNameIndex] as string;
+                var assemblyQualifiedTypeName = (string)row[AssemblyQualifiedNameIndex];
 
-                if (string.IsNullOrWhiteSpace(infoRowAssemblyQualifiedTypeName))
+                AssemblyName rowProviderFactoryAssemblyName = null;
+
+                // parse the provider factory assembly qualified type name
+                Type.GetType(
+                    assemblyQualifiedTypeName,
+                    a =>
+                    {
+                        rowProviderFactoryAssemblyName = a;
+
+                        return null;
+                    },
+                    (_, __, ___) => null);
+
+                if (rowProviderFactoryAssemblyName != null)
                 {
-                    continue;
-                }
+                    if (string.Equals(
+                        connectionProviderFactoryAssemblyName.Name,
+                        rowProviderFactoryAssemblyName.Name,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        try
+                        {
+                            var foundFactory = DbProviderFactories.GetFactory(row);
 
-                var firstCommaIndex = infoRowAssemblyQualifiedTypeName.IndexOf(',');
-
-                if (firstCommaIndex < 0)
-                {
-                    continue;
-                }
-
-                var infoRowProviderFactoryTypeFullName = infoRowAssemblyQualifiedTypeName.Substring(0, firstCommaIndex).Trim();
-
-                // Match the provider type name
-                if (!string.Equals(infoRowProviderFactoryTypeFullName, providerFactoryType.FullName, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                var infoRowProviderAssemblyName = infoRowAssemblyQualifiedTypeName.Substring(firstCommaIndex + 1).Trim();
-                if (AssemblyNamesMatch(infoRowProviderAssemblyName, providerFactoryAssemblyName))
-                {
-                    invariantName = (string)infoRow[InvariantNameIndex];
-                    return true;
+                            if (foundFactory.GetType().Equals(connectionProviderFactoryType))
+                            {
+                                invariantName = (string)row[InvariantNameIndex];
+                                return true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Fail("GetFactory failed with: " + ex);
+                            // Ignore bad providers.
+                        }
+                    }
                 }
             }
-
             invariantName = null;
             return false;
-        }
-
-        private static bool AssemblyNamesMatch(string infoRowProviderAssemblyName, AssemblyName targetAssemblyName)
-        {
-            if (string.IsNullOrWhiteSpace(infoRowProviderAssemblyName))
-            {
-                return false;
-            }
-
-            AssemblyName assemblyName;
-            try
-            {
-                assemblyName = new AssemblyName(infoRowProviderAssemblyName);
-            }
-            catch (Exception e)
-            {
-                // Ignore broken provider entries
-                if (!IsCatchableExceptionType(e))
-                {
-                    throw;
-                }
-                return false;
-            }
-
-            // Match the provider assembly details
-            if (!string.Equals(targetAssemblyName.Name, assemblyName.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-
-            if (targetAssemblyName.Version == null
-                || assemblyName.Version == null)
-            {
-                return false;
-            }
-
-            if (targetAssemblyName.Version.Major != assemblyName.Version.Major
-                || targetAssemblyName.Version.Minor != assemblyName.Version.Minor)
-            {
-                return false;
-            }
-
-            var targetPublicKeyToken = targetAssemblyName.GetPublicKeyToken();
-            return targetPublicKeyToken != null && targetPublicKeyToken.SequenceEqual(assemblyName.GetPublicKeyToken());
         }
 
         // Invalid string argument
