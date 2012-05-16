@@ -511,6 +511,48 @@
 
         /// <summary>
         ///     Evaluates the provided query expression asynchronusly.
+        ///     The results of this query are never tracked by the context even if the
+        ///     type of object returned is an entity type.  Use the
+        ///     <see cref = "DbSet.Async(Expression<Func<IQueryable<TEntity>,TResult>>)" />
+        ///     method to return entities that are tracked by the context.
+        /// </summary>
+        /// <param name="expression">Query expression to evaluate.</param>
+        /// <returns>A Task containg the result of the query expression evaluation.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<object> QueryAsync(Expression<Func<object>> expression)
+        {
+            Contract.Requires(expression != null);
+
+            return QueryAsync(expression, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Evaluates the provided query expression asynchronusly.
+        ///     The results of this query are never tracked by the context even if the
+        ///     type of object returned is an entity type.  Use the
+        ///     <see cref = "DbSet.Async(Expression<Func<IQueryable<TEntity>,TResult>>, CancellationToken)" />
+        ///     method to return entities that are tracked by the context.
+        /// </summary>
+        /// <param name="expression">Query expression to evaluate.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containg the result of the query expression evaluation.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
+        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<object> QueryAsync(Expression<Func<object>> expression, CancellationToken cancellationToken)
+        {
+            Contract.Requires(expression != null);
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Evaluates the provided query expression asynchronusly.
+        ///     The results of this query are never tracked by the context even if the
+        ///     type of object returned is an entity type.  Use the
+        ///     <see cref = "DbSet<TEntity>.Async<TResult>(Expression<Func<IQueryable<TEntity>,TResult>>)" />
+        ///     method to return entities that are tracked by the context.
         /// </summary>
         /// <typeparam name="TResult">The type of the query result.</typeparam>
         /// <param name="expression">Query expression to evaluate.</param>
@@ -525,6 +567,10 @@
 
         /// <summary>
         ///     Evaluates the provided query expression asynchronusly.
+        ///     The results of this query are never tracked by the context even if the
+        ///     type of object returned is an entity type.  Use the
+        ///     <see cref = "DbSet<TEntity>.Async<TResult>(Expression<Func<IQueryable<TEntity>,TResult>>, CancellationToken)" />
+        ///     method to return entities that are tracked by the context.
         /// </summary>
         /// <typeparam name="TResult">The type of the query result.</typeparam>
         /// <param name="expression">Query expression to evaluate.</param>
