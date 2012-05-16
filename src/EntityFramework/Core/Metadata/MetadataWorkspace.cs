@@ -861,6 +861,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _internalMetadataWorkspace.GetQueryCacheManager();
         }
 
+        internal bool TryDetermineCSpaceModelType<T>(out EdmType modelEdmType)
+        {
+            return _internalMetadataWorkspace.TryDetermineCSpaceModelType(typeof(T), out modelEdmType);
+        }
+
+        internal bool TryDetermineCSpaceModelType(Type type, out EdmType modelEdmType)
+        {
+            return _internalMetadataWorkspace.TryDetermineCSpaceModelType(type, out modelEdmType);
+        }
+
         #endregion
     }
 }

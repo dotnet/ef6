@@ -161,11 +161,13 @@
 
                 EdmType modelType;
                 int ordinal;
+
+                
                 if (TryGetColumnOrdinalFromReader(reader, prop.Name, out ordinal) &&
-                    MetadataHelper.TryDetermineCSpaceModelType(propType, workspace, out modelType) &&
+                    workspace.TryDetermineCSpaceModelType(propType, out modelType) &&
                     (Helper.IsScalarType(modelType)) &&
                     prop.CanWrite && prop.GetIndexParameters().Length == 0
-                    && null != prop.GetSetMethod( /* nonPublic */true))
+                    && null != prop.GetSetMethod(nonPublic: true))
                 {
                     memberInfo.Add(
                         Tuple.Create(

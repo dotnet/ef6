@@ -2774,10 +2774,11 @@
             EdmType modelEdmType;
             var unwrappedTElement = Nullable.GetUnderlyingType(typeof(TElement)) ?? typeof(TElement);
             CollectionColumnMap columnMap;
+
             // for enums that are not in the model we use the enum underlying type
-            if (MetadataHelper.TryDetermineCSpaceModelType<TElement>(MetadataWorkspace, out modelEdmType) ||
+            if (MetadataWorkspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType) ||
                 (unwrappedTElement.IsEnum &&
-                 MetadataHelper.TryDetermineCSpaceModelType(unwrappedTElement.GetEnumUnderlyingType(), MetadataWorkspace, out modelEdmType)))
+                 MetadataWorkspace.TryDetermineCSpaceModelType(unwrappedTElement.GetEnumUnderlyingType(), out modelEdmType)))
             {
                 if (entitySet != null && !entitySet.ElementType.IsAssignableFrom(modelEdmType))
                 {
