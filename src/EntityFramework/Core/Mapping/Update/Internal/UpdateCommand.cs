@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Threading;
+    using System.Threading.Tasks;
 
     internal enum UpdateCommandKind
     {
@@ -178,6 +179,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="generatedValues">Aggregator for server generated values.</param>
         /// <returns>Number of rows affected by the command.</returns>
         internal abstract long Execute(Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues);
+
+
+        /// <summary>
+        /// An asynchronous version of Execute, which executes the current update command.
+        /// All server-generated values are added to the generatedValues list. If those values are identifiers, they are
+        /// also added to the identifierValues dictionary, which associates proxy identifiers for keys in the session
+        /// with their actual values, permitting fix-up of identifiers across relationships.
+        /// </summary>
+        /// <param name="identifierValues">Aggregator for identifier values (read for InputIdentifiers; write for
+        /// OutputIdentifiers</param>
+        /// <param name="generatedValues">Aggregator for server generated values.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>Number of rows affected by the command.</returns>
+        internal abstract Task<long> ExecuteAsync(Dictionary<int, object> identifierValues,
+            List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken);
 
         /// <summary>
         /// Implementation of CompareTo for concrete subclass of UpdateCommand.

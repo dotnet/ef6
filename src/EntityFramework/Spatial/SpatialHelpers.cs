@@ -4,6 +4,8 @@
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal static class SpatialHelpers
     {
@@ -18,6 +20,21 @@
             else
             {
                 return spatialReader.GetGeometry(columnOrdinal);
+            }
+        }
+
+        internal static async Task<object> GetSpatialValueAsync(MetadataWorkspace workspace, DbDataReader reader,
+            TypeUsage columnType, int columnOrdinal, CancellationToken cancellationToken)
+        {
+            Debug.Assert(Helper.IsSpatialType(columnType));
+            var spatialReader = CreateSpatialDataReader(workspace, reader);
+            if (Helper.IsGeographicType((PrimitiveType)columnType.EdmType))
+            {
+                return await spatialReader.GetGeographyAsync(columnOrdinal, cancellationToken);
+            }
+            else
+            {
+                return await spatialReader.GetGeometryAsync(columnOrdinal, cancellationToken);
             }
         }
 

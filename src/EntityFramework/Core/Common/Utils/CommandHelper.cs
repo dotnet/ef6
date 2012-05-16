@@ -5,6 +5,8 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Contains utility methods for construction of DB commands through generic
@@ -16,12 +18,31 @@ namespace System.Data.Entity.Core.Common.Utils
         /// Consumes all rows and result sets from the reader. This allows client to retrieve
         /// parameter values and intercept any store exceptions.
         /// </summary>
-        /// <param name="reader">reader to consume</param>
+        /// <param name="reader">Reader to consume.</param>
         internal static void ConsumeReader(DbDataReader reader)
         {
             if (null != reader && !reader.IsClosed)
             {
                 while (reader.NextResult())
+                {
+                    // Note that we only walk through the result sets. We don't need
+                    // to walk through individual rows (though underlying provider
+                    // implementation may do so)
+                }
+            }
+        }
+
+        /// <summary>
+        /// An asynchronous version of ConsumeReader, which
+        /// consumes all rows and result sets from the reader. This allows client to retrieve
+        /// parameter values and intercept any store exceptions.
+        /// </summary>
+        /// <param name="reader">Reader to consume.</param>
+        internal async static Task ConsumeReaderAsync(DbDataReader reader, CancellationToken cancellationToken)
+        {
+            if (null != reader && !reader.IsClosed)
+            {
+                while (await reader.NextResultAsync(cancellationToken))
                 {
                     // Note that we only walk through the result sets. We don't need
                     // to walk through individual rows (though underlying provider

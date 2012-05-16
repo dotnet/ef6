@@ -2,9 +2,10 @@
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Mapping.Update.Internal;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class EntityAdapter : IEntityAdapter
     {
@@ -61,9 +62,26 @@
         /// <returns>Number of cache entries affected by the udpate.</returns>
         public int Update(IEntityStateManager entityCache)
         {
+            return Update(entityCache, 0, (ut) => ut.Update());
+        }
+
+        /// <summary>
+        /// An asynchronous version of Update, which
+        /// persists modifications described in the given cache.
+        /// </summary>
+        /// <param name="entityCache">Entity cache containing changes to persist to the store.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing the number of cache entries affected by the update.</returns>
+        public Task<int> UpdateAsync(IEntityStateManager entityCache, CancellationToken cancellationToken)
+        {
+            return Update(entityCache, Task.FromResult(0), (ut) => ut.UpdateAsync(cancellationToken));
+        }
+
+        private T Update<T>(IEntityStateManager entityCache, T noChangesResult, Func<UpdateTranslator, T> updateFunction)
+        {
             if (!IsStateManagerDirty(entityCache))
             {
-                return 0;
+                return noChangesResult;
             }
 
             // Check that we have a connection before we proceed
@@ -85,7 +103,7 @@
             }
 
             var updateTranslator = _updateTranslatorFactory(entityCache, this);
-            return updateTranslator.Update();
+            return updateFunction(updateTranslator);
         }
 
         /// <summary>

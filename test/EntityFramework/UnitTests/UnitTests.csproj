@@ -94,6 +94,7 @@
     <Compile Include="ConnectionFactoryConfigTests.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
     <Compile Include="Core\Common\EntityUtilTests.cs" />
+    <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
     <Compile Include="Core\Common\CommandTrees\BasicExpressionVisitorTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionRebinderTests.cs" />

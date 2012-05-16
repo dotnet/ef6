@@ -16,6 +16,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Aggregates information about a modification command delegated to a store function.
@@ -274,8 +276,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             var columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
                             object value;
 
-                            if (Helper.IsSpatialType(columnType)
-                                && !reader.IsDBNull(columnOrdinal))
+                            if (Helper.IsSpatialType(columnType) && !reader.IsDBNull(columnOrdinal))
                             {
                                 value = SpatialHelpers.GetSpatialValue(Translator.MetadataWorkspace, reader, columnType, columnOrdinal);
                             }
@@ -305,6 +306,82 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             else
             {
                 rowsAffected = _dbCommand.ExecuteNonQuery();
+            }
+
+            return GetRowsAffected(rowsAffected, Translator);
+        }
+
+        /// <summary>
+        ///     See comments in <see cref = "UpdateCommand" />.
+        /// </summary>
+        internal override async Task<long> ExecuteAsync(Dictionary<int, object> identifierValues,
+            List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
+        {
+            var connection = Translator.Connection;
+            // configure command to use the connection and transaction for this session
+            _dbCommand.Transaction = ((null == connection.CurrentTransaction)
+                                        ? null
+                                        : connection.CurrentTransaction.StoreTransaction);
+            _dbCommand.Connection = connection.StoreConnection;
+            if (Translator.CommandTimeout.HasValue)
+            {
+                _dbCommand.CommandTimeout = Translator.CommandTimeout.Value;
+            }
+
+            SetInputIdentifiers(identifierValues);
+
+            // Execute the query
+            long rowsAffected;
+            if (null != ResultColumns)
+            {
+                // If there are result columns, read the server gen results
+                rowsAffected = 0;
+                var members = TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType);
+                using (var reader = await _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+                {
+                    // Retrieve only the first row from the first result set
+                    if (await reader.ReadAsync(cancellationToken))
+                    {
+                        rowsAffected++;
+
+                        foreach (var resultColumn in ResultColumns
+                            .Select(r => new KeyValuePair<int, PropagatorResult>(GetColumnOrdinal(Translator, reader, r.Key), r.Value))
+                            .OrderBy(r => r.Key)) // order by column ordinal to avoid breaking SequentialAccess readers
+                        {
+                            var columnOrdinal = resultColumn.Key;
+                            var columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
+                            object value;
+
+                            if (Helper.IsSpatialType(columnType) && !await reader.IsDBNullAsync(columnOrdinal, cancellationToken))
+                            {
+                                value = await SpatialHelpers.GetSpatialValueAsync(Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken);
+                            }
+                            else
+                            {
+                                value = await reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken);
+                            }
+
+                            // register for back-propagation
+                            var result = resultColumn.Value;
+                            generatedValues.Add(new KeyValuePair<PropagatorResult, object>(result, value));
+
+                            // register identifier if it exists
+                            var identifier = result.Identifier;
+                            if (PropagatorResult.NullIdentifier != identifier)
+                            {
+                                identifierValues.Add(identifier, value);
+                            }
+                        }
+                    }
+
+                    // Consume the current reader (and subsequent result sets) so that any errors
+                    // executing the function can be intercepted
+                    await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                }
+            }
+            else
+            {
+                rowsAffected = await _dbCommand.ExecuteNonQueryAsync(cancellationToken);
             }
 
             return GetRowsAffected(rowsAffected, Translator);

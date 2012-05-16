@@ -12,6 +12,8 @@
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class DynamicUpdateCommand : UpdateCommand
     {
@@ -165,6 +167,85 @@
                 else
                 {
                     rowsAffected = command.ExecuteNonQuery();
+                }
+
+                return rowsAffected;
+            }
+        }
+
+        /// <summary>
+        ///     See comments in <see cref = "UpdateCommand" />.
+        /// </summary>
+        internal override async Task<long> ExecuteAsync(Dictionary<int, object> identifierValues,
+            List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
+        {
+            // Compile command
+            using (var command = CreateCommand(identifierValues))
+            {
+                var connection = Translator.Connection;
+                // configure command to use the connection and transaction for this session
+                command.Transaction = ((null == connection.CurrentTransaction)
+                                        ? null
+                                        : connection.CurrentTransaction.StoreTransaction);
+                command.Connection = connection.StoreConnection;
+                if (Translator.CommandTimeout.HasValue)
+                {
+                    command.CommandTimeout = Translator.CommandTimeout.Value;
+                }
+
+                // Execute the query
+                int rowsAffected;
+                if (_modificationCommandTree.HasReader)
+                {
+                    // retrieve server gen results
+                    rowsAffected = 0;
+                    using (var reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+                    {
+                        if (await reader.ReadAsync(cancellationToken))
+                        {
+                            rowsAffected++;
+
+                            var members = TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType);
+
+                            for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
+                            {
+                                // column name of result corresponds to column name of table
+                                var columnName = reader.GetName(ordinal);
+                                var member = members[columnName];
+                                object value;
+                                if (Helper.IsSpatialType(member.TypeUsage) && !await reader.IsDBNullAsync(ordinal, cancellationToken))
+                                {
+                                    value = await SpatialHelpers.GetSpatialValueAsync(Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken);
+                                }
+                                else
+                                {
+                                    value = await reader.GetFieldValueAsync<object>(ordinal, cancellationToken);
+                                }
+
+                                // retrieve result which includes the context for back-propagation
+                                var columnOrdinal = members.IndexOf(member);
+                                var result = CurrentValues.GetMemberValue(columnOrdinal);
+
+                                // register for back-propagation
+                                generatedValues.Add(new KeyValuePair<PropagatorResult, object>(result, value));
+
+                                // register identifier if it exists
+                                var identifier = result.Identifier;
+                                if (PropagatorResult.NullIdentifier != identifier)
+                                {
+                                    identifierValues.Add(identifier, value);
+                                }
+                            }
+                        }
+
+                        // Consume the current reader (and subsequent result sets) so that any errors
+                        // executing the command can be intercepted
+                        await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                    }
+                }
+                else
+                {
+                    rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
                 }
 
                 return rowsAffected;
