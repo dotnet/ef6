@@ -37,8 +37,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     {
         #region Constructors
 
-        // private constructor: only nested classes may derive from propagator result
-        private PropagatorResult()
+        // For testing purposes. Only nested classes should derive from propagator result
+        protected PropagatorResult()
         {
         }
 
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.Merge");
         }
 
-        internal void SetServerGenValue(object value)
+        internal virtual void SetServerGenValue(object value)
         {
             if (RecordOrdinal != PropagatorResult.NullOrdinal)
             {

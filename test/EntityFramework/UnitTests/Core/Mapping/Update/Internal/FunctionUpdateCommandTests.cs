@@ -3,14 +3,10 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Common;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Metadata.Internal;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Data.Entity.Resources;
     using System.Linq;
     using Moq;
     using Moq.Protected;

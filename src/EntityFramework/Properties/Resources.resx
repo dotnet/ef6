@@ -1130,9 +1130,11 @@
   </data>
   <data name="EntityClient_NoConnectionForAdapter" xml:space="preserve">
     <value>Cannot perform the operation because the adapter does not have a connection.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityClient_ClosedConnectionForUpdate" xml:space="preserve">
     <value>Cannot perform the update operation because the adapter's connection is not open.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityClient_InvalidNamedConnection" xml:space="preserve">
     <value>The specified named connection is either not found in the configuration, not intended to be used with the EntityClient provider, or not valid.</value>
@@ -1226,6 +1228,7 @@
   </data>
   <data name="EntityClient_NoStoreConnectionForUpdate" xml:space="preserve">
     <value>The update operation cannot be performed, because the adapter's connection is not associated with a valid store connection.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityClient_CommandTreeMetadataIncompatible" xml:space="preserve">
     <value>The command could not be executed, because the connection metadata is incompatible with the command metadata.</value>

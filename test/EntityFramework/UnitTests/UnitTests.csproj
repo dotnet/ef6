@@ -105,7 +105,9 @@
     <Compile Include="Core\EntityExceptionTests.cs" />
     <Compile Include="Core\EntityKeyTests.cs" />
     <Compile Include="Core\Mapping\Update\Internal\DynamicUpdateCommandTests.cs" />
+    <Compile Include="Core\Mapping\Update\Internal\EntityAdapterTests.cs" />
     <Compile Include="Core\Mapping\Update\Internal\FunctionUpdateCommandTests.cs" />
+    <Compile Include="Core\Mapping\Update\Internal\UpdateTranslatorTests.cs" />
     <Compile Include="Core\Objects\DataClasses\EntityCollectionTests.cs" />
     <Compile Include="Core\Objects\DataClasses\EntityReferenceTests.cs" />
     <Compile Include="Core\Objects\DataClasses\RelatedEndTests.cs" />

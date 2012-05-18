@@ -14549,11 +14549,27 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// UpdateException with message like "Unable to determine rows affected. The value of parameter '{0}' is not convertible to '{1}'."
+        /// InvalidOperationException with message like "Cannot perform the operation because the adapter does not have a connection."
         /// </summary>
-        internal static Exception Update_UnableToConvertRowsAffectedParameter(object p0, object p1)
+        internal static Exception EntityClient_NoConnectionForAdapter()
         {
-            return new UpdateException(Strings.Update_UnableToConvertRowsAffectedParameter(p0, p1));
+            return new InvalidOperationException(Strings.EntityClient_NoConnectionForAdapter);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Cannot perform the update operation because the adapter's connection is not open."
+        /// </summary>
+        internal static Exception EntityClient_ClosedConnectionForUpdate()
+        {
+            return new InvalidOperationException(Strings.EntityClient_ClosedConnectionForUpdate);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The update operation cannot be performed, because the adapter's connection is not associated with a valid store connection."
+        /// </summary>
+        internal static Exception EntityClient_NoStoreConnectionForUpdate()
+        {
+            return new InvalidOperationException(Strings.EntityClient_NoStoreConnectionForUpdate);
         }
 
         /// <summary>

@@ -37,6 +37,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateManager">Entity state manager containing changes to be processed.</param>
         /// <param name="adapter">Map adapter requesting the changes.</param>
         internal UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter)
+            : this()
         {
             Contract.Requires(stateManager != null);
             Contract.Requires(adapter != null);
@@ -44,6 +45,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _stateManager = stateManager;
             _adapter = adapter;
 
+            // connection state
+            _providerServices = DbProviderServices.GetProviderServices(adapter.Connection.StoreProviderFactory);
+        }
+
+        /// <summary>
+        /// For testing purposes only
+        /// </summary>
+        protected UpdateTranslator()
+        {
             // propagation state
             _changes = new Dictionary<EntitySetBase, ChangeNode>();
             _functionChanges = new Dictionary<EntitySetBase, List<ExtractedStateEntry>>();
@@ -53,8 +63,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _optionalEntities = new Set<EntityKey>();
             _includedValueEntities = new Set<EntityKey>();
 
-            // connection state
-            _providerServices = DbProviderServices.GetProviderServices(adapter.Connection.StoreProviderFactory);
 
             // ancillary propagation services
             _recordConverter = new RecordConverter(this);
@@ -64,15 +72,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _extractorMetadata = new Dictionary<Tuple<EntitySetBase, StructuralType>, ExtractorMetadata>();
 
             // key management
-            KeyManager = new KeyManager();
-            KeyComparer = CompositeKey.CreateComparer(KeyManager);
+            var keyManager = new KeyManager();
+            KeyManager = keyManager;
+            KeyComparer = CompositeKey.CreateComparer(keyManager);
         }
-
-        /// <summary>
-        /// For testing purposes only
-        /// </summary>
-        protected UpdateTranslator()
-        { }
 
         #endregion
 
@@ -119,7 +122,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Gets key manager that handles interpretation of keys (including resolution of 
         /// referential-integrity/foreign key constraints)
         /// </summary>
-        internal readonly KeyManager KeyManager;
+        internal virtual KeyManager KeyManager { get; private set; }
 
         /// <summary>
         /// Gets the view loader metadata wrapper for the current workspace.
@@ -386,7 +389,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Persists state manager changes to the store.
         /// </summary>
         /// <returns>Total number of state entries affected.</returns>
-        internal int Update()
+        internal virtual int Update()
         {
             // tracks values for identifiers in this session
             var identifierValues = new Dictionary<int, object>();
@@ -396,7 +399,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             var orderedCommands = ProduceCommands();
 
-            // used to track the source of commands being processed in case an exception is thrown
             UpdateCommand source = null;
             try
             {
@@ -425,7 +427,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return totalStateEntries;
         }
 
-        private IEnumerable<UpdateCommand> ProduceCommands()
+        protected virtual IEnumerable<UpdateCommand> ProduceCommands()
         {
             // load all modified state entries
             PullModifiedEntriesFromStateManager();
@@ -510,7 +512,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
             }
         }
-        
+
         /// <summary>
         /// Accept changes to entities and relationships processed by this translator instance.
         /// </summary>
