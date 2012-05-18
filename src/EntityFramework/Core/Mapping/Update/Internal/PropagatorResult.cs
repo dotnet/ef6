@@ -3,6 +3,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -35,8 +37,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     {
         #region Constructors
 
-        // private constructor: only nested classes may derive from propagator result
-        private PropagatorResult()
+        // For testing purposes. Only nested classes should derive from propagator result
+        protected PropagatorResult()
         {
         }
 
@@ -211,6 +213,93 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal virtual PropagatorResult Merge(KeyManager keyManager, PropagatorResult other)
         {
             throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.Merge");
+        }
+
+        internal virtual void SetServerGenValue(object value)
+        {
+            if (RecordOrdinal != PropagatorResult.NullOrdinal)
+            {
+                var targetRecord = Record;
+
+                // determine if type compensation is required
+                IExtendedDataRecord recordWithMetadata = targetRecord;
+                var member = recordWithMetadata.DataRecordInfo.FieldMetadata[RecordOrdinal].FieldType;
+
+                value = value ?? DBNull.Value; // records expect DBNull rather than null
+                value = AlignReturnValue(value, member);
+                targetRecord.SetValue(RecordOrdinal, value);
+            }
+        }
+
+        /// <summary>
+        /// Aligns a value returned from the store with the expected type for the member.
+        /// </summary>
+        /// <param name="value">Value to convert.</param>
+        /// <param name="member">Metadata for the member being set.</param>
+        /// <returns>Converted return value</returns>
+        internal object AlignReturnValue(object value, EdmMember member)
+        {
+            if (DBNull.Value.Equals(value))
+            {
+                // check if there is a nullability constraint on the value
+                if (BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind
+                    &&
+                    !((EdmProperty)member).Nullable)
+                {
+                    throw EntityUtil.Update(
+                        Strings.Update_NullReturnValueForNonNullableMember(
+                            member.Name,
+                            member.DeclaringType.FullName), null);
+                }
+            }
+            else if (!Helper.IsSpatialType(member.TypeUsage))
+            {
+                Type clrType;
+                Type clrEnumType = null;
+                if (Helper.IsEnumType(member.TypeUsage.EdmType))
+                {
+                    var underlyingType = Helper.AsPrimitive(member.TypeUsage.EdmType);
+                    clrEnumType = Record.GetFieldType(RecordOrdinal);
+                    clrType = underlyingType.ClrEquivalentType;
+                    Debug.Assert(clrEnumType.IsEnum);
+                }
+                else
+                {
+                    // convert the value to the appropriate CLR type
+                    Debug.Assert(
+                        BuiltInTypeKind.PrimitiveType == member.TypeUsage.EdmType.BuiltInTypeKind,
+                        "we only allow return values that are instances of EDM primitive or enum types");
+                    var primitiveType = (PrimitiveType)member.TypeUsage.EdmType;
+                    clrType = primitiveType.ClrEquivalentType;
+                }
+
+                try
+                {
+                    value = Convert.ChangeType(value, clrType, CultureInfo.InvariantCulture);
+                    if (clrEnumType != null)
+                    {
+                        value = Enum.ToObject(clrEnumType, value);
+                    }
+                }
+                catch (Exception e)
+                {
+                    // we should not be wrapping all exceptions
+                    if (e.RequiresContext())
+                    {
+                        var userClrType = clrEnumType ?? clrType;
+                        throw EntityUtil.Update(
+                            Strings.Update_ReturnValueHasUnexpectedType(
+                                value.GetType().FullName,
+                                userClrType.FullName,
+                                member.Name,
+                                member.DeclaringType.FullName), e);
+                    }
+                    throw;
+                }
+            }
+
+            // return the adjusted value
+            return value;
         }
 
 #if DEBUG

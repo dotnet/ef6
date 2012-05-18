@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

@@ -1,4 +1,4 @@
-namespace System.Data.Entity.ModelConfiguration.Utilities.UnitTests
+namespace System.Data.Entity.ModelConfiguration.Utilities
 {
     using System.Collections.Generic;
     using System.Reflection;

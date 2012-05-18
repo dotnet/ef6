@@ -2,6 +2,7 @@
 {
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;

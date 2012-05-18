@@ -43,7 +43,7 @@
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
     <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly>EntityFramework</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.ModelConfiguration.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
+    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
     <CodeContractsLibPaths />
     <CodeContractsExtraRewriteOptions />
     <CodeContractsExtraAnalysisOptions />
@@ -89,7 +89,7 @@
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
     <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly>EntityFramework</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.ModelConfiguration.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
+    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
     <CodeContractsLibPaths />
     <CodeContractsExtraRewriteOptions />
     <CodeContractsExtraAnalysisOptions />
@@ -219,7 +219,7 @@
     <Compile Include="Core\Common\CommandTrees\DbRefKeyExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
-    <Compile Include="Core\Common\DataRecord.cs" />
+    <Compile Include="Core\Objects\MaterializedDataRecord.cs" />
     <Compile Include="Core\Common\DataRecordInfo.cs" />
     <Compile Include="Core\Common\DbCommandDefinition.cs" />
     <Compile Include="Core\Common\DbProviderManifest.cs" />
@@ -318,6 +318,8 @@
     <Compile Include="Core\Common\EntitySql\TypeResolver.cs" />
     <Compile Include="Core\Common\EntitySql\ValueExpression.cs" />
     <Compile Include="Core\Common\EntityUtil.cs" />
+    <Compile Include="Utilities\BoolExtensions.cs" />
+    <Compile Include="Utilities\ExceptionExtensions.cs" />
     <Compile Include="Core\Common\FieldMetadata.cs" />
     <Compile Include="Core\Common\FieldNameLookup.cs" />
     <Compile Include="Core\Common\internal\DbTypeMap.cs" />
@@ -1230,16 +1232,16 @@
     <Compile Include="Migrations\Design\VisualBasicMigrationCodeGenerator.cs" />
     <Compile Include="Migrations\Edm\EdmXNames.cs" />
     <Compile Include="Migrations\Edm\ModelCompressor.cs" />
-    <Compile Include="Migrations\Extensions\AssemblyExtensions.cs" />
-    <Compile Include="Migrations\Extensions\ByteExtensions.cs" />
-    <Compile Include="Migrations\Extensions\DbContextExtensions.cs" />
-    <Compile Include="Migrations\Extensions\ExpressionExtensions.cs">
+    <Compile Include="Utilities\AssemblyExtensions.cs" />
+    <Compile Include="Utilities\ByteExtensions.cs" />
+    <Compile Include="Utilities\DbContextExtensions.cs" />
+    <Compile Include="Utilities\ExpressionExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
-    <Compile Include="Migrations\Extensions\StringExtensions.cs" />
-    <Compile Include="Migrations\Extensions\XContainerExtensions.cs" />
-    <Compile Include="Migrations\Extensions\XDocumentExtensions.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
+    <Compile Include="Utilities\XContainerExtensions.cs" />
+    <Compile Include="Utilities\XDocumentExtensions.cs" />
     <Compile Include="Migrations\History\HistoryContext.cs" />
     <Compile Include="Migrations\History\HistoryContextBase`.cs" />
     <Compile Include="Migrations\History\HistoryRepository.cs">
@@ -1319,8 +1321,8 @@
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\ColumnOrderingConventionStrict.cs" />
     <Compile Include="ModelConfiguration\Conventions\Sets\V2ConventionSet.cs" />
     <Compile Include="ModelConfiguration\Edm\EdmEnumTypeExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DbModelBuilderVersionExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DbProviderServicesExtensions.cs" />
+    <Compile Include="Utilities\DbModelBuilderVersionExtensions.cs" />
+    <Compile Include="Utilities\DbProviderServicesExtensions.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="Properties\Resources.cs">
@@ -1702,18 +1704,16 @@
     <Compile Include="ModelConfiguration\ModelValidationException.cs" />
     <Compile Include="ModelConfiguration\Utilities\AttributeProvider.cs" />
     <Compile Include="ModelConfiguration\Utilities\DatabaseName.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DbConnectionExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DbProviderInfoExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DbProviderManifestExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\ExpressionExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\HashSetExtensions.cs" />
+    <Compile Include="Utilities\DbConnectionExtensions.cs" />
+    <Compile Include="Utilities\DbProviderInfoExtensions.cs" />
+    <Compile Include="Utilities\DbProviderManifestExtensions.cs" />
+    <Compile Include="Utilities\HashSetExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\IEnumerableExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\ObjectExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\PropertyInfoExtensions.cs" />
+    <Compile Include="Utilities\PropertyInfoExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPath.cs" />
-    <Compile Include="ModelConfiguration\Utilities\RuntimeFailureMethods.cs" />
-    <Compile Include="ModelConfiguration\Utilities\TypeExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\ValidationContextExtensions.cs" />
+    <Compile Include="Utilities\RuntimeFailureMethods.cs" />
+    <Compile Include="Utilities\TypeExtensions.cs" />
+    <Compile Include="Utilities\ValidationContextExtensions.cs" />
     <Compile Include="Validation\DbEntityValidationException.cs" />
     <Compile Include="Validation\DbEntityValidationResult.cs" />
     <Compile Include="Validation\DbUnexpectedValidationException.cs" />

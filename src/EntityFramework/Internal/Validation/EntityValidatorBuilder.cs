@@ -6,6 +6,7 @@
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;

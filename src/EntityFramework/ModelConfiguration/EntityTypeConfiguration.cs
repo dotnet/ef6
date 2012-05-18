@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -106,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration
 
             var qualifiedName = tableName;
             string schemaName;
-            ObjectExtensions.ParseQualifiedTableName(qualifiedName, out schemaName, out tableName);
+            DatabaseName.ParseQualifiedTableName(qualifiedName, out schemaName, out tableName);
             _entityTypeConfiguration.ToTable(tableName, schemaName);
         }
 

@@ -33,94 +33,6 @@ namespace System.Data.Entity.Core
         internal const CompareOptions StringCompareOptions =
             CompareOptions.IgnoreKanaType | CompareOptions.IgnoreWidth | CompareOptions.IgnoreCase;
 
-        internal static bool? ThreeValuedNot(bool? operand)
-        {
-            // three-valued logic 'not' (T = true, F = false, U = unknown)
-            //      !T = F
-            //      !F = T
-            //      !U = U
-            return operand.HasValue ? !operand.Value : (bool?)null;
-        }
-
-        internal static bool? ThreeValuedAnd(bool? left, bool? right)
-        {
-            // three-valued logic 'and' (T = true, F = false, U = unknown)
-            //
-            //      T & T = T
-            //      T & F = F
-            //      F & F = F
-            //      F & T = F
-            //      F & U = F
-            //      U & F = F
-            //      T & U = U
-            //      U & T = U
-            //      U & U = U
-            bool? result;
-            if (left.HasValue
-                && right.HasValue)
-            {
-                result = left.Value && right.Value;
-            }
-            else if (!left.HasValue
-                     && !right.HasValue)
-            {
-                result = null; // unknown
-            }
-            else if (left.HasValue)
-            {
-                result = left.Value
-                             ? (bool?)null
-                             : // unknown
-                         false;
-            }
-            else
-            {
-                result = right.Value
-                             ? (bool?)null
-                             : false;
-            }
-            return result;
-        }
-
-        internal static bool? ThreeValuedOr(bool? left, bool? right)
-        {
-            // three-valued logic 'or' (T = true, F = false, U = unknown)
-            //
-            //      T | T = T
-            //      T | F = T
-            //      F | F = F
-            //      F | T = T
-            //      F | U = U
-            //      U | F = U
-            //      T | U = T
-            //      U | T = T
-            //      U | U = U
-            bool? result;
-            if (left.HasValue
-                && right.HasValue)
-            {
-                result = left.Value || right.Value;
-            }
-            else if (!left.HasValue
-                     && !right.HasValue)
-            {
-                result = null; // unknown
-            }
-            else if (left.HasValue)
-            {
-                result = left.Value
-                             ? true
-                             : (bool?)null; // unknown
-            }
-            else
-            {
-                result = right.Value
-                             ? true
-                             : (bool?)null; // unknown
-            }
-            return result;
-        }
-
         /// <summary>
         /// Zips two enumerables together (e.g., given {1, 3, 5} and {2, 4, 6} returns {{1, 2}, {3, 4}, {5, 6}})
         /// </summary>
@@ -753,31 +665,6 @@ namespace System.Data.Entity.Core
             {
                 throw new ArgumentException(Strings.InvalidStringArgument(parameterName), parameterName);
             }
-        }
-
-        internal static bool IsCatchableExceptionType(Exception e)
-        {
-            // a 'catchable' exception is defined by what it is not.
-            Debug.Assert(e != null, "Unexpected null exception!");
-            var type = e.GetType();
-
-            return ((type != typeof(StackOverflowException)) &&
-                    (type != typeof(OutOfMemoryException)) &&
-                    (type != typeof(ThreadAbortException)) &&
-                    (type != typeof(NullReferenceException)) &&
-                    (type != typeof(AccessViolationException)) &&
-                    !typeof(SecurityException).IsAssignableFrom(type));
-        }
-
-        internal static bool IsCatchableEntityExceptionType(Exception e)
-        {
-            Debug.Assert(e != null, "Unexpected null exception!");
-            var type = e.GetType();
-
-            return IsCatchableExceptionType(e) &&
-                   type != typeof(EntityCommandExecutionException) &&
-                   type != typeof(EntityCommandCompilationException) &&
-                   type != typeof(EntitySqlException);
         }
 
         internal static bool IsNull(object value)

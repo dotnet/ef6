@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
@@ -262,7 +263,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return CreatePerservedAndKnownResult(false);
                 }
 
-                result = EntityUtil.ThreeValuedAnd(leftResult, rightResult);
+                result = leftResult.And( rightResult);
 
                 return ConvertBoolToResult(result, left, right);
             }
@@ -289,7 +290,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return CreatePerservedAndKnownResult(true);
                 }
 
-                result = EntityUtil.ThreeValuedOr(leftResult, rightResult);
+                result =leftResult.Or( rightResult);
 
                 return ConvertBoolToResult(result, left, right);
             }
@@ -316,7 +317,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var child = Visit(predicate.Argument);
                 var childResult = ConvertResultToBool(child);
 
-                var result = EntityUtil.ThreeValuedNot(childResult);
+                var result = childResult.Not();
 
                 return ConvertBoolToResult(result, child);
             }

@@ -11,6 +11,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Xunit;

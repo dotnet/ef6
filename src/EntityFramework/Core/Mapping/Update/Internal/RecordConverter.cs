@@ -1,6 +1,8 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -89,7 +91,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             catch (Exception e)
             {
-                if (UpdateTranslator.RequiresContext(e))
+                if (e.RequiresContext())
                 {
                     throw EntityUtil.Update(Strings.Update_ErrorLoadingRecord, e, stateEntry);
                 }

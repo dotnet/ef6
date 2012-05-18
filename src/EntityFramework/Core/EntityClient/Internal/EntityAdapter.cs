@@ -10,6 +10,16 @@
     {
         private bool _acceptChangesDuringUpdate = true;
         private EntityConnection _connection;
+        private readonly Func<IEntityStateManager, EntityAdapter, UpdateTranslator> _updateTranslatorFactory;
+
+        public EntityAdapter()
+            : this((stateManager, adapter) => new UpdateTranslator(stateManager, adapter))
+        { }
+
+        protected EntityAdapter(Func<IEntityStateManager, EntityAdapter, UpdateTranslator> updateTranslatorFactory)
+        {
+            _updateTranslatorFactory = updateTranslatorFactory;
+        }
 
         /// <summary>
         /// Gets or sets the map connection used by this adapter.
@@ -42,14 +52,14 @@
         /// Gets of sets the command timeout for update operations. If null, indicates that the default timeout
         /// for the provider should be used.
         /// </summary>
-        public Int32? CommandTimeout { get; set; }
+        public int? CommandTimeout { get; set; }
 
         /// <summary>
         /// Persist modifications described in the given cache.
         /// </summary>
         /// <param name="entityCache">Entity cache containing changes to persist to the store.</param>
         /// <returns>Number of cache entries affected by the udpate.</returns>
-        public Int32 Update(IEntityStateManager entityCache)
+        public int Update(IEntityStateManager entityCache)
         {
             if (!IsStateManagerDirty(entityCache))
             {
@@ -59,22 +69,22 @@
             // Check that we have a connection before we proceed
             if (_connection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_NoConnectionForAdapter);
+                throw Error.EntityClient_NoConnectionForAdapter();
             }
 
             // Check that the store connection is available
             if (_connection.StoreProviderFactory == null || _connection.StoreConnection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_NoStoreConnectionForUpdate);
+                throw Error.EntityClient_NoStoreConnectionForUpdate();
             }
 
             // Check that the connection is open before we proceed
             if (ConnectionState.Open != _connection.State)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ClosedConnectionForUpdate);
+                throw Error.EntityClient_ClosedConnectionForUpdate();
             }
 
-            var updateTranslator = new UpdateTranslator(entityCache, this);
+            var updateTranslator = _updateTranslatorFactory(entityCache, this);
             return updateTranslator.Update();
         }
 
@@ -90,7 +100,7 @@
 
             // this call to GetCacheEntries is constant time (the ObjectStateManager implementation
             // maintains an explicit list of entries in each state)
-            foreach (ObjectStateEntry entry in entityCache.GetEntityStateEntries(EntityState.Added | EntityState.Deleted | EntityState.Modified))
+            foreach (var entry in entityCache.GetEntityStateEntries(EntityState.Added | EntityState.Deleted | EntityState.Modified))
             {
                 hasChanges = true;
                 break;

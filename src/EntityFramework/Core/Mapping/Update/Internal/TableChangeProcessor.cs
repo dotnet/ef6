@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -164,7 +165,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
                 catch (Exception e)
                 {
-                    if (UpdateTranslator.RequiresContext(e))
+                    if (e.RequiresContext())
                     {
                         // collect state entries in scope for the current compilation
                         var stateEntries = new List<IEntityStateEntry>();

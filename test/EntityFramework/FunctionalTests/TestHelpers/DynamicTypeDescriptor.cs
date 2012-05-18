@@ -4,6 +4,7 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;

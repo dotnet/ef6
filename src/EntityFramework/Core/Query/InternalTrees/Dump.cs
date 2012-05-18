@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -123,7 +124,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
             catch (Exception e)
             {
-                if (!EntityUtil.IsCatchableExceptionType(e))
+                if (!e.IsCatchableExceptionType())
                 {
                     throw;
                 }
@@ -1034,7 +1035,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 }
                 catch (Exception e)
                 {
-                    if (!EntityUtil.IsCatchableExceptionType(e))
+                    if (!e.IsCatchableExceptionType())
                     {
                         throw;
                     }

@@ -3,8 +3,10 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -196,7 +198,7 @@
                     }
                     catch (Exception e)
                     {
-                        if (EntityUtil.IsCatchableExceptionType(e))
+                        if (e.IsCatchableExceptionType())
                         {
                             throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionString"), e);
                         }
@@ -259,7 +261,7 @@
                 }
                 catch (Exception e)
                 {
-                    if (EntityUtil.IsCatchableExceptionType(e))
+                    if (e.IsCatchableExceptionType())
                     {
                         throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionTimeout"), e);
                     }
@@ -292,7 +294,7 @@
                 }
                 catch (Exception e)
                 {
-                    if (EntityUtil.IsCatchableExceptionType(e))
+                    if (e.IsCatchableExceptionType())
                     {
                         throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"State"), e);
                     }
@@ -321,7 +323,7 @@
                 }
                 catch (Exception e)
                 {
-                    if (EntityUtil.IsCatchableExceptionType(e))
+                    if (e.IsCatchableExceptionType())
                     {
                         throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"DataSource"), e);
                     }
@@ -355,7 +357,7 @@
                 }
                 catch (Exception e)
                 {
-                    if (EntityUtil.IsCatchableExceptionType(e))
+                    if (e.IsCatchableExceptionType())
                     {
                         throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ServerVersion"), e);
                     }
@@ -570,7 +572,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     var exceptionMessage = string.IsNullOrEmpty(attemptedOperation)
                                                ? EntityRes.GetString(exceptionCode)
@@ -601,10 +603,10 @@
                 // Ensure metadata is loaded and the workspace is appropriately initialized.
                 GetMetadataWorkspace();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 // Undo the open if something failed
-                if (EntityUtil.IsCatchableExceptionType(ex))
+                if (e.IsCatchableExceptionType())
                 {
                     ResetStoreConnection(newConnection, originalConnection, closeOriginalConnectionOnFailure);
                 }
@@ -679,7 +681,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new EntityException(Strings.EntityClient_ErrorInBeginningTransaction, e);
                 }
@@ -739,7 +741,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"EnlistTransaction"), e);
                 }
@@ -884,7 +886,7 @@
                 }
                 catch (Exception e)
                 {
-                    if (EntityUtil.IsCatchableExceptionType(e))
+                    if (e.IsCatchableExceptionType())
                     {
                         throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"ConnectionString"), e);
                     }
@@ -1188,7 +1190,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new EntityException(Strings.EntityClient_ErrorInClosingConnection, e);
                 }
