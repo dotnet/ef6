@@ -8,7 +8,7 @@
     <ProjectGuid>{1F3817E9-8070-4429-B134-9674698DD78C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>System</RootNamespace>
+    <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.PowerShell</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,7 +47,7 @@
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
     <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly>EntityFramework.PowerShell</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.ModelConfiguration.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
+    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
     <CodeContractsLibPaths />
     <CodeContractsExtraRewriteOptions />
     <CodeContractsExtraAnalysisOptions />
@@ -83,7 +83,7 @@
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
     <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly>EntityFramework.PowerShell</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.ModelConfiguration.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
+    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
     <CodeContractsLibPaths />
     <CodeContractsExtraRewriteOptions />
     <CodeContractsExtraAnalysisOptions />
@@ -125,14 +125,14 @@
     <Compile Include="..\EntityFramework\Migrations\Extensions\IEnumerableExtensions.cs">
       <Link>Migrations\Extensions\IEnumerableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\EntityFramework\Migrations\Extensions\StringExtensions.cs">
-      <Link>Migrations\Extensions\StringExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\EntityFramework\ModelConfiguration\Utilities\RuntimeFailureMethods.cs">
+    <Compile Include="..\EntityFramework\Utilities\RuntimeFailureMethods.cs">
       <Link>Properties\RuntimeFailureMethods.cs</Link>
     </Compile>
     <Compile Include="..\EntityFramework\Properties\Resources.PowerShell.cs">
       <Link>Properties\Resources.PowerShell.cs</Link>
+    </Compile>
+    <Compile Include="..\EntityFramework\Utilities\StringExtensions.cs">
+      <Link>Utilities\StringExtensions.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

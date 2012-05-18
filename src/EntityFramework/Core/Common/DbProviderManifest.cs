@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Common
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
@@ -149,7 +150,7 @@ namespace System.Data.Entity.Core.Common
             catch (Exception e)
             {
                 // we should not be wrapping all exceptions
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     // we don't want folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a ProviderIncompatibleException and make whatever we caught  

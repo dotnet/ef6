@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;

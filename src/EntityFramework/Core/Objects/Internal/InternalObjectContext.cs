@@ -16,6 +16,7 @@
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -2294,7 +2295,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableEntityExceptionType(e))
+                if (e.IsCatchableEntityExceptionType())
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
                 }
@@ -2363,7 +2364,7 @@
             catch (Exception e)
             {
                 ReleaseConnection();
-                if (EntityUtil.IsCatchableEntityExceptionType(e))
+                if (e.IsCatchableEntityExceptionType())
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
                 }

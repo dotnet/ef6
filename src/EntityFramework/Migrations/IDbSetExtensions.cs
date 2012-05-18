@@ -3,7 +3,9 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -108,7 +110,7 @@ namespace System.Data.Entity.Migrations
         }
 
         private static void AddOrUpdate<TEntity>(
-            this DbSet<TEntity> set, IEnumerable<PropertyInfo> identifyingProperties, params TEntity[] entities)
+            this DbSet<TEntity> set, IEnumerable<PropertyPath> identifyingProperties, params TEntity[] entities)
             where TEntity : class
         {
             Contract.Requires(set != null);
@@ -124,8 +126,8 @@ namespace System.Data.Entity.Migrations
                 var matchExpression
                     = identifyingProperties.Select(
                         pi => Expression.Equal(
-                            Expression.Property(parameter, pi),
-                            Expression.Constant(pi.GetValue(entity, null))))
+                            Expression.Property(parameter, pi.Last()),
+                            Expression.Constant(pi.Last().GetValue(entity, null))))
                         .Aggregate<BinaryExpression, Expression>(
                             null,
                             (current, predicate)
@@ -140,7 +142,7 @@ namespace System.Data.Entity.Migrations
                 {
                     foreach (var keyProperty in keyProperties)
                     {
-                        keyProperty.SetValue(entity, keyProperty.GetValue(existing, null), null);
+                        keyProperty.Single().SetValue(entity, keyProperty.Single().GetValue(existing, null), null);
                     }
 
                     internalSet.InternalContext.Owner.Entry(existing).CurrentValues.SetValues(entity);
@@ -153,7 +155,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private static IEnumerable<PropertyInfo> GetKeyProperties<TEntity>(
+        private static IEnumerable<PropertyPath> GetKeyProperties<TEntity>(
             Type entityType, InternalSet<TEntity> internalSet)
             where TEntity : class
         {
@@ -163,7 +165,7 @@ namespace System.Data.Entity.Migrations
             return internalSet.InternalContext
                 .GetEntitySetAndBaseTypeForType(typeof(TEntity))
                 .EntitySet.ElementType.KeyMembers
-                .Select(km => entityType.GetProperty(km.Name, KeyPropertyBindingFlags));
+                .Select(km => new PropertyPath(entityType.GetProperty(km.Name, KeyPropertyBindingFlags)));
         }
     }
 }

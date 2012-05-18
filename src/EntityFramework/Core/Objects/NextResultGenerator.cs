@@ -5,6 +5,7 @@
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
 
     internal class NextResultGenerator
     {
@@ -36,7 +37,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
                 }

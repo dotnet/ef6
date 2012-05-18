@@ -3,6 +3,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -79,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var qualifiedName = tableName;
             string schemaName;
-            ObjectExtensions.ParseQualifiedTableName(qualifiedName, out schemaName, out tableName);
+            DatabaseName.ParseQualifiedTableName(qualifiedName, out schemaName, out tableName);
 
             ToTable(tableName, schemaName);
         }

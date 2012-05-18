@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -260,7 +261,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     // Some errors can occur while a close handler is registered.  This clears
                     // out the handler so that ElementWithErrorHandling will report the correct

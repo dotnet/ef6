@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -382,11 +383,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Persists stateManager changes to the store.
+        /// Persists state manager changes to the store.
         /// </summary>
-        /// <param name="stateManager">StateManager containing changes to persist.</param>
-        /// <param name="adapter">Map adapter requesting the changes.</param>
-        /// <returns>Total number of state entries affected</returns>
+        /// <returns>Total number of state entries affected.</returns>
         internal int Update()
         {
             // tracks values for identifiers in this session
@@ -412,7 +411,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             catch (Exception e)
             {
                 // we should not be wrapping all exceptions
-                if (RequiresContext(e))
+                if (e.RequiresContext())
                 {
                     throw new UpdateException(Strings.Update_GeneralExecutionException, e, DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
                 }
@@ -496,7 +495,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 if (context.Identifier
                     == PropagatorResult.NullIdentifier)
                 {
-                    SetServerGenValue(context, value);
+                    context.SetServerGenValue(value);
                 }
                 else
                 {
@@ -505,102 +504,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     {
                         if (KeyManager.TryGetIdentifierOwner(dependent, out context))
                         {
-                            SetServerGenValue(context, value);
+                            context.SetServerGenValue(value);
                         }
                     }
                 }
             }
         }
-
-        private static void SetServerGenValue(PropagatorResult context, object value)
-        {
-            if (context.RecordOrdinal
-                != PropagatorResult.NullOrdinal)
-            {
-                var targetRecord = context.Record;
-
-                // determine if type compensation is required
-                IExtendedDataRecord recordWithMetadata = targetRecord;
-                var member = recordWithMetadata.DataRecordInfo.FieldMetadata[context.RecordOrdinal].FieldType;
-
-                value = value ?? DBNull.Value; // records expect DBNull rather than null
-                value = AlignReturnValue(value, member, context);
-                targetRecord.SetValue(context.RecordOrdinal, value);
-            }
-        }
-
-        /// <summary>
-        /// Aligns a value returned from the store with the expected type for the member.
-        /// </summary>
-        /// <param name="value">Value to convert.</param>
-        /// <param name="member">Metadata for the member being set.</param>
-        /// <param name="context">The context generating the return value.</param>
-        /// <returns>Converted return value</returns>
-        private static object AlignReturnValue(object value, EdmMember member, PropagatorResult context)
-        {
-            if (DBNull.Value.Equals(value))
-            {
-                // check if there is a nullability constraint on the value
-                if (BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind
-                    &&
-                    !((EdmProperty)member).Nullable)
-                {
-                    throw EntityUtil.Update(
-                        Strings.Update_NullReturnValueForNonNullableMember(
-                            member.Name,
-                            member.DeclaringType.FullName), null);
-                }
-            }
-            else if (!Helper.IsSpatialType(member.TypeUsage))
-            {
-                Type clrType;
-                Type clrEnumType = null;
-                if (Helper.IsEnumType(member.TypeUsage.EdmType))
-                {
-                    var underlyingType = Helper.AsPrimitive(member.TypeUsage.EdmType);
-                    clrEnumType = context.Record.GetFieldType(context.RecordOrdinal);
-                    clrType = underlyingType.ClrEquivalentType;
-                    Debug.Assert(clrEnumType.IsEnum);
-                }
-                else
-                {
-                    // convert the value to the appropriate CLR type
-                    Debug.Assert(
-                        BuiltInTypeKind.PrimitiveType == member.TypeUsage.EdmType.BuiltInTypeKind,
-                        "we only allow return values that are instances of EDM primitive or enum types");
-                    var primitiveType = (PrimitiveType)member.TypeUsage.EdmType;
-                    clrType = primitiveType.ClrEquivalentType;
-                }
-
-                try
-                {
-                    value = Convert.ChangeType(value, clrType, CultureInfo.InvariantCulture);
-                    if (clrEnumType != null)
-                    {
-                        value = Enum.ToObject(clrEnumType, value);
-                    }
-                }
-                catch (Exception e)
-                {
-                    // we should not be wrapping all exceptions
-                    if (RequiresContext(e))
-                    {
-                        var userClrType = clrEnumType ?? clrType;
-                        throw EntityUtil.Update(
-                            Strings.Update_ReturnValueHasUnexpectedType(
-                                value.GetType().FullName,
-                                userClrType.FullName,
-                                member.Name,
-                                member.DeclaringType.FullName), e);
-                    }
-                    throw;
-                }
-            }
-
-            // return the adjusted value
-            return value;
-        }
-
+        
         /// <summary>
         /// Accept changes to entities and relationships processed by this translator instance.
         /// </summary>
@@ -809,7 +719,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             catch (Exception e)
             {
                 // we should not be wrapping all exceptions
-                if (RequiresContext(e))
+                if (e.RequiresContext())
                 {
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
@@ -833,23 +743,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _providerServices.SetParameterValue(parameter, typeUsage, value);
         }
 
-        /// <summary>
-        /// Determines whether the given exception requires additional context from the update pipeline (in other
-        /// words, whether the exception should be wrapped in an UpdateException).
-        /// </summary>
-        /// <param name="e">Exception to test.</param>
-        /// <returns>true if exception should be wrapped; false otherwise</returns>
-        internal static bool RequiresContext(Exception e)
-        {
-            // if the exception isn't catchable, never wrap
-            if (!EntityUtil.IsCatchableExceptionType(e))
-            {
-                return false;
-            }
-
-            // update and incompatible provider exceptions already contain the necessary context
-            return !(e is UpdateException) && !(e is ProviderIncompatibleException);
-        }
 
         #region Private initialization methods
 

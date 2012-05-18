@@ -6,6 +6,7 @@
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -234,7 +235,7 @@
             Contract.Requires(expression != null);
 
             path = null;
-            var withoutConvert = expression.RemoveConvert(); // Removes boxing
+            var withoutConvert = ExpressionExtensions.RemoveConvert(expression); // Removes boxing
             var memberExpression = withoutConvert as MemberExpression;
             var callExpression = withoutConvert as MethodCallExpression;
 

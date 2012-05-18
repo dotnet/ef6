@@ -2,6 +2,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Xml.Linq;
     using Xunit;

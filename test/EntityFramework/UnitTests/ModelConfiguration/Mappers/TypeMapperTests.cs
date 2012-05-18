@@ -149,7 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             new MockAssembly(mockType1);
             new MockAssembly(mockType2);
 
-            mockModelConfiguration.SetupGet(m => m.ConfiguredTypes).Returns(mockType2.Object.AsEnumerable());
+            mockModelConfiguration.SetupGet(m => m.ConfiguredTypes).Returns(new[] { mockType2.Object });
 
             new TypeMapper(new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), model)).MapEntityType(mockType1);
 
@@ -202,7 +202,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             mockType1.Setup(t => t.GetEnumNames()).Returns(new string[] { });
             mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
             mockType2.SetupGet(t => t.IsEnum).Returns(true);
-            
+
             var modelConfiguration = new ModelConfiguration();
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
@@ -276,12 +276,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var model = new EdmModel().Initialize();
             var mockType = new MockType("Foo");
-            
+
             mockType.SetupGet(t => t.IsEnum).Returns(true);
             mockType.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
             mockType.Setup(t => t.GetEnumNames()).Returns(new string[] { });
             mockType.Setup(t => t.GetEnumValues()).Returns(new int[] { });
-            
+
             var modelConfiguration = new ModelConfiguration();
 
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));

@@ -20,6 +20,7 @@
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

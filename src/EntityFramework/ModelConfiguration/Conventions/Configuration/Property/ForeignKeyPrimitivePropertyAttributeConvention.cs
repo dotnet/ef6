@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 

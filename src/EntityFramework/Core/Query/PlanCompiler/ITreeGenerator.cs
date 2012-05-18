@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -1104,11 +1105,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     lambda = _iqtCommand.MetadataWorkspace.GetGeneratedFunctionDefinition(e.Function);
                 }
-                catch (Exception exception)
+                catch (Exception ex)
                 {
-                    if (EntityUtil.IsCatchableExceptionType(exception))
+                    if (ex.IsCatchableExceptionType())
                     {
-                        throw new EntityCommandCompilationException(Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), exception);
+                        throw new EntityCommandCompilationException(Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), ex);
                     }
                     throw;
                 }

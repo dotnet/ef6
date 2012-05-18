@@ -42,14 +42,14 @@
         /// Gets of sets the command timeout for update operations. If null, indicates that the default timeout
         /// for the provider should be used.
         /// </summary>
-        public Int32? CommandTimeout { get; set; }
+        public int? CommandTimeout { get; set; }
 
         /// <summary>
         /// Persist modifications described in the given cache.
         /// </summary>
         /// <param name="entityCache">Entity cache containing changes to persist to the store.</param>
         /// <returns>Number of cache entries affected by the udpate.</returns>
-        public Int32 Update(IEntityStateManager entityCache)
+        public int Update(IEntityStateManager entityCache)
         {
             if (!IsStateManagerDirty(entityCache))
             {

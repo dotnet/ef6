@@ -10,6 +10,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.IO;
     using Moq;

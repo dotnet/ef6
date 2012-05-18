@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new ProviderIncompatibleException(Strings.ProviderDidNotCreateACommandDefinition, e);
                 }
@@ -143,7 +144,7 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnAProviderManifestToken, e);
                 }
@@ -171,7 +172,7 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnAProviderManifest, e);
                 }
@@ -199,7 +200,7 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices, e);
                 }
@@ -225,7 +226,7 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices, e);
                 }

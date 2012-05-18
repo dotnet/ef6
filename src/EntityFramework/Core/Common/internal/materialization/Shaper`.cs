@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -201,7 +202,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 }
 
                 // wrap exception if necessary
-                if (EntityUtil.IsCatchableEntityExceptionType(e))
+                if (e.IsCatchableEntityExceptionType())
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
                 }

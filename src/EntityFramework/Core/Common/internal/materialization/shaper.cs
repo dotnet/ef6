@@ -9,6 +9,7 @@
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Reflection;
 
@@ -924,7 +925,7 @@
                     }
                     catch (Exception e)
                     {
-                        if (EntityUtil.IsCatchableExceptionType(e))
+                        if (e.IsCatchableExceptionType())
                         {
                             // determine if the problem is with the result type
                             // (note that if we throw on this call, it's ok

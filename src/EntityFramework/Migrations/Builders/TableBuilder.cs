@@ -3,6 +3,7 @@ namespace System.Data.Entity.Migrations.Builders
     using System.ComponentModel;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Migrations.Builders
 
             keyExpression
                 .GetPropertyAccessList()
-                .Select(p => p.Name)
+                .Select(p => p.Last().Name)
                 .Each(c => addPrimaryKeyOperation.Columns.Add(c));
 
             _createTableOperation.PrimaryKey = addPrimaryKeyOperation;
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Migrations.Builders
 
             indexExpression
                 .GetPropertyAccessList()
-                .Select(p => p.Name)
+                .Select(p => p.Last().Name)
                 .Each(c => createIndexOperation.Columns.Add(c));
 
             _migration.AddOperation(createIndexOperation);
@@ -164,7 +165,7 @@ namespace System.Data.Entity.Migrations.Builders
 
             dependentKeyExpression
                 .GetPropertyAccessList()
-                .Select(p => p.Name)
+                .Select(p => p.Last().Name)
                 .Each(c => addForeignKeyOperation.DependentColumns.Add(c));
 
             _migration.AddOperation(addForeignKeyOperation);

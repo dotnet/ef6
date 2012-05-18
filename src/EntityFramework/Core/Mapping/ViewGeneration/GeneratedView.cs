@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -292,7 +293,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 // Catching all the exception types since Query parser seems to be throwing veriety of
                 // exceptions - EntityException, ArgumentException, ArgumentNullException etc.
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     parserException = e;
                 }

@@ -2,7 +2,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -42,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     return false;
                 }
@@ -75,7 +77,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (Exception e)
             {
-                if (!EntityUtil.IsCatchableExceptionType(e))
+                if (!e.IsCatchableExceptionType())
                 {
                     throw; // StackOverflow, OutOfMemory, ...
                 }

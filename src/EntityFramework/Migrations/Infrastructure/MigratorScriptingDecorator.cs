@@ -4,6 +4,7 @@
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;

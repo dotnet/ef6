@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using CompiledQueryParameters =
@@ -90,7 +91,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             catch (Exception e)
             {
                 // we should not be wrapping all exceptions
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     // we don't wan't folks to have to know all the various types of exceptions that can 
                     // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  

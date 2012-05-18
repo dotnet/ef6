@@ -12,6 +12,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
