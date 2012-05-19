@@ -535,7 +535,7 @@
             }
             catch (Exception e)
             {
-                if (EntityUtil.IsCatchableExceptionType(e))
+                if (e.IsCatchableExceptionType())
                 {
                     var exceptionMessage = EntityRes.GetString(EntityRes.EntityClient_ProviderSpecificError, @"Open");
                     throw new EntityException(exceptionMessage, e);
