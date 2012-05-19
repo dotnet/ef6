@@ -5,8 +5,10 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Internal;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
     using Moq;
     using Xunit;
@@ -65,11 +67,11 @@
                 var connection = new EntityConnection(internalConnectionMock.Object);
 
                 setter(connection);
-                internalConnectionMock.VerifySet(m => mockSetter(m) , Times.Once());
+                internalConnectionMock.VerifySet(m => mockSetter(m), Times.Once());
             }
 
             private void VerifyMethod(
-                Action<EntityConnection> methodInvoke, 
+                Action<EntityConnection> methodInvoke,
                 Expression<Action<InternalEntityConnection>> mockMethodInvoke)
             {
                 Assert.NotNull(methodInvoke);
@@ -94,7 +96,7 @@
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
                 Assert.Equal(
-                    Strings.EntityClient_ConnectionStringNeededBeforeOperation, 
+                    Strings.EntityClient_ConnectionStringNeededBeforeOperation,
                     Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
             }
 
@@ -151,7 +153,7 @@
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
                 var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
-                
+
                 entityConnection.Open();
 
                 dbConnectionMock.Verify(m => m.Open(), Times.Once());
@@ -219,7 +221,7 @@
 
         public class OpenAsync
         {
-            ////[Fact]
+            [Fact]
             public void Exception_is_thrown_if_dbConnection_is_null()
             {
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
@@ -227,127 +229,193 @@
                 var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, null, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                Assert.Equal(
+                AssertThrowsInAsyncMethod<InvalidOperationException>(
                     Strings.EntityClient_ConnectionStringNeededBeforeOperation,
-                    Assert.Throws<InvalidOperationException>(() => entityConnection.OpenAsync()).Message);
+                    () => entityConnection.OpenAsync().Wait());
             }
 
-            ////[Fact]
-            public void Opening_EntityConnection_asynchronously_sets_its_State_to_Opened()
+            [Fact]
+            public async void Opening_EntityConnection_asynchronously_sets_its_State_to_Opened()
             {
-                var dbConnectionState = ConnectionState.Closed;
-                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync()).Callback(() => dbConnectionState = ConnectionState.Open);
-                dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
-
+                var dbConnection = new DbConnectionMock();
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
                 internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
+                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnection, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                entityConnection.OpenAsync();
+                await entityConnection.OpenAsync();
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
 
-            ////[Fact]
-            public void Exception_is_thrown_when_trying_to_asynchronously_open_already_opened_connection()
+            [Fact]
+            public async void Exception_is_thrown_when_trying_to_asynchronously_open_already_opened_connection()
             {
-                var dbConnectionState = ConnectionState.Closed;
-                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync()).Callback(() => dbConnectionState = ConnectionState.Open);
-                dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
-
+                var dbConnection = new DbConnectionMock();
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
                 internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
+                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnection, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                entityConnection.OpenAsync();
+                await entityConnection.OpenAsync();
 
-                Assert.Equal(
+                AssertThrowsInAsyncMethod<InvalidOperationException>(
                     Strings.EntityClient_CannotReopenConnection,
-                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
+                    () => entityConnection.OpenAsync().Wait());
             }
 
-            ////[Fact]
-            public void Underlying_dbConnection_is_opened_if_it_was_initially_closed()
+            [Fact]
+            public async void Underlying_dbConnection_is_opened_if_it_was_initially_closed()
             {
-                var dbConnectionState = ConnectionState.Closed;
-                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync()).Callback(() => dbConnectionState = ConnectionState.Open);
-                dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
-
+                var dbConnection = new DbConnectionMock();
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
                 internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
+                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnection, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                entityConnection.OpenAsync();
+                await entityConnection.OpenAsync();
 
-                dbConnectionMock.Verify(m => m.OpenAsync(), Times.Once());
+                Assert.Equal(1, dbConnection.OpenAsyncCallCount);
             }
 
-            ////[Fact]
-            public void Underlying_dbConnection_is_not_being_reopened_if_it_was_initally_open()
+            [Fact]
+            public async void Underlying_dbConnection_is_not_being_reopened_if_it_was_initally_open()
             {
-                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
-
+                var dbConnection = new DbConnectionMock(ConnectionState.Open);
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
                 internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
+                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnection, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                entityConnection.OpenAsync();
+                await entityConnection.OpenAsync();
 
-                dbConnectionMock.Verify(m => m.OpenAsync(), Times.Never());
-                Assert.Equal(ConnectionState.Open, dbConnectionMock.Object.State);
+                Assert.Equal(0, dbConnection.OpenAsyncCallCount);
             }
 
-            ////[Fact]
+            [Fact]
             public void Underlying_dbConnection_is_being_closed_if_it_was_initially_closed_and_metadata_initialization_fails()
             {
-                var dbConnectionState = ConnectionState.Closed;
-                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync()).Callback(() => dbConnectionState = ConnectionState.Open);
-                dbConnectionMock.Setup(m => m.Close()).Verifiable();
-                dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
-
+                var dbConnection = new DbConnectionMock();
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
                 internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
+                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnection, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                Assert.Throws<InvalidOperationException>(() => entityConnection.OpenAsync());
+                AssertThrowsInAsyncMethod<InvalidOperationException>(null, () => entityConnection.OpenAsync().Wait());
 
-                dbConnectionMock.Verify(m => m.Close(), Times.Once());
+                Assert.Equal(1, dbConnection.CloseCallCount);
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
             }
 
-            ////[Fact]
+            [Fact]
             public void Underlying_dbConnection_is_not_being_closed_if_it_was_initially_opened_and_metadata_initialization_fails()
             {
-                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync()).Verifiable();
-                dbConnectionMock.Setup(m => m.Close()).Verifiable();
-                dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
-
+                var dbConnection = new DbConnectionMock(ConnectionState.Open);
                 var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
                 internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
                 var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
+                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnection, true);
                 var entityConnection = new EntityConnection(internalEntityConnection);
 
-                Assert.Throws<InvalidOperationException>(() => entityConnection.OpenAsync());
-
-                dbConnectionMock.Verify(m => m.Close(), Times.Never());
+                AssertThrowsInAsyncMethod<InvalidOperationException>(null, () => entityConnection.OpenAsync().Wait());
+                Assert.Equal(0, dbConnection.CloseCallCount);
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
+            }
+
+            private class DbConnectionMock : DbConnection
+            {
+                private ConnectionState _connectionState;
+
+                public DbConnectionMock(ConnectionState initialConnectionState = ConnectionState.Closed)
+                {
+                    _connectionState = initialConnectionState;
+                }
+
+                public override Task OpenAsync(CancellationToken cancellationToken)
+                {
+                    OpenAsyncCallCount++;
+                    _connectionState = ConnectionState.Open;
+                    return Task.FromResult(1);
+                }
+
+                public int OpenAsyncCallCount { get; private set; }
+
+                public int CloseCallCount { get; private set; }
+
+                public override ConnectionState State
+                {
+                    get { return _connectionState; }
+                }
+
+                protected override DbTransaction BeginDbTransaction(Data.IsolationLevel isolationLevel)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public override void ChangeDatabase(string databaseName)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public override void Close()
+                {
+                    CloseCallCount++;
+                    _connectionState = ConnectionState.Closed;
+                }
+
+                public override string ConnectionString
+                {
+                    get
+                    {
+                        throw new NotImplementedException();
+                    }
+                    set
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+
+                protected override DbCommand CreateDbCommand()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public override string DataSource
+                {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public override string Database
+                {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public override void Open()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public override string ServerVersion
+                {
+                    get { throw new NotImplementedException(); }
+                }
+            }
+        }
+
+        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Xunit.Assert.ThrowsDelegate testCode)
+            where TException : Exception
+        {
+            var exception = Assert.Throws<AggregateException>(testCode);
+            var innerException = exception.InnerExceptions.Single();
+            Assert.IsType<TException>(innerException);
+            if (expectedMessage != null)
+            {
+                Assert.Equal(expectedMessage, innerException.Message);
             }
         }
     }
