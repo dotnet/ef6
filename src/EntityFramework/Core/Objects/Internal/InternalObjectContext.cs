@@ -2900,7 +2900,7 @@
         public virtual void CreateDatabase()
         {
             var storeConnection = _connection.StoreConnection;
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             services.CreateDatabase(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -2910,7 +2910,7 @@
         public virtual void DeleteDatabase()
         {
             var storeConnection = _connection.StoreConnection;
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             services.DeleteDatabase(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -2920,7 +2920,7 @@
         public virtual bool DatabaseExists()
         {
             var storeConnection = _connection.StoreConnection;
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             return services.DatabaseExists(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -2929,7 +2929,7 @@
         /// </summary>
         public virtual String CreateDatabaseScript()
         {
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             var targetProviderManifestToken = GetStoreItemCollection().StoreProviderManifestToken;
             return services.CreateDatabaseScript(targetProviderManifestToken, GetStoreItemCollection());
         }

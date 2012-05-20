@@ -698,12 +698,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var providerFactory = DbProviderFactories.GetFactory(providerInfo.ProviderInvariantName);
 
-            using (var connection = providerFactory.CreateConnection())
-            {
-                var providerServices = DbProviderServices.GetProviderServices(connection);
-
-                return providerServices.GetProviderManifest(providerInfo.ProviderManifestToken);
-            }
+            return providerFactory.GetProviderServices().GetProviderManifest(providerInfo.ProviderManifestToken);
         }
 
         public virtual string GetQualifiedTableName(string table, string schema)

@@ -1,18 +1,12 @@
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Core.Common;
-    using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.SqlClient;
     using Xunit;
 
     public class AlterColumnOperationTests
     {
-        private readonly DbProviderManifest _providerManifest
-            = DbProviderServices.GetProviderServices(new SqlConnection()).GetProviderManifest("2008");
-
         [Fact]
         public void Can_get_and_set_table_and_column_info()
         {

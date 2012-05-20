@@ -318,7 +318,7 @@ namespace System.Data.Entity
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
             var providerFactory = DbProviderFactories.GetFactory(providerInfo.ProviderInvariantName);
-            var providerServices = DbProviderServices.GetProviderServices(providerFactory.CreateConnection());
+            var providerServices = providerFactory.GetProviderServices();
             var providerManifest = providerServices.GetProviderManifest(providerInfo.ProviderManifestToken);
 
             return providerManifest;

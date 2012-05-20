@@ -58,7 +58,7 @@
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
 
-            var storeProviderServices = DbProviderServices.GetProviderServices(storeProviderFactory);
+            var storeProviderServices = storeProviderFactory.GetProviderServices();
 
             try
             {
@@ -473,7 +473,7 @@
             var hasOutputParameters = false;
             if (storeProviderCommand.Parameters != null) // SQLBUDT 519066
             {
-                var storeProviderServices = DbProviderServices.GetProviderServices(entityCommand.Connection.StoreProviderFactory);
+                var storeProviderServices = entityCommand.Connection.StoreProviderFactory.GetProviderServices();
 
                 foreach (DbParameter storeParameter in storeProviderCommand.Parameters)
                 {

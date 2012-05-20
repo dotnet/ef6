@@ -611,63 +611,6 @@ namespace System.Data.Entity.Core
             return CheckArgumentNull(value, parameterName);
         }
 
-        /// <summary>
-        /// Given a provider factory, this returns the provider invariant name for the provider. 
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        internal static bool TryGetProviderInvariantName(DbProviderFactory providerFactory, out string invariantName)
-        {
-            Debug.Assert(providerFactory != null);
-
-            var connectionProviderFactoryType = providerFactory.GetType();
-            var connectionProviderFactoryAssemblyName = new AssemblyName(
-                connectionProviderFactoryType.Assembly.FullName);
-
-            foreach (DataRow row in DbProviderFactories.GetFactoryClasses().Rows)
-            {
-                var assemblyQualifiedTypeName = (string)row[AssemblyQualifiedNameIndex];
-
-                AssemblyName rowProviderFactoryAssemblyName = null;
-
-                // parse the provider factory assembly qualified type name
-                Type.GetType(
-                    assemblyQualifiedTypeName,
-                    a =>
-                        {
-                            rowProviderFactoryAssemblyName = a;
-
-                            return null;
-                        },
-                    (_, __, ___) => null);
-
-                if (rowProviderFactoryAssemblyName != null)
-                {
-                    if (string.Equals(
-                        connectionProviderFactoryAssemblyName.Name,
-                        rowProviderFactoryAssemblyName.Name,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        try
-                        {
-                            var foundFactory = DbProviderFactories.GetFactory(row);
-
-                            if (foundFactory.GetType().Equals(connectionProviderFactoryType))
-                            {
-                                invariantName = (string)row[InvariantNameIndex];
-                                return true;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.Fail("GetFactory failed with: " + ex);
-                            // Ignore bad providers.
-                        }
-                    }
-                }
-            }
-            invariantName = null;
-            return false;
-        }
 
         // Invalid string argument
         internal static void CheckStringArgument(string value, string parameterName)

@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _adapter = adapter;
 
             // connection state
-            _providerServices = DbProviderServices.GetProviderServices(adapter.Connection.StoreProviderFactory);
+            _providerServices = adapter.Connection.StoreProviderFactory.GetProviderServices();
         }
 
         /// <summary>

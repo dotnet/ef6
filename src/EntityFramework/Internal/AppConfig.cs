@@ -2,10 +2,14 @@
 {
     using System.Collections.Specialized;
     using System.Configuration;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -13,7 +17,7 @@
     /// </summary>
     internal class AppConfig
     {
-        private const string _efSectionName = "entityFramework";
+        private const string EFSectionName = "entityFramework";
 
         private static readonly AppConfig _defaultInstance = new AppConfig();
         private readonly KeyValueConfigurationCollection _appSettings;
@@ -39,7 +43,7 @@
             : this(
                 configuration.ConnectionStrings.ConnectionStrings,
                 configuration.AppSettings.Settings,
-                (EntityFrameworkSection)configuration.GetSection(_efSectionName))
+                (EntityFrameworkSection)configuration.GetSection(EFSectionName))
         {
             Contract.Requires(configuration != null);
         }
@@ -65,11 +69,11 @@
             : this(
                 ConfigurationManager.ConnectionStrings,
                 Convert(ConfigurationManager.AppSettings),
-                (EntityFrameworkSection)ConfigurationManager.GetSection(_efSectionName))
+                (EntityFrameworkSection)ConfigurationManager.GetSection(EFSectionName))
         {
         }
 
-        private AppConfig(
+        internal AppConfig(
             ConnectionStringSettingsCollection connectionStrings,
             KeyValueConfigurationCollection appSettings,
             EntityFrameworkSection entityFrameworkSettings)
@@ -215,6 +219,64 @@
                 settings.Add(key, ConfigurationManager.AppSettings[key]);
             }
             return settings;
+        }
+
+        public DbProviderServices GetDbProviderServices(string providerInvariantName)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+
+            var providerSection =
+                _entityFrameworkSettings.Providers.OfType<ProviderElement>().FirstOrDefault(
+                    e => providerInvariantName.Equals(e.InvariantName, StringComparison.OrdinalIgnoreCase));
+
+            var providerTypeName = providerSection != null
+                                       ? providerSection.ProviderTypeName
+                                       : GetProviderTypeByConvention(providerInvariantName);
+            var providerType = Type.GetType(providerTypeName, throwOnError: false);
+
+            if (providerType == null)
+            {
+                throw new InvalidOperationException(Strings.EF6Providers_ProviderTypeMissing(providerTypeName, providerInvariantName));
+            }
+
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            var instanceMember = providerType.GetProperty("Instance", bindingFlags)
+                                 ?? (MemberInfo)providerType.GetField("Instance", bindingFlags);
+            if (instanceMember == null)
+            {
+                throw new InvalidOperationException(Strings.EF6Providers_InstanceMissing(providerTypeName));
+            }
+
+            var providerInstance = instanceMember.GetValue() as DbProviderServices;
+            if (providerInstance == null)
+            {
+                throw new InvalidOperationException(Strings.EF6Providers_NotDbProviderServices(providerTypeName));
+            }
+
+            return providerInstance;
+        }
+
+        public virtual string GetProviderTypeByConvention(string providerInvariantName)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+
+            if (providerInvariantName.Equals("System.Data.SqlClient", StringComparison.OrdinalIgnoreCase))
+            {
+                const string sqlProviderTemplate = 
+                    "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+
+                return string.Format(
+                    CultureInfo.InvariantCulture, 
+                    sqlProviderTemplate, 
+                    new AssemblyName(typeof(DbContext).Assembly.FullName).Version);
+            }
+
+            if (providerInvariantName.Equals("System.Data.SqlServerCe.4.0", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotSupportedException("SQL Compact not supported yet.");
+            }
+
+            throw new InvalidOperationException(Strings.EF6Providers_NoProviderFound(providerInvariantName));
         }
     }
 }

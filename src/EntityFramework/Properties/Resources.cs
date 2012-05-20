@@ -13232,7 +13232,51 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.InvalidEdmMemberInstance); }
         }
+<<<<<<< HEAD
     }
+=======
+
+        /// <summary>
+        /// A string like "No Entity Framework provider not found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See [TODO: EF6 providers link] for more information."
+        /// </summary>
+        internal static string EF6Providers_NoProviderFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EF6Providers_NoProviderFound, p0);
+        }
+
+        /// <summary>
+        /// A string like "The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See [TODO: EF6 providers link] for more information."
+        /// </summary>
+        internal static string EF6Providers_ProviderTypeMissing(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.EF6Providers_ProviderTypeMissing, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider."
+        /// </summary>
+        internal static string EF6Providers_InstanceMissing(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EF6Providers_InstanceMissing, p0);
+        }
+
+        /// <summary>
+        /// A string like "The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that extends from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider."
+        /// </summary>
+        internal static string EF6Providers_NotDbProviderServices(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EF6Providers_NotDbProviderServices, p0);
+        }
+
+        /// <summary>
+        /// A string like "The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider."
+        /// </summary>
+        internal static string ProviderInvariantRepeatedInConfig(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ProviderInvariantRepeatedInConfig, p0);
+        }
+    } 
+>>>>>>> WelcomeToProviderland (Allow EF6 provider to be specified in config file.)
 
     /// <summary>
     ///    Strongly-typed and parameterized exception factory.
@@ -16857,9 +16901,14 @@ namespace System.Data.Entity.Resources
         internal const string EntityProxyTypeInfo_ProxyMetadataIsUnavailable = "EntityProxyTypeInfo_ProxyMetadataIsUnavailable";
         internal const string EntityProxyTypeInfo_DuplicateOSpaceType = "EntityProxyTypeInfo_DuplicateOSpaceType";
         internal const string InvalidEdmMemberInstance = "InvalidEdmMemberInstance";
-
-        private static EntityRes loader;
-        private readonly ResourceManager resources;
+        internal const string EF6Providers_NoProviderFound = "EF6Providers_NoProviderFound";
+        internal const string EF6Providers_ProviderTypeMissing = "EF6Providers_ProviderTypeMissing";
+        internal const string EF6Providers_InstanceMissing = "EF6Providers_InstanceMissing";
+        internal const string EF6Providers_NotDbProviderServices = "EF6Providers_NotDbProviderServices";
+        internal const string ProviderInvariantRepeatedInConfig = "ProviderInvariantRepeatedInConfig";
+        
+        static EntityRes loader = null;
+        ResourceManager resources;
 
         private EntityRes()
         {

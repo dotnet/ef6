@@ -158,14 +158,7 @@
                 // Therefore it is sufficient to identify whether EC(MW, DbConnection) is used
                 if (_userConnectionOptions == null)
                 {
-                    Debug.Assert(_storeConnection != null);
-
-                    string invariantName;
-                    if (!EntityUtil.TryGetProviderInvariantName(DbProviderFactories.GetFactory(_storeConnection), out invariantName))
-                    {
-                        Debug.Fail("Provider Invariant Name not found");
-                        invariantName = "";
-                    }
+                    Contract.Assert(_storeConnection != null);
 
                     return string.Format(
                         CultureInfo.InvariantCulture,
@@ -175,7 +168,7 @@
                         s_providerConnectionString,
                         s_readerPrefix,
                         _metadataWorkspace.MetadataWorkspaceId,
-                        invariantName,
+                        _storeConnection.GetProviderInvariantName(),
                         FormatProviderString(_storeConnection.ConnectionString));
                 }
 

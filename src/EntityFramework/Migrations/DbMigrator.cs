@@ -112,9 +112,6 @@ namespace System.Data.Entity.Migrations
                 _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.DefaultSchema);
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                                         // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
-                                         // Should fix this post EF5.
-                                             : DbProviderServices.GetProviderServices(connection).
                                                    GetProviderManifestTokenChecked(connection);
 
                 _targetDatabase
