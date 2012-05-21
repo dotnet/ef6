@@ -129,6 +129,8 @@
     <Compile Include="Migrations\Edm\ModelCompressorTests.cs" />
     <Compile Include="Internal\ConfigFile\ParameterCollectionTests.cs" />
     <Compile Include="Internal\ConfigFile\ParameterElementTests.cs" />
+    <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
+    <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />
     <Compile Include="Utilities\DbContextExtensionsTests.cs" />
