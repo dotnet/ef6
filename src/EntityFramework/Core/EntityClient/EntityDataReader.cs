@@ -472,9 +472,16 @@ namespace System.Data.Entity.Core.EntityClient
         /// true if there are more result sets;
         /// false otherwise
         /// </returns>
-        public override Task<bool> NextResultAsync(CancellationToken cancellationToken)
+        public async override Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _storeDataReader.NextResultAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
+            }
         }
 
         /// <summary>
@@ -501,7 +508,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </returns>
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _storeDataReader.ReadAsync(cancellationToken);
         }
 
         /// <summary>

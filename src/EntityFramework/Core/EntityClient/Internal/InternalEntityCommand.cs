@@ -305,10 +305,10 @@
         /// </summary>
         public virtual EntityTransaction Transaction
         {
-            get 
+            get
             {
                 // SQLBU 496829
-                return _transaction; 
+                return _transaction;
             }
             set
             {
@@ -362,22 +362,27 @@
         /// </summary>
         public virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
-            Prepare(); // prepare the query first
-            var reader = _entityDataReaderFactory.CreateEntityDataReader(
-                this.EntityCommandWrapper, 
-                _commandDefinition.Execute(this.EntityCommandWrapper, behavior),
-                behavior);
-
+            // prepare the query first
+            Prepare();
+            var dbDataReader = _commandDefinition.Execute(this.EntityCommandWrapper, behavior);
+            var reader = _entityDataReaderFactory.CreateEntityDataReader(this.EntityCommandWrapper, dbDataReader, behavior);
             _dataReader = reader;
+
             return reader;
         }
 
         /// <summary>
         /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        public virtual Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+        public virtual async Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // prepare the query first
+            Prepare();
+            var dbDataReader = await _commandDefinition.ExecuteAsync(this.EntityCommandWrapper, behavior, cancellationToken);
+            var reader = _entityDataReaderFactory.CreateEntityDataReader(this.EntityCommandWrapper, dbDataReader, behavior);
+            _dataReader = reader;
+
+            return reader;
         }
 
         /// <summary>
@@ -385,21 +390,23 @@
         /// </summary>
         public virtual int ExecuteNonQuery()
         {
-            return ExecuteScalar(
-                reader =>
-                    {
-                        // consume reader before checking records affected
-                        CommandHelper.ConsumeReader(reader);
-                        return reader.RecordsAffected;
-                    });
+            using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
+            {
+                CommandHelper.ConsumeReader(reader);
+                return reader.RecordsAffected;
+            }
         }
 
         /// <summary>
         /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        public virtual Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
+        public virtual async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var reader = await ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+            {
+                await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                return reader.RecordsAffected;
+            }
         }
 
         /// <summary>
@@ -407,28 +414,14 @@
         /// </summary>
         public virtual object ExecuteScalar()
         {
-            return ExecuteScalar(
-                reader =>
-                    {
-                        var result = reader.Read() ? reader.GetValue(0) : null;
-                        // consume reader before retrieving parameters
-                        CommandHelper.ConsumeReader(reader);
-                        return result;
-                    });
-        }
-
-        /// <summary>
-        /// Executes a reader and retrieves a scalar value using the given resultSelector delegate
-        /// </summary>
-        private T_Result ExecuteScalar<T_Result>(Func<DbDataReader, T_Result> resultSelector)
-        {
-            T_Result result;
             using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
             {
-                result = resultSelector(reader);
-            }
+                var result = reader.Read() ? reader.GetValue(0) : null;
 
-            return result;
+                // consume reader before retrieving parameters
+                CommandHelper.ConsumeReader(reader);
+                return result;
+            }
         }
 
         /// <summary>
@@ -595,6 +588,24 @@
             return string.Empty;
         }
 
+
+        /// <summary>
+        /// See comments on <see cref="EntityCommand"/> class.
+        /// </summary>
+        internal virtual EntityTransaction ValidateAndGetEntityTransaction()
+        {
+            // Check to make sure that either the command has no transaction associated with it, or it
+            // matches the one used by the connection
+            if (Transaction != null && Transaction != Connection.CurrentTransaction)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_InvalidTransactionForCommand);
+            }
+
+            // Now we have asserted that EntityCommand either has no transaction or has one that matches the
+            // one used in the connection, we can simply use the connection's transaction object
+            return Connection.CurrentTransaction;
+        }
+
         /// <summary>
         /// Gets an entitycommanddefinition from cache if a match is found for the given cache key.
         /// </summary>
@@ -705,7 +716,7 @@
         internal virtual Dictionary<string, TypeUsage> GetParameterTypeUsage()
         {
             Debug.Assert(null != _parameters, "_parameters must not be null");
-            
+
             // Extract type metadata objects from the parameters to be used by CqlQuery.Compile
             var queryParams = new Dictionary<string, TypeUsage>(_parameters.Count);
             foreach (EntityParameter parameter in _parameters)

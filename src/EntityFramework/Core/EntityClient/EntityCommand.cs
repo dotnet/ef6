@@ -381,6 +381,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
+        /// Given an entity command, returns the associated entity transaction and performs validation
+        /// to ensure the transaction is consistent.
+        /// </summary>
+        /// <returns>Entity transaction</returns>
+        internal EntityTransaction ValidateAndGetEntityTransaction()
+        {
+            return _internalEntityCommand.ValidateAndGetEntityTransaction();
+        }
+
+        /// <summary>
         /// Returns the store command text.
         /// </summary>
         /// <returns></returns>

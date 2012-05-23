@@ -33,12 +33,10 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// An asynchronous version of ConsumeReader, which
-        /// consumes all rows and result sets from the reader. This allows client to retrieve
+        /// Asynchronously consumes all rows and result sets from the reader. This allows client to retrieve
         /// parameter values and intercept any store exceptions.
         /// </summary>
-        /// <param name="reader">Reader to consume.</param>
-        internal async static Task ConsumeReaderAsync(DbDataReader reader, CancellationToken cancellationToken)
+        internal static async Task ConsumeReaderAsync(DbDataReader reader, CancellationToken cancellationToken)
         {
             if (null != reader && !reader.IsClosed)
             {
@@ -80,30 +78,6 @@ namespace System.Data.Entity.Core.Common.Utils
             {
                 throw new InvalidOperationException(Strings.EntityClient_InvalidStoredProcedureCommandText);
             }
-        }
-
-        /// <summary>
-        /// Given an entity command, returns the associated entity transaction and performs validation
-        /// to ensure the transaction is consistent.
-        /// </summary>
-        /// <param name="entityCommand">Entity command instance. Must not be null.</param>
-        /// <returns>Entity transaction</returns>
-        internal static EntityTransaction GetEntityTransaction(EntityCommand entityCommand)
-        {
-            Debug.Assert(null != entityCommand);
-            var entityTransaction = entityCommand.Transaction;
-
-            // Check to make sure that either the command has no transaction associated with it, or it
-            // matches the one used by the connection
-            if (entityTransaction != null
-                && entityTransaction != entityCommand.Connection.CurrentTransaction)
-            {
-                throw new InvalidOperationException(Strings.EntityClient_InvalidTransactionForCommand);
-            }
-            // Now we have asserted that EntityCommand either has no transaction or has one that matches the
-            // one used in the connection, we can simply use the connection's transaction object
-            entityTransaction = entityCommand.Connection.CurrentTransaction;
-            return entityTransaction;
         }
 
         /// <summary>

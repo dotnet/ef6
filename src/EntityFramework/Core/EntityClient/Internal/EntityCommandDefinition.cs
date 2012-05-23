@@ -18,6 +18,8 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class EntityCommandDefinition : DbCommandDefinition
     {
@@ -43,6 +45,8 @@
         /// </summary>
         private readonly Set<EntitySet> _entitySets;
 
+        private BridgeDataReaderFactory _bridgeDataReaderFactory;
+
         #endregion
 
         #region constructors
@@ -53,7 +57,7 @@
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree, BridgeDataReaderFactory factory = null)
         {
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
@@ -163,13 +167,17 @@
 
                 throw;
             }
+
+            _bridgeDataReaderFactory = factory ?? new BridgeDataReaderFactory();
         }
 
         /// <summary>
         /// Constructor for testing/mocking purposes.
         /// </summary>
-        internal EntityCommandDefinition()
+        protected EntityCommandDefinition(BridgeDataReaderFactory factory = null, List<DbCommandDefinition> mappedCommandDefinitions = null)
         {
+            _bridgeDataReaderFactory = factory ?? new BridgeDataReaderFactory();
+            _mappedCommandDefinitions = mappedCommandDefinitions;
         }
 
         /// <summary>
@@ -379,9 +387,6 @@
         /// to the command objects, executes them, and builds the result assembly 
         /// structures needed to return the data reader
         /// </summary>
-        /// <param name="entityCommand"></param>
-        /// <param name="behavior"></param>
-        /// <returns></returns>
         /// <exception cref="InvalidOperationException">behavior must specify CommandBehavior.SequentialAccess</exception>
         /// <exception cref="InvalidOperationException">input parameters in the entityCommand.Parameters collection must have non-null values.</exception>
         internal virtual DbDataReader Execute(EntityCommand entityCommand, CommandBehavior behavior)
@@ -410,9 +415,60 @@
                     }
                     else
                     {
-                        result = BridgeDataReader.Create(
-                            storeDataReader, columnMap, entityCommand.Connection.GetMetadataWorkspace(),
-                            GetNextResultColumnMaps(storeDataReader));
+                        var metadataWorkspace = entityCommand.Connection.GetMetadataWorkspace();
+                        var nextResultColumnMaps = GetNextResultColumnMaps(storeDataReader);
+                        result = _bridgeDataReaderFactory.CreateBridgeDataReader(
+                            storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);
+                    }
+                }
+                catch
+                {
+                    // dispose of store reader if there is an error creating the BridgeDataReader
+                    storeDataReader.Dispose();
+                    throw;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Internal execute method -- Asynchronously copies command information from the map command 
+        /// to the command objects, executes them, and builds the result assembly 
+        /// structures needed to return the data reader
+        /// </summary>
+        /// <exception cref="InvalidOperationException">behavior must specify CommandBehavior.SequentialAccess</exception>
+        /// <exception cref="InvalidOperationException">input parameters in the entityCommand.Parameters collection must have non-null values.</exception>
+        internal virtual async Task<DbDataReader> ExecuteAsync(EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
+        {
+            if (CommandBehavior.SequentialAccess != (behavior & CommandBehavior.SequentialAccess))
+            {
+                throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
+            }
+
+            var storeDataReader = await ExecuteStoreCommandsAsync(entityCommand, behavior, cancellationToken);
+            DbDataReader result = null;
+
+            // If we actually executed something, then go ahead and construct a bridge
+            // data reader for it.
+            if (null != storeDataReader)
+            {
+                try
+                {
+                    var columnMap = CreateColumnMap(storeDataReader, 0);
+                    if (null == columnMap)
+                    {
+                        // For a query with no result type (and therefore no column map), consume the reader.
+                        // When the user requests Metadata for this reader, we return nothing.
+                        await CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken);
+                        result = storeDataReader;
+                    }
+                    else
+                    {
+                        var metadataWorkspace = entityCommand.Connection.GetMetadataWorkspace();
+                        var nextResultColumnMaps = GetNextResultColumnMaps(storeDataReader);
+                        result = _bridgeDataReaderFactory.CreateBridgeDataReader(
+                            storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);
                     }
                 }
                 catch
@@ -437,9 +493,62 @@
         /// <summary>
         /// Execute the store commands, and return IteratorSources for each one
         /// </summary>
-        /// <param name="entityCommand"></param>
-        /// <param name="behavior"></param>
         internal virtual DbDataReader ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+        {
+            var storeProviderCommand = PrepareEntityCommandBeforeExecution(entityCommand);
+
+            DbDataReader reader = null;
+            try
+            {
+                reader = storeProviderCommand.ExecuteReader(behavior & ~CommandBehavior.SequentialAccess);
+            }
+            catch (Exception e)
+            {
+                // we should not be wrapping all exceptions
+                if (e.IsCatchableExceptionType())
+                {
+                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
+                    // the inner exception of it.
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
+                }
+            
+                throw;
+            }
+            
+            return reader;
+        }
+
+        /// <summary>
+        /// Execute the store commands, and return IteratorSources for each one
+        /// </summary>
+        internal virtual async Task<DbDataReader> ExecuteStoreCommandsAsync(EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
+        {
+            var storeProviderCommand = PrepareEntityCommandBeforeExecution(entityCommand);
+
+            DbDataReader reader = null;
+            try
+            {
+                reader = await storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                // we should not be wrapping all exceptions
+                if (e.IsCatchableExceptionType())
+                {
+                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
+                    // the inner exception of it.
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
+                }
+
+                throw;
+            }
+
+            return reader;
+        }
+
+        private DbCommand PrepareEntityCommandBeforeExecution(EntityCommand entityCommand)
         {
             // SQLPT #120007433 is the work item to implement MARS support, which we
             //                  need to do here, but since the PlanCompiler doesn't 
@@ -449,7 +558,7 @@
                 throw new NotSupportedException("MARS");
             }
 
-            var entityTransaction = CommandHelper.GetEntityTransaction(entityCommand);
+            var entityTransaction = entityCommand.ValidateAndGetEntityTransaction();
             var definition = _mappedCommandDefinitions[0];
             var storeProviderCommand = definition.CreateCommand();
 
@@ -503,26 +612,7 @@
                 entityCommand.SetStoreProviderCommand(storeProviderCommand);
             }
 
-            DbDataReader reader = null;
-            try
-            {
-                reader = storeProviderCommand.ExecuteReader(behavior & ~CommandBehavior.SequentialAccess);
-            }
-            catch (Exception e)
-            {
-                // we should not be wrapping all exceptions
-                if (e.IsCatchableExceptionType())
-                {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
-                    // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
-                    // the inner exception of it.
-                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
-                }
-            
-                throw;
-            }
-            
-            return reader;
+            return storeProviderCommand;
         }
 
         /// <summary>
@@ -671,6 +761,21 @@
             {
                 return ColumnMapFactory.CreateFunctionImportStructuralTypeColumnMap(
                     reader, _mapping, _resultSetIndex, _entitySet, _baseStructuralType);
+            }
+        }
+
+        /// <summary>
+        /// Class for test purposes only, used to abstract the creation of bridge <see cref="DbDataReader"/> object.
+        /// </summary>
+        internal class BridgeDataReaderFactory
+        {
+            internal virtual DbDataReader CreateBridgeDataReader(
+                DbDataReader storeDataReader, 
+                ColumnMap columnMap, 
+                MetadataWorkspace metadataWorkspace, 
+                IEnumerable<ColumnMap> nextResultColumnMaps)
+            {
+                return BridgeDataReader.Create(storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);
             }
         }
 

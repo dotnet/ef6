@@ -5,6 +5,7 @@
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -54,24 +55,12 @@
                 VerifyMethod(r => r.GetValues(Enumerable.Empty<object>().ToArray()), m => m.GetValues(It.IsAny<object[]>()));
                 VerifyMethod(r => r.IsDBNull(default(int)), m => m.IsDBNull(It.IsAny<int>()));
                 VerifyMethod(r => r.NextResult(), m => m.NextResult());
-                ////VerifyMethod(r => r.NextResultAsync(), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
-                ////VerifyMethod(r => r.NextResultAsync(default(CancellationToken)), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
+                VerifyMethod(r => r.NextResultAsync(), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
+                VerifyMethod(r => r.NextResultAsync(default(CancellationToken)), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
                 VerifyMethod(r => r.Read(), m => m.Read());
-                ////VerifyMethod(r => r.ReadAsync(), m => m.ReadAsync(It.IsAny<CancellationToken>()));
-                ////VerifyMethod(r => r.ReadAsync(default(CancellationToken)), m => m.ReadAsync(It.IsAny<CancellationToken>()));
+                VerifyMethod(r => r.ReadAsync(), m => m.ReadAsync(It.IsAny<CancellationToken>()));
+                VerifyMethod(r => r.ReadAsync(default(CancellationToken)), m => m.ReadAsync(It.IsAny<CancellationToken>()));
                 VerifyMethod(r => r.GetEnumerator(), m => m.GetEnumerator());
-            }
-
-            [Fact]
-            public void NextResult_wraps_exception_into_EntityCommandExecutionException_if_one_was_thrown()
-            {
-                var dbDataReaderMock = new Mock<DbDataReader>();
-                dbDataReaderMock.Setup(m => m.NextResult()).Throws<InvalidOperationException>();
-                var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
-
-                Assert.Equal(
-                    Strings.EntityClient_StoreReaderFailed,
-                    Assert.Throws<EntityCommandExecutionException>(() => entityDataReader.NextResult()).Message);
             }
 
             private void VerifyGetter<TProperty>(
@@ -100,6 +89,42 @@
 
                 methodInvoke(entityDataReader);
                 dbDataReaderMock.Verify(mockMethodInvoke, Times.Once());
+            }
+        }
+
+        [Fact]
+        public void NextResult_wraps_exception_into_EntityCommandExecutionException_if_one_was_thrown()
+        {
+            var dbDataReaderMock = new Mock<DbDataReader>();
+            dbDataReaderMock.Setup(m => m.NextResult()).Throws<InvalidOperationException>();
+            var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
+
+            Assert.Equal(
+                Strings.EntityClient_StoreReaderFailed,
+                Assert.Throws<EntityCommandExecutionException>(() => entityDataReader.NextResult()).Message);
+        }
+
+        [Fact]
+        public void NextResultAsync_wraps_exception_into_EntityCommandExecutionException_if_one_was_thrown()
+        {
+            var dbDataReaderMock = new Mock<DbDataReader>();
+            dbDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Throws<InvalidOperationException>();
+            var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
+
+            AssertThrowsInAsyncMethod<EntityCommandExecutionException>(
+                Strings.EntityClient_StoreReaderFailed,
+                () => entityDataReader.NextResultAsync().Wait());
+        }
+
+        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Xunit.Assert.ThrowsDelegate testCode)
+            where TException : Exception
+        {
+            var exception = Assert.Throws<AggregateException>(testCode);
+            var innerException = exception.InnerExceptions.Single();
+            Assert.IsType<TException>(innerException);
+            if (expectedMessage != null)
+            {
+                Assert.Equal(expectedMessage, innerException.Message);
             }
         }
     }
