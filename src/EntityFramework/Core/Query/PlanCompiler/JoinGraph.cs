@@ -12,6 +12,7 @@
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 //
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly Dictionary<Var, VarVec> m_reverseVarMap;
 
         private readonly Dictionary<Var, AugmentedTableNode> m_varToDefiningNodeMap;
-                                                             //Includes all replacing vars and referenced vars from replacing tables
+        //Includes all replacing vars and referenced vars from replacing tables
 
         private readonly Dictionary<Node, Node> m_processedNodes;
         private bool m_modifiedGraph;

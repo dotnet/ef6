@@ -128,7 +128,7 @@
 
             Debug.Assert(
                 null != translator._rootCoordinatorScratchpad, "translating the root of the query must populate _rootCoordinatorBuilder");
-                // how can this happen?
+            // how can this happen?
 
             // We're good. Go ahead and recursively compile the CoordinatorScratchpads we
             // created in the vistor into CoordinatorFactories which contain compiled
@@ -1562,7 +1562,7 @@
             else
             {
                 Debug.Assert(columnMap.Type.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType, "RecordColumnMap without RowType?");
-                    // we kind of depend upon this 
+                // we kind of depend upon this 
                 Expression nullConstant;
 
                 // There are (at least) three different reasons we have a RecordColumnMap
@@ -1921,7 +1921,8 @@
 
                     if (typeToInstantiate == null)
                     {
-                        throw new InvalidOperationException(Strings.ObjectQuery_UnableToMaterializeArbitaryProjectionType(arg.RequestedType));
+                        throw new InvalidOperationException(
+                            Strings.ObjectQuery_UnableToMaterializeArbitaryProjectionType(arg.RequestedType));
                     }
 
                     var listOfElementType = typeof(List<>).MakeGenericType(innerElementType);
@@ -1971,7 +1972,7 @@
                 {
                     // if the user isn't asking for a CLR collection type (e.g. ObjectQuery<object>("{{1, 2}}")), we choose for them
                     var edmElementType = ((CollectionType)columnMap.Type.EdmType).TypeUsage;
-                        // the TypeUsage of the Element of the collection.
+                    // the TypeUsage of the Element of the collection.
                     result = DetermineClrType(edmElementType);
                 }
             }

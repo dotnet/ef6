@@ -162,7 +162,7 @@ namespace System.Data.Entity
         public virtual void HasDefaultSchema(string schema)
         {
             _modelConfiguration.DefaultSchema = schema;
-       }
+        }
 
         /// <summary>
         ///     Excludes a type(s) from the model. This is used to remove types from the model that were added 

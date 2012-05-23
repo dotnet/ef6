@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 var notNeeded = !caseStatement.MemberPath.IsPartOfKey && // keys are required in inner queries for joins conditions
                                 !caseStatement.DependsOnMemberValue;
-                    // if case statement returns its slot value as one of the options, then we need to produce it
+                // if case statement returns its slot value as one of the options, then we need to produce it
                 if (notNeeded)
                 {
                     requiredSlots[m_projectedSlotMap.IndexOf(caseStatement.MemberPath)] = false;

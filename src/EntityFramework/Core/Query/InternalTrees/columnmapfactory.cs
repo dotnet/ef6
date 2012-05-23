@@ -185,9 +185,10 @@
                 // make sure that a single column isn't contributing to multiple properties
                 if (memberGroup.Count() != 1)
                 {
-                    throw new InvalidOperationException(Strings.ObjectContext_TwoPropertiesMappedToSameColumn(
-                        reader.GetName(memberGroup.Key),
-                        String.Join(", ", memberGroup.Select(tuple => tuple.Item3.Name).ToArray())));
+                    throw new InvalidOperationException(
+                        Strings.ObjectContext_TwoPropertiesMappedToSameColumn(
+                            reader.GetName(memberGroup.Key),
+                            String.Join(", ", memberGroup.Select(tuple => tuple.Item3.Name).ToArray())));
                 }
 
                 var member = memberGroup.Single();
@@ -294,7 +295,8 @@
             {
                 if (!Helper.IsScalarType(member.TypeUsage.EdmType))
                 {
-                    throw new InvalidOperationException(Strings.ADP_InvalidDataReaderUnableToMaterializeNonScalarType(member.Name, member.TypeUsage.EdmType.FullName));
+                    throw new InvalidOperationException(
+                        Strings.ADP_InvalidDataReaderUnableToMaterializeNonScalarType(member.Name, member.TypeUsage.EdmType.FullName));
                 }
 
                 var ordinal = GetMemberOrdinalFromReader(storeDataReader, member, edmType, renameList);
@@ -344,8 +346,9 @@
 
             if (!TryGetColumnOrdinalFromReader(storeDataReader, memberName, out result))
             {
-                throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderMissingColumnForType(
-                    currentType.FullName, member.Name));
+                throw new EntityCommandExecutionException(
+                    Strings.ADP_InvalidDataReaderMissingColumnForType(
+                        currentType.FullName, member.Name));
             }
             return result;
         }
@@ -379,7 +382,8 @@
             int result;
             if (!TryGetColumnOrdinalFromReader(storeDataReader, columnName, out result))
             {
-                throw new EntityCommandExecutionException(Strings.ADP_InvalidDataReaderMissingDiscriminatorColumn(columnName, functionImport.FullName));
+                throw new EntityCommandExecutionException(
+                    Strings.ADP_InvalidDataReaderMissingDiscriminatorColumn(columnName, functionImport.FullName));
             }
             return result;
         }

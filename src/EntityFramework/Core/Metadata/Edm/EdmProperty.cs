@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Action<object, object> _memberSetter;
 
         #endregion
-        
+
         /// <summary>
         /// Returns the kind of the type
         /// </summary>

@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -387,7 +386,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                 }
                             }
 
-                            throw new UpdateException(Strings.Update_CircularRelationships, null, stateEntriesInCycle.Cast<ObjectStateEntry>().Distinct());
+                            throw new UpdateException(
+                                Strings.Update_CircularRelationships, null, stateEntriesInCycle.Cast<ObjectStateEntry>().Distinct());
                         }
                     default:
                         // done

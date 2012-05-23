@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Objects
     {
         internal IntBox(int val)
         {
-            this.Value = val;
+            Value = val;
         }
 
         internal int Value { get; set; }

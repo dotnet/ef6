@@ -96,14 +96,16 @@ namespace System.Data.Entity.Core.Objects
             var byteCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
-                throw new ArgumentOutOfRangeException("dataIndex", Strings.ADP_InvalidSourceBufferIndex(
-                    tempBuffer.Length.ToString(CultureInfo.InvariantCulture), ((long)srcIndex).ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    "dataIndex", Strings.ADP_InvalidSourceBufferIndex(
+                        tempBuffer.Length.ToString(CultureInfo.InvariantCulture), ((long)srcIndex).ToString(CultureInfo.InvariantCulture)));
             }
             else if ((bufferIndex < 0)
                      || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
-                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
-                    buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    "bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
+                        buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (0 < byteCount)
@@ -141,14 +143,16 @@ namespace System.Data.Entity.Core.Objects
             var charCount = Math.Min(tempBuffer.Length - srcIndex, length);
             if (srcIndex < 0)
             {
-                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidSourceBufferIndex(
-                    buffer.Length.ToString(CultureInfo.InvariantCulture), ((long)bufferIndex).ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    "bufferIndex", Strings.ADP_InvalidSourceBufferIndex(
+                        buffer.Length.ToString(CultureInfo.InvariantCulture), ((long)bufferIndex).ToString(CultureInfo.InvariantCulture)));
             }
             else if ((bufferIndex < 0)
                      || (bufferIndex > 0 && bufferIndex >= buffer.Length))
             {
-                throw new ArgumentOutOfRangeException("bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
-                    buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    "bufferIndex", Strings.ADP_InvalidDestinationBufferIndex(
+                        buffer.Length.ToString(CultureInfo.InvariantCulture), bufferIndex.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (0 < charCount)

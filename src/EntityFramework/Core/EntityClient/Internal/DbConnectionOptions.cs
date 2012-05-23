@@ -330,11 +330,12 @@
                         throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(currentPosition));
 
                     default:
-                        throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.InvalidParserState1));
+                        throw new InvalidOperationException(
+                            Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.InvalidParserState1));
                 }
                 buffer.Append(currentChar);
             }
-        ParserExit:
+            ParserExit:
             switch (parserState)
             {
                 case ParserState.Key:
@@ -360,7 +361,8 @@
                     if (('\'' == tmpChar)
                         || ('"' == tmpChar))
                     {
-                        throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition)); // unquoted value must not end in quote
+                        throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
+                            // unquoted value must not end in quote
                     }
                     break;
 
@@ -378,7 +380,8 @@
                     break;
 
                 default:
-                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.InvalidParserState2));
+                    throw new InvalidOperationException(
+                        Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.InvalidParserState2));
             }
             if ((';' == currentChar)
                 && (currentPosition < connectionString.Length))

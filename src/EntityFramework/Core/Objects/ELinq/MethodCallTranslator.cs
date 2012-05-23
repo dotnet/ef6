@@ -573,7 +573,8 @@
                     MethodInfo suggestedMethodInfo;
                     if (TryGetAlternativeMethod(call.Method, out suggestedMethodInfo))
                     {
-                        throw new NotSupportedException(Strings.ELinq_UnsupportedMethodSuggestedAlternative(call.Method, suggestedMethodInfo));
+                        throw new NotSupportedException(
+                            Strings.ELinq_UnsupportedMethodSuggestedAlternative(call.Method, suggestedMethodInfo));
                     }
                     //The default error message
                     throw new NotSupportedException(Strings.ELinq_UnsupportedMethod(call.Method));
@@ -794,15 +795,17 @@
                                 //Verify if this is a collection type (if so, recursively resolve)
                                 if (!clrReturnType.IsGenericType)
                                 {
-                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                        call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                            call.Method, call.Method.DeclaringType));
                                 }
                                 var genericType = clrReturnType.GetGenericTypeDefinition();
                                 if ((genericType != typeof(IEnumerable<>))
                                     && (genericType != typeof(IQueryable<>)))
                                 {
-                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                        call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                            call.Method, call.Method.DeclaringType));
                                 }
                                 var elementType = clrReturnType.GetGenericArguments()[0];
                                 result = ValidateReturnType(
@@ -813,8 +816,9 @@
                             {
                                 if (clrReturnType != typeof(DbDataRecord))
                                 {
-                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                        call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                            call.Method, call.Method.DeclaringType));
                                 }
                                 break;
                             }
@@ -822,8 +826,9 @@
                             {
                                 if (clrReturnType != typeof(EntityKey))
                                 {
-                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                        call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                            call.Method, call.Method.DeclaringType));
                                 }
                                 break;
                             }
@@ -836,8 +841,9 @@
                                     var toType = parent.GetCastTargetType(actualReturnType, clrReturnType, null, false);
                                     if (toType != null)
                                     {
-                                        throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                            call.Method, call.Method.DeclaringType));
+                                        throw new NotSupportedException(
+                                            Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                                call.Method, call.Method.DeclaringType));
                                     }
                                 }
 
@@ -846,8 +852,9 @@
                                 var expectedReturnType = parent.GetValueLayerType(clrReturnType);
                                 if (!TypeSemantics.IsPromotableTo(actualReturnType, expectedReturnType))
                                 {
-                                    throw new NotSupportedException(Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
-                                        call.Method, call.Method.DeclaringType));
+                                    throw new NotSupportedException(
+                                        Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
+                                            call.Method, call.Method.DeclaringType));
                                 }
 
                                 // For scalar return types, align the return types if needed.
@@ -872,7 +879,8 @@
                 {
                     if (String.IsNullOrEmpty(parameterValue))
                     {
-                        throw new NotSupportedException(Strings.ELinq_DbFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
+                        throw new NotSupportedException(
+                            Strings.ELinq_DbFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
                     }
                 }
             }
@@ -1310,7 +1318,8 @@
                         var arg2 = parent.TranslateExpression(call.Arguments[1]);
                         if (!IsNonNegativeIntegerConstant(arg2))
                         {
-                            throw new NotSupportedException(Strings.ELinq_UnsupportedStringRemoveCase(call.Method, call.Method.GetParameters()[1].Name));
+                            throw new NotSupportedException(
+                                Strings.ELinq_UnsupportedStringRemoveCase(call.Method, call.Method.GetParameters()[1].Name));
                         }
 
                         // Build the second substring
@@ -1721,14 +1730,16 @@
                     var intervalLinqExpression = call.Arguments[0] as ConstantExpression;
                     if (intervalLinqExpression == null)
                     {
-                        throw new NotSupportedException(Strings.ELinq_UnsupportedVBDatePartNonConstantInterval(call.Method, call.Method.GetParameters()[0].Name));
+                        throw new NotSupportedException(
+                            Strings.ELinq_UnsupportedVBDatePartNonConstantInterval(call.Method, call.Method.GetParameters()[0].Name));
                     }
 
                     var intervalValue = intervalLinqExpression.Value.ToString();
                     if (!s_supportedIntervals.Contains(intervalValue))
                     {
-                        throw new NotSupportedException(Strings.ELinq_UnsupportedVBDatePartInvalidInterval(
-                            call.Method, call.Method.GetParameters()[0].Name, intervalValue));
+                        throw new NotSupportedException(
+                            Strings.ELinq_UnsupportedVBDatePartInvalidInterval(
+                                call.Method, call.Method.GetParameters()[0].Name, intervalValue));
                     }
 
                     CqtExpression result = parent.TranslateIntoCanonicalFunction(intervalValue, call, call.Arguments[1]);
@@ -2377,8 +2388,9 @@
                     }
                     else
                     {
-                        throw new NotSupportedException(Strings.ELinq_UnsupportedPassthrough(
-                            call.Method.Name, operand.ResultType.EdmType.Name));
+                        throw new NotSupportedException(
+                            Strings.ELinq_UnsupportedPassthrough(
+                                call.Method.Name, operand.ResultType.EdmType.Name));
                     }
                 }
             }

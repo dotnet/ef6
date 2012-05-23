@@ -33,11 +33,13 @@ namespace System.Data.Entity.Core.Mapping
 
         private readonly Dictionary<string, StoragePropertyMapping> m_properties =
             new Dictionary<string, StoragePropertyMapping>(StringComparer.Ordinal);
-                                                                    //child property mappings that make up this complex property
+
+        //child property mappings that make up this complex property
 
         private readonly Dictionary<EdmProperty, StoragePropertyMapping> m_conditionProperties =
             new Dictionary<EdmProperty, StoragePropertyMapping>(EqualityComparer<EdmProperty>.Default);
-                                                                         //Condition property mappings for this complex type
+
+        //Condition property mappings for this complex type
 
 #if DEBUG
         private readonly bool m_isPartial; //Whether the property mapping representation is 
@@ -45,10 +47,10 @@ namespace System.Data.Entity.Core.Mapping
 
         //totally represented in this table mapping fragment or not.
         private readonly Dictionary<string, ComplexType> m_types = new Dictionary<string, ComplexType>(StringComparer.Ordinal);
-                                                         //Types for which the mapping holds true for.
+        //Types for which the mapping holds true for.
 
         private readonly Dictionary<string, ComplexType> m_isOfTypes = new Dictionary<string, ComplexType>(StringComparer.Ordinal);
-                                                         //Types for which the mapping holds true for
+        //Types for which the mapping holds true for
 
         // not only the type specified but the sub-types of that type as well.        
 

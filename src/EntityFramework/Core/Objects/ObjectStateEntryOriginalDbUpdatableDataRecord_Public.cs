@@ -64,7 +64,9 @@ namespace System.Data.Entity.Core.Objects
                     !member.CdmMetadata.Nullable)
                 {
                     // Throw if the underlying CLR type of this property is not nullable, and it is being set to null
-                    throw new InvalidOperationException(Strings.ObjectStateEntry_NullOriginalValueForNonNullableProperty(member.CLayerName, member.ClrMetadata.Name, member.ClrMetadata.DeclaringType.FullName));
+                    throw new InvalidOperationException(
+                        Strings.ObjectStateEntry_NullOriginalValueForNonNullableProperty(
+                            member.CLayerName, member.ClrMetadata.Name, member.ClrMetadata.DeclaringType.FullName));
                 }
 
                 base.SetRecordValue(ordinal, value);

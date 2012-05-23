@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;

@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Objects
         internal const int InitialListSize = 16;
 
         private bool _isDisposed;
-        private InternalObjectStateManager _internalObjectStateManager;
+        private readonly InternalObjectStateManager _internalObjectStateManager;
 
         // delegate for notifying changes in collection
         private CollectionChangeEventHandler onObjectStateManagerChangedDelegate;
@@ -350,7 +350,7 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(
                 TransactionManager.IsAttachTracking || TransactionManager.IsAddTracking,
                 "This method should be called only from ObjectContext.AttachTo/AddObject (indirectly)");
- 
+
             _internalObjectStateManager.TrackPromotedRelationship(relatedEnd, wrappedEntity);
         }
 
@@ -390,7 +390,8 @@ namespace System.Data.Entity.Core.Objects
             var relatedEnd = wrappedSource.RelationshipManager.GetRelatedEndInternal(sourceMember.DeclaringType.FullName, targetMember.Name);
 
             // EntityReference can only have one value
-            if (targetMember.RelationshipMultiplicity != RelationshipMultiplicity.Many)
+            if (targetMember.RelationshipMultiplicity
+                != RelationshipMultiplicity.Many)
             {
                 Debug.Assert(
                     relatedEnd is EntityReference, "If end is not Many multiplicity, then the RelatedEnd should be an EntityReference.");
@@ -428,7 +429,8 @@ namespace System.Data.Entity.Core.Objects
 
                         // currentWrappedTarget may already be correct because we may already have done FK fixup as part of
                         // accepting changes in the overwrite code.
-                        if (currentWrappedTarget != null && currentWrappedTarget.Entity != null && currentWrappedTarget != wrappedTarget)
+                        if (currentWrappedTarget != null && currentWrappedTarget.Entity != null
+                            && currentWrappedTarget != wrappedTarget)
                         {
                             // The source entity is already related to a different target, so before we hook it up to the new target,
                             // disconnect the existing related ends and detach the relationship entry
@@ -445,7 +447,8 @@ namespace System.Data.Entity.Core.Objects
                                 // If the relationship was Added prior to the above RemoveAll, it will have already been detached
                                 // If it was Unchanged, it is now Deleted and should be detached
                                 // It should never have been Deleted before now, because we just got currentTargetEntity from the related end
-                                if (relationshipEntry.State == EntityState.Deleted)
+                                if (relationshipEntry.State
+                                    == EntityState.Deleted)
                                 {
                                     relationshipEntry.AcceptChanges();
                                 }
@@ -465,7 +468,9 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // The EntityCollection has already been loaded as part of the query and adding additional
                     // entities would cause duplicate entries
-                    throw new InvalidOperationException(Strings.Collections_CannotFillTryDifferentMergeOption(targetRelatedEnd.SourceRoleName, targetRelatedEnd.RelationshipName));
+                    throw new InvalidOperationException(
+                        Strings.Collections_CannotFillTryDifferentMergeOption(
+                            targetRelatedEnd.SourceRoleName, targetRelatedEnd.RelationshipName));
                 }
             }
 
@@ -559,7 +564,8 @@ namespace System.Data.Entity.Core.Objects
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
             IEntityWrapper wrappedSource, AssociationEndMember targetMember, IList targets, bool setIsLoaded)
         {
-            return _internalObjectStateManager.UpdateRelationships(context, mergeOption, associationSet, sourceMember, wrappedSource, targetMember, targets, setIsLoaded);
+            return _internalObjectStateManager.UpdateRelationships(
+                context, mergeOption, associationSet, sourceMember, wrappedSource, targetMember, targets, setIsLoaded);
         }
 
         /// <summary>
@@ -570,7 +576,8 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="associationSet">AssociationSet for the incoming relationship</param>
         /// <param name="sourceKey">EntityKey of the source entity in the relationship</param>
         /// <param name="sourceMember">Role of the source entity in the relationship</param>
-        internal virtual void RemoveRelationships(MergeOption mergeOption, AssociationSet associationSet,
+        internal virtual void RemoveRelationships(
+            MergeOption mergeOption, AssociationSet associationSet,
             EntityKey sourceKey, AssociationEndMember sourceMember)
         {
             Debug.Assert(
@@ -720,7 +727,8 @@ namespace System.Data.Entity.Core.Objects
                 foreach (var entryToDetach in entriesToDetach)
                 {
                     // the entry may have already been detached by another operation. If not, detach it now.
-                    if (entryToDetach.State != EntityState.Detached)
+                    if (entryToDetach.State
+                        != EntityState.Detached)
                     {
                         RemoveRelatedEndsAndDetachRelationship(entryToDetach, setIsLoaded);
                     }
@@ -743,18 +751,21 @@ namespace System.Data.Entity.Core.Objects
                             // AppendOnly and NoTracking shouldn't affect existing relationships, so do nothing
                             break;
                         case MergeOption.OverwriteChanges:
-                            if (relationshipEntry.State == EntityState.Added)
+                            if (relationshipEntry.State
+                                == EntityState.Added)
                             {
                                 relationshipEntry.AcceptChanges();
                             }
-                            else if (relationshipEntry.State == EntityState.Deleted)
+                            else if (relationshipEntry.State
+                                     == EntityState.Deleted)
                             {
                                 // targetEntry should always exist in this scenario because it would have
                                 // at least been created when the relationship entry was created
                                 var targetEntry = manager.GetEntityEntry(targetKey);
 
                                 // If the target entity is deleted, we don't want to bring the relationship entry back.                            
-                                if (targetEntry.State != EntityState.Deleted)
+                                if (targetEntry.State
+                                    != EntityState.Deleted)
                                 {
                                     // If the targetEntry is a KeyEntry, there are no ends to fix up.
                                     if (!targetEntry.IsKeyEntry)
@@ -775,7 +786,8 @@ namespace System.Data.Entity.Core.Objects
                             // else it's already Unchanged so we don't need to do anything
                             break;
                         case MergeOption.PreserveChanges:
-                            if (relationshipEntry.State == EntityState.Added)
+                            if (relationshipEntry.State
+                                == EntityState.Added)
                             {
                                 // The client now matches the server, so just move the relationship to unchanged.
                                 // If we don't do this and left the state Added, we will get a concurrency exception when trying to save
@@ -805,7 +817,8 @@ namespace System.Data.Entity.Core.Objects
             }
 
             // Delete the relationship entry and disconnect the related ends
-            if (relationshipToRemove.State != EntityState.Deleted)
+            if (relationshipToRemove.State
+                != EntityState.Deleted)
             {
                 relationshipToRemove.Delete();
             }
@@ -1047,7 +1060,8 @@ namespace System.Data.Entity.Core.Objects
             Expression<Func<TEntity, object>> navigationPropertySelector,
             EntityState relationshipState) where TEntity : class
         {
-            return _internalObjectStateManager.ChangeRelationshipState<TEntity>(sourceEntity, targetEntity, navigationPropertySelector, relationshipState);
+            return _internalObjectStateManager.ChangeRelationshipState(
+                sourceEntity, targetEntity, navigationPropertySelector, relationshipState);
         }
 
         /// <summary>
@@ -1069,7 +1083,8 @@ namespace System.Data.Entity.Core.Objects
             string targetRoleName,
             EntityState relationshipState)
         {
-            return _internalObjectStateManager.ChangeRelationshipState(sourceEntity, targetEntity, relationshipName, targetRoleName, relationshipState);
+            return _internalObjectStateManager.ChangeRelationshipState(
+                sourceEntity, targetEntity, relationshipName, targetRoleName, relationshipState);
         }
 
         /// <summary>
@@ -1094,7 +1109,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal EntityEntry GetEntityEntry(EntityKey key)
         {
-            return _internalObjectStateManager.GetEntityEntry(key); 
+            return _internalObjectStateManager.GetEntityEntry(key);
         }
 
         /// <summary>
@@ -1126,7 +1141,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Contract.Requires(entity != null);
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            
+
             return _internalObjectStateManager.TryGetObjectStateEntry(entity, out entry);
         }
 

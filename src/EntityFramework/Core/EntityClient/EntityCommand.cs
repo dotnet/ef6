@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.EntityClient
     /// </summary>
     public sealed class EntityCommand : DbCommand
     {
-        private InternalEntityCommand _internalEntityCommand;
+        private readonly InternalEntityCommand _internalEntityCommand;
 
         /// <summary>
         /// Constructs the EntityCommand object not yet associated to a connection object

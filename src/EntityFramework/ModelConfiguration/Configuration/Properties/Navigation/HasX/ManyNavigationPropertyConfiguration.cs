@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

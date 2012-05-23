@@ -130,7 +130,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (!MetadataWorkspace.TryGetEntityContainer(defaultContainerName, DataSpace.CSpace, out container))
                 {
-                    throw new ArgumentException(Strings.ObjectContext_InvalidDefaultContainerName(defaultContainerName), "defaultContainerName");
+                    throw new ArgumentException(
+                        Strings.ObjectContext_InvalidDefaultContainerName(defaultContainerName), "defaultContainerName");
                 }
             }
             _defaultContainer = container;

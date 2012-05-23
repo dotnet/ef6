@@ -338,7 +338,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             //Throw if entity is in added state, unless this is the dependent end of an FK relationship
-            if (entityState == EntityState.Added &&
+            if (entityState == EntityState.Added
+                &&
                 (!IsForeignKey ||
                  !IsDependentEndOfReferentialConstraint(checkIdentifying: false)))
             {
@@ -346,8 +347,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             Contract.Assert(
-                 !(entityState != EntityState.Detached && UsingNoTracking),
-                 "Entity with NoTracking option cannot exist in the ObjectStateManager");
+                !(entityState != EntityState.Detached && UsingNoTracking),
+                "Entity with NoTracking option cannot exist in the ObjectStateManager");
 
             // the CreateSourceQuery method can only return non-NULL when we're
             // either detached & mergeOption is NoTracking or
@@ -401,7 +402,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var targetEntityType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)_toEndMember);
             var ofTypeRequired = false;
-            if (!targetEntitySet.ElementType.EdmEquals(targetEntityType) &&
+            if (!targetEntitySet.ElementType.EdmEquals(targetEntityType)
+                &&
                 !TypeSemantics.IsSubTypeOf(targetEntitySet.ElementType, targetEntityType))
             {
                 // If the type contained in the target entity set is not equal to
@@ -477,8 +479,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     //   P.PrincipalProperty1 = @DependentProperty1 AND ...
                     //
                     Contract.Assert(
-                         fkConstraint.FromRole.EdmEquals(_toEndMember),
-                         "Source query for foreign key association related end is not based on principal or dependent?");
+                        fkConstraint.FromRole.EdmEquals(_toEndMember),
+                        "Source query for foreign key association related end is not based on principal or dependent?");
 
                     sourceBuilder = new StringBuilder("SELECT VALUE P FROM ");
                     AppendEntitySet(sourceBuilder, targetEntitySet, targetEntityType, ofTypeRequired);
@@ -547,7 +549,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 throw Error.EntityKey_UnexpectedNull();
             }
 
-            bool hasResults = true;
+            var hasResults = true;
 
             // Add a parameter for each entity key value found on the key.
             var paramNameGen = new AliasGenerator(_entityKeyParamName); // Aliases are cached in AliasGenerator
@@ -926,7 +928,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             // find state entry
             var stateEntry = ObjectContext.ObjectStateManager.GetEntityEntry(_wrappedOwner.Entity);
-            if (stateEntry.State != EntityState.Modified &&
+            if (stateEntry.State != EntityState.Modified
+                &&
                 stateEntry.State != EntityState.Unchanged)
             {
                 throw Error.RelatedEnd_InvalidOwnerStateForAttach();
@@ -936,7 +939,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // verifies requirements for child entity passed to Attach()
         internal void ValidateEntityForAttach(IEntityWrapper wrappedEntity, int index, bool allowCollection)
         {
-            if (null == wrappedEntity || null == wrappedEntity.Entity)
+            if (null == wrappedEntity
+                || null == wrappedEntity.Entity)
             {
                 if (allowCollection)
                 {
@@ -953,8 +957,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             // verify the entity exists in the current context
             Contract.Assert(
-                 null != ObjectContext,
-                 "ObjectContext must not be null after call to ValidateOwnerForAttach");
+                null != ObjectContext,
+                "ObjectContext must not be null after call to ValidateOwnerForAttach");
             Contract.Assert(!UsingNoTracking, "We should not be here for NoTracking case.");
             var stateEntry = ObjectContext.ObjectStateManager.FindEntityEntry(wrappedEntity.Entity);
             if (null == stateEntry
@@ -970,12 +974,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
             }
             Contract.Assert(
-                 stateEntry.State != EntityState.Detached,
-                 "State cannot be detached if the entry was retrieved from the context");
+                stateEntry.State != EntityState.Detached,
+                "State cannot be detached if the entry was retrieved from the context");
 
             // verify the state of the entity (may not be in added state, since 
             // we only support attaching relationships to existing entities)
-            if (stateEntry.State != EntityState.Unchanged &&
+            if (stateEntry.State != EntityState.Unchanged
+                &&
                 stateEntry.State != EntityState.Modified)
             {
                 if (allowCollection)
@@ -1126,10 +1131,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal void CheckRelationEntitySet(EntitySet set)
         {
             Contract.Requires(set != null, "null EntitySet");
-            Contract.Assert(_relationshipSet != null,
-                 "Should only be checking the RelationshipSet on an attached entity and it should always be non-null in that case");
+            Contract.Assert(
+                _relationshipSet != null,
+                "Should only be checking the RelationshipSet on an attached entity and it should always be non-null in that case");
 
-            if ((((AssociationSet)_relationshipSet).AssociationSetEnds[_navigation.To] != null) &&
+            if ((((AssociationSet)_relationshipSet).AssociationSetEnds[_navigation.To] != null)
+                &&
                 (((AssociationSet)_relationshipSet).AssociationSetEnds[_navigation.To].EntitySet != set))
             {
                 throw Error.RelatedEnd_EntitySetIsNotValidForRelationship(
@@ -1217,7 +1224,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             // FK: update foreign key values on the dependent end.
             if (ObjectContext != null &&
-                IsForeignKey &&
+                IsForeignKey
+                &&
                 !ObjectContext.ObjectStateManager.TransactionManager.IsGraphUpdate)
             {
                 // Note that we use "forceForeignKeyChanges" below so that the FK properties will be set as modified
@@ -1281,7 +1289,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // Both entities are NoTracking, but have different contexts
                     // Attach the owner's context to the target's RelationshipManager
                     // O-C mappings are 1:1, so this operation is allowed
-                    targetRelatedEnd.WrappedOwner.ResetContext(ObjectContext, GetTargetEntitySetFromRelationshipSet(), MergeOption.NoTracking);
+                    targetRelatedEnd.WrappedOwner.ResetContext(
+                        ObjectContext, GetTargetEntitySetFromRelationshipSet(), MergeOption.NoTracking);
                 }
                 else
                 {
@@ -1309,7 +1318,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             RelatedEnd attachedRelatedEnd = null; // the end of the relationship that is already attached to a context, if there is one.
             IEntityWrapper entityToAdd = null; // the entity to be added to attachedRelatedEnd
-            IEntityWrapper wrappedTarget = targetRelatedEnd.WrappedOwner;
+            var wrappedTarget = targetRelatedEnd.WrappedOwner;
 
             if (ReferenceEquals(ObjectContext, targetRelatedEnd.ObjectContext)
                 && ObjectContext != null)
@@ -1389,8 +1398,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 && TargetAccessor.HasProperty)
                             {
                                 Contract.Assert(
-                                     CheckIfNavigationPropertyContainsEntity(wrappedTarget),
-                                     "owner's navigation property doesn't contain the target entity as expected");
+                                    CheckIfNavigationPropertyContainsEntity(wrappedTarget),
+                                    "owner's navigation property doesn't contain the target entity as expected");
                                 targetRelatedEnd.AddToNavigationProperty(_wrappedOwner);
                             }
 
@@ -1425,7 +1434,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        private void AddGraphToObjectStateManager(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists,
+        private void AddGraphToObjectStateManager(
+            IEntityWrapper wrappedEntity, bool relationshipAlreadyExists,
             bool addRelationshipAsUnchanged, bool doAttach)
         {
             Contract.Requires(wrappedEntity != null, "IEntityWrapper instance is null.");
@@ -1690,9 +1700,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     wrappedEntity, /*relationshipAlreadyExists*/ false,
                     addRelationshipAsUnchanged, doAttach);
             }
-            // There is a possibility that related entity is added to cache but relationship is not added.
-            // Example: Suppose A and B are related. When walking the graph it is possible that 
-            // node B was visited through some relationship other than A-B. 
+                // There is a possibility that related entity is added to cache but relationship is not added.
+                // Example: Suppose A and B are related. When walking the graph it is possible that 
+                // node B was visited through some relationship other than A-B. 
             else if (null == FindRelationshipEntryInObjectStateManager(wrappedEntity))
             {
                 VerifyDetachedKeyMatches(wrappedEntity.EntityKey);
@@ -1702,7 +1712,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     if (!IsForeignKey)
                     {
-                        if (cacheEntry.State == EntityState.Added)
+                        if (cacheEntry.State
+                            == EntityState.Added)
                         {
                             // In POCO, when the graph is partially attached and user is calling Attach on the detached entity
                             // and the entity in the context is in the Added state, the relationship has to created also in Added state.
@@ -1814,9 +1825,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     RemoveEntityFromObjectStateManager(wrappedEntity);
                 }
-                // There is a possibility that related entity is removed from cache but relationship is not removed.
-                // Example: Suppose A and B are related. When walking the graph it is possible that 
-                // node B was visited through some relationship other than A-B. 
+                    // There is a possibility that related entity is removed from cache but relationship is not removed.
+                    // Example: Suppose A and B are related. When walking the graph it is possible that 
+                    // node B was visited through some relationship other than A-B. 
                 else if (!IsForeignKey
                          && null != FindRelationshipEntryInObjectStateManager(wrappedEntity))
                 {
@@ -1882,11 +1893,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     var dependent = wrappedRelatedEntity.ObjectStateEntry;
                     if (dependent != null &&
                         dependent.State != EntityState.Added &&
-                        dependent.State != EntityState.Deleted &&
+                        dependent.State != EntityState.Deleted
+                        &&
                         dependent.State != EntityState.Detached)
                     {
                         if (!VerifyRIConstraintsWithRelatedEntry(
-                                constraint, dependent.GetCurrentEntityValue, ownerEntry.EntityKey))
+                            constraint, dependent.GetCurrentEntityValue, ownerEntry.EntityKey))
                         {
                             return false;
                         }
@@ -1901,8 +1913,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             ReferentialConstraint constraint, Func<string, object> getDependentPropertyValue, EntityKey principalKey)
         {
             Contract.Requires(
-                 constraint.FromProperties.Count == constraint.ToProperties.Count,
-                 "RIC: Referential constraints From/To properties list have different size");
+                constraint.FromProperties.Count == constraint.ToProperties.Count,
+                "RIC: Referential constraints From/To properties list have different size");
 
             // NOTE order of properties in collections (From/ToProperties) is important.
             for (var i = 0; i < constraint.FromProperties.Count; ++i)
@@ -2179,8 +2191,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             Contract.Requires(wrappedEntity != null, "IEntityWrapper instance is null.");
             Contract.Assert(
-                 relationshipSet == null || !(relationshipSet.ElementType as AssociationType).IsForeignKey,
-                 "for IsForeignKey relationships ObjectStateEntries don't exist");
+                relationshipSet == null || !(relationshipSet.ElementType as AssociationType).IsForeignKey,
+                "for IsForeignKey relationships ObjectStateEntries don't exist");
 
             var deletedEntry = MarkRelationshipAsDeletedInObjectStateManager(wrappedEntity, wrappedOwner, relationshipSet, navigation);
             if (deletedEntry != null
@@ -2221,8 +2233,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             Contract.Requires(wrappedEntity != null, "IEntityWrapper instance is null.");
             Contract.Assert(
-                 relationshipSet == null || !(relationshipSet.ElementType as AssociationType).IsForeignKey,
-                 "for IsForeignKey relationships ObjectStateEntries don't exist");
+                relationshipSet == null || !(relationshipSet.ElementType as AssociationType).IsForeignKey,
+                "for IsForeignKey relationships ObjectStateEntries don't exist");
             RelationshipEntry entry = null;
             if (wrappedOwner.Context != null && wrappedEntity.Context != null
                 && relationshipSet != null)
@@ -2352,7 +2364,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             }
                         }
                     }
-                    string relationshipName = _navigation.RelationshipName;
+                    var relationshipName = _navigation.RelationshipName;
                     Contract.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
                     throw Error.Collections_NoRelationshipSetMatched(relationshipName);
                 }
@@ -2361,7 +2373,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var foundFromRelationEnd = false;
                 var foundToRelationEnd = false;
                 foreach (var relationEnd in ((AssociationType)_relationMetadata).AssociationEndMembers)
-                //Only Association relationship is supported
+                    //Only Association relationship is supported
                 {
                     if (relationEnd.Name
                         == _navigation.From)
@@ -2415,7 +2427,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             relationshipType = context.MetadataWorkspace.GetItem<EdmType>(_navigation.RelationshipName, DataSpace.CSpace);
             if (relationshipType == null)
             {
-                string relationshipName = _navigation.RelationshipName;
+                var relationshipName = _navigation.RelationshipName;
                 Contract.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
                 throw Error.Collections_NoRelationshipSetMatched(relationshipName);
             }

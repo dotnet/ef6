@@ -555,10 +555,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Type elementType;
                 if (!EntityUtil.TryGetICollectionElementType(ClrType, out elementType))
                 {
-                    throw new InvalidOperationException(Strings.ELinq_UnexpectedTypeForNavigationProperty(
-                        _navigationProperty,
-                        typeof(EntityCollection<>), typeof(ICollection<>),
-                        ClrType));
+                    throw new InvalidOperationException(
+                        Strings.ELinq_UnexpectedTypeForNavigationProperty(
+                            _navigationProperty,
+                            typeof(EntityCollection<>), typeof(ICollection<>),
+                            ClrType));
                 }
                 return elementType;
             }

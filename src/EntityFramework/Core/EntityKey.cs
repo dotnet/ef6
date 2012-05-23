@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core
             _entitySetName = entitySet.Name;
             _entityContainerName = entitySet.EntityContainer.Name;
             _keyNames = entitySet.ElementType.KeyMemberNames; // using EntitySetBase avoids an (EntityType) cast that EntitySet encoure
-            
+
             AssertCorrectState(entitySet, false);
             _isLocked = true;
         }
@@ -722,7 +722,9 @@ namespace System.Data.Entity.Core
                 // FUTURE_FEATURE SQLPT 300003053:  When there exists a method to do
                 // structural equivalent of metadata types, this error check should be changed to an 
                 // assert.
-                throw new ArgumentException(Strings.EntityKey_EntitySetDoesNotMatch(TypeHelpers.GetFullName(entitySet.EntityContainer.Name, entitySet.Name)), "entitySet");
+                throw new ArgumentException(
+                    Strings.EntityKey_EntitySetDoesNotMatch(TypeHelpers.GetFullName(entitySet.EntityContainer.Name, entitySet.Name)),
+                    "entitySet");
             }
 
             // Iterate over the internal collection of string->object
@@ -806,7 +808,8 @@ namespace System.Data.Entity.Core
             Contract.Requires(!string.IsNullOrWhiteSpace(qualifiedEntitySetName));
 
             var result = qualifiedEntitySetName.Split('.');
-            if (result.Length != 2 || string.IsNullOrWhiteSpace(result[0]) || string.IsNullOrWhiteSpace(result[1]))
+            if (result.Length != 2 || string.IsNullOrWhiteSpace(result[0])
+                || string.IsNullOrWhiteSpace(result[1]))
             {
                 throw new ArgumentException(Strings.EntityKey_InvalidQualifiedEntitySetName, "qualifiedEntitySetName");
             }
@@ -830,7 +833,7 @@ namespace System.Data.Entity.Core
 
         internal bool InitializeKeyValues(
             IEnumerable<KeyValuePair<string, object>> entityKeyValues,
-            bool allowNullKeys = false, 
+            bool allowNullKeys = false,
             bool tokenizeStrings = false)
         {
             Contract.Requires(entityKeyValues != null);
@@ -868,7 +871,8 @@ namespace System.Data.Entity.Core
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private void InitializeKeyValue(KeyValuePair<string, object> keyValuePair, int i, bool tokenizeStrings)
         {
-            if (EntityUtil.IsNull(keyValuePair.Value) || string.IsNullOrWhiteSpace(keyValuePair.Key))
+            if (EntityUtil.IsNull(keyValuePair.Value)
+                || string.IsNullOrWhiteSpace(keyValuePair.Key))
             {
                 throw new ArgumentException(Strings.EntityKey_NoNullsAllowedInKeyValuePairs, "entityKeyValues");
             }
@@ -965,11 +969,14 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw new ArgumentException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, 1), argumentName);
+                            throw new ArgumentException(
+                                Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, 1),
+                                argumentName);
                         }
                         else
                         {
-                            throw new InvalidOperationException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, 1));
+                            throw new InvalidOperationException(
+                                Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, 1));
                         }
                     }
 
@@ -982,11 +989,13 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw new ArgumentException(Strings.EntityKey_MissingKeyValue(keyMembers[0].Name, entitySet.ElementType.FullName), argumentName);
+                            throw new ArgumentException(
+                                Strings.EntityKey_MissingKeyValue(keyMembers[0].Name, entitySet.ElementType.FullName), argumentName);
                         }
                         else
                         {
-                            throw new InvalidOperationException(Strings.EntityKey_MissingKeyValue(keyMembers[0].Name, entitySet.ElementType.FullName));
+                            throw new InvalidOperationException(
+                                Strings.EntityKey_MissingKeyValue(keyMembers[0].Name, entitySet.ElementType.FullName));
                         }
                     }
                 }
@@ -998,11 +1007,15 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw new ArgumentException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length), argumentName);
+                            throw new ArgumentException(
+                                Strings.EntityKey_IncorrectNumberOfKeyValuePairs(
+                                    entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length), argumentName);
                         }
                         else
                         {
-                            throw new InvalidOperationException(Strings.EntityKey_IncorrectNumberOfKeyValuePairs(entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length));
+                            throw new InvalidOperationException(
+                                Strings.EntityKey_IncorrectNumberOfKeyValuePairs(
+                                    entitySet.ElementType.FullName, keyMembers.Count, _compositeKeyValues.Length));
                         }
                     }
 
@@ -1027,11 +1040,13 @@ namespace System.Data.Entity.Core
                         {
                             if (isArgumentException)
                             {
-                                throw new ArgumentException(Strings.EntityKey_MissingKeyValue(keyField.Name, entitySet.ElementType.FullName), argumentName);
+                                throw new ArgumentException(
+                                    Strings.EntityKey_MissingKeyValue(keyField.Name, entitySet.ElementType.FullName), argumentName);
                             }
                             else
                             {
-                                throw new InvalidOperationException(Strings.EntityKey_MissingKeyValue(keyField.Name, entitySet.ElementType.FullName));
+                                throw new InvalidOperationException(
+                                    Strings.EntityKey_MissingKeyValue(keyField.Name, entitySet.ElementType.FullName));
                             }
                         }
                     }
@@ -1064,11 +1079,14 @@ namespace System.Data.Entity.Core
                 {
                     if (isArgumentException)
                     {
-                        throw new ArgumentException(Strings.EntityKey_IncorrectValueType(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName), argumentName);
+                        throw new ArgumentException(
+                            Strings.EntityKey_IncorrectValueType(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName),
+                            argumentName);
                     }
                     else
                     {
-                        throw new InvalidOperationException(Strings.EntityKey_IncorrectValueType(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName));
+                        throw new InvalidOperationException(
+                            Strings.EntityKey_IncorrectValueType(keyMember.Name, entitySetKeyType.FullName, keyValue.GetType().FullName));
                     }
                 }
             }
@@ -1084,11 +1102,15 @@ namespace System.Data.Entity.Core
                     {
                         if (isArgumentException)
                         {
-                            throw new ArgumentException(Strings.EntityKey_IncorrectValueType(keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName), argumentName);
+                            throw new ArgumentException(
+                                Strings.EntityKey_IncorrectValueType(
+                                    keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName), argumentName);
                         }
                         else
                         {
-                            throw new InvalidOperationException(Strings.EntityKey_IncorrectValueType(keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName));
+                            throw new InvalidOperationException(
+                                Strings.EntityKey_IncorrectValueType(
+                                    keyMember.Name, expectedClrEnumType.FullName, keyValue.GetType().FullName));
                         }
                     }
                 }
@@ -1096,11 +1118,14 @@ namespace System.Data.Entity.Core
                 {
                     if (isArgumentException)
                     {
-                        throw new ArgumentException(Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyMember.Name, keyMemberEdmType.FullName), argumentName);
+                        throw new ArgumentException(
+                            Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyMember.Name, keyMemberEdmType.FullName),
+                            argumentName);
                     }
                     else
                     {
-                        throw new InvalidOperationException(Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyMember.Name, keyMemberEdmType.FullName));
+                        throw new InvalidOperationException(
+                            Strings.EntityKey_NoCorrespondingOSpaceTypeForEnumKeyMember(keyMember.Name, keyMemberEdmType.FullName));
                     }
                 }
             }

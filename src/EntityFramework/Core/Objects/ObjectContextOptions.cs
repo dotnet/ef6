@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Data.Entity.Core.Objects.Internal;
 
     /// <summary>
     /// Defines options that affect the behavior of the ObjectContext.

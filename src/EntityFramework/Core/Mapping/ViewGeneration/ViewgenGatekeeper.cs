@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 return viewGenResults;
             }
 
-            foreach (CellGroup cellGroup in cellGroups)
+            foreach (var cellGroup in cellGroups)
             {
                 if (!DoesCellGroupContainEntitySet(cellGroup, entity))
                 {

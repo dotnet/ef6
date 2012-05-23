@@ -45,7 +45,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// For testing purposes only
         /// </summary>
         protected TableChangeProcessor()
-        { }
+        {
+        }
 
         #endregion
 
@@ -182,7 +183,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                     insertResult, compiler.m_translator, m_table));
                         }
 
-                        throw new UpdateException(Strings.Update_GeneralExecutionException, e, stateEntries.Cast<ObjectStateEntry>().Distinct());
+                        throw new UpdateException(
+                            Strings.Update_GeneralExecutionException, e, stateEntries.Cast<ObjectStateEntry>().Distinct());
                     }
                     throw;
                 }
@@ -277,7 +279,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // to ensure the exception shape is consistent with constraint violations discovered while processing
                 // commands (a more conventional scenario in which different tables are contributing principal values)
                 // wrap a DataConstraintException in an UpdateException
-                throw new UpdateException(Strings.Update_GeneralExecutionException, new ConstraintException(Strings.Update_ReferentialConstraintIntegrityViolation), commonDependents.Cast<ObjectStateEntry>().Distinct());
+                throw new UpdateException(
+                    Strings.Update_GeneralExecutionException,
+                    new ConstraintException(Strings.Update_ReferentialConstraintIntegrityViolation),
+                    commonDependents.Cast<ObjectStateEntry>().Distinct());
             }
         }
 

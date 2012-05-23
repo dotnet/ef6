@@ -133,7 +133,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get { return false;  }
+            get { return false; }
         }
 
         // -------
@@ -510,7 +510,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (!CanSetEntityType(wrappedEntity))
             {
-                throw new InvalidOperationException(Strings.RelatedEnd_InvalidContainedType_Collection(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName));
+                throw new InvalidOperationException(
+                    Strings.RelatedEnd_InvalidContainedType_Collection(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName));
             }
         }
 

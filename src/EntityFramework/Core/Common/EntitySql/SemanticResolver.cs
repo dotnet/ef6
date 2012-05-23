@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 {
                     if (retParams.ContainsKey(paramDef.ParameterName))
                     {
-                        string message = Strings.MultipleDefinitionsOfParameter(paramDef.ParameterName);
+                        var message = Strings.MultipleDefinitionsOfParameter(paramDef.ParameterName);
                         throw new EntitySqlException(message);
                     }
 
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 {
                     if (retVars.ContainsKey(varDef.VariableName))
                     {
-                        string message = Strings.MultipleDefinitionsOfVariable(varDef.VariableName);
+                        var message = Strings.MultipleDefinitionsOfVariable(varDef.VariableName);
                         throw new EntitySqlException(message);
                     }
 
@@ -432,7 +432,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 if (scopeEntry.EntryKind == ScopeEntryKind.SourceVar
                     && ((SourceScopeEntry)scopeEntry).IsJoinClauseLeftExpr)
                 {
-                    string message = Strings.InvalidJoinLeftCorrelation;
+                    var message = Strings.InvalidJoinLeftCorrelation;
                     throw EntitySqlException.Create(errCtx, message, null);
                 }
 
@@ -551,12 +551,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (TypeSemantics.IsCollectionType(valueExpr.ResultType))
             {
-                string message = Strings.NotAMemberOfCollection(name, valueExpr.ResultType.EdmType.FullName);
+                var message = Strings.NotAMemberOfCollection(name, valueExpr.ResultType.EdmType.FullName);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
             else
             {
-                string message = Strings.NotAMemberOfType(name, valueExpr.ResultType.EdmType.FullName);
+                var message = Strings.NotAMemberOfType(name, valueExpr.ResultType.EdmType.FullName);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
         }
@@ -607,7 +607,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 else
                 {
-                    string message = Strings.InvalidDeRefProperty(name, derefExprType.EdmType.FullName, valueExpr.ResultType.EdmType.FullName);
+                    var message = Strings.InvalidDeRefProperty(name, derefExprType.EdmType.FullName, valueExpr.ResultType.EdmType.FullName);
                     throw EntitySqlException.Create(errCtx, message, null);
                 }
             }
@@ -631,7 +631,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
             else
             {
-                string message = Strings.MemberDoesNotBelongToEntityContainer(name, entityContainer.Name);
+                var message = Strings.MemberDoesNotBelongToEntityContainer(name, entityContainer.Name);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
         }

@@ -195,7 +195,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         {
                             throw Error.EntityKey_UnexpectedNull();
                         }
-                        ObjectContext.ObjectStateManager.RemoveRelationships(mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndMember);
+                        ObjectContext.ObjectStateManager.RemoveRelationships(
+                            mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndMember);
                     }
                     // else this is NoTracking or AppendOnly, and no entity was retrieved by the Load, so there's nothing extra to do
 
@@ -558,7 +559,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (!CanSetEntityType(wrappedEntity))
             {
-                throw new InvalidOperationException(Strings.RelatedEnd_InvalidContainedType_Reference(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName));
+                throw new InvalidOperationException(
+                    Strings.RelatedEnd_InvalidContainedType_Reference(wrappedEntity.Entity.GetType().FullName, typeof(TEntity).FullName));
             }
         }
 
@@ -690,7 +692,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (applyConstraints && !IsEmpty())
             {
-                throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
+                throw new InvalidOperationException(
+                    Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(
+                        RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
             }
         }
 
@@ -767,7 +771,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (!ReferenceEquals(null, value)
                     && !Equals(value, wrapper.Entity))
                 {
-                    throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
+                    throw new InvalidOperationException(
+                        Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(
+                            RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
                 }
             }
         }
@@ -818,7 +824,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     if (tm == null || tm.ProcessedEntities == null
                         || tm.ProcessedEntities.Contains(_wrappedCachedValue))
                     {
-                        throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
+                        throw new InvalidOperationException(
+                            Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(
+                                RelationshipNavigation.To, RelationshipNavigation.RelationshipName));
                     }
                 }
                 if (tm != null

@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -22,9 +21,9 @@
     /// </summary>
     internal class InternalEntityConnection : IDisposable
     {
-       #region Constants
+        #region Constants
 
-        private bool _disposed = false;
+        private bool _disposed;
         private const string s_metadataPathSeparator = "|";
         private const string s_semicolonSeparator = ";";
         private const string s_entityClientProviderName = "System.Data.EntityClient";
@@ -79,7 +78,8 @@
         /// </summary>
         [ResourceExposure(ResourceScope.Machine)]
         [ResourceConsumption(ResourceScope.Machine)]
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         public InternalEntityConnection(string connectionString)
         {
             ChangeConnectionString(connectionString);
@@ -112,10 +112,12 @@
                 }
                 if (!workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace))
                 {
-                    throw new ArgumentException(Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
+                    throw new ArgumentException(
+                        Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
                 }
 
-                if (connection.State != ConnectionState.Closed)
+                if (connection.State
+                    != ConnectionState.Closed)
                 {
                     throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
                 }
@@ -132,7 +134,7 @@
                 _userOwnsStoreConnection = true;
                 _initialized = true;
             }
-            
+
             _metadataWorkspace = workspace;
             _storeConnection = connection;
         }
@@ -187,7 +189,8 @@
                 // shuffled, which is unavoidable but it's ok because the connection string cannot be the same as what the
                 // user originally passed in anyway.  However, if the store connection string is still the same, then we
                 // simply return what the user originally passed in.
-                if (ReferenceEquals(_userConnectionOptions, _effectiveConnectionOptions) && _storeConnection != null)
+                if (ReferenceEquals(_userConnectionOptions, _effectiveConnectionOptions)
+                    && _storeConnection != null)
                 {
                     string storeConnectionString = null;
                     try
@@ -224,8 +227,9 @@
                 return userConnectionString;
             }
             [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
-            [ResourceConsumption(ResourceScope.Machine)] // For ChangeConnectionString method call. But the paths are not created in this method.
-            set
+            [ResourceConsumption(ResourceScope.Machine)]
+            // For ChangeConnectionString method call. But the paths are not created in this method.
+                set
             {
                 ValidateChangesPermitted();
                 ChangeConnectionString(value);
@@ -282,7 +286,8 @@
                     if (_entityClientConnectionState == ConnectionState.Open)
                     {
                         Debug.Assert(StoreConnection != null);
-                        if (StoreConnection.State != ConnectionState.Open)
+                        if (StoreConnection.State
+                            != ConnectionState.Open)
                         {
                             return ConnectionState.Broken;
                         }
@@ -404,14 +409,15 @@
         /// <summary>
         /// See comments on <see cref="EntityConnection"/> class.
         /// </summary>
-        [ResourceExposure(ResourceScope.None)] 
+        [ResourceExposure(ResourceScope.None)]
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
         internal virtual MetadataWorkspace GetMetadataWorkspace(bool initializeAllCollections)
         {
             Debug.Assert(
                 _metadataWorkspace != null || _effectiveConnectionOptions != null,
                 "The effective connection options is null, which should never be");
-            if (_metadataWorkspace == null ||
+            if (_metadataWorkspace == null
+                ||
                 (initializeAllCollections && !_metadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)))
             {
                 // This lock is to ensure that the connection string and the metadata workspace are in a consistent state, that is, you
@@ -478,7 +484,7 @@
                 {
                     ClearCurrentTransaction();
                 }
- 
+
                 return _currentTransaction;
             }
         }
@@ -526,7 +532,8 @@
 
             // the following guards against the case when the user closes the underlying store connection
             // in the state change event handler, as a consequence of which we are in the 'Broken' state
-            if (_storeConnection == null || _storeConnection.State != ConnectionState.Open)
+            if (_storeConnection == null
+                || _storeConnection.State != ConnectionState.Open)
             {
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
             }
@@ -549,7 +556,8 @@
         {
             try
             {
-                if (storeConnectionToOpen.State != ConnectionState.Open)
+                if (storeConnectionToOpen.State
+                    != ConnectionState.Open)
                 {
                     storeConnectionToOpen.Open();
                     closeStoreConnectionOnFailure = true;
@@ -682,10 +690,11 @@
             // for the transaction object
             if (storeTransaction == null)
             {
-                throw new ProviderIncompatibleException(Strings.EntityClient_ReturnedNullOnProviderMethod("BeginTransaction", _storeConnection.GetType().Name));
+                throw new ProviderIncompatibleException(
+                    Strings.EntityClient_ReturnedNullOnProviderMethod("BeginTransaction", _storeConnection.GetType().Name));
             }
 
-            _currentTransaction = new EntityTransaction(this.EntityConnectionWrapper, storeTransaction);
+            _currentTransaction = new EntityTransaction(EntityConnectionWrapper, storeTransaction);
             return _currentTransaction;
         }
 
@@ -744,7 +753,7 @@
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -778,7 +787,7 @@
                     if (_storeConnection != null)
                     {
                         // closes store connection
-                        StoreCloseHelper(); 
+                        StoreCloseHelper();
                         if (_storeConnection != null)
                         {
                             if (!_userOwnsStoreConnection) // only dispose it if we didn't get it from the user...
@@ -796,7 +805,7 @@
 
                     if (raiseStateChangeEvent) // we need to raise the event explicitly
                     {
-                        this.EntityConnectionWrapper.InternalOnStageChange(StateChangeClosed);
+                        EntityConnectionWrapper.InternalOnStageChange(StateChangeClosed);
                     }
                 }
 
@@ -835,7 +844,8 @@
 
                     // Find the named connection from the configuration, then extract the settings
                     var setting = ConfigurationManager.ConnectionStrings[namedConnection];
-                    if (setting == null || setting.ProviderName != s_entityClientProviderName)
+                    if (setting == null
+                        || setting.ProviderName != s_entityClientProviderName)
                     {
                         throw new ArgumentException(Strings.EntityClient_InvalidNamedConnection);
                     }
@@ -1170,7 +1180,8 @@
         {
             try
             {
-                if (_storeConnection != null && (_storeConnection.State != ConnectionState.Closed))
+                if (_storeConnection != null
+                    && (_storeConnection.State != ConnectionState.Closed))
                 {
                     _storeConnection.Close();
                 }
@@ -1250,7 +1261,8 @@
             var storeConnection = factory.CreateConnection();
             if (storeConnection == null)
             {
-                throw new ProviderIncompatibleException(Strings.EntityClient_ReturnedNullOnProviderMethod("CreateConnection", factory.GetType().Name));
+                throw new ProviderIncompatibleException(
+                    Strings.EntityClient_ReturnedNullOnProviderMethod("CreateConnection", factory.GetType().Name));
             }
 
             return storeConnection;

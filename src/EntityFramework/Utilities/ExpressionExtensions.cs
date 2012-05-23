@@ -134,7 +134,8 @@ namespace System.Data.Entity.Utilities
             Contract.Requires(propertyPaths != null);
 
             return !newExpression.Members
-                        .Where((t, i) =>
+                        .Where(
+                            (t, i) =>
                             !string.Equals(t.Name, propertyPaths.ElementAt(i).Last().Name, StringComparison.Ordinal))
                         .Any();
         }

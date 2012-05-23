@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

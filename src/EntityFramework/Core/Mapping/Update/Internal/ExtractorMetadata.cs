@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Contract.Requires(translator != null);
 
             m_type = type;
-            m_translator = translator; 
+            m_translator = translator;
 
             EntityType entityType = null;
             Set<EdmMember> keyMembers;

@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     syntaxContextInfo = String.Format(CultureInfo.CurrentCulture, "{0} '{1}'", syntaxContextInfo, term);
                 }
 
-                string errorMessage = Strings.GenericSyntaxError;
+                var errorMessage = Strings.GenericSyntaxError;
                 throw EntitySqlException.Create(
                     _query,
                     errorMessage,
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     false,
                     null);
             }
-            int errorPosition1 = _lexer.IPos;
+            var errorPosition1 = _lexer.IPos;
             throw EntitySqlException.Create(_query, s, errorPosition1, null, false, null);
         }
 

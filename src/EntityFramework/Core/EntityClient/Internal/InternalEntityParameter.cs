@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.ComponentModel;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Internal;
@@ -151,7 +150,8 @@
         /// <param name="argumentName"></param>
         private void SetParameterNameWithValidation(string parameterName, string argumentName)
         {
-            if (!string.IsNullOrEmpty(parameterName) && !DbCommandTree.IsValidParameterName(parameterName))
+            if (!string.IsNullOrEmpty(parameterName)
+                && !DbCommandTree.IsValidParameterName(parameterName))
             {
                 throw new ArgumentException(Strings.EntityClient_InvalidParameterName(parameterName), argumentName);
             }
@@ -214,7 +214,8 @@
             get { return _edmType; }
             set
             {
-                if (value != null && !Helper.IsScalarType(value))
+                if (value != null
+                    && !Helper.IsScalarType(value))
                 {
                     throw new InvalidOperationException(Strings.EntityClient_EntityParameterEdmTypeNotScalar(value.FullName));
                 }
@@ -270,7 +271,8 @@
                 // of the change in the value.  What we want to achieve is that changes to the value will not cause
                 // it to be dirty, but changes to the value that causes the apparent DbType to change, then should be
                 // dirty.
-                if (!_dbType.HasValue && _edmType == null)
+                if (!_dbType.HasValue
+                    && _edmType == null)
                 {
                     // If the value is null, then we assume it's string type
                     var oldDbType = DbType.String;
@@ -379,7 +381,10 @@
                             _direction = value;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException(typeof(ParameterDirection).Name, Strings.ADP_InvalidEnumerationValue(typeof(ParameterDirection).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
+                            throw new ArgumentOutOfRangeException(
+                                typeof(ParameterDirection).Name,
+                                Strings.ADP_InvalidEnumerationValue(
+                                    typeof(ParameterDirection).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
                     }
                 }
             }
@@ -417,7 +422,8 @@
             }
             set
             {
-                if (!_size.HasValue || _size.Value != value)
+                if (!_size.HasValue
+                    || _size.Value != value)
                 {
                     if (value < -1)
                     {
@@ -484,7 +490,10 @@
                         _sourceVersion = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(typeof(DataRowVersion).Name, Strings.ADP_InvalidEnumerationValue(typeof(DataRowVersion).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
+                        throw new ArgumentOutOfRangeException(
+                            typeof(DataRowVersion).Name,
+                            Strings.ADP_InvalidEnumerationValue(
+                                typeof(DataRowVersion).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
                 }
             }
         }
@@ -494,7 +503,8 @@
         /// </summary>
         public void ResetDbType()
         {
-            if (_dbType != null || _edmType != null)
+            if (_dbType != null
+                || _edmType != null)
             {
                 PropertyChanging();
             }
@@ -529,8 +539,9 @@
             TypeUsage typeUsage;
             if (!IsTypeConsistent)
             {
-                throw new InvalidOperationException(Strings.EntityClient_EntityParameterInconsistentEdmType(
-                    _edmType.FullName, _parameterName));
+                throw new InvalidOperationException(
+                    Strings.EntityClient_EntityParameterInconsistentEdmType(
+                        _edmType.FullName, _parameterName));
             }
 
             if (_edmType != null)
@@ -541,9 +552,10 @@
             {
                 // Spatial types have only DbType 'Object', and cannot be represented in the static type map.
                 PrimitiveType primitiveParameterType;
-                if (DbType == DbType.Object && 
+                if (DbType == DbType.Object &&
                     Value != null &&
-                    ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType) &&
+                    ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType)
+                    &&
                     Helper.IsSpatialType(primitiveParameterType))
                 {
                     typeUsage = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveParameterType.PrimitiveTypeKind);
@@ -570,7 +582,8 @@
         {
             get
             {
-                if (_edmType != null && _dbType.HasValue)
+                if (_edmType != null
+                    && _dbType.HasValue)
                 {
                     var dbType = GetDbTypeFromEdm(_edmType);
                     if (dbType == DbType.String)
@@ -708,7 +721,8 @@
                     return cvalue.Length;
                 }
 
-                if (value is byte || value is char)
+                if (value is byte
+                    || value is char)
                 {
                     return 1;
                 }

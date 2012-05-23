@@ -1449,7 +1449,6 @@ namespace System.Data.Entity.Spatial
         #endregion
 
         #endregion
-
     }
 
     [ContractClassFor(typeof(DbSpatialServices))]

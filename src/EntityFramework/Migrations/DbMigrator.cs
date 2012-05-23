@@ -12,7 +12,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -20,7 +19,6 @@ namespace System.Data.Entity.Migrations
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
-    using IEnumerableExtensions = System.Data.Entity.Migrations.Extensions.IEnumerableExtensions;
 
     /// <summary>
     ///     DbMigrator is used to apply existing migrations to a database. 
@@ -114,8 +112,8 @@ namespace System.Data.Entity.Migrations
                 _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.DefaultSchema);
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                    // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
-                    // Should fix this post EF5.
+                                         // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
+                                         // Should fix this post EF5.
                                              : DbProviderServices.GetProviderServices(connection).
                                                    GetProviderManifestTokenChecked(connection);
 

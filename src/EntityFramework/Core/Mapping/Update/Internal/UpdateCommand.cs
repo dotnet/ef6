@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Threading;
@@ -177,7 +176,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// OutputIdentifiers</param>
         /// <param name="generatedValues">Aggregator for server generated values.</param>
         /// <returns>Number of rows affected by the command.</returns>
-        internal abstract long Execute(Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues);
+        internal abstract long Execute(
+            Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues);
 
         /// <summary>
         /// Implementation of CompareTo for concrete subclass of UpdateCommand.

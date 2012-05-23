@@ -194,7 +194,8 @@
         {
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
             {
-                if (!skipExistsCheck && _internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
+                if (!skipExistsCheck
+                    && _internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
                 {
                     throw Error.Database_DatabaseAlreadyExists(_internalContext.Connection.Database);
                 }

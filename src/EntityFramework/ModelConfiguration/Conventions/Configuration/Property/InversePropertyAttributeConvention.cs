@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Mappers;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;

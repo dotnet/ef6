@@ -471,7 +471,7 @@ namespace System.Data.Entity
 
         internal string DefaultSchema
         {
-           get { return InternalContext.DefaultSchema; }
+            get { return InternalContext.DefaultSchema; }
         }
 
         #region Hidden Object methods

@@ -21,8 +21,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             Debug.Assert(!string.IsNullOrEmpty(functionName), "Function name must not be null");
 
             var functions = new List<EdmFunction>(
-                Enumerable.Where(
-                    EdmProviderManifest.Instance.GetStoreFunctions(),
+                EdmProviderManifest.Instance.GetStoreFunctions().Where(
                     func => string.Equals(func.Name, functionName, StringComparison.Ordinal))
                 );
 

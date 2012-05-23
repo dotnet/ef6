@@ -79,8 +79,9 @@
                                                                             return assembly;
                                                                         }
                                                                     }
-                                                                    throw new ArgumentException(Strings.AssemblyMissingFromAssembliesToConsider(
-                                                                        referenceName.FullName), "assembliesToConsider");
+                                                                    throw new ArgumentException(
+                                                                        Strings.AssemblyMissingFromAssembliesToConsider(
+                                                                            referenceName.FullName), "assembliesToConsider");
                                                                 };
 
             CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
@@ -160,7 +161,7 @@
         /// </summary>
         public eSQL.EntitySqlParser CreateEntitySqlParser()
         {
-            return new eSQL.EntitySqlParser(new ModelPerspective(this.MetadataWorkspaceWrapper));
+            return new eSQL.EntitySqlParser(new ModelPerspective(MetadataWorkspaceWrapper));
         }
 
         /// <summary>
@@ -173,7 +174,7 @@
         /// <exception cref="ArgumentException">If <paramref name="query"/> is not structurally valid because it contains unresolvable variable references</exception>
         public DbQueryCommandTree CreateQueryCommandTree(DbExpression query)
         {
-            return new DbQueryCommandTree(this.MetadataWorkspaceWrapper, DataSpace.CSpace, query);
+            return new DbQueryCommandTree(MetadataWorkspaceWrapper, DataSpace.CSpace, query);
         }
 
         /// <summary>
@@ -216,12 +217,13 @@
                             var edmCollection = (EdmItemCollection)collection;
                             if (!SupportedEdmVersions.Contains(edmCollection.EdmVersion))
                             {
-                                throw new InvalidOperationException(Strings.EdmVersionNotSupportedByRuntime(
-                                    edmCollection.EdmVersion,
-                                    Helper.GetCommaDelimitedString(
-                                        SupportedEdmVersions
-                                            .Where(e => e != XmlConstants.UndefinedVersion)
-                                            .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
+                                throw new InvalidOperationException(
+                                    Strings.EdmVersionNotSupportedByRuntime(
+                                        edmCollection.EdmVersion,
+                                        Helper.GetCommaDelimitedString(
+                                            SupportedEdmVersions
+                                                .Where(e => e != XmlConstants.UndefinedVersion)
+                                                .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
                             }
 
                             CheckAndSetItemCollectionVersionInWorkSpace(collection);
@@ -269,30 +271,37 @@
             }
             // Need to make sure that if the storage mapping Item collection was created with the 
             // same instances of item collection that are registered for CSpace and SSpace
-            if (collection.DataSpace == DataSpace.CSpace)
+            if (collection.DataSpace
+                == DataSpace.CSpace)
             {
-                if (_itemsCSSpace != null && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, collection))
+                if (_itemsCSSpace != null
+                    && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, collection))
                 {
                     throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
             }
 
-            if (collection.DataSpace == DataSpace.SSpace)
+            if (collection.DataSpace
+                == DataSpace.SSpace)
             {
-                if (_itemsCSSpace != null && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, collection))
+                if (_itemsCSSpace != null
+                    && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, collection))
                 {
                     throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
             }
 
-            if (collection.DataSpace == DataSpace.CSSpace)
+            if (collection.DataSpace
+                == DataSpace.CSSpace)
             {
-                if (_itemsCSpace != null && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, _itemsCSpace))
+                if (_itemsCSpace != null
+                    && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, _itemsCSpace))
                 {
                     throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
 
-                if (_itemsSSpace != null && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, _itemsSSpace))
+                if (_itemsSSpace != null
+                    && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, _itemsSSpace))
                 {
                     throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
                 }
@@ -327,11 +336,13 @@
             }
 
             if (versionToRegister != _schemaVersion &&
-                versionToRegister != XmlConstants.UndefinedVersion &&
+                versionToRegister != XmlConstants.UndefinedVersion
+                &&
                 _schemaVersion != XmlConstants.UndefinedVersion)
             {
                 Debug.Assert(itemCollectionType != null);
-                throw new MetadataException(Strings.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion));
+                throw new MetadataException(
+                    Strings.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion));
             }
             else
             {
@@ -419,7 +430,8 @@
                 ItemCollection itemCollection;
                 TryGetItemCollection(DataSpace.CSpace, out itemCollection);
                 var edmItemCollection = (EdmItemCollection)itemCollection;
-                if (!objItemCollection.ImplicitLoadAssemblyForType(type, edmItemCollection) && null != callingAssembly)
+                if (!objItemCollection.ImplicitLoadAssemblyForType(type, edmItemCollection)
+                    && null != callingAssembly)
                 {
                     // only load from callingAssembly if all types were filtered
                     // then loaded referenced assemblies of calling assembly
@@ -433,7 +445,8 @@
                     // strictly follow the Get all referenced assemblies rules.
                     // If the attribute is not presented on the assembly, then we won't load the referenced asssembly 
                     // for this callingAssembly
-                    if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(callingAssembly) ||
+                    if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(callingAssembly)
+                        ||
                         (_foundAssemblyWithAttribute ||
                          MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(callingAssembly).Any(
                              a => ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(a))))
@@ -471,7 +484,8 @@
                 // We do a check here to see if the type was actually found in the attempted load.
                 var ospaceCollection = GetItemCollection(DataSpace.OSpace) as ObjectItemCollection;
                 EdmType ospaceType;
-                if (ospaceCollection == null || !ospaceCollection.TryGetOSpaceType(type, out ospaceType))
+                if (ospaceCollection == null
+                    || !ospaceCollection.TryGetOSpaceType(type, out ospaceType))
                 {
                     throw new InvalidOperationException(Strings.Mapping_Object_InvalidType(type.Identity));
                 }
@@ -887,7 +901,8 @@
         {
             var edm = _itemsCSpace;
             var obj = _itemsOSpace;
-            if ((null != edm) && (null != obj))
+            if ((null != edm)
+                && (null != obj))
             {
                 RegisterItemCollection(new DefaultObjectMappingItemCollection(edm, obj));
             }
@@ -1201,7 +1216,7 @@
         internal virtual GeneratedView GetGeneratedView(EntitySetBase extent)
         {
             var collection = GetItemCollection(DataSpace.CSSpace, true);
-            return ((StorageMappingItemCollection)collection).GetGeneratedView(extent, this.MetadataWorkspaceWrapper);
+            return ((StorageMappingItemCollection)collection).GetGeneratedView(extent, MetadataWorkspaceWrapper);
         }
 
         /// <summary>
@@ -1446,11 +1461,13 @@
             {
                 if (associationSet != null)
                 {
-                    throw new ArgumentException(Strings.TypeNotInAssociationSet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
+                    throw new ArgumentException(
+                        Strings.TypeNotInAssociationSet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
                 }
                 else
                 {
-                    throw new ArgumentException(Strings.TypeNotInEntitySet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
+                    throw new ArgumentException(
+                        Strings.TypeNotInEntitySet(entityType.FullName, entitySet.ElementType.FullName, entitySet.Name));
                 }
             }
 

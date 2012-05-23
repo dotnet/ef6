@@ -69,11 +69,13 @@ namespace System.Data.Entity.Core.Mapping
 
         private readonly Dictionary<string, StorageSetMapping> m_entitySetMappings =
             new Dictionary<string, StorageSetMapping>(StringComparer.Ordinal);
-                                                               //A collection of EntitySetMappings under this EntityContainer mapping
+
+        //A collection of EntitySetMappings under this EntityContainer mapping
 
         private readonly Dictionary<string, StorageSetMapping> m_associationSetMappings =
             new Dictionary<string, StorageSetMapping>(StringComparer.Ordinal);
-                                                               //A collection of AssociationSetMappings under this EntityContainer mapping        
+
+        //A collection of AssociationSetMappings under this EntityContainer mapping        
 
         private readonly Dictionary<EdmFunction, FunctionImportMapping> m_functionImportMappings =
             new Dictionary<EdmFunction, FunctionImportMapping>();

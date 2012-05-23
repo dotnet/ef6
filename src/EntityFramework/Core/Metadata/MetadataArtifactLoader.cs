@@ -171,7 +171,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (string.IsNullOrEmpty(path))
                 {
-                    throw new MetadataException(Strings.NotValidInputPath, new ArgumentException(Strings.ADP_CollectionParameterElementIsNullOrEmpty("filePaths")));
+                    throw new MetadataException(
+                        Strings.NotValidInputPath, new ArgumentException(Strings.ADP_CollectionParameterElementIsNullOrEmpty("filePaths")));
                 }
 
                 var trimedPath = path.Trim();

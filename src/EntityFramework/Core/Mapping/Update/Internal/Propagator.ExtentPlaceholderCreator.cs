@@ -120,8 +120,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return creator.CreateEntitySetPlaceholder(entitySet);
                 }
 
-                throw new NotSupportedException(Strings.Update_UnsupportedExtentType(
-                    extent.Name, extent.GetType().Name));
+                throw new NotSupportedException(
+                    Strings.Update_UnsupportedExtentType(
+                        extent.Name, extent.GetType().Name));
             }
 
             /// <summary>

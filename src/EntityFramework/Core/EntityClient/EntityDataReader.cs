@@ -147,7 +147,8 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // Notify the command object that we are closing, so clean up operations such as copying output parameters can be done
                 _command.NotifyDataReaderClosing();
-                if ((_behavior & CommandBehavior.CloseConnection) == CommandBehavior.CloseConnection)
+                if ((_behavior & CommandBehavior.CloseConnection)
+                    == CommandBehavior.CloseConnection)
                 {
                     Debug.Assert(_command.Connection != null);
                     _command.Connection.Close();

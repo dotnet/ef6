@@ -82,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                           DependentEnd = dependentEnd
                       };
 
-            var dependentProperties = Enumerable.AsEnumerable(_dependentProperties);
+            var dependentProperties = _dependentProperties.AsEnumerable();
 
             if (!IsFullySpecified)
             {

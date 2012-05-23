@@ -36,8 +36,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             var aliasId = bltInExpr.Arg1 as Identifier;
             if (aliasId == null)
             {
-                ErrorContext errCtx = bltInExpr.Arg1.ErrCtx;
-                string message = Strings.InvalidNamespaceAlias;
+                var errCtx = bltInExpr.Arg1.ErrCtx;
+                var message = Strings.InvalidNamespaceAlias;
                 throw EntitySqlException.Create(errCtx, message, null);
             }
 

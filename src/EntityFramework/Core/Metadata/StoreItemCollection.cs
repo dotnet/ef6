@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         #region Constructors
-        
+
         internal StoreItemCollection()
         {
         }

@@ -54,10 +54,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     argumentName = StringUtil.FormatIndex(argumentName, argumentIndex);
                 }
 
-                throw new ArgumentException(Strings.Cqt_ExpressionLink_TypeMismatch(
-                    expression.ResultType.ToString(),
-                    requiredResultType.ToString()
-                    ), argumentName);
+                throw new ArgumentException(
+                    Strings.Cqt_ExpressionLink_TypeMismatch(
+                        expression.ResultType.ToString(),
+                        requiredResultType.ToString()
+                        ), argumentName);
             }
         }
 
@@ -82,12 +83,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     argumentName = StringUtil.FormatIndex(argumentName, index);
                 }
 
-                throw new ArgumentException(Strings.Cqt_ExpressionLink_TypeMismatch(
-                    (valueIsPrimitive
-                         ? Enum.GetName(typeof(PrimitiveTypeKind), valueTypeKind)
-                         : expression.ResultType.ToString()),
-                    Enum.GetName(typeof(PrimitiveTypeKind), requiredResultType)
-                    ), argumentName);
+                throw new ArgumentException(
+                    Strings.Cqt_ExpressionLink_TypeMismatch(
+                        (valueIsPrimitive
+                             ? Enum.GetName(typeof(PrimitiveTypeKind), valueTypeKind)
+                             : expression.ResultType.ToString()),
+                        Enum.GetName(typeof(PrimitiveTypeKind), requiredResultType)
+                        ), argumentName);
             }
         }
 
@@ -157,14 +159,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
             if (!TypeHelpers.IsSetComparableOpType(TypeHelpers.GetElementTypeUsage(left.ResultType)))
             {
-                throw new ArgumentException(Strings.Cqt_InvalidTypeForSetOperation(
-                    TypeHelpers.GetElementTypeUsage(left.ResultType).Identity, typeof(TExpressionType).Name), "left");
+                throw new ArgumentException(
+                    Strings.Cqt_InvalidTypeForSetOperation(
+                        TypeHelpers.GetElementTypeUsage(left.ResultType).Identity, typeof(TExpressionType).Name), "left");
             }
 
             if (!TypeHelpers.IsSetComparableOpType(TypeHelpers.GetElementTypeUsage(right.ResultType)))
             {
-                throw new ArgumentException(Strings.Cqt_InvalidTypeForSetOperation(
-                    TypeHelpers.GetElementTypeUsage(right.ResultType).Identity, typeof(TExpressionType).Name), "right");
+                throw new ArgumentException(
+                    Strings.Cqt_InvalidTypeForSetOperation(
+                        TypeHelpers.GetElementTypeUsage(right.ResultType).Identity, typeof(TExpressionType).Name), "right");
             }
 
             return resultType;
@@ -465,7 +469,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 //
                 // Validate the DbExpressionBinding before accessing its properties
                 //
-                string argumentName = StringUtil.FormatIndex("inputs", iPos);
+                var argumentName = StringUtil.FormatIndex("inputs", iPos);
                 if (input == null)
                 {
                     throw new ArgumentNullException(argumentName);
@@ -546,7 +550,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             return input.Expression.ResultType;
         }
 
-        internal static TypeUsage ValidateGroupBy(IEnumerable<KeyValuePair<string, DbExpression>> keys,
+        internal static TypeUsage ValidateGroupBy(
+            IEnumerable<KeyValuePair<string, DbExpression>> keys,
             IEnumerable<KeyValuePair<string, DbAggregate>> aggregates, out DbExpressionList validKeys,
             out ReadOnlyCollection<DbAggregate> validAggregates)
         {
@@ -750,10 +755,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 if ((value.GetType().IsEnum || clrEnumUnderlyingType != value.GetType())
                     && !ClrEdmEnumTypesMatch(edmEnumType, value.GetType()))
                 {
-                    throw new ArgumentException(Strings.Cqt_Constant_ClrEnumTypeDoesNotMatchEdmEnumType(
-                        value.GetType().Name,
-                        edmEnumType.Name,
-                        clrEnumUnderlyingType.Name), "value");
+                    throw new ArgumentException(
+                        Strings.Cqt_Constant_ClrEnumTypeDoesNotMatchEdmEnumType(
+                            value.GetType().Name,
+                            edmEnumType.Name,
+                            clrEnumUnderlyingType.Name), "value");
                 }
             }
             else
@@ -876,7 +882,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 }
                 else
                 {
-                    throw new ArgumentException(Strings.Cqt_Arithmetic_InvalidUnsignedTypeForUnaryMinus(argument.ResultType.EdmType.FullName));
+                    throw new ArgumentException(
+                        Strings.Cqt_Arithmetic_InvalidUnsignedTypeForUnaryMinus(argument.ResultType.EdmType.FullName));
                 }
             }
             return new DbExpressionList(new[] { argument });
@@ -1554,7 +1561,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
                                               if (null == commonElementType)
                                               {
-                                                  throw new ArgumentException(Strings.Cqt_Factory_NewCollectionInvalidCommonType, "collectionElements");
+                                                  throw new ArgumentException(
+                                                      Strings.Cqt_Factory_NewCollectionInvalidCommonType, "collectionElements");
                                               }
                                           }
                 );
@@ -1649,7 +1657,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             if (members == null
                 || members.Count < 1)
             {
-                throw new ArgumentException(Strings.Cqt_NewInstance_CannotInstantiateMemberlessType(instanceType.ToString()), "instanceType");
+                throw new ArgumentException(
+                    Strings.Cqt_NewInstance_CannotInstantiateMemberlessType(instanceType.ToString()), "instanceType");
             }
 
             var memberTypes = new List<TypeUsage>(members.Count);
@@ -1686,7 +1695,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                         &&
                         !entityType.IsSubtypeOf(expectedSourceType))
                     {
-                        throw new ArgumentException(Strings.Cqt_NewInstance_IncompatibleRelatedEntity_SourceTypeNotValid, StringUtil.FormatIndex("relationships", idx));
+                        throw new ArgumentException(
+                            Strings.Cqt_NewInstance_IncompatibleRelatedEntity_SourceTypeNotValid,
+                            StringUtil.FormatIndex("relationships", idx));
                     }
 
                     relatedRefs.Add(relatedRef);
@@ -1757,7 +1768,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 }
             }
 
-            throw new ArgumentOutOfRangeException("propertyName", Strings.Cqt_Factory_NoSuchProperty(propertyName, instance.ResultType.ToString()));
+            throw new ArgumentOutOfRangeException(
+                "propertyName", Strings.Cqt_Factory_NoSuchProperty(propertyName, instance.ResultType.ToString()));
         }
 
         #endregion

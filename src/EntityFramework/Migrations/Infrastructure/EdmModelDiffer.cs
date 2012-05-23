@@ -109,34 +109,34 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             renamedColumns.Each(
                 rc =>
-                {
-                    var entitySet
-                        = (from es in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                           where
-                               GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute()).EqualsIgnoreCase(
-                                   rc.Table)
-                           select es.NameAttribute()).Single();
+                    {
+                        var entitySet
+                            = (from es in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
+                               where
+                                   GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute()).EqualsIgnoreCase(
+                                       rc.Table)
+                               select es.NameAttribute()).Single();
 
-                    var principalDependents
-                        = from pd in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.PrincipalNames)
-                              .Concat(columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.DependentNames))
-                          where pd.RoleAttribute().EqualsIgnoreCase(entitySet)
-                          from pr in pd.Descendants(EdmXNames.Ssdl.PropertyRefNames)
-                          where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
-                          select pr;
+                        var principalDependents
+                            = from pd in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.PrincipalNames)
+                                  .Concat(columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.DependentNames))
+                              where pd.RoleAttribute().EqualsIgnoreCase(entitySet)
+                              from pr in pd.Descendants(EdmXNames.Ssdl.PropertyRefNames)
+                              where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
+                              select pr;
 
-                    principalDependents.Each(pd => pd.SetAttributeValue("Name", rc.NewName));
+                        principalDependents.Each(pd => pd.SetAttributeValue("Name", rc.NewName));
 
-                    var keyProperties
-                        = from et in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
-                          where et.NameAttribute().EqualsIgnoreCase(entitySet)
-                          from pr in
-                              et.Descendants(EdmXNames.Ssdl.KeyNames).Descendants(EdmXNames.Ssdl.PropertyRefNames)
-                          where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
-                          select pr;
+                        var keyProperties
+                            = from et in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
+                              where et.NameAttribute().EqualsIgnoreCase(entitySet)
+                              from pr in
+                                  et.Descendants(EdmXNames.Ssdl.KeyNames).Descendants(EdmXNames.Ssdl.PropertyRefNames)
+                              where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
+                              select pr;
 
-                    keyProperties.Each(pr => pr.SetAttributeValue("Name", rc.NewName));
-                });
+                        keyProperties.Each(pr => pr.SetAttributeValue("Name", rc.NewName));
+                    });
 
             return columnNormalizedSourceModel;
         }
@@ -172,8 +172,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                          && !es1.SchemaAttribute().EqualsIgnoreCase(es2.SchemaAttribute())
                    select
                        new MoveTableOperation(
-                           GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
-                           es2.SchemaAttribute());
+                       GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
+                       es2.SchemaAttribute());
         }
 
         private IEnumerable<DropTableOperation> FindRemovedTables(IEnumerable<RenameTableOperation> renamedTables)

@@ -12,6 +12,7 @@
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
@@ -2231,7 +2232,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // We're now dealing with a structured type
             PlanCompiler.Assert(
                 !(md.TypeSemantics.IsComplexType(child0Type) || md.TypeSemantics.IsComplexType(child1Type)), "complex type?");
-                // cannot be a complex type
+            // cannot be a complex type
             PlanCompiler.Assert(op.OpType == OpType.EQ || op.OpType == OpType.NE, "non-equality comparison of structured types?");
 
             //

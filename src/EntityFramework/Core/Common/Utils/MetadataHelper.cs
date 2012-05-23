@@ -127,9 +127,10 @@ namespace System.Data.Entity.Core.Common.Utils
                 ||
                 !modelEdmType.EdmEquals(spatialNormalizedEdmType))
             {
-                throw new InvalidOperationException(Strings.ObjectContext_ExecuteFunctionTypeMismatch(
-                    typeof(TElement).FullName,
-                    expectedEdmType.FullName));
+                throw new InvalidOperationException(
+                    Strings.ObjectContext_ExecuteFunctionTypeMismatch(
+                        typeof(TElement).FullName,
+                        expectedEdmType.FullName));
             }
         }
 
@@ -427,7 +428,7 @@ namespace System.Data.Entity.Core.Common.Utils
                 }
 
                 specificType = specificType.BaseType as EntityType;
-                    //The cast is guaranteed to work. See use of GetItems<T_EdmType> in GetTypesAndSubTypesOf()
+                //The cast is guaranteed to work. See use of GetItems<T_EdmType> in GetTypesAndSubTypesOf()
             }
         }
 

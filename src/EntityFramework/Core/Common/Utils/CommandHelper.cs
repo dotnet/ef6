@@ -19,7 +19,8 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <param name="reader">reader to consume</param>
         internal static void ConsumeReader(DbDataReader reader)
         {
-            if (null != reader && !reader.IsClosed)
+            if (null != reader
+                && !reader.IsClosed)
             {
                 while (reader.NextResult())
                 {
@@ -168,8 +169,9 @@ namespace System.Data.Entity.Core.Common.Utils
             EntityContainer entityContainer;
             if (!workspace.TryGetEntityContainer(containerName, DataSpace.CSpace, out entityContainer))
             {
-                throw new InvalidOperationException(Strings.EntityClient_UnableToFindFunctionImportContainer(
-                    containerName));
+                throw new InvalidOperationException(
+                    Strings.EntityClient_UnableToFindFunctionImportContainer(
+                        containerName));
             }
 
             // find function import
@@ -184,12 +186,14 @@ namespace System.Data.Entity.Core.Common.Utils
             }
             if (null == functionImport)
             {
-                throw new InvalidOperationException(Strings.EntityClient_UnableToFindFunctionImport(
-                    containerName, functionImportName));
+                throw new InvalidOperationException(
+                    Strings.EntityClient_UnableToFindFunctionImport(
+                        containerName, functionImportName));
             }
             if (functionImport.IsComposableAttribute)
             {
-                throw new InvalidOperationException(Strings.EntityClient_FunctionImportMustBeNonComposable(containerName + "." + functionImportName));
+                throw new InvalidOperationException(
+                    Strings.EntityClient_FunctionImportMustBeNonComposable(containerName + "." + functionImportName));
             }
             return functionImport;
         }

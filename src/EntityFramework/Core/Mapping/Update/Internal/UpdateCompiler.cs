@@ -270,12 +270,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             &&
                             processor.IsKeyProperty(propertyOrdinal))
                         {
-                            throw new NotSupportedException(Strings.Update_NotSupportedComputedKeyColumn(
-                                EdmProviderManifest.StoreGeneratedPatternFacetName,
-                                XmlConstants.Computed,
-                                XmlConstants.Identity,
-                                property.Name,
-                                property.DeclaringType.FullName));
+                            throw new NotSupportedException(
+                                Strings.Update_NotSupportedComputedKeyColumn(
+                                    EdmProviderManifest.StoreGeneratedPatternFacetName,
+                                    XmlConstants.Computed,
+                                    XmlConstants.Identity,
+                                    property.Name,
+                                    property.DeclaringType.FullName));
                         }
                     }
                 }
@@ -309,10 +310,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     if (!ByValueEqualityComparer.Default.Equals(originalPropertyResult.GetSimpleValue(), propertyResult.GetSimpleValue()))
                     {
-                        throw new InvalidOperationException(Strings.Update_ModifyingIdentityColumn(
-                            XmlConstants.Identity,
-                            property.Name,
-                            property.DeclaringType.FullName));
+                        throw new InvalidOperationException(
+                            Strings.Update_ModifyingIdentityColumn(
+                                XmlConstants.Identity,
+                                property.Name,
+                                property.DeclaringType.FullName));
                     }
                     else
                     {

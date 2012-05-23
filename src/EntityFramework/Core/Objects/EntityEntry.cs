@@ -1129,7 +1129,8 @@
                 // also not be matched, so if we checked this first, it would cause a confusing error to be thrown.
                 if (State != _cache.ChangingState)
                 {
-                    throw new InvalidOperationException(Strings.ObjectStateEntry_ChangedInDifferentStateFromChanging(_cache.ChangingState, State));
+                    throw new InvalidOperationException(
+                        Strings.ObjectStateEntry_ChangedInDifferentStateFromChanging(_cache.ChangingState, State));
                 }
 
                 var oldValue = _cache.ChangingOldValue;
@@ -2507,7 +2508,9 @@
                     var existingRelatedObject = objectsInRelatedEnd.First();
                     if (!Equals(existingRelatedObject, relatedObject))
                     {
-                        throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(relatedEnd.RelationshipNavigation.To, relatedEnd.RelationshipNavigation.RelationshipName));
+                        throw new InvalidOperationException(
+                            Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(
+                                relatedEnd.RelationshipNavigation.To, relatedEnd.RelationshipNavigation.RelationshipName));
                     }
                 }
             }
@@ -3488,7 +3491,9 @@
             if (WrappedEntity.IdentityType
                 != wrappedCurrentEntity.IdentityType)
             {
-                throw new ArgumentException(Strings.ObjectContext_EntitiesHaveDifferentType(Entity.GetType().FullName, wrappedCurrentEntity.Entity.GetType().FullName));
+                throw new ArgumentException(
+                    Strings.ObjectContext_EntitiesHaveDifferentType(
+                        Entity.GetType().FullName, wrappedCurrentEntity.Entity.GetType().FullName));
             }
 
             CompareKeyProperties(wrappedCurrentEntity.Entity);
@@ -3518,7 +3523,9 @@
             if (WrappedEntity.IdentityType
                 != wrappedOriginalEntity.IdentityType)
             {
-                throw new ArgumentException(Strings.ObjectContext_EntitiesHaveDifferentType(Entity.GetType().FullName, wrappedOriginalEntity.Entity.GetType().FullName));
+                throw new ArgumentException(
+                    Strings.ObjectContext_EntitiesHaveDifferentType(
+                        Entity.GetType().FullName, wrappedOriginalEntity.Entity.GetType().FullName));
             }
 
             CompareKeyProperties(wrappedOriginalEntity.Entity);
@@ -3784,7 +3791,9 @@
             else
             {
                 // Else it is 1:1 and one side or the other is non-null => reference steal!
-                throw new InvalidOperationException(Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(refToDependent.RelationshipNavigation.To, refToDependent.RelationshipNavigation.RelationshipName));
+                throw new InvalidOperationException(
+                    Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(
+                        refToDependent.RelationshipNavigation.To, refToDependent.RelationshipNavigation.RelationshipName));
             }
         }
 
@@ -3874,7 +3883,8 @@
                             if (isOneToMany.Value)
                             {
                                 // Cycles in constraints are dissallowed except for 1:* self references
-                                throw new InvalidOperationException(Strings.RelationshipManager_CircularRelationshipsWithReferentialConstraints);
+                                throw new InvalidOperationException(
+                                    Strings.RelationshipManager_CircularRelationshipsWithReferentialConstraints);
                             }
                         }
                         else

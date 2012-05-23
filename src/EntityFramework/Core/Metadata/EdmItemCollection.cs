@@ -434,10 +434,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Ensure the result type of the generated definition matches the result type of the edm function (the declaration)
             if (!TypeSemantics.IsStructurallyEqual(function.ReturnParameter.TypeUsage, generatedDefinition.Body.ResultType))
             {
-                throw new InvalidOperationException(Strings.Cqt_UDF_FunctionDefinitionResultTypeMismatch(
-                    function.ReturnParameter.TypeUsage.ToString(),
-                    function.FullName,
-                    generatedDefinition.Body.ResultType.ToString()));
+                throw new InvalidOperationException(
+                    Strings.Cqt_UDF_FunctionDefinitionResultTypeMismatch(
+                        function.ReturnParameter.TypeUsage.ToString(),
+                        function.FullName,
+                        generatedDefinition.Body.ResultType.ToString()));
             }
 
             Debug.Assert(generatedDefinition != null, "generatedDefinition != null");

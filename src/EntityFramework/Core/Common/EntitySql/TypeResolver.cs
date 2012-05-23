@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (_aliasedNamespaces.ContainsKey(alias))
             {
-                string message = Strings.NamespaceAliasAlreadyUsed(alias);
+                var message = Strings.NamespaceAliasAlreadyUsed(alias);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
 
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             if (_namespaces.Contains(@namespace))
             {
-                string message = Strings.NamespaceAlreadyImported(@namespace.Name);
+                var message = Strings.NamespaceAlreadyImported(@namespace.Name);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
 
@@ -135,8 +135,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 overload.Parameters.Select(p => p.ResultType).SequenceEqual(
                     functionInfo.Parameters.Select(p => p.ResultType), TypeUsageStructuralComparer.Instance)))
             {
-                ErrorContext errCtx = functionInfo.FunctionDefAst.ErrCtx;
-                string message = Strings.DuplicatedInlineFunctionOverload(name);
+                var errCtx = functionInfo.FunctionDefAst.ErrCtx;
+                var message = Strings.DuplicatedInlineFunctionOverload(name);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
 
@@ -249,13 +249,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     }
                     else
                     {
-                        string message = Strings.NotAMemberOfType(name, qualifier.Name);
+                        var message = Strings.NotAMemberOfType(name, qualifier.Name);
                         throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }
             }
 
-            string message1 = Strings.InvalidMetadataMemberClassResolution(
+            var message1 = Strings.InvalidMetadataMemberClassResolution(
                 qualifier.Name, qualifier.MetadataMemberClassName, MetadataNamespace.NamespaceClassName);
             throw EntitySqlException.Create(errCtx, message1, null);
         }
@@ -410,7 +410,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static Exception AmbiguousMetadataMemberName(ErrorContext errCtx, string name, MetadataNamespace ns1, MetadataNamespace ns2)
         {
-            string message = Strings.AmbiguousMetadataMemberName(name, ns1.Name, ns2 != null ? ns2.Name : null);
+            var message = Strings.AmbiguousMetadataMemberName(name, ns1.Name, ns2 != null ? ns2.Name : null);
             throw EntitySqlException.Create(errCtx, message, null);
         }
 

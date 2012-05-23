@@ -408,7 +408,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 || (DbExpressionKind.Lambda < kind))
             {
                 var paramName = typeof(DbExpressionKind).Name;
-                throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)kind).ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)kind).ToString(CultureInfo.InvariantCulture)));
             }
         }
 

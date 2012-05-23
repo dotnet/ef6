@@ -3,7 +3,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Reflection;

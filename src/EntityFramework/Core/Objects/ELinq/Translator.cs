@@ -75,8 +75,9 @@
                 // gets turned into a constant during funcletization and has special error handling).
                 if (linq == parent._funcletizer.RootContextExpression)
                 {
-                    throw new InvalidOperationException(Strings.ELinq_UnsupportedUseOfContextParameter(
-                        parent._funcletizer.RootContextParameter.Name));
+                    throw new InvalidOperationException(
+                        Strings.ELinq_UnsupportedUseOfContextParameter(
+                            parent._funcletizer.RootContextParameter.Name));
                 }
 
                 var queryOfT = linq.Value as ObjectQuery;

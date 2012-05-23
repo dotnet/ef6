@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;

@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -35,7 +34,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             var isAnd = ExprType.And == treeType;
             Debug.Assert(isAnd || ExprType.Or == treeType);
 
-            IEnumerable<BoolExpr<T_Identifier>> clauseExpressions =
+            var clauseExpressions =
                 clauses.Select(ExprSelector);
 
             if (isAnd)

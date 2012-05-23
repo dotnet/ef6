@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             source._entityConfigurations.Each(c => _entityConfigurations.Add(c.Key, c.Value.Clone()));
             source._complexTypeConfigurations.Each(c => _complexTypeConfigurations.Add(c.Key, c.Value.Clone()));
-            
+
             _ignoredTypes.AddRange(source._ignoredTypes);
 
             DefaultSchema = source.DefaultSchema;

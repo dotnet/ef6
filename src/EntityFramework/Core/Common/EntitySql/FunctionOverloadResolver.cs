@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         // Even though it is the job of metadata to ensure that the provider manifest is consistent.
                         // Ensure that if a function is marked as aggregate, then the argument type must be of collection{GivenType}.
                         //
-                        string message = Strings.InvalidArgumentTypeForAggregateFunction;
+                        var message = Strings.InvalidArgumentTypeForAggregateFunction;
                         throw new EntitySqlException(message);
                     }
                     parameterType = TypeHelpers.GetElementTypeUsage(parameterType);

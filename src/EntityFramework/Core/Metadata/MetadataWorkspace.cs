@@ -4,21 +4,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.QueryCache;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Internal;
-    using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Data.Entity.Resources;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
-    using System.Globalization;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.Versioning;
-    using System.Xml;
     using eSQL = System.Data.Entity.Core.Common.EntitySql;
 
     /// <summary>
@@ -204,7 +196,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity or space argument is null</exception>
         public bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.TryGetItem<T>(identity, space, out item);
+            return _internalMetadataWorkspace.TryGetItem(identity, space, out item);
         }
 
         /// <summary>
@@ -238,7 +230,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if identity or space argument is null</exception>
         public bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
         {
-            return _internalMetadataWorkspace.TryGetItem<T>(identity, ignoreCase, dataSpace, out item);
+            return _internalMetadataWorkspace.TryGetItem(identity, ignoreCase, dataSpace, out item);
         }
 
         /// <summary>

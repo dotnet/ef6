@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 if (_evaluatingScopeRegion == null)
                 {
-                    string message = Strings.GroupVarNotFoundInScope;
+                    var message = Strings.GroupVarNotFoundInScope;
                     throw new EntitySqlException(message);
                 }
             }
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                             containedAggregate.ErrCtx.UseContextInfoAsResourceIdentifier,
                             out line, out column);
 
-                        string message = Strings.NestedAggregateCannotBeUsedInAggregate(nestedAggregateInfo, currentAggregateInfo);
+                        var message = Strings.NestedAggregateCannotBeUsedInAggregate(nestedAggregateInfo, currentAggregateInfo);
                         throw new EntitySqlException(message);
                     }
 

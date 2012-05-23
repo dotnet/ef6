@@ -6,7 +6,6 @@
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
@@ -21,7 +20,8 @@
         private readonly Dictionary<int, string> _outputIdentifiers;
         private readonly DbModificationCommandTree _modificationCommandTree;
 
-        internal DynamicUpdateCommand(TableChangeProcessor processor, UpdateTranslator translator,
+        internal DynamicUpdateCommand(
+            TableChangeProcessor processor, UpdateTranslator translator,
             ModificationOperator modificationOperator, PropagatorResult originalValues, PropagatorResult currentValues,
             DbModificationCommandTree tree, Dictionary<int, string> outputIdentifiers)
             : base(translator, originalValues, currentValues)
@@ -50,7 +50,8 @@
                     DbSetClause setter;
                     var identifier = member.Value.Identifier;
 
-                    if (PropagatorResult.NullIdentifier != identifier &&
+                    if (PropagatorResult.NullIdentifier != identifier
+                        &&
                         TryGetSetterExpression(tree, member.Key, modificationOperator, out setter)) // can find corresponding setter
                     {
                         foreach (var principal in translator.KeyManager.GetPrincipals(identifier))
@@ -95,7 +96,8 @@
         /// <summary>
         ///     See comments in <see cref = "UpdateCommand" />.
         /// </summary>
-        internal override long Execute(Dictionary<int, object> identifierValues,
+        internal override long Execute(
+            Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             // Compile command
@@ -104,8 +106,8 @@
                 var connection = Translator.Connection;
                 // configure command to use the connection and transaction for this session
                 command.Transaction = ((null == connection.CurrentTransaction)
-                                        ? null
-                                        : connection.CurrentTransaction.StoreTransaction);
+                                           ? null
+                                           : connection.CurrentTransaction.StoreTransaction);
                 command.Connection = connection.StoreConnection;
                 if (Translator.CommandTimeout.HasValue)
                 {
@@ -132,7 +134,8 @@
                                 var columnName = reader.GetName(ordinal);
                                 var member = members[columnName];
                                 object value;
-                                if (Helper.IsSpatialType(member.TypeUsage) && !reader.IsDBNull(ordinal))
+                                if (Helper.IsSpatialType(member.TypeUsage)
+                                    && !reader.IsDBNull(ordinal))
                                 {
                                     value = SpatialHelpers.GetSpatialValue(Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal);
                                 }

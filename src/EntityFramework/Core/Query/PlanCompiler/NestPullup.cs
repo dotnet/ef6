@@ -12,6 +12,7 @@
 // or the tree was built/rewritten not the way we thought it was.
 // Use your judgment - if you rather remove an assert than ship it use Debug.Assert otherwise use
 // PlanCompiler.Assert.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
@@ -453,7 +454,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         //
                         // isn’t good enough, because that will get converted to a MultiStreamNest, with
                         // the SingleStreamNest as the input to the MultiStreamNest.
-                        throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.JoinOverSingleStreamNest));
+                        throw new InvalidOperationException(
+                            Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.JoinOverSingleStreamNest));
                     }
                 }
             }
@@ -956,7 +958,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     newCollectionInfo.Add(ci);
                     newNestInputs.Add(nestedNestNode.Children[i]);
                     PlanCompiler.Assert(newOutputVars.IsSet(ci.CollectionVar), "collectionVar not in output Vars?");
-                        // I must have missed something...
+                    // I must have missed something...
                 }
             }
 
@@ -968,7 +970,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 newCollectionInfo.Add(ci);
                 newNestInputs.Add(nestNode.Children[i]);
                 PlanCompiler.Assert(newOutputVars.IsSet(ci.CollectionVar), "collectionVar not in output Vars?");
-                    // I must have missed something...
+                // I must have missed something...
             }
 
             //The prefix sort keys for the new nest op should include these of the input nestOp followed by the nestedNestOp
@@ -2686,7 +2688,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (!outputVarsEnumerator.MoveNext())
             {
                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 4, null);
-                    // more columns from children than are on the unionAll?
+                // more columns from children than are on the unionAll?
             }
             // The discriminator var is always first
             discriminatorVar = outputVarsEnumerator.Current;
@@ -2701,7 +2703,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     if (!outputVarsEnumerator.MoveNext())
                     {
                         throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 5, null);
-                            // more columns from children than are on the unionAll?
+                        // more columns from children than are on the unionAll?
                     }
                     varMap[v] = outputVarsEnumerator.Current;
                 }
@@ -2710,7 +2712,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (outputVarsEnumerator.MoveNext())
             {
                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.ColumnCountMismatch, 6, null);
-                    // at this point, we better be done with both lists...
+                // at this point, we better be done with both lists...
             }
 
             return unionAllNode;

@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (0 > scopeIndex
                 || scopeIndex > CurrentScopeIndex)
             {
-                string message = Strings.InvalidScopeIndex;
+                var message = Strings.InvalidScopeIndex;
                 throw new EntitySqlException(message);
             }
             return _scopes[scopeIndex];
@@ -125,7 +125,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (scopeIndex > CurrentScopeIndex || scopeIndex < 0
                 || CurrentScopeIndex < 0)
             {
-                string message = Strings.InvalidSavePoint;
+                var message = Strings.InvalidSavePoint;
                 throw new EntitySqlException(message);
             }
 

@@ -9,7 +9,6 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

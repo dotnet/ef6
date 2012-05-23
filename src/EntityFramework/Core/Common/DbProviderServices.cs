@@ -298,9 +298,10 @@ namespace System.Data.Entity.Core.Common
             var factory = DbProviderFactories.GetFactory(connection);
             if (factory == null)
             {
-                throw new ProviderIncompatibleException(Strings.EntityClient_ReturnedNullOnProviderMethod(
-                    "get_ProviderFactory",
-                    connection.GetType().ToString()));
+                throw new ProviderIncompatibleException(
+                    Strings.EntityClient_ReturnedNullOnProviderMethod(
+                        "get_ProviderFactory",
+                        connection.GetType().ToString()));
             }
             Debug.Assert(factory != null, "Should have thrown on null");
             return factory;

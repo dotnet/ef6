@@ -38,9 +38,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Constructors
 
         // For testing purposes. Only nested classes should derive from propagator result
-        protected PropagatorResult()
-        {
-        }
 
         #endregion
 
@@ -217,7 +214,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         internal virtual void SetServerGenValue(object value)
         {
-            if (RecordOrdinal != PropagatorResult.NullOrdinal)
+            if (RecordOrdinal != NullOrdinal)
             {
                 var targetRecord = Record;
 

@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -81,7 +80,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             {
                 // Find the function or function import.
                 IList<EdmFunction> candidateFunctions;
-                if (_perspective.TryGetFunctionByName(functionMetadata.NamespaceName, functionMetadata.Name, /*ignoreCase:*/ false, out candidateFunctions))
+                if (_perspective.TryGetFunctionByName(
+                    functionMetadata.NamespaceName, functionMetadata.Name, /*ignoreCase:*/ false, out candidateFunctions))
                 {
                     Debug.Assert(
                         null != candidateFunctions && candidateFunctions.Count > 0,
@@ -99,7 +99,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 }
             }
 
-            throw new ArgumentException(Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(functionMetadata.NamespaceName, functionMetadata.Name)));
+            throw new ArgumentException(
+                Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(functionMetadata.NamespaceName, functionMetadata.Name)));
         }
 
         protected override EdmType VisitType(EdmType type)
@@ -223,8 +224,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     if (!TryGetMember(newInstance, expression.Property.Name, out endMember))
                     {
                         var type = newInstance.ResultType.EdmType;
-                        throw new ArgumentException(Strings.Cqt_Copier_EndNotFound(
-                            expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
+                        throw new ArgumentException(
+                            Strings.Cqt_Copier_EndNotFound(
+                                expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                     }
                     result = newInstance.Property(endMember);
                 }
@@ -234,8 +236,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     if (!TryGetMember(newInstance, expression.Property.Name, out navProp))
                     {
                         var type = newInstance.ResultType.EdmType;
-                        throw new ArgumentException(Strings.Cqt_Copier_NavPropertyNotFound(
-                            expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
+                        throw new ArgumentException(
+                            Strings.Cqt_Copier_NavPropertyNotFound(
+                                expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                     }
                     result = newInstance.Property(navProp);
                 }
@@ -245,8 +248,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     if (!TryGetMember(newInstance, expression.Property.Name, out prop))
                     {
                         var type = newInstance.ResultType.EdmType;
-                        throw new ArgumentException(Strings.Cqt_Copier_PropertyNotFound(
-                            expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
+                        throw new ArgumentException(
+                            Strings.Cqt_Copier_PropertyNotFound(
+                                expression.Property.Name, TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                     }
                     result = newInstance.Property(prop);
                 }
