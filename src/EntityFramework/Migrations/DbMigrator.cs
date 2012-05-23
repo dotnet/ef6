@@ -112,8 +112,8 @@ namespace System.Data.Entity.Migrations
                 _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.DefaultSchema);
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
+                                             : DbProviderServices.GetProviderServices(connection).
                                                    GetProviderManifestTokenChecked(connection);
-
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
                         connection.DataSource,
