@@ -12,6 +12,7 @@
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using Moq;
@@ -19,7 +20,7 @@
 
     public class AppConfigTests : UnitTestBase
     {
-        public class GetConnectioionString
+        public class GetConnectionString
         {
             [Fact]
             public void GetConnectionString_from_running_application_config()
@@ -1036,7 +1037,15 @@
             {
                 Assert.Equal(
                     typeof(SqlProviderServices).AssemblyQualifiedName,
-                    AppConfig.DefaultInstance.GetProviderTypeByConvention(SqlClientFactory.Instance.GetProviderInvariantName()));
+                    AppConfig.DefaultInstance.Providers.GetProviderTypeByConvention(SqlClientFactory.Instance.GetProviderInvariantName()));
+            }
+
+            [Fact]
+            public void GetProviderTypeByConvention_returns_SqlCeProviderServices_type_for_Sql_Compact_invariant_name()
+            {
+                Assert.Equal(
+                    typeof(SqlCeProviderServices).AssemblyQualifiedName,
+                    AppConfig.DefaultInstance.Providers.GetProviderTypeByConvention("System.Data.SqlServerCe.4.0"));
             }
         }
 
@@ -1048,7 +1057,7 @@
                 Assert.Equal(
                     Strings.EF6Providers_NoProviderFound("Don't.Come.Around.Here.No.More"),
                     Assert.Throws<InvalidOperationException>(
-                        () => CreateAppConfig().GetDbProviderServices("Don't.Come.Around.Here.No.More")).Message);
+                        () => CreateAppConfig().Providers.GetDbProviderServices("Don't.Come.Around.Here.No.More")).Message);
             }
 
             [Fact]
@@ -1057,7 +1066,7 @@
                 Assert.Same(
                     FakeProviderWithPublicProperty.Instance,
                     CreateAppConfig("System.Data.SqlClient", typeof(FakeProviderWithPublicProperty).AssemblyQualifiedName)
-                        .GetDbProviderServices("System.Data.SqlClient"));
+                        .Providers.GetDbProviderServices("System.Data.SqlClient"));
             }
 
             [Fact]
@@ -1065,7 +1074,7 @@
             {
                 Assert.Same(
                     SqlProviderServices.Instance,
-                    CreateAppConfig().GetDbProviderServices("System.Data.SqlClient"));
+                    CreateAppConfig().Providers.GetDbProviderServices("System.Data.SqlClient"));
             }
 
             [Fact]
@@ -1074,7 +1083,7 @@
                 Assert.Same(
                     FakeProviderWithPublicProperty.Instance,
                     CreateAppConfig("Learning.To.Fly", typeof(FakeProviderWithPublicProperty).AssemblyQualifiedName)
-                        .GetDbProviderServices("Learning.To.Fly"));
+                        .Providers.GetDbProviderServices("Learning.To.Fly"));
             }
 
             [Fact]
@@ -1083,7 +1092,7 @@
                 Assert.Same(
                     FakeProviderWithPublicField.Instance,
                     CreateAppConfig("I.Wanna.Hold.Your.Hand", typeof(FakeProviderWithPublicField).AssemblyQualifiedName)
-                        .GetDbProviderServices("I.Wanna.Hold.Your.Hand"));
+                        .Providers.GetDbProviderServices("I.Wanna.Hold.Your.Hand"));
             }
 
             [Fact]
@@ -1091,7 +1100,7 @@
             {
                 Assert.IsType<FakeProviderWithNonPublicProperty>(
                     CreateAppConfig("Stairway.To.Heaven", typeof(FakeProviderWithNonPublicProperty).AssemblyQualifiedName)
-                        .GetDbProviderServices("Stairway.To.Heaven"));
+                        .Providers.GetDbProviderServices("Stairway.To.Heaven"));
             }
 
             [Fact]
@@ -1099,7 +1108,7 @@
             {
                 Assert.IsType<FakeProviderWithNonPublicField>(
                     CreateAppConfig("Does.Anybody.Remember.Laughter?", typeof(FakeProviderWithNonPublicField).AssemblyQualifiedName)
-                        .GetDbProviderServices("Does.Anybody.Remember.Laughter?"));
+                        .Providers.GetDbProviderServices("Does.Anybody.Remember.Laughter?"));
             }
 
             [Fact]
@@ -1109,7 +1118,7 @@
                     Strings.EF6Providers_ProviderTypeMissing("Killer.Queen.ProviderServices, Sheer.Heart.Attack", "Killer.Queen"),
                     Assert.Throws<InvalidOperationException>(
                         () => CreateAppConfig("Killer.Queen", "Killer.Queen.ProviderServices, Sheer.Heart.Attack")
-                                  .GetDbProviderServices("Killer.Queen")).Message);
+                                  .Providers.GetDbProviderServices("Killer.Queen")).Message);
             }
 
             [Fact]
@@ -1119,7 +1128,7 @@
                     Strings.EF6Providers_InstanceMissing(typeof(FakeProviderWithNoInstance).AssemblyQualifiedName),
                     Assert.Throws<InvalidOperationException>(
                         () => CreateAppConfig("One.Headlight", typeof(FakeProviderWithNoInstance).AssemblyQualifiedName)
-                                  .GetDbProviderServices("One.Headlight")).Message);
+                                  .Providers.GetDbProviderServices("One.Headlight")).Message);
             }
 
             [Fact]
@@ -1129,7 +1138,7 @@
                     Strings.EF6Providers_NotDbProviderServices(typeof(FakeProviderWithNullInstance).AssemblyQualifiedName),
                     Assert.Throws<InvalidOperationException>(
                         () => CreateAppConfig("Another.One.Bites.The.Dust", typeof(FakeProviderWithNullInstance).AssemblyQualifiedName)
-                                  .GetDbProviderServices("Another.One.Bites.The.Dust")).Message);
+                                  .Providers.GetDbProviderServices("Another.One.Bites.The.Dust")).Message);
             }
 
             [Fact]
@@ -1139,7 +1148,7 @@
                     Strings.EF6Providers_NotDbProviderServices(typeof(FakeProviderWithBadInstance).AssemblyQualifiedName),
                     Assert.Throws<InvalidOperationException>(
                         () => CreateAppConfig("Everlong", typeof(FakeProviderWithBadInstance).AssemblyQualifiedName)
-                                  .GetDbProviderServices("Everlong")).Message);
+                                  .Providers.GetDbProviderServices("Everlong")).Message);
             }
 
             private static AppConfig CreateAppConfig(string invariantName = null, string typeName = null)

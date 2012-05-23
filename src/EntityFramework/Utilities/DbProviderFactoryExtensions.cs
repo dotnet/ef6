@@ -86,7 +86,7 @@ namespace System.Data.Entity.Utilities
 
             // TODO: If context is in use then use the AppConfig from the context rather than the
             // default instance.
-            return AppConfig.DefaultInstance.GetDbProviderServices(invariantName);
+            return AppConfig.DefaultInstance.Providers.GetDbProviderServices(invariantName);
         }
 
     }
