@@ -5,8 +5,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    // TODO: SDE Merge - No CE Provider
-    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class CreateTableScenarios : DbTestCase
     {

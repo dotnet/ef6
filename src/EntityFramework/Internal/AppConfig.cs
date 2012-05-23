@@ -260,23 +260,22 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
-            if (providerInvariantName.Equals("System.Data.SqlClient", StringComparison.OrdinalIgnoreCase))
-            {
-                const string sqlProviderTemplate = 
-                    "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+            var providerTemplate =
+                providerInvariantName.Equals("System.Data.SqlClient", StringComparison.OrdinalIgnoreCase)
+                    ? "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+                    : providerInvariantName.Equals("System.Data.SqlServerCe.4.0", StringComparison.OrdinalIgnoreCase)
+                          ? "System.Data.Entity.SqlServerCompact.SqlCeProviderServices, EntityFramework.SqlServerCompact, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+                          : null;
 
-                return string.Format(
-                    CultureInfo.InvariantCulture, 
-                    sqlProviderTemplate, 
-                    new AssemblyName(typeof(DbContext).Assembly.FullName).Version);
+            if (providerTemplate == null)
+            {
+                throw new InvalidOperationException(Strings.EF6Providers_NoProviderFound(providerInvariantName));
             }
 
-            if (providerInvariantName.Equals("System.Data.SqlServerCe.4.0", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException("SQL Compact not supported yet.");
-            }
-
-            throw new InvalidOperationException(Strings.EF6Providers_NoProviderFound(providerInvariantName));
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                providerTemplate,
+                new AssemblyName(typeof(DbContext).Assembly.FullName).Version);
         }
     }
 }
