@@ -262,7 +262,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// query command tree or producing only a <see cref="DbExpression"/>.
         /// </summary>
         /// <param name="astStatement">The query statement</param>
-        /// <param name="sr">The <see cref="SemanticResolver"/>instance to use</param>
+        /// <param name="sr">The <see cref="SemanticResolver"/> instance to use</param>
         /// <returns>
         ///     An instance of <see cref="DbExpression"/>, adjusted to handle 'inline' projections
         ///     and validated to produce a result edmType appropriate for the root of a query command tree.

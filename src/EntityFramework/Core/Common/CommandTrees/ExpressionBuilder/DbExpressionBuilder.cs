@@ -2907,7 +2907,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// intent is to support Entity constructors in view definitions that express information about
         /// related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         /// </summary>
-        /// <param name="instanceType">The type of the Entity instance that is being constructed</param>
+        /// <param name="entityType">The type of the Entity instance that is being constructed</param>
         /// <param name="attributeValues">Values for each (non-relationship) property of the Entity</param>
         /// <param name="relationships">A (possibly empty) list of <see cref="DbRelatedEntityRef"/>s that describe Entities that are related to the constructed Entity by various relationship types.</param>
         /// <returns>A new DbNewInstanceExpression that represents the construction of the Entity, and includes the specified related Entity information in the see <see cref="DbNewInstanceExpression.RelatedEntityReferences"/> collection.</returns>

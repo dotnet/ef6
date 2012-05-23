@@ -670,7 +670,7 @@
         }
 
         /// <summary>
-        /// Creates an Enum property based on <paramref name="clrProperty"/>and adds it to the parent structural type.
+        /// Creates an Enum property based on <paramref name="clrProperty"/> and adds it to the parent structural type.
         /// </summary>
         /// <param name="type">CLR type owning <paramref name="clrProperty"/>.</param>
         /// <param name="ospaceType">OSpace type the created property will be added to.</param>

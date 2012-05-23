@@ -651,7 +651,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         /// <summary>
         /// Validates the input and sort key arguments to both DbSkipExpression and DbSortExpression.
         /// </summary>
-        /// <param name="keys">A list of SortClauses that specifies the sort order to apply to the input collection</param>
+        /// <param name="sortOrder">A list of SortClauses that specifies the sort order to apply to the input collection</param>
         private static ReadOnlyCollection<DbSortClause> ValidateSortArguments(IEnumerable<DbSortClause> sortOrder)
         {
             var ev = CreateValidator(

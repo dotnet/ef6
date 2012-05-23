@@ -27,7 +27,7 @@
         /// <param name="parameters"></param>
         /// <exception cref="ArgumentNullException"><paramref name="metadata"/>, <paramref name="dataSpace"/> or <paramref name="edmFunction"/> is null</exception>
         /// <exception cref="ArgumentException"><paramref name="dataSpace"/> does not represent a valid data space or
-        /// <paramref name="edmFunction">is a composable function</paramref></exception>
+        /// <paramref name="edmFunction"/> is a composable function</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public DbFunctionCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, EdmFunction edmFunction, TypeUsage resultType,
