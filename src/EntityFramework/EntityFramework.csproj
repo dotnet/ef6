@@ -1256,7 +1256,6 @@
     <Compile Include="Migrations\Infrastructure\MigratorScriptingDecorator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Migrations\Infrastructure\ModelDiffer.cs" />
     <Compile Include="Migrations\Model\AddColumnOperation.cs" />
     <Compile Include="Migrations\Model\AddForeignKeyOperation.cs" />
     <Compile Include="Migrations\Model\AddPrimaryKeyOperation.cs" />

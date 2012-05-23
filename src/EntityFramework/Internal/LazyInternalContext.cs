@@ -585,5 +585,10 @@
         }
 
         #endregion
+
+        public override string DefaultSchema
+        {
+            get { return CodeFirstModel.DefaultSchema; }
+        }
     }
 }

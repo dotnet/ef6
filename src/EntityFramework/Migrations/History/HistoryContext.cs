@@ -4,9 +4,12 @@ namespace System.Data.Entity.Migrations.History
 
     internal class HistoryContext : HistoryContextBase<HistoryContext>
     {
-        public HistoryContext(DbConnection existingConnection, bool contextOwnsConnection = true)
+        private readonly string _defaultSchema;
+
+        public HistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
             : base(existingConnection, contextOwnsConnection)
         {
+            _defaultSchema = defaultSchema;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -15,6 +18,8 @@ namespace System.Data.Entity.Migrations.History
 #pragma warning disable 612,618
             modelBuilder.Entity<HistoryRow>().Ignore(h => h.CreatedOn);
 #pragma warning restore 612,618
+
+            modelBuilder.HasDefaultSchema(_defaultSchema);
         }
     }
 }

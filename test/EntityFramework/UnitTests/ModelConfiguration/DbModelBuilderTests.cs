@@ -27,6 +27,17 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
     public sealed class DbModelBuilderTests
     {
         [Fact]
+        public void Can_set_default_schema()
+        {
+            var modelConfiguration = new ModelConfiguration();
+            var modelBuilder = new DbModelBuilder(modelConfiguration);
+
+            modelBuilder.HasDefaultSchema("foo");
+
+            Assert.Equal("foo", modelConfiguration.DefaultSchema);
+        }
+
+        [Fact]
         public void Ctor_should_throw_when_version_out_of_range()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new DbModelBuilder((DbModelBuilderVersion)(-1)));
@@ -244,7 +255,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void ModelConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<ModelConfiguration>(3);
+            VerifyFieldCount<ModelConfiguration>(4);
         }
 
         [Fact]

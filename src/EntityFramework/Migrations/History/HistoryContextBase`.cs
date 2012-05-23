@@ -10,7 +10,7 @@
             Database.SetInitializer<TContext>(null);
         }
 
-        internal const string TableName = "__MigrationHistory";
+        public const string TableName = "__MigrationHistory";
 
         public HistoryContextBase(DbConnection existingConnection, bool contextOwnsConnection = true)
             : base(existingConnection, contextOwnsConnection)

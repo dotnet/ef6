@@ -7,7 +7,6 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Edm;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
@@ -22,9 +21,12 @@ namespace System.Data.Entity.Migrations.History
 
     internal class HistoryRepository : RepositoryBase
     {
-        public HistoryRepository(string connectionString, DbProviderFactory providerFactory)
+        private readonly string _defaultSchema;
+
+        public HistoryRepository(string connectionString, DbProviderFactory providerFactory, string defaultSchema = null)
             : base(connectionString, providerFactory)
         {
+            _defaultSchema = defaultSchema;
         }
 
         public virtual XDocument GetLastModel()
@@ -37,7 +39,7 @@ namespace System.Data.Entity.Migrations.History
         {
             migrationId = null;
 
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 if (!Exists(context))
                 {
@@ -70,7 +72,7 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 if (!Exists(context))
                 {
@@ -95,7 +97,7 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(localMigrations != null);
 
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 if (!Exists(context))
                 {
@@ -112,7 +114,7 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 var query = context.History.AsQueryable();
                 var exists = Exists(context);
@@ -143,7 +145,7 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationName));
 
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 if (!Exists(context))
                 {
@@ -172,7 +174,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual bool Exists()
         {
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 return Exists(context);
             }
@@ -180,7 +182,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual IEnumerable<MigrationOperation> GetUpgradeOperations()
         {
-            if (ColumnExists(() => new HistoryContext(CreateConnection()), h => h.ProductVersion) == false)
+            if (ColumnExists(() => CreateContext(), h => h.ProductVersion) == false)
             {
                 yield return new DropColumnOperation(HistoryContext.TableName, "Hash");
 
@@ -229,13 +231,13 @@ namespace System.Data.Entity.Migrations.History
             return null;
         }
 
-        public virtual MigrationOperation CreateCreateTableOperation(ModelDiffer modelDiffer)
+        public virtual MigrationOperation CreateCreateTableOperation(EdmModelDiffer modelDiffer)
         {
-            return CreateCreateTableOperation(c => new HistoryContext(c, false), modelDiffer);
+            return CreateCreateTableOperation(CreateContext, modelDiffer);
         }
 
         public virtual MigrationOperation CreateCreateTableOperation<TContext>(
-            Func<DbConnection, HistoryContextBase<TContext>> createContext, ModelDiffer modelDiffer)
+            Func<DbConnection, HistoryContextBase<TContext>> createContext, EdmModelDiffer modelDiffer)
             where TContext : DbContext
         {
             Contract.Requires(modelDiffer != null);
@@ -247,7 +249,7 @@ namespace System.Data.Entity.Migrations.History
                     using (var emptyContext = new EmptyContext(connection))
                     {
                         var operations
-                            = modelDiffer.Diff(emptyContext.GetModel(), context.GetModel(), null);
+                            = modelDiffer.Diff(emptyContext.GetModel(), context.GetModel());
 
                         var createTableOperation = operations.OfType<CreateTableOperation>().Single();
 
@@ -259,18 +261,18 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual MigrationOperation CreateDropTableOperation(ModelDiffer modelDiffer)
+        public virtual MigrationOperation CreateDropTableOperation(EdmModelDiffer modelDiffer)
         {
             Contract.Requires(modelDiffer != null);
 
             using (var connection = CreateConnection())
             {
-                using (var context = new HistoryContext(connection, false))
+                using (var context = CreateContext(connection))
                 {
                     using (var emptyContext = new EmptyContext(connection))
                     {
                         var operations
-                            = modelDiffer.Diff(context.GetModel(), emptyContext.GetModel(), null);
+                            = modelDiffer.Diff(context.GetModel(), emptyContext.GetModel());
 
                         var dropTableOperation = operations.OfType<DropTableOperation>().Single();
 
@@ -286,10 +288,7 @@ namespace System.Data.Entity.Migrations.History
             Contract.Requires(model != null);
 
             // TODO: Can we somehow use DbInsertCommandTree?
-            return new InsertHistoryOperation(
-                HistoryContext.TableName,
-                migrationId,
-                new ModelCompressor().Compress(model));
+            return new InsertHistoryOperation(TableName, migrationId, new ModelCompressor().Compress(model));
         }
 
         public virtual MigrationOperation CreateDeleteOperation(string migrationId)
@@ -297,16 +296,24 @@ namespace System.Data.Entity.Migrations.History
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
             // TODO: Can we somehow use DbInsertCommandTree?
-            return new DeleteHistoryOperation(
-                HistoryContext.TableName,
-                migrationId);
+            return new DeleteHistoryOperation(TableName, migrationId);
+        }
+
+        private string TableName
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(_defaultSchema)
+                           ? _defaultSchema + "." + HistoryContext.TableName
+                           : HistoryContext.TableName;
+            }
         }
 
         public virtual void BootstrapUsingEFProviderDdl(XDocument model)
         {
             Contract.Requires(model != null);
 
-            using (var context = new HistoryContext(CreateConnection()))
+            using (var context = CreateContext())
             {
                 context.Database.ExecuteSqlCommand(
                     ((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript());
@@ -347,6 +354,11 @@ namespace System.Data.Entity.Migrations.History
             }
 
             return false;
+        }
+
+        private HistoryContext CreateContext(DbConnection connection = null)
+        {
+            return new HistoryContext(connection ?? CreateConnection(), connection == null, _defaultSchema);
         }
     }
 }

@@ -469,6 +469,11 @@ namespace System.Data.Entity
 
         #endregion
 
+        internal string DefaultSchema
+        {
+           get { return InternalContext.DefaultSchema; }
+        }
+
         #region Hidden Object methods
 
         [EditorBrowsable(EditorBrowsableState.Never)]

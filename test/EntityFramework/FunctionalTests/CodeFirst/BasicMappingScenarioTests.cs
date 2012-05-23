@@ -1299,6 +1299,56 @@ namespace FunctionalTests
 
     public sealed class BasicMappingScenarioTests : TestBase
     {
+        [Fact]
+        public void Can_specify_default_schema()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.HasDefaultSchema("foo");
+            modelBuilder.Entity<Party>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+        
+            databaseMapping.AssertValid();
+           
+            Assert.Equal("foo", databaseMapping.Database.Schemas.Single().Name);
+            Assert.Equal("foo", databaseMapping.Database.Schemas.Single().DatabaseIdentifier);
+        }
+
+        [Fact]
+        public void Can_specify_default_schema_and_explicit_schemas()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.HasDefaultSchema("foo");
+            modelBuilder.Entity<Party>();
+            modelBuilder.Entity<DayRecord>().ToTable("days", "bar");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal("foo", databaseMapping.Database.Schemas.First().Name);
+            Assert.Equal("bar", databaseMapping.Database.Schemas.Last().Name);
+        }
+
+        [Fact]
+        public void Can_specify_default_schema_and_explicit_dbo_schema()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.HasDefaultSchema("foo");
+            modelBuilder.Entity<Party>();
+            modelBuilder.Entity<DayRecord>().ToTable("days", "dbo");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal("foo", databaseMapping.Database.Schemas.First().Name);
+            Assert.Equal("dbo", databaseMapping.Database.Schemas.Last().Name);
+        }
+
         #region Misc
 
         [Fact]

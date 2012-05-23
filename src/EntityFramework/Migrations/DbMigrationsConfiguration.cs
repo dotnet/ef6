@@ -23,7 +23,7 @@
         private MigrationCodeGenerator _codeGenerator;
         private Type _contextType;
         private Assembly _migrationsAssembly;
-        private ModelDiffer _modelDiffer = new EdmModelDiffer();
+        private EdmModelDiffer _modelDiffer = new EdmModelDiffer();
 
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = "Migrations";
@@ -169,7 +169,7 @@
             Contract.Requires(context != null);
         }
 
-        internal ModelDiffer ModelDiffer
+        internal EdmModelDiffer ModelDiffer
         {
             get { return _modelDiffer; }
             set

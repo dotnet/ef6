@@ -16,7 +16,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Xml.Linq;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal class EdmModelDiffer : ModelDiffer
+    internal class EdmModelDiffer
     {
         private static readonly PrimitiveTypeKind[] ValidIdentityTypes
             = new[]
@@ -42,8 +42,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private bool _consistentProviders;
 
-        public override IEnumerable<MigrationOperation> Diff(
-            XDocument sourceModel, XDocument targetModel, string connectionString)
+        public IEnumerable<MigrationOperation> Diff(XDocument sourceModel, XDocument targetModel)
         {
             DbProviderInfo providerInfo;
 
@@ -509,7 +508,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                           SingleOrDefault());
         }
 
-        private static CreateTableOperation BuildCreateTableOperation(
+        private CreateTableOperation BuildCreateTableOperation(
             string entitySetName,
             string tableName,
             string schema,
@@ -630,7 +629,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return column;
         }
 
-        private static AddForeignKeyOperation BuildAddForeignKeyOperation(XDocument edmx, XElement association)
+        private AddForeignKeyOperation BuildAddForeignKeyOperation(XDocument edmx, XElement association)
         {
             Contract.Requires(edmx != null);
             Contract.Requires(association != null);
@@ -655,7 +654,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return addForeignKeyOperation;
         }
 
-        private static DropForeignKeyOperation BuildDropForeignKeyOperation(XDocument edmx, XElement association)
+        private DropForeignKeyOperation BuildDropForeignKeyOperation(XDocument edmx, XElement association)
         {
             Contract.Requires(edmx != null);
             Contract.Requires(association != null);
@@ -668,7 +667,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return dropForeignKeyOperation;
         }
 
-        private static void BuildForeignKeyOperation(
+        private void BuildForeignKeyOperation(
             XDocument edmx, XElement association, ForeignKeyOperation foreignKeyOperation)
         {
             Contract.Requires(edmx != null);
@@ -707,7 +706,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
-        private static string GetQualifiedTableName(XDocument model, string entitySetName)
+        public virtual string GetQualifiedTableName(string table, string schema)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(table));
+            Contract.Requires(!string.IsNullOrWhiteSpace(schema));
+
+            return schema + "." + table;
+        }
+
+        private string GetQualifiedTableName(XDocument model, string entitySetName)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(entitySetName));
@@ -725,7 +732,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return GetQualifiedTableName(schemaAndTable.Table, schemaAndTable.Schema);
         }
 
-        private static string GetQualifiedTableNameFromType(XDocument model, string entityTypeName)
+        private string GetQualifiedTableNameFromType(XDocument model, string entityTypeName)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(entityTypeName));

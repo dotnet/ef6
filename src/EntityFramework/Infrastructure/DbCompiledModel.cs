@@ -72,6 +72,11 @@ namespace System.Data.Entity.Infrastructure
             get { return _workspace.ProviderInfo; }
         }
 
+        public string DefaultSchema
+        {
+            get { return CachedModelBuilder.ModelConfiguration.DefaultSchema; }
+        }
+
         #endregion
 
         #region CreateObjectContext
@@ -117,8 +122,7 @@ namespace System.Data.Entity.Infrastructure
             where TContext : ObjectContext
         {
             // Optimize for case where just ObjectContext (non-derived) is asked for.
-            if (typeof(TContext)
-                == typeof(ObjectContext))
+            if (typeof(TContext) == typeof(ObjectContext))
             {
                 return ObjectContextConstructor;
             }

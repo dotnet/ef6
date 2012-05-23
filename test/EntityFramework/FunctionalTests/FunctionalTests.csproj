@@ -155,6 +155,7 @@
     <Compile Include="Migrations\AutoAndGenerateScenarios.cs" />
     <Compile Include="Migrations\AutoAndGenerateTestCase.cs" />
     <Compile Include="Migrations\BasicMigrationScenarios.cs" />
+    <Compile Include="Migrations\SchemaScenarios.cs" />
     <Compile Include="Migrations\CreateIndexScenarios.cs" />
     <Compile Include="Migrations\CreateTableScenarios.cs" />
     <Compile Include="Migrations\CrossDatabaseScenarios.cs" />

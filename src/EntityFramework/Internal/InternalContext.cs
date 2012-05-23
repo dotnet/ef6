@@ -238,7 +238,7 @@
         {
             Contract.Requires(model != null);
 
-            return !new EdmModelDiffer().Diff(model, Owner.GetModel(), connectionString: null).Any();
+            return !new EdmModelDiffer().Diff(model, Owner.GetModel()).Any();
         }
 
         /// <summary>
@@ -1159,12 +1159,17 @@
         }
 
         #endregion
+
+        public virtual string DefaultSchema
+        {
+            get { return null; }
+        }
     }
 
     [ContractClassFor(typeof(InternalContext))]
     internal abstract class InternalContextContracts : InternalContext
     {
-        public InternalContextContracts()
+        protected InternalContextContracts()
             : base(null)
         {
         }
