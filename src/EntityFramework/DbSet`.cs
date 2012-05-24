@@ -7,8 +7,6 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal.Linq;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -255,44 +253,6 @@ namespace System.Data.Entity
             Contract.Requires(parameters != null);
 
             return new DbSqlQuery<TEntity>(new InternalSqlSetQuery(_internalSet, sql, false, parameters));
-        }
-
-        /// <summary>
-        ///     Evaluates the provided query expression asynchronusly.
-        ///     The results of this query are tracked by the context.
-        ///     Use the <see cref = "Database.QueryAsync<TResult>(Expression<Func<TResult>>)" />
-        ///     method to return entities that are not tracked by the context.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the query result.</typeparam>
-        /// <param name="expression">Query expression to evaluate.</param>
-        /// <returns>A Task containg the result of the query expression evaluation.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<TResult> Async<TResult>(Expression<Func<IQueryable<TEntity>, TResult>> expression)
-        {
-            Contract.Requires(expression != null);
-
-            return Async(expression, CancellationToken.None);
-        }
-
-        /// <summary>
-        ///     Evaluates the provided query expression asynchronusly.
-        ///     The results of this query are tracked by the context.
-        ///     Use the <see cref = "Database.QueryAsync<TResult>(Expression<Func<TResult>>, CancellationToken)" />
-        ///     method to return entities that are not tracked by the context.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the query result.</typeparam>
-        /// <param name="expression">Query expression to evaluate.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containg the result of the query expression evaluation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<TResult> Async<TResult>(Expression<Func<IQueryable<TEntity>, TResult>> expression, CancellationToken cancellationToken)
-        {
-            Contract.Requires(expression != null);
-
-            throw new NotImplementedException();
         }
 
         #endregion

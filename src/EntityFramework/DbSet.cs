@@ -9,8 +9,6 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -263,42 +261,6 @@
             Contract.Requires(parameters != null);
 
             return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
-        }
-
-        /// <summary>
-        ///     Evaluates the provided query expression asynchronusly.
-        ///     The results of this query are tracked by the context.
-        ///     Use the <see cref = "Database.QueryAsync(Expression<Func<object>>)" />
-        ///     method to return entities that are not tracked by the context.
-        /// </summary>
-        /// <param name="expression">Query expression to evaluate.</param>
-        /// <returns>A Task containg the result of the query expression evaluation.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<object> Async(Expression<Func<IQueryable, object>> expression)
-        {
-            Contract.Requires(expression != null);
-
-            return Async(expression, CancellationToken.None);
-        }
-
-        /// <summary>
-        ///     Evaluates the provided query expression asynchronusly.
-        ///     The results of this query are tracked by the context.
-        ///     Use the <see cref = "Database.QueryAsync(Expression<Func<object>>, CancellationToken)" />
-        ///     method to return entities that are not tracked by the context.
-        /// </summary>
-        /// <param name="expression">Query expression to evaluate.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containg the result of the query expression evaluation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<object> Async(Expression<Func<IQueryable, object>> expression, CancellationToken cancellationToken)
-        {
-            Contract.Requires(expression != null);
-
-            throw new NotImplementedException();
         }
 
         #endregion
