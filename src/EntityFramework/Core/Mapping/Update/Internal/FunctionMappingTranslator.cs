@@ -253,7 +253,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             {
                                 var entitySetName = stateEntry.Source.EntitySet.Name;
                                 var associationSetName = parameterBinding.MemberPath.AssociationSetEnd.ParentAssociationSet.Name;
-                                throw new UpdateException(Strings.Update_MissingRequiredRelationshipValue(entitySetName, associationSetName), null, command.GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
+                                throw new UpdateException(
+                                    Strings.Update_MissingRequiredRelationshipValue(entitySetName, associationSetName), null,
+                                    command.GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
                             }
                             else
                             {

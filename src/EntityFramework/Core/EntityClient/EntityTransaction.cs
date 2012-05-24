@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -11,8 +10,8 @@ namespace System.Data.Entity.Core.EntityClient
     /// </summary>
     public sealed class EntityTransaction : DbTransaction
     {
-        bool _disposed = false;
-        private InternalEntityTransaction _internalEntityTransaction;
+        private bool _disposed = false;
+        private readonly InternalEntityTransaction _internalEntityTransaction;
 
         /// <summary>
         /// Constructs the EntityTransaction object with an associated connection and the underlying store transaction

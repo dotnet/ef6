@@ -1,4 +1,4 @@
- //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
+//using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 
 // It is fine to use Debug.Assert in cases where you assert an obvious thing that is supposed
 // to prevent from simple mistakes during development (e.g. method argument validation 
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                             if (!varToCommandColumnMap.TryGetValue(varRefColumnMap.Var, out commandAndColumn))
                             {
                                 throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UnknownVar, 1, varRefColumnMap.Var.Id);
-                                    // shouldn't have gotten here without having a resolveable var
+                                // shouldn't have gotten here without having a resolveable var
                             }
                             columnMap = new ScalarColumnMap(
                                 varRefColumnMap.Type, varRefColumnMap.Name, commandAndColumn.Key, commandAndColumn.Value);

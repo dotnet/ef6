@@ -372,8 +372,9 @@ namespace System.Data.Entity.Core.Mapping
 
                 if (!generatedViews.TryGetValue(extent, out view))
                 {
-                    throw new InvalidOperationException(System.Data.Entity.Resources.Strings.Mapping_Views_For_Extent_Not_Generated(
-                        (extent.EntityContainer.DataSpace == DataSpace.SSpace) ? "Table" : "EntitySet", extent.Name));
+                    throw new InvalidOperationException(
+                        System.Data.Entity.Resources.Strings.Mapping_Views_For_Extent_Not_Generated(
+                            (extent.EntityContainer.DataSpace == DataSpace.SSpace) ? "Table" : "EntitySet", extent.Name));
                 }
 
                 return view;
@@ -403,8 +404,9 @@ namespace System.Data.Entity.Core.Mapping
                                 var viewContainerType = viewGenAttribute.ViewGenerationType;
                                 if (!viewContainerType.IsSubclassOf(typeof(EntityViewContainer)))
                                 {
-                                    throw new InvalidOperationException(System.Data.Entity.Resources.Strings.Generated_View_Type_Super_Class(
-                                        StorageMslConstructs.EntityViewGenerationTypeName));
+                                    throw new InvalidOperationException(
+                                        System.Data.Entity.Resources.Strings.Generated_View_Type_Super_Class(
+                                            StorageMslConstructs.EntityViewGenerationTypeName));
                                 }
                                 var viewContainer = (Activator.CreateInstance(viewContainerType) as EntityViewContainer);
                                 Debug.Assert(viewContainer != null, "Should be able to create the type");

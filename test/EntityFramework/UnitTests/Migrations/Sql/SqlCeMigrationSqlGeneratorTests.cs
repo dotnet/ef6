@@ -9,7 +9,7 @@ namespace System.Data.Entity.Migrations
 
     public class SqlCeMigrationSqlGeneratorTests
     {
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void Generate_should_throw_when_column_rename()
         {
             var migrationProvider = new SqlCeMigrationSqlGenerator();

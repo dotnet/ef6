@@ -15,7 +15,8 @@
 
         public EntityAdapter()
             : this((stateManager, adapter) => new UpdateTranslator(stateManager, adapter))
-        { }
+        {
+        }
 
         protected EntityAdapter(Func<IEntityStateManager, EntityAdapter, UpdateTranslator> updateTranslatorFactory)
         {
@@ -91,13 +92,15 @@
             }
 
             // Check that the store connection is available
-            if (_connection.StoreProviderFactory == null || _connection.StoreConnection == null)
+            if (_connection.StoreProviderFactory == null
+                || _connection.StoreConnection == null)
             {
                 throw Error.EntityClient_NoStoreConnectionForUpdate();
             }
 
             // Check that the connection is open before we proceed
-            if (ConnectionState.Open != _connection.State)
+            if (ConnectionState.Open
+                != _connection.State)
             {
                 throw Error.EntityClient_ClosedConnectionForUpdate();
             }

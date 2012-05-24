@@ -1,4 +1,5 @@
 using md = System.Data.Entity.Core.Metadata.Edm;
+
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
 
 namespace System.Data.Entity.Core.Query.PlanCompiler

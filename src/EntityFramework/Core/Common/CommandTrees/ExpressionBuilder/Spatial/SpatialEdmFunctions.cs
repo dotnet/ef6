@@ -452,7 +452,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <param name="pointWellKnownText">An expression that provides the well known text representation of the geography point value.</param>
         /// <param name="coordinateSystemId">An expression that provides the coordinate system id (SRID) of the geography point value's coordinate system.</param>
         /// <returns>A new DbFunctionExpression that returns a new geography point value based on the specified values.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pointWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</excpointTexteption>
+        /// <exception cref="ArgumentNullException"><paramref name="pointWellKnownText"/> or <paramref name="coordinateSystemId"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'GeographyPointFromText' function accepts arguments with the result types of <paramref name="pointWellKnownText"/> and <paramref name="coordinateSystemId"/>.</exception>
         public static DbFunctionExpression GeographyPointFromText(DbExpression pointWellKnownText, DbExpression coordinateSystemId)
         {
@@ -939,7 +939,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// specified argument, which must have an Edm.Geometry result type. The result type of
         /// the expression is Edm.Boolean.
         /// </summary>
-        /// <param name="spatialValue">An expression that specifies the geometry value from which the IsSimpleGeometry value should be retrieved.</param>
+        /// <param name="geometryValue">An expression that specifies the geometry value from which the IsSimpleGeometry value should be retrieved.</param>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether <paramref name="geometryValue"/> is a simple geometry.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'IsSimpleGeometry' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
@@ -1549,7 +1549,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'ExteriorRing' function with the
         /// specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
-        /// <param name="spatialValue">An expression that specifies the geometry polygon value from which the exterior ring should be retrieved.</param>
+        /// <param name="geometryValue">An expression that specifies the geometry polygon value from which the exterior ring should be retrieved.</param>
         /// <returns>A new DbFunctionExpression that returns either the exterior ring of the polygon <paramref name="geometryValue"/> or <c>null</c> if <paramref name="geometryValue"/> is not a polygon.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'ExteriorRing' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
@@ -1563,7 +1563,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'InteriorRingCount' function with the
         /// specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Int32.
         /// </summary>
-        /// <param name="spatialValue">An expression that specifies the geometry polygon value from which the number of interior rings should be retrieved.</param>
+        /// <param name="geometryValue">An expression that specifies the geometry polygon value from which the number of interior rings should be retrieved.</param>
         /// <returns>A new DbFunctionExpression that returns either the number of interior rings in the polygon <paramref name="geometryValue"/> or <c>null</c> if <paramref name="geometryValue"/> is not a polygon.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'InteriorRingCount' function accepts an argument with the result type of <paramref name="geometryValue"/>.</exception>
@@ -1578,7 +1578,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// specified arguments.  The first argument must have an Edm.Geometry result type.  The second argument must have an integer numeric result types. 
         /// The result type of the expression is Edm.Geometry.
         /// </summary>
-        /// <param name="spatialValue">An expression that specifies the geometry polygon value.</param>
+        /// <param name="geometryValue">An expression that specifies the geometry polygon value.</param>
         /// <param name="indexValue">An expression that specifies the position of the interior ring to be retrieved from within the polygon.</param>
         /// <returns>A new DbFunctionExpression that returns either the interior ring at position <paramref name="indexValue"/> in <paramref name="geometryValue"/> or <c>null</c> if <paramref name="geometryValue"/> is not a polygon.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="geometryValue"/> is null.</exception>

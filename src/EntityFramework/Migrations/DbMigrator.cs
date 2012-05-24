@@ -12,7 +12,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -20,7 +19,6 @@ namespace System.Data.Entity.Migrations
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
-    using IEnumerableExtensions = System.Data.Entity.Migrations.Extensions.IEnumerableExtensions;
 
     /// <summary>
     ///     DbMigrator is used to apply existing migrations to a database. 
@@ -45,7 +43,7 @@ namespace System.Data.Entity.Migrations
         private readonly MigrationAssembly _migrationAssembly;
         private readonly DbContextInfo _usersContextInfo;
         private readonly bool _calledByCreateDatabase;
-        private readonly ModelDiffer _modelDiffer;
+        private readonly EdmModelDiffer _modelDiffer;
         private readonly string _providerManifestToken;
         private readonly string _targetDatabase;
 
@@ -111,14 +109,11 @@ namespace System.Data.Entity.Migrations
 
                 var connection = context.Database.Connection;
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
-                _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory);
+                _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.DefaultSchema);
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                    // TODO: Not calling using extension method syntax here because of conflicts due to duplicate extension methods
-                    // Should fix this post EF5.
                                              : DbProviderServices.GetProviderServices(connection).
                                                    GetProviderManifestTokenChecked(connection);
-
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
                         connection.DataSource,
@@ -202,10 +197,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var migrationOperations
-                = _modelDiffer.Diff(
-                    _emptyModel,
-                    databaseModel,
-                    _usersContextInfo.ConnectionString)
+                = _modelDiffer.Diff(_emptyModel, databaseModel)
                     .ToList();
 
             var generatedMigration
@@ -235,10 +227,7 @@ namespace System.Data.Entity.Migrations
             var migrationOperations
                 = ignoreChanges
                       ? Enumerable.Empty<MigrationOperation>()
-                      : _modelDiffer.Diff(
-                          sourceModel,
-                          _currentModel,
-                          _usersContextInfo.ConnectionString)
+                      : _modelDiffer.Diff(sourceModel, _currentModel)
                             .ToList();
 
             string migrationId;
@@ -478,7 +467,7 @@ namespace System.Data.Entity.Migrations
         {
             Contract.Requires(model != null);
 
-            return _modelDiffer.Diff(GetLastModel(lastMigration), model, _usersContextInfo.ConnectionString).Any();
+            return _modelDiffer.Diff(GetLastModel(lastMigration), model).Any();
         }
 
         private XDocument GetLastModel(DbMigration lastMigration, string currentMigrationId = null)
@@ -566,10 +555,7 @@ namespace System.Data.Entity.Migrations
             string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
         {
             var operations
-                = _modelDiffer.Diff(
-                    sourceModel,
-                    targetModel,
-                    _usersContextInfo.ConnectionString)
+                = _modelDiffer.Diff(sourceModel, targetModel)
                     .ToList();
 
             if (!_configuration.AutomaticMigrationDataLossAllowed
@@ -699,7 +685,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private static void FillInForeignKeyOperations(
+        private void FillInForeignKeyOperations(
             IEnumerable<MigrationOperation> operations, XDocument targetModel)
         {
             Contract.Requires(operations != null);
@@ -712,7 +698,7 @@ namespace System.Data.Entity.Migrations
                 var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                       where ModelDiffer.GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute())
+                       where _modelDiffer.GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute())
                            .EqualsIgnoreCase(principalTable)
                        select es.NameAttribute()).SingleOrDefault();
 

@@ -21,8 +21,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             Debug.Assert(!string.IsNullOrEmpty(functionName), "Function name must not be null");
 
             var functions = new List<EdmFunction>(
-                Enumerable.Where(
-                    EdmProviderManifest.Instance.GetStoreFunctions(),
+                EdmProviderManifest.Instance.GetStoreFunctions().Where(
                     func => string.Equals(func.Name, functionName, StringComparison.Ordinal))
                 );
 
@@ -216,7 +215,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="string1">An expression that specifies the string that should appear first in the concatenated result string.</param>
         /// <param name="string2">An expression that specifies the string that should appear second in the concatenated result string.</param>
         /// <returns>A new DbFunctionExpression that produces the concatenated string.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="string1"/> or <paramref name="string2"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="string1"/> or <paramref name="string2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'Concat' function accepts arguments with the result types of <paramref name="string1"/> and <paramref name="string2"/>.</exception>
         public static DbFunctionExpression Concat(this DbExpression string1, DbExpression string2)
         {
@@ -235,7 +234,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="searchedString">An expression that specifies the string to search for any occurence of <paramref name="searchedForString"/>.</param>
         /// <param name="searchedForString">An expression that specifies the string to search for in <paramref name="searchedString"/>.</param>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether or not <paramref name="searchedForString"/> occurs within <paramref name="searchedString"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="searchedString"/> or <paramref name="searchedForString"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="searchedString"/> or <paramref name="searchedForString"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'Contains' function accepts arguments with the result types of <paramref name="searchedString"/> and <paramref name="searchedForString"/>.</exception>
         public static DbExpression Contains(this DbExpression searchedString, DbExpression searchedForString)
         {
@@ -249,10 +248,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must each have a string result type. The result type of the expression is
         /// Boolean.
         /// </summary>
-        /// <param name="stringArgument">An expression that specifies the string to check for the specified <param name="suffix">.</param>
+        /// <param name="stringArgument">An expression that specifies the string to check for the specified <paramref name="suffix"/>.</param>
         /// <param name="suffix">An expression that specifies the suffix for which <paramref name="stringArgument"/> should be checked.</param>
         /// <returns>A new DbFunctionExpression that indicates whether <paramref name="stringArgument"/> ends with <paramref name="suffix"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="suffix"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="suffix"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'EndsWith' function accepts arguments with the result types of <paramref name="stringArgument"/> and <paramref name="suffix"/>.</exception>
         public static DbFunctionExpression EndsWith(this DbExpression stringArgument, DbExpression suffix)
         {
@@ -270,7 +269,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="searchString">An expression that specifies the string to search for <paramref name="stringToFind"/>.</param>
         /// <param name="stringToFind">An expression that specifies the string to locate within <paramref name="searchString"/> should be checked.</param>
         /// <returns>A new DbFunctionExpression that returns the first index of <paramref name="stringToFind"/> in <paramref name="searchString"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="searchString"/> or <paramref name="stringToFind"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="searchString"/> or <paramref name="stringToFind"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'IndexOf' function accepts arguments with the result types of <paramref name="searchString"/> and <paramref name="stringToFind"/>.</exception>
         public static DbFunctionExpression IndexOf(this DbExpression searchString, DbExpression stringToFind)
         {
@@ -287,7 +286,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="stringArgument">An expression that specifies the string from which to extract the leftmost substring.</param>
         /// <param name="length">An expression that specifies the length of the leftmost substring to extract from <paramref name="stringArgument"/>.</param>
         /// <returns>A new DbFunctionExpression that returns the the leftmost substring of length <paramref name="length"/> from <paramref name="stringArgument"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="length"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="length"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'Left' function accepts arguments with the result types of <paramref name="stringArgument"/>.</exception>
         public static DbFunctionExpression Left(this DbExpression stringArgument, DbExpression length)
         {
@@ -353,7 +352,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="stringArgument">An expression that specifies the string from which to extract the rightmost substring.</param>
         /// <param name="length">An expression that specifies the length of the rightmost substring to extract from <paramref name="stringArgument"/>.</param>
         /// <returns>A new DbFunctionExpression that returns the the rightmost substring of length <paramref name="length"/> from <paramref name="stringArgument"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="length"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="length"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'Right' function accepts arguments with the result types of <paramref name="stringArgument"/>.</exception>
         public static DbFunctionExpression Right(this DbExpression stringArgument, DbExpression length)
         {
@@ -367,10 +366,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must each have a string result type. The result type of the expression is
         /// Boolean.
         /// </summary>
-        /// <param name="stringArgument">An expression that specifies the string to check for the specified <param name="prefix">.</param>
-        /// <param name="suffix">An expression that specifies the prefix for which <paramref name="stringArgument"/> should be checked.</param>
+        /// <param name="stringArgument">An expression that specifies the string to check for the specified <paramref name="prefix"/>.</param>
+        /// <param name="prefix">An expression that specifies the prefix for which <paramref name="stringArgument"/> should be checked.</param>
         /// <returns>A new DbFunctionExpression that indicates whether <paramref name="stringArgument"/> starts with <paramref name="prefix"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="prefix"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/> or <paramref name="prefix"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'StartsWith' function accepts arguments with the result types of <paramref name="stringArgument"/> and <paramref name="prefix"/>.</exception>
         public static DbFunctionExpression StartsWith(this DbExpression stringArgument, DbExpression prefix)
         {
@@ -391,7 +390,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="start">An expression that specifies the starting index from which the substring should be taken.</param>
         /// <param name="length">An expression that specifies the length of the substring.</param>
         /// <returns>A new DbFunctionExpression that returns the substring of length <paramref name="length"/> from <paramref name="stringArgument"/> starting at <paramref name="start"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/>, <paramref name="start"/> or <paramref name="length"/>is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stringArgument"/>, <paramref name="start"/> or <paramref name="length"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'Substring' function accepts arguments with the result types of <paramref name="stringArgument"/>, <paramref name="start"/> and <paramref name="length"/>.</exception>
         public static DbFunctionExpression Substring(this DbExpression stringArgument, DbExpression start, DbExpression length)
         {
@@ -743,7 +742,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="dateValue"/>.
         /// </summary>
-        /// <param name="dateValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="dateValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of years to add to <paramref name="dateValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of years specified by <paramref name="addValue"/> to the value specified by <paramref name="dateValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dateValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -760,7 +759,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="dateValue"/>.
         /// </summary>
-        /// <param name="dateValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="dateValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of months to add to <paramref name="dateValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of months specified by <paramref name="addValue"/> to the value specified by <paramref name="dateValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dateValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -777,7 +776,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="dateValue"/>.
         /// </summary>
-        /// <param name="dateValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="dateValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of days to add to <paramref name="dateValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of days specified by <paramref name="addValue"/> to the value specified by <paramref name="dateValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dateValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -794,7 +793,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="timeValue"/>.
         /// </summary>
-        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of hours to add to <paramref name="timeValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of hours specified by <paramref name="addValue"/> to the value specified by <paramref name="timeValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -811,7 +810,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="timeValue"/>.
         /// </summary>
-        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of minutes to add to <paramref name="timeValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of minutes specified by <paramref name="addValue"/> to the value specified by <paramref name="timeValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -828,7 +827,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="timeValue"/>.
         /// </summary>
-        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of seconds to add to <paramref name="timeValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of seconds specified by <paramref name="addValue"/> to the value specified by <paramref name="timeValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -845,7 +844,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="timeValue"/>.
         /// </summary>
-        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of milliseconds to add to <paramref name="timeValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of milliseconds specified by <paramref name="addValue"/> to the value specified by <paramref name="timeValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -862,7 +861,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="timeValue"/>.
         /// </summary>
-        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of microseconds to add to <paramref name="timeValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of microseconds specified by <paramref name="addValue"/> to the value specified by <paramref name="timeValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -879,7 +878,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result
         /// type of the expression is the same as the result type of <paramref name="timeValue"/>.
         /// </summary>
-        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/>should be added.</param>
+        /// <param name="timeValue">An expression that specifies the value to which <paramref name="addValue"/> should be added.</param>
         /// <param name="addValue">An expression that specifies the number of nanoseconds to add to <paramref name="timeValue"/>.</param>
         /// <returns>A new DbFunctionExpression that adds the number of nanoseconds specified by <paramref name="addValue"/> to the value specified by <paramref name="timeValue"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue"/> or <paramref name="addValue"/> is null.</exception>
@@ -903,7 +902,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="dateValue1">An expression that specifies the first DateTime or DateTimeOffset value.</param>
         /// <param name="dateValue2">An expression that specifies the DateTime or DateTimeOffset for which the year difference from <paramref name="dateValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the year difference between <param name="dateValue1"> and <param name="dateValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the year difference between <paramref name="dateValue1"/> and <paramref name="dateValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dateValue1"/> or <paramref name="dateValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffYears' function accepts arguments with the result types of <paramref name="dateValue1"/> and <paramref name="dateValue2"/>.</exception>
         public static DbFunctionExpression DiffYears(this DbExpression dateValue1, DbExpression dateValue2)
@@ -921,7 +920,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="dateValue1">An expression that specifies the first DateTime or DateTimeOffset value.</param>
         /// <param name="dateValue2">An expression that specifies the DateTime or DateTimeOffset for which the month difference from <paramref name="dateValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the month difference between <param name="dateValue1"> and <param name="dateValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the month difference between <paramref name="dateValue1"/> and <paramref name="dateValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dateValue1"/> or <paramref name="dateValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffMonths' function accepts arguments with the result types of <paramref name="dateValue1"/> and <paramref name="dateValue2"/>.</exception>
         public static DbFunctionExpression DiffMonths(this DbExpression dateValue1, DbExpression dateValue2)
@@ -939,7 +938,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="dateValue1">An expression that specifies the first DateTime or DateTimeOffset value.</param>
         /// <param name="dateValue2">An expression that specifies the DateTime or DateTimeOffset for which the day difference from <paramref name="dateValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the day difference between <param name="dateValue1"> and <param name="dateValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the day difference between <paramref name="dateValue1"/> and <paramref name="dateValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dateValue1"/> or <paramref name="dateValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffDays' function accepts arguments with the result types of <paramref name="dateValue1"/> and <paramref name="dateValue2"/>.</exception>
         public static DbFunctionExpression DiffDays(this DbExpression dateValue1, DbExpression dateValue2)
@@ -957,7 +956,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="timeValue1">An expression that specifies the first DateTime, DateTimeOffset or Time value.</param>
         /// <param name="timeValue2">An expression that specifies the DateTime, DateTimeOffset or Time for which the hour difference from <paramref name="timeValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the hour difference between <param name="timeValue1"> and <param name="timeValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the hour difference between <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue1"/> or <paramref name="timeValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffHours' function accepts arguments with the result types of <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</exception>
         public static DbFunctionExpression DiffHours(this DbExpression timeValue1, DbExpression timeValue2)
@@ -975,7 +974,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="timeValue1">An expression that specifies the first DateTime, DateTimeOffset or Time value.</param>
         /// <param name="timeValue2">An expression that specifies the DateTime, DateTimeOffset or Time for which the minute difference from <paramref name="timeValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the minute difference between <param name="timeValue1"> and <param name="timeValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the minute difference between <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue1"/> or <paramref name="timeValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffMinutes' function accepts arguments with the result types of <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</exception>
         public static DbFunctionExpression DiffMinutes(this DbExpression timeValue1, DbExpression timeValue2)
@@ -993,7 +992,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="timeValue1">An expression that specifies the first DateTime, DateTimeOffset or Time value.</param>
         /// <param name="timeValue2">An expression that specifies the DateTime, DateTimeOffset or Time for which the second difference from <paramref name="timeValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the second difference between <param name="timeValue1"> and <param name="timeValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the second difference between <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue1"/> or <paramref name="timeValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffSeconds' function accepts arguments with the result types of <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</exception>
         public static DbFunctionExpression DiffSeconds(this DbExpression timeValue1, DbExpression timeValue2)
@@ -1011,7 +1010,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="timeValue1">An expression that specifies the first DateTime, DateTimeOffset or Time value.</param>
         /// <param name="timeValue2">An expression that specifies the DateTime, DateTimeOffset or Time for which the millisecond difference from <paramref name="timeValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the millisecond difference between <param name="timeValue1"> and <param name="timeValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the millisecond difference between <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue1"/> or <paramref name="timeValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffMilliseconds' function accepts arguments with the result types of <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</exception>
         public static DbFunctionExpression DiffMilliseconds(this DbExpression timeValue1, DbExpression timeValue2)
@@ -1029,7 +1028,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="timeValue1">An expression that specifies the first DateTime, DateTimeOffset or Time value.</param>
         /// <param name="timeValue2">An expression that specifies the DateTime, DateTimeOffset or Time for which the microsecond difference from <paramref name="timeValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the microsecond difference between <param name="timeValue1"> and <param name="timeValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the microsecond difference between <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue1"/> or <paramref name="timeValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffMicroseconds' function accepts arguments with the result types of <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</exception>
         public static DbFunctionExpression DiffMicroseconds(this DbExpression timeValue1, DbExpression timeValue2)
@@ -1047,7 +1046,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </summary>
         /// <param name="timeValue1">An expression that specifies the first DateTime, DateTimeOffset or Time value.</param>
         /// <param name="timeValue2">An expression that specifies the DateTime, DateTimeOffset or Time for which the nanosecond difference from <paramref name="timeValue1"/> should be calculated.</param>
-        /// <returns>A new DbFunctionExpression that returns the nanosecond difference between <param name="timeValue1"> and <param name="timeValue2">.</returns>
+        /// <returns>A new DbFunctionExpression that returns the nanosecond difference between <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="timeValue1"/> or <paramref name="timeValue2"/> is null.</exception>
         /// <exception cref="ArgumentException">No overload of the canonical 'DiffNanoseconds' function accepts arguments with the result types of <paramref name="timeValue1"/> and <paramref name="timeValue2"/>.</exception>
         public static DbFunctionExpression DiffNanoseconds(this DbExpression timeValue1, DbExpression timeValue2)
@@ -1181,7 +1180,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// specified arguments, which must have the same integer numeric result type. The result type of the
         /// expression is this same type.
         /// </summary>
-        /// <param name="value">An expression that specifies the first operand.</param>
+        /// <param name="value1">An expression that specifies the first operand.</param>
         /// <param name="value2">An expression that specifies the second operand.</param>
         /// <returns>A new DbFunctionExpression that returns the value produced by performing the bitwise AND of <paramref name="value1"/> and <paramref name="value2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="value1"/> <paramref name="value2"/> is null.</exception>

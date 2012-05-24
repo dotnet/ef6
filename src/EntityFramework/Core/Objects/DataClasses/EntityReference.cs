@@ -421,7 +421,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                  (targetEntity.ObjectStateEntry == null || // setting to a detached principle
                   (EntityKey == null && targetEntity.ObjectStateEntry.State == EntityState.Deleted || // setting to a deleted principle
                    (CachedForeignKey == null && targetEntity.ObjectStateEntry.State == EntityState.Added)))))
-            // setting to an added principle
+                // setting to an added principle
             {
                 throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
             }
@@ -643,7 +643,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 if (cacheEntry != null &&
                     otherRelatedEnd.ObjectContext.ObjectStateManager.TransactionManager.IsAddTracking &&
-                    otherRelatedEnd.IsForeignKey &&
+                    otherRelatedEnd.IsForeignKey
+                    &&
                     IsDependentEndOfReferentialConstraint(checkIdentifying: false))
                 {
                     MarkForeignKeyPropertiesModified();
@@ -652,8 +653,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             else if (!CheckIfNavigationPropertyContainsEntity(otherRelatedEnd.WrappedOwner))
             {
                 throw Error.ObjectStateManager_ConflictingChangesOfRelationshipDetected(
-                        RelationshipNavigation.To,
-                        RelationshipNavigation.RelationshipName);
+                    RelationshipNavigation.To,
+                    RelationshipNavigation.RelationshipName);
             }
         }
 
@@ -676,7 +677,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected override void ValidateDetachedEntityKey()
         {
             // If this is a stub EntityReference and the DetachedEntityKey is set, make sure it is valid
-            if (IsEmpty() && DetachedEntityKey != null)
+            if (IsEmpty()
+                && DetachedEntityKey != null)
             {
                 var detachedKey = DetachedEntityKey;
                 if (!IsValidEntityKeyType(detachedKey))
@@ -746,8 +748,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 principalKey = ExtractPrincipalKey(wrappedRelatedEntity);
             }
             else if ((ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne ||
-                 ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
-                 DetachedEntityKey != null)
+                      ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
+                     &&
+                     DetachedEntityKey != null)
             {
                 // Generally for foreign keys we want to use the EntityKey to do RI constraint validation
                 // However, if we are doing an Add/Attach, we should use the DetachedEntityKey because this is the value
@@ -780,8 +783,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 return base.CheckReferentialConstraintDependentProperty(ownerEntry, constraint);
             }
             else if ((ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne ||
-                      ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
-                      DetachedEntityKey != null)
+                      ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
+                     &&
+                     DetachedEntityKey != null)
             {
                 // related end is empty, so we must have a reference with a detached key
                 var detachedKey = DetachedEntityKey;

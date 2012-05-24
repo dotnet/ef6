@@ -101,20 +101,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             return CompileCommon(
                 queryCommandText, parserOptions, (astCommand, validatedParserOptions) =>
-                                                                  {
-                                                                      var lambda = AnalyzeQueryExpressionSemantics(
-                                                                          astCommand,
-                                                                          perspective,
-                                                                          validatedParserOptions,
-                                                                          parameters,
-                                                                          variables);
+                                                     {
+                                                         var lambda = AnalyzeQueryExpressionSemantics(
+                                                             astCommand,
+                                                             perspective,
+                                                             validatedParserOptions,
+                                                             parameters,
+                                                             variables);
 
-                                                                      TypeHelpers.AssertEdmType(lambda.Body.ResultType);
+                                                         TypeHelpers.AssertEdmType(lambda.Body.ResultType);
 
-                                                                      Debug.Assert(lambda != null, "lambda != null post-condition FAILED");
+                                                         Debug.Assert(lambda != null, "lambda != null post-condition FAILED");
 
-                                                                      return lambda;
-                                                                  });
+                                                         return lambda;
+                                                     });
         }
 
         #region Private
@@ -150,7 +150,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             if (null == astExpr)
             {
-                string errorMessage = Strings.InvalidEmptyQuery;
+                var errorMessage = Strings.InvalidEmptyQuery;
                 throw EntitySqlException.Create(commandText, errorMessage, 0, null, false, null);
             }
 
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
             catch (MetadataException metadataException)
             {
-                string message = Strings.GeneralExceptionAsQueryInnerException("Metadata");
+                var message = Strings.GeneralExceptionAsQueryInnerException("Metadata");
                 throw new EntitySqlException(message, metadataException);
             }
                 //
@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
             catch (MappingException mappingException)
             {
-                string message = Strings.GeneralExceptionAsQueryInnerException("Mapping");
+                var message = Strings.GeneralExceptionAsQueryInnerException("Mapping");
                 throw new EntitySqlException(message, mappingException);
             }
 

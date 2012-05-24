@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return CreatePerservedAndKnownResult(false);
                 }
 
-                result = leftResult.And( rightResult);
+                result = leftResult.And(rightResult);
 
                 return ConvertBoolToResult(result, left, right);
             }
@@ -290,7 +290,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return CreatePerservedAndKnownResult(true);
                 }
 
-                result =leftResult.Or( rightResult);
+                result = leftResult.Or(rightResult);
 
                 return ConvertBoolToResult(result, left, right);
             }

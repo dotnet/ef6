@@ -12,7 +12,7 @@ namespace System.Data.Entity.Utilities
             Contract.Requires(providerManifest != null);
 
             var edmTypeUsage = TypeUsage.CreateDefaultTypeUsage(
-                    PrimitiveType.GetEdmPrimitiveType(primitiveTypeKind));
+                PrimitiveType.GetEdmPrimitiveType(primitiveTypeKind));
 
             return providerManifest.GetStoreType(edmTypeUsage).EdmType.Name;
         }

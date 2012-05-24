@@ -13,7 +13,7 @@
     /// </summary>
     internal class AppConfig
     {
-        private const string _efSectionName = "entityFramework";
+        private const string EFSectionName = "entityFramework";
 
         private static readonly AppConfig _defaultInstance = new AppConfig();
         private readonly KeyValueConfigurationCollection _appSettings;
@@ -39,7 +39,7 @@
             : this(
                 configuration.ConnectionStrings.ConnectionStrings,
                 configuration.AppSettings.Settings,
-                (EntityFrameworkSection)configuration.GetSection(_efSectionName))
+                (EntityFrameworkSection)configuration.GetSection(EFSectionName))
         {
             Contract.Requires(configuration != null);
         }
@@ -65,11 +65,11 @@
             : this(
                 ConfigurationManager.ConnectionStrings,
                 Convert(ConfigurationManager.AppSettings),
-                (EntityFrameworkSection)ConfigurationManager.GetSection(_efSectionName))
+                (EntityFrameworkSection)ConfigurationManager.GetSection(EFSectionName))
         {
         }
 
-        private AppConfig(
+        internal AppConfig(
             ConnectionStringSettingsCollection connectionStrings,
             KeyValueConfigurationCollection appSettings,
             EntityFrameworkSection entityFrameworkSettings)
@@ -215,6 +215,11 @@
                 settings.Add(key, ConfigurationManager.AppSettings[key]);
             }
             return settings;
+        }
+
+        public ProviderConfig Providers
+        {
+            get { return new ProviderConfig(_entityFrameworkSettings); }
         }
     }
 }

@@ -15,10 +15,8 @@
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.Entity.Internal.Validation;
     using System.Data.Entity.Migrations;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
@@ -238,7 +236,7 @@
         {
             Contract.Requires(model != null);
 
-            return !new EdmModelDiffer().Diff(model, Owner.GetModel(), connectionString: null).Any();
+            return !new EdmModelDiffer().Diff(model, Owner.GetModel()).Any();
         }
 
         /// <summary>
@@ -1159,12 +1157,17 @@
         }
 
         #endregion
+
+        public virtual string DefaultSchema
+        {
+            get { return null; }
+        }
     }
 
     [ContractClassFor(typeof(InternalContext))]
     internal abstract class InternalContextContracts : InternalContext
     {
-        public InternalContextContracts()
+        protected InternalContextContracts()
             : base(null)
         {
         }

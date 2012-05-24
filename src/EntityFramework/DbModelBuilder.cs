@@ -155,6 +155,16 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        ///     Configures the default database schema name. The default database schema name is used
+        ///     when resolving database objects that do not have an explicitly configured schema name.
+        /// </summary>
+        /// <param name="schema">The name of the default database schema.</param>
+        public virtual void HasDefaultSchema(string schema)
+        {
+            _modelConfiguration.DefaultSchema = schema;
+        }
+
+        /// <summary>
         ///     Excludes a type(s) from the model. This is used to remove types from the model that were added 
         ///     by convention during initial model discovery.
         /// </summary>
@@ -308,7 +318,7 @@ namespace System.Data.Entity
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
             var providerFactory = DbProviderFactories.GetFactory(providerInfo.ProviderInvariantName);
-            var providerServices = DbProviderServices.GetProviderServices(providerFactory.CreateConnection());
+            var providerServices = providerFactory.GetProviderServices();
             var providerManifest = providerServices.GetProviderManifest(providerInfo.ProviderManifestToken);
 
             return providerManifest;

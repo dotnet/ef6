@@ -944,7 +944,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 if (_functionExpansions.Contains(expandingEdmFunction))
                 {
-                    throw new EntityCommandCompilationException(Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(expandingEdmFunction.FullName), null);
+                    throw new EntityCommandCompilationException(
+                        Strings.Cqt_UDF_FunctionDefinitionWithCircularReference(expandingEdmFunction.FullName), null);
                 }
                 //
                 // Push the function before processing its body
@@ -1109,7 +1110,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     if (ex.IsCatchableExceptionType())
                     {
-                        throw new EntityCommandCompilationException(Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), ex);
+                        throw new EntityCommandCompilationException(
+                            Strings.Cqt_UDF_FunctionDefinitionGenerationFailed(e.Function.FullName), ex);
                     }
                     throw;
                 }

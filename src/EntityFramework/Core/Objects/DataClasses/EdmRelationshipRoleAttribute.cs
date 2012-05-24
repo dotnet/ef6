@@ -1,4 +1,4 @@
- //for RelationshipMultiplicity
+//for RelationshipMultiplicity
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {

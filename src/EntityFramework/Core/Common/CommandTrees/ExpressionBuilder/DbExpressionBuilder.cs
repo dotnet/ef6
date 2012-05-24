@@ -2297,7 +2297,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             Contract.Requires(selector != null);
 
             // Defer argument validation for all but the selector to the selector-less overload of Join
-            DbJoinExpression joinExpression = outer.Join(inner, outerKey, innerKey);
+            var joinExpression = outer.Join(inner, outerKey, innerKey);
 
             // Bind the join expression and produce the selector based on the left and right inputs
             var joinBinding = joinExpression.Bind();
@@ -2331,7 +2331,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
-            DbSortClause sortClause = keyExpression.ToSortClause();
+            var sortClause = keyExpression.ToSortClause();
             return input.Sort(new[] { sortClause });
         }
 
@@ -2358,7 +2358,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
-            DbSortClause sortClause = keyExpression.ToSortClause(collation);
+            var sortClause = keyExpression.ToSortClause(collation);
             return input.Sort(new[] { sortClause });
         }
 
@@ -2383,7 +2383,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
-            DbSortClause sortClause = keyExpression.ToSortClauseDescending();
+            var sortClause = keyExpression.ToSortClauseDescending();
             return input.Sort(new[] { sortClause });
         }
 
@@ -2411,7 +2411,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
-            DbSortClause sortClause = keyExpression.ToSortClauseDescending(collation);
+            var sortClause = keyExpression.ToSortClauseDescending(collation);
             return input.Sort(new[] { sortClause });
         }
 
@@ -2469,7 +2469,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             var inputBinding = ConvertToBinding(source, apply, out functorResult);
 
             var functorBinding = functorResult.Bind();
-            DbApplyExpression intermediateApply = inputBinding.CrossApply(functorBinding);
+            var intermediateApply = inputBinding.CrossApply(functorBinding);
 
             var projectionBinding = intermediateApply.Bind();
             return projectionBinding.Project(projectionBinding.Variable.Property(functorBinding.VariableName));
@@ -2516,7 +2516,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             var inputBinding = ConvertToBinding(source, apply, out functorResult);
 
             var functorBinding = functorResult.Bind();
-            DbApplyExpression intermediateApply = inputBinding.CrossApply(functorBinding);
+            var intermediateApply = inputBinding.CrossApply(functorBinding);
 
             var projectionBinding = intermediateApply.Bind();
             DbExpression left = projectionBinding.Variable.Property(inputBinding.VariableName);
@@ -2773,7 +2773,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
                 default:
                     var paramName = typeof(PrimitiveTypeKind).Name;
-                    throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)primitiveType).ToString(CultureInfo.InvariantCulture)));
+                    throw new ArgumentOutOfRangeException(
+                        paramName,
+                        Strings.ADP_InvalidEnumerationValue(paramName, ((int)primitiveType).ToString(CultureInfo.InvariantCulture)));
             }
         }
 
@@ -2792,7 +2794,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
                 default:
                     var paramName = typeof(DbExpressionKind).Name;
-                    throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)applyKind).ToString(CultureInfo.InvariantCulture)));
+                    throw new ArgumentOutOfRangeException(
+                        paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)applyKind).ToString(CultureInfo.InvariantCulture)));
             }
         }
 
@@ -2828,7 +2831,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
                     default:
                         var paramName = typeof(DbExpressionKind).Name;
-                        throw new ArgumentOutOfRangeException(paramName, Strings.ADP_InvalidEnumerationValue(paramName, ((int)joinKind).ToString(CultureInfo.InvariantCulture)));
+                        throw new ArgumentOutOfRangeException(
+                            paramName,
+                            Strings.ADP_InvalidEnumerationValue(paramName, ((int)joinKind).ToString(CultureInfo.InvariantCulture)));
                 }
             }
         }
@@ -2902,7 +2907,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// intent is to support Entity constructors in view definitions that express information about
         /// related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         /// </summary>
-        /// <param name="instanceType">The type of the Entity instance that is being constructed</param>
+        /// <param name="entityType">The type of the Entity instance that is being constructed</param>
         /// <param name="attributeValues">Values for each (non-relationship) property of the Entity</param>
         /// <param name="relationships">A (possibly empty) list of <see cref="DbRelatedEntityRef"/>s that describe Entities that are related to the constructed Entity by various relationship types.</param>
         /// <returns>A new DbNewInstanceExpression that represents the construction of the Entity, and includes the specified related Entity information in the see <see cref="DbNewInstanceExpression.RelatedEntityReferences"/> collection.</returns>

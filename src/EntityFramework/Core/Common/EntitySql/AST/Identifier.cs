@@ -29,14 +29,14 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 {
                     if (isIdentifierASCII)
                     {
-                        ErrorContext errCtx = ErrCtx;
-                        string message = Strings.InvalidSimpleIdentifier(name);
+                        var errCtx = ErrCtx;
+                        var message = Strings.InvalidSimpleIdentifier(name);
                         throw EntitySqlException.Create(errCtx, message, null);
                     }
                     else
                     {
-                        ErrorContext errCtx = ErrCtx;
-                        string message = Strings.InvalidSimpleIdentifierNonASCII(name);
+                        var errCtx = ErrCtx;
+                        var message = Strings.InvalidSimpleIdentifierNonASCII(name);
                         throw EntitySqlException.Create(errCtx, message, null);
                     }
                 }

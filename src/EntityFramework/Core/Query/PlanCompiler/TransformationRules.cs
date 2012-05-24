@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     postJoinEliminationRules = new List<Rule>();
                     postJoinEliminationRules.AddRange(ProjectOpRules.Rules);
-                        //these don't use key info per-se, but can help after the distinct op rules.
+                    //these don't use key info per-se, but can help after the distinct op rules.
                     postJoinEliminationRules.AddRange(DistinctOpRules.Rules);
                     postJoinEliminationRules.AddRange(FilterOpRules.Rules);
                     postJoinEliminationRules.AddRange(JoinOpRules.Rules);

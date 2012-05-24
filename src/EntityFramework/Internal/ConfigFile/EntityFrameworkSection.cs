@@ -8,21 +8,28 @@
     /// </summary>
     internal class EntityFrameworkSection : ConfigurationSection
     {
-        private const string _defaultConnectionFactoryKey = "defaultConnectionFactory";
-        private const string _contextsKey = "contexts";
+        private const string DefaultConnectionFactoryKey = "defaultConnectionFactory";
+        private const string ContextsKey = "contexts";
+        private const string ProviderKey = "providers";
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ConfigurationProperty(_defaultConnectionFactoryKey)]
-        public DefaultConnectionFactoryElement DefaultConnectionFactory
+        [ConfigurationProperty(DefaultConnectionFactoryKey)]
+        public virtual DefaultConnectionFactoryElement DefaultConnectionFactory
         {
-            get { return (DefaultConnectionFactoryElement)this[_defaultConnectionFactoryKey]; }
-            set { this[_defaultConnectionFactoryKey] = value; }
+            get { return (DefaultConnectionFactoryElement)this[DefaultConnectionFactoryKey]; }
+            set { this[DefaultConnectionFactoryKey] = value; }
         }
 
-        [ConfigurationProperty(_contextsKey)]
-        public ContextCollection Contexts
+        [ConfigurationProperty(ProviderKey)]
+        public virtual ProviderCollection Providers
         {
-            get { return (ContextCollection)base[_contextsKey]; }
+            get { return (ProviderCollection)base[ProviderKey]; }
+        }
+
+        [ConfigurationProperty(ContextsKey)]
+        public virtual ContextCollection Contexts
+        {
+            get { return (ContextCollection)base[ContextsKey]; }
         }
     }
 }

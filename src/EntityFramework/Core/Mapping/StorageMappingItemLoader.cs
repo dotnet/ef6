@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Mapping
         private readonly List<EdmSchemaError> m_parsingErrors;
 
         private readonly Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>> m_scalarMemberMappings;
-                                                                                   // dictionary of all the scalar member mappings - this is to validate that no property is mapped to different store types across mappings.
+        // dictionary of all the scalar member mappings - this is to validate that no property is mapped to different store types across mappings.
 
         private bool m_hasQueryViews; //set to true if any of the SetMaps have a query view so that 
         private string m_currentNamespaceUri;

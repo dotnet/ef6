@@ -205,16 +205,18 @@
                     if (typeof(TEntity)
                         != existingEntry.WrappedEntity.IdentityType)
                     {
-                        EntityKey key = existingEntry.EntityKey;
-                        throw new NotSupportedException(Strings.Materializer_RecyclingEntity(
-                            TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), typeof(TEntity).FullName,
-                            existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
+                        var key = existingEntry.EntityKey;
+                        throw new NotSupportedException(
+                            Strings.Materializer_RecyclingEntity(
+                                TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), typeof(TEntity).FullName,
+                                existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
                     }
 
                     if (EntityState.Added
                         == existingEntry.State)
                     {
-                        throw new InvalidOperationException(Strings.Materializer_AddedEntityAlreadyExists(existingEntry.EntityKey.ConcatKeyValue()));
+                        throw new InvalidOperationException(
+                            Strings.Materializer_AddedEntityAlreadyExists(existingEntry.EntityKey.ConcatKeyValue()));
                     }
                     result = existingEntry.WrappedEntity;
                 }
@@ -785,10 +787,11 @@
             var clrType = typeof(TEntity);
             if (clrType != existingEntry.WrappedEntity.IdentityType)
             {
-                EntityKey key = existingEntry.EntityKey;
-                throw new NotSupportedException(Strings.Materializer_RecyclingEntity(
-                    TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), clrType.FullName,
-                    existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
+                var key = existingEntry.EntityKey;
+                throw new NotSupportedException(
+                    Strings.Materializer_RecyclingEntity(
+                        TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), clrType.FullName,
+                        existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
             }
 
             if (EntityState.Added
@@ -1002,16 +1005,18 @@
 
             protected override Exception CreateNullValueException()
             {
-                return new ConstraintException(Strings.Materializer_SetInvalidValue(
-                    (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
-                    _typeName, _propertyName, "null"));
+                return new ConstraintException(
+                    Strings.Materializer_SetInvalidValue(
+                        (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
+                        _typeName, _propertyName, "null"));
             }
 
             protected override Exception CreateWrongTypeException(Type resultType)
             {
-                return new InvalidOperationException(Strings.Materializer_SetInvalidValue(
-                    (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
-                    _typeName, _propertyName, resultType.Name));
+                return new InvalidOperationException(
+                    Strings.Materializer_SetInvalidValue(
+                        (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
+                        _typeName, _propertyName, resultType.Name));
             }
         }
 

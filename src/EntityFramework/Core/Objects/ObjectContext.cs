@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     public class ObjectContext : IDisposable
     {
-        private bool _disposed = false;
-        private InternalObjectContext _internalObjectContext;
+        private bool _disposed;
+        private readonly InternalObjectContext _internalObjectContext;
 
         private EventHandler _onSavingChanges;
         private ObjectMaterializedEventHandler _onObjectMaterialized;
@@ -350,7 +350,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector)
         {
-            _internalObjectContext.LoadProperty<TEntity>(entity, selector);
+            _internalObjectContext.LoadProperty(entity, selector);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector, MergeOption mergeOption)
         {
-            _internalObjectContext.LoadProperty<TEntity>(entity, selector, mergeOption);
+            _internalObjectContext.LoadProperty(entity, selector, mergeOption);
         }
 
         // Validates that the given property selector may represent a navigation property and returns the nav prop string.
@@ -385,7 +385,8 @@ namespace System.Data.Entity.Core.Objects
             // Therefore, we keep track of whether or not we removed the convert.
             removedConvert = false;
             var body = selector.Body;
-            while (body.NodeType == ExpressionType.Convert || body.NodeType == ExpressionType.ConvertChecked)
+            while (body.NodeType == ExpressionType.Convert
+                   || body.NodeType == ExpressionType.ConvertChecked)
             {
                 removedConvert = true;
                 body = ((UnaryExpression)body).Operand;
@@ -393,7 +394,8 @@ namespace System.Data.Entity.Core.Objects
 
             var bodyAsMember = body as MemberExpression;
             if (bodyAsMember == null ||
-                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity)) ||
+                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity))
+                ||
                 bodyAsMember.Expression.NodeType != ExpressionType.Parameter)
             {
                 throw new ArgumentException(Strings.ObjectContext_SelectorExpressionMustBeMemberAccess);
@@ -429,7 +431,7 @@ namespace System.Data.Entity.Core.Objects
             Contract.Requires(currentEntity != null);
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
-            return _internalObjectContext.ApplyCurrentValues<TEntity>(entitySetName, currentEntity);
+            return _internalObjectContext.ApplyCurrentValues(entitySetName, currentEntity);
         }
 
         /// <summary>
@@ -443,7 +445,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Contract.Requires(originalEntity != null);
 
-            return _internalObjectContext.ApplyOriginalValues<TEntity>(entitySetName, originalEntity);
+            return _internalObjectContext.ApplyOriginalValues(entitySetName, originalEntity);
         }
 
         /// <summary>
@@ -921,7 +923,8 @@ namespace System.Data.Entity.Core.Objects
             EdmType[] edmTypes,
             MergeOption mergeOption)
         {
-            return _internalObjectContext.MaterializedDataRecord<TElement>(entityCommand, storeReader, resultSetIndex, entitySets, edmTypes, mergeOption);
+            return _internalObjectContext.MaterializedDataRecord<TElement>(
+                entityCommand, storeReader, resultSetIndex, entitySets, edmTypes, mergeOption);
         }
 
         /// <summary>
@@ -1056,7 +1059,8 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>An enumeration of objects of type <typeparamref name="TElement"/>.</returns>
         public ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
-            return _internalObjectContext.ExecuteStoreQuery<TElement>(commandText, /*entitySetName:*/null, MergeOption.AppendOnly, parameters);
+            return _internalObjectContext.ExecuteStoreQuery<TElement>(
+                commandText, /*entitySetName:*/null, MergeOption.AppendOnly, parameters);
         }
 
         /// <summary>
@@ -1069,7 +1073,8 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption">Merge option to use for entity results.</param>
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>An enumeration of objects of type <typeparamref name="TElement"/>.</returns>
-        public ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, string entitySetName,
+        public ObjectResult<TElement> ExecuteStoreQuery<TElement>(
+            string commandText, string entitySetName,
             MergeOption mergeOption, params object[] parameters)
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");

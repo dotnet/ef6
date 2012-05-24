@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Migrations.Utilities
 {
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;

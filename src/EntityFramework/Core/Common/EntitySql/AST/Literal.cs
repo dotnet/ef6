@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             UInt32 value;
                             if (!UInt32.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                string message = Strings.CannotConvertNumericLiteral(numericString, "unsigned int");
+                                var message = Strings.CannotConvertNumericLiteral(numericString, "unsigned int");
                                 throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
@@ -240,7 +240,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             long value;
                             if (!Int64.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                string message = Strings.CannotConvertNumericLiteral(numericString, "long");
+                                var message = Strings.CannotConvertNumericLiteral(numericString, "long");
                                 throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
@@ -253,7 +253,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             UInt64 value;
                             if (!UInt64.TryParse(numberPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
                             {
-                                string message = Strings.CannotConvertNumericLiteral(numericString, "unsigned long");
+                                var message = Strings.CannotConvertNumericLiteral(numericString, "unsigned long");
                                 throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
@@ -265,7 +265,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             Single value;
                             if (!Single.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                             {
-                                string message = Strings.CannotConvertNumericLiteral(numericString, "float");
+                                var message = Strings.CannotConvertNumericLiteral(numericString, "float");
                                 throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                                     numberPart, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
                                     out value))
                             {
-                                string message = Strings.CannotConvertNumericLiteral(numericString, "decimal");
+                                var message = Strings.CannotConvertNumericLiteral(numericString, "decimal");
                                 throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
@@ -292,7 +292,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                             Double value;
                             if (!Double.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                             {
-                                string message = Strings.CannotConvertNumericLiteral(numericString, "double");
+                                var message = Strings.CannotConvertNumericLiteral(numericString, "double");
                                 throw EntitySqlException.Create(errCtx, message, null);
                             }
                             return value;
@@ -318,7 +318,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 Double value;
                 if (!Double.TryParse(numericString, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 {
-                    string message = Strings.CannotConvertNumericLiteral(numericString, "double");
+                    var message = Strings.CannotConvertNumericLiteral(numericString, "double");
                     throw EntitySqlException.Create(errCtx, message, null);
                 }
 
@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 Int64 int64Value;
                 if (!Int64.TryParse(numericString, NumberStyles.Integer, CultureInfo.InvariantCulture, out int64Value))
                 {
-                    string message = Strings.CannotConvertNumericLiteral(numericString, "long");
+                    var message = Strings.CannotConvertNumericLiteral(numericString, "long");
                     throw EntitySqlException.Create(errCtx, message, null);
                 }
 
@@ -351,7 +351,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             var result = false;
             if (!Boolean.TryParse(booleanLiteralValue, out result))
             {
-                string message = Strings.InvalidLiteralFormat("Boolean", booleanLiteralValue);
+                var message = Strings.InvalidLiteralFormat("Boolean", booleanLiteralValue);
                 throw EntitySqlException.Create(errCtx, message, null);
             }
             return result;
@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             if (delimiter != '\''
                 && delimiter != '\"')
             {
-                string message = Strings.MalformedStringLiteralPayload;
+                var message = Strings.MalformedStringLiteralPayload;
                 throw new EntitySqlException(message);
             }
 
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(before % 2 == 0, "must have an even number of delimiters in the string literal");
             if (0 != (before % 2))
             {
-                string message = Strings.MalformedStringLiteralPayload;
+                var message = Strings.MalformedStringLiteralPayload;
                 throw new EntitySqlException(message);
             }
 
@@ -404,7 +404,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             Debug.Assert(after == (before - 2) / 2);
             if ((after != ((before - 2) / 2)))
             {
-                string message = Strings.MalformedStringLiteralPayload;
+                var message = Strings.MalformedStringLiteralPayload;
                 throw new EntitySqlException(message);
             }
 
@@ -555,7 +555,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             }
             catch (ArgumentOutOfRangeException e)
             {
-                string message = Strings.InvalidDateTimeOffsetLiteral(datetimeLiteralValue);
+                var message = Strings.InvalidDateTimeOffsetLiteral(datetimeLiteralValue);
                 throw EntitySqlException.Create(errCtx, message, e);
             }
         }
@@ -591,13 +591,13 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             hour = Int32.Parse(datetimeParts[timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (hour > 23)
             {
-                string message = Strings.InvalidHour(datetimeParts[timePartStartIndex], datetimeLiteralValue);
+                var message = Strings.InvalidHour(datetimeParts[timePartStartIndex], datetimeLiteralValue);
                 throw new EntitySqlException(message);
             }
             minute = Int32.Parse(datetimeParts[++timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (minute > 59)
             {
-                string message = Strings.InvalidMinute(datetimeParts[timePartStartIndex], datetimeLiteralValue);
+                var message = Strings.InvalidMinute(datetimeParts[timePartStartIndex], datetimeLiteralValue);
                 throw new EntitySqlException(message);
             }
             second = 0;
@@ -608,7 +608,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
                 second = Int32.Parse(datetimeParts[timePartStartIndex], NumberStyles.Integer, CultureInfo.InvariantCulture);
                 if (second > 59)
                 {
-                    string message = Strings.InvalidSecond(datetimeParts[timePartStartIndex], datetimeLiteralValue);
+                    var message = Strings.InvalidSecond(datetimeParts[timePartStartIndex], datetimeLiteralValue);
                     throw new EntitySqlException(message);
                 }
                 timePartStartIndex++;
@@ -627,25 +627,25 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             if (year < 1
                 || year > 9999)
             {
-                string message = Strings.InvalidYear(datetimeParts[0], datetimeLiteralValue);
+                var message = Strings.InvalidYear(datetimeParts[0], datetimeLiteralValue);
                 throw new EntitySqlException(message);
             }
             month = Int32.Parse(datetimeParts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (month < 1
                 || month > 12)
             {
-                string message = Strings.InvalidMonth(datetimeParts[1], datetimeLiteralValue);
+                var message = Strings.InvalidMonth(datetimeParts[1], datetimeLiteralValue);
                 throw new EntitySqlException(message);
             }
             day = Int32.Parse(datetimeParts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
             if (day < 1)
             {
-                string message = Strings.InvalidDay(datetimeParts[2], datetimeLiteralValue);
+                var message = Strings.InvalidDay(datetimeParts[2], datetimeLiteralValue);
                 throw new EntitySqlException(message);
             }
             if (day > DateTime.DaysInMonth(year, month))
             {
-                string message = Strings.InvalidDayInMonth(datetimeParts[2], datetimeParts[1], datetimeLiteralValue);
+                var message = Strings.InvalidDayInMonth(datetimeParts[2], datetimeParts[1], datetimeLiteralValue);
                 throw new EntitySqlException(message);
             }
         }

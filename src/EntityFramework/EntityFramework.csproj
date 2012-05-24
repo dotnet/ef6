@@ -318,7 +318,11 @@
     <Compile Include="Core\Common\EntitySql\TypeResolver.cs" />
     <Compile Include="Core\Common\EntitySql\ValueExpression.cs" />
     <Compile Include="Core\Common\EntityUtil.cs" />
+    <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
+    <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
+    <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
+    <Compile Include="Utilities\DbProviderFactoryExtensions.cs" />
     <Compile Include="Utilities\ExceptionExtensions.cs" />
     <Compile Include="Core\Common\FieldMetadata.cs" />
     <Compile Include="Core\Common\FieldNameLookup.cs" />
@@ -1239,6 +1243,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Utilities\MemberInfoExtensions.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\XContainerExtensions.cs" />
     <Compile Include="Utilities\XDocumentExtensions.cs" />
@@ -1261,7 +1266,6 @@
     <Compile Include="Migrations\Infrastructure\MigratorScriptingDecorator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Migrations\Infrastructure\ModelDiffer.cs" />
     <Compile Include="Migrations\Model\AddColumnOperation.cs" />
     <Compile Include="Migrations\Model\AddForeignKeyOperation.cs" />
     <Compile Include="Migrations\Model\AddPrimaryKeyOperation.cs" />

@@ -16,7 +16,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Xml.Linq;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal class EdmModelDiffer : ModelDiffer
+    internal class EdmModelDiffer
     {
         private static readonly PrimitiveTypeKind[] ValidIdentityTypes
             = new[]
@@ -42,8 +42,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private bool _consistentProviders;
 
-        public override IEnumerable<MigrationOperation> Diff(
-            XDocument sourceModel, XDocument targetModel, string connectionString)
+        public IEnumerable<MigrationOperation> Diff(XDocument sourceModel, XDocument targetModel)
         {
             DbProviderInfo providerInfo;
 
@@ -110,34 +109,34 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             renamedColumns.Each(
                 rc =>
-                {
-                    var entitySet
-                        = (from es in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                           where
-                               GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute()).EqualsIgnoreCase(
-                                   rc.Table)
-                           select es.NameAttribute()).Single();
+                    {
+                        var entitySet
+                            = (from es in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
+                               where
+                                   GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute()).EqualsIgnoreCase(
+                                       rc.Table)
+                               select es.NameAttribute()).Single();
 
-                    var principalDependents
-                        = from pd in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.PrincipalNames)
-                              .Concat(columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.DependentNames))
-                          where pd.RoleAttribute().EqualsIgnoreCase(entitySet)
-                          from pr in pd.Descendants(EdmXNames.Ssdl.PropertyRefNames)
-                          where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
-                          select pr;
+                        var principalDependents
+                            = from pd in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.PrincipalNames)
+                                  .Concat(columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.DependentNames))
+                              where pd.RoleAttribute().EqualsIgnoreCase(entitySet)
+                              from pr in pd.Descendants(EdmXNames.Ssdl.PropertyRefNames)
+                              where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
+                              select pr;
 
-                    principalDependents.Each(pd => pd.SetAttributeValue("Name", rc.NewName));
+                        principalDependents.Each(pd => pd.SetAttributeValue("Name", rc.NewName));
 
-                    var keyProperties
-                        = from et in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
-                          where et.NameAttribute().EqualsIgnoreCase(entitySet)
-                          from pr in
-                              et.Descendants(EdmXNames.Ssdl.KeyNames).Descendants(EdmXNames.Ssdl.PropertyRefNames)
-                          where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
-                          select pr;
+                        var keyProperties
+                            = from et in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
+                              where et.NameAttribute().EqualsIgnoreCase(entitySet)
+                              from pr in
+                                  et.Descendants(EdmXNames.Ssdl.KeyNames).Descendants(EdmXNames.Ssdl.PropertyRefNames)
+                              where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
+                              select pr;
 
-                    keyProperties.Each(pr => pr.SetAttributeValue("Name", rc.NewName));
-                });
+                        keyProperties.Each(pr => pr.SetAttributeValue("Name", rc.NewName));
+                    });
 
             return columnNormalizedSourceModel;
         }
@@ -173,8 +172,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                          && !es1.SchemaAttribute().EqualsIgnoreCase(es2.SchemaAttribute())
                    select
                        new MoveTableOperation(
-                           GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
-                           es2.SchemaAttribute());
+                       GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
+                       es2.SchemaAttribute());
         }
 
         private IEnumerable<DropTableOperation> FindRemovedTables(IEnumerable<RenameTableOperation> renamedTables)
@@ -509,7 +508,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                           SingleOrDefault());
         }
 
-        private static CreateTableOperation BuildCreateTableOperation(
+        private CreateTableOperation BuildCreateTableOperation(
             string entitySetName,
             string tableName,
             string schema,
@@ -630,7 +629,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return column;
         }
 
-        private static AddForeignKeyOperation BuildAddForeignKeyOperation(XDocument edmx, XElement association)
+        private AddForeignKeyOperation BuildAddForeignKeyOperation(XDocument edmx, XElement association)
         {
             Contract.Requires(edmx != null);
             Contract.Requires(association != null);
@@ -655,7 +654,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return addForeignKeyOperation;
         }
 
-        private static DropForeignKeyOperation BuildDropForeignKeyOperation(XDocument edmx, XElement association)
+        private DropForeignKeyOperation BuildDropForeignKeyOperation(XDocument edmx, XElement association)
         {
             Contract.Requires(edmx != null);
             Contract.Requires(association != null);
@@ -668,7 +667,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return dropForeignKeyOperation;
         }
 
-        private static void BuildForeignKeyOperation(
+        private void BuildForeignKeyOperation(
             XDocument edmx, XElement association, ForeignKeyOperation foreignKeyOperation)
         {
             Contract.Requires(edmx != null);
@@ -699,15 +698,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var providerFactory = DbProviderFactories.GetFactory(providerInfo.ProviderInvariantName);
 
-            using (var connection = providerFactory.CreateConnection())
-            {
-                var providerServices = DbProviderServices.GetProviderServices(connection);
-
-                return providerServices.GetProviderManifest(providerInfo.ProviderManifestToken);
-            }
+            return providerFactory.GetProviderServices().GetProviderManifest(providerInfo.ProviderManifestToken);
         }
 
-        private static string GetQualifiedTableName(XDocument model, string entitySetName)
+        public virtual string GetQualifiedTableName(string table, string schema)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(table));
+            Contract.Requires(!string.IsNullOrWhiteSpace(schema));
+
+            return schema + "." + table;
+        }
+
+        private string GetQualifiedTableName(XDocument model, string entitySetName)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(entitySetName));
@@ -725,7 +727,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return GetQualifiedTableName(schemaAndTable.Table, schemaAndTable.Schema);
         }
 
-        private static string GetQualifiedTableNameFromType(XDocument model, string entityTypeName)
+        private string GetQualifiedTableNameFromType(XDocument model, string entityTypeName)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(entityTypeName));

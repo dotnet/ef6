@@ -92,8 +92,8 @@
     <Compile Include="CommandLine\_TestHelpers\TwoPropsWithSameSwitch.cs" />
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
+    <Compile Include="Internal\ConfigFile\ContextElementTests.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
-    <Compile Include="Core\Common\EntityUtilTests.cs" />
     <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandDefinitionTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
@@ -115,6 +115,9 @@
     <Compile Include="Core\Objects\DataClasses\RelatedEndTests.cs" />
     <Compile Include="Core\Objects\ObjectContextTests.cs" />
     <Compile Include="Core\Objects\TestHelpers\ObjectContextForMock.cs" />
+    <Compile Include="Internal\ConfigFile\DatabaseInitializerElementTests.cs" />
+    <Compile Include="Internal\ConfigFile\EntityFrameworkSectionTests.cs" />
+    <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilderTests.cs" />
     <Compile Include="Migrations\Builders\TableBuilderTests.cs" />
     <Compile Include="Migrations\DbMigrationsConfigurationTests.cs" />
@@ -126,11 +129,17 @@
     <Compile Include="Migrations\Design\ToolingExceptionTests.cs" />
     <Compile Include="Migrations\Design\VisualBasicMigrationCodeGeneratorTests.cs" />
     <Compile Include="Migrations\Edm\ModelCompressorTests.cs" />
+    <Compile Include="Internal\ConfigFile\ParameterCollectionTests.cs" />
+    <Compile Include="Internal\ConfigFile\ParameterElementTests.cs" />
+    <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
+    <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />
     <Compile Include="Utilities\DbContextExtensionsTests.cs" />
+    <Compile Include="Utilities\DbProviderFactoryExtensionsTests.cs" />
     <Compile Include="Utilities\ExpressionExtensionsTests.cs" />
     <Compile Include="Migrations\Extensions\IEnumerableExtensionsTests.cs" />
+    <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />
     <Compile Include="Utilities\XDocumentExtensionsTests.cs" />
@@ -319,7 +328,6 @@
     <Compile Include="DbSqlQueryTests.cs" />
     <Compile Include="DefaultConnectionFactoryTests.cs" />
     <Compile Include="EdmMetadataRepositoryTests.cs" />
-    <Compile Include="EntityFrameworkSectionTests.cs" />
     <Compile Include="IncludeTests.cs" />
     <Compile Include="InternalConnectionTests.cs" />
     <Compile Include="ModelHashCalculatorTests.cs" />
@@ -376,6 +384,10 @@
       <Project>{1F3817E9-8070-4429-B134-9674698DD78C}</Project>
       <Name>EntityFramework.PowerShell</Name>
       <Aliases>powershell</Aliases>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
+      <Project>{1ef9c524-7122-4677-b111-dd14bb2a9ea2}</Project>
+      <Name>EntityFramework.SqlServerCompact</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
       <Project>{6f4bb80b-5f74-44d3-a77f-0025dfa48c1a}</Project>

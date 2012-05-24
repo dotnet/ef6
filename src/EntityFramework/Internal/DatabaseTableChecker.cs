@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Internal
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -58,15 +57,16 @@
                     }
                 }
 
-                if (databaseTables.Any(t => t.Item2 == HistoryContext.TableName
-                    || t.Item2 == EdmMetadataContext.TableName))
+                if (databaseTables.Any(
+                    t => t.Item2 == HistoryContext.TableName
+                         || t.Item2 == EdmMetadataContext.TableName))
                 {
                     return true;
                 }
 
                 var comparer = provider.SupportsSchemas
-                    ? EqualityComparer<Tuple<string, string>>.Default
-                    : (IEqualityComparer<Tuple<string, string>>)new IgnoreSchemaComparer();
+                                   ? EqualityComparer<Tuple<string, string>>.Default
+                                   : (IEqualityComparer<Tuple<string, string>>)new IgnoreSchemaComparer();
 
                 foreach (var databaseTable in databaseTables)
                 {
@@ -95,16 +95,17 @@
                 .Single()
                 .BaseEntitySets
                 .OfType<EntitySet>()
-                .Where(s => !s.MetadataProperties.Contains("Type")
-                    || (string)s.MetadataProperties["Type"].Value == "Tables");
+                .Where(
+                    s => !s.MetadataProperties.Contains("Type")
+                         || (string)s.MetadataProperties["Type"].Value == "Tables");
 
             foreach (var table in tables)
             {
                 var schemaName = (string)table.MetadataProperties["Schema"].Value;
                 var tableName = table.MetadataProperties.Contains("Table")
-                        && table.MetadataProperties["Table"].Value != null
-                    ? (string)table.MetadataProperties["Table"].Value
-                    : table.Name;
+                                && table.MetadataProperties["Table"].Value != null
+                                    ? (string)table.MetadataProperties["Table"].Value
+                                    : table.Name;
 
                 yield return Tuple.Create(schemaName, tableName);
             }

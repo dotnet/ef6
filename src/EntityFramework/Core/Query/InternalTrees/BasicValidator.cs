@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Globalization;

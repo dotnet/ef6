@@ -62,11 +62,12 @@
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
 
-            var storeProviderServices = DbProviderServices.GetProviderServices(storeProviderFactory);
+            var storeProviderServices = storeProviderFactory.GetProviderServices();
 
             try
             {
-                if (DbCommandTreeKind.Query == commandTree.CommandTreeKind)
+                if (DbCommandTreeKind.Query
+                    == commandTree.CommandTreeKind)
                 {
                     // Next compile the plan for the command tree
                     var mappedCommandList = new List<ProviderCommandInfo>();
@@ -76,7 +77,7 @@
                     _columnMapGenerators = new IColumnMapGenerator[] { new ConstantColumnMapGenerator(columnMap, columnCount) };
                     // Note: we presume that the first item in the ProviderCommandInfo is the root node;
                     Debug.Assert(mappedCommandList.Count > 0, "empty providerCommandInfo collection and no exception?");
-                        // this shouldn't ever happen.
+                    // this shouldn't ever happen.
 
                     // Then, generate the store commands from the resulting command tree(s)
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(mappedCommandList.Count);
@@ -125,9 +126,9 @@
 
                     var storeCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandTree);
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(1)
-                    {
-                        storeCommandDefinition
-                    };
+                                                    {
+                                                        storeCommandDefinition
+                                                    };
 
                     var firstResultEntitySet = mapping.FunctionImport.EntitySets.FirstOrDefault();
                     if (firstResultEntitySet != null)
@@ -391,7 +392,8 @@
         /// <exception cref="InvalidOperationException">input parameters in the entityCommand.Parameters collection must have non-null values.</exception>
         internal virtual DbDataReader Execute(EntityCommand entityCommand, CommandBehavior behavior)
         {
-            if (CommandBehavior.SequentialAccess != (behavior & CommandBehavior.SequentialAccess))
+            if (CommandBehavior.SequentialAccess
+                != (behavior & CommandBehavior.SequentialAccess))
             {
                 throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
@@ -580,7 +582,7 @@
             var hasOutputParameters = false;
             if (storeProviderCommand.Parameters != null) // SQLBUDT 519066
             {
-                var storeProviderServices = DbProviderServices.GetProviderServices(entityCommand.Connection.StoreProviderFactory);
+                var storeProviderServices = entityCommand.Connection.StoreProviderFactory.GetProviderServices();
 
                 foreach (DbParameter storeParameter in storeProviderCommand.Parameters)
                 {
@@ -596,7 +598,8 @@
 
                         SyncParameterProperties(entityParameter, storeParameter, storeProviderServices);
 
-                        if (storeParameter.Direction != ParameterDirection.Input)
+                        if (storeParameter.Direction
+                            != ParameterDirection.Input)
                         {
                             hasOutputParameters = true;
                         }
@@ -729,7 +732,8 @@
 
             ColumnMap IColumnMapGenerator.CreateColumnMap(DbDataReader reader)
             {
-                if (null != reader && reader.FieldCount < _fieldsRequired)
+                if (null != reader
+                    && reader.FieldCount < _fieldsRequired)
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_TooFewColumns);
                 }

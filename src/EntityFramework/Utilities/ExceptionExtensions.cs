@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Utilities
 {
-    using System;
     using System.Data.Entity.Core;
     using System.Diagnostics.Contracts;
     using System.Security;

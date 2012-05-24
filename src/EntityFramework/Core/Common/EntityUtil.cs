@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core
     using System.Security;
     using System.Security.Permissions;
     using System.Text;
-    using System.Threading;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class EntityUtil
@@ -108,9 +107,10 @@ namespace System.Data.Entity.Core
             Type elementType;
             if (!TryGetICollectionElementType(propertyType, out elementType))
             {
-                throw new InvalidOperationException(Strings.PocoEntityWrapper_UnexpectedTypeForNavigationProperty(
-                    propertyType.FullName,
-                    typeof(ICollection<>)));
+                throw new InvalidOperationException(
+                    Strings.PocoEntityWrapper_UnexpectedTypeForNavigationProperty(
+                        propertyType.FullName,
+                        typeof(ICollection<>)));
             }
             return elementType;
         }
@@ -136,8 +136,9 @@ namespace System.Data.Entity.Core
 
             if (requestedType.IsArray)
             {
-                throw new InvalidOperationException(Strings.ObjectQuery_UnableToMaterializeArray(
-                    requestedType, typeof(List<>).MakeGenericType(elementType)));
+                throw new InvalidOperationException(
+                    Strings.ObjectQuery_UnableToMaterializeArray(
+                        requestedType, typeof(List<>).MakeGenericType(elementType)));
             }
 
             if (!requestedType.IsAbstract
@@ -193,7 +194,9 @@ namespace System.Data.Entity.Core
             // Since csdl, ssdl, providermanifest can have bunch of errors in them and we want to
             // show all of them, we are using String.Format to form the error message.
             // Using CurrentCulture since that's what EntityRes.GetString uses.
-            return new MetadataException(String.Format(CultureInfo.CurrentCulture, EntityRes.GetString(EntityRes.InvalidSchemaEncountered), errors));
+            return
+                new MetadataException(
+                    String.Format(CultureInfo.CurrentCulture, EntityRes.GetString(EntityRes.InvalidSchemaEncountered), errors));
         }
 
         #endregion //Metadata Errors
@@ -352,15 +355,17 @@ namespace System.Data.Entity.Core
         {
             if (null == value)
             {
-                throw new ConstraintException(Strings.Materializer_SetInvalidValue(
-                    (Nullable.GetUnderlyingType(destinationType) ?? destinationType).Name,
-                    className, propertyName, "null"));
+                throw new ConstraintException(
+                    Strings.Materializer_SetInvalidValue(
+                        (Nullable.GetUnderlyingType(destinationType) ?? destinationType).Name,
+                        className, propertyName, "null"));
             }
             else
             {
-                throw new InvalidOperationException(Strings.Materializer_SetInvalidValue(
-                    (Nullable.GetUnderlyingType(destinationType) ?? destinationType).Name,
-                    className, propertyName, value.GetType().Name));
+                throw new InvalidOperationException(
+                    Strings.Materializer_SetInvalidValue(
+                        (Nullable.GetUnderlyingType(destinationType) ?? destinationType).Name,
+                        className, propertyName, value.GetType().Name));
             }
         }
 
@@ -371,13 +376,15 @@ namespace System.Data.Entity.Core
             if (destinationType.IsValueType && destinationType.IsGenericType
                 && (typeof(Nullable<>) == destinationType.GetGenericTypeDefinition()))
             {
-                return new InvalidOperationException(Strings.Materializer_InvalidCastNullable(
-                    valueType, destinationType.GetGenericArguments()[0]));
+                return new InvalidOperationException(
+                    Strings.Materializer_InvalidCastNullable(
+                        valueType, destinationType.GetGenericArguments()[0]));
             }
             else
             {
-                return new InvalidOperationException(Strings.Materializer_InvalidCastReference(
-                    valueType, destinationType));
+                return new InvalidOperationException(
+                    Strings.Materializer_InvalidCastReference(
+                        valueType, destinationType));
             }
         }
 
@@ -399,15 +406,21 @@ namespace System.Data.Entity.Core
                 case MergeOption.PreserveChanges:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(typeof(MergeOption).Name, Strings.ADP_InvalidEnumerationValue(typeof(MergeOption).Name, ((int)mergeOption).ToString(CultureInfo.InvariantCulture)));
+                    throw new ArgumentOutOfRangeException(
+                        typeof(MergeOption).Name,
+                        Strings.ADP_InvalidEnumerationValue(
+                            typeof(MergeOption).Name, ((int)mergeOption).ToString(CultureInfo.InvariantCulture)));
             }
         }
 
         internal static void CheckArgumentRefreshMode(RefreshMode refreshMode)
         {
-            if (refreshMode != RefreshMode.ClientWins && refreshMode != RefreshMode.StoreWins)
+            if (refreshMode != RefreshMode.ClientWins
+                && refreshMode != RefreshMode.StoreWins)
             {
-                throw new ArgumentOutOfRangeException(typeof(RefreshMode).Name, Strings.ADP_InvalidEnumerationValue(typeof(RefreshMode).Name, ((int)refreshMode).ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    typeof(RefreshMode).Name,
+                    Strings.ADP_InvalidEnumerationValue(typeof(RefreshMode).Name, ((int)refreshMode).ToString(CultureInfo.InvariantCulture)));
             }
         }
 
@@ -462,10 +475,12 @@ namespace System.Data.Entity.Core
             {
                 if (String.IsNullOrEmpty(argument))
                 {
-                    throw new InvalidOperationException(Strings.ObjectContext_InvalidEntitySetInKey(containerName1, setName1, containerName2, setName2));
+                    throw new InvalidOperationException(
+                        Strings.ObjectContext_InvalidEntitySetInKey(containerName1, setName1, containerName2, setName2));
                 }
-                throw new InvalidOperationException(Strings.ObjectContext_InvalidEntitySetInKeyFromName(
-                    containerName1, setName1, containerName2, setName2, argument));
+                throw new InvalidOperationException(
+                    Strings.ObjectContext_InvalidEntitySetInKeyFromName(
+                        containerName1, setName1, containerName2, setName2, argument));
             }
         }
 
@@ -596,63 +611,6 @@ namespace System.Data.Entity.Core
             return CheckArgumentNull(value, parameterName);
         }
 
-        /// <summary>
-        /// Given a provider factory, this returns the provider invariant name for the provider. 
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        internal static bool TryGetProviderInvariantName(DbProviderFactory providerFactory, out string invariantName)
-        {
-            Debug.Assert(providerFactory != null);
-
-            var connectionProviderFactoryType = providerFactory.GetType();
-            var connectionProviderFactoryAssemblyName = new AssemblyName(
-                connectionProviderFactoryType.Assembly.FullName);
-
-            foreach (DataRow row in DbProviderFactories.GetFactoryClasses().Rows)
-            {
-                var assemblyQualifiedTypeName = (string)row[AssemblyQualifiedNameIndex];
-
-                AssemblyName rowProviderFactoryAssemblyName = null;
-
-                // parse the provider factory assembly qualified type name
-                Type.GetType(
-                    assemblyQualifiedTypeName,
-                    a =>
-                    {
-                        rowProviderFactoryAssemblyName = a;
-
-                        return null;
-                    },
-                    (_, __, ___) => null);
-
-                if (rowProviderFactoryAssemblyName != null)
-                {
-                    if (string.Equals(
-                        connectionProviderFactoryAssemblyName.Name,
-                        rowProviderFactoryAssemblyName.Name,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        try
-                        {
-                            var foundFactory = DbProviderFactories.GetFactory(row);
-
-                            if (foundFactory.GetType().Equals(connectionProviderFactoryType))
-                            {
-                                invariantName = (string)row[InvariantNameIndex];
-                                return true;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.Fail("GetFactory failed with: " + ex);
-                            // Ignore bad providers.
-                        }
-                    }
-                }
-            }
-            invariantName = null;
-            return false;
-        }
 
         // Invalid string argument
         internal static void CheckStringArgument(string value, string parameterName)
@@ -669,7 +627,8 @@ namespace System.Data.Entity.Core
 
         internal static bool IsNull(object value)
         {
-            if ((null == value) || (DBNull.Value == value))
+            if ((null == value)
+                || (DBNull.Value == value))
             {
                 return true;
             }

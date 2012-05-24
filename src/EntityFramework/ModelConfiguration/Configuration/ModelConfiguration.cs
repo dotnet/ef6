@@ -37,7 +37,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             source._entityConfigurations.Each(c => _entityConfigurations.Add(c.Key, c.Value.Clone()));
             source._complexTypeConfigurations.Each(c => _complexTypeConfigurations.Add(c.Key, c.Value.Clone()));
+
             _ignoredTypes.AddRange(source._ignoredTypes);
+
+            DefaultSchema = source.DefaultSchema;
         }
 
         internal virtual ModelConfiguration Clone()
@@ -64,6 +67,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             get { return _entityConfigurations.Keys.Union(_complexTypeConfigurations.Keys).Except(_ignoredTypes).ToList(); }
         }
+
+        internal string DefaultSchema { get; set; }
 
         internal virtual void Add(EntityTypeConfiguration entityTypeConfiguration)
         {
@@ -264,10 +269,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     providerManifest);
             }
 
+            ConfigureDefaultSchema(databaseMapping);
             ConfigureEntityTypes(databaseMapping, providerManifest);
             RemoveRedundantColumnConditions(databaseMapping);
             RemoveRedundantTables(databaseMapping);
             ConfigureTables(databaseMapping.Database);
+        }
+
+        private void ConfigureDefaultSchema(DbDatabaseMapping databaseMapping)
+        {
+            Contract.Requires(databaseMapping != null);
+
+            if (!string.IsNullOrWhiteSpace(DefaultSchema))
+            {
+                var defaultSchema = databaseMapping.Database.Schemas.Single();
+
+                defaultSchema.Name = DefaultSchema;
+                defaultSchema.DatabaseIdentifier = DefaultSchema;
+            }
         }
 
         private void ConfigureEntityTypes(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)

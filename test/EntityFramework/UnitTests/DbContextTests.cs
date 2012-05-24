@@ -432,7 +432,7 @@ END";
             }
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void ApplicationName_not_set_when_not_sql_connection()
         {
             try
@@ -694,7 +694,7 @@ END";
             }
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void Can_replace_connection_with_different_provider()
         {
             var intializer = new ReplaceConnectionInitializer();

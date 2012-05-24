@@ -44,10 +44,10 @@ namespace System.Data.Entity.Core.Mapping
         private readonly EdmItemCollection m_edmCollection;
 
         private readonly Dictionary<string, int> clrTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
-                                                 //Indexes into the type mappings collection based on clr type name
+        //Indexes into the type mappings collection based on clr type name
 
         private readonly Dictionary<string, int> cdmTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
-                                                 //Indexes into the type mappings collection based on clr type name
+        //Indexes into the type mappings collection based on clr type name
 
         #endregion
 
@@ -541,10 +541,10 @@ namespace System.Data.Entity.Core.Mapping
                 != objectMember.TypeUsage.EdmType.BuiltInTypeKind)
             {
                 throw Error.Mapping_Default_OCMapping_Member_Type_Mismatch(
-                        edmMember.TypeUsage.EdmType.Name, edmMember.TypeUsage.EdmType.BuiltInTypeKind, edmMember.Name,
-                        edmMember.DeclaringType.FullName,
-                        objectMember.TypeUsage.EdmType.Name, objectMember.TypeUsage.EdmType.BuiltInTypeKind, objectMember.Name,
-                        objectMember.DeclaringType.FullName);
+                    edmMember.TypeUsage.EdmType.Name, edmMember.TypeUsage.EdmType.BuiltInTypeKind, edmMember.Name,
+                    edmMember.DeclaringType.FullName,
+                    objectMember.TypeUsage.EdmType.Name, objectMember.TypeUsage.EdmType.BuiltInTypeKind, objectMember.Name,
+                    objectMember.DeclaringType.FullName);
             }
 
             if (Helper.IsPrimitiveType(edmMember.TypeUsage.EdmType))

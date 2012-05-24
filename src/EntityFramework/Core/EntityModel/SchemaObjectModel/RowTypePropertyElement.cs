@@ -219,7 +219,7 @@
                             else
                             {
                                 _typeUsageBuilder.ValidateAndSetTypeUsage(edmType, false);
-                                    //use typeusagebuilder so dont lose facet information
+                                //use typeusagebuilder so dont lose facet information
                                 _typeUsage = _typeUsageBuilder.TypeUsage;
                             }
                         }

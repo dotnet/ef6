@@ -6,6 +6,7 @@
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
@@ -134,7 +135,7 @@
 
                     try
                     {
-                        var services = DbProviderServices.GetProviderServices(factory);
+                        var services = factory.GetProviderServices();
                         _providerManifest = services.GetProviderManifest(_providerManifestToken);
                         _providerFactory = factory;
                         if (_providerManifest is EdmProviderManifest)

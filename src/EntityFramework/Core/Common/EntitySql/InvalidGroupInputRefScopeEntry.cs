@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal override DbExpression GetExpression(string refName, ErrorContext errCtx)
         {
-            string message = Strings.InvalidGroupIdentifierReference(refName);
+            var message = Strings.InvalidGroupIdentifierReference(refName);
             throw EntitySqlException.Create(errCtx, message, null);
         }
     }

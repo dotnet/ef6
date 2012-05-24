@@ -11,7 +11,6 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -40,7 +39,7 @@
         private DbDataReader _dataReader;
         private bool _enableQueryPlanCaching;
         private DbCommand _storeProviderCommand;
-        private EntityDataReaderFactory _entityDataReaderFactory;
+        private readonly EntityDataReaderFactory _entityDataReaderFactory;
 
         #endregion
 
@@ -86,7 +85,8 @@
         /// <summary>
         /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        public InternalEntityCommand(string statement, EntityConnection connection, EntityTransaction transaction, EntityDataReaderFactory factory = null)
+        public InternalEntityCommand(
+            string statement, EntityConnection connection, EntityTransaction transaction, EntityDataReaderFactory factory = null)
             : this(statement, connection, factory)
         {
             // Assign other member fields from the parameters
@@ -120,7 +120,8 @@
         /// <summary>
         /// See comments on <see cref="EntityCommand"/> class.
         /// </summary>
-        internal InternalEntityCommand(EntityConnection connection, EntityCommandDefinition entityCommandDefinition, EntityDataReaderFactory factory = null)
+        internal InternalEntityCommand(
+            EntityConnection connection, EntityCommandDefinition entityCommandDefinition, EntityDataReaderFactory factory = null)
             : this(entityCommandDefinition, factory)
         {
             _connection = connection;
@@ -221,7 +222,8 @@
                 // If the command type is not Text, CommandTree cannot be set
                 if (CommandType.Text != CommandType)
                 {
-                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.CommandTreeOnStoredProcedureEntityCommand));
+                    throw new InvalidOperationException(
+                        Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.CommandTreeOnStoredProcedureEntityCommand));
                 }
 
                 if (_commandTreeSetByUser != value)
@@ -340,7 +342,7 @@
             {
                 ThrowIfDataReaderIsOpen();
                 _designTimeVisible = value;
-                TypeDescriptor.Refresh(this.EntityCommandWrapper);
+                TypeDescriptor.Refresh(EntityCommandWrapper);
             }
         }
 
@@ -530,7 +532,8 @@
         {
             Debug.Assert(CommandType.StoredProcedure == CommandType);
 
-            if (string.IsNullOrEmpty(CommandText) || string.IsNullOrEmpty(CommandText.Trim()))
+            if (string.IsNullOrEmpty(CommandText)
+                || string.IsNullOrEmpty(CommandText.Trim()))
             {
                 throw new InvalidOperationException(Strings.EntityClient_FunctionImportEmptyCommandText);
             }
@@ -617,13 +620,14 @@
             entityCommandDefinition = null;
 
             // if EnableQueryCaching is false, then just return to force the CommandDefinition to be created
-            if (!_enableQueryPlanCaching || string.IsNullOrEmpty(_esqlCommandText))
+            if (!_enableQueryPlanCaching
+                || string.IsNullOrEmpty(_esqlCommandText))
             {
                 return false;
             }
 
             // Create cache key
-            var queryCacheKey = new EntityClientCacheKey(this.EntityCommandWrapper);
+            var queryCacheKey = new EntityClientCacheKey(EntityCommandWrapper);
 
             // Try cache lookup
             var queryCacheManager = _connection.GetMetadataWorkspace().GetQueryCacheManager();
@@ -683,13 +687,15 @@
             // Check that we have a connection
             CheckConnectionPresent();
 
-            if (_connection.StoreProviderFactory == null || _connection.StoreConnection == null)
+            if (_connection.StoreProviderFactory == null
+                || _connection.StoreConnection == null)
             {
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
             // Make sure the connection is not closed or broken
-            if (_connection.State == ConnectionState.Closed || _connection.State == ConnectionState.Broken)
+            if (_connection.State == ConnectionState.Closed
+                || _connection.State == ConnectionState.Broken)
             {
                 var message = Strings.EntityClient_ExecutingOnClosedConnection(
                     _connection.State == ConnectionState.Closed
@@ -731,7 +737,8 @@
 
                 // Check each parameter to make sure it's an input parameter, currently EntityCommand doesn't support
                 // anything else
-                if (CommandType == CommandType.Text && parameter.Direction != ParameterDirection.Input)
+                if (CommandType == CommandType.Text
+                    && parameter.Direction != ParameterDirection.Input)
                 {
                     throw new InvalidOperationException(Strings.EntityClient_InvalidParameterDirection(parameter.ParameterName));
                 }
@@ -772,12 +779,12 @@
 
             if (null != _storeProviderCommand)
             {
-                CommandHelper.SetEntityParameterValues(this.EntityCommandWrapper, _storeProviderCommand, _connection);
+                CommandHelper.SetEntityParameterValues(EntityCommandWrapper, _storeProviderCommand, _connection);
                 _storeProviderCommand = null;
             }
-            if (this.EntityCommandWrapper.IsNotNullOnDataReaderClosingEvent())
+            if (EntityCommandWrapper.IsNotNullOnDataReaderClosingEvent())
             {
-                this.EntityCommandWrapper.InvokeOnDataReaderClosingEvent(this.EntityCommandWrapper, new EventArgs());
+                EntityCommandWrapper.InvokeOnDataReaderClosingEvent(EntityCommandWrapper, new EventArgs());
             }
         }
 
@@ -794,7 +801,8 @@
         /// </summary>
         internal class EntityDataReaderFactory
         {
-            internal virtual EntityDataReader CreateEntityDataReader(EntityCommand entityCommand, DbDataReader storeDataReader, CommandBehavior behavior)
+            internal virtual EntityDataReader CreateEntityDataReader(
+                EntityCommand entityCommand, DbDataReader storeDataReader, CommandBehavior behavior)
             {
                 return new EntityDataReader(entityCommand, storeDataReader, behavior);
             }

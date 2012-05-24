@@ -34,14 +34,14 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         /// Singleton object;
         /// </summary>
-        internal static readonly SqlProviderServices Instance = new SqlProviderServices();
+        private static readonly SqlProviderServices ProviderInstance = new SqlProviderServices();
 
         /// <summary>
         /// The Singleton instance of the SqlProviderServices type.
         /// </summary>
-        public static SqlProviderServices SingletonInstance
+        public static SqlProviderServices Instance
         {
-            get { return Instance; }
+            get { return ProviderInstance; }
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace System.Data.Entity.SqlServer
                                         && paramsToForceNonUnicode.Contains(queryParameter.Key)
                                             ? queryParameter.Value.ForceNonUnicode()
                                             : queryParameter.Value;
-                 
+
                     const bool preventTruncation = false;
                     parameter = CreateSqlParameter(
                         queryParameter.Key, parameterType, ParameterMode.In, DBNull.Value, preventTruncation, sqlVersion);
@@ -262,8 +262,11 @@ namespace System.Data.Entity.SqlServer
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
-
+#if INTERNALS_INVISIBLE
             return new SqlSpatialDataReader(underlyingReader);
+#else
+            return new SqlSpatialDataReader(new SqlDataReaderWrapper(underlyingReader));
+#endif
         }
 
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)

@@ -4,9 +4,8 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
@@ -2862,7 +2861,6 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithRequired(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasOptional(d => d.Item).WithOptionalPrincipal(p => p.Detail);
-            ;
 
             Assert.Equal(Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
                          Assert.Throws<InvalidOperationException>(() =>
@@ -3225,7 +3223,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<APerson>().HasOptional(p => p.Mother).WithMany().Map(t => t.MapKey("MotherId"));
             modelBuilder.Entity<APerson>().HasOptional(p => p.Father).WithMany().Map(t => t.MapKey("FatherId"));
-            modelBuilder.Entity<APerson>().HasOptional(p => p.Birth).WithOptionalDependent().Map(t => t.MapKey("BirthdayId")); ;
+            modelBuilder.Entity<APerson>().HasOptional(p => p.Birth).WithOptionalDependent().Map(t => t.MapKey("BirthdayId"));
             modelBuilder.Entity<APerson>().HasOptional(p => p.Death).WithOptionalDependent().Map(t => t.MapKey("DeathdayId"));
             modelBuilder.Entity<Marriage>().HasRequired(e => e.WeddingDay).WithOptional().Map(t => t.MapKey("WeddingDayId"));
             modelBuilder.Entity<Marriage>().HasRequired(e => e.Wife).WithMany().Map(t => t.MapKey("WifeId"));

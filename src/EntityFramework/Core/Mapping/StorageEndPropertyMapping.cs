@@ -92,6 +92,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 return
                     m_properties.OfType<StorageScalarPropertyMapping>().Select((propertyMap => propertyMap.ColumnProperty)).Cast<EdmMember>(
+                        
                         );
             }
         }

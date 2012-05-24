@@ -5,14 +5,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
@@ -33,17 +31,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="translator">Translator</param>
         /// <param name="stateEntries">State entries handled by this operation.</param>
         /// <param name="stateEntry">'Root' state entry being handled by this function.</param>
-        internal FunctionUpdateCommand(StorageModificationFunctionMapping functionMapping, UpdateTranslator translator,
+        internal FunctionUpdateCommand(
+            StorageModificationFunctionMapping functionMapping, UpdateTranslator translator,
             ReadOnlyCollection<IEntityStateEntry> stateEntries, ExtractedStateEntry stateEntry)
             : this(translator, stateEntries, stateEntry,
-            translator.GenerateCommandDefinition(functionMapping).CreateCommand())
+                translator.GenerateCommandDefinition(functionMapping).CreateCommand())
         {
             Contract.Requires(functionMapping != null);
             Contract.Requires(translator != null);
             Contract.Requires(stateEntries != null);
         }
 
-        protected FunctionUpdateCommand(UpdateTranslator translator, ReadOnlyCollection<IEntityStateEntry> stateEntries, ExtractedStateEntry stateEntry,
+        protected FunctionUpdateCommand(
+            UpdateTranslator translator, ReadOnlyCollection<IEntityStateEntry> stateEntries, ExtractedStateEntry stateEntry,
             DbCommand dbCommand)
             : base(translator, stateEntry.Original, stateEntry.Current)
         {
@@ -139,7 +139,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         // Adds and register a DbParameter to the current command.
-        internal void SetParameterValue(PropagatorResult result,
+        internal void SetParameterValue(
+            PropagatorResult result,
             StorageModificationFunctionParameterBinding parameterBinding, UpdateTranslator translator)
         {
             // retrieve DbParameter
@@ -239,13 +240,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     See comments in <see cref = "UpdateCommand" />.
         /// </summary>
-        internal override long Execute(Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues)
+        internal override long Execute(
+            Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             var connection = Translator.Connection;
             // configure command to use the connection and transaction for this session
             _dbCommand.Transaction = ((null == connection.CurrentTransaction)
-                                        ? null
-                                        : connection.CurrentTransaction.StoreTransaction);
+                                          ? null
+                                          : connection.CurrentTransaction.StoreTransaction);
             _dbCommand.Connection = connection.StoreConnection;
             if (Translator.CommandTimeout.HasValue)
             {
@@ -409,7 +411,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         if (e.RequiresContext())
                         {
                             // wrap the exception
-                            throw new UpdateException(Strings.Update_UnableToConvertRowsAffectedParameter(
+                            throw new UpdateException(
+                                Strings.Update_UnableToConvertRowsAffectedParameter(
                                     _rowsAffectedParameter.ParameterName, typeof(Int64).FullName),
                                 e, GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
                         }
@@ -430,7 +433,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             catch (IndexOutOfRangeException)
             {
-                throw new UpdateException(Strings.Update_MissingResultColumn(columnName), null, GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
+                throw new UpdateException(
+                    Strings.Update_MissingResultColumn(columnName), null, GetStateEntries(translator).Cast<ObjectStateEntry>().Distinct());
             }
             return columnOrdinal;
         }

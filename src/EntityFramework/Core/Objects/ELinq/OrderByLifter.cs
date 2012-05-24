@@ -270,7 +270,8 @@
                         }
                     }
                     Debug.Fail("only valid for integer constants");
-                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));
+                    throw new InvalidOperationException(
+                        Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));
                 }
 
                 #endregion

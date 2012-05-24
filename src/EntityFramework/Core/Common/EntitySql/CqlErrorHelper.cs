@@ -63,7 +63,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
         internal static void ReportAliasAlreadyUsedError(string aliasName, ErrorContext errCtx, string contextMessage)
         {
-            throw EntitySqlException.Create(errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", Strings.AliasNameAlreadyUsed(aliasName), contextMessage), null);
+            throw EntitySqlException.Create(
+                errCtx, String.Format(CultureInfo.InvariantCulture, "{0} {1}", Strings.AliasNameAlreadyUsed(aliasName), contextMessage),
+                null);
         }
 
         /// <summary>
@@ -103,11 +105,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (leftType.EdmType.BuiltInTypeKind
                 != rightType.EdmType.BuiltInTypeKind)
             {
-                throw EntitySqlException.Create(errCtx, Strings.TypeKindMismatch(
-                    GetReadableTypeKind(leftType),
-                    GetReadableTypeName(leftType),
-                    GetReadableTypeKind(rightType),
-                    GetReadableTypeName(rightType)), null);
+                throw EntitySqlException.Create(
+                    errCtx, Strings.TypeKindMismatch(
+                        GetReadableTypeKind(leftType),
+                        GetReadableTypeName(leftType),
+                        GetReadableTypeKind(rightType),
+                        GetReadableTypeName(rightType)), null);
             }
 
             switch (leftType.EdmType.BuiltInTypeKind)

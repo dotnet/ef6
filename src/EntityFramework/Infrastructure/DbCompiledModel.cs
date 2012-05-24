@@ -72,6 +72,11 @@ namespace System.Data.Entity.Infrastructure
             get { return _workspace.ProviderInfo; }
         }
 
+        public string DefaultSchema
+        {
+            get { return CachedModelBuilder.ModelConfiguration.DefaultSchema; }
+        }
+
         #endregion
 
         #region CreateObjectContext

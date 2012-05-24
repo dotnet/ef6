@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using CompiledQueryParameters =
-            System.Collections.ObjectModel.ReadOnlyCollection<Collections.Generic.KeyValuePair<ObjectParameter, ELinq.QueryParameterExpression>>
-            ;
+        System.Collections.ObjectModel.ReadOnlyCollection<Collections.Generic.KeyValuePair<ObjectParameter, ELinq.QueryParameterExpression>>
+        ;
 
     /// <summary>
     /// Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see cref="ObjectQuery"/>

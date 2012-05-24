@@ -35,7 +35,7 @@
     {
         #region Fields
 
-        private bool _disposed = false;
+        private bool _disposed;
         private IEntityAdapter _adapter;
 
         // Connection may be null if used by ObjectMaterializer for detached ObjectContext,
@@ -63,7 +63,7 @@
 
         private ObjectQueryProvider _queryProvider;
 
-        private EntityWrapperFactory _entityWrapperFactory;
+        private readonly EntityWrapperFactory _entityWrapperFactory;
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
 
@@ -105,7 +105,8 @@
         /// </summary>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For ObjectContext method. But the paths are not created in this method.
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         internal InternalObjectContext(string connectionString, string defaultContainerName)
             : this(connectionString)
         {
@@ -119,7 +120,8 @@
         /// <summary>
         /// See comments on <see cref="ObjectContext"/> class.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         internal InternalObjectContext(EntityConnection connection, string defaultContainerName)
             : this(connection)
         {
@@ -131,7 +133,8 @@
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         internal InternalObjectContext(
             EntityConnection connection,
             bool isConnectionConstructor,
@@ -151,9 +154,12 @@
                 _entityWrapperFactory = new EntityWrapperFactory();
                 // Ensure a valid connection
                 var connectionString = connection.ConnectionString;
-                if (connectionString == null || connectionString.Trim().Length == 0)
+                if (connectionString == null
+                    || connectionString.Trim().Length == 0)
                 {
-                    throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", null) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", null);
+                    throw isConnectionConstructor
+                              ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", null)
+                              : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", null);
                 }
             }
 
@@ -167,7 +173,9 @@
                 {
                     // Intercept exceptions retrieving workspace, and wrap exception in appropriate
                     // message based on which constructor pattern is being used.
-                    throw isConnectionConstructor ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", e) : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", e);
+                    throw isConnectionConstructor
+                              ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", e)
+                              : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", e);
                 }
 
                 // Register the O and OC metadata
@@ -296,7 +304,8 @@
             get { return _queryTimeout; }
             set
             {
-                if (value.HasValue && value < 0)
+                if (value.HasValue
+                    && value < 0)
                 {
                     throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout, "value");
                 }
@@ -314,7 +323,7 @@
             {
                 if (null == _queryProvider)
                 {
-                    _queryProvider = new ObjectQueryProvider(this.ObjectContextWrapper);
+                    _queryProvider = new ObjectQueryProvider(ObjectContextWrapper);
                 }
 
                 return _queryProvider;
@@ -440,7 +449,8 @@
                 existingEntry = ObjectStateManager.FindEntityEntry(key);
             }
 
-            if (null != existingEntry && !(doAttach && existingEntry.IsKeyEntry))
+            if (null != existingEntry
+                && !(doAttach && existingEntry.IsKeyEntry))
             {
                 if (!ReferenceEquals(existingEntry.Entity, wrappedEntity.Entity))
                 {
@@ -454,7 +464,9 @@
                     {
                         throw doAttach
                                   ? new InvalidOperationException(Strings.ObjectContext_EntityAlreadyExistsInObjectStateManager)
-                                  : new InvalidOperationException(Strings.ObjectStateManager_DoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity(existingEntry.State));
+                                  : new InvalidOperationException(
+                                        Strings.ObjectStateManager_DoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity(
+                                            existingEntry.State));
                     }
                     else
                     {
@@ -485,7 +497,7 @@
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             EntityEntry existingEntry;
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContextGettingEntry(entity, this.ObjectContextWrapper, out existingEntry);
+            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContextGettingEntry(entity, ObjectContextWrapper, out existingEntry);
 
             if (existingEntry == null)
             {
@@ -533,7 +545,7 @@
                     // If we failed after adding the entry but before completely attaching the related ends to the context, we need to do some cleanup.
                     // If the context is null, we didn't even get as far as trying to attach the RelationshipManager, so something failed before the entry
                     // was even added, therefore there is nothing to clean up.
-                    if (doCleanup && wrappedEntity.Context == this.ObjectContextWrapper)
+                    if (doCleanup && wrappedEntity.Context == ObjectContextWrapper)
                     {
                         // If the context is not null, it be because the failure happened after it was attached, or it
                         // could mean that this entity was already attached, in which case we don't want to clean it up
@@ -580,7 +592,7 @@
             }
 
             VerifyContextForAddOrAttach(wrappedEntity);
-            wrappedEntity.Context = this.ObjectContextWrapper;
+            wrappedEntity.Context = ObjectContextWrapper;
             var entry = ObjectStateManager.AddEntry(wrappedEntity, null, entitySet, argumentName, true);
 
             // If the entity supports relationships, AttachContext on the
@@ -600,7 +612,7 @@
 
             ObjectStateManager.TransactionManager.ProcessedEntities.Add(wrappedEntity);
 
-            wrappedEntity.AttachContext(this.ObjectContextWrapper, entitySet, MergeOption.AppendOnly);
+            wrappedEntity.AttachContext(ObjectContextWrapper, entitySet, MergeOption.AppendOnly);
 
             // Find PK values in referenced principals and use these to set FK values
             entry.FixupFKValuesFromNonAddedReferences();
@@ -660,13 +672,13 @@
         // Wraps the given entity and checks that it has a non-null context (i.e. that is is not detached).
         private IEntityWrapper WrapEntityAndCheckContext(object entity, string refType)
         {
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this.ObjectContextWrapper);
+            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContextWrapper);
             if (wrappedEntity.Context == null)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotExplicitlyLoadDetachedRelationships(refType));
             }
 
-            if (wrappedEntity.Context != this.ObjectContextWrapper)
+            if (wrappedEntity.Context != ObjectContextWrapper)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotLoadReferencesUsingDifferentContext(refType));
             }
@@ -686,7 +698,8 @@
             // Therefore, we keep track of whether or not we removed the convert.
             removedConvert = false;
             var body = selector.Body;
-            while (body.NodeType == ExpressionType.Convert || body.NodeType == ExpressionType.ConvertChecked)
+            while (body.NodeType == ExpressionType.Convert
+                   || body.NodeType == ExpressionType.ConvertChecked)
             {
                 removedConvert = true;
                 body = ((UnaryExpression)body).Operand;
@@ -694,7 +707,8 @@
 
             var bodyAsMember = body as MemberExpression;
             if (bodyAsMember == null ||
-                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity)) ||
+                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity))
+                ||
                 bodyAsMember.Expression.NodeType != ExpressionType.Parameter)
             {
                 throw new ArgumentException(Strings.ObjectContext_SelectorExpressionMustBeMemberAccess);
@@ -708,7 +722,7 @@
         /// </summary>
         public virtual TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
         {
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, this.ObjectContextWrapper);
+            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, ObjectContextWrapper);
 
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -731,7 +745,8 @@
 
             // Check if entity is already in the cache
             var ose = ObjectStateManager.FindEntityEntry(key);
-            if (ose == null || ose.IsKeyEntry)
+            if (ose == null
+                || ose.IsKeyEntry)
             {
                 throw new InvalidOperationException(Strings.ObjectStateManager_EntityNotTracked);
             }
@@ -751,7 +766,7 @@
         public virtual TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
-            var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, this.ObjectContextWrapper);
+            var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, ObjectContextWrapper);
 
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -774,21 +789,25 @@
 
             // Check if the entity is already in the cache
             var ose = ObjectStateManager.FindEntityEntry(key);
-            if (ose == null || ose.IsKeyEntry)
+            if (ose == null
+                || ose.IsKeyEntry)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_EntityNotTrackedOrHasTempKey);
             }
 
             if (ose.State != EntityState.Modified &&
-                ose.State != EntityState.Unchanged &&
+                ose.State != EntityState.Unchanged
+                &&
                 ose.State != EntityState.Deleted)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(ose.State.ToString()));
             }
 
-            if (ose.WrappedEntity.IdentityType != wrappedOriginalEntity.IdentityType)
+            if (ose.WrappedEntity.IdentityType
+                != wrappedOriginalEntity.IdentityType)
             {
-                throw new ArgumentException(Strings.ObjectContext_EntitiesHaveDifferentType(ose.Entity.GetType().FullName, originalEntity.GetType().FullName));
+                throw new ArgumentException(
+                    Strings.ObjectContext_EntitiesHaveDifferentType(ose.Entity.GetType().FullName, originalEntity.GetType().FullName));
             }
 
             ose.CompareKeyProperties(originalEntity);
@@ -810,7 +829,7 @@
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
 
             EntityEntry existingEntry;
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContextGettingEntry(entity, this.ObjectContextWrapper, out existingEntry);
+            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContextGettingEntry(entity, ObjectContextWrapper, out existingEntry);
 
             if (existingEntry == null)
             {
@@ -860,7 +879,7 @@
                     // entity from context if it was already attached to some other context.
                     // It's enough to check this only for the root of the graph since we can assume that all entities
                     // in the graph are attached to the same context (or none of them is attached).
-                    if (doCleanup && wrappedEntity.Context == this.ObjectContextWrapper)
+                    if (doCleanup && wrappedEntity.Context == ObjectContextWrapper)
                     {
                         // SQLBU 509900 RIConstraints: Entity still exists in cache after Attach fails
                         //
@@ -939,7 +958,7 @@
                     // SetChangeTrackerOntoEntity is now called from PromoteKeyEntryInitialization(). 
                     // Calling PromoteKeyEntryInitialization() before calling relationshipManager.AttachContext prevents
                     // overriding Context property on relationshipManager (and attaching relatedEnds to current context).
-                    ObjectStateManager.PromoteKeyEntryInitialization(this.ObjectContextWrapper, entry, wrappedEntity, replacingEntry: false);
+                    ObjectStateManager.PromoteKeyEntryInitialization(ObjectContextWrapper, entry, wrappedEntity, replacingEntry: false);
 
                     Debug.Assert(
                         ObjectStateManager.TransactionManager.TrackProcessedEntities,
@@ -971,7 +990,7 @@
             else
             {
                 VerifyContextForAddOrAttach(wrappedEntity);
-                wrappedEntity.Context = this.ObjectContextWrapper;
+                wrappedEntity.Context = ObjectContextWrapper;
                 entry = ObjectStateManager.AttachEntry(key, wrappedEntity, entitySet);
 
                 Debug.Assert(
@@ -981,7 +1000,7 @@
 
                 ObjectStateManager.TransactionManager.ProcessedEntities.Add(wrappedEntity);
 
-                wrappedEntity.AttachContext(this.ObjectContextWrapper, entitySet, MergeOption.AppendOnly);
+                wrappedEntity.AttachContext(ObjectContextWrapper, entitySet, MergeOption.AppendOnly);
 
                 ObjectStateManager.FixupReferencesByForeignKeys(entry);
                 wrappedEntity.TakeSnapshotOfRelationships(entry);
@@ -997,8 +1016,9 @@
         private void VerifyContextForAddOrAttach(IEntityWrapper wrappedEntity)
         {
             if (wrappedEntity.Context != null &&
-                wrappedEntity.Context != this.ObjectContextWrapper &&
-                !wrappedEntity.Context.ObjectStateManager.IsDisposed &&
+                wrappedEntity.Context != ObjectContextWrapper &&
+                !wrappedEntity.Context.ObjectStateManager.IsDisposed
+                &&
                 wrappedEntity.MergeOption != MergeOption.NoTracking)
             {
                 throw new InvalidOperationException(Strings.Entity_EntityCantHaveMultipleChangeTrackers);
@@ -1029,7 +1049,7 @@
             string setName;
             string containerName;
 
-            GetEntitySetName(entitySetName, "entitySetName", this.ObjectContextWrapper, out setName, out containerName);
+            GetEntitySetName(entitySetName, "entitySetName", ObjectContextWrapper, out setName, out containerName);
 
             // Find entity set using entitySetName and entityContainerName
             return GetEntitySet(setName, containerName);
@@ -1044,7 +1064,7 @@
                 throw new InvalidOperationException(Strings.ObjectContext_NthElementIsNull(entities.Count));
             }
 
-            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entityLike, this.ObjectContextWrapper);
+            var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entityLike, ObjectContextWrapper);
             var key = wrappedEntity.EntityKey;
             RefreshCheck(entities, key);
 
@@ -1069,7 +1089,7 @@
             where TEntity : class
         {
             var entitySet = GetEntitySetForType(typeof(TEntity), "TEntity");
-            return new ObjectSet<TEntity>(entitySet, this.ObjectContextWrapper);
+            return new ObjectSet<TEntity>(entitySet, ObjectContextWrapper);
         }
 
         /// <summary>
@@ -1099,7 +1119,8 @@
                         if (entitySetForType != null)
                         {
                             // There is more than one EntitySet for this type across all containers in metadata, so we can't determine which one the user intended
-                            throw new ArgumentException(Strings.ObjectContext_MultipleEntitySetsFoundInAllContainers(entityCLRType.FullName), exceptionParameterName);
+                            throw new ArgumentException(
+                                Strings.ObjectContext_MultipleEntitySetsFoundInAllContainers(entityCLRType.FullName), exceptionParameterName);
                         }
 
                         entitySetForType = entitySetFromContainer;
@@ -1132,12 +1153,15 @@
             {
                 // This is a match if the set is an EntitySet (not an AssociationSet) and the EntitySet
                 // is defined for the specified entity type. Must be an exact match, not a base type. 
-                if (es.BuiltInTypeKind == BuiltInTypeKind.EntitySet && es.ElementType == entityEdmType)
+                if (es.BuiltInTypeKind == BuiltInTypeKind.EntitySet
+                    && es.ElementType == entityEdmType)
                 {
                     if (entitySet != null)
                     {
                         // There is more than one EntitySet for this type, so we can't determine which one the user intended
-                        throw new ArgumentException(Strings.ObjectContext_MultipleEntitySetsFoundInSingleContainer(entityCLRType.FullName, container.Name), exceptionParameterName);
+                        throw new ArgumentException(
+                            Strings.ObjectContext_MultipleEntitySetsFoundInSingleContainer(entityCLRType.FullName, container.Name),
+                            exceptionParameterName);
                     }
 
                     entitySet = (EntitySet)es;
@@ -1154,7 +1178,7 @@
             where TEntity : class
         {
             var entitySet = GetEntitySetForNameAndType(entitySetName, typeof(TEntity), "TEntity");
-            return new ObjectSet<TEntity>(entitySet, this.ObjectContextWrapper);
+            return new ObjectSet<TEntity>(entitySet, ObjectContextWrapper);
         }
 
         /// <summary>
@@ -1177,7 +1201,9 @@
             var entityEdmType = GetTypeUsage(entityCLRType).EdmType;
             if (entitySet.ElementType != entityEdmType)
             {
-                throw new ArgumentException(Strings.ObjectContext_InvalidObjectSetTypeForEntitySet(entityCLRType.FullName, entitySet.ElementType.FullName, entitySetName), exceptionParameterName);
+                throw new ArgumentException(
+                    Strings.ObjectContext_InvalidObjectSetTypeForEntitySet(
+                        entityCLRType.FullName, entitySet.ElementType.FullName, entitySetName), exceptionParameterName);
             }
 
             return entitySet;
@@ -1190,7 +1216,8 @@
         /// </summary>
         internal virtual void EnsureConnection()
         {
-            if (ConnectionState.Closed == Connection.State)
+            if (ConnectionState.Closed
+                == Connection.State)
             {
                 Connection.Open();
                 _openedConnection = true;
@@ -1202,7 +1229,8 @@
             }
 
             // Check the connection was opened correctly
-            if (_connection.State == ConnectionState.Closed || _connection.State == ConnectionState.Broken)
+            if (_connection.State == ConnectionState.Closed
+                || _connection.State == ConnectionState.Broken)
             {
                 var message = Strings.EntityClient_ExecutingOnClosedConnection(
                     _connection.State == ConnectionState.Closed
@@ -1332,7 +1360,8 @@
         /// <param name="e"></param>
         private void ConnectionStateChange(object sender, StateChangeEventArgs e)
         {
-            if (e.CurrentState == ConnectionState.Closed)
+            if (e.CurrentState
+                == ConnectionState.Closed)
             {
                 _connectionRequestCount = 0;
                 _openedConnection = false;
@@ -1421,7 +1450,7 @@
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(T), Assembly.GetCallingAssembly());
 
             // create a ObjectQuery<T> with default settings
-            var query = new ObjectQuery<T>(queryString, this.ObjectContextWrapper, MergeOption.AppendOnly);
+            var query = new ObjectQuery<T>(queryString, ObjectContextWrapper, MergeOption.AppendOnly);
 
             foreach (var parameter in parameters)
             {
@@ -1490,7 +1519,8 @@
         internal virtual void DeleteObject(object entity, EntitySet expectedEntitySet)
         {
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
-            if (cacheEntry == null || !ReferenceEquals(cacheEntry.Entity, entity))
+            if (cacheEntry == null
+                || !ReferenceEquals(cacheEntry.Entity, entity))
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotDeleteEntityNotInObjectStateManager);
             }
@@ -1500,8 +1530,10 @@
                 var actualEntitySet = cacheEntry.EntitySet;
                 if (actualEntitySet != expectedEntitySet)
                 {
-                    throw new InvalidOperationException(Strings.ObjectContext_EntityNotInObjectSet_Delete(
-                        actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name, expectedEntitySet.Name));
+                    throw new InvalidOperationException(
+                        Strings.ObjectContext_EntityNotInObjectSet_Delete(
+                            actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name,
+                            expectedEntitySet.Name));
                 }
             }
 
@@ -1534,7 +1566,8 @@
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
 
             // this condition includes key entries and relationship entries
-            if (cacheEntry == null || !ReferenceEquals(cacheEntry.Entity, entity) || cacheEntry.Entity == null)
+            if (cacheEntry == null || !ReferenceEquals(cacheEntry.Entity, entity)
+                || cacheEntry.Entity == null)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotDetachEntityNotInObjectStateManager);
             }
@@ -1544,8 +1577,10 @@
                 var actualEntitySet = cacheEntry.EntitySet;
                 if (actualEntitySet != expectedEntitySet)
                 {
-                    throw new InvalidOperationException(Strings.ObjectContext_EntityNotInObjectSet_Detach(
-                        actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name, expectedEntitySet.Name));
+                    throw new InvalidOperationException(
+                        Strings.ObjectContext_EntityNotInObjectSet_Detach(
+                            actualEntitySet.EntityContainer.Name, actualEntitySet.Name, expectedEntitySet.EntityContainer.Name,
+                            expectedEntitySet.Name));
                 }
             }
 
@@ -1620,7 +1655,8 @@
 
             if (!container.TryGetEntitySetByName(entitySetName, false, out entitySet))
             {
-                throw new InvalidOperationException(Strings.ObjectContext_EntitySetNotFoundForName(TypeHelpers.GetFullName(container.Name, entitySetName)));
+                throw new InvalidOperationException(
+                    Strings.ObjectContext_EntitySetNotFoundForName(TypeHelpers.GetFullName(container.Name, entitySetName)));
             }
 
             return entitySet;
@@ -1646,17 +1682,20 @@
             {
                 container = result[0];
                 entityset = result[1];
-                if (container == null || container.Length == 0) // if it starts with '.'
+                if (container == null
+                    || container.Length == 0) // if it starts with '.'
                 {
                     throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
                 }
             }
-            if (entityset == null || entityset.Length == 0) // if it's not in the form "ES name . containername"
+            if (entityset == null
+                || entityset.Length == 0) // if it's not in the form "ES name . containername"
             {
                 throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
             }
 
-            if (context != null && String.IsNullOrEmpty(container) && context.Perspective.GetDefaultContainer() == null)
+            if (context != null && String.IsNullOrEmpty(container)
+                && context.Perspective.GetDefaultContainer() == null)
             {
                 throw new ArgumentException(Strings.ObjectContext_ContainerQualifiedEntitySetNameRequired, parameterName);
             }
@@ -1686,7 +1725,8 @@
             MetadataWorkspace.ImplicitLoadAssemblyForType(entityCLRType, Assembly.GetCallingAssembly());
 
             TypeUsage entityTypeUsage = null;
-            if (!Perspective.TryGetType(entityCLRType, out entityTypeUsage) || !TypeSemantics.IsEntityType(entityTypeUsage))
+            if (!Perspective.TryGetType(entityCLRType, out entityTypeUsage)
+                || !TypeSemantics.IsEntityType(entityTypeUsage))
             {
                 Debug.Assert(entityCLRType != null, "The type cannot be null.");
                 throw new InvalidOperationException(Strings.ObjectContext_NoMappingForEntityType(entityCLRType.FullName));
@@ -1775,7 +1815,8 @@
                 throw new InvalidOperationException(Strings.ObjectContext_NthElementNotInObjectStateManager(entities.Count));
             }
 
-            if (EntityState.Added == entry.State)
+            if (EntityState.Added
+                == entry.State)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_NthElementInAddedState(entities.Count));
             }
@@ -1878,7 +1919,8 @@
                         }
                     }
                 }
-                else if (RefreshMode.ClientWins == refreshMode && 0 < entities.Count)
+                else if (RefreshMode.ClientWins == refreshMode
+                         && 0 < entities.Count)
                 {
                     // throw an exception with all appropriate entity keys in text
                     var prefix = String.Empty;
@@ -1886,7 +1928,8 @@
                     foreach (var item in entities)
                     {
                         Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
-                        if (item.Value.State == EntityState.Deleted)
+                        if (item.Value.State
+                            == EntityState.Deleted)
                         {
                             // Detach the deleted items because this is the client changes and the server
                             // does not have these items any more
@@ -1918,7 +1961,8 @@
             }
         }
 
-        private int BatchRefreshEntitiesByKey(RefreshMode refreshMode, Dictionary<EntityKey, EntityEntry> trackedEntities,
+        private int BatchRefreshEntitiesByKey(
+            RefreshMode refreshMode, Dictionary<EntityKey, EntityEntry> trackedEntities,
             EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
         {
             // A single refresh query can be built for all entities from the same set.
@@ -1997,20 +2041,21 @@
 
             try
             {
-                var results = ObjectQueryExecutionPlan.ExecuteCommandTree<object>(this.ObjectContextWrapper, tree, mergeOption);
+                var results = ObjectQueryExecutionPlan.ExecuteCommandTree<object>(ObjectContextWrapper, tree, mergeOption);
 
                 foreach (var entity in results)
                 {
                     // There is a risk that, during an event, the Entity removed itself from the cache.
                     var entry = ObjectStateManager.FindEntityEntry(entity);
-                    if (null != entry && EntityState.Modified == entry.State)
+                    if (null != entry
+                        && EntityState.Modified == entry.State)
                     {
                         // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
                         Debug.Assert(RefreshMode.ClientWins == refreshMode, "StoreWins always becomes unchanged");
                         entry.SetModifiedAll();
                     }
 
-                    var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this.ObjectContextWrapper);
+                    var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContextWrapper);
                     var key = wrappedEntity.EntityKey;
                     if ((object)key == null)
                     {
@@ -2054,7 +2099,7 @@
         {
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
 
-            this.ObjectContextWrapper.InternalOnSavingChanges();
+            ObjectContextWrapper.InternalOnSavingChanges();
 
             if ((SaveOptions.DetectChangesBeforeSave & options) != 0)
             {
@@ -2102,7 +2147,8 @@
                     // determine what transaction to enlist in
                     var needLocalTransaction = false;
 
-                    if (null == connection.CurrentTransaction && !connection.EnlistedInUserTransaction)
+                    if (null == connection.CurrentTransaction
+                        && !connection.EnlistedInUserTransaction)
                     {
                         // If there isn't a local transaction started by the user, we'll attempt to enlist 
                         // on the current SysTx transaction so we don't need to construct a local
@@ -2267,7 +2313,8 @@
         /// <summary>
         /// See comments on <see cref="ObjectContext"/> class.
         /// </summary>
-        public virtual ObjectResult<TElement> ExecuteFunction<TElement>(string functionName, MergeOption mergeOption,
+        public virtual ObjectResult<TElement> ExecuteFunction<TElement>(
+            string functionName, MergeOption mergeOption,
             params ObjectParameter[] parameters)
         {
             EdmFunction functionImport;
@@ -2407,7 +2454,7 @@
                 var shaperFactory = Translator.TranslateColumnMap<TElement>(
                     cacheManager, commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
                     false);
-                var shaper = shaperFactory.Create(storeReader, this.ObjectContextWrapper, MetadataWorkspace, mergeOption, shaperOwnsReader);
+                var shaper = shaperFactory.Create(storeReader, ObjectContextWrapper, MetadataWorkspace, mergeOption, shaperOwnsReader);
 
                 NextResultGenerator nextResultGenerator;
 
@@ -2419,16 +2466,16 @@
                 // its GetEnumerator is called explicitly, and the resulting enumerator is never disposed.
                 var onReaderDisposeHasRun = false;
                 Action<object, EventArgs> onReaderDispose = (object sender, EventArgs e) =>
-                {
-                    if (!onReaderDisposeHasRun)
-                    {
-                        onReaderDisposeHasRun = true;
-                        // consume the store reader
-                        CommandHelper.ConsumeReader(storeReader);
-                        // trigger event callback
-                        entityCommand.NotifyDataReaderClosing();
-                    }
-                };
+                                                                {
+                                                                    if (!onReaderDisposeHasRun)
+                                                                    {
+                                                                        onReaderDisposeHasRun = true;
+                                                                        // consume the store reader
+                                                                        CommandHelper.ConsumeReader(storeReader);
+                                                                        // trigger event callback
+                                                                        entityCommand.NotifyDataReaderClosing();
+                                                                    }
+                                                                };
 
                 if (shaperOwnsReader)
                 {
@@ -2438,7 +2485,7 @@
                 else
                 {
                     nextResultGenerator = new NextResultGenerator(
-                        this.ObjectContextWrapper, entityCommand, edmTypes, entitySets, mergeOption, resultSetIndex + 1);
+                        ObjectContextWrapper, entityCommand, edmTypes, entitySets, mergeOption, resultSetIndex + 1);
                 }
 
                 // We want the ObjectResult to close the reader in its Dispose method, even if it is not the last result set.
@@ -2478,7 +2525,8 @@
 
                 entityParameter.Value = objectParameter.Value ?? DBNull.Value;
 
-                if (DBNull.Value == entityParameter.Value || entityParameter.Direction != ParameterDirection.Input)
+                if (DBNull.Value == entityParameter.Value
+                    || entityParameter.Direction != ParameterDirection.Input)
                 {
                     TypeUsage typeUsage;
                     if (functionParameter != null)
@@ -2516,7 +2564,8 @@
                         entityParameter, typeUsage, entityParameter.Direction != ParameterDirection.Input);
                 }
 
-                if (entityParameter.Direction != ParameterDirection.Input)
+                if (entityParameter.Direction
+                    != ParameterDirection.Input)
                 {
                     var binder = new ParameterBinder(entityParameter, objectParameter);
                     command.OnDataReaderClosing += binder.OnDataReaderClosingHandler;
@@ -2567,14 +2616,14 @@
             EntityProxyFactory.TryCreateProxyTypes(
                 types.Select(
                     type =>
-                    {
-                        // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
-                        MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
+                        {
+                            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+                            MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
 
-                        EntityType entityType;
-                        ospaceItems.TryGetItem(type.FullName, out entityType);
-                        return entityType;
-                    }).Where(entityType => entityType != null)
+                            EntityType entityType;
+                            ospaceItems.TryGetItem(type.FullName, out entityType);
+                            return entityType;
+                        }).Where(entityType => entityType != null)
                 );
         }
 
@@ -2595,7 +2644,8 @@
             var entityType = MetadataWorkspace.GetItem<ClrEntityType>(clrType.FullName, DataSpace.OSpace);
             EntityProxyTypeInfo proxyTypeInfo = null;
 
-            if (ContextOptions.ProxyCreationEnabled && ((proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType)) != null))
+            if (ContextOptions.ProxyCreationEnabled
+                && ((proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType)) != null))
             {
                 instance = (T)proxyTypeInfo.CreateProxyObject();
 
@@ -2614,7 +2664,7 @@
                     // try to do things that we normally do when we have a context, such as adding the
                     // context to the RelatedEnds.  We can't do these things since they require an
                     // EntitySet, and, because of MEST, we don't have one.
-                    wrappedEntity.AttachContext(this.ObjectContextWrapper, null, MergeOption.NoTracking);
+                    wrappedEntity.AttachContext(ObjectContextWrapper, null, MergeOption.NoTracking);
                     proxyTypeInfo.SetEntityWrapper(wrappedEntity);
                     if (proxyTypeInfo.InitializeEntityCollections != null)
                     {
@@ -2781,11 +2831,13 @@
                 (unwrappedTElement.IsEnum &&
                  MetadataWorkspace.TryDetermineCSpaceModelType(unwrappedTElement.GetEnumUnderlyingType(), out modelEdmType)))
             {
-                if (entitySet != null && !entitySet.ElementType.IsAssignableFrom(modelEdmType))
+                if (entitySet != null
+                    && !entitySet.ElementType.IsAssignableFrom(modelEdmType))
                 {
-                    throw new InvalidOperationException(Strings.ObjectContext_InvalidEntitySetForStoreQuery(
-                        entitySet.EntityContainer.Name,
-                        entitySet.Name, typeof(TElement)));
+                    throw new InvalidOperationException(
+                        Strings.ObjectContext_InvalidEntitySetForStoreQuery(
+                            entitySet.EntityContainer.Name,
+                            entitySet.Name, typeof(TElement)));
                 }
 
                 columnMap = ColumnMapFactory.CreateColumnMapFromReaderAndType(reader, modelEdmType, entitySet, null);
@@ -2799,7 +2851,7 @@
             var cacheManager = MetadataWorkspace.GetQueryCacheManager();
             var shaperFactory = Translator.TranslateColumnMap<TElement>(
                 cacheManager, columnMap, MetadataWorkspace, null, mergeOption, false);
-            var shaper = shaperFactory.Create(reader, this.ObjectContextWrapper, MetadataWorkspace, mergeOption, readerOwned);
+            var shaper = shaperFactory.Create(reader, ObjectContextWrapper, MetadataWorkspace, mergeOption, readerOwned);
             return new ObjectResult<TElement>(shaper, entitySet, MetadataHelper.GetElementType(columnMap.Type), readerOwned);
         }
 
@@ -2821,7 +2873,8 @@
                 command.Transaction = entityTransaction.StoreTransaction;
             }
 
-            if (null != parameters && parameters.Length > 0)
+            if (null != parameters
+                && parameters.Length > 0)
             {
                 var dbParameters = new DbParameter[parameters.Length];
 
@@ -2874,7 +2927,7 @@
         public virtual void CreateDatabase()
         {
             var storeConnection = _connection.StoreConnection;
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             services.CreateDatabase(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -2884,7 +2937,7 @@
         public virtual void DeleteDatabase()
         {
             var storeConnection = _connection.StoreConnection;
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             services.DeleteDatabase(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -2894,7 +2947,7 @@
         public virtual bool DatabaseExists()
         {
             var storeConnection = _connection.StoreConnection;
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             return services.DatabaseExists(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -2903,7 +2956,7 @@
         /// </summary>
         public virtual String CreateDatabaseScript()
         {
-            var services = DbProviderServices.GetProviderServices(GetStoreItemCollection().StoreProviderFactory);
+            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             var targetProviderManifestToken = GetStoreItemCollection().StoreProviderManifestToken;
             return services.CreateDatabaseScript(targetProviderManifestToken, GetStoreItemCollection());
         }
@@ -2939,7 +2992,8 @@
             {
                 // When the reader is closing, out/inout parameter values are set on the EntityParameter
                 // instance. Pass this value through to the corresponding ObjectParameter.
-                if (_entityParameter.Value != DBNull.Value && _objectParameter.MappableType.IsEnum)
+                if (_entityParameter.Value != DBNull.Value
+                    && _objectParameter.MappableType.IsEnum)
                 {
                     _objectParameter.Value = Enum.ToObject(_objectParameter.MappableType, _entityParameter.Value);
                 }

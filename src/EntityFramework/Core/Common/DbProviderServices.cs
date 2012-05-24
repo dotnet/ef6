@@ -2,13 +2,11 @@ namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -269,7 +267,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns>An instance of DbProviderServices</returns>
         public static DbProviderServices GetProviderServices(DbConnection connection)
         {
-            return GetProviderServices(GetProviderFactory(connection));
+            return GetProviderFactory(connection).GetProviderServices();
         }
 
         internal static DbProviderFactory GetProviderFactory(string providerInvariantName)
@@ -298,39 +296,13 @@ namespace System.Data.Entity.Core.Common
             var factory = DbProviderFactories.GetFactory(connection);
             if (factory == null)
             {
-                throw new ProviderIncompatibleException(Strings.EntityClient_ReturnedNullOnProviderMethod(
-                    "get_ProviderFactory",
-                    connection.GetType().ToString()));
+                throw new ProviderIncompatibleException(
+                    Strings.EntityClient_ReturnedNullOnProviderMethod(
+                        "get_ProviderFactory",
+                        connection.GetType().ToString()));
             }
             Debug.Assert(factory != null, "Should have thrown on null");
             return factory;
-        }
-
-        internal static DbProviderServices GetProviderServices(DbProviderFactory factory)
-        {
-            Contract.Requires(factory != null);
-
-            // TODO
-            // This is where the EF provider is returned. It is here that the initial changes
-            // to look-up the registered provider will be made. For now we are just loading the
-            // SQL Server provider by Reflection. We use Reflection because EF.dll does not have
-            // a reference to EF.SqlServer.dll.
-
-            if (factory is SqlClientFactory)
-            {
-                var sqlProviderServicesType = Type.GetType(
-                    "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                    throwOnError: true);
-
-                return (DbProviderServices)sqlProviderServicesType.GetProperty("SingletonInstance").GetValue(null);
-            }
-
-            if (factory is EntityProviderFactory)
-            {
-                return EntityProviderServices.Instance;
-            }
-
-            throw new NotSupportedException("TODO: Only the SQL Server provider is currently supported.");
         }
 
         /// <summary>

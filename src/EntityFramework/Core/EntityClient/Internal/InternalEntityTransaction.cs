@@ -1,17 +1,15 @@
 ﻿namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Data.Common;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     /// See comments on <see cref="EntityTransaction"/> class.
     /// </summary>
     internal class InternalEntityTransaction : IDisposable
     {
-        private bool _disposed = false;
+        private bool _disposed;
         private readonly EntityConnection _connection;
         private readonly DbTransaction _storeTransaction;
 
@@ -118,10 +116,10 @@
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         /// <summary>
         /// Cleans up this transaction object
         /// </summary>
@@ -145,7 +143,7 @@
         /// </summary>
         private void ClearCurrentTransaction()
         {
-            if (_connection.CurrentTransaction == this.EntityTransactionWrapper)
+            if (_connection.CurrentTransaction == EntityTransactionWrapper)
             {
                 _connection.ClearCurrentTransaction();
             }

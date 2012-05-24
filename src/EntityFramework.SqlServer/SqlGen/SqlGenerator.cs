@@ -1745,10 +1745,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// The Not expression may cause the translation of its child to change.
         /// These children are
         /// <list type="bullet">
-        /// <item><see cref="DbNotExpression"/>NOT(Not(x)) becomes x</item>
-        /// <item><see cref="DbIsEmptyExpression"/>NOT EXISTS becomes EXISTS</item>
-        /// <item><see cref="DbIsNullExpression"/>IS NULL becomes IS NOT NULL</item>
-        /// <item><see cref="DbComparisonExpression"/>= becomes&lt;&gt; </item>
+        /// <item><see cref="DbNotExpression"/> NOT(Not(x)) becomes x</item>
+        /// <item><see cref="DbIsEmptyExpression"/> NOT EXISTS becomes EXISTS</item>
+        /// <item><see cref="DbIsNullExpression"/> IS NULL becomes IS NOT NULL</item>
+        /// <item><see cref="DbComparisonExpression"/> = becomes &lt;&gt;</item>
         /// </list>
         /// </summary>
         /// <param name="e"></param>
@@ -1851,7 +1851,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// for whether to generate OR conditions or an IN clause.
         /// </summary>
         /// <param name="e">DbOrExpression to be visited</param>
-        /// <returns>A <see cref="SqlBuilder"/>Fragment of SQL generated</returns>
+        /// <returns>A <see cref="SqlBuilder"/> fragment of SQL generated</returns>
         /// <seealso cref="Visit(DbAndExpression)"/>
         public override ISqlFragment Visit(DbOrExpression e)
         {

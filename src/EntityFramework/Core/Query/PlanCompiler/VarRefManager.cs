@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly Dictionary<Node, Node> m_nodeToParentMap; //child-parent mapping
 
         private readonly Dictionary<Node, int> m_nodeToSiblingNumber;
-                                               //the index of the given node among its siblings, i.e. 0 for a first child
+        //the index of the given node among its siblings, i.e. 0 for a first child
 
         private readonly Command m_command;
 

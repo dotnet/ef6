@@ -329,8 +329,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // Verify the initializers are compatible.
                 if (!metadata.Equals(existingMetadata))
                 {
-                    throw new NotSupportedException(Strings.ELinq_UnsupportedHeterogeneousInitializers(
-                        DescribeClrType(metadata.ClrType)));
+                    throw new NotSupportedException(
+                        Strings.ELinq_UnsupportedHeterogeneousInitializers(
+                            DescribeClrType(metadata.ClrType)));
                 }
             }
             else
@@ -680,9 +681,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 (!TypeSemantics.IsEntityType(toType) &&
                  !TypeSemantics.IsComplexType(toType)))
             {
-                throw new NotSupportedException(Strings.ELinq_UnsupportedIsOrAs(
-                    operationType,
-                    DescribeClrType(fromClrType), DescribeClrType(toClrType)));
+                throw new NotSupportedException(
+                    Strings.ELinq_UnsupportedIsOrAs(
+                        operationType,
+                        DescribeClrType(fromClrType), DescribeClrType(toClrType)));
             }
 
             return toType;
@@ -947,7 +949,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return GetLambdaExpression(((UnaryExpression)argument).Operand);
             }
 
-            throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));
+            throw new InvalidOperationException(
+                Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));
         }
 
         // Translate a LINQ expression acting as a set input to a CQT expression
@@ -1007,16 +1010,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     ||
                     BuiltInTypeKind.ComplexType == typeKind)
                 {
-                    throw new NotSupportedException(Strings.ELinq_UnsupportedNominalType(
-                        typeUsage.EdmType.FullName));
+                    throw new NotSupportedException(
+                        Strings.ELinq_UnsupportedNominalType(
+                            typeUsage.EdmType.FullName));
                 }
             }
 
             // types implementing IEnumerable are not supported
             if (TypeSystem.IsSequenceType(type))
             {
-                throw new NotSupportedException(Strings.ELinq_UnsupportedEnumerableType(
-                    DescribeClrType(type)));
+                throw new NotSupportedException(
+                    Strings.ELinq_UnsupportedEnumerableType(
+                        DescribeClrType(type)));
             }
         }
 
@@ -1250,7 +1255,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     var leftRefType = left.ResultType.EdmType as RefType;
                     var rightRefType = right.ResultType.EdmType as RefType;
-                    throw new NotSupportedException(Strings.ELinq_UnsupportedRefComparison(leftRefType.ElementType.FullName, rightRefType.ElementType.FullName));
+                    throw new NotSupportedException(
+                        Strings.ELinq_UnsupportedRefComparison(leftRefType.ElementType.FullName, rightRefType.ElementType.FullName));
                 }
             }
 
@@ -1365,7 +1371,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         return constant.Equal(unknown); // same as EqualsPattern.PositiveNullEqualityNonComposable
                     }
                     return constant.Equal(unknown).And(unknown.IsNull().Not());
-                        // add more logic to avoid undefined result for true clr semantics
+                    // add more logic to avoid undefined result for true clr semantics
                 default:
                     Debug.Fail("unknown pattern");
                     return null;
@@ -1638,11 +1644,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var methodInfo = ((MethodCallExpression)Expression).Method;
                 if (isAmbiguous)
                 {
-                    throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForMethodAmbiguousMatch(methodInfo, methodInfo.DeclaringType));
+                    throw new NotSupportedException(
+                        Strings.ELinq_UnresolvableFunctionForMethodAmbiguousMatch(methodInfo, methodInfo.DeclaringType));
                 }
                 else
                 {
-                    throw new NotSupportedException(Strings.ELinq_UnresolvableFunctionForMethodNotFound(methodInfo, methodInfo.DeclaringType));
+                    throw new NotSupportedException(
+                        Strings.ELinq_UnresolvableFunctionForMethodNotFound(methodInfo, methodInfo.DeclaringType));
                 }
             }
             else if (Expression.NodeType

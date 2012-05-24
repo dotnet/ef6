@@ -49,13 +49,15 @@ namespace System.Data.Entity.Core.Mapping
                 handleTypeNotComparable:
                     () =>
                         {
-                            throw new EntityCommandExecutionException(Strings.Mapping_FunctionImport_UnsupportedType(ColumnName, columnValueType.FullName));
+                            throw new EntityCommandExecutionException(
+                                Strings.Mapping_FunctionImport_UnsupportedType(ColumnName, columnValueType.FullName));
                         },
                 handleInvalidConditionValue:
                     () =>
                         {
-                            throw new EntityCommandExecutionException(Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(
-                                StorageMslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
+                            throw new EntityCommandExecutionException(
+                                Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(
+                                    StorageMslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
                         });
         }
 

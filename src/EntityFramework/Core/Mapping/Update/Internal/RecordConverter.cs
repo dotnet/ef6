@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
@@ -82,8 +81,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             try
             {
                 var record = useCurrentValues
-                    ? stateEntry.CurrentValues
-                    : (IExtendedDataRecord)stateEntry.OriginalValues;
+                                 ? stateEntry.CurrentValues
+                                 : (IExtendedDataRecord)stateEntry.OriginalValues;
 
                 var isModified = false; // the root of the state entry is unchanged because the type is static
                 return ExtractorMetadata.ExtractResultFromRecord(

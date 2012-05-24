@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Mapping
         private readonly string identity;
 
         private readonly Dictionary<string, ObjectMemberMapping> m_memberMapping;
-                                                                 //Indexes into the member mappings collection based on clr member name
+        //Indexes into the member mappings collection based on clr member name
 
         private static readonly Dictionary<string, ObjectMemberMapping> EmptyMemberMapping
             = new Dictionary<string, ObjectMemberMapping>(0);

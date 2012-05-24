@@ -312,7 +312,7 @@
             Assert.Equal(Strings.DbContextServices_MissingDefaultCtor(typeof(ContextWithoutDefaultCtorBadFactory.ContextFactory)), Assert.Throws<InvalidOperationException>(() => new DbContextInfo(typeof(ContextWithoutDefaultCtorBadFactory))).Message);
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void CreateInstance_should_use_passed_provider_info_when_building_model()
         {
             var contextInfo = new DbContextInfo(typeof(SimpleContext), ProviderRegistry.SqlCe4_ProviderInfo);

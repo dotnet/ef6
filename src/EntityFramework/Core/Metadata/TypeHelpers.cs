@@ -678,7 +678,9 @@ namespace System.Data.Entity.Core.Common
 
         internal static string GetFullName(string qualifier, string name)
         {
-            return string.IsNullOrEmpty(qualifier) ? string.Format(CultureInfo.InvariantCulture, "{0}", name) : string.Format(CultureInfo.InvariantCulture, "{0}.{1}", qualifier, name);
+            return string.IsNullOrEmpty(qualifier)
+                       ? string.Format(CultureInfo.InvariantCulture, "{0}", name)
+                       : string.Format(CultureInfo.InvariantCulture, "{0}.{1}", qualifier, name);
         }
 
         /// <summary>
@@ -752,7 +754,9 @@ namespace System.Data.Entity.Core.Common
                 case TypeCode.String:
                     return DbType.String;
                 default:
-                    throw new ArgumentException(Strings.ADP_UnknownDataTypeCode(((int)Type.GetTypeCode(clrType)).ToString(CultureInfo.InvariantCulture), clrType.FullName));
+                    throw new ArgumentException(
+                        Strings.ADP_UnknownDataTypeCode(
+                            ((int)Type.GetTypeCode(clrType)).ToString(CultureInfo.InvariantCulture), clrType.FullName));
             }
         }
 

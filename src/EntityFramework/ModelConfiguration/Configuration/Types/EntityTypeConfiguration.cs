@@ -339,7 +339,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 throw Error.KeyRegisteredOnDerivedType(ClrType, entityType.GetRootType().GetClrType());
             }
 
-            var keyProperties = Enumerable.AsEnumerable(_keyProperties);
+            var keyProperties = _keyProperties.AsEnumerable();
 
             if (!_isKeyConfigured)
             {

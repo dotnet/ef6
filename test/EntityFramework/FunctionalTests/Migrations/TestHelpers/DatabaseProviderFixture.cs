@@ -13,11 +13,10 @@
 
         public DatabaseProviderFixture()
         {
-            // TODO: SDE Merge - No CE Provider
-            //foreach (DatabaseProvider provider in Enum.GetValues(typeof(DatabaseProvider)))
-            //{
-            //    _testDatabases[provider] = InitializeTestDatabase(provider, DefaultDatabaseName);
-            //}
+            foreach (DatabaseProvider provider in Enum.GetValues(typeof(DatabaseProvider)))
+            {
+                _testDatabases[provider] = InitializeTestDatabase(provider, DefaultDatabaseName);
+            }
             _testDatabases[DatabaseProvider.SqlClient] = InitializeTestDatabase(DatabaseProvider.SqlClient, DefaultDatabaseName);
 
             _codeGenerators[Migrations.ProgrammingLanguage.CSharp] = new CSharpMigrationCodeGenerator();

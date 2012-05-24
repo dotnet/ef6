@@ -5263,4 +5263,19 @@
     <value>All 'EdmMember' instances must be a valid member of the EdmType.</value>
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
+  <data name="EF6Providers_NoProviderFound" xml:space="preserve">
+    <value>No Entity Framework provider not found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See [TODO: EF6 providers link] for more information.</value>
+  </data>
+  <data name="EF6Providers_ProviderTypeMissing" xml:space="preserve">
+    <value>The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See [TODO: EF6 providers link] for more information.</value>
+  </data>
+  <data name="EF6Providers_InstanceMissing" xml:space="preserve">
+    <value>The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.</value>
+  </data>
+  <data name="EF6Providers_NotDbProviderServices" xml:space="preserve">
+    <value>The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that extends from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.</value>
+  </data>
+  <data name="ProviderInvariantRepeatedInConfig" xml:space="preserve">
+    <value>The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider.</value>
+  </data>
 </root>

@@ -17,7 +17,8 @@ namespace System.Data.Entity.Core.EntityClient
                 if ((null != _next)
                     || (null == value))
                 {
-                    throw new InvalidOperationException(Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.NameValuePairNext));
+                    throw new InvalidOperationException(
+                        Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.NameValuePairNext));
                 }
                 _next = value;
             }

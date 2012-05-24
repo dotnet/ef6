@@ -162,11 +162,10 @@
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Closed);
         }
 
-        [Fact]
+        [Fact(Skip = "Cannot create EntityConnection with open connection.")]
         public void Existing_connection_is_open_if_it_started_open()
         {
-            // TODO: Currently doesn't work because an EntityConnection cannot be created with an open DbConnection
-            // Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Open);
+            Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Open);
         }
 
         private void Existing_connection_is_same_state_it_started_in_after_use(ConnectionState initialState)

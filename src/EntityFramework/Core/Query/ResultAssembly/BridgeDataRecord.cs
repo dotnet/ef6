@@ -212,8 +212,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
             if (_lastColumnRead >= ordinal)
             {
-                throw new InvalidOperationException(Strings.ADP_NonSequentialColumnAccess(
-                    ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
+                throw new InvalidOperationException(
+                    Strings.ADP_NonSequentialColumnAccess(
+                        ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
             }
             _lastColumnRead = ordinal;
             // SQLBUDT #442001 -- we need to mark things that are not using GetBytes/GetChars
@@ -243,15 +244,18 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             if (_lastColumnRead > ordinal
                 || (_lastColumnRead == ordinal && _lastDataOffsetRead == long.MaxValue))
             {
-                throw new InvalidOperationException(Strings.ADP_NonSequentialColumnAccess(
-                    ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
+                throw new InvalidOperationException(
+                    Strings.ADP_NonSequentialColumnAccess(
+                        ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
             }
             if (_lastColumnRead == ordinal)
             {
                 if (_lastDataOffsetRead >= dataOffset)
                 {
-                    throw new InvalidOperationException(Strings.ADP_NonSequentialChunkAccess(
-                        dataOffset.ToString(CultureInfo.InvariantCulture), (_lastDataOffsetRead + 1).ToString(CultureInfo.InvariantCulture), methodName));
+                    throw new InvalidOperationException(
+                        Strings.ADP_NonSequentialChunkAccess(
+                            dataOffset.ToString(CultureInfo.InvariantCulture),
+                            (_lastDataOffsetRead + 1).ToString(CultureInfo.InvariantCulture), methodName));
                 }
                 // _lastDataOffsetRead will be set by GetBytes/GetChars, since we need to set it
                 // to the last offset that was actually read, which isn't necessarily what was 

@@ -1,4 +1,4 @@
- // Dev notes -1
+// Dev notes -1
 // why we need this class: in order to keep the view alive, we have to listen to evens from entities and
 // also EntityCollection/ObjectStateManager they exists in. listening to event will prevent the view to be 
 // disposed, hence GC'ed due to having a strong reference; and to avoid this situation we have to introduce 

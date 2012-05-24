@@ -51,7 +51,8 @@ namespace System.Data.Entity.Core.Common.Internal
         /// <param name="rightQuote">set of characters which are valid to stop a quote, array index's correspond to the the leftquote array.</param>
         /// <param name="separator">separator to use</param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly"), SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static List<string> ParseMultipartIdentifier(string name, string leftQuote, string rightQuote, char separator)
         {
             Debug.Assert(
@@ -64,9 +65,9 @@ namespace System.Data.Entity.Core.Common.Internal
             var state = MPIState.MPI_Value; // Initalize the starting state
 
             var sb = new StringBuilder(name.Length);
-                // String buffer to hold the string being currently built, init the string builder so it will never be resized
+            // String buffer to hold the string being currently built, init the string builder so it will never be resized
             StringBuilder whitespaceSB = null;
-                // String buffer to hold white space used when parsing nonquoted strings  'a b .  c d' = 'a b' and 'c d'
+            // String buffer to hold white space used when parsing nonquoted strings  'a b .  c d' = 'a b' and 'c d'
             var rightQuoteChar = ' '; // Right quote character to use given the left quote character found.
             for (var index = 0; index < name.Length; ++index)
             {
@@ -140,7 +141,7 @@ namespace System.Data.Entity.Core.Common.Internal
                                     }
                                     whitespaceSB.Length = 0;
                                     whitespaceSB.Append(testchar);
-                                        // start to record the white space, if we are parsing a name like "name with space" we should return "name with space"
+                                    // start to record the white space, if we are parsing a name like "name with space" we should return "name with space"
                                     state = MPIState.MPI_LookForNextCharOrSeparator;
                                 }
                                 else

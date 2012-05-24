@@ -124,8 +124,9 @@ namespace System.Data.Entity.Core.Objects
             // is invalid
             if (fieldOffset > Int32.MaxValue)
             {
-                throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
-                    cbytes.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    "fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                        cbytes.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
             }
 
             ndataIndex = (int)fieldOffset;
@@ -162,31 +163,35 @@ namespace System.Data.Entity.Core.Objects
 
                     if (length < 0)
                     {
-                        throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
+                        throw new IndexOutOfRangeException(
+                            Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad buffer index, throw
                     if (bufferOffset < 0
                         || bufferOffset >= buffer.Length)
                     {
-                        throw new ArgumentOutOfRangeException("bufferOffset", Strings.ADP_InvalidDestinationBufferIndex(
-                            length.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
+                        throw new ArgumentOutOfRangeException(
+                            "bufferOffset", Strings.ADP_InvalidDestinationBufferIndex(
+                                length.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad data index, throw
                     if (fieldOffset < 0
                         || fieldOffset >= cbytes)
                     {
-                        throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
-                            length.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
+                        throw new ArgumentOutOfRangeException(
+                            "fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                                length.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if there is not enough room in the buffer for data
                     if (cbytes + bufferOffset
                         > buffer.Length)
                     {
-                        throw new IndexOutOfRangeException(Strings.ADP_InvalidBufferSizeOrIndex(
-                            cbytes.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
+                        throw new IndexOutOfRangeException(
+                            Strings.ADP_InvalidBufferSizeOrIndex(
+                                cbytes.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
                 }
 
@@ -221,8 +226,9 @@ namespace System.Data.Entity.Core.Objects
             // is invalid
             if (fieldOffset > Int32.MaxValue)
             {
-                throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
-                    cchars.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
+                throw new ArgumentOutOfRangeException(
+                    "fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                        cchars.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
             }
 
             ndataIndex = (int)fieldOffset;
@@ -258,31 +264,35 @@ namespace System.Data.Entity.Core.Objects
 
                     if (length < 0)
                     {
-                        throw new IndexOutOfRangeException(Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
+                        throw new IndexOutOfRangeException(
+                            Strings.ADP_InvalidDataLength(((long)length).ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad buffer index, throw
                     if (bufferOffset < 0
                         || bufferOffset >= buffer.Length)
                     {
-                        throw new ArgumentOutOfRangeException("bufferOffset", Strings.ADP_InvalidDestinationBufferIndex(
-                            buffer.Length.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
+                        throw new ArgumentOutOfRangeException(
+                            "bufferOffset", Strings.ADP_InvalidDestinationBufferIndex(
+                                buffer.Length.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if bad data index, throw
                     if (fieldOffset < 0
                         || fieldOffset >= cchars)
                     {
-                        throw new ArgumentOutOfRangeException("fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
-                            cchars.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
+                        throw new ArgumentOutOfRangeException(
+                            "fieldOffset", Strings.ADP_InvalidSourceBufferIndex(
+                                cchars.ToString(CultureInfo.InvariantCulture), fieldOffset.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     // if there is not enough room in the buffer for data
                     if (cchars + bufferOffset
                         > buffer.Length)
                     {
-                        throw new IndexOutOfRangeException(Strings.ADP_InvalidBufferSizeOrIndex(
-                            cchars.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
+                        throw new IndexOutOfRangeException(
+                            Strings.ADP_InvalidBufferSizeOrIndex(
+                                cchars.ToString(CultureInfo.InvariantCulture), bufferOffset.ToString(CultureInfo.InvariantCulture)));
                     }
                 }
 

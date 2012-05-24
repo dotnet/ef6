@@ -444,13 +444,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     // If the expression type is the same as the parameter type, indicate that the parameter type is not valid.
                     return
-                        new NotSupportedException(Strings.CompiledELinq_UnsupportedNamedParameterType(parameterExp.Name, parameterExp.Type.FullName));
+                        new NotSupportedException(
+                            Strings.CompiledELinq_UnsupportedNamedParameterType(parameterExp.Name, parameterExp.Type.FullName));
                 }
                 else
                 {
                     // Otherwise, indicate that using the specified parameter to produce a value of the expression's type is not supported in compiled query
                     return
-                        new NotSupportedException(Strings.CompiledELinq_UnsupportedNamedParameterUseAsType(parameterExp.Name, expression.Type.FullName));
+                        new NotSupportedException(
+                            Strings.CompiledELinq_UnsupportedNamedParameterUseAsType(parameterExp.Name, expression.Type.FullName));
                 }
             }
 

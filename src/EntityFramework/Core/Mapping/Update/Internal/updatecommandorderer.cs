@@ -161,7 +161,9 @@
                     {
                         // throw an exception indicating that a key value is generated in two locations
                         // in the store
-                        throw new UpdateException(Strings.Update_AmbiguousServerGenIdentifier, duplicateKey, command.GetStateEntries(_translator).Cast<ObjectStateEntry>().Distinct());
+                        throw new UpdateException(
+                            Strings.Update_AmbiguousServerGenIdentifier, duplicateKey,
+                            command.GetStateEntries(_translator).Cast<ObjectStateEntry>().Distinct());
                     }
                 }
             }

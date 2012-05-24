@@ -2,7 +2,6 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Entity.Internal.Linq;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

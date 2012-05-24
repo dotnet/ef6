@@ -319,7 +319,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal void Dump(DbLambda lambda)
         {
             Begin("DbLambda");
-            Dump(Enumerable.Cast<DbExpression>(lambda.Variables), "Variables", "Variable");
+            Dump(lambda.Variables.Cast<DbExpression>(), "Variables", "Variable");
             Dump(lambda.Body, "Body");
             End("DbLambda");
         }

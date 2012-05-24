@@ -50,7 +50,8 @@
         {
             Debug.Assert(commandTree != null, "Ensure command tree is non-null before calling ValidateDataSpace");
 
-            if (commandTree.DataSpace != DataSpace.CSpace)
+            if (commandTree.DataSpace
+                != DataSpace.CSpace)
             {
                 throw new ProviderIncompatibleException(Strings.EntityClient_RequiresNonStoreCommandTree);
             }
@@ -74,7 +75,8 @@
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
             Contract.Requires(connection != null);
-            if (connection.GetType() != typeof(EntityConnection))
+            if (connection.GetType()
+                != typeof(EntityConnection))
             {
                 throw new ArgumentException(Strings.Mapping_Provider_WrongConnectionType(typeof(EntityConnection)));
             }

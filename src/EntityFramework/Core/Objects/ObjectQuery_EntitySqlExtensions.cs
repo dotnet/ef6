@@ -363,7 +363,7 @@ namespace System.Data.Entity.Core.Objects
                 ||
                 !(Helper.IsEntityType(ofType) || Helper.IsComplexType(ofType)))
             {
-                string message = Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName);
+                var message = Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName);
                 throw new EntitySqlException(message);
             }
 

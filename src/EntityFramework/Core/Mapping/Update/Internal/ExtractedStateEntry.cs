@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>

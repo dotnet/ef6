@@ -10,9 +10,9 @@ namespace System.Data.Entity.Core.EntityClient
     /// <summary>
     /// Class representing a parameter used in EntityCommand
     /// </summary>
-    public sealed partial class EntityParameter : DbParameter, IDbDataParameter
+    public sealed class EntityParameter : DbParameter, IDbDataParameter
     {
-        InternalEntityParameter _internalEntityParameter;
+        private InternalEntityParameter _internalEntityParameter;
 
         /// <summary>
         /// Constructs the EntityParameter object
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="size">The size of the parameter</param>
         /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
         public EntityParameter(string parameterName, DbType dbType, int size, string sourceColumn)
-            : this(new InternalEntityParameter(parameterName, dbType, size, sourceColumn)) 
+            : this(new InternalEntityParameter(parameterName, dbType, size, sourceColumn))
         {
         }
 
@@ -83,15 +83,15 @@ namespace System.Data.Entity.Core.EntityClient
             DataRowVersion sourceVersion,
             object value)
             : this(new InternalEntityParameter(
-                parameterName, 
-                dbType, 
-                size, 
-                direction, 
-                isNullable, 
-                precision, 
-                scale, 
-                sourceColumn, 
-                sourceVersion, 
+                parameterName,
+                dbType,
+                size,
+                direction,
+                isNullable,
+                precision,
+                scale,
+                sourceColumn,
+                sourceVersion,
                 value))
         {
         }
@@ -274,7 +274,7 @@ namespace System.Data.Entity.Core.EntityClient
         internal EntityParameter Clone()
         {
             var clonedEntityParameter = new EntityParameter();
-            clonedEntityParameter._internalEntityParameter = this._internalEntityParameter.Clone();
+            clonedEntityParameter._internalEntityParameter = _internalEntityParameter.Clone();
 
             return clonedEntityParameter;
         }
@@ -300,7 +300,7 @@ namespace System.Data.Entity.Core.EntityClient
         internal void CopyTo(DbParameter destination)
         {
             Contract.Requires(destination != null);
-            ((EntityParameter)destination)._internalEntityParameter.CopyTo(this._internalEntityParameter);
+            ((EntityParameter)destination)._internalEntityParameter.CopyTo(_internalEntityParameter);
         }
 
         internal object CompareExchangeParent(object value, object comparand)

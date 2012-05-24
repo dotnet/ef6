@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.EntityClient
     public sealed class EntityConnection : DbConnection
     {
         private bool _disposed = false;
-        private InternalEntityConnection _internalEntityConnection;
+        private readonly InternalEntityConnection _internalEntityConnection;
 
         /// <summary>
         /// Constructs the EntityConnection object with a connection not yet associated to a particular store
@@ -74,8 +74,9 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get { return _internalEntityConnection.ConnectionString; }
             [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
-            [ResourceConsumption(ResourceScope.Machine)] // For ChangeConnectionString method call. But the paths are not created in this method.
-            set { _internalEntityConnection.ConnectionString = value; }
+            [ResourceConsumption(ResourceScope.Machine)]
+            // For ChangeConnectionString method call. But the paths are not created in this method.
+                set { _internalEntityConnection.ConnectionString = value; }
         }
 
         /// <summary>
@@ -164,7 +165,8 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         [ResourceExposure(ResourceScope.None)] // The resource( path name) is not exposed to the callers of this method
-        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)] //For SplitPaths call and we pick the file names from class variable.
+        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
+        //For SplitPaths call and we pick the file names from class variable.
         internal MetadataWorkspace GetMetadataWorkspace(bool initializeAllCollections)
         {
             return _internalEntityConnection.GetMetadataWorkspace(initializeAllCollections);

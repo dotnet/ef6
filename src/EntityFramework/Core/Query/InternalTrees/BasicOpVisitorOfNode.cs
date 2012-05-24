@@ -1,6 +1,5 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-
     /// <summary>
     /// A visitor implementation that allows subtrees to be modified (in a bottom-up
     /// fashion)

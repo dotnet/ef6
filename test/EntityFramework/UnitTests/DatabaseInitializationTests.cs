@@ -806,7 +806,7 @@
             CreateDatabase_uses_Migrations_when_provider_is_known("System.Data.SqlClient");
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void CreateDatabase_uses_Migrations_when_provider_is_SQL_CE()
         {
             CreateDatabase_uses_Migrations_when_provider_is_known("System.Data.SqlServerCe.4.0");

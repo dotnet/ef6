@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
     using System.Data.Entity;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -18,6 +19,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
     public sealed class ModelConfigurationTests
     {
+         [Fact]
+        public void Configure_should_configure_default_schema()
+        {
+            var modelConfiguration
+                = new ModelConfiguration
+                      {
+                          DefaultSchema = "foo"
+                      };
+
+            var databaseMapping 
+                = new DbDatabaseMapping().Initialize(
+                    new EdmModel().Initialize(), 
+                    new DbDatabaseMetadata().Initialize());
+
+            Assert.Equal("dbo", databaseMapping.Database.Schemas.Single().Name);
+            Assert.Equal("dbo", databaseMapping.Database.Schemas.Single().DatabaseIdentifier);
+
+            modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal("foo", databaseMapping.Database.Schemas.Single().Name);
+            Assert.Equal("foo", databaseMapping.Database.Schemas.Single().DatabaseIdentifier);
+        }
+
         [Fact]
         public void GetConfiguredProperties_should_return_all_configured_properties()
         {

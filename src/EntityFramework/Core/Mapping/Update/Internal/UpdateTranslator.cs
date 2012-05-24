@@ -33,6 +33,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal class UpdateTranslator
     {
         #region Constructors
+
         /// <summary>
         /// Constructs a new instance of <see cref="UpdateTranslator"/> based on the contents of the given entity state manager.
         /// </summary>
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _adapter = adapter;
 
             // connection state
-            _providerServices = DbProviderServices.GetProviderServices(adapter.Connection.StoreProviderFactory);
+            _providerServices = adapter.Connection.StoreProviderFactory.GetProviderServices();
         }
 
         /// <summary>
@@ -64,7 +65,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _requiredEntities = new Dictionary<EntityKey, AssociationSet>();
             _optionalEntities = new Set<EntityKey>();
             _includedValueEntities = new Set<EntityKey>();
-
 
             // ancillary propagation services
             _recordConverter = new RecordConverter(this);
@@ -191,7 +191,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         {
                             using (var dependentPropertyEnum = constraint.ToProperties.GetEnumerator())
                             {
-                                while (principalPropertyEnum.MoveNext() && dependentPropertyEnum.MoveNext())
+                                while (principalPropertyEnum.MoveNext()
+                                       && dependentPropertyEnum.MoveNext())
                                 {
                                     int principalKeyMemberCount;
                                     int dependentKeyMemberCount;
@@ -219,7 +220,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             else if (!stateEntry.IsKeyEntry)
             {
-                if (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified)
+                if (stateEntry.State == EntityState.Added
+                    || stateEntry.State == EntityState.Modified)
                 {
                     RegisterEntityReferentialConstraints(stateEntry, true);
                 }
@@ -343,7 +345,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                             // don't allow the user to insert or update an entity that refers to a deleted principal
                             if (currentValues && null != existingPrincipal &&
-                                existingPrincipal.State == EntityState.Deleted &&
+                                existingPrincipal.State == EntityState.Deleted
+                                &&
                                 (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified))
                             {
                                 throw EntityUtil.Update(
@@ -367,10 +370,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Contract.Requires(null != role);
             Contract.Requires(null != property);
 
-            Contract.Assert(BuiltInTypeKind.RefType == role.TypeUsage.EdmType.BuiltInTypeKind,
+            Contract.Assert(
+                BuiltInTypeKind.RefType == role.TypeUsage.EdmType.BuiltInTypeKind,
                 "relationship ends must be of RefType");
             var endType = (RefType)role.TypeUsage.EdmType;
-            Contract.Assert(BuiltInTypeKind.EntityType == endType.ElementType.BuiltInTypeKind,
+            Contract.Assert(
+                BuiltInTypeKind.EntityType == endType.ElementType.BuiltInTypeKind,
                 "relationship ends must reference EntityType");
             var entityType = (EntityType)endType.ElementType;
             keyMemberCount = entityType.KeyMembers.Count;
@@ -417,7 +422,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // we should not be wrapping all exceptions
                 if (e.RequiresContext())
                 {
-                    throw new UpdateException(Strings.Update_GeneralExecutionException, e, DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
+                    throw new UpdateException(
+                        Strings.Update_GeneralExecutionException, e,
+                        DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
                 }
                 throw;
             }
@@ -533,7 +540,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 PropagatorResult context;
 
                 // check if a redirect to "owner" result is possible
-                if (PropagatorResult.NullIdentifier == generatedValue.Key.Identifier ||
+                if (PropagatorResult.NullIdentifier == generatedValue.Key.Identifier
+                    ||
                     !KeyManager.TryGetIdentifierOwner(generatedValue.Key.Identifier, out context))
                 {
                     // otherwise, just use the straightforward context
@@ -759,7 +767,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             DbCommand command;
             Debug.Assert(
                 null != _providerServices, "constructor ensures either the command definition " +
-                                            "builder or provider service is available");
+                                           "builder or provider service is available");
             Debug.Assert(null != Connection.StoreConnection, "EntityAdapter.Update ensures the store connection is set");
             try
             {
@@ -791,7 +799,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             _providerServices.SetParameterValue(parameter, typeUsage, value);
         }
-
 
         #region Private initialization methods
 
@@ -850,7 +857,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     else
                     {
                         // throw an exception
-                        throw EntityUtil.Update(Strings.Update_MissingEntity(required.Value.Name, TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName)), null);
+                        throw EntityUtil.Update(
+                            Strings.Update_MissingEntity(
+                                required.Value.Name, TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName)), null);
                     }
                 }
             }
@@ -1360,10 +1369,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         }
                         if (violationType.HasValue)
                         {
-                            throw new UpdateException(Strings.Update_RelationshipCardinalityViolation(
-                                maximumCount.Value,
-                                violationType.Value, actualRelationship.AssociationSet.ElementType.FullName,
-                                actualRelationship.FromEnd.Name, actualRelationship.ToEnd.Name, violationCount.Value), null, actualRelationship.GetEquivalenceSet().Select(reln => reln.StateEntry).Cast<ObjectStateEntry>().Distinct());
+                            throw new UpdateException(
+                                Strings.Update_RelationshipCardinalityViolation(
+                                    maximumCount.Value,
+                                    violationType.Value, actualRelationship.AssociationSet.ElementType.FullName,
+                                    actualRelationship.FromEnd.Name, actualRelationship.ToEnd.Name, violationCount.Value), null,
+                                actualRelationship.GetEquivalenceSet().Select(reln => reln.StateEntry).Cast<ObjectStateEntry>().Distinct());
                         }
                     }
 
@@ -1387,7 +1398,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             ||
                             (!isAdd && EntityState.Deleted != entityEntry.State))
                         {
-                            var message = Strings.Update_MissingRequiredEntity(actualRelationship.AssociationSet.Name, actualRelationship.StateEntry.State, actualRelationship.ToEnd.Name);
+                            var message = Strings.Update_MissingRequiredEntity(
+                                actualRelationship.AssociationSet.Name, actualRelationship.StateEntry.State, actualRelationship.ToEnd.Name);
                             throw EntityUtil.Update(message, null, actualRelationship.StateEntry);
                         }
                     }

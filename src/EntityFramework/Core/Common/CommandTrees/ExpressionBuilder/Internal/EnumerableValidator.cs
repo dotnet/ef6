@@ -103,7 +103,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             Debug.Assert(map != null, "Set EnumerableValidator.ConvertElement before calling validate");
             Debug.Assert(collect != null, "Set EnumerableValidator.CreateResult before calling validate");
 
-
             var checkNull = (default(TElementIn) == null);
             var checkCount = (expectedElementCount != -1);
             Dictionary<string, int> nameIndex = null;
@@ -138,7 +137,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     var foundIndex = -1;
                     if (nameIndex.TryGetValue(name, out foundIndex))
                     {
-                        throw new ArgumentException(Strings.Cqt_Util_CheckListDuplicateName(foundIndex, pos, name), StringUtil.FormatIndex(argumentName, pos));
+                        throw new ArgumentException(
+                            Strings.Cqt_Util_CheckListDuplicateName(foundIndex, pos, name), StringUtil.FormatIndex(argumentName, pos));
                     }
                     nameIndex[name] = pos;
                 }

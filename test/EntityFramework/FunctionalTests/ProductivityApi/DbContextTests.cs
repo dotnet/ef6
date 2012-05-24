@@ -201,7 +201,7 @@
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.DontMatch);
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void Model_Tweaking_is_ignored_when_using_model_ctor_on_DbContext()
         {
             // Arrange
@@ -538,7 +538,7 @@
                 "DbContext_ConnectionStringNotFound", "NonexistentConnectionString");
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void DbContext_caches_models_for_two_providers()
         {
             // Ensure that the model is in use with a SQL connection
@@ -2981,7 +2981,7 @@
             }
         }
 
-        [Fact(Skip = "No CE Provider")]
+        [Fact]
         public void Can_replace_connection_with_different_provider()
         {
             using (var context = new ReplaceConnectionContext())

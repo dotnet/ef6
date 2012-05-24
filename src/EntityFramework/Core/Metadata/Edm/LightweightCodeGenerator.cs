@@ -550,8 +550,11 @@ namespace System.Data.Entity.Core.Objects
                         break;
                     }
                 default:
-                    Type type = typeof(RelationshipMultiplicity);
-                    throw new ArgumentOutOfRangeException(type.Name, Strings.ADP_InvalidEnumerationValue(type.Name, ((int)targetMember.RelationshipMultiplicity).ToString(CultureInfo.InvariantCulture)));
+                    var type = typeof(RelationshipMultiplicity);
+                    throw new ArgumentOutOfRangeException(
+                        type.Name,
+                        Strings.ADP_InvalidEnumerationValue(
+                            type.Name, ((int)targetMember.RelationshipMultiplicity).ToString(CultureInfo.InvariantCulture)));
             }
 
             return getRelatedEnd;
