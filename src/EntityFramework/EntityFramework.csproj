@@ -1245,6 +1245,7 @@
     <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\MemberInfoExtensions.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
+    <Compile Include="Utilities\TaskHelper.cs" />
     <Compile Include="Utilities\XContainerExtensions.cs" />
     <Compile Include="Utilities\XDocumentExtensions.cs" />
     <Compile Include="Migrations\History\HistoryContext.cs" />

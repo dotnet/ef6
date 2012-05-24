@@ -1,5 +1,7 @@
 ﻿namespace System.Data.Entity.Spatial
 {
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -37,9 +39,23 @@
         /// <param name="ordinal">The ordinal of the column that contains the geography value.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task containing the instance of DbGeography at the specified column value.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Exception provided in the returned task.")]
         public virtual Task<DbGeography> GetGeographyAsync(int ordinal, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return TaskHelper.FromCancellation<DbGeography>();
+            }
+
+            try
+            {
+                return Task.FromResult(GetGeography(ordinal));
+            }
+            catch (Exception e)
+            {
+                return TaskHelper.FromException<DbGeography>(e);
+            }
         }
 
         /// <summary>
@@ -71,9 +87,23 @@
         /// <param name="ordinal">The ordinal of the data record column that contains the provider-specific geometry data.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task containing the instance of DbGeometry at the specified column value.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Exception provided in the returned task.")]
         public virtual Task<DbGeometry> GetGeometryAsync(int ordinal, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return TaskHelper.FromCancellation<DbGeometry>();
+            }
+
+            try
+            {
+                return Task.FromResult(GetGeometry(ordinal));
+            }
+            catch (Exception e)
+            {
+                return TaskHelper.FromException<DbGeometry>(e);
+            }
         }
     }
 }

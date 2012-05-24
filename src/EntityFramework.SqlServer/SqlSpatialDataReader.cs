@@ -5,10 +5,13 @@ namespace System.Data.Entity.SqlServer
 #if INTERNALS_INVISIBLE
     using System.Data.SqlClient;
 #endif
+    using System.Data.SqlTypes;
     using System.Diagnostics;
     using System.IO;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
 #if !INTERNALS_INVISIBLE
     using SqlDataReader = System.Data.Entity.SqlServer.Utilities.SqlDataReaderWrapper;
 #endif
@@ -35,10 +38,26 @@ namespace System.Data.Entity.SqlServer
             return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
         }
 
+        public override async Task<DbGeography> GetGeographyAsync(int ordinal, CancellationToken cancellationToken)
+        {
+            EnsureGeographyColumn(ordinal);
+            var geogBytes = await _reader.GetFieldValueAsync<SqlBytes>(ordinal, cancellationToken);
+            var providerValue = SqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
+            return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
+        }
+
         public override DbGeometry GetGeometry(int ordinal)
         {
             EnsureGeometryColumn(ordinal);
             var geomBytes = _reader.GetSqlBytes(ordinal);
+            var providerValue = SqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
+            return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
+        }
+
+        public override async Task<DbGeometry> GetGeometryAsync(int ordinal, CancellationToken cancellationToken)
+        {
+            EnsureGeometryColumn(ordinal);
+            var geomBytes = await _reader.GetFieldValueAsync<SqlBytes>(ordinal, cancellationToken);
             var providerValue = SqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
             return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
         }
