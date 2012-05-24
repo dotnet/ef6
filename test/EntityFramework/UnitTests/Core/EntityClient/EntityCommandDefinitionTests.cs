@@ -22,7 +22,7 @@
             [Fact]
             public void Exception_thrown_if_CommandBehavior_is_not_SequentialAccess()
             {
-                var entityCommandDefinition = new Mock<EntityCommandDefinition>() { CallBase = true }.Object;
+                var entityCommandDefinition = new Mock<EntityCommandDefinition>(null, null) { CallBase = true }.Object;
 
                 Assert.Equal(
                     Strings.ADP_MustUseSequentialAccess,
@@ -124,7 +124,7 @@
             [Fact]
             public void Exception_thrown_if_CommandBehavior_is_not_SequentialAccess()
             {
-                var entityCommandDefinition = new Mock<EntityCommandDefinition>() { CallBase = true }.Object;
+                var entityCommandDefinition = new Mock<EntityCommandDefinition>(null, null) { CallBase = true }.Object;
 
                 AssertThrowsInAsyncMethod<InvalidOperationException>(
                     Strings.ADP_MustUseSequentialAccess,
