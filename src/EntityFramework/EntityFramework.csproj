@@ -900,7 +900,6 @@
     <Compile Include="Core\Objects\Internal\IChangeTrackingStrategy.cs" />
     <Compile Include="Core\Objects\Internal\IEntityKeyStrategy.cs" />
     <Compile Include="Core\Objects\Internal\IEntityWrapper.cs" />
-    <Compile Include="Core\Objects\Internal\InternalObjectContext.cs" />
     <Compile Include="Core\Objects\Internal\InternalObjectStateManager.cs" />
     <Compile Include="Core\Objects\Internal\IPOCOImplementor.cs" />
     <Compile Include="Core\Objects\Internal\IPropertyAccessorStrategy.cs" />
