@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity.Core.Objects
 {
-    using System.Collections.Generic;
-    using System.Data.Common;
-    using System.Data.Entity.Core.Common.Internal.Materialization;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using Moq;
     using Xunit;
@@ -13,12 +11,12 @@
         public void GetEnumerator_calls_Shaper_GetEnumerator()
         {
             var shaperMock = MockHelper.CreateShaperMock<object>();
-            var expectedEnumerator = ((IEnumerable<object>)new object[] { }).GetEnumerator();
+            var expectedEnumerator = new Mock<IDbEnumerator<object>>().Object;
             shaperMock.Setup(m => m.GetEnumerator()).Returns(() => expectedEnumerator);
             var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-                        {
-                            CallBase = true
-                        };
+            {
+                CallBase = true
+            };
 
             var actualEnumerator = objectResultMock.Object.GetEnumerator();
 
@@ -30,7 +28,7 @@
         public void GetEnumerator_throws_when_called_twice()
         {
             var shaperMock = MockHelper.CreateShaperMock<object>();
-            var expectedEnumerator = ((IEnumerable<object>)new object[] { }).GetEnumerator();
+            var expectedEnumerator = new Mock<IDbEnumerator<object>>().Object;
             shaperMock.Setup(m => m.GetEnumerator()).Returns(() => expectedEnumerator);
             var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
             {

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
 
@@ -62,6 +63,11 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public virtual IEnumerator<T> GetEnumerator()
         {
+            return GetDbEnumerator();
+        }
+
+        internal IDbEnumerator<T> GetDbEnumerator()
+        {
             EnsureCanEnumerateResults();
 
             var shaper = _shaper;
@@ -79,7 +85,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
         {
-            throw new NotImplementedException();
+            return GetDbEnumerator();
         }
 
         #endregion
@@ -122,7 +128,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal override IEnumerator GetEnumeratorInternal()
         {
-            return (this).GetEnumerator();
+            return GetDbEnumerator();
         }
 
         internal override IList GetIListSourceListInternal()

@@ -323,6 +323,7 @@
     <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
+    <Compile Include="Internal\IDbEnumerator.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensions.cs" />

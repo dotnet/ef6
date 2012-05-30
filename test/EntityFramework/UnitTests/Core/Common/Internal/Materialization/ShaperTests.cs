@@ -4,21 +4,36 @@
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
     public class ShaperTests
     {
         [Fact]
-        public void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory()
+        public void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory_sync()
+        {
+            GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(SetupReadSync, e => e.ToList());
+        }
+
+        [Fact]
+        public void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory_async()
+        {
+            GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(SetupReadAsync, e => e.ToListAsync().Result);
+        }
+
+        private void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(Action<Mock<DbDataReader>, IEnumerator<object>> setupRead,
+            Func<IDbEnumerator<object>, List<object>> toList)
         {
             var sourceEnumerable = new[] { new object[] { 1 }, new object[] { 2 } };
             var underlyingEnumerator = ((IEnumerable<object[]>)sourceEnumerable).GetEnumerator();
 
             var dbDataReaderMock = new Mock<DbDataReader>();
-            dbDataReaderMock.Setup(m => m.Read()).Returns(() => underlyingEnumerator.MoveNext());
+            setupRead(dbDataReaderMock, underlyingEnumerator);
             dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal]);
 
             var coordinatorFactory = MockHelper.CreateCoordinatorFactory<object>(shaper => shaper.Reader.GetValue(0));
@@ -29,11 +44,23 @@
 
             var actualEnumerator = shaperMock.Object.GetEnumerator();
 
-            Assert.Equal(sourceEnumerable.SelectMany(e => e).ToList(), actualEnumerator.ToList());
+            Assert.Equal(sourceEnumerable.SelectMany(e => e).ToList(), toList(actualEnumerator));
         }
 
         [Fact]
-        public void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories()
+        public void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories_sync()
+        {
+            GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(SetupReadSync, e => e.ToList());
+        }
+
+        [Fact]
+        public void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories_async()
+        {
+            GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(SetupReadAsync, e => e.ToListAsync().Result);
+        }
+
+        private void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(Action<Mock<DbDataReader>, IEnumerator<object>> setupRead,
+            Func<IDbEnumerator<object>, List<object>> toList)
         {
             var sourceEnumerable = new[]
                                        {
@@ -47,7 +74,7 @@
             var underlyingEnumerator = ((IEnumerable<object[]>)sourceEnumerable).GetEnumerator();
 
             var dbDataReaderMock = new Mock<DbDataReader>();
-            dbDataReaderMock.Setup(m => m.Read()).Returns(() => underlyingEnumerator.MoveNext());
+            setupRead(dbDataReaderMock, underlyingEnumerator);
             dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal]);
 
             var actualValuesFromNestedCoordinatorOne = new List<string>();
@@ -80,14 +107,44 @@
 
             var actualEnumerator = shaperMock.Object.GetEnumerator();
 
-            Assert.Equal(new object[] { 1, 2, 3, 4 }.ToList(), actualEnumerator.ToList());
+            Assert.Equal(new object[] { 1, 2, 3, 4 }.ToList(), toList(actualEnumerator));
             Assert.Equal(new object[] { 1, 2, 3, 4 }.ToList(), actualValuesFromRootCoordinator);
             Assert.Equal(new[] { "A", "B", "C", "D" }.ToList(), actualValuesFromNestedCoordinatorOne);
             Assert.Equal(new[] { "X" }.ToList(), actualValuesFromNestedCoordinatorTwo);
         }
 
         [Fact]
-        public void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState()
+        public void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState_sync()
+        {
+            GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(SetupReadSync,
+                e =>
+                {
+                    var actualValues = new List<object>();
+                    while (e.MoveNext())
+                    {
+                        actualValues.Add(e.Current.PendingColumnValues[0]);
+                    }
+                    return actualValues;
+                });
+        }
+
+        [Fact]
+        public void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState_async()
+        {
+            GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(SetupReadAsync,
+                e =>
+                {
+                    var actualValues = new List<object>();
+                    while (e.MoveNextAsync(CancellationToken.None).Result)
+                    {
+                        actualValues.Add(e.Current.PendingColumnValues[0]);
+                    }
+                    return actualValues;
+                });
+        }
+
+        private void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(Action<Mock<DbDataReader>, IEnumerator<object>> setupRead,
+            Func<IDbEnumerator<RecordState>, List<object>> toList)
         {
             var sourceEnumerable = new[]
                                        {
@@ -101,7 +158,7 @@
             var underlyingEnumerator = ((IEnumerable<object[]>)sourceEnumerable).GetEnumerator();
 
             var dbDataReaderMock = new Mock<DbDataReader>();
-            dbDataReaderMock.Setup(m => m.Read()).Returns(() => underlyingEnumerator.MoveNext());
+            setupRead(dbDataReaderMock, underlyingEnumerator);
             dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal]);
             dbDataReaderMock.Setup(m => m.IsDBNull(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal] == null);
 
@@ -130,13 +187,7 @@
                 MergeOption.AppendOnly, /*stateCount*/ 6, rootCoordinatorFactory, /*checkPermissions*/ null,
                 /*readerOwned*/ false) { CallBase = true };
 
-            var actualValues = new List<object>();
-            while (shaperMock.Object.RootEnumerator.MoveNext())
-            {
-                actualValues.Add(shaperMock.Object.RootEnumerator.Current.PendingColumnValues[0]);
-            }
-
-            Assert.Equal(new object[] { 1, "A", 2, "X", 3, "B", 4, "C", "D" }.ToList(), actualValues);
+            Assert.Equal(new object[] { 1, "A", 2, "X", 3, "B", 4, "C", "D" }.ToList(), toList(shaperMock.Object.RootEnumerator));
         }
 
         private CoordinatorFactory<TResult> CreateCoordinatorFactory<TKey, TResult>(
@@ -180,5 +231,16 @@
                 initializeCollection: null,
                 recordStateFactories: recordStateFactories);
         }
+
+        private void SetupReadSync(Mock<DbDataReader> dbDataReaderMock, IEnumerator<object> underlyingEnumerator)
+        {
+            dbDataReaderMock.Setup(m => m.Read()).Returns(underlyingEnumerator.MoveNext);
+        }
+
+        private void SetupReadAsync(Mock<DbDataReader> dbDataReaderMock, IEnumerator<object> underlyingEnumerator)
+        {
+            dbDataReaderMock.Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Returns((CancellationToken ct) => Task.FromResult(underlyingEnumerator.MoveNext()));
+        }
+
     }
 }
