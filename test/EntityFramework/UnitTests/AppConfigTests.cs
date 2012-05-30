@@ -18,7 +18,7 @@
     using Moq;
     using Xunit;
 
-    public class AppConfigTests : UnitTestBase
+    public class AppConfigTests : TestBase
     {
         public class GetConnectionString
         {

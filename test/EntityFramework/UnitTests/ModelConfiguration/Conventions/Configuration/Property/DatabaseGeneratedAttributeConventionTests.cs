@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
-    public sealed class DatabaseGeneratedAttributeConventionTests : UnitTestBase
+    public sealed class DatabaseGeneratedAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_set_store_generated_pattern()

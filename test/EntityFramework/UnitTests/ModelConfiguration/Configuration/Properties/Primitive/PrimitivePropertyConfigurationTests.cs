@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
     using Xunit;
     using Strings = System.Data.Entity.Resources.Strings;
 
-    public abstract class PrimitivePropertyConfigurationTests : UnitTestBase
+    public abstract class PrimitivePropertyConfigurationTests : TestBase
     {
         [Fact]
         public void HasColumnOrder_should_throw_when_argument_out_of_range()

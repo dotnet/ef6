@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
-    public sealed class ConcurrencyCheckAttributeConventionTests : UnitTestBase
+    public sealed class ConcurrencyCheckAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_set_concurrency_token()

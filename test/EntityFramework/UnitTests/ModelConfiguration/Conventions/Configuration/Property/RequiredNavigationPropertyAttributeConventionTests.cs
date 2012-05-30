@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using Xunit;
 
-    public sealed class RequiredNavigationPropertyAttributeConventionTests : UnitTestBase
+    public sealed class RequiredNavigationPropertyAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_make_end_kind_required()

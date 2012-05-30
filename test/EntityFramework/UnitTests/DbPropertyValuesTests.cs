@@ -16,7 +16,7 @@
     /// General unit tests for DbPropertyValues and related classes/methods.
     /// Some specific features, such as concurrency, are tested elsewhere.
     /// </summary>
-    public class DbPropertyValuesTests : UnitTestBase
+    public class DbPropertyValuesTests : TestBase
     {
         #region Helper classes
 

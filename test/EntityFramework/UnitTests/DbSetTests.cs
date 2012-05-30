@@ -13,7 +13,7 @@
     /// Note that some tests that would normally be unit tests are in the functional tests project because they
     /// were created before the functional/unit division.
     /// </summary> 
-    public class DbSetTests : UnitTestBase
+    public class DbSetTests : TestBase
     {
         #region Tests for nulls and incorrect types passed to non-generic DbSet API
 

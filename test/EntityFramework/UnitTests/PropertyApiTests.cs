@@ -16,7 +16,7 @@
     /// <summary>
     /// Unit tests for the Property, Reference, and Collection methods on DbEntityEntry.
     /// </summary>
-    public class PropertyApiTests : UnitTestBase
+    public class PropertyApiTests : TestBase
     {
         #region Helpers
 

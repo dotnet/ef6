@@ -10,7 +10,7 @@
     /// <summary>
     /// Unit tests for Database.
     /// </summary>
-    public class DatabaseTests : UnitTestBase
+    public class DatabaseTests : TestBase
     {
         #region Negative constructor tests
 

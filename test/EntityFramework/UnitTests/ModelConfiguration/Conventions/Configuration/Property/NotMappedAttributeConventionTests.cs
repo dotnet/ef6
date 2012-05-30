@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Linq;
     using Xunit;
 
-    public sealed class NotMappedAttributeConventionTests : UnitTestBase
+    public sealed class NotMappedAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_ignore_property()

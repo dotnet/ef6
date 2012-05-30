@@ -14,7 +14,7 @@
     /// <summary>
     /// Unit tests for database initialization.
     /// </summary>
-    public class DatabaseInitializationTests : UnitTestBase
+    public class DatabaseInitializationTests : TestBase
     {
         #region Helpers
 

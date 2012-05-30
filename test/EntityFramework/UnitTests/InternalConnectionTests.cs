@@ -14,7 +14,7 @@
     /// <summary>
     /// Tests for creating and managing connections using IInternalConnection.
     /// </summary>
-    public class InternalConnectionTests : UnitTestBase
+    public class InternalConnectionTests : TestBase
     {
         #region Positive existing connection tests
 

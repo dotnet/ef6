@@ -14,7 +14,7 @@
     /// <summary>
     /// Unit tests for the SQL query classes.
     /// </summary>
-    public class DbSqlQueryTests : UnitTestBase
+    public class DbSqlQueryTests : TestBase
     {
         #region ToString tests
 

@@ -210,7 +210,6 @@
     <Compile Include="TestHelpers\Mock\InternalContextForMock`.cs" />
     <Compile Include="TestHelpers\Mock\InternalReferenceEntryForMock.cs" />
     <Compile Include="TestHelpers\TestInternalPropertyBag`.cs" />
-    <Compile Include="TestHelpers\UnitTestBase.cs" />
     <Compile Include="ModelConfiguration\ComplexTypeConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationRegistrarTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsConfigurationTests.cs" />

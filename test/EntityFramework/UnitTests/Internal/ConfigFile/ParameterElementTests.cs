@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Data.Entity;
     using Xunit;
 
-    public class ParameterElementTests : UnitTestBase
+    public class ParameterElementTests : TestBase
     {
         [Fact]
         public void ParameterElement_converts_to_valid_type()

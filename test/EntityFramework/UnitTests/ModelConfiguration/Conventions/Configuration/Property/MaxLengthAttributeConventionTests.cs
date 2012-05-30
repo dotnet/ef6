@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
-    public sealed class MaxLengthAttributeConventionTests : UnitTestBase
+    public sealed class MaxLengthAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_set_is_max_length_when_no_length_given()

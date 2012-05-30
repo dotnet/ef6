@@ -20,7 +20,7 @@
     using powershell::System.Data.Entity.Migrations.Resources;
     using Xunit;
 
-    public class ConnectionFactoryConfigTests : UnitTestBase
+    public class ConnectionFactoryConfigTests : TestBase
     {
         #region Well-known values
 

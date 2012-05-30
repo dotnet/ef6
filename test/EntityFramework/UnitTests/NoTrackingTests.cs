@@ -11,7 +11,7 @@
     /// <summary>
     /// Unit tests for the AsNoTracking extension methods on IQueryable.
     /// </summary> 
-    public class AsNoTrackingTests : UnitTestBase
+    public class AsNoTrackingTests : TestBase
     {
         #region AsNoTracking negative contract tests
 

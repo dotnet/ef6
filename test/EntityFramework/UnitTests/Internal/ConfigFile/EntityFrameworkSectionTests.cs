@@ -6,7 +6,7 @@
     using System.Linq;
     using Xunit;
 
-    public class EntityFrameworkSectionTests : UnitTestBase
+    public class EntityFrameworkSectionTests : TestBase
     {
         public class DefaultConnectionFactory
         {

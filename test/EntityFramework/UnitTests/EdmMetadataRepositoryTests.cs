@@ -12,7 +12,7 @@
     using Moq;
     using Xunit;
 
-    public class EdmMetadataRepositoryTests : UnitTestBase
+    public class EdmMetadataRepositoryTests : TestBase
     {
         [Fact]
         public void QueryForModelHash_returns_the_model_hash_if_it_exists()

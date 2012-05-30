@@ -19,7 +19,7 @@
     /// type just because these tests pass does not mean that the code is correct. On the other hand,
     /// if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
     /// </summary>
-    public class MultiThreadingTests : UnitTestBase
+    public class MultiThreadingTests : TestBase
     {
         #region Access to cached property type/getter/setter delegates
 

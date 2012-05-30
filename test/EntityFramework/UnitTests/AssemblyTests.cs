@@ -4,7 +4,7 @@
     using System.Linq;
     using Xunit;
 
-    public class AssemblyTests : UnitTestBase
+    public class AssemblyTests : TestBase
     {
         [Fact]
         public void Microsoft_Data_Entity_CTP_is_CLSCompliant()

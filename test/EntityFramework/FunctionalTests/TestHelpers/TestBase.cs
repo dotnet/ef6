@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Configuration;
     using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Edm.Db.Mapping;
@@ -10,10 +11,13 @@
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal.ConfigFile;
     using System.Data.SqlClient;
+    using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Transactions;
+    using System.Xml.Linq;
 
     public class TestBase : MarshalByRefObject
     {
@@ -369,6 +373,25 @@
         protected static EntityType GetEntityType(ObjectContext objectContext, Type clrType)
         {
             return ModelHelpers.GetStructuralType<EntityType>(objectContext, clrType);
+        }
+
+        #endregion
+
+        #region Creating config documents
+
+        public static Configuration CreateEmptyConfig()
+        {
+            var tempFileName = Path.GetTempFileName();
+            var doc = new XDocument(new XElement("configuration"));
+            doc.Save(tempFileName);
+
+            var config = ConfigurationManager.OpenMappedExeConfiguration(
+                new ExeConfigurationFileMap() { ExeConfigFilename = tempFileName },
+                ConfigurationUserLevel.None);
+
+            config.Sections.Add("entityFramework", new EntityFrameworkSection());
+
+            return config;
         }
 
         #endregion

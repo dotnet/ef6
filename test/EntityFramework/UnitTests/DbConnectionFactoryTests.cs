@@ -20,7 +20,7 @@ namespace ProductivityApiUnitTests
     /// <summary>
     /// Unit tests for implementations of IDbConnectionFactory.
     /// </summary> 
-    public class DbConnectionFactoryTests : UnitTestBase
+    public class DbConnectionFactoryTests : TestBase
     {
         #region Test setup
 

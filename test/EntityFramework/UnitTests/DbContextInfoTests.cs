@@ -15,21 +15,21 @@
     using Moq;
     using Xunit;
 
-    public class DbContextInfoTests : UnitTestBase
+    public class DbContextInfoTests : TestBase
     {
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
             Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo((Type)null)).ParamName);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo((Type)null, new DbConnectionInfo("Name"))).ParamName);
+            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, new DbConnectionInfo("Name"))).ParamName);
             Assert.Equal("connectionInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (DbConnectionInfo)null)).ParamName);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo((Type)null, CreateEmptyConfig())).ParamName);
+            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig())).ParamName);
             Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (Configuration)null)).ParamName);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo((Type)null, CreateEmptyConfig(), new DbConnectionInfo("Name"))).ParamName);
-            Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (Configuration)null, new DbConnectionInfo("Name"))).ParamName);
+            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig(), new DbConnectionInfo("Name"))).ParamName);
+            Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), null, new DbConnectionInfo("Name"))).ParamName);
             Assert.Equal("connectionInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), CreateEmptyConfig(), (DbConnectionInfo)null)).ParamName);
 
 #pragma warning disable 618 // Obsolete ctor
@@ -37,6 +37,13 @@
 #pragma warning restore 618
 
             Assert.Equal(Error.ArgumentOutOfRange("contextType").Message, Assert.Throws<ArgumentOutOfRangeException>(() => new DbContextInfo(typeof(string))).Message);
+
+            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
+            Assert.Equal("modelProviderInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (DbProviderInfo)null)).ParamName);
+
+            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig(), ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
+            Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), null, ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
+            Assert.Equal("modelProviderInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), CreateEmptyConfig(), (DbProviderInfo)null)).ParamName);
         }
 
         [Fact]
@@ -592,6 +599,40 @@
                 : base("name=WontFindMeInDefaultConfig")
             {
             }
+        }
+
+        [Fact]
+        public void CreateInstance_should_use_passed_provider_info_when_building_model_even_when_config_is_passed_as_well()
+        {
+            var config = AddConnectionStrings(CreateEmptyConfig().AddDefaultConnectionFactory(
+                "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                new string[0]));
+
+            var contextInfo = new DbContextInfo(typeof(SimpleContext), config, ProviderRegistry.SqlCe4_ProviderInfo);
+
+            Assert.Equal(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName, contextInfo.ConnectionProviderName);
+            Assert.Equal(string.Empty, contextInfo.ConnectionString);
+
+            Database.SetInitializer<SimpleContext>(null);
+
+            var objectContext = ((IObjectContextAdapter)contextInfo.CreateInstance()).ObjectContext;
+
+            Assert.NotNull(objectContext);
+            Assert.Equal("SqlCeConnection", ((EntityConnection)objectContext.Connection).StoreConnection.GetType().Name);
+        }
+
+        [Fact]
+        public void CreateInstance_should_use_passed_connection_string_even_when_provider_info_is_passed_as_well()
+        {
+            var config = AddConnectionStrings(CreateEmptyConfig().AddDefaultConnectionFactory(
+                "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                new string[0]));
+
+            var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config, ProviderRegistry.SqlCe4_ProviderInfo);
+
+            Assert.Equal(DbConnectionStringOrigin.Configuration, contextInfo.ConnectionStringOrigin);
+            Assert.Equal("Initial Catalog=foo", contextInfo.ConnectionString);
+            Assert.Equal("foo", contextInfo.ConnectionStringName);
         }
     }
 

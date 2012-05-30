@@ -7,7 +7,7 @@
     using System.Linq;
     using Xunit;
 
-    public class PropertyConstraintExceptionTests : UnitTestBase
+    public class PropertyConstraintExceptionTests : TestBase
     {
         #region Tests for constructors
 
