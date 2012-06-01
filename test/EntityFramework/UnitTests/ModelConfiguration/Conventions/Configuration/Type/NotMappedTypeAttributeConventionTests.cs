@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration;
     using Xunit;
 
-    public sealed class NotMappedTypeAttributeConventionTests : UnitTestBase
+    public sealed class NotMappedTypeAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_ignore_type()

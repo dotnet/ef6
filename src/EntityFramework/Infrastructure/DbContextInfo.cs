@@ -114,6 +114,25 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
+        ///     Creates a new instance representing a given <see cref = "DbContext" /> type. An external config 
+        ///     object (e.g. app.config or web.config) can be supplied and will be used during connection string
+        ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries. 
+        ///     A <see cref = "DbProviderInfo" /> can be supplied in order to override the default determined
+        ///     provider used when constructing the underlying EDM model. This can be useful to prevent EF from
+        ///     connecting to discover a manifest token.
+        /// </summary>
+        /// <param name = "contextType">The type deriving from <see cref = "DbContext" />.</param>
+        /// <param name = "config">An object representing the config file.</param>
+        /// <param name = "modelProviderInfo">A <see cref = "DbProviderInfo" /> specifying the underlying ADO.NET provider to target.</param>
+        public DbContextInfo(Type contextType, Configuration config, DbProviderInfo modelProviderInfo)
+            : this(contextType, modelProviderInfo, new AppConfig(config), null)
+        {
+            Contract.Requires(contextType != null);
+            Contract.Requires(config != null);
+            Contract.Requires(modelProviderInfo != null);
+        }
+
+        /// <summary>
         /// Called internally when a context info is needed for an existing context, which may not be constructable.
         /// </summary>
         /// <param name="context">The context instance to get info from.</param>

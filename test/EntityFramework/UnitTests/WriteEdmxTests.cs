@@ -11,7 +11,7 @@
     /// <summary>
     /// Unit tests for WriteEdmx methods.
     /// </summary>
-    public class WriteEdmxTests : UnitTestBase
+    public class WriteEdmxTests : TestBase
     {
         #region Tests for arguments to WriteEdmx methods
 

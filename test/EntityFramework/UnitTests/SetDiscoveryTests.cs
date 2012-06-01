@@ -37,7 +37,7 @@
     /// <summary>
     /// Unit tests for the DbSet/ObjectSet discovery service.
     /// </summary> 
-    public class SetDiscoveryTests : UnitTestBase
+    public class SetDiscoveryTests : TestBase
     {
         #region Positive DbContext discovery and initialization tests
 

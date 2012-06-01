@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Linq;
     using Xunit;
 
-    public sealed class PluralizingTableNameConventionTests : UnitTestBase
+    public sealed class PluralizingTableNameConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_set_pluralized_table_name_as_identitier()

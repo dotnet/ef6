@@ -257,7 +257,7 @@
     /// <summary>
     /// Tests for validation.
     /// </summary>
-    public class ValidationTests : UnitTestBase
+    public class ValidationTests : TestBase
     {
         #region Infrastructure/setup
 

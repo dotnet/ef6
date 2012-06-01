@@ -7,7 +7,7 @@
     using System.Data.Entity.Resources;
     using Xunit;
 
-    public class DbConnectionInfoTests : UnitTestBase
+    public class DbConnectionInfoTests : TestBase
     {
         [Fact]
         public void Ctor_should_validate_preconditions()

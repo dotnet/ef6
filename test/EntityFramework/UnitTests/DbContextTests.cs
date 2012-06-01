@@ -66,7 +66,7 @@
     /// <summary>
     /// Unit tests for DbContext.
     /// </summary>
-    public class DbContextTests : UnitTestBase
+    public class DbContextTests : TestBase
     {
         static DbContextTests() 
         {

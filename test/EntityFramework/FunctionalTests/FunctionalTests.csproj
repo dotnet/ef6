@@ -179,6 +179,7 @@
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
+    <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />

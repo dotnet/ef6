@@ -11,7 +11,7 @@
     using Moq;
     using Xunit;
 
-    public class ClonedObjectContextTests : UnitTestBase
+    public class ClonedObjectContextTests : TestBase
     {
         [Fact]
         public void Creating_a_cloned_ObjectContext_causes_the_store_and_entity_connection_to_be_cloned_and_given_connection_string_applied()

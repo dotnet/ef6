@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Linq;
     using Xunit;
 
-    public class ParameterCollectionTests : UnitTestBase
+    public class ParameterCollectionTests : TestBase
     {
         [Fact]
         public void ParameterCollection_converts_valid_types()

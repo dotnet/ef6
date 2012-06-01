@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Data.Entity;
     using Xunit;
 
-    public class DatabaseInitializerElementTests : UnitTestBase
+    public class DatabaseInitializerElementTests : TestBase
     {
         [Fact]
         public void DatabaseInitializerElement_converts_valid_type()

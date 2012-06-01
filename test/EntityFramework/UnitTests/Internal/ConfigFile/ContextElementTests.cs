@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Data.Entity;
     using Xunit;
 
-    public class ContextElementTests : UnitTestBase
+    public class ContextElementTests : TestBase
     {
         [Fact]
         public void ContextElement_converts_valid_type()

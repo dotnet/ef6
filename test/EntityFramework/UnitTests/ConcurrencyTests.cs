@@ -14,7 +14,7 @@
     /// the actual functionality is contained in core EF and is tested through
     /// functional tests.
     /// </summary>
-    public class ConcurrencyTests : UnitTestBase
+    public class ConcurrencyTests : TestBase
     {
         #region Tests for access to entries in DbUpdateException
 

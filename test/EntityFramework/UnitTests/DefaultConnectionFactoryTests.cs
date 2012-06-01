@@ -10,7 +10,7 @@
     /// <summary>
     /// Tests for Database.DefaultConnectionFactory and related infrastructure classes.
     /// </summary>
-    public class DefaultConnectionFactoryTests : UnitTestBase
+    public class DefaultConnectionFactoryTests : TestBase
     {
         #region DefaultConnectionFactory positive tests
 

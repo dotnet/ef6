@@ -15,7 +15,7 @@
     /// <summary>
     /// Unit tests for the Include extension methods on IQueryable.
     /// </summary> 
-    public class IncludeTests : UnitTestBase
+    public class IncludeTests : TestBase
     {
         #region Some fake entities with pseudo-relationships
 

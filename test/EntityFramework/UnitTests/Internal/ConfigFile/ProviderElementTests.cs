@@ -2,7 +2,7 @@ namespace System.Data.Entity.Internal.ConfigFile
 {
     using Xunit;
 
-    public class ProviderElementTests : UnitTestBase
+    public class ProviderElementTests : TestBase
     {
         [Fact]
         public void Provider_invariant_can_be_accessed()

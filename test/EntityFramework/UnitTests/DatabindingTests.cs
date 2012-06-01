@@ -19,7 +19,7 @@
     /// <summary>
     /// Unit tests for data binding and DbSet.Local.
     /// </summary>
-    public class DatabindingTests : UnitTestBase
+    public class DatabindingTests : TestBase
     {
         #region Test subjects
 

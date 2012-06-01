@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
-    public sealed class RequiredPrimitivePropertyAttributeConventionTests : UnitTestBase
+    public sealed class RequiredPrimitivePropertyAttributeConventionTests : TestBase
     {
         [Fact]
         public void Apply_should_unset_optional_flag()

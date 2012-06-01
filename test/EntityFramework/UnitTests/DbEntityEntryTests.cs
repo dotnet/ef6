@@ -17,7 +17,7 @@
     /// General unit tests for DbEntityEntry and related classes/methods.
     /// Some specific features, such as concurrency, are tested elsewhere.
     /// </summary>
-    public class DbEntityEntryTests : UnitTestBase
+    public class DbEntityEntryTests : TestBase
     {
         #region Helpers
 
