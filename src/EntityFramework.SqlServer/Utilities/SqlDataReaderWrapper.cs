@@ -1,13 +1,10 @@
-﻿#if !INTERNALS_INVISIBLE
-namespace System.Data.Entity.SqlServer.Utilities
+﻿namespace System.Data.Entity.SqlServer.Utilities
 {
     using System;
     using System.Collections;
     using System.Data.SqlClient;
     using System.Data.SqlTypes;
     using System.IO;
-    using System.Runtime.Remoting;
-    using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
@@ -384,4 +381,3 @@ namespace System.Data.Entity.SqlServer.Utilities
         }
     }
 }
-#endif

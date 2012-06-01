@@ -131,12 +131,10 @@ namespace System.Data.Entity.SqlServer
 
             // Now add parameters added as part of SQL gen (note: this feature is only safe for DML SQL gen which
             // does not support user parameters, where there is no risk of name collision)
-            if (null != parameters
-                && 0 < parameters.Count)
+            if (null != parameters && 0 < parameters.Count)
             {
                 if (commandTree.CommandTreeKind != DbCommandTreeKind.Delete &&
-                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert
-                    &&
+                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert &&
                     commandTree.CommandTreeKind != DbCommandTreeKind.Update)
                 {
                     throw new InvalidOperationException(Strings.ADP_InternalProviderError(1017 /*InternalErrorCode.SqlGenParametersNotPermitted*/));
@@ -262,11 +260,7 @@ namespace System.Data.Entity.SqlServer
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
-#if INTERNALS_INVISIBLE
-            return new SqlSpatialDataReader(underlyingReader);
-#else
             return new SqlSpatialDataReader(new SqlDataReaderWrapper(underlyingReader));
-#endif
         }
 
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
