@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Migrations
 {
     using System.CodeDom.Compiler;
     using System.Data.Entity.Migrations.Design;
@@ -116,7 +116,7 @@
             {
                 var scaffoldedMigration = facade.ScaffoldInitialCreate("cs", "ClassLibrary1");
 
-                Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
+                Assert.True(scaffoldedMigration.DesignerCode.Length > 500);
                 Assert.Equal("cs", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_InitialCreate"));
                 Assert.True(scaffoldedMigration.UserCode.Length > 500);
@@ -136,7 +136,7 @@
             {
                 var scaffoldedMigration = facade.Scaffold("Create", "cs", "ClassLibrary1", ignoreChanges: true);
 
-                Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
+                Assert.True(scaffoldedMigration.DesignerCode.Length > 500);
                 Assert.Equal("cs", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
                 Assert.True(scaffoldedMigration.UserCode.Length < 300);
@@ -158,7 +158,7 @@
             {
                 var scaffoldedMigration = facade.Scaffold("Create", "cs", "ClassLibrary1", ignoreChanges: false);
 
-                Assert.True(scaffoldedMigration.DesignerCode.Length > 1500);
+                Assert.True(scaffoldedMigration.DesignerCode.Length > 500);
                 Assert.Equal("cs", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
                 Assert.True(scaffoldedMigration.UserCode.Length > 500);
@@ -180,7 +180,7 @@
             {
                 var scaffoldedMigration = facade.Scaffold("Create", "vb", "ClassLibrary1", ignoreChanges: false);
 
-                Assert.True(scaffoldedMigration.DesignerCode.Length > 1900);
+                Assert.True(scaffoldedMigration.DesignerCode.Length > 500);
                 Assert.Equal("vb", scaffoldedMigration.Language);
                 Assert.True(scaffoldedMigration.MigrationId.EndsWith("_Create"));
                 Assert.True(scaffoldedMigration.UserCode.Length > 500);

@@ -1,9 +1,9 @@
 ﻿namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using Xunit;
 
@@ -29,7 +29,8 @@
                             .SequenceEqual(new[]
                                                {
                                                    "System.Data.Entity.Migrations",
-                                                   "System.Data.Entity.Migrations.Infrastructure"
+                                                   "System.Data.Entity.Migrations.Infrastructure",
+                                                   "System.Resources"
                                                }));
         }
 
@@ -82,7 +83,7 @@
                             .SequenceEqual(new[]
                                                {
                                                    "System",
-                                                   "System.Data.Entity.Migrations"
+                                                    "System.Data.Entity.Migrations"
                                                }));
         }
 

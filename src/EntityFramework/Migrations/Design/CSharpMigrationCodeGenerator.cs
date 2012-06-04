@@ -32,6 +32,8 @@ namespace System.Data.Entity.Migrations.Design
             string @namespace,
             string className)
         {
+            className = ScrubName(className);
+
             _newTableForeignKeys
                 = (from ct in operations.OfType<CreateTableOperation>()
                    from cfk in operations.OfType<AddForeignKeyOperation>()
@@ -46,11 +48,19 @@ namespace System.Data.Entity.Migrations.Design
 
             var generatedMigration
                 = new ScaffoldedMigration
-                      {
-                          Language = "cs",
-                          UserCode = Generate(operations, @namespace, className),
-                          DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
-                      };
+                    {
+                        MigrationId = migrationId,
+                        Language = "cs",
+                        UserCode = Generate(operations, @namespace, className),
+                        DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
+                    };
+
+            if (!string.IsNullOrWhiteSpace(sourceModel))
+            {
+                generatedMigration.Resources.Add("Source", sourceModel);
+            }
+
+            generatedMigration.Resources.Add("Target", targetModel);
 
             return generatedMigration;
         }
@@ -76,7 +86,7 @@ namespace System.Data.Entity.Migrations.Design
                 {
                     WriteClassStart(
                         @namespace, className, writer, "DbMigration", designer: false,
-                        namespaces: GetNamespaces(operations));
+                                    namespaces: GetNamespaces(operations));
 
                     writer.WriteLine("public override void Up()");
                     writer.WriteLine("{");
@@ -138,11 +148,21 @@ namespace System.Data.Entity.Migrations.Design
 
                     WriteClassStart(@namespace, className, writer, "IMigrationMetadata", designer: true);
 
-                    WriteProperty("Id", migrationId, writer);
+                    writer.Write("private readonly ResourceManager Resources = new ResourceManager(typeof(");
+                    writer.Write(className);
+                    writer.WriteLine("));");
                     writer.WriteLine();
-                    WriteProperty("Source", sourceModel, writer);
+
+                    WriteProperty("Id", Quote(migrationId), writer);
                     writer.WriteLine();
-                    WriteProperty("Target", targetModel, writer);
+                    WriteProperty(
+                        "Source",
+                        sourceModel == null
+                            ? null
+                            : "Resources.GetString(\"Source\")",
+                        writer);
+                    writer.WriteLine();
+                    WriteProperty("Target", "Resources.GetString(\"Target\")", writer);
 
                     WriteClassEnd(@namespace, writer);
                 }
@@ -174,9 +194,7 @@ namespace System.Data.Entity.Migrations.Design
             }
             else
             {
-                writer.Write("\"");
-                writer.Write(value.Break().Join(separator: "\"" + Environment.NewLine + new string(' ', 23) + "+ \""));
-                writer.Write("\"");
+                writer.Write(value);
             }
 
             writer.WriteLine("; }");
@@ -224,7 +242,7 @@ namespace System.Data.Entity.Migrations.Design
             }
 
             writer.Write("partial class ");
-            writer.Write(ScrubName(className));
+            writer.Write(className);
             writer.Write(" : ");
             writer.Write(@base);
             writer.WriteLine();
@@ -327,14 +345,14 @@ namespace System.Data.Entity.Migrations.Design
 
             createTableOperation.Columns.Each(
                 c =>
-                    {
-                        var scrubbedName = ScrubName(c.Name);
+                {
+                    var scrubbedName = ScrubName(c.Name);
 
-                        writer.Write(scrubbedName);
-                        writer.Write(" =");
-                        Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
-                        writer.WriteLine(",");
-                    });
+                    writer.Write(scrubbedName);
+                    writer.Write(" =");
+                    Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
+                    writer.WriteLine(",");
+                });
 
             writer.Indent--;
             writer.Write("}");

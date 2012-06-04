@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.IO;
     using Xunit;
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {},
+                    new MigrationOperation[] { },
                     new string('a', 10000),
                     "Target",
                     "Foo",
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {dropPrimaryKeyOperation},
+                    new MigrationOperation[] { dropPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -96,7 +96,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {dropPrimaryKeyOperation},
+                    new MigrationOperation[] { dropPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -141,7 +141,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addPrimaryKeyOperation},
+                    new MigrationOperation[] { addPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -185,7 +185,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addPrimaryKeyOperation},
+                    new MigrationOperation[] { addPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -231,7 +231,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addForeignKeyOperation},
+                    new MigrationOperation[] { addForeignKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -278,7 +278,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addForeignKeyOperation},
+                    new MigrationOperation[] { addForeignKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -315,7 +315,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {dropColumnOperation},
+                    new MigrationOperation[] { dropColumnOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -347,13 +347,13 @@ End Namespace
             var codeGenerator = new VisualBasicMigrationCodeGenerator();
 
             var createTableOperation = new CreateTableOperation("Customers");
-            var column = new ColumnModel(PrimitiveTypeKind.Binary) {Name = "Version", IsTimestamp = true};
+            var column = new ColumnModel(PrimitiveTypeKind.Binary) { Name = "Version", IsTimestamp = true };
             createTableOperation.Columns.Add(column);
 
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {createTableOperation},
+                    new MigrationOperation[] { createTableOperation },
                     "Source",
                     "Target",
                     "Foo",
@@ -390,11 +390,10 @@ End Namespace
         public void Generate_can_output_create_table_statement()
         {
             var createTableOperation = new CreateTableOperation("Customers");
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) {Name = "Id", IsNullable = true, IsIdentity = true};
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
             createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String)
-                                                 {Name = "Name", IsNullable = false});
-            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation {Name = "MyPK"};
+            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation { Name = "MyPK" };
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
             var codeGenerator = new VisualBasicMigrationCodeGenerator();
@@ -458,11 +457,14 @@ End Namespace
                 @"' <auto-generated />
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.Migrations.Infrastructure
+Imports System.Resources
 
 Namespace Foo
     Public NotInheritable Partial Class Bar
         Implements IMigrationMetadata
     
+        Private ReadOnly Resources As New ResourceManager(GetType(Bar))
+        
         Private ReadOnly Property IMigrationMetadata_Id() As String Implements IMigrationMetadata.Id
             Get
                 Return ""Migration""
@@ -471,13 +473,13 @@ Namespace Foo
         
         Private ReadOnly Property IMigrationMetadata_Source() As String Implements IMigrationMetadata.Source
             Get
-                Return ""Source""
+                Return Resources.GetString(""Source"")
             End Get
         End Property
         
         Private ReadOnly Property IMigrationMetadata_Target() As String Implements IMigrationMetadata.Target
             Get
-                Return ""Target""
+                Return Resources.GetString(""Target"")
             End Get
         End Property
     End Class
@@ -486,6 +488,9 @@ End Namespace
                 generatedMigration.DesignerCode);
 
             Assert.Equal("vb", generatedMigration.Language);
+            Assert.Equal(2, generatedMigration.Resources.Count);
+            Assert.Equal("Source", generatedMigration.Resources["Source"]);
+            Assert.Equal("Target", generatedMigration.Resources["Target"]);
         }
 
         [Fact]
@@ -496,7 +501,7 @@ End Namespace
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new[] {new DropTableOperation("Customers")},
+                    new[] { new DropTableOperation("Customers") },
                     "Source",
                     "Target",
                     "Foo",
@@ -529,7 +534,7 @@ End Namespace
 
             var generatedMigration = codeGenerator.Generate(
                 "Migration",
-                new MigrationOperation[] {},
+                new MigrationOperation[] { },
                 "Source",
                 "Target",
                 "Foo",
@@ -539,7 +544,7 @@ End Namespace
 
             generatedMigration = codeGenerator.Generate(
                 "Migration",
-                new MigrationOperation[] {},
+                new MigrationOperation[] { },
                 "Source",
                 "Target",
                 "Foo",
@@ -555,7 +560,7 @@ End Namespace
 
             var generatedMigration = codeGenerator.Generate(
                 "Migration",
-                new MigrationOperation[] {},
+                new MigrationOperation[] { },
                 null,
                 "Target",
                 "Foo",
@@ -565,11 +570,14 @@ End Namespace
                 @"' <auto-generated />
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.Migrations.Infrastructure
+Imports System.Resources
 
 Namespace Foo
     Public NotInheritable Partial Class Bar
         Implements IMigrationMetadata
     
+        Private ReadOnly Resources As New ResourceManager(GetType(Bar))
+        
         Private ReadOnly Property IMigrationMetadata_Id() As String Implements IMigrationMetadata.Id
             Get
                 Return ""Migration""
@@ -584,13 +592,16 @@ Namespace Foo
         
         Private ReadOnly Property IMigrationMetadata_Target() As String Implements IMigrationMetadata.Target
             Get
-                Return ""Target""
+                Return Resources.GetString(""Target"")
             End Get
         End Property
     End Class
 End Namespace
 ",
                 generatedMigration.DesignerCode);
+
+            Assert.Equal(1, generatedMigration.Resources.Count);
+            Assert.Equal("Target", generatedMigration.Resources["Target"]);
         }
 
         [Fact]
@@ -698,10 +709,13 @@ End Namespace
                 @"' <auto-generated />
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.Migrations.Infrastructure
+Imports System.Resources
 
 Public NotInheritable Partial Class Bar
     Implements IMigrationMetadata
 
+    Private ReadOnly Resources As New ResourceManager(GetType(Bar))
+    
     Private ReadOnly Property IMigrationMetadata_Id() As String Implements IMigrationMetadata.Id
         Get
             Return ""Migration""
@@ -716,12 +730,15 @@ Public NotInheritable Partial Class Bar
     
     Private ReadOnly Property IMigrationMetadata_Target() As String Implements IMigrationMetadata.Target
         Get
-            Return ""Target""
+            Return Resources.GetString(""Target"")
         End Get
     End Property
 End Class
 ",
                 generatedMigration.DesignerCode);
+
+            Assert.Equal(1, generatedMigration.Resources.Count);
+            Assert.Equal("Target", generatedMigration.Resources["Target"]);
 
             Assert.Equal(
                 @"Imports System

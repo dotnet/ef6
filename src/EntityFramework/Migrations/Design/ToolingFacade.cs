@@ -173,10 +173,10 @@
         public void Update(string targetMigration, bool force)
         {
             var runner = new UpdateRunner
-                             {
-                                 TargetMigration = targetMigration,
-                                 Force = force
-                             };
+                {
+                    TargetMigration = targetMigration,
+                    Force = force
+                };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -199,11 +199,11 @@
         {
             var runner
                 = new ScriptUpdateRunner
-                      {
-                          SourceMigration = sourceMigration,
-                          TargetMigration = targetMigration,
-                          Force = force
-                      };
+                    {
+                        SourceMigration = sourceMigration,
+                        TargetMigration = targetMigration,
+                        Force = force
+                    };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -224,17 +224,17 @@
         {
             var runner
                 = new ScaffoldRunner
-                      {
-                          MigrationName = migrationName,
-                          Language = language,
-                          RootNamespace = rootNamespace,
-                          IgnoreChanges = ignoreChanges
-                      };
+                    {
+                        MigrationName = migrationName,
+                        Language = language,
+                        RootNamespace = rootNamespace,
+                        IgnoreChanges = ignoreChanges
+                    };
             ConfigureRunner(runner);
 
             Run(runner);
 
-            return HydrateScaffoldedMigration();
+            return (ScaffoldedMigration)_appDomain.GetData("result");
         }
 
         /// <summary>
@@ -247,33 +247,16 @@
         {
             var runner
                 = new InitialCreateScaffoldRunner
-                      {
-                          Language = language,
-                          RootNamespace = rootNamespace
-                      };
+                    {
+                        Language = language,
+                        RootNamespace = rootNamespace
+                    };
 
             ConfigureRunner(runner);
 
             Run(runner);
 
-            return HydrateScaffoldedMigration();
-        }
-
-        private ScaffoldedMigration HydrateScaffoldedMigration()
-        {
-            if ((bool)_appDomain.GetData("result.IsNull"))
-            {
-                return null;
-            }
-
-            return new ScaffoldedMigration
-                       {
-                           DesignerCode = (string)_appDomain.GetData("result.DesignerCode"),
-                           Language = (string)_appDomain.GetData("result.Language"),
-                           MigrationId = (string)_appDomain.GetData("result.MigrationId"),
-                           UserCode = (string)_appDomain.GetData("result.UserCode"),
-                           Directory = (string)_appDomain.GetData("result.Folder")
-                       };
+            return (ScaffoldedMigration)_appDomain.GetData("result");
         }
 
         /// <inheritdoc />
@@ -658,22 +641,7 @@
 
                 var scaffoldedMigration = Scaffold(scaffolder);
 
-                // UNDONE: Not sure why this won't just serialize straight across
-                // AppDomain.CurrentDomain.SetData("result", scaffoldedMigration);
-
-                if (scaffoldedMigration == null)
-                {
-                    AppDomain.CurrentDomain.SetData("result.IsNull", true);
-                }
-                else
-                {
-                    AppDomain.CurrentDomain.SetData("result.IsNull", false);
-                    AppDomain.CurrentDomain.SetData("result.DesignerCode", scaffoldedMigration.DesignerCode);
-                    AppDomain.CurrentDomain.SetData("result.Language", scaffoldedMigration.Language);
-                    AppDomain.CurrentDomain.SetData("result.MigrationId", scaffoldedMigration.MigrationId);
-                    AppDomain.CurrentDomain.SetData("result.UserCode", scaffoldedMigration.UserCode);
-                    AppDomain.CurrentDomain.SetData("result.Folder", scaffoldedMigration.Directory);
-                }
+                AppDomain.CurrentDomain.SetData("result", scaffoldedMigration);
             }
 
             protected virtual ScaffoldedMigration Scaffold(MigrationScaffolder scaffolder)

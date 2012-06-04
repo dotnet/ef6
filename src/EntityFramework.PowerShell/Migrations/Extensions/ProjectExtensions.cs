@@ -107,8 +107,8 @@
             Contract.Requires(project != null);
 
             return project.GetProjectTypes().Any(
-                g => g.EqualsIgnoreCase(WebApplicationProjectTypeGuid)
-                     || g.EqualsIgnoreCase(WebSiteProjectTypeGuid));
+                    g => g.EqualsIgnoreCase(WebApplicationProjectTypeGuid)
+                        || g.EqualsIgnoreCase(WebSiteProjectTypeGuid));
         }
 
         public static bool IsWebSiteProject(this Project project)
@@ -118,14 +118,12 @@
             return project.GetProjectTypes().Any(g => g.EqualsIgnoreCase(WebSiteProjectTypeGuid));
         }
 
-        public static void AddFile(this Project project, string path, string contents)
+        public static void EditFile(this Project project, string path)
         {
             Contract.Requires(project != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(path));
             Contract.Requires(!Path.IsPathRooted(path));
 
-            var directory = Path.GetDirectoryName(path);
-            var fileName = Path.GetFileName(path);
             var absolutePath = Path.Combine(project.GetProjectDir(), path);
             var dte = project.DTE;
 
@@ -135,9 +133,32 @@
             {
                 dte.SourceControl.CheckOutItem(absolutePath);
             }
+        }
 
+        public static void AddFile(this Project project, string path, string contents)
+        {
+            Contract.Requires(project != null);
+            Contract.Requires(!string.IsNullOrWhiteSpace(path));
+            Contract.Requires(!Path.IsPathRooted(path));
+
+            var absolutePath = Path.Combine(project.GetProjectDir(), path);
+
+            project.EditFile(path);
             Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
             File.WriteAllText(absolutePath, contents);
+
+            project.AddFile(path);
+        }
+
+        public static void AddFile(this Project project, string path)
+        {
+            Contract.Requires(project != null);
+            Contract.Requires(!string.IsNullOrWhiteSpace(path));
+            Contract.Requires(!Path.IsPathRooted(path));
+
+            var directory = Path.GetDirectoryName(path);
+            var fileName = Path.GetFileName(path);
+            var absolutePath = Path.Combine(project.GetProjectDir(), path);
 
             var projectItems
                 = directory
@@ -145,24 +166,24 @@
                     .Aggregate(
                         project.ProjectItems,
                         (pi, dir) =>
+                        {
+                            Contract.Assert(pi != null);
+                            Contract.Assert(pi.Kind == VsProjectItemKindPhysicalFolder);
+
+                            try
                             {
-                                Contract.Assert(pi != null);
-                                Contract.Assert(pi.Kind == VsProjectItemKindPhysicalFolder);
+                                var subDir = pi.Item(dir);
+                                return subDir.ProjectItems;
+                            }
+                            catch
+                            {
+                            }
 
-                                try
-                                {
-                                    var subDir = pi.Item(dir);
-                                    return subDir.ProjectItems;
-                                }
-                                catch
-                                {
-                                }
+                            var projectDir = ((Project)pi.Parent).GetProjectDir();
+                            var absoluteDir = Path.Combine(projectDir, dir);
 
-                                var projectDir = ((Project)pi.Parent).GetProjectDir();
-                                var absoluteDir = Path.Combine(projectDir, dir);
-
-                                return pi.AddFromDirectory(absoluteDir).ProjectItems;
-                            });
+                            return pi.AddFromDirectory(absoluteDir).ProjectItems;
+                        });
 
             try
             {

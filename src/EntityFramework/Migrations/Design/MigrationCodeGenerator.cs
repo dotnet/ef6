@@ -69,6 +69,7 @@ namespace System.Data.Entity.Migrations.Design
             if (designer)
             {
                 namespaces.Add("System.Data.Entity.Migrations.Infrastructure");
+                namespaces.Add("System.Resources");
             }
             else
             {

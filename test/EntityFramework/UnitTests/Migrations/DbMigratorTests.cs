@@ -684,7 +684,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(
                 generatedMigration.DesignerCode
-                    .Contains("IMigrationMetadata.Source\r\n        {\r\n            get { return \""));
+                    .Contains("IMigrationMetadata.Source\r\n        {\r\n            get { return R"));
         }
 
         [MigrationsTheory]
