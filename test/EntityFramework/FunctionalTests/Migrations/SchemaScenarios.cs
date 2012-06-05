@@ -4,10 +4,9 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using Xunit;
 
-    //[Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    // TODO: SDE Merge - No CE Provider
-    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
-    //[Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
+    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SchemaScenarios : DbTestCase
     {
         private class CustomSchemaContext : ShopContext_v1
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        //[MigrationsTheory]
+        [MigrationsTheory]
         public void Can_update_when_custom_default_schema()
         {
             DropDatabase();
@@ -34,7 +33,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("foo." + HistoryContext.TableName));
         }
 
-        //[MigrationsTheory]
+        [MigrationsTheory]
         public void Can_generate_and_update_when_custom_default_schema()
         {
             DropDatabase();
