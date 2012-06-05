@@ -590,6 +590,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name or namespaceName arguments passed in are null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "GetType")]
         public virtual EdmType GetType(string name, string namespaceName, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);
@@ -625,6 +626,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name or namespaceName arguments passed in are null</exception>
         /// <exception cref="System.ArgumentException">If the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "GetType")]
         public virtual EdmType GetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, true);

@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
@@ -44,6 +45,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="parameterName">The name of the parameter</param>
         /// <param name="dbType">The type of the parameter</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType)
         {
             SetParameterNameWithValidation(parameterName, "parameterName");
@@ -57,6 +59,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="parameterName">The name of the parameter</param>
         /// <param name="dbType">The type of the parameter</param>
         /// <param name="size">The size of the parameter</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size)
         {
             SetParameterNameWithValidation(parameterName, "parameterName");
@@ -72,6 +75,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="dbType">The type of the parameter</param>
         /// <param name="size">The size of the parameter</param>
         /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size, string sourceColumn)
         {
             SetParameterNameWithValidation(parameterName, "parameterName");
@@ -94,6 +98,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
         /// <param name="sourceVersion">The data row version to use when loading the parameter value</param>
         /// <param name="value">The value of the parameter</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(
             string parameterName,
             DbType dbType,

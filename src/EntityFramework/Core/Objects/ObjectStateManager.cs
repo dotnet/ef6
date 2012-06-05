@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Objects
     {
         // This is the initial capacity used for lists of entries.  We use this rather than the default because
         // perf testing showed we were almost always increasing the capacity which can be quite a slow operation.
-        private const int _initialListSize = 16;
+        private const int InitialListSize = 16;
 
         // dictionaries (one for each entity state) that store cache entries that represent entities
         // these are only non-null when there is an entity in respective state, must always check for null before using
@@ -1081,7 +1081,7 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(
                 mergeOption == MergeOption.PreserveChanges || mergeOption == MergeOption.OverwriteChanges, "Unexpected MergeOption");
             // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-            var deletedRelationships = new List<RelationshipEntry>(_initialListSize);
+            var deletedRelationships = new List<RelationshipEntry>(InitialListSize);
 
             // This entity has no related entities on the server for the given associationset and role. If it has related
             // entities on the client, we may need to update those relationships, depending on the MergeOption
@@ -1171,7 +1171,7 @@ namespace System.Data.Entity.Core.Objects
                         if (entriesToUpdate == null)
                         {
                             // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                            entriesToUpdate = new List<RelationshipEntry>(_initialListSize);
+                            entriesToUpdate = new List<RelationshipEntry>(InitialListSize);
                         }
                         entriesToUpdate.Add(relationshipEntry);
                     }
@@ -1205,7 +1205,7 @@ namespace System.Data.Entity.Core.Objects
                                         if (entriesToDetach == null)
                                         {
                                             // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                                            entriesToDetach = new List<RelationshipEntry>(_initialListSize);
+                                            entriesToDetach = new List<RelationshipEntry>(InitialListSize);
                                         }
                                         entriesToDetach.Add(relationshipEntry);
                                         break;
@@ -1219,7 +1219,7 @@ namespace System.Data.Entity.Core.Objects
                                                 if (entriesToDetach == null)
                                                 {
                                                     // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                                                    entriesToDetach = new List<RelationshipEntry>(_initialListSize);
+                                                    entriesToDetach = new List<RelationshipEntry>(InitialListSize);
                                                 }
                                                 entriesToDetach.Add(relationshipEntry);
                                                 break;
@@ -1228,7 +1228,7 @@ namespace System.Data.Entity.Core.Objects
                                                 if (entriesToDetach == null)
                                                 {
                                                     // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                                                    entriesToDetach = new List<RelationshipEntry>(_initialListSize);
+                                                    entriesToDetach = new List<RelationshipEntry>(InitialListSize);
                                                 }
                                                 entriesToDetach.Add(relationshipEntry);
                                                 break;

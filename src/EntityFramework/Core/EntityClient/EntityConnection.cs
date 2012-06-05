@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="connectionString">The connection string, may contain a list of settings for the connection or
         /// just the name of the connection to use</param>
-        [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors"), ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
         //For ChangeConnectionString method call. But the paths are not created in this method.        
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",

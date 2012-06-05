@@ -70,8 +70,7 @@
         ///     Gets or sets the database initialization strategy.  The database initialization strategy is called when <see cref = "DbContext" /> instance
         ///     is initialized from a <see cref = "DbCompiledModel" />.  The strategy can optionally check for database existence, create a new database, and
         ///     seed the database with data.
-        ///     The default strategy is an instance of <see cref = "DropCreateDatabaseIfModelChanges{TContext}" /> created with useSeedData set
-        ///     to true.
+        ///     The default strategy is an instance of <see cref = "CreateDatabaseIfNotExists{TContext}" />.
         /// </summary>
         /// <typeparam name = "TContext">The type of the context.</typeparam>
         /// <param name = "strategy">The strategy.</param>
