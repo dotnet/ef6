@@ -63,13 +63,13 @@
 
             private void VerifyGetter<TProperty>(
                 Func<EntityCommand, TProperty> getterFunc,
-                Expression<Func<InternalEntityCommand, TProperty>> mockGetterFunc)
+                Expression<Func<EntityCommand, TProperty>> mockGetterFunc)
             {
                 Assert.NotNull(getterFunc);
                 Assert.NotNull(mockGetterFunc);
 
-                var internalCommandMock = new Mock<InternalEntityCommand>(null);
-                var command = new EntityCommand(internalCommandMock.Object);
+                var internalCommandMock = new Mock<EntityCommand>();
+                var command = internalCommandMock.Object;
 
                 getterFunc(command);
                 internalCommandMock.VerifyGet(mockGetterFunc, Times.Once());
@@ -77,13 +77,13 @@
 
             private void VerifySetter<TProperty>(
                 Func<EntityCommand, TProperty> setter,
-                Action<InternalEntityCommand> mockSetter)
+                Action<EntityCommand> mockSetter)
             {
                 Assert.NotNull(setter);
                 Assert.NotNull(mockSetter);
 
-                var internalCommandMock = new Mock<InternalEntityCommand>(null);
-                var command = new EntityCommand(internalCommandMock.Object);
+                var internalCommandMock = new Mock<EntityCommand>();
+                var command = internalCommandMock.Object;
 
                 setter(command);
                 internalCommandMock.VerifySet(m => mockSetter(m), Times.Once());
@@ -91,13 +91,13 @@
 
             private void VerifyMethod(
                 Action<EntityCommand> methodInvoke,
-                Expression<Action<InternalEntityCommand>> mockMethodInvoke)
+                Expression<Action<EntityCommand>> mockMethodInvoke)
             {
                 Assert.NotNull(methodInvoke);
                 Assert.NotNull(mockMethodInvoke);
 
-                var internalCommandMock = new Mock<InternalEntityCommand>(null);
-                var command = new EntityCommand(internalCommandMock.Object);
+                var internalCommandMock = new Mock<EntityCommand>();
+                var command = internalCommandMock.Object;
 
                 methodInvoke(command);
                 internalCommandMock.Verify(mockMethodInvoke, Times.Once());
@@ -109,18 +109,18 @@
             [Fact]
             public void Parameterless_ExecuteReader_calls_overload_with_CommandBehavior_Default()
             {
-                var internalEntityCommandMock = new Mock<InternalEntityCommand>(null);
-                var entityCommand = new EntityCommand(internalEntityCommandMock.Object);
+                var entityCommandMock = new Mock<EntityCommand> { CallBase = true };
+                entityCommandMock.Setup(m => m.ExecuteReader(It.IsAny<CommandBehavior>()));
+                var entityCommand = entityCommandMock.Object;
                 entityCommand.ExecuteReader();
 
-                internalEntityCommandMock.Verify(m => m.ExecuteReader(CommandBehavior.Default), Times.Once());
+                entityCommandMock.Verify(m => m.ExecuteReader(CommandBehavior.Default), Times.Once());
             }
 
             [Fact]
             public void Exception_thrown_if_EntityConnection_is_not_set()
             {
-                var internalEntityCommand = new InternalEntityCommand(string.Empty, default(EntityConnection));
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(string.Empty, default(EntityConnection));
                 
                 Assert.Equal(
                     Strings.EntityClient_NoConnectionForCommand, 
@@ -130,12 +130,11 @@
             [Fact]
             public void Exception_thrown_if_EntityConnection_StoreProviderFactory_is_not_set()
             {
-                var internalEntityConnectionMock = new Mock<InternalEntityConnection>();
-                internalEntityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(default(DbProviderFactory));
-                var entityConnection = new EntityConnection(internalEntityConnectionMock.Object);
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(default(DbProviderFactory));
+                var entityConnection = entityConnectionMock.Object;
 
-                var internalEntityCommand = new InternalEntityCommand(string.Empty, entityConnection);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(string.Empty, entityConnection);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionStringNeededBeforeOperation,
@@ -146,13 +145,12 @@
             public void Exception_thrown_if_EntityConnection_StoreConnection_is_not_set()
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-                var internalEntityConnectionMock = new Mock<InternalEntityConnection>();
-                internalEntityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
-                internalEntityConnectionMock.SetupGet(m => m.StoreConnection).Returns(default(DbConnection));
-                var entityConnection = new EntityConnection(internalEntityConnectionMock.Object);
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(default(DbConnection));
+                var entityConnection = entityConnectionMock.Object;
 
-                var internalEntityCommand = new InternalEntityCommand(string.Empty, entityConnection);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(string.Empty, entityConnection);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionStringNeededBeforeOperation,
@@ -164,14 +162,13 @@
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
                 var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
-                var internalEntityConnectionMock = new Mock<InternalEntityConnection>();
-                internalEntityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
-                internalEntityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
-                internalEntityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Closed);
-                var entityConnection = new EntityConnection(internalEntityConnectionMock.Object);
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
+                entityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Closed);
+                var entityConnection = entityConnectionMock.Object;
 
-                var internalEntityCommand = new InternalEntityCommand(string.Empty, entityConnection);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(string.Empty, entityConnection);
 
                 Assert.Equal(
                     Strings.EntityClient_ExecutingOnClosedConnection(Strings.EntityClient_ConnectionStateClosed),
@@ -183,14 +180,13 @@
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
                 var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
-                var internalEntityConnectionMock = new Mock<InternalEntityConnection>();
-                internalEntityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
-                internalEntityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
-                internalEntityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Broken);
-                var entityConnection = new EntityConnection(internalEntityConnectionMock.Object);
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
+                entityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Broken);
+                var entityConnection = entityConnectionMock.Object;
 
-                var internalEntityCommand = new InternalEntityCommand(string.Empty, entityConnection);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(string.Empty, entityConnection);
 
                 Assert.Equal(
                     Strings.EntityClient_ExecutingOnClosedConnection(Strings.EntityClient_ConnectionStateBroken),
@@ -215,8 +211,7 @@
                             passedCommandbehavior = cb;
                         });
 
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinitionMock.Object);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinitionMock.Object);
 
                 var commandBehavior = CommandBehavior.SequentialAccess;
                 entityCommand.ExecuteReader(commandBehavior);
@@ -244,10 +239,9 @@
                         passedCommandbehavior = cb;
                     });
 
-                var entityDataReaderFactoryMock = new Mock<System.Data.Entity.Core.EntityClient.Internal.InternalEntityCommand.EntityDataReaderFactory>();
+                var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
 
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinitionMock.Object, entityDataReaderFactoryMock.Object);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinitionMock.Object, entityDataReaderFactoryMock.Object);
                 var commandBehavior = CommandBehavior.SequentialAccess;
 
                 var entityDataReader = new EntityDataReader(entityCommand, storeDataReader, commandBehavior);
@@ -270,12 +264,11 @@
                 var entityCommandDefinition = InitializeEntityCommandDefinition();
 
                 var entityDataReaderMock = new Mock<EntityDataReader>();
-                var entityDataReaderFactoryMock = new Mock<System.Data.Entity.Core.EntityClient.Internal.InternalEntityCommand.EntityDataReaderFactory>();
+                var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
                 entityDataReaderFactoryMock.Setup(m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
                 entityCommand.ExecuteNonQuery();
             }
 
@@ -290,12 +283,11 @@
                 var entityDataReaderMock = new Mock<EntityDataReader>();
                 entityDataReaderMock.Setup(m => m.NextResult()).Callback(() => readNextCount++).Returns(() => readNextCount < 5);
 
-                var entityDataReaderFactoryMock = new Mock<System.Data.Entity.Core.EntityClient.Internal.InternalEntityCommand.EntityDataReaderFactory>();
+                var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
                 entityDataReaderFactoryMock.Setup(m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
                 entityCommand.ExecuteNonQuery();
 
                 entityDataReaderMock.Verify(m => m.NextResult(), Times.Exactly(5));
@@ -313,12 +305,11 @@
                 entityDataReaderMock.Setup(m => m.NextResult()).Callback(() => readNextCount++).Returns(() => readNextCount < 5);
                 entityDataReaderMock.SetupGet(m => m.RecordsAffected).Returns(10);
 
-                var entityDataReaderFactoryMock = new Mock<System.Data.Entity.Core.EntityClient.Internal.InternalEntityCommand.EntityDataReaderFactory>();
+                var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
                 entityDataReaderFactoryMock.Setup(m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var internalEntityCommand = new InternalEntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
-                var entityCommand = new EntityCommand(internalEntityCommand);
+                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
                 var result = entityCommand.ExecuteNonQuery();
 
                 Assert.Equal(10, result);
@@ -330,11 +321,11 @@
             var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
             var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
 
-            var internalEntityConnectionMock = new Mock<InternalEntityConnection>();
-            internalEntityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
-            internalEntityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
-            internalEntityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
-            var entityConnection = new EntityConnection(internalEntityConnectionMock.Object);
+            var entityConnectionMock = new Mock<EntityConnection>();
+            entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
+            entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
+            entityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
+            var entityConnection = entityConnectionMock.Object;
 
             return entityConnection;
         }

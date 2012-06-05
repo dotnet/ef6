@@ -4,7 +4,6 @@
     using System.Collections.ObjectModel;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
@@ -26,7 +25,7 @@
                 int timeout = 43;
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(timeout);
-                var entityConnection = new EntityConnection(new Mock<InternalEntityConnection>().Object);
+                var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
 
                 var mockDbCommand = new Mock<DbCommand>();
@@ -87,7 +86,7 @@
 
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(() => null);
-                var entityConnection = new EntityConnection(new Mock<InternalEntityConnection>().Object);
+                var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
 
                 var mockDbCommand = new Mock<DbCommand>();
@@ -122,8 +121,8 @@
                     });
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
-                var mockInternalObjectStateManager = new Mock<InternalObjectStateManager>();
-                var mockObjectStateEntry = new Mock<ObjectStateEntry>(new ObjectStateManager(mockInternalObjectStateManager.Object), null, EntityState.Unchanged);
+                var mockObjectStateManager = new Mock<ObjectStateManager>();
+                var mockObjectStateEntry = new Mock<ObjectStateEntry>(mockObjectStateManager.Object, null, EntityState.Unchanged);
                 var mockCurrentValueRecord = new Mock<CurrentValueRecord>(mockObjectStateEntry.Object);
 
                 var idColumn = new KeyValuePair<string, PropagatorResult>("ID",

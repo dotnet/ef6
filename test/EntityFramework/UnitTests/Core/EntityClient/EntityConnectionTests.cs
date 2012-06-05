@@ -3,7 +3,6 @@
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Metadata.Internal;
     using System.Data.Entity.Resources;
     using System.Linq.Expressions;
     using System.Transactions;
@@ -39,44 +38,44 @@
 
             private void VerifyGetter<TProperty>(
                 Func<EntityConnection, TProperty> getterFunc,
-                Expression<Func<InternalEntityConnection, TProperty>> mockGetterFunc)
+                Expression<Func<EntityConnection, TProperty>> mockGetterFunc)
             {
                 Assert.NotNull(getterFunc);
                 Assert.NotNull(mockGetterFunc);
 
-                var internalConnectionMock = new Mock<InternalEntityConnection>(null, null, true);
-                var connection = new EntityConnection(internalConnectionMock.Object);
+                var connectionMock = new Mock<EntityConnection>(null, null, true);
+                var connection = connectionMock.Object;
 
                 getterFunc(connection);
-                internalConnectionMock.VerifyGet(mockGetterFunc, Times.Once());
+                connectionMock.VerifyGet(mockGetterFunc, Times.Once());
             }
 
             private void VerifySetter<TProperty>(
                 Func<EntityConnection, TProperty> setter,
-                Action<InternalEntityConnection> mockSetter)
+                Action<EntityConnection> mockSetter)
             {
                 Assert.NotNull(setter);
                 Assert.NotNull(mockSetter);
 
-                var internalConnectionMock = new Mock<InternalEntityConnection>(null, null, true);
-                var connection = new EntityConnection(internalConnectionMock.Object);
+                var connectionMock = new Mock<EntityConnection>(null, null, true);
+                var connection = connectionMock.Object;
 
                 setter(connection);
-                internalConnectionMock.VerifySet(m => mockSetter(m) , Times.Once());
+                connectionMock.VerifySet(m => mockSetter(m) , Times.Once());
             }
 
             private void VerifyMethod(
                 Action<EntityConnection> methodInvoke, 
-                Expression<Action<InternalEntityConnection>> mockMethodInvoke)
+                Expression<Action<EntityConnection>> mockMethodInvoke)
             {
                 Assert.NotNull(methodInvoke);
                 Assert.NotNull(mockMethodInvoke);
 
-                var internalConnectionMock = new Mock<InternalEntityConnection>(null, null, true);
-                var connection = new EntityConnection(internalConnectionMock.Object);
+                var connectionMock = new Mock<EntityConnection>(null, null, true);
+                var connection = connectionMock.Object;
 
                 methodInvoke(connection);
-                internalConnectionMock.Verify(mockMethodInvoke, Times.Once());
+                connectionMock.Verify(mockMethodInvoke, Times.Once());
             }
         }
 
@@ -85,10 +84,9 @@
             [Fact]
             public void Exception_is_thrown_if_dbConnection_is_null()
             {
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, null, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, null, true);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionStringNeededBeforeOperation, 
@@ -103,11 +101,10 @@
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 entityConnection.Open();
 
@@ -122,11 +119,10 @@
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 entityConnection.Open();
 
@@ -143,11 +139,10 @@
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
                 
                 entityConnection.Open();
 
@@ -160,11 +155,10 @@
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
 
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 entityConnection.Open();
 
@@ -181,11 +175,10 @@
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 Assert.Throws<InvalidOperationException>(() => entityConnection.Open());
 
@@ -201,11 +194,10 @@
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
 
-                var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-                internalMetadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
-                var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
-                var internalEntityConnection = new InternalEntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
-                var entityConnection = new EntityConnection(internalEntityConnection);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
+                var metadataWorkspace = (metadataWorkspaceMock.Object);
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 Assert.Throws<InvalidOperationException>(() => entityConnection.Open());
 

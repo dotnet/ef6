@@ -64,7 +64,7 @@
                                  throw dbException;
                              });
 
-            var objectStateManager = new ObjectStateManager(new Mock<InternalObjectStateManager>() { CallBase = true }.Object);
+            var objectStateManager = new Mock<ObjectStateManager> { CallBase = true }.Object;
             var mockObjectStateEntry = new Mock<ObjectStateEntry>(objectStateManager, /*entitySet:*/null, EntityState.Unchanged);
 
             mockUpdateCommand.Setup(m => m.GetStateEntries(It.IsAny<UpdateTranslator>()))
