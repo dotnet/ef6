@@ -18,7 +18,7 @@
             [Fact]
             private void Propagates_server_gen_values_and_returns_entities_affected()
             {
-                var updateTranslatorMock = new Mock<UpdateTranslator>()
+                var mockUpdateTranslator = new Mock<UpdateTranslator>()
                                                {
                                                    CallBase = true
                                                };
@@ -37,11 +37,11 @@
                             Assert.Same(generatedValue, o);
                         });
 
-                var updateCommandMock = new Mock<UpdateCommand>(
-                    updateTranslatorMock.Object,
+                var mockUpdateCommand = new Mock<UpdateCommand>(
+                    mockUpdateTranslator.Object,
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0));
-                updateCommandMock.Setup(
+                mockUpdateCommand.Setup(
                     m => m.Execute(It.IsAny<Dictionary<int, object>>(), It.IsAny<List<KeyValuePair<PropagatorResult, object>>>()))
                     .Returns(
                         (Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues) =>
@@ -51,10 +51,10 @@
                             return 1;
                         });
 
-                updateTranslatorMock.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
-                    new[] { updateCommandMock.Object });
+                mockUpdateTranslator.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
+                    new[] { mockUpdateCommand.Object });
 
-                var entitiesAffected = updateTranslatorMock.Object.Update();
+                var entitiesAffected = mockUpdateTranslator.Object.Update();
 
                 Assert.Equal(0, entitiesAffected);
                 Assert.Equal(1, serverGenValuesPropagatedCount);
@@ -63,18 +63,18 @@
             [Fact]
             public void Wraps_exceptions()
             {
-                var updateTranslatorMock = new Mock<UpdateTranslator>()
+                var mockUpdateTranslator = new Mock<UpdateTranslator>()
                                                {
                                                    CallBase = true
                                                };
 
                 var dbException = new Mock<DbException>("Exception message").Object;
 
-                var updateCommandMock = new Mock<UpdateCommand>(
-                    updateTranslatorMock.Object,
+                var mockUpdateCommand = new Mock<UpdateCommand>(
+                    mockUpdateTranslator.Object,
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0));
-                updateCommandMock.Setup(
+                mockUpdateCommand.Setup(
                     m => m.Execute(It.IsAny<Dictionary<int, object>>(), It.IsAny<List<KeyValuePair<PropagatorResult, object>>>()))
                     .Returns(
                         (Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues) =>
@@ -82,23 +82,24 @@
                             throw dbException;
                         });
 
-                var objectStateManager = new Mock<ObjectStateManager>()
+                var objectStateManager = new ObjectStateManager(
+                    new Mock<InternalObjectStateManager>()
                         {
                             CallBase = true
-                        }.Object;
-                var objectStateEntryMock = new Mock<ObjectStateEntry>(objectStateManager, /*entitySet:*/null, EntityState.Unchanged);
+                        }.Object);
+                var mockObjectStateEntry = new Mock<ObjectStateEntry>(objectStateManager, /*entitySet:*/null, EntityState.Unchanged);
 
-                updateCommandMock.Setup(m => m.GetStateEntries(It.IsAny<UpdateTranslator>()))
-                    .Returns(new[] { objectStateEntryMock.Object });
+                mockUpdateCommand.Setup(m => m.GetStateEntries(It.IsAny<UpdateTranslator>()))
+                    .Returns(new[] { mockObjectStateEntry.Object });
 
                 new List<KeyValuePair<PropagatorResult, object>>();
-                updateTranslatorMock.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
-                    new[] { updateCommandMock.Object });
+                mockUpdateTranslator.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
+                    new[] { mockUpdateCommand.Object });
 
-                var exception = Assert.Throws<UpdateException>(() => updateTranslatorMock.Object.Update());
+                var exception = Assert.Throws<UpdateException>(() => mockUpdateTranslator.Object.Update());
                 Assert.Equal(Strings.Update_GeneralExecutionException, exception.Message);
                 Assert.Same(dbException, exception.InnerException);
-                Assert.Same(objectStateEntryMock.Object, exception.StateEntries.Single());
+                Assert.Same(mockObjectStateEntry.Object, exception.StateEntries.Single());
             }
         }
 
@@ -107,7 +108,7 @@
             [Fact]
             private void Propagates_server_gen_values_and_returns_entities_affected()
             {
-                var updateTranslatorMock = new Mock<UpdateTranslator>()
+                var mockUpdateTranslator = new Mock<UpdateTranslator>()
                 {
                     CallBase = true
                 };
@@ -126,12 +127,12 @@
                             Assert.Same(generatedValue, o);
                         });
 
-                var updateCommandMock = new Mock<UpdateCommand>(
-                    updateTranslatorMock.Object,
+                var mockUpdateCommand = new Mock<UpdateCommand>(
+                    mockUpdateTranslator.Object,
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0));
 
-                updateCommandMock.Setup(
+                mockUpdateCommand.Setup(
                     m => m.ExecuteAsync(It.IsAny<Dictionary<int, object>>(),
                         It.IsAny<List<KeyValuePair<PropagatorResult, object>>>(),
                         It.IsAny<CancellationToken>()))
@@ -145,10 +146,10 @@
                             return Task.FromResult(1L);
                         });
 
-                updateTranslatorMock.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
-                    new[] { updateCommandMock.Object });
+                mockUpdateTranslator.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
+                    new[] { mockUpdateCommand.Object });
 
-                var entitiesAffected = updateTranslatorMock.Object.UpdateAsync(CancellationToken.None).Result;
+                var entitiesAffected = mockUpdateTranslator.Object.UpdateAsync(CancellationToken.None).Result;
 
                 Assert.Equal(0, entitiesAffected);
                 Assert.Equal(1, serverGenValuesPropagatedCount);
@@ -157,47 +158,48 @@
             [Fact]
             public void Wraps_exceptions()
             {
-                var updateTranslatorMock = new Mock<UpdateTranslator>()
+                var mockUpdateTranslator = new Mock<UpdateTranslator>()
                 {
                     CallBase = true
                 };
 
                 var dbException = new Mock<DbException>("Exception message").Object;
 
-                var updateCommandMock = new Mock<UpdateCommand>(
-                    updateTranslatorMock.Object,
+                var mockUpdateCommand = new Mock<UpdateCommand>(
+                    mockUpdateTranslator.Object,
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0));
-                updateCommandMock.Setup(
+                mockUpdateCommand.Setup(
                     m => m.ExecuteAsync(It.IsAny<Dictionary<int, object>>(),
                         It.IsAny<List<KeyValuePair<PropagatorResult, object>>>(),
                         It.IsAny<CancellationToken>()))
                     .Returns(
-                        (Dictionary<int, object> identifierValues,
+                        (Dictionary<int, object> identifierValues, 
                          List<KeyValuePair<PropagatorResult, object>> generatedValues,
                          CancellationToken cancellationToken) =>
                         {
                             throw dbException;
                         });
 
-                var objectStateManager = new Mock<ObjectStateManager>()
+                var objectStateManager = new ObjectStateManager(
+                    new Mock<InternalObjectStateManager>()
                     {
                         CallBase = true
-                    }.Object;
-                var objectStateEntryMock = new Mock<ObjectStateEntry>(objectStateManager, /*entitySet:*/null, EntityState.Unchanged);
+                    }.Object);
+                var mockObjectStateEntry = new Mock<ObjectStateEntry>(objectStateManager, /*entitySet:*/null, EntityState.Unchanged);
 
-                updateCommandMock.Setup(m => m.GetStateEntries(It.IsAny<UpdateTranslator>()))
-                    .Returns(new[] { objectStateEntryMock.Object });
+                mockUpdateCommand.Setup(m => m.GetStateEntries(It.IsAny<UpdateTranslator>()))
+                    .Returns(new[] { mockObjectStateEntry.Object });
 
                 new List<KeyValuePair<PropagatorResult, object>>();
-                updateTranslatorMock.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
-                    new[] { updateCommandMock.Object });
+                mockUpdateTranslator.Protected().Setup<IEnumerable<UpdateCommand>>("ProduceCommands").Returns(
+                    new[] { mockUpdateCommand.Object });
 
-                var exception = Assert.Throws<AggregateException>(() => updateTranslatorMock.Object.UpdateAsync(CancellationToken.None).Result);
+                var exception = Assert.Throws<AggregateException>(() => mockUpdateTranslator.Object.UpdateAsync(CancellationToken.None).Result);
                 Assert.IsType<UpdateException>(exception.InnerException);
                 Assert.Equal(Strings.Update_GeneralExecutionException, exception.InnerException.Message);
                 Assert.Same(dbException, exception.InnerException.InnerException);
-                Assert.Same(objectStateEntryMock.Object, ((UpdateException)exception.InnerException).StateEntries.Single());
+                Assert.Same(mockObjectStateEntry.Object, ((UpdateException)exception.InnerException).StateEntries.Single());
             }
         }
     }

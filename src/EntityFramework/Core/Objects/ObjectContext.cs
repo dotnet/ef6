@@ -2440,17 +2440,7 @@ namespace System.Data.Entity.Core.Objects
             // get data adapter
             if (_adapter == null)
             {
-                var serviceProvider = DbProviderFactories.GetFactory(connection) as IServiceProvider;
-                if (serviceProvider != null)
-                {
-                    _adapter = serviceProvider.GetService(typeof(IEntityAdapter)) as IEntityAdapter;
-                }
-
-
-                if (_adapter == null)
-                {
-                    throw new InvalidOperationException(Strings.ObjectContext_InvalidDataAdapter);
-                }
+                _adapter = (IEntityAdapter)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(IEntityAdapter));
             }
 
             // only accept changes after the local transaction commits

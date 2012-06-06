@@ -318,6 +318,7 @@
     <Compile Include="Core\Common\EntitySql\TypeResolver.cs" />
     <Compile Include="Core\Common\EntitySql\ValueExpression.cs" />
     <Compile Include="Core\Common\EntityUtil.cs" />
+    <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
@@ -425,11 +426,7 @@
     <Compile Include="Core\EntityClient\Internal\EntityProviderServices.cs" />
     <Compile Include="Core\EntityClient\Internal\IEntityAdapter.cs" />
     <Compile Include="Core\EntityClient\Internal\EntityAdapter.cs" />
-    <Compile Include="Core\EntityClient\Internal\InternalEntityCommand.cs" />
     <Compile Include="Core\EntityClient\Internal\EntityCommandDefinition.cs" />
-    <Compile Include="Core\EntityClient\Internal\InternalEntityConnection.cs" />
-    <Compile Include="Core\EntityClient\Internal\InternalEntityParameter.cs" />
-    <Compile Include="Core\EntityClient\Internal\InternalEntityTransaction.cs" />
     <Compile Include="Core\EntityClient\NameValuePair.cs" />
     <Compile Include="Core\EntityCommandCompilationException.cs" />
     <Compile Include="Core\EntityCommandExecutionException.cs" />
@@ -783,7 +780,6 @@
     <Compile Include="Core\Metadata\Edm\TypeUsage.cs" />
     <Compile Include="Core\Metadata\Edm\util.cs" />
     <Compile Include="Core\Metadata\Helper.cs" />
-    <Compile Include="Core\Metadata\Internal\InternalMetadataWorkspace.cs" />
     <Compile Include="Core\Metadata\MappingMetadataHelper.cs" />
     <Compile Include="Core\Metadata\MetadataArtifactAssemblyResolver.cs" />
     <Compile Include="Core\Metadata\MetadataArtifactLoader.cs" />
@@ -901,7 +897,6 @@
     <Compile Include="Core\Objects\Internal\IChangeTrackingStrategy.cs" />
     <Compile Include="Core\Objects\Internal\IEntityKeyStrategy.cs" />
     <Compile Include="Core\Objects\Internal\IEntityWrapper.cs" />
-    <Compile Include="Core\Objects\Internal\InternalObjectStateManager.cs" />
     <Compile Include="Core\Objects\Internal\IPOCOImplementor.cs" />
     <Compile Include="Core\Objects\Internal\IPropertyAccessorStrategy.cs" />
     <Compile Include="Core\Objects\Internal\LazyLoadBehavior.cs" />

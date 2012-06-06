@@ -23,7 +23,7 @@
                 int timeout = 43;
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(timeout);
-                var entityConnection = new EntityConnection(new Mock<InternalEntityConnection>().Object);
+                var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
 
                 var mockDbModificationCommandTree = new Mock<DbModificationCommandTree>();
@@ -73,7 +73,7 @@
 
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(() => null);
-                var entityConnection = new EntityConnection(new Mock<InternalEntityConnection>().Object);
+                var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
 
                 var mockDbModificationCommandTree = new Mock<DbModificationCommandTree>();
@@ -127,7 +127,7 @@
                 int timeout = 43;
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(timeout);
-                var entityConnection = new EntityConnection(new Mock<InternalEntityConnection>().Object);
+                var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
 
                 var mockDbModificationCommandTree = new Mock<DbModificationCommandTree>();
@@ -177,7 +177,7 @@
 
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(() => null);
-                var entityConnection = new EntityConnection(new Mock<InternalEntityConnection>().Object);
+                var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
 
                 var mockDbModificationCommandTree = new Mock<DbModificationCommandTree>();

@@ -2,9 +2,7 @@
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Metadata.Internal;
     using Moq;
 
     public class ObjectContextForMock : ObjectContext
@@ -25,15 +23,15 @@
         {
             var providerFactoryMock = new Mock<DbProviderFactoryForMock>() { CallBase = true };
 
-            var internalEntityConnectionMock = new Mock<InternalEntityConnection>();
-            internalEntityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactoryMock.Object);
-            internalEntityConnectionMock.SetupGet(m => m.StoreConnection).Returns(default(DbConnection));
-            var entityConnection = new EntityConnection(internalEntityConnectionMock.Object);
+            var entityConnectionMock = new Mock<EntityConnection>();
+            entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactoryMock.Object);
+            entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(default(DbConnection));
+            var entityConnection = entityConnectionMock.Object;
 
             var objectContextMock = new Mock<ObjectContextForMock>(entityConnection) { CallBase = true };
 
-            var internalMetadataWorkspaceMock = new Mock<InternalMetadataWorkspace>(MockBehavior.Strict);
-            var metadataWorkspace = new MetadataWorkspace(internalMetadataWorkspaceMock.Object);
+            var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+            var metadataWorkspace = metadataWorkspaceMock.Object;
 
             var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspace);
 

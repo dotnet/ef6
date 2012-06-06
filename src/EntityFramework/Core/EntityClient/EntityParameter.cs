@@ -2,23 +2,41 @@ namespace System.Data.Entity.Core.EntityClient
 {
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
 
     /// <summary>
     /// Class representing a parameter used in EntityCommand
     /// </summary>
-    public sealed class EntityParameter : DbParameter, IDbDataParameter
+    public class EntityParameter : DbParameter, IDbDataParameter
     {
-        private InternalEntityParameter _internalEntityParameter;
+        private string _parameterName;
+        private DbType? _dbType;
+        private EdmType _edmType;
+        private byte? _precision;
+        private byte? _scale;
+        private bool _isDirty;
+
+        private object _value;
+        private object _parent;
+        private ParameterDirection _direction;
+        private int? _size;
+        private string _sourceColumn;
+        private DataRowVersion _sourceVersion;
+        private bool _sourceColumnNullMapping;
+        private bool? _isNullable;
 
         /// <summary>
         /// Constructs the EntityParameter object
         /// </summary>
         public EntityParameter()
-            : this(new InternalEntityParameter())
         {
         }
 
@@ -27,9 +45,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="parameterName">The name of the parameter</param>
         /// <param name="dbType">The type of the parameter</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType)
-            : this(new InternalEntityParameter(parameterName, dbType))
         {
+            SetParameterNameWithValidation(parameterName, "parameterName");
+            DbType = dbType;
         }
 
         /// <summary>
@@ -39,9 +59,12 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="parameterName">The name of the parameter</param>
         /// <param name="dbType">The type of the parameter</param>
         /// <param name="size">The size of the parameter</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size)
-            : this(new InternalEntityParameter(parameterName, dbType, size))
         {
+            SetParameterNameWithValidation(parameterName, "parameterName");
+            DbType = dbType;
+            Size = size;
         }
 
         /// <summary>
@@ -52,9 +75,13 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="dbType">The type of the parameter</param>
         /// <param name="size">The size of the parameter</param>
         /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size, string sourceColumn)
-            : this(new InternalEntityParameter(parameterName, dbType, size, sourceColumn))
         {
+            SetParameterNameWithValidation(parameterName, "parameterName");
+            DbType = dbType;
+            Size = size;
+            SourceColumn = sourceColumn;
         }
 
         /// <summary>
@@ -71,6 +98,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
         /// <param name="sourceVersion">The data row version to use when loading the parameter value</param>
         /// <param name="value">The value of the parameter</param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(
             string parameterName,
             DbType dbType,
@@ -82,23 +110,31 @@ namespace System.Data.Entity.Core.EntityClient
             string sourceColumn,
             DataRowVersion sourceVersion,
             object value)
-            : this(new InternalEntityParameter(
-                parameterName,
-                dbType,
-                size,
-                direction,
-                isNullable,
-                precision,
-                scale,
-                sourceColumn,
-                sourceVersion,
-                value))
         {
+            SetParameterNameWithValidation(parameterName, "parameterName");
+            DbType = dbType;
+            Size = size;
+            Direction = direction;
+            IsNullable = isNullable;
+            Precision = precision;
+            Scale = scale;
+            SourceColumn = sourceColumn;
+            SourceVersion = sourceVersion;
+            Value = value;
         }
 
-        internal EntityParameter(InternalEntityParameter internalEntityParameter)
+        private EntityParameter(EntityParameter source)
+            : this()
         {
-            _internalEntityParameter = internalEntityParameter;
+            Contract.Requires(source != null);
+
+            source.CloneHelper(this);
+
+            var cloneable = (_value as ICloneable);
+            if (null != cloneable)
+            {
+                _value = cloneable.Clone();
+            }
         }
 
         /// <summary>
@@ -106,8 +142,28 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override string ParameterName
         {
-            get { return _internalEntityParameter.ParameterName; }
-            set { _internalEntityParameter.ParameterName = value; }
+            get { return _parameterName ?? ""; }
+            set { SetParameterNameWithValidation(value, "value"); }
+        }
+
+        /// <summary>
+        /// Helper method to validate the parameter name; Ideally we'd only call this once, but 
+        /// we have to put an argumentName on the Argument exception, and the property setter would
+        /// need "value" which confuses folks when they call the constructor that takes the value 
+        /// of the parameter.  c'est la vie.
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="argumentName"></param>
+        private void SetParameterNameWithValidation(string parameterName, string argumentName)
+        {
+            if (!string.IsNullOrEmpty(parameterName)
+                && !DbCommandTree.IsValidParameterName(parameterName))
+            {
+                throw new ArgumentException(Strings.EntityClient_InvalidParameterName(parameterName), argumentName);
+            }
+
+            PropertyChanging();
+            _parameterName = parameterName;
         }
 
         /// <summary>
@@ -115,8 +171,45 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override DbType DbType
         {
-            get { return _internalEntityParameter.DbType; }
-            set { _internalEntityParameter.DbType = value; }
+            get
+            {
+                // if the user has not set the dbType but has set the dbType, use the edmType to try to deduce a dbType
+                if (!_dbType.HasValue)
+                {
+                    if (_edmType != null)
+                    {
+                        return GetDbTypeFromEdm(_edmType);
+                    }
+                    else
+                    {
+                        // If the user has set neither the DbType nor the EdmType, 
+                        // then we attempt to deduce it from the value, but we won't set it in the
+                        // member field as that's used to keep track of what the user set explicitly
+                        // If we can't deduce the type because there are no values, we still have to return something, 
+                        // just assume it's string type
+                        if (_value == null)
+                        {
+                            return DbType.String;
+                        }
+
+                        try
+                        {
+                            return TypeHelpers.ConvertClrTypeToDbType(_value.GetType());
+                        }
+                        catch (ArgumentException e)
+                        {
+                            throw new InvalidOperationException(Strings.EntityClient_CannotDeduceDbType, e);
+                        }
+                    }
+                }
+
+                return (DbType)_dbType;
+            }
+            set
+            {
+                PropertyChanging();
+                _dbType = value;
+            }
         }
 
         /// <summary>
@@ -125,28 +218,54 @@ namespace System.Data.Entity.Core.EntityClient
         /// that the DbType contains all the type information.
         /// Non-null values must not contradict DbType (only restate or specialize).
         /// </summary>
-        public EdmType EdmType
+        public virtual EdmType EdmType
         {
-            get { return _internalEntityParameter.EdmType; }
-            set { _internalEntityParameter.EdmType = value; }
+            get { return _edmType; }
+            set
+            {
+                if (value != null
+                    && !Helper.IsScalarType(value))
+                {
+                    throw new InvalidOperationException(Strings.EntityClient_EntityParameterEdmTypeNotScalar(value.FullName));
+                }
+
+                PropertyChanging();
+                _edmType = value;
+            }
         }
 
         /// <summary>
         /// The precision of the parameter if the parameter is a floating point type
         /// </summary>
-        public byte Precision
+        public virtual byte Precision
         {
-            get { return _internalEntityParameter.Precision; }
-            set { _internalEntityParameter.Precision = value; }
+            get
+            {
+                var result = _precision.HasValue ? _precision.Value : (byte)0;
+                return result;
+            }
+            set
+            {
+                PropertyChanging();
+                _precision = value;
+            }
         }
 
         /// <summary>
         /// The scale of the parameter if the parameter is a floating point type
         /// </summary>
-        public byte Scale
+        public virtual byte Scale
         {
-            get { return _internalEntityParameter.Scale; }
-            set { _internalEntityParameter.Scale = value; }
+            get
+            {
+                var result = _scale.HasValue ? _scale.Value : (byte)0;
+                return result;
+            }
+            set
+            {
+                PropertyChanging();
+                _scale = value;
+            }
         }
 
         /// <summary>
@@ -154,64 +273,94 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override object Value
         {
-            get { return _internalEntityParameter.Value; }
-            set { _internalEntityParameter.Value = value; }
+            get { return _value; }
+            set
+            {
+                // If the user hasn't set the DbType, then we have to figure out if the DbType will change as a result
+                // of the change in the value.  What we want to achieve is that changes to the value will not cause
+                // it to be dirty, but changes to the value that causes the apparent DbType to change, then should be
+                // dirty.
+                if (!_dbType.HasValue
+                    && _edmType == null)
+                {
+                    // If the value is null, then we assume it's string type
+                    var oldDbType = DbType.String;
+                    if (_value != null)
+                    {
+                        oldDbType = TypeHelpers.ConvertClrTypeToDbType(_value.GetType());
+                    }
+
+                    // If the value is null, then we assume it's string type
+                    var newDbType = DbType.String;
+                    if (value != null)
+                    {
+                        newDbType = TypeHelpers.ConvertClrTypeToDbType(value.GetType());
+                    }
+
+                    if (oldDbType != newDbType)
+                    {
+                        PropertyChanging();
+                    }
+                }
+
+                _value = value;
+            }
         }
 
         /// <summary>
         /// Gets whether this collection has been changes since the last reset
         /// </summary>
-        internal bool IsDirty
+        internal virtual bool IsDirty
         {
-            get { return _internalEntityParameter.IsDirty; }
+            get { return _isDirty; }
         }
 
         /// <summary>
         /// Indicates whether the DbType property has been set by the user;
         /// </summary>
-        internal bool IsDbTypeSpecified
+        internal virtual bool IsDbTypeSpecified
         {
-            get { return _internalEntityParameter.IsDbTypeSpecified; }
+            get { return _dbType.HasValue; }
         }
 
         /// <summary>
         /// Indicates whether the Direction property has been set by the user;
         /// </summary>
-        internal bool IsDirectionSpecified
+        internal virtual bool IsDirectionSpecified
         {
-            get { return _internalEntityParameter.IsDirectionSpecified; }
+            get { return _direction != 0; }
         }
 
         /// <summary>
         /// Indicates whether the IsNullable property has been set by the user;
         /// </summary>
-        internal bool IsIsNullableSpecified
+        internal virtual bool IsIsNullableSpecified
         {
-            get { return _internalEntityParameter.IsIsNullableSpecified; }
+            get { return _isNullable.HasValue; }
         }
 
         /// <summary>
         /// Indicates whether the Precision property has been set by the user;
         /// </summary>
-        internal bool IsPrecisionSpecified
+        internal virtual bool IsPrecisionSpecified
         {
-            get { return _internalEntityParameter.IsPrecisionSpecified; }
+            get { return _precision.HasValue; }
         }
 
         /// <summary>
         /// Indicates whether the Scale property has been set by the user;
         /// </summary>
-        internal bool IsScaleSpecified
+        internal virtual bool IsScaleSpecified
         {
-            get { return _internalEntityParameter.IsScaleSpecified; }
+            get { return _scale.HasValue; }
         }
 
         /// <summary>
         /// Indicates whether the Size property has been set by the user;
         /// </summary>
-        internal bool IsSizeSpecified
+        internal virtual bool IsSizeSpecified
         {
-            get { return _internalEntityParameter.IsSizeSpecified; }
+            get { return _size.HasValue; }
         }
 
         [RefreshProperties(RefreshProperties.All)]
@@ -219,44 +368,125 @@ namespace System.Data.Entity.Core.EntityClient
         [EntityResDescription(EntityRes.DbParameter_Direction)]
         public override ParameterDirection Direction
         {
-            get { return _internalEntityParameter.Direction; }
-            set { _internalEntityParameter.Direction = value; }
+            get
+            {
+                var direction = _direction;
+                return ((0 != direction) ? direction : ParameterDirection.Input);
+            }
+            set
+            {
+                if (_direction != value)
+                {
+                    switch (value)
+                    {
+                        case ParameterDirection.Input:
+                        case ParameterDirection.Output:
+                        case ParameterDirection.InputOutput:
+                        case ParameterDirection.ReturnValue:
+                            PropertyChanging();
+                            _direction = value;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(
+                                typeof(ParameterDirection).Name,
+                                Strings.ADP_InvalidEnumerationValue(
+                                    typeof(ParameterDirection).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
+                    }
+                }
+            }
         }
 
         public override bool IsNullable
         {
-            get { return _internalEntityParameter.IsNullable; }
-            set { _internalEntityParameter.IsNullable = value; }
+            get
+            {
+                var result = _isNullable.HasValue ? _isNullable.Value : true;
+                return result;
+            }
+            set { _isNullable = value; }
         }
 
         [EntityResCategory(EntityRes.DataCategory_Data)]
         [EntityResDescription(EntityRes.DbParameter_Size)]
         public override int Size
         {
-            get { return _internalEntityParameter.Size; }
-            set { _internalEntityParameter.Size = value; }
+            get
+            {
+                var size = _size.HasValue ? _size.Value : 0;
+                if (0 == size)
+                {
+                    size = ValueSize(Value);
+                }
+
+                return size;
+            }
+            set
+            {
+                if (!_size.HasValue
+                    || _size.Value != value)
+                {
+                    if (value < -1)
+                    {
+                        throw new ArgumentException(Strings.ADP_InvalidSizeValue(value.ToString(CultureInfo.InvariantCulture)));
+                    }
+
+                    PropertyChanging();
+                    if (0 == value)
+                    {
+                        _size = null;
+                    }
+                    else
+                    {
+                        _size = value;
+                    }
+                }
+            }
         }
 
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceColumn)]
         public override string SourceColumn
         {
-            get { return _internalEntityParameter.SourceColumn; }
-            set { _internalEntityParameter.SourceColumn = value; }
+            get
+            {
+                var sourceColumn = _sourceColumn;
+                return ((null != sourceColumn) ? sourceColumn : string.Empty);
+            }
+            set { _sourceColumn = value; }
         }
 
         public override bool SourceColumnNullMapping
         {
-            get { return _internalEntityParameter.SourceColumnNullMapping; }
-            set { _internalEntityParameter.SourceColumnNullMapping = value; }
+            get { return _sourceColumnNullMapping; }
+            set { _sourceColumnNullMapping = value; }
         }
 
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceVersion)]
         public override DataRowVersion SourceVersion
         {
-            get { return _internalEntityParameter.SourceVersion; }
-            set { _internalEntityParameter.SourceVersion = value; }
+            get
+            {
+                var sourceVersion = _sourceVersion;
+                return ((0 != sourceVersion) ? sourceVersion : DataRowVersion.Current);
+            }
+            set
+            {
+                switch (value)
+                {
+                    case DataRowVersion.Original:
+                    case DataRowVersion.Current:
+                    case DataRowVersion.Proposed:
+                    case DataRowVersion.Default:
+                        _sourceVersion = value;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            typeof(DataRowVersion).Name,
+                            Strings.ADP_InvalidEnumerationValue(
+                                typeof(DataRowVersion).Name, ((int)value).ToString(CultureInfo.InvariantCulture)));
+                }
+            }
         }
 
         /// <summary>
@@ -264,19 +494,64 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override void ResetDbType()
         {
-            _internalEntityParameter.ResetDbType();
+            if (_dbType != null
+                || _edmType != null)
+            {
+                PropertyChanging();
+            }
+
+            _edmType = null;
+            _dbType = null;
+        }
+
+        /// <summary>
+        /// Marks that this parameter has been changed
+        /// </summary>
+        private void PropertyChanging()
+        {
+            _isDirty = true;
+        }
+
+        /// <summary>
+        /// Determines the size of the given object
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static int ValueSize(object value)
+        {
+            return ValueSizeCore(value);
         }
 
         /// <summary>
         /// Clones this parameter object
         /// </summary>
         /// <returns>The new cloned object</returns>
-        internal EntityParameter Clone()
+        internal virtual EntityParameter Clone()
         {
-            var clonedEntityParameter = new EntityParameter();
-            clonedEntityParameter._internalEntityParameter = _internalEntityParameter.Clone();
+            return new EntityParameter(this);
+        }
 
-            return clonedEntityParameter;
+        /// <summary>
+        /// Clones this parameter object
+        /// </summary>
+        /// <returns>The new cloned object</returns>
+        private void CloneHelper(EntityParameter destination)
+        {
+            destination._value = _value;
+
+            destination._direction = _direction;
+            destination._size = _size;
+
+            destination._sourceColumn = _sourceColumn;
+            destination._sourceVersion = _sourceVersion;
+            destination._sourceColumnNullMapping = _sourceColumnNullMapping;
+            destination._isNullable = _isNullable;
+
+            destination._parameterName = _parameterName;
+            destination._dbType = _dbType;
+            destination._edmType = _edmType;
+            destination._precision = _precision;
+            destination._scale = _scale;
         }
 
         /// <summary>
@@ -284,38 +559,164 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <returns>The type usage for this parameter</returns>
         /// <remarks>Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution</remarks>
-        internal TypeUsage GetTypeUsage()
+        internal virtual TypeUsage GetTypeUsage()
         {
-            return _internalEntityParameter.GetTypeUsage();
+            TypeUsage typeUsage;
+            if (!IsTypeConsistent)
+            {
+                throw new InvalidOperationException(
+                    Strings.EntityClient_EntityParameterInconsistentEdmType(
+                        _edmType.FullName, _parameterName));
+            }
+
+            if (_edmType != null)
+            {
+                typeUsage = TypeUsage.Create(_edmType);
+            }
+            else if (!DbTypeMap.TryGetModelTypeUsage(DbType, out typeUsage))
+            {
+                // Spatial types have only DbType 'Object', and cannot be represented in the static type map.
+                PrimitiveType primitiveParameterType;
+                if (DbType == DbType.Object &&
+                    Value != null &&
+                    ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType)
+                    &&
+                    Helper.IsSpatialType(primitiveParameterType))
+                {
+                    typeUsage = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveParameterType.PrimitiveTypeKind);
+                }
+                else
+                {
+                    throw new InvalidOperationException(Strings.EntityClient_UnsupportedDbType(DbType.ToString(), ParameterName));
+                }
+            }
+
+            Debug.Assert(typeUsage != null, "DbType.TryGetModelTypeUsage returned true for null TypeUsage?");
+            return typeUsage;
         }
 
         /// <summary>
         /// Reset the dirty flag on the collection
         /// </summary>
-        internal void ResetIsDirty()
+        internal virtual void ResetIsDirty()
         {
-            _internalEntityParameter.ResetIsDirty();
+            _isDirty = false;
         }
 
-        internal void CopyTo(DbParameter destination)
+        private bool IsTypeConsistent
+        {
+            get
+            {
+                if (_edmType != null
+                    && _dbType.HasValue)
+                {
+                    var dbType = GetDbTypeFromEdm(_edmType);
+                    if (dbType == DbType.String)
+                    {
+                        // would need facets to distinguish the various sorts of string, 
+                        // a generic string EdmType is consistent with any string DbType.
+                        return _dbType == DbType.String || _dbType == DbType.AnsiString
+                               || dbType == DbType.AnsiStringFixedLength || dbType == DbType.StringFixedLength;
+                    }
+                    else
+                    {
+                        return _dbType == dbType;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        private static DbType GetDbTypeFromEdm(EdmType edmType)
+        {
+            var primitiveType = Helper.AsPrimitive(edmType);
+            DbType dbType;
+            if (Helper.IsSpatialType(primitiveType))
+            {
+                return DbType.Object;
+            }
+            else if (DbCommandDefinition.TryGetDbTypeFromPrimitiveType(primitiveType, out dbType))
+            {
+                return dbType;
+            }
+
+            // we shouldn't ever get here.   Assert in a debug build, and pick a type.
+            Debug.Assert(false, "The provided edmType is of an unknown primitive type.");
+            return default(DbType);
+        }
+
+        private void ResetSize()
+        {
+            if (_size.HasValue)
+            {
+                PropertyChanging();
+                _size = null;
+            }
+        }
+
+        private bool ShouldSerializeSize()
+        {
+            return (_size.HasValue && _size.Value != 0);
+        }
+
+        internal virtual void CopyTo(DbParameter destination)
         {
             Contract.Requires(destination != null);
-            ((EntityParameter)destination)._internalEntityParameter.CopyTo(_internalEntityParameter);
+            CloneHelper((EntityParameter)destination);
         }
 
-        internal object CompareExchangeParent(object value, object comparand)
+        internal virtual object CompareExchangeParent(object value, object comparand)
         {
-            return _internalEntityParameter.CompareExchangeParent(value, comparand);
+            var parent = _parent;
+            if (comparand == parent)
+            {
+                _parent = value;
+            }
+
+            return parent;
         }
 
-        internal void ResetParent()
+        internal virtual void ResetParent()
         {
-            _internalEntityParameter.ResetParent();
+            _parent = null;
         }
 
         public override string ToString()
         {
-            return _internalEntityParameter.ToString();
+            return ParameterName;
+        }
+
+        private static int ValueSizeCore(object value)
+        {
+            if (!EntityUtil.IsNull(value))
+            {
+                var svalue = value as string;
+                if (null != svalue)
+                {
+                    return svalue.Length;
+                }
+
+                var bvalue = value as byte[];
+                if (null != bvalue)
+                {
+                    return bvalue.Length;
+                }
+
+                var cvalue = value as char[];
+                if (null != cvalue)
+                {
+                    return cvalue.Length;
+                }
+
+                if (value is byte
+                    || value is char)
+                {
+                    return 1;
+                }
+            }
+
+            return 0;
         }
     }
 }

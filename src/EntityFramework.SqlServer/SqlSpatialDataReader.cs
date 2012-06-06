@@ -2,9 +2,7 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
-#if INTERNALS_INVISIBLE
-    using System.Data.SqlClient;
-#endif
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlTypes;
     using System.Diagnostics;
     using System.IO;
@@ -12,20 +10,17 @@ namespace System.Data.Entity.SqlServer
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-#if !INTERNALS_INVISIBLE
-    using SqlDataReader = System.Data.Entity.SqlServer.Utilities.SqlDataReaderWrapper;
-#endif
 
     /// <summary>
     /// SqlClient specific implementation of <see cref="DbSpatialDataReader"/>
     /// </summary>
     internal sealed class SqlSpatialDataReader : DbSpatialDataReader
     {
-        private readonly SqlDataReader _reader;
+        private readonly SqlDataReaderWrapper _reader;
         private const string geometrySqlType = "sys.geometry";
         private const string geographySqlType = "sys.geography";
 
-        internal SqlSpatialDataReader(SqlDataReader underlyingReader)
+        internal SqlSpatialDataReader(SqlDataReaderWrapper underlyingReader)
         {
             _reader = underlyingReader;
         }
