@@ -624,6 +624,8 @@ END";
 
             var context = new PersistSecurityInfoContext(new SqlConnection(connectionStringBuilder.ToString()), true);
 
+            context.Database.Delete();
+
             context.Database.Initialize(true);
 
             context.Database.Delete();

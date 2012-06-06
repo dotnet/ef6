@@ -19,8 +19,6 @@
     /// </summary>
     internal abstract class Shaper
     {
-        #region constructor
-
         internal Shaper(DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption, int stateCount)
         {
             Debug.Assert(context == null || workspace == context.MetadataWorkspace, "workspace must match context's workspace");
@@ -34,19 +32,13 @@
             _spatialReader = new Lazy<DbSpatialDataReader>(CreateSpatialDataReader);
         }
 
-        #endregion
-
-        #region OnMaterialized storage
-
         /// <summary>
         /// Keeps track of the entities that have been materialized so that we can fire an OnMaterialized
         /// for them before returning control to the caller.
         /// </summary>
         private IList<IEntityWrapper> _materializedEntities;
 
-        #endregion
-
-        #region runtime callable/accessible code
+        #region Runtime callable/accessible code
 
         // Code in this section is called from the delegates produced by the Translator.  It   
         // may not show up if you search using Find All References...use Find in Files instead.
@@ -298,8 +290,8 @@
             }
             Debug.Assert(targetMember != null);
             Debug.Assert(
-                targetMember.RelationshipMultiplicity == RelationshipMultiplicity.One
-                || targetMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne);
+                targetMember.RelationshipMultiplicity == RelationshipMultiplicity.One ||
+                targetMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne);
 
             var sourceKey = wrappedEntity.EntityKey;
             var sourceMember = MetadataHelper.GetOtherAssociationEnd(targetMember);
@@ -324,7 +316,7 @@
                 if (
                     !ObjectStateManager.TryUpdateExistingRelationships(
                         Context, MergeOption, associationSet, sourceMember, sourceKey, wrappedEntity, targetMember, targetKey,
-                         /*setIsLoaded*/ true, out newEntryState))
+                    /*setIsLoaded*/ true, out newEntryState))
                 {
                     // Try to find a state entry for the target key
                     EntityEntry targetEntry = null;
@@ -352,8 +344,8 @@
                                 targetEntry.WrappedEntity,
                                 sourceMember,
                                 sourceKey,
-                                                       /*setIsLoaded*/ true,
-                                out newEntryState);
+                                setIsLoaded: true,
+                                newEntryState: out newEntryState);
 
                             // It is possible that as part of removing existing relationships, the key entry was deleted
                             // If that is the case, recreate the key entry
@@ -399,9 +391,9 @@
                                     MergeOption, wrappedEntity, sourceMember,
                                     targetEntry.WrappedEntity,
                                     targetMember,
-                                    /*setIsLoaded*/ true,
-                                    /*relationshipAlreadyExists*/ false,
-                                    /* inKeyEntryPromotion */ false);
+                                    setIsLoaded: true,
+                                    relationshipAlreadyExists: false,
+                                    inKeyEntryPromotion: false);
                             }
                             else
                             {
@@ -916,7 +908,7 @@
                     {
                         // NullReferenceException is thrown when casting null to a value type.
                         // We don't use isNullable here because of an issue with GetReaderMethod
-                        // CONSIDER(SteveSta):: is GetReaderMethod doing what it needs?
+                        // CONSIDER:: is GetReaderMethod doing what it needs?
                         throw CreateNullValueException();
                     }
                 }

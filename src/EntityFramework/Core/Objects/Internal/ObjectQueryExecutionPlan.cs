@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     /// <summary>
     /// Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see cref="ObjectQuery"/>
     /// </summary>
-    internal sealed class ObjectQueryExecutionPlan
+    internal class ObjectQueryExecutionPlan
     {
         internal readonly DbCommandDefinition CommandDefinition;
         internal readonly ShaperFactory ResultShaperFactory;
@@ -31,14 +31,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>If the query yields entities from a single entity set, the value is stored here.</summary>
         private readonly EntitySet _singleEntitySet;
 
-        private ObjectQueryExecutionPlan(
+        /// <summary>
+        /// For testing purposes only. For anything else call <see cref="Prepare"/>.
+        /// </summary>
+        protected ObjectQueryExecutionPlan(
             DbCommandDefinition commandDefinition, ShaperFactory resultShaperFactory, TypeUsage resultType, MergeOption mergeOption,
             EntitySet singleEntitySet, CompiledQueryParameters compiledQueryParameters)
         {
-            Debug.Assert(commandDefinition != null, "A command definition is required");
-            Debug.Assert(resultShaperFactory != null, "A result shaper factory is required");
-            Debug.Assert(resultType != null, "A result type is required");
-
             CommandDefinition = commandDefinition;
             ResultShaperFactory = resultShaperFactory;
             ResultType = resultType;
@@ -114,7 +113,6 @@ namespace System.Data.Entity.Core.Objects.Internal
                 context.MetadataWorkspace, spanInfo, mergeOption, false);
 
             // attempt to determine entity information for this query (e.g. which entity type and which entity set)
-            //EntityType rootEntityType = null;
 
             EntitySet singleEntitySet = null;
 
@@ -163,7 +161,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        internal ObjectResult<TResultType> Execute<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues)
+        internal virtual ObjectResult<TResultType> Execute<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues)
         {
             DbDataReader storeReader = null;
             try

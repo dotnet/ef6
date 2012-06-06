@@ -358,7 +358,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
             TypeUsage result;
 
-            // CONSIDER(SteveSta): optimize this by storing NULL in the TypeUsage list on RecordState for nested records?
+            // CONSIDER: optimize this by storing NULL in the TypeUsage list on RecordState for nested records?
             var recordState = _source.CurrentColumnValues[ordinal] as RecordState;
             if (null != recordState)
             {

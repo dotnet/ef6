@@ -1,6 +1,8 @@
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -9,9 +11,12 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     /// <summary>
@@ -20,13 +25,10 @@ namespace System.Data.Entity.Core.Objects
     ///   the Entity-SQL-based query builder methods declared by ObjectQuery.
     /// </summary>
     /// <typeparam name="T">The result type of this ObjectQuery</typeparam>
-    public partial class ObjectQuery<T> : IEnumerable<T>
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    public class ObjectQuery<T> : ObjectQuery, IEnumerable<T>, IOrderedQueryable<T>
     {
         #region Private Static Members
-
-        // -----------------
-        // Static Fields
-        // -----------------
 
         /// <summary>
         ///   The default query name, which is used in query-building to refer to an
@@ -40,16 +42,12 @@ namespace System.Data.Entity.Core.Objects
 
         private static bool IsLinqQuery(ObjectQuery query)
         {
-            return (query.QueryState is ELinqQueryState);
+            return query.QueryState is ELinqQueryState;
         }
 
         #endregion
 
-        #region Private Instance Members
-
-        // -------------------
-        // Private Fields
-        // -------------------
+        #region Private Instance Fields
 
         /// <summary>
         ///   The name of the current sequence, which defaults to "it". Used in query-
@@ -60,13 +58,7 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
-        #region Public Constructors
-
-        // -------------------
-        // Public Constructors
-        // -------------------
-
-        #region ObjectQuery (string, ObjectContext)
+        #region Constructors
 
         /// <summary>
         ///   This constructor creates a new ObjectQuery instance using the specified Entity-SQL
@@ -97,10 +89,6 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             context.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(T), Assembly.GetCallingAssembly());
         }
-
-        #endregion
-
-        #region ObjectQuery (string, ObjectContext, MergeOption)
 
         /// <summary>
         ///   This constructor creates a new ObjectQuery instance using the specified Entity-SQL
@@ -138,12 +126,6 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             context.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(T), Assembly.GetCallingAssembly());
         }
-
-        #endregion
-
-        #endregion
-
-        #region internal ObjectQuery (EntitySet, ObjectContext, MergeOption) constructor.
 
         /// <summary>
         ///   This method creates a new ObjectQuery instance that represents a scan over
@@ -193,6 +175,11 @@ namespace System.Data.Entity.Core.Objects
                 EntityUtil.QuoteIdentifier(entitySet.Name));
         }
 
+        internal ObjectQuery(ObjectQueryState queryState)
+            : base(queryState)
+        {
+        }
+
         #endregion
 
         #region Public Properties
@@ -221,6 +208,35 @@ namespace System.Data.Entity.Core.Objects
         }
 
         #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        ///   This method allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <returns>
+        ///   An enumerable for the ObjectQuery results.
+        /// </returns>
+        public new ObjectResult<T> Execute(MergeOption mergeOption)
+        {
+            EntityUtil.CheckArgumentMergeOption(mergeOption);
+            return GetResults(mergeOption);
+        }
+
+        /// <summary>
+        ///   Adds a path to the set of navigation property span paths included in the results of this query
+        /// </summary>
+        /// <param name="path">The new span path</param>
+        /// <returns>A new ObjectQuery that includes the specified span path</returns>
+        public ObjectQuery<T> Include(string path)
+        {
+            EntityUtil.CheckStringArgument(path, "path");
+            return new ObjectQuery<T>(QueryState.Include(this, path));
+        }
 
         #region Query-builder Methods
 
@@ -360,8 +376,7 @@ namespace System.Data.Entity.Core.Objects
             if (
                 !QueryState.ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.OSpace).TryGetType(
                     clrOfType.Name, clrOfType.Namespace ?? string.Empty, out ofType)
-                ||
-                !(Helper.IsEntityType(ofType) || Helper.IsComplexType(ofType)))
+                || !(Helper.IsEntityType(ofType) || Helper.IsComplexType(ofType)))
             {
                 var message = Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName);
                 throw new EntitySqlException(message);
@@ -626,6 +641,131 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Where(QueryState, Name, predicate, parameters));
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IEnumerable<T> implementation
+
+        /// <summary>
+        ///   These methods are the "executors" for the query. They can be called
+        ///   directly, or indirectly (by foreach'ing through the query, for example).
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            var disposableEnumerable = GetResults(null);
+            try
+            {
+                var result = disposableEnumerable.GetEnumerator();
+                return result;
+            }
+            catch
+            {
+                // if there is a problem creating the enumerator, we should dispose
+                // the enumerable (if there is no problem, the enumerator will take 
+                // care of the dispose)
+                disposableEnumerable.Dispose();
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region ObjectQuery Overrides
+
+        internal override IEnumerator GetEnumeratorInternal()
+        {
+            return ((IEnumerable<T>)this).GetEnumerator();
+        }
+
+        internal override IList GetIListSourceListInternal()
+        {
+            return ((IListSource)GetResults(null)).GetList();
+        }
+
+        internal override ObjectResult ExecuteInternal(MergeOption mergeOption)
+        {
+            return GetResults(mergeOption);
+        }
+
+        /// <summary>
+        /// Retrieves the LINQ expression that backs this ObjectQuery for external consumption.
+        /// It is important that the work to wrap the expression in an appropriate MergeAs call
+        /// takes place in this method and NOT in ObjectQueryState.TryGetExpression which allows
+        /// the unmodified expression (that does not include the MergeOption-preserving MergeAs call)
+        /// to be retrieved and processed by the ELinq ExpressionConverter.
+        /// </summary>
+        /// <returns>
+        ///   The LINQ expression for this ObjectQuery, wrapped in a MergeOption-preserving call
+        ///   to the MergeAs method if the ObjectQuery.MergeOption property has been set.
+        /// </returns>
+        internal override Expression GetExpression()
+        {
+            // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),
+            // then create a ConstantExpression that uses this ObjectQuery as its value.
+            Expression retExpr;
+            if (!QueryState.TryGetExpression(out retExpr))
+            {
+                retExpr = Expression.Constant(this);
+            }
+
+            var objectQueryType = typeof(ObjectQuery<T>);
+            if (QueryState.UserSpecifiedMergeOption.HasValue)
+            {
+                var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
+                Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
+                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
+                retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
+            }
+
+            if (null != QueryState.Span)
+            {
+                var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
+                Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
+                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
+                retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
+            }
+
+            return retExpr;
+        }
+
+        // Intended for use only in the MethodCallExpression produced for inline queries.
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
+        internal ObjectQuery<T> MergeAs(MergeOption mergeOption)
+        {
+            throw new InvalidOperationException(Strings.ELinq_MethodNotDirectlyCallable);
+        }
+
+        // Intended for use only in the MethodCallExpression produced for inline queries.
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "span")]
+        internal ObjectQuery<T> IncludeSpan(Span span)
+        {
+            throw new InvalidOperationException(Strings.ELinq_MethodNotDirectlyCallable);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private ObjectResult<T> GetResults(MergeOption? forMergeOption)
+        {
+            QueryState.ObjectContext.EnsureConnection();
+
+            try
+            {
+                var execPlan = QueryState.GetExecutionPlan(forMergeOption);
+                return execPlan.Execute<T>(QueryState.ObjectContext, QueryState.Parameters);
+            }
+            catch
+            {
+                QueryState.ObjectContext.ReleaseConnection();
+                throw;
+            }
         }
 
         #endregion

@@ -286,7 +286,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
                 // We defer to the store reader for rows affected count. Note that for queries,
                 // the provider is generally expected to return -1.
-                // FUTURE(CMeek):: when DML is supported, we will need to compute this value ourselves.
+                // FUTURE: when DML is supported, we will need to compute this value ourselves.
                 if (DataRecord.Depth == 0)
                 {
                     result = Shaper.Reader.RecordsAffected;

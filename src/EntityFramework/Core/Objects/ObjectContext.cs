@@ -3210,7 +3210,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption">Merge option to use for entity results.</param>
         /// <returns>The translated sequence of objects</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "cmeek: Generic parameters are required for strong-typing of the return type.")]
+            Justification = "Generic parameters are required for strong-typing of the return type.")]
         public virtual ObjectResult<TEntity> Translate<TEntity>(DbDataReader reader, string entitySetName, MergeOption mergeOption)
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");

@@ -10,11 +10,10 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// This class implements IEnumerable of T and IDisposable. Instance of this class
-    /// is returned from ObjectQuery&lt;T&gt;.Execute method.
+    /// This class represents the result of the <see cref="ObjectQuery{T}.Execute"/> method.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public sealed class ObjectResult<T> : ObjectResult, IEnumerable<T>
+    public class ObjectResult<T> : ObjectResult, IEnumerable<T>
     {
         private Shaper<T> _shaper;
         private DbDataReader _reader;
@@ -60,7 +59,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Returns an enumerator that iterates through the collection. 
         /// </summary>
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {
             EnsureCanEnumerateResults();
 
@@ -76,6 +75,11 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
         public override void Dispose()
         {
+            // Technically, calling GC.SuppressFinalize is not required because the class does not
+            // have a finalizer, but it does no harm, protects against the case where a finalizer is added
+            // in the future, and prevents an FxCop warning.
+            GC.SuppressFinalize(this);
+
             var reader = _reader;
             _reader = null;
             _nextResultGenerator = null;

@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    ///   An instance of a class derived from ObjectQueryState is used to model every instance of <see cref="ObjectQuery&lt;TResultType&gt;"/>.
+    ///   An instance of a class derived from ObjectQueryState is used to model every instance of <see cref="ObjectQuery{TResultType}"/>.
     ///   A different ObjectQueryState-derived class is used depending on whether the ObjectQuery is an Entity SQL, 
     ///   Linq to Entities, or compiled Linq to Entities query.
     /// </summary>
