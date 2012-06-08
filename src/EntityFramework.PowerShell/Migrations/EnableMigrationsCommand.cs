@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Migrations.Resources;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -16,90 +16,81 @@
         {
             Execute(
                 () =>
+                {
+                    var project = Project;
+
+                    var qualifiedContextTypeName = FindContextToEnable();
+                    var isVb = project.CodeModel.Language == CodeModelLanguageConstants.vsCMLanguageVB;
+                    var fileName = isVb ? "Configuration.vb" : "Configuration.cs";
+                    var template = LoadTemplate(fileName);
+
+                    var tokens = new Dictionary<string, string>();
+
+                    tokens["enableAutomaticMigrations"]
+                        = enableAutomaticMigrations
+                              ? (isVb ? "True" : "true")
+                              : (isVb ? "False" : "false");
+
+                    var rootNamespace = project.GetRootNamespace();
+                    tokens["rootnamespace"] = rootNamespace;
+
+                    if (string.IsNullOrWhiteSpace(qualifiedContextTypeName))
                     {
-                        var project = Project;
+                        tokens["contexttype"]
+                            = isVb
+                                  ? "[[type name]]"
+                                  : "/* TODO: put your Code First context type name here */";
 
-                        var qualifiedContextTypeName = FindContextToEnable();
-                        var isVb = project.CodeModel.Language == CodeModelLanguageConstants.vsCMLanguageVB;
-                        var fileName = isVb ? "Configuration.vb" : "Configuration.cs";
-                        var template = LoadTemplate(fileName);
-
-                        var tokens = new Dictionary<string, string>();
-
-                        tokens["enableAutomaticMigrations"]
-                            = enableAutomaticMigrations
-                                  ? (isVb ? "True" : "true")
-                                  : (isVb ? "False" : "false");
-
-                        var rootNamespace = project.GetRootNamespace();
-                        tokens["rootnamespace"] = rootNamespace;
-
-                        if (string.IsNullOrWhiteSpace(qualifiedContextTypeName))
+                        if (isVb)
                         {
-                            tokens["contexttype"]
-                                = isVb
-                                      ? "[[type name]]"
-                                      : "/* TODO: put your Code First context type name here */";
+                            tokens["contexttypecomment"]
+                                = "\r\n        'TODO: replace [[type name]] with your Code First context type name";
+                        }
+                    }
+                    else if (isVb && qualifiedContextTypeName.StartsWith(rootNamespace + "."))
+                    {
+                        tokens["contexttype"] =
+                            qualifiedContextTypeName.Substring(rootNamespace.Length + 1).Replace('+', '.');
+                    }
+                    else
+                    {
+                        tokens["contexttype"] = qualifiedContextTypeName.Replace('+', '.');
+                    }
 
-                            if (isVb)
+                    var path = Path.Combine("Migrations", fileName);
+                    var absolutePath = Path.Combine(project.GetProjectDir(), path);
+
+                    if (!force
+                        && File.Exists(absolutePath))
+                    {
+                        throw Error.MigrationsAlreadyEnabled(project.Name);
+                    }
+
+                    project.AddFile(path, new TemplateProcessor().Process(template, tokens));
+                    project.OpenFile(path);
+
+                    if (!enableAutomaticMigrations && StartUpProject.TryBuild()
+                        && project.TryBuild())
+                    {
+                        using (var facade = GetFacade())
+                        {
+                            WriteLine(Strings.EnableMigrations_BeginInitialScaffold);
+
+                            var scaffoldedMigration
+                                = facade.ScaffoldInitialCreate(project.GetLanguage(), project.GetRootNamespace());
+
+                            if (scaffoldedMigration != null)
                             {
-                                tokens["contexttypecomment"]
-                                    = "\r\n        'TODO: replace [[type name]] with your Code First context type name";
+                                new MigrationWriter(this).Write(scaffoldedMigration);
+
+                                WriteWarning(
+                                    Strings.EnableMigrations_InitialScaffold(scaffoldedMigration.MigrationId));
                             }
                         }
-                        else if (isVb && qualifiedContextTypeName.StartsWith(rootNamespace + "."))
-                        {
-                            tokens["contexttype"] =
-                                qualifiedContextTypeName.Substring(rootNamespace.Length + 1).Replace('+', '.');
-                        }
-                        else
-                        {
-                            tokens["contexttype"] = qualifiedContextTypeName.Replace('+', '.');
-                        }
+                    }
 
-                        var path = Path.Combine("Migrations", fileName);
-                        var absolutePath = Path.Combine(project.GetProjectDir(), path);
-
-                        if (!force
-                            && File.Exists(absolutePath))
-                        {
-                            throw Error.MigrationsAlreadyEnabled(project.Name);
-                        }
-
-                        project.AddFile(path, new TemplateProcessor().Process(template, tokens));
-                        project.OpenFile(path);
-
-                        if (!enableAutomaticMigrations && StartUpProject.TryBuild()
-                            && project.TryBuild())
-                        {
-                            using (var facade = GetFacade())
-                            {
-                                WriteLine(Strings.EnableMigrations_BeginInitialScaffold);
-
-                                var scaffoldedMigration
-                                    = facade.ScaffoldInitialCreate(project.GetLanguage(), project.GetRootNamespace());
-
-                                if (scaffoldedMigration != null)
-                                {
-                                    var userCodeFileName = scaffoldedMigration.MigrationId + "."
-                                                           + scaffoldedMigration.Language;
-                                    var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
-                                    var designerCodeFileName = scaffoldedMigration.MigrationId + ".Designer."
-                                                               + scaffoldedMigration.Language;
-                                    var designerCodePath = Path.Combine(
-                                        scaffoldedMigration.Directory, designerCodeFileName);
-
-                                    project.AddFile(userCodePath, scaffoldedMigration.UserCode);
-                                    project.AddFile(designerCodePath, scaffoldedMigration.DesignerCode);
-
-                                    WriteWarning(
-                                        Strings.EnableMigrations_InitialScaffold(scaffoldedMigration.MigrationId));
-                                }
-                            }
-                        }
-
-                        WriteLine(Strings.EnableMigrations_Success(project.Name));
-                    });
+                    WriteLine(Strings.EnableMigrations_Success(project.Name));
+                });
         }
 
         private string FindContextToEnable()
@@ -137,7 +128,7 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
-            var stream = GetType().Assembly.GetManifestResourceStream("System.Templates." + name);
+            var stream = GetType().Assembly.GetManifestResourceStream("System.Data.Entity.Templates." + name);
             Contract.Assert(stream != null);
 
             using (var reader = new StreamReader(stream, Encoding.UTF8))

@@ -65,6 +65,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -130,6 +131,7 @@
     <Compile Include="Migrations\Edm\ModelCompressorTests.cs" />
     <Compile Include="Internal\ConfigFile\ParameterCollectionTests.cs" />
     <Compile Include="Internal\ConfigFile\ParameterElementTests.cs" />
+    <Compile Include="Migrations\Utilities\MigrationWriterTests.cs" />
     <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
     <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
