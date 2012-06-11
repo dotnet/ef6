@@ -699,6 +699,21 @@ namespace FunctionalTests
         public TableSharing1A BackRef { get; set; }
     }
 
+    public class OneToOneResult
+    {
+        public int OneToOneResultId { get; set; }
+
+        [ForeignKey("OneToOneResultId")]
+        public virtual OneToOneResultDetail Detail { get; set; }
+    }
+
+    public class OneToOneResultDetail
+    {
+        [Key]
+        public int OneToOneResultId { get; set; }
+        public DateTime DataDate { get; set; }
+    }
+
     #endregion
 
     public sealed class AssociationScenarioTests : TestBase
@@ -3232,6 +3247,22 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        [Fact]
+        public void ForeignKey_annotation_is_allowed_for_one_to_one_PK_to_PK_mapping_Dev11_437725()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<OneToOneResult>()
+                .HasRequired(r => r.Detail)
+                .WithRequiredPrincipal();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<OneToOneResultDetail>().HasForeignKey(
+                new[] { "OneToOneResultId" }, "OneToOneResults");
         }
     }
 

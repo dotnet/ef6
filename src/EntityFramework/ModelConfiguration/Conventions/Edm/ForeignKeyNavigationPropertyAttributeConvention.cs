@@ -39,6 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 || associationType.IsPrincipalConfigured())
             {
                 dependentEnd = dependentEnd ?? associationType.TargetEnd;
+                principalEnd = principalEnd ?? associationType.SourceEnd;
 
                 var dependentPropertyNames
                     = foreignKeyAttribute.Name
