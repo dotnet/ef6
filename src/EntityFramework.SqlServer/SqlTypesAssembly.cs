@@ -17,7 +17,7 @@ namespace System.Data.Entity.SqlServer
     /// </summary>
     internal sealed class SqlTypesAssembly
     {
-        private static readonly ReadOnlyCollection<string> preferredSqlTypesAssemblies = new List<string>
+        private static readonly ReadOnlyCollection<string> _preferredSqlTypesAssemblies = new List<string>
                                                                                              {
                                                                                                  "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
                                                                                                  "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
@@ -26,7 +26,7 @@ namespace System.Data.Entity.SqlServer
         private static SqlTypesAssembly BindToLatest()
         {
             Assembly sqlTypesAssembly = null;
-            foreach (var assemblyFullName in preferredSqlTypesAssemblies)
+            foreach (var assemblyFullName in _preferredSqlTypesAssemblies)
             {
                 var asmName = new AssemblyName(assemblyFullName);
                 try
@@ -62,7 +62,7 @@ namespace System.Data.Entity.SqlServer
 
         private static bool IsKnownAssembly(Assembly assembly)
         {
-            foreach (var knownAssemblyFullName in preferredSqlTypesAssemblies)
+            foreach (var knownAssemblyFullName in _preferredSqlTypesAssemblies)
             {
                 if (AssemblyNamesMatch(assembly.FullName, new AssemblyName(knownAssemblyFullName)))
                 {
@@ -112,14 +112,14 @@ namespace System.Data.Entity.SqlServer
             return targetPublicKeyToken != null && targetPublicKeyToken.SequenceEqual(assemblyName.GetPublicKeyToken());
         }
 
-        private static readonly Lazy<SqlTypesAssembly> LatestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
+        private static readonly Lazy<SqlTypesAssembly> _latestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
 
         /// <summary>
         /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
         /// </summary>
         internal static SqlTypesAssembly Latest
         {
-            get { return LatestVersion.Value; }
+            get { return _latestVersion.Value; }
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]

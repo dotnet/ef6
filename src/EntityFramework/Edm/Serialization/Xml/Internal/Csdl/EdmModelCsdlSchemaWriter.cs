@@ -144,10 +144,10 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
         private static string SyndicationItemPropertyToString(object value)
         {
-            return syndicationItemToTargetPath[(int)value];
+            return _syndicationItemToTargetPath[(int)value];
         }
 
-        private static readonly string[] syndicationItemToTargetPath = new[]
+        private static readonly string[] _syndicationItemToTargetPath = new[]
                                                                            {
                                                                                String.Empty,
                                                                                // SyndicationItemProperty.Custom
@@ -175,10 +175,10 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
         private static string SyndicationTextContentKindToString(object value)
         {
-            return syndicationTextContentKindToString[(int)value];
+            return _syndicationTextContentKindToString[(int)value];
         }
 
-        private static readonly string[] syndicationTextContentKindToString = new[]
+        private static readonly string[] _syndicationTextContentKindToString = new[]
                                                                                   {
                                                                                       XmlConstants.
                                                                                           SyndContentKindPlaintext,

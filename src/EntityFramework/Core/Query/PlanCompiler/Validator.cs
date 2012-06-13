@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static void AddAllEntry(BitVec opVector, OpType opType)
         {
-            foreach (var phase in s_PlanCompilerPhases)
+            foreach (var phase in _planCompilerPhases)
             {
                 AddSingleEntry(opVector, opType, phase);
             }
@@ -285,7 +285,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private readonly PlanCompiler m_compilerState;
 
-        private static readonly PlanCompilerPhase[] s_PlanCompilerPhases = {
+        private static readonly PlanCompilerPhase[] _planCompilerPhases = {
                                                                                PlanCompilerPhase.PreProcessor,
                                                                                PlanCompilerPhase.AggregatePushdown,
                                                                                PlanCompilerPhase.Normalization,

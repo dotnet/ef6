@@ -11,24 +11,24 @@ namespace System.Data.Entity.Migrations.Utilities
     /// </summary>
     internal class ConfigurationFileUpdater
     {
-        private static readonly XNamespace Asm = "urn:schemas-microsoft-com:asm.v1";
-        private static readonly XElement DependentAssemblyElement;
+        private static readonly XNamespace _asm = "urn:schemas-microsoft-com:asm.v1";
+        private static readonly XElement _dependentAssemblyElement;
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static ConfigurationFileUpdater()
         {
             var executingAssemblyName = Assembly.GetExecutingAssembly().GetName();
 
-            DependentAssemblyElement
+            _dependentAssemblyElement
                 = new XElement(
-                    Asm + "dependentAssembly",
+                    _asm + "dependentAssembly",
                     new XElement(
-                        Asm + "assemblyIdentity",
+                        _asm + "assemblyIdentity",
                         new XAttribute("name", "EntityFramework"),
                         new XAttribute("culture", "neutral"),
                         new XAttribute("publicKeyToken", "b77a5c561934e089")),
                     new XElement(
-                        Asm + "codeBase",
+                        _asm + "codeBase",
                         new XAttribute("version", executingAssemblyName.Version.ToString()),
                         new XAttribute("href", executingAssemblyName.CodeBase)));
         }
@@ -50,8 +50,8 @@ namespace System.Data.Entity.Migrations.Utilities
 
             configuration.GetOrAddElement("configuration")
                 .GetOrAddElement("runtime")
-                .GetOrAddElement(Asm + "assemblyBinding")
-                .Add(DependentAssemblyElement);
+                .GetOrAddElement(_asm + "assemblyBinding")
+                .Add(_dependentAssemblyElement);
 
             var newConfigurationFile = Path.GetTempFileName();
 

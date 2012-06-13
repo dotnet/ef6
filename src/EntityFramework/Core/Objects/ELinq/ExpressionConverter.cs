@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private const string s_visualBasicAssemblyFullName =
             "Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 
-        private static readonly Dictionary<ExpressionType, Translator> s_translators = InitializeTranslators();
+        private static readonly Dictionary<ExpressionType, Translator> _translators = InitializeTranslators();
 
         internal const string s_entityCollectionCountPropertyName = "Count";
         internal const string s_nullableHasValuePropertyName = "HasValue";
@@ -969,7 +969,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 // translate to a CQT expression
                 Translator translator;
-                if (s_translators.TryGetValue(linq.NodeType, out translator))
+                if (_translators.TryGetValue(linq.NodeType, out translator))
                 {
                     result = translator.Translate(this, linq);
                 }

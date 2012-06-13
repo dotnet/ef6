@@ -289,17 +289,17 @@
         private const BindingFlags PropertyBindingFlags =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-        private static readonly MethodInfo DbHelpers_ConvertAndSet = typeof(DbHelpers).GetMethod(
+        private static readonly MethodInfo _convertAndSetMethod = typeof(DbHelpers).GetMethod(
             "ConvertAndSet", BindingFlags.Static | BindingFlags.NonPublic);
 
-        private static readonly ConcurrentDictionary<Type, IDictionary<string, Type>> PropertyTypes =
+        private static readonly ConcurrentDictionary<Type, IDictionary<string, Type>> _propertyTypes =
             new ConcurrentDictionary<Type, IDictionary<string, Type>>();
 
-        private static readonly ConcurrentDictionary<Type, IDictionary<string, Action<object, object>>> PropertySetters
+        private static readonly ConcurrentDictionary<Type, IDictionary<string, Action<object, object>>> _propertySetters
             =
             new ConcurrentDictionary<Type, IDictionary<string, Action<object, object>>>();
 
-        private static readonly ConcurrentDictionary<Type, IDictionary<string, Func<object, object>>> PropertyGetters =
+        private static readonly ConcurrentDictionary<Type, IDictionary<string, Func<object, object>>> _propertyGetters =
             new ConcurrentDictionary<Type, IDictionary<string, Func<object, object>>>();
 
         /// <summary>
@@ -311,7 +311,7 @@
             Contract.Requires(type != null);
 
             IDictionary<string, Type> types;
-            if (!PropertyTypes.TryGetValue(type, out types))
+            if (!_propertyTypes.TryGetValue(type, out types))
             {
                 var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 types = new Dictionary<string, Type>(properties.Count());
@@ -319,7 +319,7 @@
                 {
                     types[property.Name] = property.PropertyType;
                 }
-                PropertyTypes.TryAdd(type, types);
+                _propertyTypes.TryAdd(type, types);
             }
             return types;
         }
@@ -333,7 +333,7 @@
             Contract.Requires(type != null);
 
             IDictionary<string, Action<object, object>> setters;
-            if (!PropertySetters.TryGetValue(type, out setters))
+            if (!_propertySetters.TryGetValue(type, out setters))
             {
                 var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 setters = new Dictionary<string, Action<object, object>>(properties.Count());
@@ -357,7 +357,7 @@
 
                         // Next create a delegate with CreateDelegate that calls the internal ConvertAndSet method below.
                         // This works in partial trust because it is using CreateDelegate to avoid creating any dynamic code.
-                        var convertMethod = DbHelpers_ConvertAndSet.MakeGenericMethod(property.PropertyType);
+                        var convertMethod = _convertAndSetMethod.MakeGenericMethod(property.PropertyType);
                         var convertAndSet = (Action<object, object, Action<object, object>, string, string>)
                                             Delegate.CreateDelegate(
                                                 typeof(Action<object, object, Action<object, object>, string, string>),
@@ -369,7 +369,7 @@
                         setters[property.Name] = (i, v) => convertAndSet(i, v, setter, propertyName, type.Name);
                     }
                 }
-                PropertySetters.TryAdd(type, setters);
+                _propertySetters.TryAdd(type, setters);
             }
             return setters;
         }
@@ -398,7 +398,7 @@
             Contract.Requires(type != null);
 
             IDictionary<string, Func<object, object>> getters;
-            if (!PropertyGetters.TryGetValue(type, out getters))
+            if (!_propertyGetters.TryGetValue(type, out getters))
             {
                 var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 getters = new Dictionary<string, Func<object, object>>(properties.Count());
@@ -414,7 +414,7 @@
                             Expression.Lambda<Func<object, object>>(getterExpression, instanceParam).Compile();
                     }
                 }
-                PropertyGetters.TryAdd(type, getters);
+                _propertyGetters.TryAdd(type, getters);
             }
             return getters;
         }
@@ -527,7 +527,7 @@
 
         #region Collection types for element types
 
-        private static readonly ConcurrentDictionary<Type, Type> CollectionTypes =
+        private static readonly ConcurrentDictionary<Type, Type> _collectionTypes =
             new ConcurrentDictionary<Type, Type>();
 
         /// <summary>
@@ -537,7 +537,7 @@
         /// <returns>The collection type.</returns>
         public static Type CollectionType(Type elementType)
         {
-            return CollectionTypes.GetOrAdd(elementType, t => typeof(ICollection<>).MakeGenericType(t));
+            return _collectionTypes.GetOrAdd(elementType, t => typeof(ICollection<>).MakeGenericType(t));
         }
 
         #endregion

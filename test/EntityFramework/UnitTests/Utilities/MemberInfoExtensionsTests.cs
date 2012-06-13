@@ -23,7 +23,10 @@ namespace System.Data.Entity.Utilities
         public class FakeForGetValue
         {
             public static readonly string Field = "People Are People";
-            public static string Property { get { return Field; }
+
+            public static string Property
+            {
+                get { return Field; }
             }
         }
     }

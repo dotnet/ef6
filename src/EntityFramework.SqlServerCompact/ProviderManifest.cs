@@ -7,13 +7,13 @@ namespace System.Data.Entity.SqlServerCompact
     internal class ProviderManifest
     {
         /// <summary>Value to pass to GetInformation to get the StoreSchemaDefinition</summary>
-        public static readonly string StoreSchemaDefinition = "StoreSchemaDefinition";
+        public const string StoreSchemaDefinition = "StoreSchemaDefinition";
 
         /// <summary>Value to pass to GetInformation to get the StoreSchemaMapping</summary>
-        public static readonly string StoreSchemaMapping = "StoreSchemaMapping";
+        public const string StoreSchemaMapping = "StoreSchemaMapping";
 
         /// <summary>Value to pass to GetInformation to get the ConceptualSchemaDefinition</summary>
-        public static readonly string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
+        public const string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
 
         // System Facet Info
         /// <summary>

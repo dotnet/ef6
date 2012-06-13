@@ -8,18 +8,18 @@
     internal static class AssemblyCache
     {
         // Global Assembly Cache
-        private static readonly Dictionary<Assembly, ImmutableAssemblyCacheEntry> s_globalAssemblyCache =
+        private static readonly Dictionary<Assembly, ImmutableAssemblyCacheEntry> _globalAssemblyCache =
             new Dictionary<Assembly, ImmutableAssemblyCacheEntry>();
 
         private static readonly object _assemblyCacheLock = new object();
 
         //List of assemblies having view gen attribute. We cache these things if we discover
         //these assemblies while looking for O-space metadata.
-        private static readonly IList<Assembly> s_viewGenAssemblies = new ThreadSafeList<Assembly>();
+        private static readonly IList<Assembly> _viewGenAssemblies = new ThreadSafeList<Assembly>();
 
         internal static LockedAssemblyCache AquireLockedAssemblyCache()
         {
-            return new LockedAssemblyCache(_assemblyCacheLock, s_globalAssemblyCache);
+            return new LockedAssemblyCache(_assemblyCacheLock, _globalAssemblyCache);
         }
 
         internal static void LoadAssembly(
@@ -158,7 +158,7 @@
 
         internal static IList<Assembly> ViewGenerationAssemblies
         {
-            get { return s_viewGenAssemblies; }
+            get { return _viewGenAssemblies; }
         }
     }
 }

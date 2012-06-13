@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private const string OtherCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]";
         private const string NameExp = StartCharacterExp + OtherCharacterExp + "{0,}";
         //private static Regex ValidDottedName=new Regex(@"^"+NameExp+@"(\."+NameExp+@"){0,}$",RegexOptions.Singleline);
-        private static readonly Regex UndottedNameValidator = new Regex(
+        private static readonly Regex _undottedNameValidator = new Regex(
             @"^" + NameExp + @"$", RegexOptions.Singleline | RegexOptions.Compiled);
 
         #endregion
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             // CodeGenerator.IsValidLanguageIndependentIdentifier does demand a FullTrust Link
             // but this is safe since the function only walks over the string no risk is introduced
-            return !string.IsNullOrEmpty(name) && UndottedNameValidator.IsMatch(name)
+            return !string.IsNullOrEmpty(name) && _undottedNameValidator.IsMatch(name)
                    && IsValidLanguageIndependentIdentifier(name);
         }
 

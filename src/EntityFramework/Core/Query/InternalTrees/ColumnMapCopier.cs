@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Singleton instance for the "public" methods to use;
         /// </summary>
-        private static readonly ColumnMapCopier Instance = new ColumnMapCopier();
+        private static readonly ColumnMapCopier _instance = new ColumnMapCopier();
 
         /// <summary>
         /// Constructor; no one should use this.
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns></returns>
         internal static ColumnMap Copy(ColumnMap columnMap, VarMap replacementVarMap)
         {
-            return columnMap.Accept(Instance, replacementVarMap);
+            return columnMap.Accept(_instance, replacementVarMap);
         }
 
         #endregion

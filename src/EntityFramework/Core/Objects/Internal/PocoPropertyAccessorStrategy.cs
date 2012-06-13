@@ -15,10 +15,10 @@
     /// </summary>
     internal sealed class PocoPropertyAccessorStrategy : IPropertyAccessorStrategy
     {
-        private static readonly MethodInfo s_AddToCollectionGeneric = typeof(PocoPropertyAccessorStrategy).GetMethod(
+        private static readonly MethodInfo _addToCollectionGeneric = typeof(PocoPropertyAccessorStrategy).GetMethod(
             "AddToCollection", BindingFlags.NonPublic | BindingFlags.Static);
 
-        private static readonly MethodInfo s_RemoveFromCollectionGeneric =
+        private static readonly MethodInfo _removeFromCollectionGeneric =
             typeof(PocoPropertyAccessorStrategy).GetMethod("RemoveFromCollection", BindingFlags.NonPublic | BindingFlags.Static);
 
         private readonly object _entity;
@@ -190,7 +190,7 @@
             var elementType = EntityUtil.GetCollectionElementType(navPropType);
             var collectionType = typeof(ICollection<>).MakeGenericType(elementType);
 
-            var addToCollection = s_AddToCollectionGeneric.MakeGenericMethod(elementType);
+            var addToCollection = _addToCollectionGeneric.MakeGenericMethod(elementType);
             return (Action<object, object>)addToCollection.Invoke(null, null);
         }
 
@@ -253,7 +253,7 @@
             var elementType = EntityUtil.GetCollectionElementType(navPropType);
             var collectionType = typeof(ICollection<>).MakeGenericType(elementType);
 
-            var removeFromCollection = s_RemoveFromCollectionGeneric.MakeGenericMethod(elementType);
+            var removeFromCollection = _removeFromCollectionGeneric.MakeGenericMethod(elementType);
             return (Func<object, object, bool>)removeFromCollection.Invoke(null, null);
         }
 

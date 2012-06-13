@@ -10,10 +10,10 @@
     /// </summary>
     internal abstract class InternalCollectionEntryForMock : InternalCollectionEntry
     {
-        private static readonly NavigationEntryMetadata FakeCollectionMetadata = new NavigationEntryMetadata(typeof(PropertyApiTests.FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
+        private static readonly NavigationEntryMetadata _fakeCollectionMetadata = new NavigationEntryMetadata(typeof(PropertyApiTests.FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
         
         protected InternalCollectionEntryForMock()
-            : base(new Mock<PropertyApiTests.InternalEntityEntryForMock<FakeEntity>>().Object, FakeCollectionMetadata)
+            : base(new Mock<PropertyApiTests.InternalEntityEntryForMock<FakeEntity>>().Object, _fakeCollectionMetadata)
         {
         }
     }

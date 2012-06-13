@@ -28,36 +28,36 @@ namespace System.Data.Entity.Core.Objects.Internal
         private HashSet<EdmMember> _scalarMembers;
         private HashSet<EdmMember> _relationshipMembers;
 
-        private static readonly MethodInfo s_EntityMemberChanging = typeof(IEntityChangeTracker).GetMethod(
+        private static readonly MethodInfo _entityMemberChangingMethod = typeof(IEntityChangeTracker).GetMethod(
             "EntityMemberChanging", new[] { typeof(string) });
 
-        private static readonly MethodInfo s_EntityMemberChanged = typeof(IEntityChangeTracker).GetMethod(
+        private static readonly MethodInfo _entityMemberChangedMethod = typeof(IEntityChangeTracker).GetMethod(
             "EntityMemberChanged", new[] { typeof(string) });
 
-        private static readonly MethodInfo s_CreateRelationshipManager = typeof(RelationshipManager).GetMethod(
+        private static readonly MethodInfo _createRelationshipManagerMethod = typeof(RelationshipManager).GetMethod(
             "Create", new[] { typeof(IEntityWithRelationships) });
 
-        private static readonly MethodInfo s_GetRelationshipManager =
+        private static readonly MethodInfo _getRelationshipManagerMethod =
             typeof(IEntityWithRelationships).GetProperty("RelationshipManager").GetGetMethod();
 
-        private static readonly MethodInfo s_GetRelatedReference = typeof(RelationshipManager).GetMethod(
+        private static readonly MethodInfo _getRelatedReferenceMethod = typeof(RelationshipManager).GetMethod(
             "GetRelatedReference", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo s_GetRelatedCollection = typeof(RelationshipManager).GetMethod(
+        private static readonly MethodInfo _getRelatedCollectionMethod = typeof(RelationshipManager).GetMethod(
             "GetRelatedCollection", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo s_GetRelatedEnd = typeof(RelationshipManager).GetMethod(
+        private static readonly MethodInfo _getRelatedEndMethod = typeof(RelationshipManager).GetMethod(
             "GetRelatedEnd", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo s_ObjectEquals = typeof(object).GetMethod("Equals", new[] { typeof(object), typeof(object) });
+        private static readonly MethodInfo _objectEqualsMethod = typeof(object).GetMethod("Equals", new[] { typeof(object), typeof(object) });
 
-        private static readonly ConstructorInfo s_InvalidOperationConstructor =
+        private static readonly ConstructorInfo _invalidOperationConstructorMethod =
             typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
 
-        private static readonly MethodInfo s_IEntityWrapper_GetEntity = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
-        private static readonly MethodInfo s_Action_Invoke = typeof(Action<object>).GetMethod("Invoke", new[] { typeof(object) });
+        private static readonly MethodInfo _iEntityWrapper_GetEntityMethod = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
+        private static readonly MethodInfo _action_InvokeMethod = typeof(Action<object>).GetMethod("Invoke", new[] { typeof(object) });
 
-        private static readonly MethodInfo s_Func_object_object_bool_Invoke = typeof(Func<object, object, bool>).GetMethod(
+        private static readonly MethodInfo _func_object_object_bool_InvokeMethod = typeof(Func<object, object, bool>).GetMethod(
             "Invoke", new[] { typeof(object), typeof(object) });
 
         public IPOCOImplementor(EntityType ospaceEntityType)
@@ -175,18 +175,18 @@ namespace System.Data.Entity.Core.Objects.Internal
                 generator.DeclareLocal(proxyType);
                 generator.DeclareLocal(typeof(RelationshipManager));
                 generator.Emit(OpCodes.Ldarg_0);
-                generator.Emit(OpCodes.Callvirt, s_IEntityWrapper_GetEntity);
+                generator.Emit(OpCodes.Callvirt, _iEntityWrapper_GetEntityMethod);
                 generator.Emit(OpCodes.Castclass, proxyType);
                 generator.Emit(OpCodes.Stloc_0);
                 generator.Emit(OpCodes.Ldloc_0);
-                generator.Emit(OpCodes.Callvirt, s_GetRelationshipManager);
+                generator.Emit(OpCodes.Callvirt, _getRelationshipManagerMethod);
                 generator.Emit(OpCodes.Stloc_1);
 
                 foreach (var navProperty in _collectionProperties)
                 {
                     // Update Constructor to initialize this property
                     var getRelatedCollection =
-                        s_GetRelatedCollection.MakeGenericMethod(EntityUtil.GetCollectionElementType(navProperty.Value.PropertyType));
+                        _getRelatedCollectionMethod.MakeGenericMethod(EntityUtil.GetCollectionElementType(navProperty.Value.PropertyType));
 
                     generator.Emit(OpCodes.Ldloc_0);
                     generator.Emit(OpCodes.Ldloc_1);
@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Call, baseGetter);
                         generator.Emit(OpCodes.Ldarg_1);
-                        generator.Emit(OpCodes.Callvirt, s_Func_object_object_bool_Invoke);
+                        generator.Emit(OpCodes.Callvirt, _func_object_object_bool_InvokeMethod);
                         generator.Emit(OpCodes.Brtrue_S, endOfMethod);
                     }
                     else
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                             {
                                 generator.Emit(OpCodes.Box, propertyType);
                             }
-                            generator.Emit(OpCodes.Call, s_ObjectEquals);
+                            generator.Emit(OpCodes.Call, _objectEqualsMethod);
                             generator.Emit(OpCodes.Brtrue_S, endOfMethod);
                         }
                     }
@@ -354,7 +354,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.BeginFinallyBlock();
             generator.Emit(OpCodes.Ldsfld, _resetFKSetterFlagField);
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Callvirt, s_Action_Invoke);
+            generator.Emit(OpCodes.Callvirt, _action_InvokeMethod);
             generator.EndExceptionBlock();
             generator.MarkLabel(endOfMethod);
             generator.Emit(OpCodes.Ret);
@@ -369,7 +369,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             ;
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
 
-            var specificGetRelatedReference = s_GetRelatedReference.MakeGenericMethod(baseProperty.PropertyType);
+            var specificGetRelatedReference = _getRelatedReferenceMethod.MakeGenericMethod(baseProperty.PropertyType);
             var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetMethod(
                 "set_Value");
             ;
@@ -408,10 +408,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Call, _getRelationshipManager);
             generator.Emit(OpCodes.Ldstr, navProperty.RelationshipType.FullName);
             generator.Emit(OpCodes.Ldstr, navProperty.ToEndMember.Name);
-            generator.Emit(OpCodes.Callvirt, s_GetRelatedEnd);
+            generator.Emit(OpCodes.Callvirt, _getRelatedEndMethod);
             generator.Emit(OpCodes.Beq_S, instanceEqual);
             generator.Emit(OpCodes.Ldstr, cannotSetException);
-            generator.Emit(OpCodes.Newobj, s_InvalidOperationConstructor);
+            generator.Emit(OpCodes.Newobj, _invalidOperationConstructorMethod);
             generator.Emit(OpCodes.Throw);
             generator.MarkLabel(instanceEqual);
             generator.Emit(OpCodes.Ldarg_0);
@@ -441,7 +441,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, _changeTrackerField);
             generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Callvirt, s_EntityMemberChanging);
+            generator.Emit(OpCodes.Callvirt, _entityMemberChangingMethod);
             generator.MarkLabel(methodEnd);
             generator.Emit(OpCodes.Ret);
 
@@ -456,7 +456,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, _changeTrackerField);
             generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Callvirt, s_EntityMemberChanged);
+            generator.Emit(OpCodes.Callvirt, _entityMemberChangedMethod);
             generator.MarkLabel(methodEnd);
             generator.Emit(OpCodes.Ret);
 
@@ -495,7 +495,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Brtrue_S, trueLabel);
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Call, s_CreateRelationshipManager);
+            generator.Emit(OpCodes.Call, _createRelationshipManagerMethod);
             generator.Emit(OpCodes.Stfld, _relationshipManagerField);
             generator.MarkLabel(trueLabel);
             generator.Emit(OpCodes.Ldarg_0);

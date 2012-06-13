@@ -267,7 +267,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         private static readonly Dictionary<string, FunctionHandler> _canonicalFunctionHandlers = InitializeCanonicalFunctionHandlers();
         private static readonly Dictionary<string, string> _functionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
         private static readonly Dictionary<string, object> _datepartKeywords = InitializeDatepartKeywords();
-        private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         private static readonly Queue<string> _functionRequiresReturnTypeCast = new Queue<string>(
             new[]
@@ -4118,7 +4118,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             var sb = new StringBuilder(binaryArray.Length * 2);
             for (var i = 0; i < binaryArray.Length; i++)
             {
-                sb.Append(hexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(hexDigits[binaryArray[i] & 0x0F]);
+                sb.Append(_hexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(_hexDigits[binaryArray[i] & 0x0F]);
             }
             return sb.ToString();
         }

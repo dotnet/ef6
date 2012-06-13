@@ -12,7 +12,7 @@
     /// </summary>
     internal class NullEntityWrapper : IEntityWrapper
     {
-        private static readonly IEntityWrapper s_nullWrapper = new NullEntityWrapper();
+        private static readonly IEntityWrapper _nullWrapper = new NullEntityWrapper();
 
         // Private constructor prevents anyone else from creating an instance
         private NullEntityWrapper()
@@ -24,7 +24,7 @@
         /// </summary>
         internal static IEntityWrapper NullWrapper
         {
-            get { return s_nullWrapper; }
+            get { return _nullWrapper; }
         }
 
         public RelationshipManager RelationshipManager

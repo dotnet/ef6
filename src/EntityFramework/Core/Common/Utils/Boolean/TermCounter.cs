@@ -4,12 +4,12 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
     internal class TermCounter<T_Identifier> : Visitor<T_Identifier, int>
     {
-        private static readonly TermCounter<T_Identifier> s_instance = new TermCounter<T_Identifier>();
+        private static readonly TermCounter<T_Identifier> _instance = new TermCounter<T_Identifier>();
 
         internal static int CountTerms(BoolExpr<T_Identifier> expression)
         {
             Debug.Assert(null != expression);
-            return expression.Accept(s_instance);
+            return expression.Accept(_instance);
         }
 
         internal override int VisitTrue(TrueExpr<T_Identifier> expression)

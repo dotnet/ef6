@@ -24,7 +24,7 @@
         #region Fields and constructors
 
         // Maps derived DbContext type to strategy that acts on that type.
-        private static readonly ConcurrentDictionary<Type, InitializerLockPair> InitializationStrategies =
+        private static readonly ConcurrentDictionary<Type, InitializerLockPair> _initializationStrategies =
             new ConcurrentDictionary<Type, InitializerLockPair>();
 
         // The default factory object used to create a DbConnection from a database name.
@@ -93,7 +93,7 @@
             where TContext : DbContext
         {
             var executor = strategy == null ? (Action<DbContext>)null : c => strategy.InitializeDatabase((TContext)c);
-            InitializationStrategies.AddOrUpdate(
+            _initializationStrategies.AddOrUpdate(
                 typeof(TContext),
                 new InitializerLockPair(executor, lockStrategy),
                 (t, e) => e.IsLocked && !lockStrategy ? e : new InitializerLockPair(executor, lockStrategy));
@@ -136,7 +136,7 @@
         {
             get
             {
-                return InitializationStrategies.GetOrAdd(
+                return _initializationStrategies.GetOrAdd(
                     _internalContext.Owner.GetType(),
                     t =>
                     new InitializerLockPair(

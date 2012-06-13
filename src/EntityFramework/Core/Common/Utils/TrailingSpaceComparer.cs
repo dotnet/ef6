@@ -15,7 +15,7 @@
         }
 
         internal static readonly TrailingSpaceComparer Instance = new TrailingSpaceComparer();
-        private static readonly IEqualityComparer<object> s_template = EqualityComparer<object>.Default;
+        private static readonly IEqualityComparer<object> _template = EqualityComparer<object>.Default;
 
         bool IEqualityComparer<object>.Equals(object x, object y)
         {
@@ -28,7 +28,7 @@
                     return TrailingSpaceStringComparer.Instance.Equals(xAsString, yAsString);
                 }
             }
-            return s_template.Equals(x, y);
+            return _template.Equals(x, y);
         }
 
         int IEqualityComparer<object>.GetHashCode(object obj)
@@ -38,7 +38,7 @@
             {
                 return TrailingSpaceStringComparer.Instance.GetHashCode(value);
             }
-            return s_template.GetHashCode(obj);
+            return _template.GetHashCode(obj);
         }
     }
 }

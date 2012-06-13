@@ -60,7 +60,7 @@
 
         #region Static variables
 
-        private static readonly Tile<FragmentQuery> TrueViewSurrogate = CreateTile(FragmentQuery.Create(BoolExpression.True));
+        private static readonly Tile<FragmentQuery> _trueViewSurrogate = CreateTile(FragmentQuery.Create(BoolExpression.True));
 
         #endregion
 
@@ -871,7 +871,7 @@
             var isRelaxed = (_context.ViewTarget == ViewTarget.UpdateView);
             var found = RewriteQuery(toFill, toAvoid, out rewriting, out notCoveredAttributes, isRelaxed);
             Debug.Assert(
-                !found || rewriting.GetNamedQueries().All(q => q != TrueViewSurrogate.Query),
+                !found || rewriting.GetNamedQueries().All(q => q != _trueViewSurrogate.Query),
                 "TrueViewSurrogate should have been substituted");
             return found;
         }
@@ -1108,7 +1108,7 @@
                     if (IsTrue(unionTile.Query))
                     {
                         // yes, we can; use a surrogate view - replace it later
-                        firstTrueView = TrueViewSurrogate;
+                        firstTrueView = _trueViewSurrogate;
                         break;
                     }
                 }
@@ -1132,12 +1132,12 @@
         private HashSet<FragmentQuery> GetUsedViewsAndRemoveTrueSurrogate(ref Tile<FragmentQuery> rewriting)
         {
             var usedViews = new HashSet<FragmentQuery>(rewriting.GetNamedQueries());
-            if (!usedViews.Contains(TrueViewSurrogate.Query))
+            if (!usedViews.Contains(_trueViewSurrogate.Query))
             {
                 return usedViews; // no surrogate
             }
             // remove the surrogate
-            usedViews.Remove(TrueViewSurrogate.Query);
+            usedViews.Remove(_trueViewSurrogate.Query);
 
             // first, try to union usedViews to see whether we can get True
             Tile<FragmentQuery> unionTile = null;
@@ -1149,7 +1149,7 @@
                 if (IsTrue(unionTile.Query))
                 {
                     // we found a true rewriting
-                    rewriting = rewriting.Replace(TrueViewSurrogate, unionTile);
+                    rewriting = rewriting.Replace(_trueViewSurrogate, unionTile);
                     return usedViews;
                 }
             }

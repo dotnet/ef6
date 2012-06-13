@@ -252,7 +252,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// </summary>
         private static readonly int[] _agingFactor = { 1, 1, 2, 4, 8, 16 };
 
-        private static readonly int AgingMaxIndex = _agingFactor.Length - 1;
+        private static readonly int _agingMaxIndex = _agingFactor.Length - 1;
 
         /// <summary>
         /// Sweeps the cache removing old unused entries.
@@ -296,9 +296,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
                         else
                         {
                             var agingIndex = unchecked(cacheKeys[i].AgingIndex + 1);
-                            if (agingIndex > AgingMaxIndex)
+                            if (agingIndex > _agingMaxIndex)
                             {
-                                agingIndex = AgingMaxIndex;
+                                agingIndex = _agingMaxIndex;
                             }
                             cacheKeys[i].AgingIndex = agingIndex;
                             cacheKeys[i].HitCount = cacheKeys[i].HitCount >> _agingFactor[agingIndex];

@@ -47,10 +47,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        private static readonly MethodInfo s_StringEquals = typeof(string).GetMethod(
+        private static readonly MethodInfo _stringEquals = typeof(string).GetMethod(
             "op_Equality", new[] { typeof(string), typeof(string) });
 
-        private static readonly ConstructorInfo s_InvalidOperationConstructor =
+        private static readonly ConstructorInfo _invalidOperationConstructor =
             typeof(InvalidOperationException).GetConstructor(Type.EmptyTypes);
 
         private void ImplementBaseGetter(TypeBuilder typeBuilder)
@@ -66,14 +66,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                 labels[i] = gen.DefineLabel();
                 gen.Emit(OpCodes.Ldarg_1);
                 gen.Emit(OpCodes.Ldstr, _baseGetters[i].Name);
-                gen.Emit(OpCodes.Call, s_StringEquals);
+                gen.Emit(OpCodes.Call, _stringEquals);
                 gen.Emit(OpCodes.Brfalse_S, labels[i]);
                 gen.Emit(OpCodes.Ldarg_0);
                 gen.Emit(OpCodes.Call, _baseGetters[i].GetGetMethod(true));
                 gen.Emit(OpCodes.Ret);
                 gen.MarkLabel(labels[i]);
             }
-            gen.Emit(OpCodes.Newobj, s_InvalidOperationConstructor);
+            gen.Emit(OpCodes.Newobj, _invalidOperationConstructor);
             gen.Emit(OpCodes.Throw);
         }
 
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 labels[i] = gen.DefineLabel();
                 gen.Emit(OpCodes.Ldarg_1);
                 gen.Emit(OpCodes.Ldstr, _baseSetters[i].Name);
-                gen.Emit(OpCodes.Call, s_StringEquals);
+                gen.Emit(OpCodes.Call, _stringEquals);
                 gen.Emit(OpCodes.Brfalse_S, labels[i]);
                 gen.Emit(OpCodes.Ldarg_0);
                 gen.Emit(OpCodes.Ldarg_2);
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 gen.Emit(OpCodes.Ret);
                 gen.MarkLabel(labels[i]);
             }
-            gen.Emit(OpCodes.Newobj, s_InvalidOperationConstructor);
+            gen.Emit(OpCodes.Newobj, _invalidOperationConstructor);
             gen.Emit(OpCodes.Throw);
         }
     }

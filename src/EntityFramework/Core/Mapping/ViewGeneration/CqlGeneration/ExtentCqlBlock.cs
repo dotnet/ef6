@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             BoolExpression whereClause,
             CqlIdentifiers identifiers,
             int blockAliasNum)
-            : base(slots, EmptyChildren, whereClause, identifiers, blockAliasNum)
+            : base(slots, _emptyChildren, whereClause, identifiers, blockAliasNum)
         {
             m_extent = extent;
             m_nodeTableAlias = identifiers.GetBlockAlias();
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         private readonly EntitySetBase m_extent;
         private readonly string m_nodeTableAlias;
         private readonly CellQuery.SelectDistinct m_selectDistinct;
-        private static readonly List<CqlBlock> EmptyChildren = new List<CqlBlock>();
+        private static readonly List<CqlBlock> _emptyChildren = new List<CqlBlock>();
 
         #endregion
 

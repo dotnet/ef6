@@ -21,11 +21,11 @@ namespace System.Data.Entity.Infrastructure
         #region Fields and constructors
 
         // Cached delegates that have been created dynamically to call a constructors for a given derived type of ObjectContext.
-        private static readonly ConcurrentDictionary<Type, Func<EntityConnection, ObjectContext>> ContextConstructors =
+        private static readonly ConcurrentDictionary<Type, Func<EntityConnection, ObjectContext>> _contextConstructors =
             new ConcurrentDictionary<Type, Func<EntityConnection, ObjectContext>>();
 
         // Delegate to create an instance of a non-derived ObjectContext.
-        private static readonly Func<EntityConnection, ObjectContext> ObjectContextConstructor =
+        private static readonly Func<EntityConnection, ObjectContext> _objectContextConstructor =
             c => new ObjectContext(c);
 
         // An object that can be used to get a cached MetadataWorkspace.
@@ -125,11 +125,11 @@ namespace System.Data.Entity.Infrastructure
             if (typeof(TContext)
                 == typeof(ObjectContext))
             {
-                return ObjectContextConstructor;
+                return _objectContextConstructor;
             }
 
             Func<EntityConnection, ObjectContext> constructorDelegate;
-            if (!ContextConstructors.TryGetValue(typeof(TContext), out constructorDelegate))
+            if (!_contextConstructors.TryGetValue(typeof(TContext), out constructorDelegate))
             {
                 var constructor = typeof(TContext).GetConstructor(
                     BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(EntityConnection) }, null);
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Infrastructure
                         Expression.New(constructor, connectionParam), connectionParam).
                         Compile();
 
-                ContextConstructors.TryAdd(typeof(TContext), constructorDelegate);
+                _contextConstructors.TryAdd(typeof(TContext), constructorDelegate);
             }
             return constructorDelegate;
         }

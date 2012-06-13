@@ -14,7 +14,8 @@ namespace System.Data.Entity.Core.EntityClient
     public sealed class EntityProviderFactory : DbProviderFactory, IServiceProvider
     {
         /// <summary>
-        /// A singleton object for the entity client provider factory object
+        /// A singleton object for the entity client provider factory object.
+        /// This remains a public field (not property) because DbProviderFactory expects a field.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification =

@@ -31,14 +31,14 @@ namespace System.Data.Entity.Core.EntityClient
         private const string s_providerConnectionString = "provider connection string";
         private const string s_readerPrefix = "reader://";
 
-        private static readonly StateChangeEventArgs StateChangeClosed = new StateChangeEventArgs(
+        private static readonly StateChangeEventArgs _stateChangeClosed = new StateChangeEventArgs(
             ConnectionState.Open, ConnectionState.Closed);
 
-        private static readonly StateChangeEventArgs StateChangeOpen = new StateChangeEventArgs(
+        private static readonly StateChangeEventArgs _stateChangeOpen = new StateChangeEventArgs(
             ConnectionState.Closed, ConnectionState.Open);
 
         private readonly object _connectionStringLock = new object();
-        private static readonly DbConnectionOptions s_emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
+        private static readonly DbConnectionOptions _emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
 
         // The connection options object having the connection settings needed by this connection
         private DbConnectionOptions _userConnectionOptions;
@@ -645,7 +645,7 @@ namespace System.Data.Entity.Core.EntityClient
         private void SetEntityClientConnectionStateToOpen()
         {
             _entityClientConnectionState = ConnectionState.Open;
-            OnStateChange(StateChangeOpen);
+            OnStateChange(_stateChangeOpen);
         }
 
         /// <summary>
@@ -850,7 +850,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 if (raiseStateChangeEvent) // we need to raise the event explicitly
                 {
-                    OnStateChange(StateChangeClosed);
+                    OnStateChange(_stateChangeClosed);
                 }
             }
             base.Dispose(disposing);
@@ -871,7 +871,7 @@ namespace System.Data.Entity.Core.EntityClient
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names which are a Machine resource as part of the connection string
         private void ChangeConnectionString(string newConnectionString)
         {
-            var userConnectionOptions = s_emptyConnectionOptions;
+            var userConnectionOptions = _emptyConnectionOptions;
             if (!String.IsNullOrEmpty(newConnectionString))
             {
                 userConnectionOptions = new DbConnectionOptions(newConnectionString, EntityConnectionStringBuilder.Synonyms);
@@ -1259,7 +1259,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (fireEventOnStateChange)
                 {
-                    OnStateChange(StateChangeClosed);
+                    OnStateChange(_stateChangeClosed);
                 }
                 else
                 {

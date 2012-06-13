@@ -19,7 +19,7 @@
         private const BindingFlags PropertyBindingFlags =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-        private static readonly ConcurrentDictionary<Type, Func<object>> NonEntityFactories =
+        private static readonly ConcurrentDictionary<Type, Func<object>> _nonEntityFactories =
             new ConcurrentDictionary<Type, Func<object>>();
 
         private readonly InternalContext _internalContext;
@@ -111,12 +111,12 @@
             }
 
             Func<object> nonEntityFactory;
-            if (!NonEntityFactories.TryGetValue(_type, out nonEntityFactory))
+            if (!_nonEntityFactories.TryGetValue(_type, out nonEntityFactory))
             {
                 var factoryExpression =
                     Expression.New(_type.GetConstructor(PropertyBindingFlags, null, Type.EmptyTypes, null));
                 nonEntityFactory = Expression.Lambda<Func<object>>(factoryExpression, null).Compile();
-                NonEntityFactories.TryAdd(_type, nonEntityFactory);
+                _nonEntityFactories.TryAdd(_type, nonEntityFactory);
             }
             return nonEntityFactory();
         }

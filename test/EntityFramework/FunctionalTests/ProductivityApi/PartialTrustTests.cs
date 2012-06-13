@@ -242,13 +242,13 @@
             }
         }
 
-        private static readonly Type AspProxy =
+        private static readonly Type _aspProxy =
             typeof(ObjectContext).Assembly.GetType("System.Data.Entity.Core.Metadata.Edm.AspProxy");
 
         public void InvokeIsAspNetEnvironment()
         {
-            var aspProxy = Activator.CreateInstance(AspProxy, nonPublic: true);
-            var isAspNetEnvironment = AspProxy.GetMethod("IsAspNetEnvironment",
+            var aspProxy = Activator.CreateInstance(_aspProxy, nonPublic: true);
+            var isAspNetEnvironment = _aspProxy.GetMethod("IsAspNetEnvironment",
                                                          BindingFlags.Instance | BindingFlags.NonPublic);
 
             // Before fixing Dev11 216491 this would throw a SecurityException

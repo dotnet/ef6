@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
     internal class SortedEntityTypeIndex
     {
-        private static readonly EdmEntityType[] EmptyTypes = new EdmEntityType[0];
+        private static readonly EdmEntityType[] _emptyTypes = new EdmEntityType[0];
 
         private readonly Dictionary<EdmEntitySet, List<EdmEntityType>> _entityTypes;
         // these are sorted where base types come before derived types
@@ -91,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
             else
             {
-                return EmptyTypes;
+                return _emptyTypes;
             }
         }
     }

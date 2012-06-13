@@ -17,7 +17,7 @@
         private const string ConfigKeyKey = "DatabaseInitializerForType";
         private const string DisabledSpecialValue = "Disabled";
 
-        private static readonly MethodInfo Database_SetInitializerInternal = typeof(Database).GetMethod(
+        private static readonly MethodInfo _setInitializerInternalMethod = typeof(Database).GetMethod(
             "SetInitializerInternal", BindingFlags.Static | BindingFlags.NonPublic);
 
         private readonly string _contextTypeName;
@@ -87,7 +87,7 @@
                     initializer = Activator.CreateInstance(initializerType);
                 }
 
-                var setInitializerMethod = Database_SetInitializerInternal.MakeGenericMethod(contextType);
+                var setInitializerMethod = _setInitializerInternalMethod.MakeGenericMethod(contextType);
                 setInitializerMethod.Invoke(
                     null, BindingFlags.Static | BindingFlags.NonPublic, null, new[] { initializer, true }, null);
             }

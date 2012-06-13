@@ -386,7 +386,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Set of facets that should be included in identity for TypeUsage
         /// </summary>
         /// <remarks>keep this sorted for binary searching</remarks>
-        private static readonly string[] s_identityFacets = new[]
+        private static readonly string[] _identityFacets = new[]
                                                                 {
                                                                     DbProviderManifest.DefaultValueFacetName,
                                                                     DbProviderManifest.FixedLengthFacetName,
@@ -638,7 +638,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 var facet = Facets[j];
 
-                if (0 <= Array.BinarySearch(s_identityFacets, facet.Name, StringComparer.Ordinal))
+                if (0 <= Array.BinarySearch(_identityFacets, facet.Name, StringComparer.Ordinal))
                 {
                     if (first)
                     {

@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             #region Fields
 
-            private static readonly Dictionary<PrimitiveTypeKind, object> s_typeDefaultMap = InitializeTypeDefaultMap();
+            private static readonly Dictionary<PrimitiveTypeKind, object> _typeDefaultMap = InitializeTypeDefaultMap();
 
             #endregion
 
@@ -236,7 +236,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 object value;
                 var primitiveTypeKind = primitiveType.PrimitiveTypeKind;
-                if (!s_typeDefaultMap.TryGetValue(primitiveTypeKind, out value))
+                if (!_typeDefaultMap.TryGetValue(primitiveTypeKind, out value))
                 {
                     // If none exists, default to lowest common denominator for constants
                     value = default(byte);

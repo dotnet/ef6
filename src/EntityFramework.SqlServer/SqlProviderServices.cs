@@ -34,14 +34,14 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         /// Singleton object;
         /// </summary>
-        private static readonly SqlProviderServices ProviderInstance = new SqlProviderServices();
+        private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
         /// <summary>
         /// The Singleton instance of the SqlProviderServices type.
         /// </summary>
         public static SqlProviderServices Instance
         {
-            get { return ProviderInstance; }
+            get { return _providerInstance; }
         }
 
         /// <summary>

@@ -76,12 +76,12 @@
             }
 
             internal static readonly PairComparer Instance = new PairComparer();
-            private static readonly EqualityComparer<TFirst> firstComparer = EqualityComparer<TFirst>.Default;
-            private static readonly EqualityComparer<TSecond> secondComparer = EqualityComparer<TSecond>.Default;
+            private static readonly EqualityComparer<TFirst> _firstComparer = EqualityComparer<TFirst>.Default;
+            private static readonly EqualityComparer<TSecond> _secondComparer = EqualityComparer<TSecond>.Default;
 
             public bool Equals(Pair<TFirst, TSecond> x, Pair<TFirst, TSecond> y)
             {
-                return firstComparer.Equals(x.First, y.First) && secondComparer.Equals(x.Second, y.Second);
+                return _firstComparer.Equals(x.First, y.First) && _secondComparer.Equals(x.Second, y.Second);
             }
 
             public int GetHashCode(Pair<TFirst, TSecond> source)

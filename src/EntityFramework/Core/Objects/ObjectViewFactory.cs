@@ -26,11 +26,11 @@
     internal static class ObjectViewFactory
     {
         // References to commonly-used generic type definitions.
-        private static readonly Type genericObjectViewType = typeof(ObjectView<>);
+        private static readonly Type _genericObjectViewType = typeof(ObjectView<>);
 
-        private static readonly Type genericObjectViewDataInterfaceType = typeof(IObjectViewData<>);
-        private static readonly Type genericObjectViewQueryResultDataType = typeof(ObjectViewQueryResultData<>);
-        private static readonly Type genericObjectViewEntityCollectionDataType = typeof(ObjectViewEntityCollectionData<,>);
+        private static readonly Type _genericObjectViewDataInterfaceType = typeof(IObjectViewData<>);
+        private static readonly Type _genericObjectViewQueryResultDataType = typeof(ObjectViewQueryResultData<>);
+        private static readonly Type _genericObjectViewEntityCollectionDataType = typeof(ObjectViewEntityCollectionData<,>);
 
         /// <summary>
         /// Return a list suitable for data binding using the supplied query results.
@@ -110,7 +110,7 @@
                 // Use reflection to create an instance of the generic ObjectView and ObjectViewQueryResultData classes, 
                 // using clrElementType as the value of TElement generic type parameter for both classes.
 
-                var objectViewDataType = genericObjectViewQueryResultDataType.MakeGenericType(clrElementType);
+                var objectViewDataType = _genericObjectViewQueryResultDataType.MakeGenericType(clrElementType);
 
                 var viewDataConstructor = objectViewDataType.GetConstructor(
                     BindingFlags.Instance | BindingFlags.NonPublic,
@@ -197,7 +197,7 @@
                 // Use reflection to create an instance of the generic ObjectView and ObjectViewEntityCollectionData classes, 
                 // using clrElementType as the value of TElement generic type parameter for both classes.
 
-                var objectViewDataType = genericObjectViewEntityCollectionDataType.MakeGenericType(clrElementType, typeof(TElement));
+                var objectViewDataType = _genericObjectViewEntityCollectionDataType.MakeGenericType(clrElementType, typeof(TElement));
 
                 var viewDataConstructor = objectViewDataType.GetConstructor(
                     BindingFlags.Instance | BindingFlags.NonPublic,
@@ -230,11 +230,11 @@
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static IBindingList CreateObjectView(Type clrElementType, Type objectViewDataType, object viewData, object eventDataSource)
         {
-            var objectViewType = genericObjectViewType.MakeGenericType(clrElementType);
+            var objectViewType = _genericObjectViewType.MakeGenericType(clrElementType);
 
             var viewDataInterfaces =
                 objectViewDataType.FindInterfaces(
-                    (Type type, object unusedFilter) => type.Name == genericObjectViewDataInterfaceType.Name, null);
+                    (Type type, object unusedFilter) => type.Name == _genericObjectViewDataInterfaceType.Name, null);
             Debug.Assert(
                 viewDataInterfaces.Length == 1, "Could not find IObjectViewData<T> interface definition for ObjectViewQueryResultData<T>.");
 

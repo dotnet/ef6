@@ -13,7 +13,7 @@
     {
         #region Include
 
-        private static readonly Type[] StringIncludeTypes = new[] { typeof(string) };
+        private static readonly Type[] _stringIncludeTypes = new[] { typeof(string) };
 
         /// <summary>
         ///     Specifies the related objects to include in the query results.
@@ -98,7 +98,7 @@
         /// </summary>
         private static T CommonInclude<T>(T source, string path)
         {
-            var includeMethod = source.GetType().GetMethod("Include", StringIncludeTypes);
+            var includeMethod = source.GetType().GetMethod("Include", _stringIncludeTypes);
             if (includeMethod != null
                 && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
             {

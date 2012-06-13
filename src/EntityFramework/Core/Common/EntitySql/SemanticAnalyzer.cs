@@ -3583,10 +3583,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private static DbExpressionKind MapJoinKind(JoinKind joinKind)
         {
             Debug.Assert(joinKind != JoinKind.RightOuter, "joinKind != JoinKind.RightOuter");
-            return joinMap[(int)joinKind];
+            return _joinMap[(int)joinKind];
         }
 
-        private static readonly DbExpressionKind[] joinMap = {
+        private static readonly DbExpressionKind[] _joinMap = {
                                                                  DbExpressionKind.CrossJoin, DbExpressionKind.InnerJoin,
                                                                  DbExpressionKind.LeftOuterJoin, DbExpressionKind.FullOuterJoin
                                                              };
@@ -3638,10 +3638,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private static DbExpressionKind MapApplyKind(ApplyKind applyKind)
         {
-            return applyMap[(int)applyKind];
+            return _applyMap[(int)applyKind];
         }
 
-        private static readonly DbExpressionKind[] applyMap = { DbExpressionKind.CrossApply, DbExpressionKind.OuterApply };
+        private static readonly DbExpressionKind[] _applyMap = { DbExpressionKind.CrossApply, DbExpressionKind.OuterApply };
 
         /// <summary>
         /// Process WHERE clause.

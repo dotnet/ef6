@@ -5,11 +5,11 @@
 
     internal static class ObjectContextTypeCache
     {
-        private static readonly ConcurrentDictionary<Type, Type> TypeCache = new ConcurrentDictionary<Type, Type>();
+        private static readonly ConcurrentDictionary<Type, Type> _typeCache = new ConcurrentDictionary<Type, Type>();
 
         public static Type GetObjectType(Type type)
         {
-            return TypeCache.GetOrAdd(type, ObjectContext.GetObjectType);
+            return _typeCache.GetOrAdd(type, ObjectContext.GetObjectType);
         }
     }
 }

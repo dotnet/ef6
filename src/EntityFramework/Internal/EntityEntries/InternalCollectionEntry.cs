@@ -17,7 +17,7 @@
     {
         #region Fields and constructors
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalCollectionEntry, object>> EntryFactories =
+        private static readonly ConcurrentDictionary<Type, Func<InternalCollectionEntry, object>> _entryFactories =
             new ConcurrentDictionary<Type, Func<InternalCollectionEntry, object>>();
 
         /// <summary>
@@ -132,7 +132,7 @@
             var targetType = typeof(DbMemberEntry<TEntity, TProperty>);
 
             Func<InternalCollectionEntry, object> factory;
-            if (!EntryFactories.TryGetValue(targetType, out factory))
+            if (!_entryFactories.TryGetValue(targetType, out factory))
             {
                 var genericType = typeof(DbCollectionEntry<,>).MakeGenericType(typeof(TEntity), elementType);
 
@@ -151,7 +151,7 @@
                 factory =
                     (Func<InternalCollectionEntry, object>)
                     Delegate.CreateDelegate(typeof(Func<InternalCollectionEntry, object>), factoryMethod);
-                EntryFactories.TryAdd(targetType, factory);
+                _entryFactories.TryAdd(targetType, factory);
             }
             return (DbMemberEntry<TEntity, TProperty>)factory(this);
         }

@@ -293,10 +293,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region Statics
 
         private const byte DefaultDecimalPrecision = 18;
-        private static readonly char[] HexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         // Define lists of functions that take string arugments and return strings.
-        private static readonly ISet<string> CanonicalAndStoreStringFunctionsOneArg =
+        private static readonly ISet<string> _canonicalAndStoreStringFunctionsOneArg =
             new HashSet<string>(StringComparer.Ordinal)
                 {
                     "Edm.Trim",
@@ -824,7 +824,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // All string arguments to the function must be candidates to match target pattern.
                 var functionFullName = function.FullName;
 
-                if (CanonicalAndStoreStringFunctionsOneArg.Contains(functionFullName))
+                if (_canonicalAndStoreStringFunctionsOneArg.Contains(functionFullName))
                 {
                     return MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]);
                 }
@@ -4215,7 +4215,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var sb = new StringBuilder(binaryArray.Length * 2);
             for (var i = 0; i < binaryArray.Length; i++)
             {
-                sb.Append(HexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(HexDigits[binaryArray[i] & 0x0F]);
+                sb.Append(_hexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(_hexDigits[binaryArray[i] & 0x0F]);
             }
             return sb.ToString();
         }

@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        private static readonly Dictionary<DbExpressionKind, OpType> s_opMap = InitializeExpressionKindToOpTypeMap();
+        private static readonly Dictionary<DbExpressionKind, OpType> _opMap = InitializeExpressionKindToOpTypeMap();
 
         private readonly Command _iqtCommand;
         private readonly Stack<CqtVariableScope> _varScopes = new Stack<CqtVariableScope>();
@@ -1372,7 +1372,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbComparisonExpression e)
         {
-            Op op = _iqtCommand.CreateComparisonOp(s_opMap[e.ExpressionKind]);
+            Op op = _iqtCommand.CreateComparisonOp(_opMap[e.ExpressionKind]);
 
             var leftArg = VisitExprAsScalar(e.Left);
             var rightArg = VisitExprAsScalar(e.Right);
@@ -1573,7 +1573,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbArithmeticExpression e)
         {
-            Op op = _iqtCommand.CreateArithmeticOp(s_opMap[e.ExpressionKind], e.ResultType);
+            Op op = _iqtCommand.CreateArithmeticOp(_opMap[e.ExpressionKind], e.ResultType);
             // Make sure that the inputs have been "cast" to the result type
             // Assumption: The input type must be the same as the result type. Is this always true?
             var children = new List<Node>();

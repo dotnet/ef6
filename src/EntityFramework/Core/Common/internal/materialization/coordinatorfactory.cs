@@ -18,12 +18,12 @@
         /// <summary>
         /// Function of shaper that returns true; one default case when there is no explicit predicate.
         /// </summary>
-        private static readonly Func<Shaper, bool> AlwaysTrue = s => true;
+        private static readonly Func<Shaper, bool> _alwaysTrue = s => true;
 
         /// <summary>
         /// Function of shaper that returns false; one default case used when there is no explicit predicate.
         /// </summary>
-        private static readonly Func<Shaper, bool> AlwaysFalse = s => false;
+        private static readonly Func<Shaper, bool> _alwaysFalse = s => false;
 
         #endregion
 
@@ -96,7 +96,7 @@
             // if there is no explicit 'has data' discriminator, it means all rows contain data for the coordinator
             if (hasData == null)
             {
-                HasData = AlwaysTrue;
+                HasData = _alwaysTrue;
             }
             else
             {
@@ -106,7 +106,7 @@
             // if there is no explicit set key delegate, just return true (the value is not used anyways)
             if (setKeys == null)
             {
-                SetKeys = AlwaysTrue;
+                SetKeys = _alwaysTrue;
             }
             else
             {
@@ -122,11 +122,11 @@
             {
                 if (IsLeafResult)
                 {
-                    CheckKeys = AlwaysFalse; // every row is a new result (the keys don't match)
+                    CheckKeys = _alwaysFalse; // every row is a new result (the keys don't match)
                 }
                 else
                 {
-                    CheckKeys = AlwaysTrue; // every row belongs to a single child collection
+                    CheckKeys = _alwaysTrue; // every row belongs to a single child collection
                 }
             }
             else

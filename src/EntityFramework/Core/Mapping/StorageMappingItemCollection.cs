@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Mapping
 
             private readonly StorageMappingItemCollection m_storageMappingItemCollection;
 
-            private static readonly ConfigViewGenerator MConfig = new ConfigViewGenerator();
+            private static readonly ConfigViewGenerator _config = new ConfigViewGenerator();
 
             // Indicates whether the views are being fetched from a generated class or they are being generated at the runtime
             private bool m_generatedViewsMode = true;
@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Mapping
                 //If there are no entity set maps, don't call the view generation process
                 Debug.Assert(entityContainerMap.HasViews);
 
-                var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(entityContainerMap, MConfig);
+                var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(entityContainerMap, _config);
                 var extentMappingViews = viewGenResults.Views;
                 if (viewGenResults.HasErrors)
                 {
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Mapping
 
                 bool success;
                 var viewGenResults = ViewgenGatekeeper.GenerateTypeSpecificQueryView(
-                    entityContainerMap, MConfig, entity, type, includeSubtypes, out success);
+                    entityContainerMap, _config, entity, type, includeSubtypes, out success);
                 if (!success)
                 {
                     generatedView = null;
@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core.Mapping
                     var aSet = (AssociationSet)extent;
                     if (aSet.ElementType.IsForeignKey)
                     {
-                        if (MConfig.IsViewTracing)
+                        if (_config.IsViewTracing)
                         {
                             Helpers.StringTraceLine(String.Empty);
                             Helpers.StringTraceLine(String.Empty);
@@ -363,7 +363,7 @@ namespace System.Data.Entity.Core.Mapping
                                 });
                         return GeneratedView.CreateGeneratedViewForFKAssociationSet(
                             aSet, aSet.ElementType, new DbQueryCommandTree(workspace, DataSpace.SSpace, qView), storageMappingItemCollection,
-                            MConfig);
+                            _config);
                     }
                 }
 

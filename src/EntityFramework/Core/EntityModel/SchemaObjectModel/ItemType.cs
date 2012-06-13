@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private const char KEY_DELIMITER = ' ';
         private ISchemaElementLookUpTable<NavigationProperty> _navigationProperties;
         private EntityKeyElement _keyElement;
-        private static readonly List<PropertyRefElement> EmptyKeyProperties = new List<PropertyRefElement>(0);
+        private static readonly List<PropertyRefElement> _emptyKeyProperties = new List<PropertyRefElement>(0);
 
         #endregion
 
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 if (KeyElement == null)
                 {
-                    return EmptyKeyProperties;
+                    return _emptyKeyProperties;
                 }
                 return KeyElement.KeyProperties;
             }
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                         return (BaseType as SchemaEntityType).KeyProperties;
                     }
 
-                    return EmptyKeyProperties;
+                    return _emptyKeyProperties;
                 }
                 return KeyElement.KeyProperties;
             }

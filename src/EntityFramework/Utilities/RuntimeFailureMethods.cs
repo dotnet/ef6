@@ -11,13 +11,23 @@ namespace System.Data.Entity.Utilities
     /// </summary>
     internal static class RuntimeFailureMethods
     {
-        public static readonly Regex IsNotNull = new Regex(
+        private static readonly Regex _isNotNull = new Regex(
             @"^\s*(@?\w+)\s*\!\=\s*null\s*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public static readonly Regex IsNullOrWhiteSpace = new Regex(
+        private static readonly Regex _isNullOrWhiteSpace = new Regex(
             @"^\s*\!\s*string\s*\.\s*IsNullOrWhiteSpace\s*\(\s*(@?[\w]+)\s*\)\s*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public static Regex IsNotNull
+        {
+            get { return _isNotNull; }
+        }
+
+        public static Regex IsNullOrWhiteSpace
+        {
+            get { return _isNullOrWhiteSpace; }
+        }
 
         [DebuggerStepThrough]
         public static void Requires(bool condition, string userMessage, string conditionText)
@@ -26,13 +36,13 @@ namespace System.Data.Entity.Utilities
             {
                 Match match;
 
-                if (((match = IsNotNull.Match(conditionText)) != null)
+                if (((match = _isNotNull.Match(conditionText)) != null)
                     && match.Success)
                 {
                     throw Error.ArgumentNull(match.Groups[1].Value);
                 }
 
-                if (((match = IsNullOrWhiteSpace.Match(conditionText)) != null)
+                if (((match = _isNullOrWhiteSpace.Match(conditionText)) != null)
                     && match.Success)
                 {
                     throw Error.ArgumentIsNullOrWhitespace(match.Groups[1].Value);

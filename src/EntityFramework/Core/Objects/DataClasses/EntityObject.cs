@@ -24,10 +24,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private EntityKey _entityKey;
 
         [NonSerialized]
-        private IEntityChangeTracker _entityChangeTracker = s_detachedEntityChangeTracker;
+        private IEntityChangeTracker _entityChangeTracker = _detachedEntityChangeTracker;
 
         [NonSerialized]
-        private static readonly DetachedEntityChangeTracker s_detachedEntityChangeTracker = new DetachedEntityChangeTracker();
+        private static readonly DetachedEntityChangeTracker _detachedEntityChangeTracker = new DetachedEntityChangeTracker();
 
         /// <summary>
         /// Helper class used when we are not currently attached to a change tracker.
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (_entityChangeTracker == null)
                 {
-                    _entityChangeTracker = s_detachedEntityChangeTracker;
+                    _entityChangeTracker = _detachedEntityChangeTracker;
                 }
                 return _entityChangeTracker;
             }
@@ -88,9 +88,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 Debug.Assert(
                     EntityChangeTracker != null,
-                    "EntityChangeTracker should never return null -- if detached should be set to s_detachedEntityChangeTracker");
+                    "EntityChangeTracker should never return null -- if detached should be set to _detachedEntityChangeTracker");
                 Debug.Assert(
-                    EntityChangeTracker != s_detachedEntityChangeTracker ? EntityChangeTracker.EntityState != EntityState.Detached : true,
+                    EntityChangeTracker != _detachedEntityChangeTracker ? EntityChangeTracker.EntityState != EntityState.Detached : true,
                     "Should never get a detached state from an attached change tracker.");
 
                 return EntityChangeTracker.EntityState;
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // If we are attached, the change tracker should make sure the new value is valid for the current state
                 Debug.Assert(
                     EntityChangeTracker != null,
-                    "_entityChangeTracker should never be null -- if detached it should return s_detachedEntityChangeTracker");
+                    "_entityChangeTracker should never be null -- if detached it should return _detachedEntityChangeTracker");
                 EntityChangeTracker.EntityMemberChanging(EntityKeyPropertyName);
                 _entityKey = value;
                 EntityChangeTracker.EntityMemberChanged(EntityKeyPropertyName);
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // Fail if the change tracker is already set for this EntityObject and it's being set to something different
             // If the original change tracker is associated with a disposed ObjectStateManager, then allow
             // the entity to be attached
-            if (changeTracker != null && EntityChangeTracker != s_detachedEntityChangeTracker
+            if (changeTracker != null && EntityChangeTracker != _detachedEntityChangeTracker
                 && !ReferenceEquals(changeTracker, EntityChangeTracker))
             {
                 var entry = EntityChangeTracker as EntityEntry;
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             Debug.Assert(
                 EntityChangeTracker != null,
-                "_entityChangeTracker should never be null -- if detached it should return s_detachedEntityChangeTracker");
+                "_entityChangeTracker should never be null -- if detached it should return _detachedEntityChangeTracker");
 
             base.ReportPropertyChanging(property);
 
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             Debug.Assert(
                 EntityChangeTracker != null,
-                "EntityChangeTracker should never return null -- if detached it should be return s_detachedEntityChangeTracker");
+                "EntityChangeTracker should never return null -- if detached it should be return _detachedEntityChangeTracker");
             EntityChangeTracker.EntityMemberChanged(property);
 
             base.ReportPropertyChanged(property);

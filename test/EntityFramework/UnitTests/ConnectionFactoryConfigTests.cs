@@ -30,13 +30,13 @@
         // Hard-coding this rather than getting it dynamically because the product code gets it dynamically
         // and the tests need to make sure it gets the correct thing. This will need to be updated when the
         // assembly version number is incremented.
-        private static readonly Version BuiltEntityFrameworkVersion = new Version("6.0.0.0");
-        private static readonly Version Net45EntityFrameworkVersion = new Version("6.0.0.0");
-        private static readonly Version Net40EntityFrameworkVersion = new Version("4.4.0.0");
+        private static readonly Version _builtEntityFrameworkVersion = new Version("6.0.0.0");
+        private static readonly Version _net45EntityFrameworkVersion = new Version("6.0.0.0");
+        private static readonly Version _net40EntityFrameworkVersion = new Version("4.4.0.0");
 
         private const string EntityFrameworkSectionFormat = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-        private static readonly string Net45EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, Net45EntityFrameworkVersion);
-        private static readonly string Net40EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, Net40EntityFrameworkVersion);
+        private static readonly string _net45EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, _net45EntityFrameworkVersion);
+        private static readonly string _net40EntityFrameworkSectionName = string.Format(CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, _net40EntityFrameworkVersion);
 
         #endregion
 
@@ -45,28 +45,28 @@
         [Fact]
         public void VersionMapper_maps_dotNET_4_to_net40_assembly()
         {
-            Assert.Equal(Net40EntityFrameworkVersion,
+            Assert.Equal(_net40EntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.0")));
         }
 
         [Fact]
         public void VersionMapper_maps_dotNET_4_client_to_net40_assembly()
         {
-            Assert.Equal(Net40EntityFrameworkVersion,
+            Assert.Equal(_net40EntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.0, Profile=Client")));
         }
 
         [Fact]
         public void VersionMapper_maps_dotNET_4_5_to_built_assembly()
         {
-            Assert.Equal(BuiltEntityFrameworkVersion,
+            Assert.Equal(_builtEntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.5")));
         }
 
         [Fact]
         public void VersionMapper_maps_future_dotNET_version_to_built_assembly()
         {
-            Assert.Equal(BuiltEntityFrameworkVersion,
+            Assert.Equal(_builtEntityFrameworkVersion,
                          new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=7.3")));
         }
 
@@ -116,12 +116,12 @@
                         .ProcessConfigFile(
                             mockedItem.Object, new Func<XDocument, bool>[]
                                                {
-                                                   c => mockManipulator.Object.AddOrUpdateConfigSection(c, Net45EntityFrameworkVersion),
+                                                   c => mockManipulator.Object.AddOrUpdateConfigSection(c, _net45EntityFrameworkVersion),
                                                    c => mockManipulator.Object.AddConnectionFactoryToConfig(c, new ConnectionFactorySpecification("F"))
                                                });
 
                     mockManipulator.Verify(m => m.AddConnectionFactoryToConfig(It.IsAny<XDocument>(), It.IsAny<ConnectionFactorySpecification>()));
-                    mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), Net45EntityFrameworkVersion));
+                    mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), _net45EntityFrameworkVersion));
                 });
         }
 
@@ -358,12 +358,12 @@
         [Fact]
         public void AddOrUpdateConfigSection_does_nothing_if_EF_assembly_name_is_up_to_date()
         {
-            var config = CreateConfigSectionDoc(Net45EntityFrameworkSectionName, addRequirePermission: true);
+            var config = CreateConfigSectionDoc(_net45EntityFrameworkSectionName, addRequirePermission: true);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             Assert.False(sectionModified);
-            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -371,10 +371,10 @@
         {
             var config = new XDocument();
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -382,10 +382,10 @@
         {
             var config = new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName));
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -395,10 +395,10 @@
                 new XDocument(new XElement(ConfigFileManipulator.ConfigurationElementName,
                                            new XElement(ConfigFileManipulator.ConfigSectionsElementName)));
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -406,43 +406,43 @@
         {
             var config = CreateConfigSectionDoc(assemblyName: null);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_updates_EF_section_if_configSections_element_is_out_of_date()
         {
-            var config = CreateConfigSectionDoc(Net40EntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(_net40EntityFrameworkSectionName);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(Net45EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net45EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_when_using_NET4_EF_assembly_does_nothing_if_EF_assembly_name_is_up_to_date()
         {
-            var config = CreateConfigSectionDoc(Net40EntityFrameworkSectionName, addRequirePermission: true);
+            var config = CreateConfigSectionDoc(_net40EntityFrameworkSectionName, addRequirePermission: true);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net40EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net40EntityFrameworkVersion);
 
             Assert.False(sectionModified);
-            Assert.Equal(Net40EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
         public void AddOrUpdateConfigSection_when_using_NET4_EF_assembly_updates_EF_section_if_configSections_element_is_too_new()
         {
-            var config = CreateConfigSectionDoc(Net45EntityFrameworkSectionName);
+            var config = CreateConfigSectionDoc(_net45EntityFrameworkSectionName);
 
-            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net40EntityFrameworkVersion);
+            var sectionModified = new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net40EntityFrameworkVersion);
 
             Assert.True(sectionModified);
-            Assert.Equal(Net40EntityFrameworkSectionName, GetEfSectionName(config));
+            Assert.Equal(_net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
         [Fact]
@@ -456,12 +456,12 @@
         public void AddOrUpdateConfigSection_on_update_yields_result_that_can_load_in_partial_trust()
         {
             AddOrUpdateConfigSection_result_can_load_in_partial_trust(
-                CreateConfigSectionDoc(Net40EntityFrameworkSectionName));
+                CreateConfigSectionDoc(_net40EntityFrameworkSectionName));
         }
 
         private void AddOrUpdateConfigSection_result_can_load_in_partial_trust(XDocument config)
         {
-            new ConfigFileManipulator().AddOrUpdateConfigSection(config, Net45EntityFrameworkVersion);
+            new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
 
             var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
             config.Save(configurationFile);
@@ -633,7 +633,7 @@
                                       mockedItem.Object,
                                       new Func<XDocument, bool>[]
                                       {
-                                          c => mockedManipulator.Object.AddOrUpdateConfigSection(c, Net45EntityFrameworkVersion),
+                                          c => mockedManipulator.Object.AddOrUpdateConfigSection(c, _net45EntityFrameworkVersion),
                                           c => mockedManipulator.Object.AddConnectionFactoryToConfig(c, new ConnectionFactorySpecification("F"))
                                       });
 

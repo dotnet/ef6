@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     {
         #region Fields
 
-        private static readonly Regex s_wordIdentifierRegex = new Regex(@"^[_A-Za-z]\w*$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+        private static readonly Regex _wordIdentifierRegex = new Regex(@"^[_A-Za-z]\w*$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         // effects: Modifies builder to contain an escaped version of "name"
         internal static void AppendEscapedName(StringBuilder builder, string name)
         {
-            if (s_wordIdentifierRegex.IsMatch(name)
+            if (_wordIdentifierRegex.IsMatch(name)
                 && false == ExternalCalls.IsReservedKeyword(name))
             {
                 // We do not need to escape the name if it is a simple name and it is not a keyword

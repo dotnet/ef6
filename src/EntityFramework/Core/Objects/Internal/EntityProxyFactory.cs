@@ -38,28 +38,28 @@
         /// A null value for a particular EntityType name key records the fact that 
         /// no proxy Type could be created for the specified type.
         /// </summary>
-        private static readonly Dictionary<Tuple<Type, string>, EntityProxyTypeInfo> s_ProxyNameMap =
+        private static readonly Dictionary<Tuple<Type, string>, EntityProxyTypeInfo> _proxyNameMap =
             new Dictionary<Tuple<Type, string>, EntityProxyTypeInfo>();
 
         /// <summary>
         /// Dictionary of proxy class type information, keyed by the proxy type
         /// </summary>
-        private static readonly Dictionary<Type, EntityProxyTypeInfo> s_ProxyTypeMap = new Dictionary<Type, EntityProxyTypeInfo>();
+        private static readonly Dictionary<Type, EntityProxyTypeInfo> _proxyTypeMap = new Dictionary<Type, EntityProxyTypeInfo>();
 
-        private static readonly Dictionary<Assembly, ModuleBuilder> s_ModuleBuilders = new Dictionary<Assembly, ModuleBuilder>();
-        private static readonly ReaderWriterLockSlim s_TypeMapLock = new ReaderWriterLockSlim();
+        private static readonly Dictionary<Assembly, ModuleBuilder> _moduleBuilders = new Dictionary<Assembly, ModuleBuilder>();
+        private static readonly ReaderWriterLockSlim _typeMapLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// The runtime assembly of the proxy types.
         /// This is not the same as the AssemblyBuilder used to create proxy types.
         /// </summary>
-        private static readonly HashSet<Assembly> ProxyRuntimeAssemblies = new HashSet<Assembly>();
+        private static readonly HashSet<Assembly> _proxyRuntimeAssemblies = new HashSet<Assembly>();
 
         private static ModuleBuilder GetDynamicModule(EntityType ospaceEntityType)
         {
             var assembly = ospaceEntityType.ClrType.Assembly;
             ModuleBuilder moduleBuilder;
-            if (!s_ModuleBuilders.TryGetValue(assembly, out moduleBuilder))
+            if (!_moduleBuilders.TryGetValue(assembly, out moduleBuilder))
             {
                 var assemblyName =
                     new AssemblyName(String.Format(CultureInfo.InvariantCulture, "EntityFrameworkDynamicProxies-{0}", assembly.FullName));
@@ -93,34 +93,34 @@
                     moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule");
                 }
 
-                s_ModuleBuilders.Add(assembly, moduleBuilder);
+                _moduleBuilders.Add(assembly, moduleBuilder);
             }
             return moduleBuilder;
         }
 
         internal static bool TryGetProxyType(Type clrType, string entityTypeName, out EntityProxyTypeInfo proxyTypeInfo)
         {
-            s_TypeMapLock.EnterReadLock();
+            _typeMapLock.EnterReadLock();
             try
             {
-                return s_ProxyNameMap.TryGetValue(new Tuple<Type, string>(clrType, entityTypeName), out proxyTypeInfo);
+                return _proxyNameMap.TryGetValue(new Tuple<Type, string>(clrType, entityTypeName), out proxyTypeInfo);
             }
             finally
             {
-                s_TypeMapLock.ExitReadLock();
+                _typeMapLock.ExitReadLock();
             }
         }
 
         internal static bool TryGetProxyType(Type proxyType, out EntityProxyTypeInfo proxyTypeInfo)
         {
-            s_TypeMapLock.EnterReadLock();
+            _typeMapLock.EnterReadLock();
             try
             {
-                return s_ProxyTypeMap.TryGetValue(proxyType, out proxyTypeInfo);
+                return _proxyTypeMap.TryGetValue(proxyType, out proxyTypeInfo);
             }
             finally
             {
-                s_TypeMapLock.ExitReadLock();
+                _typeMapLock.ExitReadLock();
             }
         }
 
@@ -171,14 +171,14 @@
             // 1. Other readers aren't blocked while the second existence check is performed.
             // 2. Other threads that may have also detected the absence of an entry block while the first thread handles proxy type creation.
 
-            s_TypeMapLock.EnterUpgradeableReadLock();
+            _typeMapLock.EnterUpgradeableReadLock();
             try
             {
                 return TryCreateProxyType(ospaceEntityType);
             }
             finally
             {
-                s_TypeMapLock.ExitUpgradeableReadLock();
+                _typeMapLock.ExitUpgradeableReadLock();
             }
         }
 
@@ -216,7 +216,7 @@
             // 1. Other readers aren't blocked while existence checks are performed.
             // 2. Other threads that may have detected the absence of an entry block while the first thread handles proxy type creation.
 
-            s_TypeMapLock.EnterUpgradeableReadLock();
+            _typeMapLock.EnterUpgradeableReadLock();
             try
             {
                 foreach (var ospaceEntityType in ospaceEntityTypes)
@@ -227,40 +227,40 @@
             }
             finally
             {
-                s_TypeMapLock.ExitUpgradeableReadLock();
+                _typeMapLock.ExitUpgradeableReadLock();
             }
         }
 
         private static EntityProxyTypeInfo TryCreateProxyType(EntityType ospaceEntityType)
         {
             Debug.Assert(
-                s_TypeMapLock.IsUpgradeableReadLockHeld,
-                "EntityProxyTypeInfo.TryCreateProxyType method was called without first acquiring an upgradeable read lock from s_TypeMapLock.");
+                _typeMapLock.IsUpgradeableReadLockHeld,
+                "EntityProxyTypeInfo.TryCreateProxyType method was called without first acquiring an upgradeable read lock from _typeMapLock.");
 
             EntityProxyTypeInfo proxyTypeInfo;
             var clrEntityType = (ClrEntityType)ospaceEntityType;
 
             var proxyIdentiy = new Tuple<Type, string>(clrEntityType.ClrType, clrEntityType.HashedDescription);
 
-            if (!s_ProxyNameMap.TryGetValue(proxyIdentiy, out proxyTypeInfo)
+            if (!_proxyNameMap.TryGetValue(proxyIdentiy, out proxyTypeInfo)
                 && CanProxyType(ospaceEntityType))
             {
                 var moduleBuilder = GetDynamicModule(ospaceEntityType);
                 proxyTypeInfo = BuildType(moduleBuilder, clrEntityType);
 
-                s_TypeMapLock.EnterWriteLock();
+                _typeMapLock.EnterWriteLock();
                 try
                 {
-                    s_ProxyNameMap[proxyIdentiy] = proxyTypeInfo;
+                    _proxyNameMap[proxyIdentiy] = proxyTypeInfo;
                     if (proxyTypeInfo != null)
                     {
                         // If there is a proxy type, create the reverse lookup
-                        s_ProxyTypeMap[proxyTypeInfo.ProxyType] = proxyTypeInfo;
+                        _proxyTypeMap[proxyTypeInfo.ProxyType] = proxyTypeInfo;
                     }
                 }
                 finally
                 {
-                    s_TypeMapLock.ExitWriteLock();
+                    _typeMapLock.ExitWriteLock();
                 }
             }
 
@@ -279,7 +279,7 @@
         internal static bool IsProxyType(Type type)
         {
             Debug.Assert(type != null, "type is null, was this intended?");
-            return type != null && ProxyRuntimeAssemblies.Contains(type.Assembly);
+            return type != null && _proxyRuntimeAssemblies.Contains(type.Assembly);
         }
 
         /// <summary>
@@ -294,17 +294,17 @@
         /// </remarks>
         internal static IEnumerable<Type> GetKnownProxyTypes()
         {
-            s_TypeMapLock.EnterReadLock();
+            _typeMapLock.EnterReadLock();
             try
             {
-                var proxyTypes = from info in s_ProxyNameMap.Values
+                var proxyTypes = from info in _proxyNameMap.Values
                                  where info != null
                                  select info.ProxyType;
                 return proxyTypes.ToArray();
             }
             finally
             {
-                s_TypeMapLock.ExitReadLock();
+                _typeMapLock.ExitReadLock();
             }
         }
 
@@ -395,8 +395,8 @@
         private static EntityProxyTypeInfo BuildType(ModuleBuilder moduleBuilder, ClrEntityType ospaceEntityType)
         {
             Debug.Assert(
-                s_TypeMapLock.IsUpgradeableReadLockHeld,
-                "EntityProxyTypeInfo.BuildType method was called without first acquiring an upgradeable read lock from s_TypeMapLock.");
+                _typeMapLock.IsUpgradeableReadLockHeld,
+                "EntityProxyTypeInfo.BuildType method was called without first acquiring an upgradeable read lock from _typeMapLock.");
 
             EntityProxyTypeInfo proxyTypeInfo;
 
@@ -408,9 +408,9 @@
                 // Set the runtime assembly of the proxy types if it hasn't already been set.
                 // This is used by the IsProxyType method.
                 var typeAssembly = proxyType.Assembly;
-                if (!ProxyRuntimeAssemblies.Contains(typeAssembly))
+                if (!_proxyRuntimeAssemblies.Contains(typeAssembly))
                 {
-                    ProxyRuntimeAssemblies.Add(typeAssembly);
+                    _proxyRuntimeAssemblies.Add(typeAssembly);
                     AddAssemblyToResolveList(typeAssembly);
                 }
 
@@ -444,7 +444,7 @@
         [SecuritySafeCritical]
         private static void AddAssemblyToResolveList(Assembly assembly)
         {
-            if (ProxyRuntimeAssemblies.Contains(assembly)) // If the assembly is not a known proxy assembly, ignore it.
+            if (_proxyRuntimeAssemblies.Contains(assembly)) // If the assembly is not a known proxy assembly, ignore it.
             {
                 ResolveEventHandler resolveHandler = (sender, args) => args.Name == assembly.FullName ? assembly : null;
                 AppDomain.CurrentDomain.AssemblyResolve += resolveHandler;
@@ -812,25 +812,25 @@
                 }
             }
 
-            private static readonly ConstructorInfo s_NonSerializedAttributeConstructor =
+            private static readonly ConstructorInfo _nonSerializedAttributeConstructor =
                 typeof(NonSerializedAttribute).GetConstructor(Type.EmptyTypes);
 
-            private static readonly ConstructorInfo s_IgnoreDataMemberAttributeConstructor =
+            private static readonly ConstructorInfo _ignoreDataMemberAttributeConstructor =
                 typeof(IgnoreDataMemberAttribute).GetConstructor(Type.EmptyTypes);
 
-            private static readonly ConstructorInfo s_XmlIgnoreAttributeConstructor =
+            private static readonly ConstructorInfo _xmlIgnoreAttributeConstructor =
                 typeof(XmlIgnoreAttribute).GetConstructor(Type.EmptyTypes);
 
             private static void MarkAsNotSerializable(FieldBuilder field)
             {
                 var emptyArray = new object[0];
 
-                field.SetCustomAttribute(new CustomAttributeBuilder(s_NonSerializedAttributeConstructor, emptyArray));
+                field.SetCustomAttribute(new CustomAttributeBuilder(_nonSerializedAttributeConstructor, emptyArray));
 
                 if (field.IsPublic)
                 {
-                    field.SetCustomAttribute(new CustomAttributeBuilder(s_IgnoreDataMemberAttributeConstructor, emptyArray));
-                    field.SetCustomAttribute(new CustomAttributeBuilder(s_XmlIgnoreAttributeConstructor, emptyArray));
+                    field.SetCustomAttribute(new CustomAttributeBuilder(_ignoreDataMemberAttributeConstructor, emptyArray));
+                    field.SetCustomAttribute(new CustomAttributeBuilder(_xmlIgnoreAttributeConstructor, emptyArray));
                 }
             }
         }

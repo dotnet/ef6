@@ -213,21 +213,21 @@
 
             #region Static members and initializers
 
-            private static readonly Dictionary<PropertyInfo, PropertyTranslator> s_propertyTranslators;
-            private static bool s_vbPropertiesInitialized;
-            private static readonly object s_vbInitializerLock = new object();
+            private static readonly Dictionary<PropertyInfo, PropertyTranslator> _propertyTranslators;
+            private static bool _vbPropertiesInitialized;
+            private static readonly object _vbInitializerLock = new object();
 
             [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member",
                 Target = "System.Data.Entity.Core.Objects.ELinq.ExpressionConverter+MemberAccessTranslator.#.cctor()")]
             static MemberAccessTranslator()
             {
                 // initialize translators for specific properties
-                s_propertyTranslators = new Dictionary<PropertyInfo, PropertyTranslator>();
+                _propertyTranslators = new Dictionary<PropertyInfo, PropertyTranslator>();
                 foreach (var translator in GetPropertyTranslators())
                 {
                     foreach (var property in translator.Properties)
                     {
-                        s_propertyTranslators.Add(property, translator);
+                        _propertyTranslators.Add(property, translator);
                     }
                 }
             }
@@ -264,7 +264,7 @@
                 }
 
                 PropertyTranslator translatorInstance;
-                if (s_propertyTranslators.TryGetValue(propertyInfo, out translatorInstance))
+                if (_propertyTranslators.TryGetValue(propertyInfo, out translatorInstance))
                 {
                     propertyTranslator = translatorInstance;
                     return true;
@@ -273,15 +273,15 @@
                 // check if this is the visual basic assembly
                 if (s_visualBasicAssemblyFullName == propertyInfo.DeclaringType.Assembly.FullName)
                 {
-                    lock (s_vbInitializerLock)
+                    lock (_vbInitializerLock)
                     {
-                        if (!s_vbPropertiesInitialized)
+                        if (!_vbPropertiesInitialized)
                         {
                             InitializeVBProperties(propertyInfo.DeclaringType.Assembly);
-                            s_vbPropertiesInitialized = true;
+                            _vbPropertiesInitialized = true;
                         }
                         // try again
-                        if (s_propertyTranslators.TryGetValue(propertyInfo, out translatorInstance))
+                        if (_propertyTranslators.TryGetValue(propertyInfo, out translatorInstance))
                         {
                             propertyTranslator = translatorInstance;
                             return true;
@@ -425,12 +425,12 @@
 
             private static void InitializeVBProperties(Assembly vbAssembly)
             {
-                Debug.Assert(!s_vbPropertiesInitialized);
+                Debug.Assert(!_vbPropertiesInitialized);
                 foreach (var translator in GetVisualBasicPropertyTranslators(vbAssembly))
                 {
                     foreach (var property in translator.Properties)
                     {
-                        s_propertyTranslators.Add(property, translator);
+                        _propertyTranslators.Add(property, translator);
                     }
                 }
             }
@@ -617,7 +617,7 @@
 
             private sealed class RenameCanonicalFunctionPropertyTranslator : PropertyTranslator
             {
-                private static readonly Dictionary<PropertyInfo, string> s_propertyRenameMap = new Dictionary<PropertyInfo, string>(2);
+                private static readonly Dictionary<PropertyInfo, string> _propertyRenameMap = new Dictionary<PropertyInfo, string>(2);
 
                 internal RenameCanonicalFunctionPropertyTranslator()
                     : base(GetProperties())
@@ -641,7 +641,7 @@
                     Type declaringType, string propertyName, BindingFlags bindingFlages, string canonicalFunctionName)
                 {
                     var propertyInfo = declaringType.GetProperty(propertyName, bindingFlages);
-                    s_propertyRenameMap.Add(propertyInfo, canonicalFunctionName);
+                    _propertyRenameMap.Add(propertyInfo, canonicalFunctionName);
                     return propertyInfo;
                 }
 
@@ -653,7 +653,7 @@
                 internal override DbExpression Translate(ExpressionConverter parent, MemberExpression call)
                 {
                     var property = (PropertyInfo)call.Member;
-                    var canonicalFunctionName = s_propertyRenameMap[property];
+                    var canonicalFunctionName = _propertyRenameMap[property];
                     DbExpression result;
                     if (call.Expression == null)
                     {

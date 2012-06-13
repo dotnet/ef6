@@ -21,11 +21,11 @@ namespace System.Data.Entity.Internal
         #region Fields and constructors
 
         // AppDomain cache collection initializers for a known type.
-        private static readonly ConcurrentDictionary<Type, DbContextTypesInitializersPair> ObjectSetInitializers =
+        private static readonly ConcurrentDictionary<Type, DbContextTypesInitializersPair> _objectSetInitializers =
             new ConcurrentDictionary<Type, DbContextTypesInitializersPair>();
 
         // Used by the code below to create DbSet instances
-        private static readonly MethodInfo DbContext_Set = typeof(DbContext).GetMethod("Set", Type.EmptyTypes);
+        private static readonly MethodInfo _setMethod = typeof(DbContext).GetMethod("Set", Type.EmptyTypes);
 
         private readonly DbContext _context;
 
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Internal
         private Dictionary<Type, List<string>> GetSets()
         {
             DbContextTypesInitializersPair setsInfo;
-            if (!ObjectSetInitializers.TryGetValue(_context.GetType(), out setsInfo))
+            if (!_objectSetInitializers.TryGetValue(_context.GetType(), out setsInfo))
             {
                 // It is possible that multiple threads will enter this code and create the list
                 // and the delegates.  However, the result will always be the same so we may, in
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Internal
                             var setter = propertyInfo.GetSetMethod(nonPublic: false);
                             if (setter != null)
                             {
-                                var setMethod = DbContext_Set.MakeGenericMethod(entityType);
+                                var setMethod = _setMethod.MakeGenericMethod(entityType);
 
                                 var newExpression = Expression.Call(dbContextParam, setMethod);
                                 var setExpression = Expression.Call(
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Internal
 
                 // If TryAdd fails it just means some other thread got here first, which is okay
                 // since the end result is the same info anyway.
-                ObjectSetInitializers.TryAdd(_context.GetType(), setsInfo);
+                _objectSetInitializers.TryAdd(_context.GetType(), setsInfo);
             }
             return setsInfo.EntityTypeToPropertyNameMap;
         }
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Internal
         public void InitializeSets()
         {
             GetSets(); // Ensures sets have been discovered
-            ObjectSetInitializers[_context.GetType()].SetsInitializer(_context);
+            _objectSetInitializers[_context.GetType()].SetsInitializer(_context);
         }
 
         /// <summary>

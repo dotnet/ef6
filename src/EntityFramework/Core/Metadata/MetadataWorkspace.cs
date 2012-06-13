@@ -134,8 +134,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        //The Max EDM version thats going to be supported by the runtime.
-        public static readonly double MaximumEdmVersionSupported = SupportedEdmVersions.Last();
+        private static readonly double _maximumEdmVersionSupported = SupportedEdmVersions.Last();
+
+        /// <summary>
+        /// The Max EDM version thats going to be supported by the runtime.
+        /// </summary>
+        public static double MaximumEdmVersionSupported
+        {
+            get { return _maximumEdmVersionSupported; }
+        }
 
         internal virtual Guid MetadataWorkspaceId
         {
