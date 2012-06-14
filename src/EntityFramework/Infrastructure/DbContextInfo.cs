@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Configuration;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
@@ -16,6 +17,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly DbProviderInfo _modelProviderInfo;
         private readonly DbConnectionInfo _connectionInfo;
         private readonly AppConfig _appConfig;
+        private readonly ConfigDependencyResolver _dependencyResolver;
         private readonly Func<DbContext> _activator;
         private readonly string _connectionString;
         private readonly string _connectionProviderName;
@@ -168,6 +170,9 @@ namespace System.Data.Entity.Infrastructure
             _modelProviderInfo = modelProviderInfo;
             _appConfig = config;
             _connectionInfo = connectionInfo;
+            _dependencyResolver = new ConfigDependencyResolver(_appConfig);
+
+            DbConfiguration.Instance.AddDependencyResolver(_dependencyResolver);
 
             _activator = CreateActivator();
 
@@ -190,6 +195,11 @@ namespace System.Data.Entity.Infrastructure
                     }
                 }
             }
+        }
+
+        public virtual void PopConfiguration()
+        {
+            DbConfiguration.Instance.RemoveDependencyResolver(_dependencyResolver);
         }
 
         /// <summary>

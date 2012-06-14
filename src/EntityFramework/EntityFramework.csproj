@@ -130,6 +130,14 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Config\ConfigDependencyResolver.cs" />
+    <Compile Include="Config\DbConfiguration.cs" />
+    <Compile Include="Config\DbConfigurationFinder.cs" />
+    <Compile Include="Config\DbConfigurationManager.cs" />
+    <Compile Include="Config\IDbDependencyResolver.cs" />
+    <Compile Include="Config\ResolverChain.cs" />
+    <Compile Include="Config\RootDependencyResolver.cs" />
+    <Compile Include="Config\SingletonDependencyResolver.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAggregate.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAndExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbApplyExpression.cs" />
