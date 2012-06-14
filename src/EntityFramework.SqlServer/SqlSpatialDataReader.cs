@@ -52,7 +52,7 @@ namespace System.Data.Entity.SqlServer
         {
             var fieldTypeName = _reader.GetDataTypeName(ordinal);
             if (!fieldTypeName.EndsWith(geographySqlType, StringComparison.Ordinal))
-            // Use EndsWith so that we just see the schema and type name, not the database name.
+                // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeographyColumn(fieldTypeName));
             }
@@ -62,7 +62,7 @@ namespace System.Data.Entity.SqlServer
         {
             var fieldTypeName = _reader.GetDataTypeName(ordinal);
             if (!fieldTypeName.EndsWith(geometrySqlType, StringComparison.Ordinal))
-            // Use EndsWith so that we just see the schema and type name, not the database name.
+                // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeometryColumn(fieldTypeName));
             }

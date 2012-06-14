@@ -19,7 +19,7 @@
         private static readonly string[] _defaultSwitchSeparators = new[] { "/", "-" };
 
         private static readonly string[] _defaultValueSeparators = new[] { ":", "=" };
-        
+
         internal const string SwitchNameGroup = "SwitchName";
 
         internal const string SwitchOptionGroup = "SwitchOption";

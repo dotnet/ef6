@@ -1694,14 +1694,14 @@
                 private const string s_FirstWeekOfYearFullName = "Microsoft.VisualBasic.FirstWeekOfYear";
 
                 private static readonly HashSet<string> _supportedIntervals = new HashSet<string>
-                                                                                   {
-                                                                                       Year,
-                                                                                       Month,
-                                                                                       Day,
-                                                                                       Hour,
-                                                                                       Minute,
-                                                                                       Second
-                                                                                   };
+                                                                                  {
+                                                                                      Year,
+                                                                                      Month,
+                                                                                      Day,
+                                                                                      Hour,
+                                                                                      Minute,
+                                                                                      Second
+                                                                                  };
 
                 internal VBDatePartTranslator(Assembly vbAssembly)
                     : base(GetMethods(vbAssembly))

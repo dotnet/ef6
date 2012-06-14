@@ -51,9 +51,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes);
 
         private static readonly PropertyInfo[] _dataContractProperties = new[]
-                                                                              {
-                                                                                  typeof(DataContractAttribute).GetProperty("IsReference")
-                                                                              };
+                                                                             {
+                                                                                 typeof(DataContractAttribute).GetProperty("IsReference")
+                                                                             };
 
         private readonly Type _baseClrType;
         private readonly DataContractAttribute _dataContract;

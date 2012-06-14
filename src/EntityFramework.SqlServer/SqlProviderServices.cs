@@ -131,13 +131,16 @@ namespace System.Data.Entity.SqlServer
 
             // Now add parameters added as part of SQL gen (note: this feature is only safe for DML SQL gen which
             // does not support user parameters, where there is no risk of name collision)
-            if (null != parameters && 0 < parameters.Count)
+            if (null != parameters
+                && 0 < parameters.Count)
             {
                 if (commandTree.CommandTreeKind != DbCommandTreeKind.Delete &&
-                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert &&
+                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert
+                    &&
                     commandTree.CommandTreeKind != DbCommandTreeKind.Update)
                 {
-                    throw new InvalidOperationException(Strings.ADP_InternalProviderError(1017 /*InternalErrorCode.SqlGenParametersNotPermitted*/));
+                    throw new InvalidOperationException(
+                        Strings.ADP_InternalProviderError(1017 /*InternalErrorCode.SqlGenParametersNotPermitted*/));
                 }
                 foreach (var parameter in parameters)
                 {
@@ -785,10 +788,10 @@ namespace System.Data.Entity.SqlServer
 
             UsingMasterConnection(
                 sqlConnection, conn =>
-                {
-                    // create database
-                    CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
-                });
+                                   {
+                                       // create database
+                                       CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
+                                   });
 
             // Create database already succeeded. If there is a failure from this point on, the user should be informed.
             try
@@ -799,10 +802,10 @@ namespace System.Data.Entity.SqlServer
 
                 UsingConnection(
                     sqlConnection, conn =>
-                    {
-                        // create database objects
-                        CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
-                    });
+                                       {
+                                           // create database objects
+                                           CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
+                                       });
             }
             catch (Exception e)
             {
@@ -976,13 +979,13 @@ namespace System.Data.Entity.SqlServer
                     var databaseDoesNotExistInSysTables = false;
                     UsingMasterConnection(
                         sqlConnection, conn =>
-                        {
-                            var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                            var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
-                                fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                            var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                            databaseDoesNotExistInSysTables = (result == 0);
-                        });
+                                           {
+                                               var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                               var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
+                                                   fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                                               var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
+                                               databaseDoesNotExistInSysTables = (result == 0);
+                                           });
                     if (databaseDoesNotExistInSysTables)
                     {
                         return false;
@@ -1001,13 +1004,13 @@ namespace System.Data.Entity.SqlServer
             var databaseExistsInSysTables = false;
             UsingMasterConnection(
                 sqlConnection, conn =>
-                {
-                    var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                    var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
-                        databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                    var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                    databaseExistsInSysTables = (result > 0);
-                });
+                                   {
+                                       var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                       var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
+                                           databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                                       var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
+                                       databaseExistsInSysTables = (result > 0);
+                                   });
             return databaseExistsInSysTables;
         }
 
@@ -1049,20 +1052,20 @@ namespace System.Data.Entity.SqlServer
                 var databaseNames = new List<string>();
                 UsingMasterConnection(
                     sqlConnection, conn =>
-                    {
-                        var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                        var getDatabaseNamesScript =
-                            SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
-                                fullFileName, sqlVersion == SqlVersion.Sql8);
-                        var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                databaseNames.Add(reader.GetString(0));
-                            }
-                        }
-                    });
+                                       {
+                                           var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                           var getDatabaseNamesScript =
+                                               SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
+                                                   fullFileName, sqlVersion == SqlVersion.Sql8);
+                                           var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
+                                           using (var reader = command.ExecuteReader())
+                                           {
+                                               while (reader.Read())
+                                               {
+                                                   databaseNames.Add(reader.GetString(0));
+                                               }
+                                           }
+                                       });
                 if (databaseNames.Count > 0)
                 {
                     foreach (var databaseName in databaseNames)
@@ -1075,7 +1078,7 @@ namespace System.Data.Entity.SqlServer
                     throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);
                 }
             }
-            // neither initial catalog nor attachDB file name are specified
+                // neither initial catalog nor attachDB file name are specified
             else
             {
                 throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
@@ -1145,10 +1148,10 @@ namespace System.Data.Entity.SqlServer
         private static void UsingMasterConnection(SqlConnection sqlConnection, Action<SqlConnection> act)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString)
-            {
-                InitialCatalog = "master",
-                AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
-            };
+                                        {
+                                            InitialCatalog = "master",
+                                            AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
+                                        };
 
             try
             {

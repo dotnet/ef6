@@ -387,16 +387,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <remarks>keep this sorted for binary searching</remarks>
         private static readonly string[] _identityFacets = new[]
-                                                                {
-                                                                    DbProviderManifest.DefaultValueFacetName,
-                                                                    DbProviderManifest.FixedLengthFacetName,
-                                                                    DbProviderManifest.MaxLengthFacetName,
-                                                                    DbProviderManifest.NullableFacetName,
-                                                                    DbProviderManifest.PrecisionFacetName,
-                                                                    DbProviderManifest.ScaleFacetName,
-                                                                    DbProviderManifest.UnicodeFacetName,
-                                                                    DbProviderManifest.SridFacetName,
-                                                                };
+                                                               {
+                                                                   DbProviderManifest.DefaultValueFacetName,
+                                                                   DbProviderManifest.FixedLengthFacetName,
+                                                                   DbProviderManifest.MaxLengthFacetName,
+                                                                   DbProviderManifest.NullableFacetName,
+                                                                   DbProviderManifest.PrecisionFacetName,
+                                                                   DbProviderManifest.ScaleFacetName,
+                                                                   DbProviderManifest.UnicodeFacetName,
+                                                                   DbProviderManifest.SridFacetName,
+                                                               };
 
         internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue = EdmConstants.UnboundedValue;
         internal static readonly EdmConstants.Unbounded DefaultPrecisionFacetValue = EdmConstants.UnboundedValue;

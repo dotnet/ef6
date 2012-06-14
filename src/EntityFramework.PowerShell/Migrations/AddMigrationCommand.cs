@@ -15,48 +15,48 @@
 
             Execute(
                 () =>
-                {
-                    var rescaffolding = false;
-
-                    using (var facade = GetFacade())
                     {
-                        var pendingMigrations = facade.GetPendingMigrations();
+                        var rescaffolding = false;
 
-                        if (pendingMigrations.Any())
+                        using (var facade = GetFacade())
                         {
-                            var lastMigration = pendingMigrations.Last();
+                            var pendingMigrations = facade.GetPendingMigrations();
 
-                            if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
-                                &&
-                                !string.Equals(
-                                    lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
+                            if (pendingMigrations.Any())
                             {
-                                throw Error.MigrationsPendingException(pendingMigrations.Join());
+                                var lastMigration = pendingMigrations.Last();
+
+                                if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
+                                    &&
+                                    !string.Equals(
+                                        lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    throw Error.MigrationsPendingException(pendingMigrations.Join());
+                                }
+
+                                rescaffolding = true;
+                                name = lastMigration;
                             }
 
-                            rescaffolding = true;
-                            name = lastMigration;
+                            WriteLine(Strings.LoggingGenerate(name));
+
+                            var scaffoldedMigration = facade.Scaffold(
+                                name, Project.GetLanguage(), Project.GetRootNamespace(), ignoreChanges);
+                            var userCodePath = new MigrationWriter(this)
+                                .Write(
+                                    scaffoldedMigration,
+                                    rescaffolding,
+                                    force,
+                                    name);
+
+                            if (!rescaffolding)
+                            {
+                                WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
+                            }
+
+                            Project.OpenFile(userCodePath);
                         }
-
-                        WriteLine(Strings.LoggingGenerate(name));
-
-                        var scaffoldedMigration = facade.Scaffold(
-                            name, Project.GetLanguage(), Project.GetRootNamespace(), ignoreChanges);
-                        var userCodePath = new MigrationWriter(this)
-                            .Write(
-                                scaffoldedMigration,
-                                rescaffolding,
-                                force,
-                                name);
-
-                        if (!rescaffolding)
-                        {
-                            WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
-                        }
-
-                        Project.OpenFile(userCodePath);
-                    }
-                });
+                    });
         }
     }
 }

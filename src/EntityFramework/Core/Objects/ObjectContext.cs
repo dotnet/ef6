@@ -169,7 +169,8 @@ namespace System.Data.Entity.Core.Objects
             _entityWrapperFactory = new EntityWrapperFactory();
             // Ensure a valid connection
             var connectionString = connection.ConnectionString;
-            if (connectionString == null || connectionString.Trim().Length == 0)
+            if (connectionString == null
+                || connectionString.Trim().Length == 0)
             {
                 throw isConnectionConstructor
                           ? new ArgumentException(Strings.ObjectContext_InvalidConnection, "connection", null)
@@ -212,13 +213,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-
         /// <summary>
         /// For testing porpuses only.
         /// </summary>
         internal ObjectContext()
         {
-            
         }
 
         #endregion //Constructors
@@ -315,7 +314,8 @@ namespace System.Data.Entity.Core.Objects
             get { return _queryTimeout; }
             set
             {
-                if (value.HasValue && value < 0)
+                if (value.HasValue
+                    && value < 0)
                 {
                     throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout, "value");
                 }
@@ -683,9 +683,11 @@ namespace System.Data.Entity.Core.Objects
             // NOTE: AttachContext must be called after adding the object to
             // the cache--otherwise the object might not have a key
             // when the EntityCollections expect it to.            
-            Contract.Assert(ObjectStateManager.TransactionManager.TrackProcessedEntities,
+            Contract.Assert(
+                ObjectStateManager.TransactionManager.TrackProcessedEntities,
                 "Expected tracking processed entities to be true when adding.");
-            Contract.Assert(ObjectStateManager.TransactionManager.ProcessedEntities != null,
+            Contract.Assert(
+                ObjectStateManager.TransactionManager.ProcessedEntities != null,
                 "Expected non-null collection when flag set.");
 
             ObjectStateManager.TransactionManager.ProcessedEntities.Add(wrappedEntity);
@@ -790,7 +792,8 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectContext_CannotExplicitlyLoadDetachedRelationships(refType));
             }
 
-            if (wrappedEntity.Context != this)
+            if (wrappedEntity.Context
+                != this)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotLoadReferencesUsingDifferentContext(refType));
             }
@@ -810,7 +813,8 @@ namespace System.Data.Entity.Core.Objects
             // Therefore, we keep track of whether or not we removed the convert.
             removedConvert = false;
             var body = selector.Body;
-            while (body.NodeType == ExpressionType.Convert ||
+            while (body.NodeType == ExpressionType.Convert
+                   ||
                    body.NodeType == ExpressionType.ConvertChecked)
             {
                 removedConvert = true;
@@ -819,7 +823,8 @@ namespace System.Data.Entity.Core.Objects
 
             var bodyAsMember = body as MemberExpression;
             if (bodyAsMember == null ||
-                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity)) ||
+                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity))
+                ||
                 bodyAsMember.Expression.NodeType != ExpressionType.Parameter)
             {
                 throw new ArgumentException(Strings.ObjectContext_SelectorExpressionMustBeMemberAccess);
@@ -878,7 +883,8 @@ namespace System.Data.Entity.Core.Objects
 
             // Check if entity is already in the cache
             var entityEntry = ObjectStateManager.FindEntityEntry(key);
-            if (entityEntry == null || entityEntry.IsKeyEntry)
+            if (entityEntry == null
+                || entityEntry.IsKeyEntry)
             {
                 throw new InvalidOperationException(Strings.ObjectStateManager_EntityNotTracked);
             }
@@ -923,22 +929,27 @@ namespace System.Data.Entity.Core.Objects
 
             // Check if the entity is already in the cache
             var entityEntry = ObjectStateManager.FindEntityEntry(key);
-            if (entityEntry == null || entityEntry.IsKeyEntry)
+            if (entityEntry == null
+                || entityEntry.IsKeyEntry)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_EntityNotTrackedOrHasTempKey);
             }
 
             if (entityEntry.State != EntityState.Modified &&
-                entityEntry.State != EntityState.Unchanged &&
+                entityEntry.State != EntityState.Unchanged
+                &&
                 entityEntry.State != EntityState.Deleted)
             {
-                throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(entityEntry.State.ToString()));
+                throw new InvalidOperationException(
+                    Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(entityEntry.State.ToString()));
             }
 
-            if (entityEntry.WrappedEntity.IdentityType != wrappedOriginalEntity.IdentityType)
+            if (entityEntry.WrappedEntity.IdentityType
+                != wrappedOriginalEntity.IdentityType)
             {
                 throw new ArgumentException(
-                    Strings.ObjectContext_EntitiesHaveDifferentType(entityEntry.Entity.GetType().FullName, originalEntity.GetType().FullName));
+                    Strings.ObjectContext_EntitiesHaveDifferentType(
+                        entityEntry.Entity.GetType().FullName, originalEntity.GetType().FullName));
             }
 
             entityEntry.CompareKeyProperties(originalEntity);
@@ -980,7 +991,8 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                Contract.Assert(existingEntry.Entity == entity,
+                Contract.Assert(
+                    existingEntry.Entity == entity,
                     "FindEntityEntry should return null if existing entry contains a different object.");
             }
 
@@ -1172,7 +1184,8 @@ namespace System.Data.Entity.Core.Objects
         {
             if (wrappedEntity.Context != null &&
                 wrappedEntity.Context != this &&
-                !wrappedEntity.Context.ObjectStateManager.IsDisposed &&
+                !wrappedEntity.Context.ObjectStateManager.IsDisposed
+                &&
                 wrappedEntity.MergeOption != MergeOption.NoTracking)
             {
                 throw new InvalidOperationException(Strings.Entity_EntityCantHaveMultipleChangeTrackers);
@@ -1383,7 +1396,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ObjectDisposedException">If the <see cref="ObjectContext"/> instance has been disposed.</exception>
         internal virtual void EnsureConnection()
         {
-            if (ConnectionState.Closed == Connection.State)
+            if (ConnectionState.Closed
+                == Connection.State)
             {
                 Connection.Open();
                 _openedConnection = true;
@@ -1395,7 +1409,8 @@ namespace System.Data.Entity.Core.Objects
             }
 
             // Check the connection was opened correctly
-            if (Connection.State == ConnectionState.Closed ||
+            if (Connection.State == ConnectionState.Closed
+                ||
                 Connection.State == ConnectionState.Broken)
             {
                 var message = Strings.EntityClient_ExecutingOnClosedConnection(
@@ -1700,7 +1715,8 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
-            if (cacheEntry == null || !ReferenceEquals(cacheEntry.Entity, entity))
+            if (cacheEntry == null
+                || !ReferenceEquals(cacheEntry.Entity, entity))
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotDeleteEntityNotInObjectStateManager);
             }
@@ -1881,18 +1897,21 @@ namespace System.Data.Entity.Core.Objects
             {
                 container = result[0];
                 entityset = result[1];
-                if (container == null || container.Length == 0) // if it starts with '.'
+                if (container == null
+                    || container.Length == 0) // if it starts with '.'
                 {
                     throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
                 }
             }
-            if (entityset == null || entityset.Length == 0) // if it's not in the form "ES name . containername"
+            if (entityset == null
+                || entityset.Length == 0) // if it's not in the form "ES name . containername"
             {
                 throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
             }
 
             if (context != null &&
-                String.IsNullOrEmpty(container) &&
+                String.IsNullOrEmpty(container)
+                &&
                 context.Perspective.GetDefaultContainer() == null)
             {
                 throw new ArgumentException(Strings.ObjectContext_ContainerQualifiedEntitySetNameRequired, parameterName);
@@ -2409,7 +2428,8 @@ namespace System.Data.Entity.Core.Objects
                 // determine what transaction to enlist in
                 var needLocalTransaction = false;
 
-                if (null == connection.CurrentTransaction && !connection.EnlistedInUserTransaction)
+                if (null == connection.CurrentTransaction
+                    && !connection.EnlistedInUserTransaction)
                 {
                     // If there isn't a local transaction started by the user, we'll attempt to enlist 
                     // on the current SysTx transaction so we don't need to construct a local
@@ -2775,16 +2795,16 @@ namespace System.Data.Entity.Core.Objects
                 // its GetEnumerator is called explicitly, and the resulting enumerator is never disposed.
                 var onReaderDisposeHasRun = false;
                 Action<object, EventArgs> onReaderDispose = (object sender, EventArgs e) =>
-                {
-                    if (!onReaderDisposeHasRun)
-                    {
-                        onReaderDisposeHasRun = true;
-                        // consume the store reader
-                        CommandHelper.ConsumeReader(storeReader);
-                        // trigger event callback
-                        entityCommand.NotifyDataReaderClosing();
-                    }
-                };
+                                                                {
+                                                                    if (!onReaderDisposeHasRun)
+                                                                    {
+                                                                        onReaderDisposeHasRun = true;
+                                                                        // consume the store reader
+                                                                        CommandHelper.ConsumeReader(storeReader);
+                                                                        // trigger event callback
+                                                                        entityCommand.NotifyDataReaderClosing();
+                                                                    }
+                                                                };
 
                 if (shaperOwnsReader)
                 {
@@ -2948,14 +2968,14 @@ namespace System.Data.Entity.Core.Objects
             EntityProxyFactory.TryCreateProxyTypes(
                 types.Select(
                     type =>
-                    {
-                        // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
-                        MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
+                        {
+                            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+                            MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
 
-                        EntityType entityType;
-                        ospaceItems.TryGetItem(type.FullName, out entityType);
-                        return entityType;
-                    }).Where(entityType => entityType != null)
+                            EntityType entityType;
+                            ospaceItems.TryGetItem(type.FullName, out entityType);
+                            return entityType;
+                        }).Where(entityType => entityType != null)
                 );
         }
 
@@ -3275,7 +3295,8 @@ namespace System.Data.Entity.Core.Objects
                 command.Transaction = entityTransaction.StoreTransaction;
             }
 
-            if (null != parameters && parameters.Length > 0)
+            if (null != parameters
+                && parameters.Length > 0)
             {
                 var dbParameters = new DbParameter[parameters.Length];
 

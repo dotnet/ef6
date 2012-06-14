@@ -312,14 +312,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var propertyInput = input;
 
                 var propertyExpression = propertyInput.Property(property);
-                if (BuiltInTypeKind.PrimitiveType == property.TypeUsage.EdmType.BuiltInTypeKind)
+                if (BuiltInTypeKind.PrimitiveType
+                    == property.TypeUsage.EdmType.BuiltInTypeKind)
                 {
                     flattenedProperties.Add(propertyExpression);
                 }
                 else
                 {
                     Debug.Assert(
-                        BuiltInTypeKind.EntityType == property.TypeUsage.EdmType.BuiltInTypeKind || BuiltInTypeKind.RowType == property.TypeUsage.EdmType.BuiltInTypeKind,
+                        BuiltInTypeKind.EntityType == property.TypeUsage.EdmType.BuiltInTypeKind
+                        || BuiltInTypeKind.RowType == property.TypeUsage.EdmType.BuiltInTypeKind,
                         "The input to FlattenProperties is not of EntityType or RowType?");
 
                     FlattenProperties(propertyExpression, flattenedProperties);

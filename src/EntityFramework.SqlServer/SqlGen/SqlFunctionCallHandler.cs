@@ -58,21 +58,46 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static readonly ISet<string> _datepartKeywords =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    "year", "yy", "yyyy",
-                    "quarter", "qq", "q",
-                    "month", "mm", "m",
-                    "dayofyear", "dy", "y",
-                    "day", "dd", "d",
-                    "week", "wk", "ww",
-                    "weekday", "dw", "w",
-                    "hour", "hh",
-                    "minute", "mi", "n",
-                    "second", "ss", "s",
-                    "millisecond", "ms",
-                    "microsecond", "mcs",
-                    "nanosecond", "ns",
-                    "tzoffset", "tz",
-                    "iso_week", "isoww", "isowk"
+                    "year",
+                    "yy",
+                    "yyyy",
+                    "quarter",
+                    "qq",
+                    "q",
+                    "month",
+                    "mm",
+                    "m",
+                    "dayofyear",
+                    "dy",
+                    "y",
+                    "day",
+                    "dd",
+                    "d",
+                    "week",
+                    "wk",
+                    "ww",
+                    "weekday",
+                    "dw",
+                    "w",
+                    "hour",
+                    "hh",
+                    "minute",
+                    "mi",
+                    "n",
+                    "second",
+                    "ss",
+                    "s",
+                    "millisecond",
+                    "ms",
+                    "microsecond",
+                    "mcs",
+                    "nanosecond",
+                    "ns",
+                    "tzoffset",
+                    "tz",
+                    "iso_week",
+                    "isoww",
+                    "isowk"
                 };
 
         private static readonly ISet<string> _functionRequiresReturnTypeCastToInt64
@@ -758,18 +783,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             return WrapWithCast(
                 returnType, result =>
-                {
-                    if (functionName == null)
-                    {
-                        WriteFunctionName(result, e.Function);
-                    }
-                    else
-                    {
-                        result.Append(functionName);
-                    }
+                                {
+                                    if (functionName == null)
+                                    {
+                                        WriteFunctionName(result, e.Function);
+                                    }
+                                    else
+                                    {
+                                        result.Append(functionName);
+                                    }
 
-                    HandleFunctionArgumentsDefault(sqlgen, e, result);
-                });
+                                    HandleFunctionArgumentsDefault(sqlgen, e, result);
+                                });
         }
 
         private static ISqlFragment WrapWithCast(string returnType, Action<SqlBuilder> toWrap)
@@ -963,27 +988,27 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             return WrapWithCast(
                 castReturnTypeTo, result =>
-                {
-                    var instanceExpression = functionExpression.Arguments[0];
+                                      {
+                                          var instanceExpression = functionExpression.Arguments[0];
 
-                    // Write the instance - if this is another function call, it need not be enclosed in parentheses.
-                    if (instanceExpression.ExpressionKind
-                        != DbExpressionKind.Function)
-                    {
-                        sqlgen.ParenthesizeExpressionIfNeeded(instanceExpression, result);
-                    }
-                    else
-                    {
-                        result.Append(instanceExpression.Accept(sqlgen));
-                    }
-                    result.Append(".");
-                    result.Append(functionName);
+                                          // Write the instance - if this is another function call, it need not be enclosed in parentheses.
+                                          if (instanceExpression.ExpressionKind
+                                              != DbExpressionKind.Function)
+                                          {
+                                              sqlgen.ParenthesizeExpressionIfNeeded(instanceExpression, result);
+                                          }
+                                          else
+                                          {
+                                              result.Append(instanceExpression.Accept(sqlgen));
+                                          }
+                                          result.Append(".");
+                                          result.Append(functionName);
 
-                    if (!isPropertyAccess)
-                    {
-                        WriteFunctionArguments(sqlgen, functionExpression.Arguments.Skip(1), result);
-                    }
-                });
+                                          if (!isPropertyAccess)
+                                          {
+                                              WriteFunctionArguments(sqlgen, functionExpression.Arguments.Skip(1), result);
+                                          }
+                                      });
         }
 
         /// <summary>
@@ -1069,13 +1094,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var constExpr = e.Arguments[0] as DbConstantExpression;
             if (null == constExpr)
             {
-                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(
+                    Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
             var datepart = constExpr.Value as string;
             if (null == datepart)
             {
-                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(
+                    Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
             //
@@ -1083,7 +1110,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             //
             if (!_datepartKeywords.Contains(datepart))
             {
-                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(
+                    Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
             }
 
             var result = new SqlBuilder();

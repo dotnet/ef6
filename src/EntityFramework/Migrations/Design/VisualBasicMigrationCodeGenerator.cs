@@ -48,12 +48,12 @@ namespace System.Data.Entity.Migrations.Design
 
             var generatedMigration
                 = new ScaffoldedMigration
-                    {
-                        MigrationId = migrationId,
-                        Language = "vb",
-                        UserCode = Generate(operations, @namespace, className),
-                        DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
-                    };
+                      {
+                          MigrationId = migrationId,
+                          Language = "vb",
+                          UserCode = Generate(operations, @namespace, className),
+                          DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
+                      };
 
             if (!string.IsNullOrWhiteSpace(sourceModel))
             {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Migrations.Design
                 {
                     WriteClassStart(
                         @namespace, className, writer, "Inherits DbMigration", designer: false,
-                                    namespaces: GetNamespaces(operations));
+                        namespaces: GetNamespaces(operations));
 
                     writer.WriteLine("Public Overrides Sub Up()");
                     writer.Indent++;
@@ -351,21 +351,21 @@ namespace System.Data.Entity.Migrations.Design
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                {
-                    var scrubbedName = ScrubName(c.Name);
-
-                    writer.Write(".");
-                    writer.Write(scrubbedName);
-                    writer.Write(" =");
-                    Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
-
-                    if (i < columnCount - 1)
                     {
-                        writer.Write(",");
-                    }
+                        var scrubbedName = ScrubName(c.Name);
 
-                    writer.WriteLine();
-                });
+                        writer.Write(".");
+                        writer.Write(scrubbedName);
+                        writer.Write(" =");
+                        Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
+
+                        if (i < columnCount - 1)
+                        {
+                            writer.Write(",");
+                        }
+
+                        writer.WriteLine();
+                    });
 
             writer.Indent--;
             writer.Write("}");

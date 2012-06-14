@@ -49,15 +49,16 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static readonly MethodInfo _getRelatedEndMethod = typeof(RelationshipManager).GetMethod(
             "GetRelatedEnd", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo _objectEqualsMethod = typeof(object).GetMethod("Equals", new[] { typeof(object), typeof(object) });
+        private static readonly MethodInfo _objectEqualsMethod = typeof(object).GetMethod(
+            "Equals", new[] { typeof(object), typeof(object) });
 
         private static readonly ConstructorInfo _invalidOperationConstructorMethod =
             typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
 
-        private static readonly MethodInfo _iEntityWrapper_GetEntityMethod = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
-        private static readonly MethodInfo _action_InvokeMethod = typeof(Action<object>).GetMethod("Invoke", new[] { typeof(object) });
+        private static readonly MethodInfo _getEntityMethod = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
+        private static readonly MethodInfo _invokeMethod = typeof(Action<object>).GetMethod("Invoke", new[] { typeof(object) });
 
-        private static readonly MethodInfo _func_object_object_bool_InvokeMethod = typeof(Func<object, object, bool>).GetMethod(
+        private static readonly MethodInfo _funcInvokeMethod = typeof(Func<object, object, bool>).GetMethod(
             "Invoke", new[] { typeof(object), typeof(object) });
 
         public IPOCOImplementor(EntityType ospaceEntityType)
@@ -175,7 +176,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 generator.DeclareLocal(proxyType);
                 generator.DeclareLocal(typeof(RelationshipManager));
                 generator.Emit(OpCodes.Ldarg_0);
-                generator.Emit(OpCodes.Callvirt, _iEntityWrapper_GetEntityMethod);
+                generator.Emit(OpCodes.Callvirt, _getEntityMethod);
                 generator.Emit(OpCodes.Castclass, proxyType);
                 generator.Emit(OpCodes.Stloc_0);
                 generator.Emit(OpCodes.Ldloc_0);
@@ -288,7 +289,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Call, baseGetter);
                         generator.Emit(OpCodes.Ldarg_1);
-                        generator.Emit(OpCodes.Callvirt, _func_object_object_bool_InvokeMethod);
+                        generator.Emit(OpCodes.Callvirt, _funcInvokeMethod);
                         generator.Emit(OpCodes.Brtrue_S, endOfMethod);
                     }
                     else
@@ -354,7 +355,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.BeginFinallyBlock();
             generator.Emit(OpCodes.Ldsfld, _resetFKSetterFlagField);
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Callvirt, _action_InvokeMethod);
+            generator.Emit(OpCodes.Callvirt, _invokeMethod);
             generator.EndExceptionBlock();
             generator.MarkLabel(endOfMethod);
             generator.Emit(OpCodes.Ret);

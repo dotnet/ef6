@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ProviderManifest Namespace="SqlServerCe" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/providermanifest">
-    <Types>
-      <!-- pragyaa. Rules followed
+  <Types>
+    <!-- pragyaa. Rules followed
       Promotable:  Conversion with no change in representation. Used for comparing, assigning variables.
       Implicit Conversion: Conversion with a potential change in representation/loss of data.  Used in function overloading.
       Explicit Conversion: Requiring a cast operator. Used by users to explicitly cast one type to another.
@@ -13,18 +14,12 @@
 PROCESS
       -->
       
-    <Type Name="tinyint" PrimitiveTypeKind="Byte">
-    </Type>
-    <Type Name="smallint" PrimitiveTypeKind="Int16">
-    </Type>
-    <Type Name="int" PrimitiveTypeKind="Int32">
-    </Type>
-    <Type Name="bigint" PrimitiveTypeKind="Int64">
-    </Type>
-    <Type Name="float" PrimitiveTypeKind="Double">
-    </Type>
-    <Type Name="real" PrimitiveTypeKind="Single">
-    </Type>
+    <Type Name="tinyint" PrimitiveTypeKind="Byte"></Type>
+    <Type Name="smallint" PrimitiveTypeKind="Int16"></Type>
+    <Type Name="int" PrimitiveTypeKind="Int32"></Type>
+    <Type Name="bigint" PrimitiveTypeKind="Int64"></Type>
+    <Type Name="float" PrimitiveTypeKind="Double"></Type>
+    <Type Name="real" PrimitiveTypeKind="Single"></Type>
     <Type Name="decimal" PrimitiveTypeKind="Decimal">
       <FacetDescriptions>
         <Precision Minimum="1" Maximum="38" DefaultValue="18" Constant="false" />
@@ -55,7 +50,7 @@ PROCESS
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="image" PrimitiveTypeKind="Binary" >
+    <Type Name="image" PrimitiveTypeKind="Binary">
       <FacetDescriptions>
         <MaxLength DefaultValue="2147483647" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
@@ -73,11 +68,10 @@ PROCESS
         <FixedLength DefaultValue="true" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="bit" PrimitiveTypeKind="Boolean">
-    </Type>
+    <Type Name="bit" PrimitiveTypeKind="Boolean"></Type>
     <Type Name="datetime" PrimitiveTypeKind="DateTime">
       <FacetDescriptions>
-          <Precision DefaultValue="3" Constant="true" />
+        <Precision DefaultValue="3" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="nvarchar" PrimitiveTypeKind="String">
@@ -94,15 +88,14 @@ PROCESS
         <FixedLength DefaultValue="true" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="ntext" PrimitiveTypeKind="String" >
+    <Type Name="ntext" PrimitiveTypeKind="String">
       <FacetDescriptions>
         <MaxLength DefaultValue="1073741823" Constant="true" />
         <Unicode DefaultValue="true" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
-    <Type Name="uniqueidentifier" PrimitiveTypeKind="Guid">
-    </Type>
+    <Type Name="uniqueidentifier" PrimitiveTypeKind="Guid"></Type>
   </Types>
   <Functions>
 
@@ -266,7 +259,7 @@ PROCESS
     <!-- STDEV not supported-->
     <!-- STDEVP not supported -->
     <!-- VAR  not supported-->
-        <!-- VARP  not supported-->
+    <!-- VARP  not supported-->
 
     <!-- END AGGREGATES ############################################# -->
 
@@ -343,7 +336,7 @@ PROCESS
             str: nchar, nvarchar, varbinary
             returns:  nvarchar
         -->
-        <!-- pragyaa-todo. ntext doesnt work. File doc bug.-->
+    <!-- pragyaa-todo. ntext doesnt work. File doc bug.-->
     <Function Name="LTRIM" BuiltIn="true">
       <ReturnType Type="String" />
       <Parameter Name="str" Type="String" Mode="In" />
@@ -354,7 +347,7 @@ PROCESS
                 returns: nchar(1)
         -->
     <Function Name="NCHAR" BuiltIn="true">
-      <ReturnType Type="String"/>
+      <ReturnType Type="String" />
       <Parameter Name="arg" Type="Int32" Mode="In" />
     </Function>
 
@@ -378,12 +371,12 @@ PROCESS
             strReplacement: nchar, nvarchar, ntext
             returns: nvarchar, ntext
         -->
-        <!-- pragyaa. ntext gives an error . doc bug.-->
+    <!-- pragyaa. ntext gives an error . doc bug.-->
     <Function Name="REPLACE" BuiltIn="true">
       <ReturnType Type="String" />
-      <Parameter Name="strTarget" Type="String"  Mode="In" />
-      <Parameter Name="strSearch" Type="String"  Mode="In" />
-      <Parameter Name="strReplacement" Type="String"  Mode="In" />
+      <Parameter Name="strTarget" Type="String" Mode="In" />
+      <Parameter Name="strSearch" Type="String" Mode="In" />
+      <Parameter Name="strReplacement" Type="String" Mode="In" />
     </Function>
 
     <!-- REPLICATE( strSource, count )
@@ -393,7 +386,7 @@ PROCESS
         -->
     <!-- pragyaa. ntext gives an error in either of the params. Should work as per doc. Check.-->
     <Function Name="REPLICATE" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="strTarget" Type="String" Mode="In" />
       <Parameter Name="count" Type="Int32" Mode="In" />
     </Function>
@@ -420,20 +413,20 @@ PROCESS
                 returns: nvarchar  
         -->
     <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Double" Mode="In" />
     </Function>
     <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Decimal" Mode="In" />
     </Function>
-   <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+    <Function Name="STR" BuiltIn="true">
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Double" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
     </Function>
     <Function Name="STR" BuiltIn="true">
-      <ReturnType Type="String"  />
+      <ReturnType Type="String" />
       <Parameter Name="number" Type="Decimal" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
     </Function>
@@ -448,7 +441,7 @@ PROCESS
       <Parameter Name="number" Type="Decimal" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
       <Parameter Name="decimal" Type="Int32" Mode="In" />
-   </Function>
+    </Function>
 
     <!-- STUFF( strInput, start, length, strReplacement )
                 strInput: nvarchar, ntext
@@ -458,13 +451,13 @@ PROCESS
                 returns: nvarchar, ntext
         -->
       
-      <!-- pragyaa. ntext gives an error . Doc bug. -->
+    <!-- pragyaa. ntext gives an error . Doc bug. -->
     <Function Name="STUFF" BuiltIn="true">
-      <ReturnType Type="String"  />
-      <Parameter Name="strInput" Type="String"  Mode="In" />
+      <ReturnType Type="String" />
+      <Parameter Name="strInput" Type="String" Mode="In" />
       <Parameter Name="start" Type="Int32" Mode="In" />
       <Parameter Name="length" Type="Int32" Mode="In" />
-      <Parameter Name="strReplacement" Type="String"  Mode="In" />
+      <Parameter Name="strReplacement" Type="String" Mode="In" />
     </Function>
       
     <!-- SUBSTRING( str, start, length )
@@ -476,14 +469,14 @@ PROCESS
     <Function Name="SUBSTRING" BuiltIn="true">
       <ReturnType Type="String" />
       <Parameter Name="str" Type="String" Mode="In" />
-      <Parameter Name="start" Type="Int32" Mode="In"/>
-      <Parameter Name="length" Type="Int32" Mode="In"/>
+      <Parameter Name="start" Type="Int32" Mode="In" />
+      <Parameter Name="length" Type="Int32" Mode="In" />
     </Function>
     <Function Name="SUBSTRING" BuiltIn="true">
       <ReturnType Type="Binary" />
       <Parameter Name="str" Type="Binary" Mode="In" />
-      <Parameter Name="start" Type="Int32" Mode="In"/>
-      <Parameter Name="length" Type="Int32" Mode="In"/>
+      <Parameter Name="start" Type="Int32" Mode="In" />
+      <Parameter Name="length" Type="Int32" Mode="In" />
     </Function>
 
     <!-- UNICODE( arg ) 
@@ -502,8 +495,8 @@ PROCESS
         -->
     <!-- pragyaa. doesnt work with ntext. File doc bug.-->
     <Function Name="UPPER" BuiltIn="true">
-            <ReturnType Type="String" />
-            <Parameter Name="str" Type="String" Mode="In"/>
+      <ReturnType Type="String" />
+      <Parameter Name="str" Type="String" Mode="In" />
     </Function>
        
     <!-- END STRING FUNCTIONS ####################################### -->

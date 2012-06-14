@@ -3587,9 +3587,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         private static readonly DbExpressionKind[] _joinMap = {
-                                                                 DbExpressionKind.CrossJoin, DbExpressionKind.InnerJoin,
-                                                                 DbExpressionKind.LeftOuterJoin, DbExpressionKind.FullOuterJoin
-                                                             };
+                                                                  DbExpressionKind.CrossJoin, DbExpressionKind.InnerJoin,
+                                                                  DbExpressionKind.LeftOuterJoin, DbExpressionKind.FullOuterJoin
+                                                              };
 
         /// <summary>
         /// Process an APPLY clause item.

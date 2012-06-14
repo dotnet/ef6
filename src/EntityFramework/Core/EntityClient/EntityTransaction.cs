@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// The connection object owning this transaction object
         /// </summary>
-        public virtual new EntityConnection Connection
+        public new virtual EntityConnection Connection
         {
             get
             {
@@ -137,7 +137,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         private void ClearCurrentTransaction()
         {
-            if (_connection.CurrentTransaction == this)
+            if (_connection.CurrentTransaction
+                == this)
             {
                 _connection.ClearCurrentTransaction();
             }

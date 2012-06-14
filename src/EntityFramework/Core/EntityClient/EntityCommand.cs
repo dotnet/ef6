@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// The connection object used for executing the command
         /// </summary>
-        public virtual new EntityConnection Connection
+        public new virtual EntityConnection Connection
         {
             get { return _connection; }
             set
@@ -321,7 +321,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// The collection of parameters for this command
         /// </summary>
-        public virtual new EntityParameterCollection Parameters
+        public new virtual EntityParameterCollection Parameters
         {
             get { return _parameters; }
         }
@@ -337,7 +337,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// The transaction object used for executing the command
         /// </summary>
-        public virtual new EntityTransaction Transaction
+        public new virtual EntityTransaction Transaction
         {
             get
             {
@@ -412,7 +412,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         ///
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public virtual new EntityParameter CreateParameter()
+        public new virtual EntityParameter CreateParameter()
         {
             return new EntityParameter();
         }
@@ -429,7 +429,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// Executes the command and returns a data reader for reading the results
         /// </summary>
         /// <returns>An EntityDataReader object</returns>
-        public virtual new EntityDataReader ExecuteReader()
+        public new virtual EntityDataReader ExecuteReader()
         {
             return ExecuteReader(CommandBehavior.Default);
         }
@@ -442,7 +442,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>An EntityDataReader object</returns>
         /// <exception cref="InvalidOperationException">For stored procedure commands, if called
         /// for anything but an entity collection result</exception>
-        public virtual new EntityDataReader ExecuteReader(CommandBehavior behavior)
+        public new virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
             Prepare(); // prepare the query first
             var reader = _entityDataReaderFactory.CreateEntityDataReader(

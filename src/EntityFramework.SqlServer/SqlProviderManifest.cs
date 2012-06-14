@@ -188,15 +188,15 @@ namespace System.Data.Entity.SqlServer
                     //Remove the Katmai types for both Sql8 and Sql9
                     primitiveTypes.RemoveAll(
                         delegate(PrimitiveType primitiveType)
-                        {
-                            var name = primitiveType.Name.ToLowerInvariant();
-                            return name.Equals("time", StringComparison.Ordinal) ||
-                                   name.Equals("date", StringComparison.Ordinal) ||
-                                   name.Equals("datetime2", StringComparison.Ordinal) ||
-                                   name.Equals("datetimeoffset", StringComparison.Ordinal) ||
-                                   name.Equals("geography", StringComparison.Ordinal) ||
-                                   name.Equals("geometry", StringComparison.Ordinal);
-                        }
+                            {
+                                var name = primitiveType.Name.ToLowerInvariant();
+                                return name.Equals("time", StringComparison.Ordinal) ||
+                                       name.Equals("date", StringComparison.Ordinal) ||
+                                       name.Equals("datetime2", StringComparison.Ordinal) ||
+                                       name.Equals("datetimeoffset", StringComparison.Ordinal) ||
+                                       name.Equals("geography", StringComparison.Ordinal) ||
+                                       name.Equals("geometry", StringComparison.Ordinal);
+                            }
                         );
                     //Remove the types that won't work in Sql8
                     if (_version == SqlVersion.Sql8)
@@ -204,10 +204,10 @@ namespace System.Data.Entity.SqlServer
                         // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
                         primitiveTypes.RemoveAll(
                             delegate(PrimitiveType primitiveType)
-                            {
-                                var name = primitiveType.Name.ToLowerInvariant();
-                                return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
-                            }
+                                {
+                                    var name = primitiveType.Name.ToLowerInvariant();
+                                    return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
+                                }
                             );
                     }
                     _primitiveTypes = primitiveTypes.AsReadOnly();
@@ -366,7 +366,7 @@ namespace System.Data.Entity.SqlServer
 
             switch (storeTypeName)
             {
-                // for some types we just go with simple type usage with no facets
+                    // for some types we just go with simple type usage with no facets
                 case "tinyint":
                 case "smallint":
                 case "bigint":
@@ -728,7 +728,8 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private TypeUsage GetStorePrimitiveTypeIfPostSql9(string storeTypeName, string nameForException, PrimitiveTypeKind primitiveTypeKind)
+        private TypeUsage GetStorePrimitiveTypeIfPostSql9(
+            string storeTypeName, string nameForException, PrimitiveTypeKind primitiveTypeKind)
         {
             if ((SqlVersion != SqlVersion.Sql8)
                 && (SqlVersion != SqlVersion.Sql9))

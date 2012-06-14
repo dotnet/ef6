@@ -173,10 +173,10 @@
         public void Update(string targetMigration, bool force)
         {
             var runner = new UpdateRunner
-                {
-                    TargetMigration = targetMigration,
-                    Force = force
-                };
+                             {
+                                 TargetMigration = targetMigration,
+                                 Force = force
+                             };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -199,11 +199,11 @@
         {
             var runner
                 = new ScriptUpdateRunner
-                    {
-                        SourceMigration = sourceMigration,
-                        TargetMigration = targetMigration,
-                        Force = force
-                    };
+                      {
+                          SourceMigration = sourceMigration,
+                          TargetMigration = targetMigration,
+                          Force = force
+                      };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -224,12 +224,12 @@
         {
             var runner
                 = new ScaffoldRunner
-                    {
-                        MigrationName = migrationName,
-                        Language = language,
-                        RootNamespace = rootNamespace,
-                        IgnoreChanges = ignoreChanges
-                    };
+                      {
+                          MigrationName = migrationName,
+                          Language = language,
+                          RootNamespace = rootNamespace,
+                          IgnoreChanges = ignoreChanges
+                      };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -247,10 +247,10 @@
         {
             var runner
                 = new InitialCreateScaffoldRunner
-                    {
-                        Language = language,
-                        RootNamespace = rootNamespace
-                    };
+                      {
+                          Language = language,
+                          RootNamespace = rootNamespace
+                      };
 
             ConfigureRunner(runner);
 

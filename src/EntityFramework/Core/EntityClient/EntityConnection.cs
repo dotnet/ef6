@@ -80,7 +80,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="connectionString">The connection string, may contain a list of settings for the connection or
         /// just the name of the connection to use</param>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors"), ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
         //For ChangeConnectionString method call. But the paths are not created in this method.        
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
@@ -596,7 +597,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Create a new command object that uses this connection object.
         /// </summary>
-        public virtual new EntityCommand CreateCommand()
+        public new virtual EntityCommand CreateCommand()
         {
             return new EntityCommand(null, this);
         }
@@ -691,7 +692,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// Begins a database transaction
         /// </summary>
         /// <returns>An object representing the new transaction</returns>
-        public virtual new EntityTransaction BeginTransaction()
+        public new virtual EntityTransaction BeginTransaction()
         {
             return base.BeginTransaction() as EntityTransaction;
         }
@@ -701,7 +702,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="isolationLevel">The isolation level of the transaction</param>
         /// <returns>An object representing the new transaction</returns>
-        public virtual new EntityTransaction BeginTransaction(IsolationLevel isolationLevel)
+        public new virtual EntityTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             return base.BeginTransaction(isolationLevel) as EntityTransaction;
         }

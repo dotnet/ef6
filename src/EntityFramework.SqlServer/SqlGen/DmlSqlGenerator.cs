@@ -412,8 +412,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                         if (!IsValidScopeIdentityColumnType(keyMember.TypeUsage))
                         {
-                            throw new InvalidOperationException(Strings.Update_NotSupportedIdentityType(
-                                keyMember.Name, keyMember.TypeUsage.ToString()));
+                            throw new InvalidOperationException(
+                                Strings.Update_NotSupportedIdentityType(
+                                    keyMember.Name, keyMember.TypeUsage.ToString()));
                         }
 
                         commandText.Append("scope_identity()");

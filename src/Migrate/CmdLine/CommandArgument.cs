@@ -21,7 +21,7 @@ namespace CmdLine
         public CommandArgument(Match match)
         {
             Token = GetGroupValue(match, TokenGroup);
-            this.SwitchSeparator = GetGroupValue(match, CommandLine.SwitchSeparatorGroup);
+            SwitchSeparator = GetGroupValue(match, CommandLine.SwitchSeparatorGroup);
             Command = GetGroupValue(match, CommandLine.SwitchNameGroup);
             SwitchOption = GetGroupValue(match, CommandLine.SwitchOptionGroup);
             Value = GetGroupValue(match, CommandLine.ValueGroup);

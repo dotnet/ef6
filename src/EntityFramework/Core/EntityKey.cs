@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core
         private static readonly EntityKey _noEntitySetKey = new EntityKey("NoEntitySetKey.NoEntitySetKey");
 
         /// <summary>
-        /// A singleton EntityKey identifying an entity resulted from a failed TREAT.
+        /// Returns a singleton EntityKey identifying an entity resulted from a failed TREAT.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         private static readonly EntityKey _entityNotValidKey = new EntityKey("EntityNotValidKey.EntityNotValidKey");
@@ -250,7 +250,7 @@ namespace System.Data.Entity.Core
         #endregion
 
         /// <summary>
-        /// A singleton EntityKey by which a read-only entity is identified.
+        /// Gets a singleton EntityKey by which a read-only entity is identified.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static EntityKey NoEntitySetKey
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// A singleton EntityKey identifying an entity resulted from a failed TREAT.
+        /// Gets a singleton EntityKey identifying an entity resulted from a failed TREAT.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static EntityKey EntityNotValidKey

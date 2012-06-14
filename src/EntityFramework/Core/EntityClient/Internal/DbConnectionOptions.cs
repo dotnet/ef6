@@ -362,7 +362,7 @@
                         || ('"' == tmpChar))
                     {
                         throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
-                            // unquoted value must not end in quote
+                        // unquoted value must not end in quote
                     }
                     break;
 

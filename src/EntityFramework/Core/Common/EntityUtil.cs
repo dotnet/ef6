@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Core
 {
     using System.Collections.Generic;
-    using System.Data.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -610,7 +609,6 @@ namespace System.Data.Entity.Core
         {
             return CheckArgumentNull(value, parameterName);
         }
-
 
         // Invalid string argument
         internal static void CheckStringArgument(string value, string parameterName)

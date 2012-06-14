@@ -26,7 +26,7 @@
             var userCodeFileName = scaffoldedMigration.MigrationId + "." + scaffoldedMigration.Language;
             var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
             var designerCodeFileName = scaffoldedMigration.MigrationId + ".Designer."
-                + scaffoldedMigration.Language;
+                                       + scaffoldedMigration.Language;
             var designerCodePath = Path.Combine(scaffoldedMigration.Directory, designerCodeFileName);
             var resourcesFileName = scaffoldedMigration.MigrationId + ".resx";
             var resourcesPath = Path.Combine(scaffoldedMigration.Directory, resourcesFileName);

@@ -114,11 +114,11 @@
                 configurationFile,
                 dataDirectory,
                 connectionStringInfo)
-            {
-                LogInfoDelegate = WriteLine,
-                LogWarningDelegate = WriteWarning,
-                LogVerboseDelegate = WriteVerbose
-            };
+                       {
+                           LogInfoDelegate = WriteLine,
+                           LogWarningDelegate = WriteWarning,
+                           LogVerboseDelegate = WriteVerbose
+                       };
         }
 
         private void Init()

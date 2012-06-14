@@ -18,10 +18,10 @@ namespace System.Data.Entity.SqlServer
     internal sealed class SqlTypesAssembly
     {
         private static readonly ReadOnlyCollection<string> _preferredSqlTypesAssemblies = new List<string>
-                                                                                             {
-                                                                                                 "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                                                                                                 "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                                                                                             }.AsReadOnly();
+                                                                                              {
+                                                                                                  "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                                                                                                  "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                                                                                              }.AsReadOnly();
 
         private static SqlTypesAssembly BindToLatest()
         {
