@@ -163,7 +163,7 @@
             }
 
             [Fact]
-            public async void New_bridge_DataReader_created_for_query_with_result_type()
+            public void New_bridge_DataReader_created_for_query_with_result_type()
             {
                 var dbDataReaderMock = new Mock<DbDataReader>();
                 dbDataReaderMock.SetupGet(m => m.IsClosed).Returns(false);
@@ -189,11 +189,11 @@
                 var entityConnectionMock = new Mock<EntityConnection>(null/*workspace*/, null/*connection*/, true /*skipInitialization*/);
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
 
-                var entityCommandMock = new Mock<EntityCommand>(null);
+                var entityCommandMock = new Mock<EntityCommand>();
                 entityCommandMock.SetupGet(m => m.Connection).Returns(entityConnectionMock.Object);
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
-                var result = await entityCommandDefinition.ExecuteAsync(entityCommandMock.Object, CommandBehavior.SequentialAccess, CancellationToken.None);
+                var result = entityCommandDefinition.ExecuteAsync(entityCommandMock.Object, CommandBehavior.SequentialAccess, CancellationToken.None).Result;
 
                 Assert.Same(bridgeDataReader, result);
             }

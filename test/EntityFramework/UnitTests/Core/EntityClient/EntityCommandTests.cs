@@ -167,11 +167,11 @@
         public class ExecuteReaderAsync
         {
             [Fact]
-            public async void Parameterless_ExecuteReader_calls_overload_with_CommandBehavior_Default()
+            public void Parameterless_ExecuteReader_calls_overload_with_CommandBehavior_Default()
             {
-                var entityCommandMock = new Mock<EntityCommand>(null);
+                var entityCommandMock = new Mock<EntityCommand>();
                 entityCommandMock.Setup(m => m.ExecuteReaderAsync(CommandBehavior.Default, It.IsAny<CancellationToken>())).Returns(Task.FromResult(default(EntityDataReader)));
-                await entityCommandMock.Object.ExecuteReaderAsync();
+                entityCommandMock.Object.ExecuteReaderAsync().Wait();
 
                 entityCommandMock.Verify(m => m.ExecuteReaderAsync(CommandBehavior.Default, It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -249,7 +249,7 @@
             }
 
             [Fact]
-            public async void EntityCommandDefinition_is_executed_with_correct_EntityCommand_and_CommandBehavior()
+            public void EntityCommandDefinition_is_executed_with_correct_EntityCommand_and_CommandBehavior()
             {
                 var entityConnection = InitializeEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
@@ -269,7 +269,7 @@
                 var entityCommand = new EntityCommand(entityConnection, entityCommandDefinitionMock.Object);
 
                 var commandBehavior = CommandBehavior.SequentialAccess;
-                await entityCommand.ExecuteReaderAsync(commandBehavior);
+                entityCommand.ExecuteReaderAsync(commandBehavior).Wait();
 
                 Assert.Same(entityCommand, passedEntityCommand);
                 Assert.Equal(passedCommandbehavior, commandBehavior);
@@ -277,7 +277,7 @@
             }
 
             [Fact]
-            public async void EntityDataReader_is_created_with_correct_EntityCommand_DbDataReader_and_CommandBehavior()
+            public void EntityDataReader_is_created_with_correct_EntityCommand_DbDataReader_and_CommandBehavior()
             {
                 var entityConnection = InitializeEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
@@ -303,7 +303,7 @@
                 entityDataReaderFactoryMock.Setup(m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReader);
 
-                var returnedReader = await entityCommand.ExecuteReaderAsync(commandBehavior);
+                var returnedReader = entityCommand.ExecuteReaderAsync(commandBehavior).Result;
 
                 Assert.Same(entityDataReader, returnedReader);
                 entityDataReaderFactoryMock.Verify(m => m.CreateEntityDataReader(entityCommand, storeDataReader, commandBehavior), Times.Once());

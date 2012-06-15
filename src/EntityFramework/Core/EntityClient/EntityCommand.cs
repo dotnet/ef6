@@ -512,7 +512,7 @@ namespace System.Data.Entity.Core.EntityClient
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
         SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "behavior"),
         SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public async new Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+        public async virtual new Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
             // prepare the query first
             Prepare();
