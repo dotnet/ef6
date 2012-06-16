@@ -20,6 +20,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [DataContract]
     [Serializable]
+    [ContractClass(typeof(RelatedEndContracts))]
     public abstract class RelatedEnd : IRelatedEnd
     {
         //-----------------
@@ -848,8 +849,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Attach(object entity)
         {
-            Contract.Requires(entity != null);
-
             CheckOwnerNull();
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
         }
@@ -1022,7 +1021,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Add(object entity)
         {
-            Contract.Requires(entity != null);
             Add(EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext));
         }
 
@@ -1068,7 +1066,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IRelatedEnd.Remove(object entity)
         {
-            Contract.Requires(entity != null);
             DeferredLoad();
             return Remove(EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext), false);
         }
@@ -1482,9 +1479,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             if (wrappedEntity.RequiresRelationshipChangeTracking && // Is it POCO?
                 doFixup
-                &&
                 // Remove() is called for both ends of relationship, once with doFixup==true, once with doFixup==false. Verify only one time.
-                TargetAccessor.HasProperty) // Is there anything to verify?
+                && TargetAccessor.HasProperty) // Is there anything to verify?
             {
                 var contains = CheckIfNavigationPropertyContainsEntity(wrappedEntity);
 
@@ -1507,8 +1503,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             //   because removing relationship between Client and Order should cause cascade delete on the Order side.
             if (null != _context && doFixup &&
                 applyReferentialConstraints
-                &&
-                IsDependentEndOfReferentialConstraint(false)) // don't check the nullability of the "from" properties
+                && IsDependentEndOfReferentialConstraint(false)) // don't check the nullability of the "from" properties
             {
                 // Remove _wrappedOwner from the related end with applying Referential Constraints
                 var relatedEnd = GetOtherEndOfRelationship(wrappedEntity);
@@ -1520,10 +1515,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             //The following call will verify that the given entity is part of the collection or ref.
             var fireEvent = RemoveFromCache(wrappedEntity, false, preserveForeignKey);
 
-            if (!UsingNoTracking &&
-                ObjectContext != null
-                &&
-                !IsForeignKey)
+            if (!UsingNoTracking
+                && ObjectContext != null
+                && !IsForeignKey)
             {
                 MarkRelationshipAsDeletedInObjectStateManager(wrappedEntity, _wrappedOwner, _relationshipSet, _navigation);
             }
@@ -1544,8 +1538,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                              (deleteOwner && CheckCascadeDeleteFlag(_fromEndMember)) ||
                                              (applyReferentialConstraints && IsPrincipalEndOfReferentialConstraint())) &&
                         !ReferenceEquals(wrappedEntity.Entity, _context.ObjectStateManager.TransactionManager.EntityBeingReparented)
-                        &&
-                        !ReferenceEquals(_context.ObjectStateManager.EntityInvokingFKSetter, wrappedEntity.Entity))
+                        && !ReferenceEquals(_context.ObjectStateManager.EntityInvokingFKSetter, wrappedEntity.Entity))
                     {
                         //Once related entity is deleted, all relationships involving related entity would be updated
 
@@ -2640,6 +2633,77 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
 
                 RelationshipNavigation.InitializeAccessors(sourceAccessor, targetAccessor);
+            }
+        }
+
+        #endregion
+
+        #region Base Member Contracts
+
+        [ContractClassFor(typeof(RelatedEnd))]
+        private abstract class RelatedEndContracts : RelatedEnd
+        {
+            internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override void AddToLocalCache(IEntityWrapper wrappedEntity, bool applyConstraints)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override void AddToObjectCache(IEntityWrapper wrappedEntity)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool CanSetEntityType(IEntityWrapper wrappedEntity)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool ContainsEntity(IEntityWrapper wrappedEntity)
+            {
+                Contract.Requires(wrappedEntity != null);
+
+                throw new NotImplementedException();
             }
         }
 

@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Reflection;
@@ -20,6 +19,7 @@ namespace System.Data.Entity.Core.Common
     /// factory;
     /// </summary>
     [CLSCompliant(false)]
+    [ContractClass(typeof(DbProviderServicesContracts))]
     public abstract class DbProviderServices
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Common
             Contract.Requires(commandTree != null);
             ValidateDataSpace(commandTree);
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
+            Contract.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
 
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree);
         }
@@ -74,6 +74,9 @@ namespace System.Data.Entity.Core.Common
         /// </remarks>
         public DbCommandDefinition CreateCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
+            Contract.Requires(providerManifest != null);
+            Contract.Requires(commandTree != null);
+
             try
             {
                 return CreateDbCommandDefinition(providerManifest, commandTree);
@@ -106,7 +109,7 @@ namespace System.Data.Entity.Core.Common
         /// <param name="commandTree">The command tree for which the data space should be validated</param>
         internal virtual void ValidateDataSpace(DbCommandTree commandTree)
         {
-            Debug.Assert(commandTree != null, "Ensure command tree is non-null before calling ValidateDataSpace");
+            Contract.Requires(commandTree != null);
 
             if (commandTree.DataSpace
                 != DataSpace.SSpace)
@@ -152,6 +155,8 @@ namespace System.Data.Entity.Core.Common
         /// </remarks>
         public string GetProviderManifestToken(DbConnection connection)
         {
+            Contract.Requires(connection != null);
+
             try
             {
                 var providerManifestToken = GetDbProviderManifestToken(connection);
@@ -179,6 +184,8 @@ namespace System.Data.Entity.Core.Common
 
         public DbProviderManifest GetProviderManifest(string manifestToken)
         {
+            Contract.Requires(manifestToken != null);
+
             try
             {
                 var providerManifest = GetDbProviderManifest(manifestToken);
@@ -266,6 +273,8 @@ namespace System.Data.Entity.Core.Common
 
         protected virtual DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string manifestToken)
         {
+            Contract.Requires(fromReader != null);
+
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices
             throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
         }
@@ -278,8 +287,8 @@ namespace System.Data.Entity.Core.Common
 
         internal void SetParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
         {
-            Debug.Assert(parameter != null, "Validate parameter before calling SetParameterValue");
-            Debug.Assert(parameterType != null, "Validate parameterType before calling SetParameterValue");
+            Contract.Requires(parameter != null, "Validate parameter before calling SetParameterValue");
+            Contract.Requires(parameterType != null, "Validate parameterType before calling SetParameterValue");
 
             SetDbParameterValue(parameter, parameterType, value);
         }
@@ -333,7 +342,7 @@ namespace System.Data.Entity.Core.Common
                         "get_ProviderFactory",
                         connection.GetType().ToString()));
             }
-            Debug.Assert(factory != null, "Should have thrown on null");
+            Contract.Assert(factory != null, "Should have thrown on null");
             return factory;
         }
 
@@ -370,11 +379,17 @@ namespace System.Data.Entity.Core.Common
         /// </returns>
         public string CreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(providerManifestToken != null);
+            Contract.Requires(storeItemCollection != null);
+
             return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
         }
 
         protected virtual string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(providerManifestToken != null);
+            Contract.Requires(storeItemCollection != null);
+
             throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportCreateDatabaseScript);
         }
 
@@ -388,11 +403,17 @@ namespace System.Data.Entity.Core.Common
         /// <param name="storeItemCollection">The collection of all store items based on which the script should be created<</param>
         public void CreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
+
             DbCreateDatabase(connection, commandTimeout, storeItemCollection);
         }
 
         protected virtual void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
+
             throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportCreateDatabase);
         }
 
@@ -409,11 +430,17 @@ namespace System.Data.Entity.Core.Common
         /// <returns>Whether the database indicated by the connection and the storeItemCollection exist</returns>
         public bool DatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
+
             return DbDatabaseExists(connection, commandTimeout, storeItemCollection);
         }
 
         protected virtual bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
+
             throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportDatabaseExists);
         }
 
@@ -425,11 +452,17 @@ namespace System.Data.Entity.Core.Common
         /// <param name="storeItemCollection">The collection of all store items contained in the database that should be deleted<</param>
         public void DeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
+
             DbDeleteDatabase(connection, commandTimeout, storeItemCollection);
         }
 
         protected virtual void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Contract.Requires(connection != null);
+            Contract.Requires(storeItemCollection != null);
+
             throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportDeleteDatabase);
         }
 
@@ -488,5 +521,35 @@ namespace System.Data.Entity.Core.Common
 
             return path;
         }
+
+        #region Base Member Contracts
+
+        [ContractClassFor(typeof(DbProviderServices))]
+        private abstract class DbProviderServicesContracts : DbProviderServices
+        {
+            protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
+            {
+                Contract.Requires(providerManifest != null);
+                Contract.Requires(commandTree != null);
+
+                throw new NotImplementedException();
+            }
+
+            protected override string GetDbProviderManifestToken(DbConnection connection)
+            {
+                Contract.Requires(connection != null);
+
+                throw new NotImplementedException();
+            }
+
+            protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
+            {
+                Contract.Requires(manifestToken != null);
+
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     // Detached - nothing
 
@@ -23,6 +24,7 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     /// Represets either a entity, entity stub or relationship
     /// </summary>
+    [ContractClass(typeof(ObjectStateEntryContracts))]
     public abstract class ObjectStateEntry : IEntityStateEntry, IEntityChangeTracker
     {
         #region common entry fields
@@ -38,7 +40,7 @@ namespace System.Data.Entity.Core.Objects
         // ObjectStateEntry will not be detached and creation will be handled from ObjectStateManager
         internal ObjectStateEntry(ObjectStateManager cache, EntitySet entitySet, EntityState state)
         {
-            Debug.Assert(cache != null, "cache cannot be null.");
+            Contract.Requires(cache != null);
 
             _cache = cache;
             _entitySet = entitySet;
@@ -114,23 +116,23 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Original values of entity
+        /// Original values
         /// </summary>
         /// <param></param>
         /// <returns> DbDataRecord </returns>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            public abstract DbDataRecord OriginalValues { get; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public abstract DbDataRecord OriginalValues { get; }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract OriginalValueRecord GetUpdatableOriginalValues();
 
         /// <summary>
-        /// Current values of entity/ DataRow
+        /// Current values
         /// </summary>
         /// <param></param>
         /// <returns> DbUpdatableDataRecord </returns>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            public abstract CurrentValueRecord CurrentValues { get; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public abstract CurrentValueRecord CurrentValues { get; }
 
         /// <summary>
         /// API to accept the current values as original values and  mark the entity as Unchanged.
@@ -352,5 +354,50 @@ namespace System.Data.Entity.Core.Objects
         }
 
         #endregion // Internal members
+
+        #region Base Member Contracts
+
+        [ContractClassFor(typeof(ObjectStateEntry))]
+        private abstract class ObjectStateEntryContracts : ObjectStateEntry
+        {
+            private ObjectStateEntryContracts()
+                : base(new ObjectStateManager(), null, EntityState.Unchanged)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void ApplyCurrentValues(object currentEntity)
+            {
+                Contract.Requires<ArgumentNullException>(currentEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            public override void ApplyOriginalValues(object originalEntity)
+            {
+                Contract.Requires(originalEntity != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override void EntityComplexMemberChanging(
+                string entityMemberName, object complexObject, string complexObjectMemberName)
+            {
+                Contract.Requires(complexObjectMemberName != null);
+                Contract.Requires(complexObject != null);
+
+                throw new NotImplementedException();
+            }
+
+            internal override void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
+            {
+                Contract.Requires(complexObjectMemberName != null);
+                Contract.Requires(complexObject != null);
+
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

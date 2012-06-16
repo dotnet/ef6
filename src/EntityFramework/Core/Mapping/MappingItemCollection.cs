@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class for representing a collection of mapping items in Edm space.
@@ -36,6 +37,8 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="item"></param>
         internal virtual Map GetMap(GlobalItem item)
         {
+            Contract.Requires(item != null);
+
             //will only be implemented by Mapping Item Collections
             throw Error.NotSupported();
         }
@@ -61,6 +64,8 @@ namespace System.Data.Entity.Core.Mapping
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal virtual Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
+            Contract.Requires(identity != null);
+
             //will only be implemented by Mapping Item Collections
             throw Error.NotSupported();
         }
@@ -87,12 +92,10 @@ namespace System.Data.Entity.Core.Mapping
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal virtual Map GetMap(string identity, DataSpace typeSpace)
         {
+            Contract.Requires(identity != null);
+
             //will only be implemented by Mapping Item Collections
             throw Error.NotSupported();
         }
     }
-
-//---- ItemCollection
 }
-
-//---- 

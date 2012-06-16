@@ -54,17 +54,24 @@
 
         #region Constructors
 
-        // EntityEntry
+        /// <summary>
+        /// For testing purposes only.
+        /// </summary>
+        internal EntityEntry()
+            : base(new ObjectStateManager(), null, EntityState.Unchanged)
+        {
+        }
+
         internal EntityEntry(
             IEntityWrapper wrappedEntity, EntityKey entityKey, EntitySet entitySet, ObjectStateManager cache,
             StateManagerTypeMetadata typeMetadata, EntityState state)
             : base(cache, entitySet, state)
         {
-            Debug.Assert(wrappedEntity != null, "entity wrapper cannot be null.");
-            Debug.Assert(wrappedEntity.Entity != null, "entity cannot be null.");
-            Debug.Assert(typeMetadata != null, "typeMetadata cannot be null.");
-            Debug.Assert(entitySet != null, "entitySet cannot be null.");
-            Debug.Assert((null == (object)entityKey) || (entityKey.EntitySetName == entitySet.Name), "different entitySet");
+            Contract.Requires(wrappedEntity != null);
+            Contract.Requires(wrappedEntity.Entity != null);
+            Contract.Requires(typeMetadata != null);
+            Contract.Requires(entitySet != null);
+            Contract.Requires((entityKey == null) || (entityKey.EntitySetName == entitySet.Name), "different entitySet");
 
             _wrappedEntity = wrappedEntity;
             _cacheTypeMetadata = typeMetadata;
@@ -97,14 +104,13 @@
                                           _requiresScalarChangeTracking);
         }
 
-        // KeyEntry
         internal EntityEntry(EntityKey entityKey, EntitySet entitySet, ObjectStateManager cache, StateManagerTypeMetadata typeMetadata)
             : base(cache, entitySet, EntityState.Unchanged)
         {
-            Debug.Assert((object)entityKey != null, "entityKey cannot be null.");
-            Debug.Assert(entitySet != null, "extent cannot be null.");
-            Debug.Assert(typeMetadata != null, "typeMetadata cannot be null.");
-            Debug.Assert(entityKey.EntitySetName == entitySet.Name, "different entitySet");
+            Contract.Requires(entityKey != null);
+            Contract.Requires(entitySet != null);
+            Contract.Requires(typeMetadata != null);
+            Contract.Requires(entityKey.EntitySetName == entitySet.Name, "different entitySet");
 
             _wrappedEntity = NullEntityWrapper.NullWrapper;
             _entityKey = entityKey;
@@ -154,7 +160,6 @@
             {
                 foreach (var foreignKey in ((EntitySet)EntitySet).ForeignKeyDependents)
                 {
-                    var associationSet = foreignKey.Item1;
                     var constraint = foreignKey.Item2;
                     var dependentType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)constraint.ToRole);
                     if (dependentType.IsAssignableFrom(_cacheTypeMetadata.DataRecordInfo.RecordType.EdmType))
@@ -171,7 +176,6 @@
             {
                 foreach (var foreignKey in ((EntitySet)EntitySet).ForeignKeyPrincipals)
                 {
-                    var associationSet = foreignKey.Item1;
                     var constraint = foreignKey.Item2;
                     var dependentType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)constraint.FromRole);
                     if (dependentType.IsAssignableFrom(_cacheTypeMetadata.DataRecordInfo.RecordType.EdmType))
@@ -188,7 +192,7 @@
             if (EntityState.Modified == State
                 && _modifiedFields != null)
             {
-                Debug.Assert(null != _modifiedFields, "null fields");
+                Contract.Assert(null != _modifiedFields, "null fields");
                 for (var i = 0; i < _modifiedFields.Count; i++)
                 {
                     if (_modifiedFields[i])
@@ -214,7 +218,7 @@
 
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "SetModifiedProperty");
 
-            Debug.Assert(
+            Contract.Assert(
                 State == EntityState.Unchanged || State == EntityState.Modified, "ValidateAndGetOrdinalForProperty should have thrown.");
 
             if (EntityState.Unchanged == State)
@@ -258,9 +262,7 @@
                 || State == EntityState.Deleted)
             {
                 // Threw for detached above; this throws for Added or Deleted entities
-                InvalidOperationException ret;
                 throw new InvalidOperationException(Strings.ObjectStateEntry_SetModifiedStates(methodName));
-                throw ret;
             }
 
             return ordinal;
@@ -296,7 +298,7 @@
                 return;
             }
 
-            Debug.Assert(State == EntityState.Modified, "Should have handled all other states above.");
+            Contract.Assert(State == EntityState.Modified, "Should have handled all other states above.");
 
             if (_modifiedFields != null
                 && _modifiedFields[ordinal])
@@ -323,12 +325,12 @@
         }
 
         /// <summary>
-        /// Original values of entity
+        /// Original values
         /// </summary>
         /// <param></param>
         /// <returns> DbDataRecord </returns>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            public override DbDataRecord OriginalValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override DbDataRecord OriginalValues
         {
             get { return InternalGetOriginalValues(true /*readOnly*/); }
         }
@@ -391,12 +393,12 @@
         }
 
         /// <summary>
-        /// Current values of entity/ DataRow
+        /// Current values
         /// </summary>
         /// <param></param>
         /// <returns> DbUpdatableDataRecord </returns>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            public override CurrentValueRecord CurrentValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override CurrentValueRecord CurrentValues
         {
             get
             {
@@ -440,7 +442,7 @@
                 throw new InvalidOperationException(Strings.ObjectContext_CommitWithConceptualNull);
             }
 
-            Debug.Assert(!IsKeyEntry || State == EntityState.Unchanged, "Key ObjectStateEntries must always be unchanged.");
+            Contract.Assert(!IsKeyEntry || State == EntityState.Unchanged, "Key ObjectStateEntries must always be unchanged.");
 
             switch (State)
             {
@@ -454,9 +456,9 @@
                     break;
                 case EntityState.Added:
                     // If this entry represents an entity, perform key fixup.
-                    Debug.Assert(Entity != null, "Non-relationship entries should have a non-null entity.");
-                    Debug.Assert((object)_entityKey != null, "All entities in the state manager should have a non-null EntityKey.");
-                    Debug.Assert(_entityKey.IsTemporary, "All entities in the Added state should have a temporary EntityKey.");
+                    Contract.Assert(Entity != null, "Non-relationship entries should have a non-null entity.");
+                    Contract.Assert((object)_entityKey != null, "All entities in the state manager should have a non-null EntityKey.");
+                    Contract.Assert(_entityKey.IsTemporary, "All entities in the Added state should have a temporary EntityKey.");
 
                     // Retrieve referential constraint properties from Principal entities (possibly recursively)
                     // and check referential constraint properties in the Dependent entities (1 level only)
@@ -518,9 +520,7 @@
                 }
                 else if (EntityState.Modified != State)
                 {
-                    InvalidOperationException ret;
                     throw new InvalidOperationException(Strings.ObjectStateEntry_SetModifiedStates("SetModified"));
-                    throw ret;
                 }
             }
         }
@@ -582,8 +582,6 @@
         /// <param name="currentEntity">object with modified properties</param>
         public override void ApplyCurrentValues(object currentEntity)
         {
-            Contract.Requires(currentEntity != null);
-
             ValidateState();
 
             if (IsKeyEntry)
@@ -602,8 +600,6 @@
         /// <param name="originalEntity">The object with original values</param>
         public override void ApplyOriginalValues(object originalEntity)
         {
-            Contract.Requires(originalEntity != null);
-
             ValidateState();
 
             if (IsKeyEntry)
@@ -625,20 +621,20 @@
         /// </summary>
         internal void AddRelationshipEnd(RelationshipEntry item)
         {
-#if DEBUG
-            Debug.Assert(null != item, "null item");
-            Debug.Assert(null != item.RelationshipWrapper, "null RelationshipWrapper");
-            Debug.Assert(0 <= _countRelationshipEnds, "negative _relationshipEndCount");
-            Debug.Assert(
+            Contract.Requires(null != item);
+            Contract.Requires(null != item.RelationshipWrapper);
+            Contract.Assert(0 <= _countRelationshipEnds, "negative _relationshipEndCount");
+            Contract.Assert(
                 EntityKey.Equals(item.RelationshipWrapper.Key0) || EntityKey.Equals(item.RelationshipWrapper.Key1),
                 "entity key doesn't match");
 
+#if DEBUG
             for (var current = _headRelationshipEnds;
                  null != current;
                  current = current.GetNextRelationshipEnd(EntityKey))
             {
-                Debug.Assert(!ReferenceEquals(item, current), "RelationshipEntry already in list");
-                Debug.Assert(!item.RelationshipWrapper.Equals(current.RelationshipWrapper), "RelationshipWrapper already in list");
+                Contract.Assert(!ReferenceEquals(item, current), "RelationshipEntry already in list");
+                Contract.Assert(!item.RelationshipWrapper.Equals(current.RelationshipWrapper), "RelationshipWrapper already in list");
             }
 #endif
             // the item will become the head of the list
@@ -647,7 +643,7 @@
             _headRelationshipEnds = item;
             _countRelationshipEnds++;
 
-            Debug.Assert(_countRelationshipEnds == (new RelationshipEndEnumerable(this)).ToArray().Length, "different count");
+            Contract.Assert(_countRelationshipEnds == (new RelationshipEndEnumerable(this)).ToArray().Length, "different count");
         }
 
         /// <summary>
@@ -675,10 +671,10 @@
         /// <param name="item"></param>
         internal void RemoveRelationshipEnd(RelationshipEntry item)
         {
-            Debug.Assert(null != item, "removing null");
-            Debug.Assert(null != item.RelationshipWrapper, "null RelationshipWrapper");
-            Debug.Assert(1 <= _countRelationshipEnds, "negative _relationshipEndCount");
-            Debug.Assert(
+            Contract.Requires(null != item);
+            Contract.Requires(null != item.RelationshipWrapper);
+            Contract.Assert(1 <= _countRelationshipEnds, "negative _relationshipEndCount");
+            Contract.Assert(
                 EntityKey.Equals(item.RelationshipWrapper.Key0) || EntityKey.Equals(item.RelationshipWrapper.Key1),
                 "entity key doesn't match");
 
@@ -697,14 +693,14 @@
                     if (currentIsKey0)
                     {
                         // if this.EntityKey matches Key0, NextKey0 is the next element in the lsit
-                        Debug.Assert(EntityKey.Equals(current.RelationshipWrapper.Key0), "entity key didn't match");
+                        Contract.Assert(EntityKey.Equals(current.RelationshipWrapper.Key0), "entity key didn't match");
                         next = current.NextKey0;
                         current.NextKey0 = null;
                     }
                     else
                     {
                         // if this.EntityKey matches Key1, NextKey1 is the next element in the lsit
-                        Debug.Assert(EntityKey.Equals(current.RelationshipWrapper.Key1), "entity key didn't match");
+                        Contract.Assert(EntityKey.Equals(current.RelationshipWrapper.Key1), "entity key didn't match");
                         next = current.NextKey1;
                         current.NextKey1 = null;
                     }
@@ -722,17 +718,17 @@
                     }
                     --_countRelationshipEnds;
 
-                    Debug.Assert(_countRelationshipEnds == (new RelationshipEndEnumerable(this)).ToArray().Length, "different count");
+                    Contract.Assert(_countRelationshipEnds == (new RelationshipEndEnumerable(this)).ToArray().Length, "different count");
                     return;
                 }
-                Debug.Assert(
+                Contract.Assert(
                     !item.RelationshipWrapper.Equals(current.RelationshipWrapper), "same wrapper, different RelationshipEntry instances");
 
                 previous = current;
                 current = currentIsKey0 ? current.NextKey0 : current.NextKey1;
                 previousIsKey0 = currentIsKey0;
             }
-            Debug.Assert(false, "didn't remove a RelationshipEntry");
+            Contract.Assert(false, "didn't remove a RelationshipEntry");
         }
 
         /// <summary>
@@ -742,8 +738,8 @@
         /// <param name="promotedEntry">if promoting entity stub to full entity</param>
         internal void UpdateRelationshipEnds(EntityKey oldKey, EntityEntry promotedEntry)
         {
-            Debug.Assert(null != (object)oldKey, "bad oldKey");
-            Debug.Assert(!ReferenceEquals(this, promotedEntry), "shouldn't be same reference");
+            Contract.Requires(null != oldKey);
+            Contract.Assert(!ReferenceEquals(this, promotedEntry), "shouldn't be same reference");
 
             // traverse the list to update one of the ends in the relationship entry
             var count = 0;
@@ -768,7 +764,7 @@
                 }
                 ++count;
             }
-            Debug.Assert(count == _countRelationshipEnds, "didn't traverse all relationships");
+            Contract.Assert(count == _countRelationshipEnds, "didn't traverse all relationships");
             if (null != promotedEntry)
             {
                 // cleanup existing (dead) entry to reduce confusion
@@ -810,13 +806,13 @@
 
             IEnumerator<RelationshipEntry> IEnumerable<RelationshipEntry>.GetEnumerator()
             {
-                Debug.Assert(false, "dead code, don't box the RelationshipEndEnumerable");
+                Contract.Assert(false, "dead code, don't box the RelationshipEndEnumerable");
                 return GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                Debug.Assert(false, "dead code, don't box the RelationshipEndEnumerable");
+                Contract.Assert(false, "dead code, don't box the RelationshipEndEnumerable");
                 return GetEnumerator();
             }
 
@@ -833,15 +829,15 @@
                     list = new RelationshipEntry[_entityEntry._countRelationshipEnds];
                     for (var i = 0; i < list.Length; ++i)
                     {
-                        Debug.Assert(null != relationshipEnd, "count larger than list");
-                        Debug.Assert(
+                        Contract.Assert(null != relationshipEnd, "count larger than list");
+                        Contract.Assert(
                             _entityEntry.EntityKey.Equals(relationshipEnd.Key0) || _entityEntry.EntityKey.Equals(relationshipEnd.Key1),
                             "entity key mismatch");
                         list[i] = relationshipEnd;
 
                         relationshipEnd = relationshipEnd.GetNextRelationshipEnd(_entityEntry.EntityKey);
                     }
-                    Debug.Assert(null == relationshipEnd, "count smaller than list");
+                    Contract.Assert(null == relationshipEnd, "count smaller than list");
                 }
                 return list ?? EmptyRelationshipEntryArray;
             }
@@ -875,7 +871,7 @@
             {
                 get
                 {
-                    Debug.Assert(false, "dead code, don't box the RelationshipEndEnumerator");
+                    Contract.Assert(false, "dead code, don't box the RelationshipEndEnumerator");
                     return _current;
                 }
             }
@@ -902,7 +898,7 @@
 
             public void Reset()
             {
-                Debug.Assert(false, "not implemented");
+                Contract.Assert(false, "not implemented");
             }
         }
 
@@ -932,15 +928,14 @@
             else
             {
                 // ObjectContext.AttachTo uses CurrentValueRecord to build EntityKey for EntityType
-                // so the Entity doesn't have an EntityKey yet, SQLBU 525130
-                //Debug.Assert(Helper.IsComplexType(metadata.CdmMetadata.EdmType), "!IsComplexType");
+                // so the Entity doesn't have an EntityKey yet
                 return metadata.DataRecordInfo;
             }
         }
 
         internal override void Reset()
         {
-            Debug.Assert(_cache != null, "Cannot Reset an entity that is not currently attached to a context.");
+            Contract.Assert(_cache != null, "Cannot Reset an entity that is not currently attached to a context.");
             RemoveFromForeignKeyIndex();
             _cache.ForgetEntryWithConceptualNull(this, resetAllKeys: true);
 
@@ -993,15 +988,15 @@
                 // CascadeAcceptChanges is only called on Entity ObjectStateEntry when it is
                 // in deleted state. Entity is in deleted state therefore for all related Relationship
                 // cache entries only valid state is Deleted.
-                Debug.Assert(entry.State == EntityState.Deleted, "Relationship ObjectStateEntry should be in deleted state");
+                Contract.Assert(entry.State == EntityState.Deleted, "Relationship ObjectStateEntry should be in deleted state");
                 entry.AcceptChanges();
             }
         }
 
         internal override void SetModifiedAll()
         {
-            Debug.Assert(!IsKeyEntry, "SetModifiedAll called on a KeyEntry");
-            Debug.Assert(State == EntityState.Modified, "SetModifiedAll called when not modified");
+            Contract.Assert(!IsKeyEntry, "SetModifiedAll called on a KeyEntry");
+            Contract.Assert(State == EntityState.Modified, "SetModifiedAll called when not modified");
 
             ValidateState();
             if (null == _modifiedFields)
@@ -1053,8 +1048,6 @@
             {
                 throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
-            Contract.Requires(complexObjectMemberName != null);
-            Contract.Requires(complexObject != null);
             EntityMemberChanging(entityMemberName, complexObject, complexObjectMemberName);
         }
 
@@ -1071,8 +1064,6 @@
             {
                 throw new InvalidOperationException(Strings.ObjectStateEntry_CannotAccessKeyEntryValues);
             }
-            Contract.Requires(complexObjectMemberName != null);
-            Contract.Requires(complexObject != null);
             EntityMemberChanged(entityMemberName, complexObject, complexObjectMemberName);
         }
 
@@ -1162,8 +1153,7 @@
                 List<Pair<string, string>> relationships;
                 if (complexObject == null && // check if property is a top-level property
                     (transManager.IsAlignChanges || !transManager.IsDetectChanges)
-                    &&
-                    IsPropertyAForeignKey(entityMemberName, out relationships))
+                    && IsPropertyAForeignKey(entityMemberName, out relationships))
                 {
                     foreach (var relationship in relationships)
                     {
@@ -1171,9 +1161,9 @@
                         var targetRoleName = relationship.Second;
 
                         var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(relationshipName, targetRoleName);
-                        Debug.Assert(relatedEnd != null, "relatedEnd should exist if property is a foreign key");
+                        Contract.Assert(relatedEnd != null, "relatedEnd should exist if property is a foreign key");
                         var reference = relatedEnd as EntityReference;
-                        Debug.Assert(reference != null, "relatedEnd should be an EntityReference");
+                        Contract.Assert(reference != null, "relatedEnd should be an EntityReference");
 
                         // Allow updating of other relationships that this FK property participates in except that
                         // if we're doing fixup by references as part of AcceptChanges then don't allow a ref to 
@@ -1222,7 +1212,7 @@
             }
             finally
             {
-                Debug.Assert(_cache != null, "Unexpected null state manager.");
+                Contract.Assert(_cache != null, "Unexpected null state manager.");
                 SetCachedChangingValues(null, null, null, EntityState.Detached, null);
             }
         }
@@ -1312,7 +1302,7 @@
                 return;
             }
 
-            Debug.Assert(changingOrdinal != -1, "Expected GetAndValidateChangeMemberInfo to throw for a invalid property name");
+            Contract.Assert(changingOrdinal != -1, "Expected GetAndValidateChangeMemberInfo to throw for a invalid property name");
 
             // Cache the current value for later storage in original values. If we are not in a state where we should update
             // the original values, we don't even need to bother saving the current value here. However, we will still cache
@@ -1328,7 +1318,7 @@
             //          so we don't need to worry about shadow state, and we don't want a CSpace representation of complex objects
             var oldValue = memberMetadata.GetValue(changingObject);
 
-            Debug.Assert(State != EntityState.Detached, "Change tracking should not happen on detached entities.");
+            Contract.Assert(State != EntityState.Detached, "Change tracking should not happen on detached entities.");
             SetCachedChangingValues(entityMemberName, changingObject, changingMemberName, State, oldValue);
         }
 
@@ -1342,7 +1332,7 @@
         internal object GetOriginalEntityValue(
             StateManagerTypeMetadata metadata, int ordinal, object userObject, ObjectStateValueRecord updatableRecord)
         {
-            Debug.Assert(
+            Contract.Assert(
                 updatableRecord != ObjectStateValueRecord.OriginalUpdatablePublic,
                 "OriginalUpdatablePublic records must preserve complex type information, use the overload that takes parentEntityPropertyIndex");
             return GetOriginalEntityValue(metadata, ordinal, userObject, updatableRecord, s_EntityRoot);
@@ -1367,7 +1357,7 @@
         internal object GetCurrentEntityValue(
             StateManagerTypeMetadata metadata, int ordinal, object userObject, ObjectStateValueRecord updatableRecord)
         {
-            Debug.Assert(
+            Contract.Assert(
                 updatableRecord != ObjectStateValueRecord.OriginalUpdatablePublic,
                 "OriginalUpdatablePublic records must preserve complex type information, use the overload that takes parentEntityPropertyIndex");
             return GetCurrentEntityValue(metadata, ordinal, userObject, updatableRecord, s_EntityRoot);
@@ -1381,7 +1371,7 @@
 
             object retValue = null;
             var member = metadata.Member(ordinal);
-            Debug.Assert(null != member, "didn't throw ArgumentOutOfRangeException");
+            Contract.Assert(null != member, "didn't throw ArgumentOutOfRangeException");
 
             if (!metadata.IsMemberPartofShadowState(ordinal))
             {
@@ -1417,19 +1407,19 @@
                                 parentEntityPropertyIndex);
                             break;
                         default:
-                            Debug.Assert(false, "shouldn't happen");
+                            Contract.Assert(false, "shouldn't happen");
                             break;
                     }
                     // we need to pass the toplevel ordinal
                 }
             }
 #if DEBUG
-                // performance, don't do this work in retail until shadow state is supported
+            // performance, don't do this work in retail until shadow state is supported
             else if (userObject == _wrappedEntity.Entity)
             {
-                Debug.Assert(false, "shadowstate not supported");
+                Contract.Assert(false, "shadowstate not supported");
 #if SupportShadowState
-                            Debug.Assert(null != _currentValues, "shadow state without values");
+                            Contract.Assert(null != _currentValues, "shadow state without values");
                             _currentValues.TryGetValue(member.CLayerName, out retValue); // try to get it from shadow state if exists
                             // we don't support CSpace only complex type
 #endif
@@ -1469,12 +1459,12 @@
         // Relationship must be related to the current entry.
         internal AssociationEndMember GetAssociationEndMember(RelationshipEntry relationshipEntry)
         {
-            Debug.Assert((object)EntityKey != null, "entry should have a not null EntityKey");
+            Contract.Assert(EntityKey != null, "entry should have a not null EntityKey");
 
             ValidateState();
 
             var endMember = relationshipEntry.RelationshipWrapper.GetAssociationEndMember(EntityKey);
-            Debug.Assert(null != endMember, "should be one of the ends of the relationship");
+            Contract.Assert(null != endMember, "should be one of the ends of the relationship");
             return endMember;
         }
 
@@ -1482,7 +1472,7 @@
         // Relationship must be related to the current entry.
         internal EntityEntry GetOtherEndOfRelationship(RelationshipEntry relationshipEntry)
         {
-            Debug.Assert((object)EntityKey != null, "entry should have a not null EntityKey");
+            Contract.Assert(EntityKey != null, "entry should have a not null EntityKey");
 
             return _cache.GetEntityEntry(relationshipEntry.RelationshipWrapper.GetOtherEntityKey(EntityKey));
         }
@@ -1501,12 +1491,12 @@
         private void ExpandComplexTypeAndAddValues(
             StateManagerMemberMetadata memberMetadata, object oldComplexObject, object newComplexObject, bool useOldComplexObject)
         {
-            Debug.Assert(memberMetadata.IsComplex, "Cannot expand non-complex objects");
+            Contract.Requires(memberMetadata.IsComplex, "Cannot expand non-complex objects");
             if (newComplexObject == null)
             {
                 throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(memberMetadata.CLayerName));
             }
-            Debug.Assert(
+            Contract.Assert(
                 oldComplexObject == null || (oldComplexObject.GetType() == newComplexObject.GetType()),
                 "Cannot replace a complex object with an object of a different type, unless the original one was null");
 
@@ -1558,7 +1548,7 @@
                             }
                             else
                             {
-                                Debug.Assert(
+                                Contract.Assert(
                                     Entity is IEntityWithChangeTracker, "for POCO objects the snapshot should contain all original values");
                             }
                         }
@@ -1628,7 +1618,7 @@
                         //     EntityMemberChanging("EntityKey")
                         //     EntityMemberChanged("EntityKey")
                         //     EntityMemberChanged("Property1")
-                        Debug.Assert(State != EntityState.Detached, "Change tracking should not happen on detached entities.");
+                        Contract.Assert(State != EntityState.Detached, "Change tracking should not happen on detached entities.");
                         SetCachedChangingValues(null, null, null, State, null);
                         return -2;
                     }
@@ -1704,13 +1694,13 @@
             }
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            internal OriginalValueRecord EditableOriginalValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        internal OriginalValueRecord EditableOriginalValues
         {
             get
             {
-                Debug.Assert(!IsKeyEntry, "should not edit original key entry");
-                Debug.Assert(
+                Contract.Assert(!IsKeyEntry, "should not edit original key entry");
+                Contract.Assert(
                     EntityState.Modified == State ||
                     EntityState.Deleted == State ||
                     EntityState.Unchanged == State,
@@ -1745,7 +1735,7 @@
         // which are later used to detect changes in properties
         internal void TakeSnapshot(bool onlySnapshotComplexProperties)
         {
-            Debug.Assert(!IsKeyEntry);
+            Contract.Assert(!IsKeyEntry);
 
             if (State != EntityState.Added)
             {
@@ -1784,8 +1774,8 @@
                 foreach (var pair in keys)
                 {
                     var reference = pair.Key as EntityReference;
-                    Debug.Assert(reference != null, "EntityReference expected");
-                    Debug.Assert(pair.Value.Count == 1, "Unexpected number of keys");
+                    Contract.Assert(reference != null, "EntityReference expected");
+                    Contract.Assert(pair.Value.Count == 1, "Unexpected number of keys");
 
                     if (!ForeignKeyFactory.IsConceptualNullKey(reference.CachedForeignKey))
                     {
@@ -1797,7 +1787,7 @@
 
         private void TakeSnapshotOfComplexType(StateManagerMemberMetadata member, object complexValue)
         {
-            Debug.Assert(member.IsComplex, "Cannot expand non-complex objects");
+            Contract.Assert(member.IsComplex, "Cannot expand non-complex objects");
 
             // Skip null values
             if (complexValue == null)
@@ -1829,8 +1819,8 @@
 
         private void AddComplexObjectSnapshot(object userObject, int ordinal, object complexObject)
         {
-            Debug.Assert(userObject != null, "null userObject");
-            Debug.Assert(ordinal >= 0, "invalid ordinal");
+            Contract.Requires(userObject != null);
+            Contract.Requires(ordinal >= 0);
 
             if (complexObject == null)
             {
@@ -1851,7 +1841,7 @@
                 _originalComplexObjects.Add(userObject, ordinal2complexObject);
             }
 
-            Debug.Assert(!ordinal2complexObject.ContainsKey(ordinal), "shouldn't contain this ordinal yet");
+            Contract.Assert(!ordinal2complexObject.ContainsKey(ordinal), "shouldn't contain this ordinal yet");
             ordinal2complexObject.Add(ordinal, complexObject);
         }
 
@@ -1900,6 +1890,7 @@
                 detectOnlyComplexProperties: false, detectOnly: true);
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "originalValueFound", Justification = "Used in the debug build")]
         private bool DetectChangesInProperty(int ordinal, bool detectOnlyComplexProperties, bool detectOnly)
         {
             var changeDetected = false;
@@ -1924,7 +1915,7 @@
                             // equivalent of EntityObject.ReportPropertyChanging()
                             ((IEntityChangeTracker)this).EntityMemberChanging(member.CLayerName);
 
-                            Debug.Assert(
+                            Contract.Assert(
                                 _cache.SaveOriginalValues,
                                 "complex object instance was changed so the SaveOriginalValues flag should be set to true");
 
@@ -1957,7 +1948,7 @@
                 object originalStateManagerValue;
                 var originalValueFound = FindOriginalValue(member, _wrappedEntity.Entity, out originalStateManagerValue);
 
-                Debug.Assert(originalValueFound, "Original value not found even after snapshot.");
+                Contract.Assert(originalValueFound, "Original value not found even after snapshot.");
 
                 var originalValue = ((StateManagerValue)originalStateManagerValue).originalValue;
                 if (!Equals(currentValue, originalValue))
@@ -1993,8 +1984,8 @@
         // This method uses original values stored in the ObjectStateEntry to detect changes in values of entity's properties
         internal void DetectChangesInProperties(bool detectOnlyComplexProperties)
         {
-            Debug.Assert(!IsKeyEntry, "Entry should be an EntityEntry");
-            Debug.Assert(State != EntityState.Added, "This method should not be called for entries in Added state");
+            Contract.Assert(!IsKeyEntry, "Entry should be an EntityEntry");
+            Contract.Assert(State != EntityState.Added, "This method should not be called for entries in Added state");
 
             var fieldCount = GetFieldCount(_cacheTypeMetadata);
             for (var i = 0; i < fieldCount; i++)
@@ -2011,7 +2002,7 @@
             ref bool changeDetected,
             bool detectOnly)
         {
-            Debug.Assert(complexMember.IsComplex, "Cannot expand non-complex objects");
+            Contract.Requires(complexMember.IsComplex, "Cannot expand non-complex objects");
 
             if (complexValue == null)
             {
@@ -2029,7 +2020,7 @@
                 return true;
             }
 
-            Debug.Assert(oldComplexValue != null, "original complex type value should not be null at this point");
+            Contract.Assert(oldComplexValue != null, "original complex type value should not be null at this point");
 
             var metadata = _cache.GetOrAddStateManagerTypeMetadata(complexMember.CdmMetadata.TypeUsage.EdmType);
             for (var i = 0; i < GetFieldCount(metadata); i++)
@@ -2091,7 +2082,7 @@
                     {
                         changeDetected = true;
 
-                        Debug.Assert(!member.IsPartOfKey, "Found member of complex type that is part of a key");
+                        Contract.Assert(!member.IsPartOfKey, "Found member of complex type that is part of a key");
 
                         if (!detectOnly)
                         {
@@ -2137,7 +2128,7 @@
                 Dictionary<int, object> ordinal2complexObject;
                 if (_originalComplexObjects.TryGetValue(userObject, out ordinal2complexObject))
                 {
-                    Debug.Assert(ordinal2complexObject != null, "value should already exists");
+                    Contract.Assert(ordinal2complexObject != null, "value should already exists");
 
                     object oldValue;
                     ordinal2complexObject.TryGetValue(ordinal, out oldValue);
@@ -2186,7 +2177,7 @@
         /// </summary>
         internal void FixupFKValuesFromNonAddedReferences()
         {
-            Debug.Assert(EntitySet is EntitySet, "Expect entity entries to have true entity sets.");
+            Contract.Assert(EntitySet is EntitySet, "Expect entity entries to have true entity sets.");
             if (!((EntitySet)EntitySet).HasForeignKeyRelationships)
             {
                 return;
@@ -2199,7 +2190,7 @@
                 var reference =
                     RelationshipManager.GetRelatedEndInternal(dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as
                     EntityReference;
-                Debug.Assert(reference != null, "Expected reference to exist and be an entity reference (not collection)");
+                Contract.Assert(reference != null, "Expected reference to exist and be an entity reference (not collection)");
 
                 if (reference.TargetAccessor.HasProperty)
                 {
@@ -2208,10 +2199,9 @@
                     {
                         ObjectStateEntry principalEntry;
                         if (_cache.TryGetObjectStateEntry(principal, out principalEntry)
-                            &&
-                            (principalEntry.State == EntityState.Modified || principalEntry.State == EntityState.Unchanged))
+                            && (principalEntry.State == EntityState.Modified || principalEntry.State == EntityState.Unchanged))
                         {
-                            Debug.Assert(
+                            Contract.Assert(
                                 principalEntry is EntityEntry,
                                 "Existing entry for an entity must be an EntityEntry, not a RelationshipEntry");
                             reference.UpdateForeignKeyValues(
@@ -2225,8 +2215,8 @@
         // Method used for entities which don't implement IEntityWithRelationships
         internal void TakeSnapshotOfRelationships()
         {
-            Debug.Assert(_wrappedEntity != null, "wrapped entity shouldn't be null");
-            Debug.Assert(
+            Contract.Assert(_wrappedEntity != null, "wrapped entity shouldn't be null");
+            Contract.Assert(
                 !(_wrappedEntity.Entity is IEntityWithRelationships),
                 "this method should be called only for entities which don't implement IEntityWithRelationships");
 
@@ -2281,7 +2271,7 @@
 
             if (relatedEntry != null)
             {
-                Debug.Assert(
+                Contract.Assert(
                     ObjectStateManager.TransactionManager.IsAddTracking ||
                     ObjectStateManager.TransactionManager.IsAttachTracking, "Should be inside Attach or Add");
 
@@ -2295,7 +2285,7 @@
                     n.RelationshipType.FullName, n.FromEndMember.Name);
                 if (!otherRelatedEnd.ContainsEntity(_wrappedEntity))
                 {
-                    Debug.Assert(relatedWrapper.ObjectStateEntry != null, "Expected related entity to be tracked in snapshot code.");
+                    Contract.Assert(relatedWrapper.ObjectStateEntry != null, "Expected related entity to be tracked in snapshot code.");
                     if (relatedWrapper.ObjectStateEntry.State
                         == EntityState.Deleted)
                     {
@@ -2358,8 +2348,8 @@
 
         internal void DetectChangesInRelationshipsOfSingleEntity()
         {
-            Debug.Assert(!IsKeyEntry, "Entry should be an EntityEntry");
-            Debug.Assert(!(Entity is IEntityWithRelationships), "Entity shouldn't implement IEntityWithRelationships");
+            Contract.Assert(!IsKeyEntry, "Entry should be an EntityEntry");
+            Contract.Assert(!(Entity is IEntityWithRelationships), "Entity shouldn't implement IEntityWithRelationships");
 
             var metadata = _cacheTypeMetadata;
 
@@ -2369,7 +2359,7 @@
             foreach (var n in navigationProperties)
             {
                 var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(n.RelationshipType.FullName, n.ToEndMember.Name);
-                Debug.Assert(relatedEnd != null, "relatedEnd is null");
+                Contract.Assert(relatedEnd != null, "relatedEnd is null");
 
                 var val = WrappedEntity.GetNavigationPropertyValue(relatedEnd);
 
@@ -2457,13 +2447,12 @@
             EntityEntry relatedEntry,
             RelatedEnd relatedEndFrom)
         {
-            Debug.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permaanent keys");
+            Contract.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permaanent keys");
             AddDetectedRelationship(relationships, relatedKey, relatedEndFrom);
 
             if (relatedEntry != null)
             {
                 var relatedWrapper = relatedEntry.WrappedEntity;
-                ;
 
                 var relatedEndTo = relatedEndFrom.GetOtherEndOfRelationship(relatedWrapper);
 
@@ -2504,7 +2493,7 @@
             {
                 if (relatedEnd is EntityReference)
                 {
-                    Debug.Assert(objectsInRelatedEnd.Count() == 1, "unexpected number of entities for EntityReference");
+                    Contract.Assert(objectsInRelatedEnd.Count() == 1, "unexpected number of entities for EntityReference");
                     var existingRelatedObject = objectsInRelatedEnd.First();
                     if (!Equals(existingRelatedObject, relatedObject))
                     {
@@ -2526,12 +2515,12 @@
         {
             ValidateState();
 
-            Debug.Assert(!IsKeyEntry);
+            Contract.Assert(!IsKeyEntry);
 
             var createKeyEntry = false;
 
             var relationshipManager = _wrappedEntity.RelationshipManager;
-            Debug.Assert(relationshipManager != null, "Entity wrapper returned a null RelationshipManager");
+            Contract.Assert(relationshipManager != null, "Entity wrapper returned a null RelationshipManager");
             // Key entry should be created only when current entity is not in Added state
             // and if the entity is a "OneToOne" or "ZeroToOne" end of some existing relationship.
             createKeyEntry =
@@ -2608,13 +2597,13 @@
             switch (State)
             {
                 case EntityState.Added:
-                    Debug.Assert(
+                    Contract.Assert(
                         EntityState.Added == State,
                         "Expected ObjectStateEntry state is Added; make sure FixupRelationship did not corrupt cache entry state");
 
                     _cache.ChangeState(this, EntityState.Added, EntityState.Detached);
 
-                    Debug.Assert(null == _modifiedFields, "There should not be any modified fields");
+                    Contract.Assert(null == _modifiedFields, "There should not be any modified fields");
 
                     break;
                 case EntityState.Modified:
@@ -2625,7 +2614,7 @@
                         // this mainly occurs in cascade delete scenarios
                         DeleteRelationshipsThatReferenceKeys(null, null);
                     }
-                    Debug.Assert(
+                    Contract.Assert(
                         EntityState.Modified == State,
                         "Expected ObjectStateEntry state is Modified; make sure FixupRelationship did not corrupt cache entry state");
                     _cache.ChangeState(this, EntityState.Modified, EntityState.Deleted);
@@ -2640,12 +2629,12 @@
                         // this mainly occurs in cascade delete scenarios
                         DeleteRelationshipsThatReferenceKeys(null, null);
                     }
-                    Debug.Assert(State == EntityState.Unchanged, "Unexpected state");
-                    Debug.Assert(
+                    Contract.Assert(State == EntityState.Unchanged, "Unexpected state");
+                    Contract.Assert(
                         EntityState.Unchanged == State,
                         "Expected ObjectStateEntry state is Unchanged; make sure FixupRelationship did not corrupt cache entry state");
                     _cache.ChangeState(this, EntityState.Unchanged, EntityState.Deleted);
-                    Debug.Assert(null == _modifiedFields, "There should not be any modified fields");
+                    Contract.Assert(null == _modifiedFields, "There should not be any modified fields");
                     State = EntityState.Deleted;
 
                     break;
@@ -2664,7 +2653,7 @@
             {
                 var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(
                     dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as EntityReference;
-                Debug.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
+                Contract.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
                 relatedEnd.NullAllForeignKeys();
             }
         }
@@ -2695,14 +2684,14 @@
         // Key entry from the other side of the relationship is removed if is not related to other entries.
         private void DetachRelationshipsEntries(RelationshipManager relationshipManager)
         {
-            Debug.Assert(relationshipManager != null, "Unexpected null RelationshipManager");
-            Debug.Assert(!IsKeyEntry, "Should only be detaching relationships with key entries if the source is not a key entry");
+            Contract.Requires(relationshipManager != null);
+            Contract.Assert(!IsKeyEntry, "Should only be detaching relationships with key entries if the source is not a key entry");
 
             foreach (var relationshipEntry in _cache.CopyOfRelationshipsByKey(EntityKey))
             {
                 // Get state entry for other side of the relationship
                 var targetKey = relationshipEntry.RelationshipWrapper.GetOtherEntityKey(EntityKey);
-                Debug.Assert((object)targetKey != null, "EntityKey not on either side of relationship as expected");
+                Contract.Assert(targetKey != null, "EntityKey not on either side of relationship as expected");
 
                 var relatedEntry = _cache.GetEntityEntry(targetKey);
                 if (relatedEntry.IsKeyEntry)
@@ -2746,7 +2735,7 @@
         private void FixupRelationships()
         {
             var relationshipManager = _wrappedEntity.RelationshipManager;
-            Debug.Assert(relationshipManager != null, "Entity wrapper returned a null RelationshipManager");
+            Contract.Assert(relationshipManager != null, "Entity wrapper returned a null RelationshipManager");
             relationshipManager.RemoveEntityFromRelationships();
             DeleteRelationshipsThatReferenceKeys(null, null);
         }
@@ -2803,7 +2792,7 @@
         private bool RetrieveAndCheckReferentialConstraintValuesInAcceptChanges()
         {
             var relationshipManager = _wrappedEntity.RelationshipManager;
-            Debug.Assert(relationshipManager != null, "Entity wrapper returned a null RelationshipManager");
+            Contract.Assert(relationshipManager != null, "Entity wrapper returned a null RelationshipManager");
             // Find key property names which are part of referential integrity constraints
             List<string> propertiesToRetrieve; // names of properties which should be retrieved from Principal entities
             bool propertiesToCheckExist; // true iff there are properties which should be checked in dependent entities
@@ -2852,7 +2841,7 @@
                 if (otherEnd.IsKeyEntry)
                 {
                     association = (AssociationSet)relationshipEntry.EntitySet;
-                    Debug.Assert(association != null, "relationship is not an association");
+                    Contract.Assert(association != null, "relationship is not an association");
 
                     // Iterate through referential constraints of the association of the relationship
                     // NOTE PERFORMANCE This collection in current stack can have 0 or 1 elements
@@ -2863,9 +2852,9 @@
                         // Check if curent entry is a dependent end of the referential constraint
                         if (constraint.ToRole.Name == thisRole)
                         {
-                            Debug.Assert(!otherEnd.EntityKey.IsTemporary, "key of key entry can't be temporary");
+                            Contract.Assert(!otherEnd.EntityKey.IsTemporary, "key of key entry can't be temporary");
                             IList<EntityKeyMember> otherEndKeyValues = otherEnd.EntityKey.EntityKeyValues;
-                            Debug.Assert(otherEndKeyValues != null, "key entry must have key values");
+                            Contract.Assert(otherEndKeyValues != null, "key entry must have key values");
 
                             // NOTE PERFORMANCE Number of key properties is supposed to be "small"
                             foreach (var pair in otherEndKeyValues)
@@ -2888,9 +2877,9 @@
         internal static void AddOrIncreaseCounter(
             Dictionary<string, KeyValuePair<object, IntBox>> properties, string propertyName, object propertyValue)
         {
-            Debug.Assert(properties != null);
-            Debug.Assert(propertyName != null);
-            Debug.Assert(propertyValue != null);
+            Contract.Requires(properties != null);
+            Contract.Requires(propertyName != null);
+            Contract.Requires(propertyValue != null);
 
             if (properties.ContainsKey(propertyName))
             {
@@ -2932,7 +2921,7 @@
                     || otherEnd.State == EntityState.Modified)
                 {
                     association = (AssociationSet)relationshipEntry.EntitySet;
-                    Debug.Assert(association != null, "relationship is not an association");
+                    Contract.Assert(association != null, "relationship is not an association");
 
                     // Iterate through referential constraints of the association of the relationship
                     // NOTE PERFORMANCE This collection in current stack can have 0 or 1 elements
@@ -2943,7 +2932,7 @@
                         // Check if curent entry is a principal end of the referential constraint
                         if (constraint.FromRole.Name == thisRole)
                         {
-                            Debug.Assert(!otherEnd.EntityKey.IsTemporary, "key of Unchanged or Modified entry can't be temporary");
+                            Contract.Assert(!otherEnd.EntityKey.IsTemporary, "key of Unchanged or Modified entry can't be temporary");
                             IList<EntityKeyMember> otherEndKeyValues = otherEnd.EntityKey.EntityKeyValues;
                             // NOTE PERFORMANCE Number of key properties is supposed to be "small"
                             foreach (var pair in otherEndKeyValues)
@@ -2970,10 +2959,10 @@
 
         internal void PromoteKeyEntry(IEntityWrapper wrappedEntity, StateManagerTypeMetadata typeMetadata)
         {
-            Debug.Assert(wrappedEntity != null, "entity wrapper cannot be null.");
-            Debug.Assert(wrappedEntity.Entity != null, "entity cannot be null.");
-            Debug.Assert(IsKeyEntry, "ObjectStateEntry should be a key.");
-            Debug.Assert(typeMetadata != null, "typeMetadata cannot be null.");
+            Contract.Requires(wrappedEntity != null, "entity wrapper cannot be null.");
+            Contract.Requires(wrappedEntity.Entity != null, "entity cannot be null.");
+            Contract.Requires(typeMetadata != null, "typeMetadata cannot be null.");
+            Contract.Assert(IsKeyEntry, "ObjectStateEntry should be a key.");
 
             _wrappedEntity = wrappedEntity;
             _wrappedEntity.ObjectStateEntry = this;
@@ -2989,8 +2978,8 @@
         /// </summary>
         internal void DegradeEntry()
         {
-            Debug.Assert(!IsKeyEntry);
-            Debug.Assert((object)_entityKey != null);
+            Contract.Assert(!IsKeyEntry);
+            Contract.Assert((object)_entityKey != null);
 
             _entityKey = EntityKey; //Performs validation.
 
@@ -3026,13 +3015,13 @@
 
             _cache.OnObjectStateManagerChanged(CollectionChangeAction.Remove, degradedEntity);
 
-            Debug.Assert(IsKeyEntry);
+            Contract.Assert(IsKeyEntry);
         }
 
         internal void AttachObjectStateManagerToEntity()
         {
             // This method should only be called in cases where we really have an entity to attach to
-            Debug.Assert(_wrappedEntity.Entity != null, "Cannot attach a null entity to the state manager");
+            Contract.Assert(_wrappedEntity.Entity != null, "Cannot attach a null entity to the state manager");
             _wrappedEntity.SetChangeTracker(this);
             _wrappedEntity.TakeSnapshot(this);
         }
@@ -3040,13 +3029,13 @@
         // Get values of key properties which doesn't already exist in passed in 'properties'
         internal void GetOtherKeyProperties(Dictionary<string, KeyValuePair<object, IntBox>> properties)
         {
-            Debug.Assert(properties != null);
-            Debug.Assert(_cacheTypeMetadata != null);
-            Debug.Assert(_cacheTypeMetadata.DataRecordInfo != null);
-            Debug.Assert(_cacheTypeMetadata.DataRecordInfo.RecordType != null);
+            Contract.Requires(properties != null);
+            Contract.Assert(_cacheTypeMetadata != null);
+            Contract.Assert(_cacheTypeMetadata.DataRecordInfo != null);
+            Contract.Assert(_cacheTypeMetadata.DataRecordInfo.RecordType != null);
 
             var entityType = _cacheTypeMetadata.DataRecordInfo.RecordType.EdmType as EntityType;
-            Debug.Assert(entityType != null, "EntityType == null");
+            Contract.Assert(entityType != null, "EntityType == null");
 
             foreach (var member in entityType.KeyMembers)
             {
@@ -3068,8 +3057,8 @@
 
         internal void CompareKeyProperties(object changed)
         {
-            Debug.Assert(changed != null, "changed object is null");
-            Debug.Assert(!IsKeyEntry);
+            Contract.Requires(changed != null);
+            Contract.Assert(!IsKeyEntry);
 
             var metadata = _cacheTypeMetadata;
 
@@ -3082,7 +3071,7 @@
                 var member = metadata.Member(i);
                 if (member.IsPartOfKey)
                 {
-                    Debug.Assert(!member.IsComplex);
+                    Contract.Assert(!member.IsComplex);
 
                     currentValueNew = member.GetValue(changed);
                     currentValueOld = member.GetValue(_wrappedEntity.Entity);
@@ -3108,17 +3097,16 @@
         /// <exception cref="InvalidOperationException">the property is not editable</exception>
         internal void VerifyEntityValueIsEditable(StateManagerTypeMetadata typeMetadata, int ordinal, string memberName)
         {
+            Contract.Requires(typeMetadata != null, "Cannot verify entity or complex object is editable if typeMetadata is null.");
+
             if (State == EntityState.Deleted)
             {
-                InvalidOperationException ret;
                 throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyDetachedDeletedEntries);
-                throw ret;
             }
 
-            Debug.Assert(typeMetadata != null, "Cannot verify entity or complex object is editable if typeMetadata is null.");
             var member = typeMetadata.Member(ordinal);
 
-            Debug.Assert(member != null, "Member shouldn't be null.");
+            Contract.Assert(member != null, "Member shouldn't be null.");
 
             // Key fields are only editable if the entry is the Added state.
             if (member.IsPartOfKey
@@ -3140,7 +3128,7 @@
             ValidateState();
 
             var member = metadata.Member(ordinal);
-            Debug.Assert(member != null, "StateManagerMemberMetadata was not found for the given ordinal.");
+            Contract.Assert(member != null, "StateManagerMemberMetadata was not found for the given ordinal.");
 
             if (member.IsComplex)
             {
@@ -3173,7 +3161,7 @@
                     ObjectStateManager.ChangeState(relationshipEntry, EntityState.Unchanged, EntityState.Added);
                     relationshipEntry.State = EntityState.Added;
                 }
-                    // Deleted -> Detached
+                // Deleted -> Detached
                 else if (relationshipEntry.State
                          == EntityState.Deleted)
                 {
@@ -3189,7 +3177,7 @@
         [Conditional("DEBUG")]
         private void VerifyIsNotRelated()
         {
-            Debug.Assert(!IsKeyEntry, "shouldn't be called for a key entry");
+            Contract.Assert(!IsKeyEntry, "shouldn't be called for a key entry");
 
             WrappedEntity.RelationshipManager.VerifyIsNotRelated();
         }
@@ -3372,7 +3360,7 @@
 
         internal void UpdateOriginalValues(object entity)
         {
-            Debug.Assert(EntityState.Added != State, "Cannot change original values of an entity in the Added state");
+            Contract.Assert(EntityState.Added != State, "Cannot change original values of an entity in the Added state");
 
             var oldState = State;
 
@@ -3406,10 +3394,10 @@
 
         private void UpdateRecord(object value, DbUpdatableDataRecord current, UpdateRecordBehavior behavior, int propertyIndex)
         {
-            Debug.Assert(null != value, "null value");
-            Debug.Assert(null != current, "null CurrentValueRecord");
-            Debug.Assert(!(value is IEntityWrapper));
-            Debug.Assert(
+            Contract.Requires(null != value, "null value");
+            Contract.Requires(null != current, "null CurrentValueRecord");
+            Contract.Requires(!(value is IEntityWrapper));
+            Contract.Requires(
                 propertyIndex == s_EntityRoot ||
                 propertyIndex >= 0, "Unexpected index. Use -1 if the passed value is an entity, not a complex type object");
 
@@ -3446,7 +3434,7 @@
                 }
                 else
                 {
-                    Debug.Assert(Helper.IsScalarType(field.FieldType.TypeUsage.EdmType), "Expected primitive or enum type.");
+                    Contract.Assert(Helper.IsScalarType(field.FieldType.TypeUsage.EdmType), "Expected primitive or enum type.");
 
                     // Set the new value if it doesn't match the existing value or if the field is modified, not a primary key, and
                     // this entity has a conceptual null, since setting the field may then clear the conceptual null--see 640443.
@@ -3478,12 +3466,11 @@
 
         internal void ApplyCurrentValuesInternal(IEntityWrapper wrappedCurrentEntity)
         {
-            Debug.Assert(!IsKeyEntry, "Cannot apply values to a key KeyEntry.");
-            Debug.Assert(wrappedCurrentEntity != null, "null entity wrapper");
+            Contract.Requires(wrappedCurrentEntity != null);
+            Contract.Assert(!IsKeyEntry, "Cannot apply values to a key KeyEntry.");
 
             if (State != EntityState.Modified
-                &&
-                State != EntityState.Unchanged)
+                && State != EntityState.Unchanged)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModified(State.ToString()));
             }
@@ -3503,19 +3490,18 @@
 
         internal void UpdateCurrentValueRecord(object value)
         {
-            Debug.Assert(!(value is IEntityWrapper));
+            Contract.Requires(!(value is IEntityWrapper));
             _wrappedEntity.UpdateCurrentValueRecord(value, this);
         }
 
         internal void ApplyOriginalValuesInternal(IEntityWrapper wrappedOriginalEntity)
         {
-            Debug.Assert(!IsKeyEntry, "Cannot apply values to a key KeyEntry.");
-            Debug.Assert(wrappedOriginalEntity != null, "null entity wrapper");
+            Contract.Requires(wrappedOriginalEntity != null);
+            Contract.Assert(!IsKeyEntry, "Cannot apply values to a key KeyEntry.");
 
-            if (State != EntityState.Modified &&
-                State != EntityState.Unchanged
-                &&
-                State != EntityState.Deleted)
+            if (State != EntityState.Modified
+                && State != EntityState.Unchanged
+                && State != EntityState.Deleted)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(State.ToString()));
             }
@@ -3561,7 +3547,7 @@
         /// </summary>
         internal void FixupReferencesByForeignKeys(bool replaceAddedRefs)
         {
-            Debug.Assert(_cache != null, "Attempt to fixup detached entity entry");
+            Contract.Assert(_cache != null, "Attempt to fixup detached entity entry");
             _cache.TransactionManager.BeginGraphUpdate();
             var setIsLoaded = !(_cache.TransactionManager.IsAttachTracking || _cache.TransactionManager.IsAddTracking);
             try
@@ -3570,7 +3556,7 @@
                 {
                     var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(
                         dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as EntityReference;
-                    Debug.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
+                    Contract.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
                     // Prevent fixup using values that are effectivly null but aren't nullable.
                     if (!ForeignKeyFactory.IsConceptualNullKey(relatedEnd.CachedForeignKey))
                     {
@@ -3628,7 +3614,6 @@
             {
                 if (needToSetRef)
                 {
-                    var stateManager = _cache;
                     _cache.TransactionManager.BeginGraphUpdate();
                     // Keep track of this entity so that we don't try to delete/detach the entity while we're
                     // working with it.  This allows the FK to be set to some value without that entity being detached.
@@ -3643,7 +3628,7 @@
                     }
                     finally
                     {
-                        Debug.Assert(_cache != null, "Unexpected null state manager.");
+                        Contract.Assert(_cache != null, "Unexpected null state manager.");
                         _cache.TransactionManager.EntityBeingReparented = null;
                         _cache.TransactionManager.EndGraphUpdate();
                     }
@@ -3668,7 +3653,7 @@
         internal void FixupEntityReferenceToPrincipal(
             EntityReference relatedEnd, EntityKey foreignKey, bool setIsLoaded, bool replaceExistingRef)
         {
-            Debug.Assert(relatedEnd != null, "Found null RelatedEnd or EntityCollection to principal");
+            Contract.Requires(relatedEnd != null, "Found null RelatedEnd or EntityCollection to principal");
             if (foreignKey == null)
             {
                 foreignKey = ForeignKeyFactory.CreateKeyFromForeignKeyValues(this, relatedEnd);
@@ -3695,8 +3680,7 @@
                     !principalEntry.IsKeyEntry &&
                     principalEntry.State != EntityState.Deleted &&
                     (replaceExistingRef || WillNotRefSteal(relatedEnd, principalEntry.WrappedEntity))
-                    &&
-                    relatedEnd.CanSetEntityType(principalEntry.WrappedEntity))
+                    && relatedEnd.CanSetEntityType(principalEntry.WrappedEntity))
                 {
                     if (canModifyReference)
                     {
@@ -3704,7 +3688,7 @@
                         // the principal or both that are being added.  Having extra members in this index doesn't hurt.
                         if (_cache.TransactionManager.PopulatedEntityReferences != null)
                         {
-                            Debug.Assert(
+                            Contract.Assert(
                                 _cache.TransactionManager.IsAddTracking || _cache.TransactionManager.IsAttachTracking,
                                 "PromotedEntityKeyRefs is non-null while not tracking add or attach");
                             _cache.TransactionManager.PopulatedEntityReferences.Add(relatedEnd);
@@ -3808,9 +3792,8 @@
         /// <returns>True if the principal key was found or built; false if it could not be found or built</returns>
         internal bool TryGetReferenceKey(AssociationEndMember principalRole, out EntityKey principalKey)
         {
-            var relatedEnd =
-                (RelatedEnd)RelationshipManager.GetRelatedEnd(principalRole.DeclaringType.FullName, principalRole.Name) as EntityReference;
-            Debug.Assert(relatedEnd != null, "Expected there to be a non null EntityReference to the principal");
+            var relatedEnd = RelationshipManager.GetRelatedEnd(principalRole.DeclaringType.FullName, principalRole.Name) as EntityReference;
+            Contract.Assert(relatedEnd != null, "Expected there to be a non null EntityReference to the principal");
             if (relatedEnd.CachedValue.Entity == null
                 || relatedEnd.CachedValue.ObjectStateEntry == null)
             {
@@ -3828,7 +3811,7 @@
         /// </summary>
         internal void FixupForeignKeysByReference()
         {
-            Debug.Assert(_cache != null, "Attempt to fixup detached entity entry");
+            Contract.Assert(_cache != null, "Attempt to fixup detached entity entry");
             _cache.TransactionManager.BeginFixupKeysByReference();
             try
             {
@@ -3862,7 +3845,7 @@
                 var reference =
                     RelationshipManager.GetRelatedEndInternal(dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as
                     EntityReference;
-                Debug.Assert(reference != null, "Expected reference to exist and be an entity reference (not collection)");
+                Contract.Assert(reference != null, "Expected reference to exist and be an entity reference (not collection)");
                 var existingPrincipal = reference.ReferenceValue;
                 if (existingPrincipal.Entity != null)
                 {
@@ -3917,13 +3900,12 @@
                 // are added to the context--see bug 628752.
                 var fkOverlapsPk = false; // Set to true if we find out that the FK overlaps the dependent PK
                 var dependentPropsChecked = false; // Set to true once we have checked whether or not the FK overlaps the PK
-                var principalKey = WrappedEntity.EntityKey;
                 var principalEnd = RelationshipManager.GetRelatedEndInternal(
                     principal.Item1.ElementType.FullName, principal.Item2.ToRole.Name);
                 foreach (var dependent in principalEnd.GetWrappedEntities())
                 {
                     var dependentEntry = dependent.ObjectStateEntry;
-                    Debug.Assert(dependentEntry != null, "Should have fully tracked graph at this point.");
+                    Contract.Assert(dependentEntry != null, "Should have fully tracked graph at this point.");
                     if (dependentEntry.State != EntityState.Added
                         && !dependentPropsChecked)
                     {
@@ -3949,7 +3931,7 @@
                         || (dependentEntry.State == EntityState.Modified && !fkOverlapsPk))
                     {
                         var principalRef = principalEnd.GetOtherEndOfRelationship(dependent) as EntityReference;
-                        Debug.Assert(principalRef != null, "Expected reference to exist and be an entity reference (not collection)");
+                        Contract.Assert(principalRef != null, "Expected reference to exist and be an entity reference (not collection)");
                         // "forceChange" is false because we don't want to actually set the property values
                         // here if they are aready set to the same thing--we don't want the events and setting
                         // the modified flag is irrelavent during AcceptChanges.
@@ -4010,17 +3992,14 @@
                 // Get association end members for the dependent and the principal ends
                 var dependentId = constraint.ToRole.Identity;
                 var setEnds = associationSet.AssociationSetEnds;
-                Debug.Assert(associationSet.AssociationSetEnds.Count == 2, "Expected an association set with only two ends.");
-                AssociationEndMember dependentEnd;
+                Contract.Assert(associationSet.AssociationSetEnds.Count == 2, "Expected an association set with only two ends.");
                 AssociationEndMember principalEnd;
                 if (setEnds[0].CorrespondingAssociationEndMember.Identity == dependentId)
                 {
-                    dependentEnd = setEnds[0].CorrespondingAssociationEndMember;
                     principalEnd = setEnds[1].CorrespondingAssociationEndMember;
                 }
                 else
                 {
-                    dependentEnd = setEnds[1].CorrespondingAssociationEndMember;
                     principalEnd = setEnds[0].CorrespondingAssociationEndMember;
                 }
 
@@ -4073,7 +4052,7 @@
         internal void DetectChangesInForeignKeys()
         {
             //DetectChangesInProperties should already have marked this entity as dirty
-            Debug.Assert(State == EntityState.Added || State == EntityState.Modified, "unexpected state");
+            Contract.Assert(State == EntityState.Added || State == EntityState.Modified, "unexpected state");
 
             //We are going to be adding data to the TransactionManager
             var tm = ObjectStateManager.TransactionManager;
@@ -4099,11 +4078,11 @@
                     else if (currentKey == null)
                     {
                         //If current is null we are just deleting a relationship
-                        Debug.Assert(!originalKeyIsConceptualNull, "If FK is nullable there shouldn't be a conceptual null set");
+                        Contract.Assert(!originalKeyIsConceptualNull, "If FK is nullable there shouldn't be a conceptual null set");
                         AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
                     }
-                        //If there is a Conceptual Null set we need to check if the current values
-                        //are different from the values when the Conceptual Null was created
+                    //If there is a Conceptual Null set we need to check if the current values
+                    //are different from the values when the Conceptual Null was created
                     else if (!currentKey.Equals(originalKey)
                              && (!originalKeyIsConceptualNull || ForeignKeyFactory.IsConceptualNullKeyChanged(originalKey, currentKey)))
                     {

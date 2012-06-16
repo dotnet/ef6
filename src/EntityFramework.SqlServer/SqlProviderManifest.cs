@@ -148,23 +148,20 @@ namespace System.Data.Entity.SqlServer
         protected override XmlReader GetDbInformation(string informationType)
         {
             if (informationType == StoreSchemaDefinitionVersion3
-                ||
-                informationType == StoreSchemaDefinition)
+                || informationType == StoreSchemaDefinition)
             {
                 return GetStoreSchemaDescription(informationType);
             }
 
             if (informationType == StoreSchemaMappingVersion3
-                ||
-                informationType == StoreSchemaMapping)
+                || informationType == StoreSchemaMapping)
             {
                 return GetStoreSchemaMapping(informationType);
             }
 
             // Use default Conceptual Schema Definition
             if (informationType == ConceptualSchemaDefinitionVersion3
-                ||
-                informationType == ConceptualSchemaDefinition)
+                || informationType == ConceptualSchemaDefinition)
             {
                 return null;
             }
@@ -347,8 +344,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
-            Contract.Requires(storeType != null);
-
             var storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
@@ -524,7 +519,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
-            Contract.Requires(edmType != null);
             Debug.Assert(edmType.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = edmType.EdmType as PrimitiveType;
@@ -761,8 +755,6 @@ namespace System.Data.Entity.SqlServer
         /// <returns>Equivalent to the argument, with the wildcard characters and the escape character escaped</returns>
         public override string EscapeLikeArgument(string argument)
         {
-            Contract.Requires(argument != null);
-
             bool usedEscapeCharacter;
             return EscapeLikeText(argument, true, out usedEscapeCharacter);
         }

@@ -2,8 +2,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="context">The ObjectContext of the provider.</param>
         internal ObjectQueryProvider(ObjectContext context)
         {
-            Debug.Assert(null != context, "context must be given");
+            Contract.Requires(null != context);
             _context = context;
         }
 
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         internal ObjectQueryProvider(ObjectQuery query)
             : this(query.Context)
         {
-            Debug.Assert(null != query, "query must be given");
+            Contract.Requires(null != query);
             _query = query;
         }
 
@@ -54,7 +54,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>ObjectQuery implementing the expression logic.</returns>
         IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
         {
-            Contract.Requires(expression != null);
+            DbHelpers.ThrowIfNull(expression, "expression");
+
             if (!typeof(IQueryable<S>).IsAssignableFrom(expression.Type))
             {
                 throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
@@ -76,7 +77,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>Single result from execution.</returns>
         S IQueryProvider.Execute<S>(Expression expression)
         {
-            Contract.Requires(expression != null);
+            DbHelpers.ThrowIfNull(expression, "expression");
+
             var query = CreateQuery<S>(expression);
 
             return ExecuteSingle(query, expression);
@@ -91,7 +93,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>ObjectQuery instance implementing the given expression.</returns>
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
-            Contract.Requires(expression != null);
+            DbHelpers.ThrowIfNull(expression, "expression");
+
             if (!typeof(IQueryable).IsAssignableFrom(expression.Type))
             {
                 throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
@@ -115,7 +118,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>Single result from execution.</returns>
         object IQueryProvider.Execute(Expression expression)
         {
-            Contract.Requires(expression != null);
+            DbHelpers.ThrowIfNull(expression, "expression");
 
             var query = CreateQuery(expression, expression.Type);
             var objQuery = Enumerable.Cast<object>(query);

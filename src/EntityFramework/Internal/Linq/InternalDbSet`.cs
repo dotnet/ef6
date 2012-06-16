@@ -115,10 +115,6 @@
         /// </summary>
         public override object Create(Type derivedEntityType)
         {
-            // We need this because the Code Contract gets compiled out in the release build even though
-            // this method is effectively on the public surface because it overrides the abstract method on DbSet.
-            DbHelpers.ThrowIfNull(derivedEntityType, "derivedEntityType");
-
             return _internalSet.Create(derivedEntityType);
         }
 

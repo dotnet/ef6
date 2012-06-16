@@ -184,7 +184,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             public int GetHashCode(ProjectedSlot key)
             {
-                Contract.Requires(key != null);
                 return key.GetHash();
             }
         }

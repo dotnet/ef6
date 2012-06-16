@@ -139,8 +139,6 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
-            ADP1.CheckArgumentNull(storeType, "storeType");
-
             var storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
@@ -279,7 +277,6 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
-            ADP1.CheckArgumentNull(edmType, "edmType");
             Debug.Assert(edmType.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = edmType.EdmType as PrimitiveType;

@@ -138,8 +138,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // creates a hash code by XORing hash codes for all key components.
             public int GetHashCode(CompositeKey key)
             {
-                Contract.Requires(key != null);
-
                 var result = 0;
                 foreach (var keyComponent in key.KeyComponents)
                 {

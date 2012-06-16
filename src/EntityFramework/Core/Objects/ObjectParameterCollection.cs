@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Text;
@@ -173,7 +174,8 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public void Add(ObjectParameter item)
         {
-            Contract.Requires(item != null);
+            DbHelpers.ThrowIfNull(item, "item");
+
             CheckUnlocked();
 
             if (Contains(item))
@@ -232,7 +234,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public bool Contains(ObjectParameter item)
         {
-            Contract.Requires(item != null);
+            DbHelpers.ThrowIfNull(item, "item");
 
             return _parameters.Contains(item);
         }
@@ -312,7 +314,8 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public bool Remove(ObjectParameter item)
         {
-            Contract.Requires(item != null);
+            DbHelpers.ThrowIfNull(item, "item");
+
             CheckUnlocked();
 
             var removed = _parameters.Remove(item);

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
@@ -80,7 +81,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         internal BridgeDataRecord(Shaper<RecordState> shaper, int depth)
         {
-            Debug.Assert(null != shaper, "null shaper?");
+            Contract.Requires(null != shaper);
             Shaper = shaper;
             Depth = depth;
             // Rest of state is set through the SetRecordSource method.
@@ -535,7 +536,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <returns></returns>
         public override int GetValues(object[] values)
         {
-            Contract.Requires(values != null);
+            DbHelpers.ThrowIfNull(values, "values");
 
             var copy = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < copy; ++i)
