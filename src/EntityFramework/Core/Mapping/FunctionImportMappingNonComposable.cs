@@ -208,7 +208,7 @@
             {
                 if (!columns.ContainsKey(discriminatorColumn))
                 {
-                    // CONSIDER(CMeek)::  we assume that discriminatorColumns are all string types. In practice,
+                    // CONSIDER: we assume that discriminatorColumns are all string types. In practice,
                     // we're flexible about the runtime type during materialization, so the provider's
                     // decision is hopefully irrelevant. The alternative is to require typed stored
                     // procedure declarations in the SSDL, which is too much of a burden on the user and/or the

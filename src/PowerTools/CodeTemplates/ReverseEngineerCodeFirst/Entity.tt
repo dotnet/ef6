@@ -1,0 +1,63 @@
+﻿<#@ template hostspecific="true" language="C#" #>
+<#@ include file="EF.Utility.CS.ttinclude" #><#@
+ output extension=".cs" #><#
+
+    var efHost = (EfTextTemplateHost)Host;
+    var code = new CodeGenerationTools(this);
+#>
+using System;
+using System.Collections.Generic;
+
+namespace <#= code.EscapeNamespace(efHost.Namespace) #>
+{
+    public class <#= efHost.EntityType.Name #>
+    {
+<#
+    var collectionNavigations = efHost.EntityType.NavigationProperties.Where(
+        np => np.DeclaringType == efHost.EntityType
+            && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many);
+
+    // Add a ctor to initialize any collections
+    if (collectionNavigations.Any())
+    {
+#>
+        public <#= code.Escape(efHost.EntityType) #>()
+        {
+<#
+        foreach (var navProperty in collectionNavigations)
+        {
+#>
+            this.<#= code.Escape(navProperty) #> = new List<<#= code.Escape(navProperty.ToEndMember.GetEntityType()) #>>();
+<#
+        }
+#>
+        }
+
+<#
+    }
+        
+    foreach (var property in efHost.EntityType.Properties)
+    {
+#>
+        <#= Accessibility.ForProperty(property) #> <#= code.Escape(property.TypeUsage) #> <#= code.Escape(property) #> { get; set; }
+<#
+    }
+
+    foreach (var navProperty in efHost.EntityType.NavigationProperties.Where(np => np.DeclaringType == efHost.EntityType))
+    {
+        if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+        {
+#>
+        public virtual ICollection<<#= code.Escape(navProperty.ToEndMember.GetEntityType()) #>> <#= code.Escape(navProperty) #> { get; set; }
+<#
+        }
+        else
+        {
+#>
+        public virtual <#= code.Escape(navProperty.ToEndMember.GetEntityType()) #> <#= code.Escape(navProperty) #> { get; set; }
+<#
+        }
+    }
+#>
+    }
+}

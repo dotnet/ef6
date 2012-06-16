@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
-    using System.Text;
 
     /// <summary>
     /// Mapping metadata for Conditional property mapping on a type.
@@ -115,11 +114,11 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
 #if DEBUG
-        /// <summary>
-        /// This method is primarily for debugging purposes.
-        /// Will be removed shortly.
-        /// </summary>
-        /// <param name="index"></param>
+    /// <summary>
+    /// This method is primarily for debugging purposes.
+    /// Will be removed shortly.
+    /// </summary>
+    /// <param name="index"></param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

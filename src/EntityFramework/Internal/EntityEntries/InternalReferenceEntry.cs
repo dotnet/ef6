@@ -18,10 +18,10 @@
     {
         #region Fields and constructors
 
-        private static readonly ConcurrentDictionary<Type, Action<IRelatedEnd, object>> EntityReferenceValueSetters =
+        private static readonly ConcurrentDictionary<Type, Action<IRelatedEnd, object>> _entityReferenceValueSetters =
             new ConcurrentDictionary<Type, Action<IRelatedEnd, object>>();
 
-        private static readonly MethodInfo SetValueOnEntityReferenceMethod =
+        private static readonly MethodInfo _setValueOnEntityReferenceMethod =
             typeof(InternalReferenceEntry).GetMethod(
                 "SetValueOnEntityReference", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -68,13 +68,13 @@
         {
             var entityRefType = RelatedEnd.GetType();
             Action<IRelatedEnd, object> setter;
-            if (!EntityReferenceValueSetters.TryGetValue(entityRefType, out setter))
+            if (!_entityReferenceValueSetters.TryGetValue(entityRefType, out setter))
             {
                 var setMethod =
-                    SetValueOnEntityReferenceMethod.MakeGenericMethod(entityRefType.GetGenericArguments().Single());
+                    _setValueOnEntityReferenceMethod.MakeGenericMethod(entityRefType.GetGenericArguments().Single());
                 setter =
                     (Action<IRelatedEnd, object>)Delegate.CreateDelegate(typeof(Action<IRelatedEnd, object>), setMethod);
-                EntityReferenceValueSetters.TryAdd(entityRefType, setter);
+                _entityReferenceValueSetters.TryAdd(entityRefType, setter);
             }
             setter(RelatedEnd, value);
         }

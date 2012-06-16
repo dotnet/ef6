@@ -11,12 +11,12 @@ namespace System.Data.Entity.Spatial
     [ContractClass(typeof(DbSpatialServicesContracts))]
     public abstract class DbSpatialServices
     {
-        private static readonly Lazy<DbSpatialServices> DefaultServices = new Lazy<DbSpatialServices>(
+        private static readonly Lazy<DbSpatialServices> _defaultServices = new Lazy<DbSpatialServices>(
             LoadDefaultServices, isThreadSafe: true);
 
         public static DbSpatialServices Default
         {
-            get { return DefaultServices.Value; }
+            get { return _defaultServices.Value; }
         }
 
         private static DbSpatialServices LoadDefaultServices()

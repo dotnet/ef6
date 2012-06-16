@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
@@ -264,6 +263,25 @@ namespace System.Data.Entity.Migrations
 
             Assert.Equal("Migration 2", pendingMigrations.First());
             Assert.Equal("Migration 4", pendingMigrations.Last());
+        }
+
+        [MigrationsTheory]
+        public void GetPendingMigrations_should_ignore_InitialCreate_timestamps()
+        {
+            ResetDatabase();
+
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
+
+            var model = CreateContext<ShopContext_v1>().GetModel();
+
+            ExecuteOperations(
+                historyRepository.CreateCreateTableOperation(new EdmModelDiffer()),
+                historyRepository.CreateInsertOperation("000000000000001_InitialCreate", model));
+
+            var pendingMigrations = historyRepository.GetPendingMigrations(
+                new[] { "000000000000002_InitialCreate", "Migration 1" });
+
+            Assert.Equal("Migration 1", pendingMigrations.Single());
         }
 
         [MigrationsTheory]

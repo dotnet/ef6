@@ -278,7 +278,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             var columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
                             object value;
 
-                            if (Helper.IsSpatialType(columnType) && !reader.IsDBNull(columnOrdinal))
+                            if (Helper.IsSpatialType(columnType)
+                                && !reader.IsDBNull(columnOrdinal))
                             {
                                 value = SpatialHelpers.GetSpatialValue(Translator.MetadataWorkspace, reader, columnType, columnOrdinal);
                             }
@@ -316,14 +317,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     See comments in <see cref = "UpdateCommand" />.
         /// </summary>
-        internal override async Task<long> ExecuteAsync(Dictionary<int, object> identifierValues,
+        internal override async Task<long> ExecuteAsync(
+            Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
         {
             var connection = Translator.Connection;
             // configure command to use the connection and transaction for this session
             _dbCommand.Transaction = ((null == connection.CurrentTransaction)
-                                        ? null
-                                        : connection.CurrentTransaction.StoreTransaction);
+                                          ? null
+                                          : connection.CurrentTransaction.StoreTransaction);
             _dbCommand.Connection = connection.StoreConnection;
             if (Translator.CommandTimeout.HasValue)
             {
@@ -354,9 +356,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             var columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
                             object value;
 
-                            if (Helper.IsSpatialType(columnType) && !await reader.IsDBNullAsync(columnOrdinal, cancellationToken))
+                            if (Helper.IsSpatialType(columnType)
+                                && !await reader.IsDBNullAsync(columnOrdinal, cancellationToken))
                             {
-                                value = await SpatialHelpers.GetSpatialValueAsync(Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken);
+                                value =
+                                    await
+                                    SpatialHelpers.GetSpatialValueAsync(
+                                        Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken);
                             }
                             else
                             {

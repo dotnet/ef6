@@ -100,8 +100,8 @@
         /// <summary>
         ///     See comments in <see cref = "DbSet{TEntity}" />.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
         public override Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             throw new NotImplementedException();

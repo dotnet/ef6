@@ -3,7 +3,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.Text;
 
     /// <summary>
     /// Describes modification function mappings for an association set.

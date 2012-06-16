@@ -3,7 +3,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Text;
 
     /// <summary>
     /// Mapping metadata for Complex properties.
@@ -102,11 +101,11 @@ namespace System.Data.Entity.Core.Mapping
         }
 
 #if DEBUG
-        /// <summary>
-        /// This method is primarily for debugging purposes.
-        /// Will be removed shortly.
-        /// </summary>
-        /// <param name="index"></param>
+    /// <summary>
+    /// This method is primarily for debugging purposes.
+    /// Will be removed shortly.
+    /// </summary>
+    /// <param name="index"></param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

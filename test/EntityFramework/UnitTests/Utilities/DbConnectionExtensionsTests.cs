@@ -41,7 +41,7 @@ namespace System.Data.Entity.Utilities
         {
             Assert.Equal(
                 "Weak.Provider.Factory", 
-                CreateMockConnection(WeakProviderType.AssemblyQualifiedName).Object.GetProviderInvariantName());
+                CreateMockConnection(_weakProviderType.AssemblyQualifiedName).Object.GetProviderInvariantName());
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Utilities
 
         private static Mock<DbConnection> CreateMockConnection(string assemblyQualifiedName)
         {
-            var providerType = WeakProviderType;
+            var providerType = _weakProviderType;
             RegisterWeakProviderFactory(assemblyQualifiedName);
             var dbProviderFactory = (DbProviderFactory)Activator.CreateInstance(providerType);
 
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Utilities
             return mockConnection;
         }
 
-        private static readonly Type WeakProviderType = CreateWeakProviderType();
+        private static readonly Type _weakProviderType = CreateWeakProviderType();
         private static Type CreateWeakProviderType()
         {
             var assembly = new DynamicAssembly();

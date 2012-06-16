@@ -66,13 +66,13 @@ namespace System.Data.Entity.Core
         /// A singleton EntityKey by which a read-only entity is identified.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly EntityKey NoEntitySetKey = new EntityKey("NoEntitySetKey.NoEntitySetKey");
+        private static readonly EntityKey _noEntitySetKey = new EntityKey("NoEntitySetKey.NoEntitySetKey");
 
         /// <summary>
-        /// A singleton EntityKey identifying an entity resulted from a failed TREAT.
+        /// Returns a singleton EntityKey identifying an entity resulted from a failed TREAT.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly EntityKey EntityNotValidKey = new EntityKey("EntityNotValidKey.EntityNotValidKey");
+        private static readonly EntityKey _entityNotValidKey = new EntityKey("EntityNotValidKey.EntityNotValidKey");
 
         /// <summary>
         /// A dictionary of names so that singleton instances of names can be used
@@ -248,6 +248,24 @@ namespace System.Data.Entity.Core
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets a singleton EntityKey by which a read-only entity is identified.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static EntityKey NoEntitySetKey
+        {
+            get { return _noEntitySetKey; }
+        }
+
+        /// <summary>
+        /// Gets a singleton EntityKey identifying an entity resulted from a failed TREAT.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static EntityKey EntityNotValidKey
+        {
+            get { return _entityNotValidKey; }
+        }
 
         /// <summary>
         /// Gets the EntitySet name identifying the entity set that contains the entity.

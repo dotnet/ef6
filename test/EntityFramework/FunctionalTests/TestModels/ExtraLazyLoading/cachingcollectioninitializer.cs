@@ -10,10 +10,10 @@
 
     public abstract class CachingCollectionInitializer
     {
-        private static readonly ConcurrentDictionary<Type, IList<Tuple<string, Func<DbCollectionEntry, object>>>> Factories
+        private static readonly ConcurrentDictionary<Type, IList<Tuple<string, Func<DbCollectionEntry, object>>>> _factories
             = new ConcurrentDictionary<Type, IList<Tuple<string, Func<DbCollectionEntry, object>>>>();
 
-        private static readonly MethodInfo FactoryMethodInfo
+        private static readonly MethodInfo _factoryMethodInfo
             = typeof(CachingCollectionInitializer).GetMethod("CreateCollection");
 
         public virtual Type TryGetElementType(PropertyInfo collectionProperty)
@@ -31,7 +31,7 @@
 
         public virtual void InitializeCollections(DbContext context, object entity)
         {
-            var factories = Factories.GetOrAdd(entity.GetType(), t =>
+            var factories = _factories.GetOrAdd(entity.GetType(), t =>
             {
                 var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
 
@@ -64,7 +64,7 @@
         {
             return (Func<DbCollectionEntry, object>)Delegate.CreateDelegate(
                 typeof(Func<DbCollectionEntry, object>), this,
-                FactoryMethodInfo.MakeGenericMethod(elementType));
+                _factoryMethodInfo.MakeGenericMethod(elementType));
         }
 
         public abstract object CreateCollection<TElement>(DbCollectionEntry collectionEntry);

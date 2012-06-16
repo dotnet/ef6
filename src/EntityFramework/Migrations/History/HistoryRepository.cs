@@ -104,8 +104,30 @@ namespace System.Data.Entity.Migrations.History
                     return localMigrations;
                 }
 
-                return localMigrations
-                    .Except(context.History.Select(s => s.MigrationId))
+                var databaseMigrations = context.History
+                    .Select(s => s.MigrationId)
+                    .ToList();
+                var pendingMigrations = localMigrations
+                    .Except(databaseMigrations);
+
+                var firstDatabaseMigration = databaseMigrations.FirstOrDefault();
+                var firstLocalMigration = localMigrations.FirstOrDefault();
+
+                // If the first database migration and the first local migration don't match,
+                // but both are named InitialCreate then treat it as already applied. This can
+                // happen when trying to migrate a database that was created using initializers
+                if (firstDatabaseMigration != firstLocalMigration
+                    && firstDatabaseMigration != null
+                    && firstDatabaseMigration.MigrationName() == Strings.InitialCreate
+                    && firstLocalMigration != null
+                    && firstLocalMigration.MigrationName() == Strings.InitialCreate)
+                {
+                    Contract.Assert(pendingMigrations.First() == firstLocalMigration);
+
+                    pendingMigrations = pendingMigrations.Skip(1);
+                }
+
+                return pendingMigrations
                     .ToList();
             }
         }

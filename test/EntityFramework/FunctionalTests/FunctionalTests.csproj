@@ -8,7 +8,7 @@
     <ProjectGuid>{23330EF8-2593-4B0A-A70F-12E6BE1F46C4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FunctionalTests</RootNamespace>
+    <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -173,7 +173,6 @@
     <Compile Include="Migrations\MappingScenarios.cs" />
     <Compile Include="Migrations\NoTestInfraScenarios.cs" />
     <Compile Include="Migrations\SeedingScenarios.cs" />
-    <Compile Include="Migrations\TestModel\DbContextTestExtensions.cs" />
     <Compile Include="Migrations\ToolingScenarios.cs" />
     <Compile Include="Migrations\TransactionScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
@@ -183,9 +182,11 @@
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
+    <Compile Include="TestHelpers\EnumeratorExtensions.cs" />
     <Compile Include="TestHelpers\FullTrustAttribute.cs" />
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
+    <Compile Include="TestHelpers\ListExtensions.cs" />
     <Compile Include="TestHelpers\PartialTrustFactAttribute.cs" />
     <Compile Include="TestHelpers\PartialTrustClassCommand.cs" />
     <Compile Include="TestHelpers\PartialTrustCommand.cs" />

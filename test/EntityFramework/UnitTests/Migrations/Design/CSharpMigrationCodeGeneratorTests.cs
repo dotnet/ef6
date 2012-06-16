@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.IO;
     using Xunit;
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {},
+                    new MigrationOperation[] { },
                     new string('a', 10000),
                     "Target",
                     "Foo",
@@ -40,10 +40,10 @@ namespace System.Data.Entity.Migrations
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation
-                      {
-                          Table = "T",
-                          Name = "PK"
-                      };
+                {
+                    Table = "T",
+                    Name = "PK"
+                };
 
             dropPrimaryKeyOperation.Columns.Add("c1");
             dropPrimaryKeyOperation.Columns.Add("c2");
@@ -51,14 +51,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {dropPrimaryKeyOperation},
+                    new MigrationOperation[] { dropPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -87,9 +87,9 @@ namespace System.Data.Entity.Migrations
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation
-                      {
-                          Table = "T"
-                      };
+                {
+                    Table = "T"
+                };
 
             dropPrimaryKeyOperation.Columns.Add("c1");
             dropPrimaryKeyOperation.Columns.Add("c2");
@@ -97,14 +97,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {dropPrimaryKeyOperation},
+                    new MigrationOperation[] { dropPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -133,10 +133,10 @@ namespace System.Data.Entity.Migrations
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation
-                      {
-                          Table = "T",
-                          Name = "PK"
-                      };
+                {
+                    Table = "T",
+                    Name = "PK"
+                };
 
             addPrimaryKeyOperation.Columns.Add("c1");
             addPrimaryKeyOperation.Columns.Add("c2");
@@ -144,14 +144,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addPrimaryKeyOperation},
+                    new MigrationOperation[] { addPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -180,9 +180,9 @@ namespace System.Data.Entity.Migrations
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation
-                      {
-                          Table = "T"
-                      };
+                {
+                    Table = "T"
+                };
 
             addPrimaryKeyOperation.Columns.Add("c1");
             addPrimaryKeyOperation.Columns.Add("c2");
@@ -190,14 +190,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addPrimaryKeyOperation},
+                    new MigrationOperation[] { addPrimaryKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -216,7 +216,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -226,11 +226,11 @@ namespace System.Data.Entity.Migrations
 
             var addForeignKeyOperation
                 = new AddForeignKeyOperation
-                      {
-                          DependentTable = "Orders",
-                          PrincipalTable = "Customers",
-                          CascadeDelete = true
-                      };
+                {
+                    DependentTable = "Orders",
+                    PrincipalTable = "Customers",
+                    CascadeDelete = true
+                };
 
             addForeignKeyOperation.DependentColumns.Add("CustomerId");
             addForeignKeyOperation.PrincipalColumns.Add("Id");
@@ -238,14 +238,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addForeignKeyOperation},
+                    new MigrationOperation[] { addForeignKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -264,7 +264,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -274,10 +274,10 @@ namespace System.Data.Entity.Migrations
 
             var addForeignKeyOperation
                 = new AddForeignKeyOperation
-                      {
-                          DependentTable = "Orders",
-                          PrincipalTable = "Customers"
-                      };
+                {
+                    DependentTable = "Orders",
+                    PrincipalTable = "Customers"
+                };
 
             addForeignKeyOperation.DependentColumns.Add("CustomerId1");
             addForeignKeyOperation.DependentColumns.Add("CustomerId2");
@@ -287,14 +287,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {addForeignKeyOperation},
+                    new MigrationOperation[] { addForeignKeyOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -313,7 +313,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -326,14 +326,14 @@ namespace System.Data.Entity.Migrations
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {dropColumnOperation},
+                    new MigrationOperation[] { dropColumnOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -351,7 +351,7 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -360,20 +360,20 @@ namespace System.Data.Entity.Migrations
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
             var createTableOperation = new CreateTableOperation("Customers");
-            var column = new ColumnModel(PrimitiveTypeKind.Binary) {Name = "Version", IsTimestamp = true};
+            var column = new ColumnModel(PrimitiveTypeKind.Binary) { Name = "Version", IsTimestamp = true };
             createTableOperation.Columns.Add(column);
 
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new MigrationOperation[] {createTableOperation},
+                    new MigrationOperation[] { createTableOperation },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -398,28 +398,27 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
         public void Generate_can_output_create_table_statement()
         {
             var createTableOperation = new CreateTableOperation("Customers");
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) {Name = "Id", IsNullable = true, IsIdentity = true};
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
             createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String)
-                                                 {Name = "Name", IsNullable = false});
-            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation {Name = "MyPK"};
+            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation { Name = "MyPK" };
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
             var addForeignKeyOperation = new AddForeignKeyOperation
-                                             {
-                                                 DependentTable = "Customers",
-                                                 PrincipalTable = "Blogs",
-                                                 CascadeDelete = true
-                                             };
+            {
+                DependentTable = "Customers",
+                PrincipalTable = "Blogs",
+                CascadeDelete = true
+            };
             addForeignKeyOperation.DependentColumns.Add("Blog_Id");
             addForeignKeyOperation.PrincipalColumns.Add("Id");
 
@@ -427,18 +426,18 @@ namespace System.Data.Entity.Migrations
                 = codeGenerator.Generate(
                     "Migration",
                     new MigrationOperation[]
-                        {
-                            createTableOperation,
-                            addForeignKeyOperation,
-                            addForeignKeyOperation.CreateCreateIndexOperation()
-                        },
+                            {
+                                createTableOperation,
+                                addForeignKeyOperation,
+                                addForeignKeyOperation.CreateCreateIndexOperation()
+                            },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -469,17 +468,20 @@ namespace System.Data.Entity.Migrations
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
 
             Assert.Equal(
-                @"// <auto-generated />
+                    @"// <auto-generated />
 namespace Foo
 {
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Resources;
     
     public sealed partial class Bar : IMigrationMetadata
     {
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Bar));
+        
         string IMigrationMetadata.Id
         {
             get { return ""Migration""; }
@@ -487,19 +489,22 @@ namespace Foo
         
         string IMigrationMetadata.Source
         {
-            get { return ""Source""; }
+            get { return Resources.GetString(""Source""); }
         }
         
         string IMigrationMetadata.Target
         {
-            get { return ""Target""; }
+            get { return Resources.GetString(""Target""); }
         }
     }
 }
 ",
-                generatedMigration.DesignerCode);
+                    generatedMigration.DesignerCode);
 
             Assert.Equal("cs", generatedMigration.Language);
+            Assert.Equal(2, generatedMigration.Resources.Count);
+            Assert.Equal("Source", generatedMigration.Resources["Source"]);
+            Assert.Equal("Target", generatedMigration.Resources["Target"]);
         }
 
         [Fact]
@@ -510,14 +515,14 @@ namespace Foo
             var generatedMigration
                 = codeGenerator.Generate(
                     "Migration",
-                    new[] {new DropTableOperation("Customers")},
+                    new[] { new DropTableOperation("Customers") },
                     "Source",
                     "Target",
                     "Foo",
                     "Bar");
 
             Assert.Equal(
-                @"namespace Foo
+                    @"namespace Foo
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -535,7 +540,7 @@ namespace Foo
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
 
         [Fact]
@@ -545,7 +550,7 @@ namespace Foo
 
             var generatedMigration = codeGenerator.Generate(
                 "Migration",
-                new MigrationOperation[] {},
+                new MigrationOperation[] { },
                 "Source",
                 "Target",
                 "Foo",
@@ -555,7 +560,7 @@ namespace Foo
 
             generatedMigration = codeGenerator.Generate(
                 "Migration",
-                new MigrationOperation[] {},
+                new MigrationOperation[] { },
                 "Source",
                 "Target",
                 "Foo",
@@ -571,21 +576,24 @@ namespace Foo
 
             var generatedMigration = codeGenerator.Generate(
                 "Migration",
-                new MigrationOperation[] {},
+                new MigrationOperation[] { },
                 null,
                 "Target",
                 "Foo",
                 "Bar");
 
             Assert.Equal(
-                @"// <auto-generated />
+                    @"// <auto-generated />
 namespace Foo
 {
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Resources;
     
     public sealed partial class Bar : IMigrationMetadata
     {
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Bar));
+        
         string IMigrationMetadata.Id
         {
             get { return ""Migration""; }
@@ -598,12 +606,15 @@ namespace Foo
         
         string IMigrationMetadata.Target
         {
-            get { return ""Target""; }
+            get { return Resources.GetString(""Target""); }
         }
     }
 }
 ",
-                generatedMigration.DesignerCode);
+                    generatedMigration.DesignerCode);
+
+            Assert.Equal(1, generatedMigration.Resources.Count);
+            Assert.Equal("Target", generatedMigration.Resources["Target"]);
         }
 
         [Fact]
@@ -617,10 +628,10 @@ namespace Foo
                             new AddColumnOperation(
                                 "T",
                                 new ColumnModel(PrimitiveTypeKind.Geography)
-                                    {
-                                        IsNullable = false,
-                                        Name = "C",
-                                        DefaultValue = DbGeography.FromText("POINT (6 7)")
+                                {
+                                    IsNullable = false,
+                                    Name = "C",
+                                    DefaultValue = DbGeography.FromText("POINT (6 7)")
                                     })
                         },
                     "Source",
@@ -663,10 +674,10 @@ namespace Foo
                             new AddColumnOperation(
                                 "T",
                                 new ColumnModel(PrimitiveTypeKind.Geometry)
-                                    {
-                                        IsNullable = false,
-                                        Name = "C",
-                                        DefaultValue = DbGeometry.FromText("POINT (8 9)")
+                                {
+                                    IsNullable = false,
+                                    Name = "C",
+                                    DefaultValue = DbGeometry.FromText("POINT (8 9)")
                                     })
                         },
                     "Source",
@@ -712,12 +723,15 @@ namespace Foo
                 "Bar");
 
             Assert.Equal(
-                @"// <auto-generated />
+                    @"// <auto-generated />
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Infrastructure;
+using System.Resources;
 
 public sealed partial class Bar : IMigrationMetadata
 {
+    private readonly ResourceManager Resources = new ResourceManager(typeof(Bar));
+    
     string IMigrationMetadata.Id
     {
         get { return ""Migration""; }
@@ -730,14 +744,17 @@ public sealed partial class Bar : IMigrationMetadata
     
     string IMigrationMetadata.Target
     {
-        get { return ""Target""; }
+        get { return Resources.GetString(""Target""); }
     }
 }
 ",
-                generatedMigration.DesignerCode);
+                    generatedMigration.DesignerCode);
+
+            Assert.Equal(1, generatedMigration.Resources.Count);
+            Assert.Equal("Target", generatedMigration.Resources["Target"]);
 
             Assert.Equal(
-                @"using System;
+                    @"using System;
 using System.Data.Entity.Migrations;
 
 public partial class Bar : DbMigration
@@ -751,7 +768,7 @@ public partial class Bar : DbMigration
     }
 }
 ",
-                generatedMigration.UserCode);
+                    generatedMigration.UserCode);
         }
     }
 }

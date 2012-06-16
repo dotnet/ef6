@@ -29,7 +29,7 @@ namespace System.Data.Entity.SqlServer
         {
             EnsureGeographyColumn(ordinal);
             var geogBytes = _reader.GetSqlBytes(ordinal);
-            var providerValue = SqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
+            var providerValue = _sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
             return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
         }
 
@@ -37,7 +37,7 @@ namespace System.Data.Entity.SqlServer
         {
             EnsureGeographyColumn(ordinal);
             var geogBytes = await _reader.GetFieldValueAsync<SqlBytes>(ordinal, cancellationToken);
-            var providerValue = SqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
+            var providerValue = _sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
             return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
         }
 
@@ -45,7 +45,7 @@ namespace System.Data.Entity.SqlServer
         {
             EnsureGeometryColumn(ordinal);
             var geomBytes = _reader.GetSqlBytes(ordinal);
-            var providerValue = SqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
+            var providerValue = _sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
             return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
         }
 
@@ -53,15 +53,15 @@ namespace System.Data.Entity.SqlServer
         {
             EnsureGeometryColumn(ordinal);
             var geomBytes = await _reader.GetFieldValueAsync<SqlBytes>(ordinal, cancellationToken);
-            var providerValue = SqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
+            var providerValue = _sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
             return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
         }
 
-        private static readonly Lazy<Func<BinaryReader, object>> SqlGeographyFromBinaryReader =
+        private static readonly Lazy<Func<BinaryReader, object>> _sqlGeographyFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(
                 () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType), isThreadSafe: true);
 
-        private static readonly Lazy<Func<BinaryReader, object>> SqlGeometryFromBinaryReader =
+        private static readonly Lazy<Func<BinaryReader, object>> _sqlGeometryFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(
                 () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType), isThreadSafe: true);
 
@@ -71,7 +71,7 @@ namespace System.Data.Entity.SqlServer
         {
             var fieldTypeName = _reader.GetDataTypeName(ordinal);
             if (!fieldTypeName.EndsWith(geographySqlType, StringComparison.Ordinal))
-            // Use EndsWith so that we just see the schema and type name, not the database name.
+                // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeographyColumn(fieldTypeName));
             }
@@ -81,7 +81,7 @@ namespace System.Data.Entity.SqlServer
         {
             var fieldTypeName = _reader.GetDataTypeName(ordinal);
             if (!fieldTypeName.EndsWith(geometrySqlType, StringComparison.Ordinal))
-            // Use EndsWith so that we just see the schema and type name, not the database name.
+                // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeometryColumn(fieldTypeName));
             }

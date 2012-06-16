@@ -21,12 +21,12 @@
         #region Fields and constructors
 
         // The initialization strategy to use for Code First if no other strategy is set for a context.
-        private static readonly CreateDatabaseIfNotExists<DbContext> DefaultCodeFirstInitializer =
+        private static readonly CreateDatabaseIfNotExists<DbContext> _defaultCodeFirstInitializer =
             new CreateDatabaseIfNotExists<DbContext>();
 
         // A cache from context type and provider invariant name to DbCompiledModel objects such that the model for a derived context type is only used once.
         private static readonly
-            ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>> CachedModels =
+            ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>> _cachedModels =
                 new ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>>();
 
         // The databases that have been initialized in this app domain in terms of the DbCompiledModel
@@ -366,7 +366,7 @@
                             // try again later when the resource issue has potentially been resolved. To enable this RetryLazy will
                             // try again next time GetValue called. We have to pass the context to GetValue so that the next time it tries
                             // again it will use the new connection.
-                            var model = CachedModels.GetOrAdd(
+                            var model = _cachedModels.GetOrAdd(
                                 Tuple.Create(Owner.GetType(), _internalConnection.ProviderName),
                                 t => new RetryLazy<LazyInternalContext, DbCompiledModel>(CreateModel))
                                 .GetValue(this);
@@ -521,7 +521,7 @@
         /// <value>The default initializer.</value>
         public override IDatabaseInitializer<DbContext> DefaultInitializer
         {
-            get { return _model != null ? DefaultCodeFirstInitializer : null; }
+            get { return _model != null ? _defaultCodeFirstInitializer : null; }
         }
 
         #endregion

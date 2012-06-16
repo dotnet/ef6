@@ -330,7 +330,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 throw new ArgumentNullException("value", Strings.EntityParameterNull);
             }
-            else if (!ItemType.IsInstanceOfType(value))
+            else if (!_itemType.IsInstanceOfType(value))
             {
                 throw new InvalidCastException(Strings.InvalidEntityParameterType(value.GetType().Name));
             }

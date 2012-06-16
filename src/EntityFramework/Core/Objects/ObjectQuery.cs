@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public abstract class ObjectQuery : IEnumerable, IQueryable, IOrderedQueryable, IListSource
+    public abstract class ObjectQuery : IEnumerable, IOrderedQueryable, IListSource
     {
         #region Private Instance Members
 

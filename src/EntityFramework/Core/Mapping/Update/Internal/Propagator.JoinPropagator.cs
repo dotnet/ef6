@@ -64,13 +64,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 if (DbExpressionKind.InnerJoin
                     == m_joinExpression.ExpressionKind)
                 {
-                    m_insertRules = s_innerJoinInsertRules;
-                    m_deleteRules = s_innerJoinDeleteRules;
+                    m_insertRules = _innerJoinInsertRules;
+                    m_deleteRules = _innerJoinDeleteRules;
                 }
                 else
                 {
-                    m_insertRules = s_leftOuterJoinInsertRules;
-                    m_deleteRules = s_leftOuterJoinDeleteRules;
+                    m_insertRules = _leftOuterJoinInsertRules;
+                    m_deleteRules = _leftOuterJoinDeleteRules;
                 }
 
                 // Figure out key selectors involved in the equi-join (if it isn't an equi-join, we don't support it)
@@ -92,10 +92,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
              * They describe for each combination of input elements (the key) propagation rules, which
              * are expressions over the input expressions.
              * */
-            private static readonly Dictionary<Ops, Ops> s_innerJoinInsertRules;
-            private static readonly Dictionary<Ops, Ops> s_innerJoinDeleteRules;
-            private static readonly Dictionary<Ops, Ops> s_leftOuterJoinInsertRules;
-            private static readonly Dictionary<Ops, Ops> s_leftOuterJoinDeleteRules;
+            private static readonly Dictionary<Ops, Ops> _innerJoinInsertRules;
+            private static readonly Dictionary<Ops, Ops> _innerJoinDeleteRules;
+            private static readonly Dictionary<Ops, Ops> _leftOuterJoinInsertRules;
+            private static readonly Dictionary<Ops, Ops> _leftOuterJoinDeleteRules;
 
             #endregion
 
@@ -120,10 +120,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
             static JoinPropagator()
             {
-                s_innerJoinInsertRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
-                s_innerJoinDeleteRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
-                s_leftOuterJoinInsertRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
-                s_leftOuterJoinDeleteRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
+                _innerJoinInsertRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
+                _innerJoinDeleteRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
+                _leftOuterJoinInsertRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
+                _leftOuterJoinDeleteRules = new Dictionary<Ops, Ops>(EqualityComparer<Ops>.Default);
 
                 #region Initialize propagation rules
 
@@ -251,10 +251,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="lojDelete">Describes the rule for deletes when the operator is a left outer join</param>
             private static void InitializeRule(Ops input, Ops joinInsert, Ops joinDelete, Ops lojInsert, Ops lojDelete)
             {
-                s_innerJoinInsertRules.Add(input, joinInsert);
-                s_innerJoinDeleteRules.Add(input, joinDelete);
-                s_leftOuterJoinInsertRules.Add(input, lojInsert);
-                s_leftOuterJoinDeleteRules.Add(input, lojDelete);
+                _innerJoinInsertRules.Add(input, joinInsert);
+                _innerJoinDeleteRules.Add(input, joinDelete);
+                _leftOuterJoinInsertRules.Add(input, lojInsert);
+                _leftOuterJoinDeleteRules.Add(input, lojDelete);
 
                 // Ensure that the right hand side of each rule contains no requests for specific row values
                 // that are not also in the input.

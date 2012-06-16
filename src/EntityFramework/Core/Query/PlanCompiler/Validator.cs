@@ -2,10 +2,6 @@ using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
-    using System.Data.Entity.Core.Query.InternalTrees;
-    using System.Diagnostics;
-    using System.Text;
-
 #if DEBUG
     /// <summary>
     /// The Validator class extends the BasicValidator and enforces that the ITree is valid
@@ -224,7 +220,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static void AddAllEntry(BitVec opVector, OpType opType)
         {
-            foreach (var phase in s_PlanCompilerPhases)
+            foreach (var phase in _planCompilerPhases)
             {
                 AddSingleEntry(opVector, opType, phase);
             }
@@ -285,18 +281,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private readonly PlanCompiler m_compilerState;
 
-        private static readonly PlanCompilerPhase[] s_PlanCompilerPhases = {
-                                                                               PlanCompilerPhase.PreProcessor,
-                                                                               PlanCompilerPhase.AggregatePushdown,
-                                                                               PlanCompilerPhase.Normalization,
-                                                                               PlanCompilerPhase.NTE,
-                                                                               PlanCompilerPhase.ProjectionPruning,
-                                                                               PlanCompilerPhase.NestPullup,
-                                                                               PlanCompilerPhase.Transformations,
-                                                                               PlanCompilerPhase.JoinElimination,
-                                                                               PlanCompilerPhase.CodeGen,
-                                                                               PlanCompilerPhase.PostCodeGen
-                                                                           };
+        private static readonly PlanCompilerPhase[] _planCompilerPhases = {
+                                                                              PlanCompilerPhase.PreProcessor,
+                                                                              PlanCompilerPhase.AggregatePushdown,
+                                                                              PlanCompilerPhase.Normalization,
+                                                                              PlanCompilerPhase.NTE,
+                                                                              PlanCompilerPhase.ProjectionPruning,
+                                                                              PlanCompilerPhase.NestPullup,
+                                                                              PlanCompilerPhase.Transformations,
+                                                                              PlanCompilerPhase.JoinElimination,
+                                                                              PlanCompilerPhase.CodeGen,
+                                                                              PlanCompilerPhase.PostCodeGen
+                                                                          };
 
         private static BitVec s_ValidOpTypes = InitializeOpTypes();
 

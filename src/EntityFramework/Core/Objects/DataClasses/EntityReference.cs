@@ -790,8 +790,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // related end is empty, so we must have a reference with a detached key
                 var detachedKey = DetachedEntityKey;
 #if DEBUG
-                // If the constraint is not PK<->PK then we can't validate it here.
-                // This debug code checks that we don't try to validate it.
+    // If the constraint is not PK<->PK then we can't validate it here.
+    // This debug code checks that we don't try to validate it.
                 var keyNames = new List<string>(
                     from v in detachedKey.EntityKeyValues
                     select v.Key);

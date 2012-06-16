@@ -87,8 +87,8 @@ namespace System.Data.Entity
         /// <exception cref = "InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref = "InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
         public Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             throw new NotImplementedException();

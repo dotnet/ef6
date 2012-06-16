@@ -708,10 +708,9 @@ namespace System.Data.Entity.Migrations
                         = targetModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                             .Single(et => et.NameAttribute().EqualsIgnoreCase(entitySetName));
 
-                    IEnumerableExtensions.Each(
-                        entityTypeElement
-                            .Descendants(EdmXNames.Ssdl.PropertyRefNames),
-                        pr => foreignKeyOperation.PrincipalColumns.Add(pr.NameAttribute()));
+                    entityTypeElement
+                        .Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
+                            pr => foreignKeyOperation.PrincipalColumns.Add(pr.NameAttribute()));
                 }
                 else
                 {
@@ -724,8 +723,7 @@ namespace System.Data.Entity.Migrations
                     if ((table != null)
                         && (table.PrimaryKey != null))
                     {
-                        IEnumerableExtensions.Each(
-                            table.PrimaryKey.Columns, c => foreignKeyOperation.PrincipalColumns.Add(c));
+                        table.PrimaryKey.Columns.Each(c => foreignKeyOperation.PrincipalColumns.Add(c));
                     }
                     else
                     {

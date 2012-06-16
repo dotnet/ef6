@@ -179,7 +179,8 @@
         /// <summary>
         ///     See comments in <see cref = "UpdateCommand" />.
         /// </summary>
-        internal override async Task<long> ExecuteAsync(Dictionary<int, object> identifierValues,
+        internal override async Task<long> ExecuteAsync(
+            Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
         {
             // Compile command
@@ -188,8 +189,8 @@
                 var connection = Translator.Connection;
                 // configure command to use the connection and transaction for this session
                 command.Transaction = ((null == connection.CurrentTransaction)
-                                        ? null
-                                        : connection.CurrentTransaction.StoreTransaction);
+                                           ? null
+                                           : connection.CurrentTransaction.StoreTransaction);
                 command.Connection = connection.StoreConnection;
                 if (Translator.CommandTimeout.HasValue)
                 {
@@ -216,9 +217,13 @@
                                 var columnName = reader.GetName(ordinal);
                                 var member = members[columnName];
                                 object value;
-                                if (Helper.IsSpatialType(member.TypeUsage) && !await reader.IsDBNullAsync(ordinal, cancellationToken))
+                                if (Helper.IsSpatialType(member.TypeUsage)
+                                    && !await reader.IsDBNullAsync(ordinal, cancellationToken))
                                 {
-                                    value = await SpatialHelpers.GetSpatialValueAsync(Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken);
+                                    value =
+                                        await
+                                        SpatialHelpers.GetSpatialValueAsync(
+                                            Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken);
                                 }
                                 else
                                 {

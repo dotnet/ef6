@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.Linq;
     using System.ServiceProcess;
 
@@ -30,7 +29,6 @@
             _controller = controller;
         }
 
-
         /// <summary>
         /// Builds a specification for a default connection factory that will use SQL Express if it
         /// running on this machine, otherwise LocalDb.
@@ -45,10 +43,10 @@
         {
             return IsSqlExpressInstalled()
                        ? new ConnectionFactorySpecification(
-                           ConnectionFactorySpecification.SqlConnectionFactoryName)
+                             ConnectionFactorySpecification.SqlConnectionFactoryName)
                        : new ConnectionFactorySpecification(
-                           ConnectionFactorySpecification.LocalDbConnectionFactoryName,
-                           "v" + (TryGetLocalDBVersionInstalled() ?? "11.0"));
+                             ConnectionFactorySpecification.LocalDbConnectionFactoryName,
+                             "v" + (TryGetLocalDBVersionInstalled() ?? "11.0"));
         }
 
         /// <summary>

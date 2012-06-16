@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private readonly UpdateTranslator m_updateTranslator;
         private readonly EntitySet m_table;
-        private static readonly string s_visitorName = typeof(Propagator).FullName;
+        private static readonly string _visitorName = typeof(Propagator).FullName;
 
         #endregion
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         protected override string VisitorName
         {
-            get { return s_visitorName; }
+            get { return _visitorName; }
         }
 
         #endregion

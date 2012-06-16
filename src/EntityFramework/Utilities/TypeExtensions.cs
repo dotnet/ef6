@@ -11,7 +11,7 @@ namespace System.Data.Entity.Utilities
 
     internal static class TypeExtensions
     {
-        private static readonly Dictionary<Type, EdmPrimitiveType> PrimitiveTypesMap
+        private static readonly Dictionary<Type, EdmPrimitiveType> _primitiveTypesMap
             = new Dictionary<Type, EdmPrimitiveType>();
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Utilities
                 {
                     Contract.Assert(primitiveType != null);
 
-                    PrimitiveTypesMap.Add(efPrimitiveType.ClrEquivalentType, primitiveType);
+                    _primitiveTypesMap.Add(efPrimitiveType.ClrEquivalentType, primitiveType);
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Utilities
 
         public static bool IsPrimitiveType(this Type type, out EdmPrimitiveType primitiveType)
         {
-            return PrimitiveTypesMap.TryGetValue(type, out primitiveType);
+            return _primitiveTypesMap.TryGetValue(type, out primitiveType);
         }
     }
 }

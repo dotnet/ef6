@@ -455,9 +455,9 @@ namespace System.Data.Entity
         /// <param name="expression">Query expression to evaluate.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task containg the result of the query expression evaluation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<object> QueryAsync(Expression<Func<object>> expression, CancellationToken cancellationToken)
         {
@@ -487,9 +487,9 @@ namespace System.Data.Entity
         /// <param name="expression">Query expression to evaluate.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task containg the result of the query expression evaluation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<TResult> QueryAsync<TResult>(Expression<Func<TResult>> expression, CancellationToken cancellationToken)
         {
@@ -497,7 +497,8 @@ namespace System.Data.Entity
 
             throw new NotImplementedException();
         }
-#endregion
+
+        #endregion
 
         #region ChangeTracker and Configuration
 

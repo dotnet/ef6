@@ -118,14 +118,12 @@
             return project.GetProjectTypes().Any(g => g.EqualsIgnoreCase(WebSiteProjectTypeGuid));
         }
 
-        public static void AddFile(this Project project, string path, string contents)
+        public static void EditFile(this Project project, string path)
         {
             Contract.Requires(project != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(path));
             Contract.Requires(!Path.IsPathRooted(path));
 
-            var directory = Path.GetDirectoryName(path);
-            var fileName = Path.GetFileName(path);
             var absolutePath = Path.Combine(project.GetProjectDir(), path);
             var dte = project.DTE;
 
@@ -135,9 +133,32 @@
             {
                 dte.SourceControl.CheckOutItem(absolutePath);
             }
+        }
 
+        public static void AddFile(this Project project, string path, string contents)
+        {
+            Contract.Requires(project != null);
+            Contract.Requires(!string.IsNullOrWhiteSpace(path));
+            Contract.Requires(!Path.IsPathRooted(path));
+
+            var absolutePath = Path.Combine(project.GetProjectDir(), path);
+
+            project.EditFile(path);
             Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
             File.WriteAllText(absolutePath, contents);
+
+            project.AddFile(path);
+        }
+
+        public static void AddFile(this Project project, string path)
+        {
+            Contract.Requires(project != null);
+            Contract.Requires(!string.IsNullOrWhiteSpace(path));
+            Contract.Requires(!Path.IsPathRooted(path));
+
+            var directory = Path.GetDirectoryName(path);
+            var fileName = Path.GetFileName(path);
+            var absolutePath = Path.Combine(project.GetProjectDir(), path);
 
             var projectItems
                 = directory

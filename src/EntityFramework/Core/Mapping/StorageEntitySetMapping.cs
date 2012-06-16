@@ -3,7 +3,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
-    using System.Text;
 
     /// <summary>
     /// Represents the Mapping metadata for an EnitytSet in CS space.
@@ -87,10 +86,10 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
 #if DEBUG
-        /// <summary>
-        /// This method is primarily for debugging purposes.
-        /// Will be removed shortly.
-        /// </summary>
+    /// <summary>
+    /// This method is primarily for debugging purposes.
+    /// Will be removed shortly.
+    /// </summary>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

@@ -16,10 +16,10 @@
     {
         #region Constants and Fields
 
-        public static readonly string[] DefaultSwitchSeparators = new[] { "/", "-" };
+        private static readonly string[] _defaultSwitchSeparators = new[] { "/", "-" };
 
-        public static readonly string[] DefaultValueSeparators = new[] { ":", "=" };
-        
+        private static readonly string[] _defaultValueSeparators = new[] { ":", "=" };
+
         internal const string SwitchNameGroup = "SwitchName";
 
         internal const string SwitchOptionGroup = "SwitchOption";
@@ -51,11 +51,11 @@
 
         private static ICommandEnvironment commandEnvironment = new CommandEnvironment();
 
-        private static List<string> commandSeparatorList = new List<string>(DefaultSwitchSeparators);
+        private static List<string> commandSeparatorList = new List<string>(_defaultSwitchSeparators);
 
         private static CommandLineParametersCollection parameters;
 
-        private static List<string> valueSeparatorList = new List<string>(DefaultValueSeparators);
+        private static List<string> valueSeparatorList = new List<string>(_defaultValueSeparators);
 
         #endregion
 

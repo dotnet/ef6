@@ -538,8 +538,8 @@
         public class DateTimeFunctions
         {
             private const long EF41Ticks = 634380912600000000;
-            private static readonly DateTime EF43DateTime = new DateTime(2012, 2, 29, 4, 3, 1, 0, DateTimeKind.Utc);
-            private static readonly DateTimeOffset EF43Offset = new DateTimeOffset(2012, 2, 29, 4, 3, 1, 0, new TimeSpan(8, 0, 0));
+            private static readonly DateTime _ef43DateTime = new DateTime(2012, 2, 29, 4, 3, 1, 0, DateTimeKind.Utc);
+            private static readonly DateTimeOffset _ef43Offset = new DateTimeOffset(2012, 2, 29, 4, 3, 1, 0, new TimeSpan(8, 0, 0));
 
             [Fact]
             public void GetTotalOffsetMinutes_can_be_used_in_DbQuery_or_ObjectQuery()
@@ -1035,12 +1035,12 @@
                 using (var context = new EntityFunctionContext())
                 {
                     Assert.Equal(
-                        1, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffYears(e.DateTimeOffset, EF43Offset)).First());
+                        1, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffYears(e.DateTimeOffset, _ef43Offset)).First());
 
                     Assert.Equal(
                         1,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffYears(e.DateTimeOffset, EF43Offset)).First());
+                            e => DbFunctions.DiffYears(e.DateTimeOffset, _ef43Offset)).First());
                 }
             }
 
@@ -1050,12 +1050,12 @@
                 using (var context = new EntityFunctionContext())
                 {
                     Assert.Equal(
-                        1, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffYears(e.DateTime, EF43DateTime)).First());
+                        1, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffYears(e.DateTime, _ef43DateTime)).First());
 
                     Assert.Equal(
                         1,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffYears(e.DateTime, EF43DateTime)).First());
+                            e => DbFunctions.DiffYears(e.DateTime, _ef43DateTime)).First());
                 }
             }
 
@@ -1066,12 +1066,12 @@
                 {
                     Assert.Equal(
                         10,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMonths(e.DateTimeOffset, EF43Offset)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMonths(e.DateTimeOffset, _ef43Offset)).First());
 
                     Assert.Equal(
                         10,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffMonths(e.DateTimeOffset, EF43Offset)).First());
+                            e => DbFunctions.DiffMonths(e.DateTimeOffset, _ef43Offset)).First());
                 }
             }
 
@@ -1081,12 +1081,12 @@
                 using (var context = new EntityFunctionContext())
                 {
                     Assert.Equal(
-                        10, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMonths(e.DateTime, EF43DateTime)).First());
+                        10, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMonths(e.DateTime, _ef43DateTime)).First());
 
                     Assert.Equal(
                         10,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffMonths(e.DateTime, EF43DateTime)).First());
+                            e => DbFunctions.DiffMonths(e.DateTime, _ef43DateTime)).First());
                 }
             }
 
@@ -1097,12 +1097,12 @@
                 {
                     Assert.Equal(
                         324,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffDays(e.DateTimeOffset, EF43Offset)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffDays(e.DateTimeOffset, _ef43Offset)).First());
 
                     Assert.Equal(
                         324,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffDays(e.DateTimeOffset, EF43Offset)).First());
+                            e => DbFunctions.DiffDays(e.DateTimeOffset, _ef43Offset)).First());
                 }
             }
 
@@ -1112,12 +1112,12 @@
                 using (var context = new EntityFunctionContext())
                 {
                     Assert.Equal(
-                        324, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffDays(e.DateTime, EF43DateTime)).First());
+                        324, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffDays(e.DateTime, _ef43DateTime)).First());
 
                     Assert.Equal(
                         324,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffDays(e.DateTime, EF43DateTime)).First());
+                            e => DbFunctions.DiffDays(e.DateTime, _ef43DateTime)).First());
                 }
             }
 
@@ -1128,12 +1128,12 @@
                 {
                     Assert.Equal(
                         7776,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffHours(e.DateTimeOffset, EF43Offset)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffHours(e.DateTimeOffset, _ef43Offset)).First());
 
                     Assert.Equal(
                         7776,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffHours(e.DateTimeOffset, EF43Offset)).First());
+                            e => DbFunctions.DiffHours(e.DateTimeOffset, _ef43Offset)).First());
                 }
             }
 
@@ -1143,12 +1143,12 @@
                 using (var context = new EntityFunctionContext())
                 {
                     Assert.Equal(
-                        7776, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffHours(e.DateTime, EF43DateTime)).First());
+                        7776, context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffHours(e.DateTime, _ef43DateTime)).First());
 
                     Assert.Equal(
                         7776,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffHours(e.DateTime, EF43DateTime)).First());
+                            e => DbFunctions.DiffHours(e.DateTime, _ef43DateTime)).First());
                 }
             }
 
@@ -1174,12 +1174,12 @@
                 {
                     Assert.Equal(
                         466562,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMinutes(e.DateTimeOffset, EF43Offset)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMinutes(e.DateTimeOffset, _ef43Offset)).First());
 
                     Assert.Equal(
                         466562,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffMinutes(e.DateTimeOffset, EF43Offset)).First());
+                            e => DbFunctions.DiffMinutes(e.DateTimeOffset, _ef43Offset)).First());
                 }
             }
 
@@ -1190,12 +1190,12 @@
                 {
                     Assert.Equal(
                         466562,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMinutes(e.DateTime, EF43DateTime)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffMinutes(e.DateTime, _ef43DateTime)).First());
 
                     Assert.Equal(
                         466562,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffMinutes(e.DateTime, EF43DateTime)).First());
+                            e => DbFunctions.DiffMinutes(e.DateTime, _ef43DateTime)).First());
                 }
             }
 
@@ -1222,12 +1222,12 @@
                 {
                     Assert.Equal(
                         27993721,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffSeconds(e.DateTimeOffset, EF43Offset)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffSeconds(e.DateTimeOffset, _ef43Offset)).First());
 
                     Assert.Equal(
                         27993721,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffSeconds(e.DateTimeOffset, EF43Offset)).First());
+                            e => DbFunctions.DiffSeconds(e.DateTimeOffset, _ef43Offset)).First());
                 }
             }
 
@@ -1238,12 +1238,12 @@
                 {
                     Assert.Equal(
                         27993721,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffSeconds(e.DateTime, EF43DateTime)).First());
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.DiffSeconds(e.DateTime, _ef43DateTime)).First());
 
                     Assert.Equal(
                         27993721,
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
-                            e => DbFunctions.DiffSeconds(e.DateTime, EF43DateTime)).First());
+                            e => DbFunctions.DiffSeconds(e.DateTime, _ef43DateTime)).First());
                 }
             }
 

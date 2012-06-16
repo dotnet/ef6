@@ -3,12 +3,10 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
     using System.Security.Cryptography;
 
     // Helper functions to get metadata information
@@ -123,7 +121,8 @@ namespace System.Data.Entity.Core.Common.Utils
             }
 
             EdmType modelEdmType;
-            if (!workspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType) ||
+            if (!workspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType)
+                ||
                 !modelEdmType.EdmEquals(spatialNormalizedEdmType))
             {
                 throw new InvalidOperationException(

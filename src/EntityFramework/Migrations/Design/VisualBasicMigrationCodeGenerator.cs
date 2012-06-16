@@ -32,6 +32,8 @@ namespace System.Data.Entity.Migrations.Design
             string @namespace,
             string className)
         {
+            className = ScrubName(className);
+
             _newTableForeignKeys
                 = (from ct in operations.OfType<CreateTableOperation>()
                    from cfk in operations.OfType<AddForeignKeyOperation>()
@@ -47,10 +49,18 @@ namespace System.Data.Entity.Migrations.Design
             var generatedMigration
                 = new ScaffoldedMigration
                       {
+                          MigrationId = migrationId,
                           Language = "vb",
                           UserCode = Generate(operations, @namespace, className),
                           DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
                       };
+
+            if (!string.IsNullOrWhiteSpace(sourceModel))
+            {
+                generatedMigration.Resources.Add("Source", sourceModel);
+            }
+
+            generatedMigration.Resources.Add("Target", targetModel);
 
             return generatedMigration;
         }
@@ -136,11 +146,21 @@ namespace System.Data.Entity.Migrations.Design
 
                     WriteClassStart(@namespace, className, writer, "Implements IMigrationMetadata", designer: true);
 
-                    WriteProperty("Id", migrationId, writer);
+                    writer.Write("Private ReadOnly Resources As New ResourceManager(GetType(");
+                    writer.Write(className);
+                    writer.WriteLine("))");
                     writer.WriteLine();
-                    WriteProperty("Source", sourceModel, writer);
+
+                    WriteProperty("Id", Quote(migrationId), writer);
                     writer.WriteLine();
-                    WriteProperty("Target", targetModel, writer);
+                    WriteProperty(
+                        "Source",
+                        sourceModel == null
+                            ? null
+                            : "Resources.GetString(\"Source\")",
+                        writer);
+                    writer.WriteLine();
+                    WriteProperty("Target", "Resources.GetString(\"Target\")", writer);
 
                     WriteClassEnd(@namespace, writer);
                 }
@@ -175,9 +195,7 @@ namespace System.Data.Entity.Migrations.Design
             }
             else
             {
-                writer.Write("\"");
-                writer.Write(value.Break().Join(separator: "\" _" + Environment.NewLine + new string(' ', 21) + "& \""));
-                writer.WriteLine("\"");
+                writer.WriteLine(value);
             }
 
             writer.Indent--;
@@ -225,7 +243,7 @@ namespace System.Data.Entity.Migrations.Design
             }
 
             writer.Write("Partial Class ");
-            writer.Write(ScrubName(className));
+            writer.Write(className);
 
             writer.WriteLine();
             writer.Indent++;

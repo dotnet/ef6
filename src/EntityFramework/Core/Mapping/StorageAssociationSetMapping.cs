@@ -2,7 +2,6 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Represents the Mapping metadata for an AssociationSet in CS space.
@@ -42,8 +41,6 @@ namespace System.Data.Entity.Core.Mapping
 
         #region Fields
 
-        private StorageAssociationSetModificationFunctionMapping m_modificationFunctionMapping;
-
         #endregion
 
         #region Properties
@@ -51,11 +48,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Gets or sets function mapping information for this association set. May be null.
         /// </summary>
-        internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping
-        {
-            get { return m_modificationFunctionMapping; }
-            set { m_modificationFunctionMapping = value; }
-        }
+        internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 
         internal EntitySetBase StoreEntitySet
         {
@@ -75,11 +68,11 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
 #if DEBUG
-        /// <summary>
-        /// This method is primarily for debugging purposes.
-        /// Will be removed shortly.
-        /// </summary>
-        /// <param name="index"></param>
+    /// <summary>
+    /// This method is primarily for debugging purposes.
+    /// Will be removed shortly.
+    /// </summary>
+    /// <param name="index"></param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

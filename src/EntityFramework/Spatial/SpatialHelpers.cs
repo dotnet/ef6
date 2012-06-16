@@ -23,7 +23,8 @@
             }
         }
 
-        internal static async Task<object> GetSpatialValueAsync(MetadataWorkspace workspace, DbDataReader reader,
+        internal static async Task<object> GetSpatialValueAsync(
+            MetadataWorkspace workspace, DbDataReader reader,
             TypeUsage columnType, int columnOrdinal, CancellationToken cancellationToken)
         {
             Debug.Assert(Helper.IsSpatialType(columnType));

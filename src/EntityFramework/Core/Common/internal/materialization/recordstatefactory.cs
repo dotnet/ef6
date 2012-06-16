@@ -4,6 +4,8 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
+    using System.Security;
+    using System.Security.Permissions;
 
     /// <summary>
     /// An immutable class used to generate new RecordStates, which are used
@@ -86,17 +88,17 @@
 
         #endregion
 
-        #region constructor
+        #region Constructors
 
         public RecordStateFactory(
             int stateSlotNumber, int columnCount, RecordStateFactory[] nestedRecordStateFactories, DataRecordInfo dataRecordInfo,
-            Expression gatherData, string[] propertyNames, TypeUsage[] typeUsages)
+            Expression<Func<Shaper, bool>> gatherData, string[] propertyNames, TypeUsage[] typeUsages, bool[] isColumnNested)
         {
             StateSlotNumber = stateSlotNumber;
             ColumnCount = columnCount;
             NestedRecordStateFactories = new ReadOnlyCollection<RecordStateFactory>(nestedRecordStateFactories);
             DataRecordInfo = dataRecordInfo;
-            GatherData = Translator.Compile<bool>(gatherData);
+            GatherData = gatherData.Compile();
             Description = gatherData.ToString();
             ColumnNames = new ReadOnlyCollection<string>(propertyNames);
             TypeUsages = new ReadOnlyCollection<TypeUsage>(typeUsages);
@@ -104,25 +106,43 @@
             FieldNameLookup = new FieldNameLookup(ColumnNames, -1);
 
             // pre-compute the nested objects from typeUsage, for performance
-            var isColumnNested = new bool[columnCount];
-
-            for (var ordinal = 0; ordinal < columnCount; ordinal++)
+            if (isColumnNested == null)
             {
-                switch (typeUsages[ordinal].EdmType.BuiltInTypeKind)
+                isColumnNested = new bool[columnCount];
+
+                for (var ordinal = 0; ordinal < columnCount; ordinal++)
                 {
-                    case BuiltInTypeKind.EntityType:
-                    case BuiltInTypeKind.ComplexType:
-                    case BuiltInTypeKind.RowType:
-                    case BuiltInTypeKind.CollectionType:
-                        isColumnNested[ordinal] = true;
-                        HasNestedColumns = true;
-                        break;
-                    default:
-                        isColumnNested[ordinal] = false;
-                        break;
+                    switch (typeUsages[ordinal].EdmType.BuiltInTypeKind)
+                    {
+                        case BuiltInTypeKind.EntityType:
+                        case BuiltInTypeKind.ComplexType:
+                        case BuiltInTypeKind.RowType:
+                        case BuiltInTypeKind.CollectionType:
+                            isColumnNested[ordinal] = true;
+                            HasNestedColumns = true;
+                            break;
+                        default:
+                            isColumnNested[ordinal] = false;
+                            break;
+                    }
                 }
             }
             IsColumnNested = new ReadOnlyCollection<bool>(isColumnNested);
+        }
+
+        // Asserts MemberAccess to skip visbility check.  
+        // This means that that security checks are skipped. Before calling this
+        // method you must ensure that you've done a TestComple on expressions provided
+        // by the user to ensure the compilation doesn't violate them.
+        //[SuppressMessage("Microsoft.Security", "CA2128")]
+        [SecuritySafeCritical]
+        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
+        public RecordStateFactory(
+            int stateSlotNumber, int columnCount, RecordStateFactory[] nestedRecordStateFactories, DataRecordInfo dataRecordInfo,
+            Expression gatherData, string[] propertyNames, TypeUsage[] typeUsages)
+            : this(stateSlotNumber, columnCount, nestedRecordStateFactories, dataRecordInfo,
+                Translator.BuildShaperLambda<bool>(gatherData), propertyNames, typeUsages, isColumnNested: null)
+        {
         }
 
         #endregion

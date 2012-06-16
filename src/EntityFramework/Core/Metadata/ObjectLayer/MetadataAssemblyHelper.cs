@@ -11,8 +11,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private const string EcmaPublicKey = "b77a5c561934e089";
         private const string MicrosoftPublicKey = "b03f5f7f11d50a3a";
 
-        private static readonly byte[] EcmaPublicKeyToken = ScalarType.ConvertToByteArray(EcmaPublicKey);
-        private static readonly byte[] MsPublicKeyToken = ScalarType.ConvertToByteArray(MicrosoftPublicKey);
+        private static readonly byte[] _ecmaPublicKeyToken = ScalarType.ConvertToByteArray(EcmaPublicKey);
+        private static readonly byte[] _msPublicKeyToken = ScalarType.ConvertToByteArray(MicrosoftPublicKey);
 
         private static readonly Memoizer<Assembly, bool> _filterAssemblyCacheByAssembly =
             new Memoizer<Assembly, bool>(ComputeShouldFilterAssembly, EqualityComparer<Assembly>.Default);
@@ -47,8 +47,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>Is the assembly and its referened assemblies not expected to have any metadata</summary>
         private static bool ShouldFilterAssembly(AssemblyName assemblyName)
         {
-            return (ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), EcmaPublicKeyToken) ||
-                    ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), MsPublicKeyToken));
+            return (ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), _ecmaPublicKeyToken) ||
+                    ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), _msPublicKeyToken));
         }
 
         private static bool ArePublicKeyTokensEqual(byte[] left, byte[] right)

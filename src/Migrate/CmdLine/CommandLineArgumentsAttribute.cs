@@ -9,6 +9,7 @@ namespace CmdLine
     public class CommandLineArgumentsAttribute : Attribute
     {
         private string title;
+
         public string Title
         {
             get
@@ -30,6 +31,7 @@ namespace CmdLine
         }
 
         private string titleResourceId;
+
         public string TitleResourceId
         {
             get { return titleResourceId; }
@@ -44,6 +46,7 @@ namespace CmdLine
         }
 
         private string description;
+
         public string Description
         {
             get
@@ -65,6 +68,7 @@ namespace CmdLine
         }
 
         private string descriptionResourceId;
+
         public string DescriptionResourceId
         {
             get { return descriptionResourceId; }

@@ -167,8 +167,14 @@
         [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         internal static Func<Shaper, TResult> Compile<TResult>(Expression body)
         {
-            var lambda = Expression.Lambda<Func<Shaper, TResult>>(body, Shaper_Parameter);
-            return lambda.Compile();
+            return BuildShaperLambda<TResult>(body).Compile();
+        }
+
+        internal static Expression<Func<Shaper, TResult>> BuildShaperLambda<TResult>(Expression body)
+        {
+            return body == null
+                       ? null
+                       : Expression.Lambda<Func<Shaper, TResult>>(body, Shaper_Parameter);
         }
 
         /// <summary>
@@ -913,7 +919,7 @@
                     discriminatedEntityIdentity.EntitySetColumnMap.Accept(translator, new TranslatorArg(typeof(int?))).Expression;
                 var entitySets = discriminatedEntityIdentity.EntitySetMap;
 
-                // CONSIDER(SteveSta): We could just do an index lookup here instead of a series of 
+                // CONSIDER: We could just do an index lookup here instead of a series of 
                 //         comparisons, however this is MEST, and they get what they asked for.
 
                 // (_discriminator == 0 ? entitySets[0] : (_discriminator == 1 ? entitySets[1] ... : null)
@@ -1019,7 +1025,7 @@
         /// </summary>
         private static Expression Emit_Reader_IsDBNull(ColumnMap columnMap)
         {
-            // CONSIDER(SteveSta): I don't care for the derefing columnMap.  Find an alternative.
+            // CONSIDER: I don't care for the derefing columnMap.  Find an alternative.
             var result = Emit_Reader_IsDBNull(((ScalarColumnMap)columnMap).ColumnPos);
             return result;
         }
@@ -1827,7 +1833,7 @@
         }
 
         /// <summary>
-        /// Common code for both Simple and Discrminated Column Maps.
+        /// Common code for both Simple and Discriminated Column Maps.
         /// </summary>
         private TranslatorResult ProcessCollectionColumnMap(
             CollectionColumnMap columnMap, TranslatorArg arg, ColumnMap discriminatorColumnMap, object discriminatorValue)

@@ -145,10 +145,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private sealed class TypeUsageStructuralComparer : IEqualityComparer<TypeUsage>
         {
-            internal static readonly TypeUsageStructuralComparer Instance = new TypeUsageStructuralComparer();
+            private static readonly TypeUsageStructuralComparer _instance = new TypeUsageStructuralComparer();
 
             private TypeUsageStructuralComparer()
             {
+            }
+
+            public static TypeUsageStructuralComparer Instance
+            {
+                get { return _instance; }
             }
 
             public bool Equals(TypeUsage x, TypeUsage y)

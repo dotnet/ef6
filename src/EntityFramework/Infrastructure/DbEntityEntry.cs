@@ -114,8 +114,8 @@
         /// </summary>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task that contains the store values.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

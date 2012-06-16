@@ -48,13 +48,13 @@
         {
             var simplifier = PatternMatchRuleProcessor.Create(
                 // determines if an expression is of the form outerProject(outerProjection(innerProject(innerNew)))
-                PatternMatchRule.Create(Pattern_CollapseNestedProjection, CollapseNestedProjection),
+                PatternMatchRule.Create(_patternCollapseNestedProjection, CollapseNestedProjection),
                 // A case statement can potentially be simplified
-                PatternMatchRule.Create(Pattern_Case, SimplifyCaseStatement),
+                PatternMatchRule.Create(_patternCase, SimplifyCaseStatement),
                 // Nested TPH discriminator pattern can be converted to the expected TPH discriminator pattern
-                PatternMatchRule.Create(Pattern_NestedTphDiscriminator, SimplifyNestedTphDiscriminator),
+                PatternMatchRule.Create(_patternNestedTphDiscriminator, SimplifyNestedTphDiscriminator),
                 // Entity constructors may be augmented with FK-based related entity refs
-                PatternMatchRule.Create(Pattern_EntityConstructor, AddFkRelatedEntityRefs)
+                PatternMatchRule.Create(_patternEntityConstructor, AddFkRelatedEntityRefs)
                 );
 
             var queryExpression = view.Query;
@@ -66,7 +66,7 @@
 
         #region Navigation simplification support by adding FK-based related entity refs
 
-        private static readonly Func<DbExpression, bool> Pattern_EntityConstructor =
+        private static readonly Func<DbExpression, bool> _patternEntityConstructor =
             Patterns.MatchProject(
                 Patterns.AnyExpression,
                 Patterns.And(
@@ -330,7 +330,7 @@
         /// <summary>
         /// Matches the nested TPH discriminator pattern produced by view generation 
         /// </summary>
-        private static readonly Func<DbExpression, bool> Pattern_NestedTphDiscriminator =
+        private static readonly Func<DbExpression, bool> _patternNestedTphDiscriminator =
             Patterns.MatchProject(
                 Patterns.MatchFilter(
                     Patterns.MatchProject(
@@ -570,7 +570,7 @@
         /// <summary>
         /// Matches any Case expression 
         /// </summary>
-        private static readonly Func<DbExpression, bool> Pattern_Case = Patterns.MatchKind(DbExpressionKind.Case);
+        private static readonly Func<DbExpression, bool> _patternCase = Patterns.MatchKind(DbExpressionKind.Case);
 
         private static DbExpression SimplifyCaseStatement(DbExpression expression)
         {
@@ -645,7 +645,7 @@
         /// <summary>
         /// Determines if an expression is of the form outerProject(outerProjection(innerProject(innerNew)))
         /// </summary>
-        private static readonly Func<DbExpression, bool> Pattern_CollapseNestedProjection =
+        private static readonly Func<DbExpression, bool> _patternCollapseNestedProjection =
             Patterns.MatchProject(
                 Patterns.MatchProject(
                     Patterns.AnyExpression,

@@ -1,6 +1,5 @@
 namespace System.Data.Entity
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -17,7 +16,7 @@ namespace System.Data.Entity
     {
         #region Include
 
-        private static readonly Type[] StringIncludeTypes = new[] { typeof(string) };
+        private static readonly Type[] _stringIncludeTypes = new[] { typeof(string) };
 
         /// <summary>
         ///     Specifies the related objects to include in the query results.
@@ -102,7 +101,7 @@ namespace System.Data.Entity
         /// </summary>
         private static T CommonInclude<T>(T source, string path)
         {
-            var includeMethod = source.GetType().GetMethod("Include", StringIncludeTypes);
+            var includeMethod = source.GetType().GetMethod("Include", _stringIncludeTypes);
             if (includeMethod != null
                 && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
             {
@@ -277,9 +276,9 @@ namespace System.Data.Entity
         /// <param name="action">The action to be executed.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public static Task ForEachAsync(this IQueryable source, Action<object> action, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
@@ -313,9 +312,9 @@ namespace System.Data.Entity
         /// <param name="action">The action to be executed.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
@@ -323,7 +322,7 @@ namespace System.Data.Entity
 
             throw new NotImplementedException();
         }
-        
+
         #endregion
 
         #region ToListAsync
@@ -351,8 +350,8 @@ namespace System.Data.Entity
         /// <param name="source">The source query.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {

@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
     {
         // Note: This class is currently immutable. If you make it mutable then you
         // must ensure that instances are cloned when cloning the DbModelBuilder.
-        public static readonly PropertyPath Empty = new PropertyPath();
+        private static readonly PropertyPath _empty = new PropertyPath();
 
         private readonly List<PropertyInfo> _components = new List<PropertyInfo>();
 
@@ -38,6 +38,11 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         public int Count
         {
             get { return _components.Count; }
+        }
+
+        public static PropertyPath Empty
+        {
+            get { return _empty; }
         }
 
         public PropertyInfo this[int index]

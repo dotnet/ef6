@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.EntityClient
     /// </summary>
     public sealed partial class EntityParameterCollection : DbParameterCollection
     {
-        private static readonly Type ItemType = typeof(EntityParameter);
+        private static readonly Type _itemType = typeof(EntityParameter);
         private bool _isDirty;
 
         /// <summary>

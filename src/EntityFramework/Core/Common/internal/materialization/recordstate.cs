@@ -79,7 +79,7 @@
 
             _currentIsNull = _pendingIsNull;
 
-            // CONSIDER(SteveSta): If additional perforamnce is needed, here's something 
+            // CONSIDER: If additional perforamnce is needed, here's something 
             // we could probably optimize by building an expression and compiling it.
             if (RecordStateFactory.HasNestedColumns)
             {
@@ -280,7 +280,7 @@
         /// </summary>
         internal RecordState SetNullRecord()
         {
-            // CONSIDER(SteveSta): If additional, performance is needed, we could make these
+            // CONSIDER: If additional performance is needed, we could make these
             // singleton objects on the RecordStateFactory, but that has additional overhead 
             // and working set that we may not want to have.
             for (var i = 0; i < PendingColumnValues.Length; i++)

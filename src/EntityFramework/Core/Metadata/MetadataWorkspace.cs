@@ -66,19 +66,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentContainsNull(ref assembliesToConsider, "assembliesToConsider");
 
             Func<AssemblyName, Assembly> resolveReference = (AssemblyName referenceName) =>
-            {
-                foreach (var assembly in assembliesToConsider)
-                {
-                    if (AssemblyName.ReferenceMatchesDefinition(
-                        referenceName, new AssemblyName(assembly.FullName)))
-                    {
-                        return assembly;
-                    }
-                }
-                throw new ArgumentException(
-                    Strings.AssemblyMissingFromAssembliesToConsider(
-                        referenceName.FullName), "assembliesToConsider");
-            };
+                                                                {
+                                                                    foreach (var assembly in assembliesToConsider)
+                                                                    {
+                                                                        if (AssemblyName.ReferenceMatchesDefinition(
+                                                                            referenceName, new AssemblyName(assembly.FullName)))
+                                                                        {
+                                                                            return assembly;
+                                                                        }
+                                                                    }
+                                                                    throw new ArgumentException(
+                                                                        Strings.AssemblyMissingFromAssembliesToConsider(
+                                                                            referenceName.FullName), "assembliesToConsider");
+                                                                };
 
             CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
         }
@@ -135,8 +135,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        //The Max EDM version thats going to be supported by the runtime.
-        public static readonly double MaximumEdmVersionSupported = SupportedEdmVersions.Last();
+        private static readonly double _maximumEdmVersionSupported = SupportedEdmVersions.Last();
+
+        /// <summary>
+        /// The Max EDM version thats going to be supported by the runtime.
+        /// </summary>
+        public static double MaximumEdmVersionSupported
+        {
+            get { return _maximumEdmVersionSupported; }
+        }
 
         internal virtual Guid MetadataWorkspaceId
         {

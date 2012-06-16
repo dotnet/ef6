@@ -20,15 +20,15 @@
     {
         #region Helpers
 
-        private static readonly PropertyEntryMetadata ValueTypePropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(int), "ValueTypeProp", isMapped: true, isComplex: false);
-        private static readonly PropertyEntryMetadata RefTypePropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(string), "RefTypeProp", isMapped: true, isComplex: false);
-        private static readonly PropertyEntryMetadata ComplexPropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(FakeWithProps), "ComplexProp", isMapped: true, isComplex: true);
-        private static readonly PropertyEntryMetadata FakeNamedFooPropertyMetadata = new PropertyEntryMetadata(typeof(FakeEntity), typeof(string), "Foo", isMapped: false, isComplex: false);
+        private static readonly PropertyEntryMetadata _valueTypePropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(int), "ValueTypeProp", isMapped: true, isComplex: false);
+        private static readonly PropertyEntryMetadata _refTypePropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(string), "RefTypeProp", isMapped: true, isComplex: false);
+        private static readonly PropertyEntryMetadata _complexPropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(FakeWithProps), "ComplexProp", isMapped: true, isComplex: true);
+        private static readonly PropertyEntryMetadata _fakeNamedFooPropertyMetadata = new PropertyEntryMetadata(typeof(FakeEntity), typeof(string), "Foo", isMapped: false, isComplex: false);
 
-        private static readonly NavigationEntryMetadata ReferenceMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "Reference", isCollection: false);
-        private static readonly NavigationEntryMetadata CollectionMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
-        private static readonly NavigationEntryMetadata HiddenReferenceMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "HiddenReference", isCollection: false);
-        private static readonly NavigationEntryMetadata HiddenCollectionMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "HiddenCollection", isCollection: true);
+        private static readonly NavigationEntryMetadata _referenceMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "Reference", isCollection: false);
+        private static readonly NavigationEntryMetadata _collectionMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
+        private static readonly NavigationEntryMetadata _hiddenReferenceMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "HiddenReference", isCollection: false);
+        private static readonly NavigationEntryMetadata _hiddenCollectionMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "HiddenCollection", isCollection: true);
 
         private static Mock<IEntityStateEntry> CreateMockStateEntry<TEntity>() where TEntity : class, new()
         {
@@ -49,17 +49,17 @@
             currentValues = currentValues ?? CreateSimpleValues(10);
             var entity = currentValues.ToObject();
             var mockInternalEntry = new Mock<InternalEntityEntryForMock<FakeWithProps>>();
-            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(ValueTypePropertyMetadata);
-            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(RefTypePropertyMetadata);
-            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ComplexProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(ComplexPropertyMetadata);
+            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(_valueTypePropertyMetadata);
+            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(_refTypePropertyMetadata);
+            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ComplexProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(_complexPropertyMetadata);
             mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("Reference", It.IsAny<Type>(), It.IsAny<Type>()));
             mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("Collection", It.IsAny<Type>(), It.IsAny<Type>()));
             mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("Missing", It.IsAny<Type>(), It.IsAny<Type>()));
             mockInternalEntry.Setup(e => e.GetNavigationMetadata("ValueTypeProp"));
             mockInternalEntry.Setup(e => e.GetNavigationMetadata("RefTypeProp"));
             mockInternalEntry.Setup(e => e.GetNavigationMetadata("ComplexProp"));
-            mockInternalEntry.Setup(e => e.GetNavigationMetadata("Reference")).Returns(ReferenceMetadata);
-            mockInternalEntry.Setup(e => e.GetNavigationMetadata("Collection")).Returns(CollectionMetadata);
+            mockInternalEntry.Setup(e => e.GetNavigationMetadata("Reference")).Returns(_referenceMetadata);
+            mockInternalEntry.Setup(e => e.GetNavigationMetadata("Collection")).Returns(_collectionMetadata);
             mockInternalEntry.Setup(e => e.GetNavigationMetadata("ValueTypeProp"));
             mockInternalEntry.Setup(e => e.GetNavigationMetadata("RefTypeProp"));
             mockInternalEntry.Setup(e => e.GetNavigationMetadata("ComplexProp"));
@@ -1045,7 +1045,7 @@
         public void Non_Generic_DbPropertyEntry_uses_original_values_on_InternalPropertyEntry()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new DbPropertyEntry(new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry(new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
 
             var valueBeforeSet = propEntry.OriginalValue;
             propEntry.OriginalValue = -1;
@@ -1058,7 +1058,7 @@
         public void Generic_DbPropertyEntry_uses_original_values_on_InternalPropertyEntry()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new DbPropertyEntry<FakeWithProps, int>(new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry<FakeWithProps, int>(new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
 
             var valueBeforeSet = propEntry.OriginalValue;
             propEntry.OriginalValue = -1;
@@ -1071,7 +1071,7 @@
         public void Non_Generic_DbPropertyEntry_uses_current_values_on_InternalPropertyEntry()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new DbPropertyEntry(new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry(new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
 
             var valueBeforeSet = propEntry.CurrentValue;
             propEntry.CurrentValue = -1;
@@ -1084,7 +1084,7 @@
         public void Generic_DbPropertyEntry_uses_current_values_on_InternalPropertyEntry()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new DbPropertyEntry<FakeWithProps, int>(new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry<FakeWithProps, int>(new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
 
             var valueBeforeSet = propEntry.CurrentValue;
             propEntry.CurrentValue = -1;
@@ -1098,7 +1098,7 @@
         {
             var entityEntry = CreateMockInternalEntry().Object;
             var mockStateEntry = Mock.Get(entityEntry.ObjectStateEntry);
-            var propEntry = new DbPropertyEntry(new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry(new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata));
 
             Assert.False(propEntry.IsModified);
 
@@ -1113,7 +1113,7 @@
         {
             var entityEntry = CreateMockInternalEntry().Object;
             var mockStateEntry = Mock.Get(entityEntry.ObjectStateEntry);
-            var propEntry = new DbPropertyEntry<FakeWithProps, string>(new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry<FakeWithProps, string>(new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata));
 
             Assert.False(propEntry.IsModified);
 
@@ -1219,7 +1219,7 @@
         public void Scalar_original_value_can_be_set()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
 
             propEntry.OriginalValue = -1;
 
@@ -1230,7 +1230,7 @@
         public void Scalar_current_value_can_be_set()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
 
             propEntry.CurrentValue = -1;
 
@@ -1241,7 +1241,7 @@
         public void Scalar_original_value_can_be_read()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
 
             var value = propEntry.OriginalValue;
 
@@ -1252,7 +1252,7 @@
         public void Scalar_current_value_can_be_read()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
 
             var value = propEntry.CurrentValue;
 
@@ -1263,7 +1263,7 @@
         public void Scalar_original_value_can_be_set_to_null()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
             propEntry.OriginalValue = null;
 
@@ -1274,7 +1274,7 @@
         public void Scalar_current_value_can_be_set_to_null()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
             propEntry.CurrentValue = null;
 
@@ -1285,7 +1285,7 @@
         public void Scalar_original_value_can_be_read_when_when_it_is_null()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
             propEntry.OriginalValue = null;
             var value = propEntry.OriginalValue;
@@ -1308,7 +1308,7 @@
         private void SetWrongTypeTest(Action<InternalEntityPropertyEntry> setValue)
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
             Assert.Equal(Strings.DbPropertyValues_WrongTypeForAssignment(typeof(Random).Name, "RefTypeProp", typeof(string).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidOperationException>(() => setValue(propEntry)).Message);
         }
@@ -1317,7 +1317,7 @@
         public void Original_value_returned_for_complex_property_is_object_instance()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             var value = (FakeWithProps)propEntry.OriginalValue;
 
@@ -1329,7 +1329,7 @@
         public void Current_value_returned_for_complex_property_is_actual_complex_object_instance()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
             var entity = (FakeWithProps)entityEntry.Entity;
 
             var value = (FakeWithProps)propEntry.CurrentValue;
@@ -1345,7 +1345,7 @@
             var properties = new Dictionary<string, object> { {"ComplexProp", null} };
             var originalValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(null, originalValues).Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             var value = propEntry.OriginalValue;
 
@@ -1358,7 +1358,7 @@
             var properties = new Dictionary<string, object> { { "ComplexProp", null } };
             var currentValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(currentValues).Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             var value = propEntry.CurrentValue;
 
@@ -1369,7 +1369,7 @@
         public void Complex_original_value_can_be_set()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             propEntry.OriginalValue = new FakeWithProps { ValueTypeProp = -2, ComplexProp = new FakeWithProps { ValueTypeProp = -3 } };
 
@@ -1382,7 +1382,7 @@
         public void Complex_current_value_can_be_set_and_the_actual_complex_object_is_set()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
             var entity = (FakeWithProps)entityEntry.Entity;
 
             var complexObject = new FakeWithProps { ValueTypeProp = -2, ComplexProp = new FakeWithProps { ValueTypeProp = -3 } };
@@ -1401,7 +1401,7 @@
         public void Original_value_for_complex_property_cannot_be_set_to_null()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = null).Message);
         }
@@ -1412,7 +1412,7 @@
             var properties = new Dictionary<string, object> { { "ComplexProp", null } };
             var originalValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(null, originalValues).Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = null).Message);
         }
@@ -1421,7 +1421,7 @@
         public void Current_value_for_complex_property_cannot_be_set_to_null()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = null).Message);
         }
@@ -1432,7 +1432,7 @@
             var properties = new Dictionary<string, object> { { "ComplexProp", null } };
             var currentValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(currentValues).Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = null).Message);
         }
@@ -1441,7 +1441,7 @@
         public void Original_value_for_complex_property_cannot_be_set_to_instance_with_nested_null_complex_property()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             var complexObject = new FakeWithProps { ValueTypeProp = -2, ComplexProp = null };
 
@@ -1452,7 +1452,7 @@
         public void Current_value_for_complex_property_cannot_be_set_to_instance_with_nested_null_complex_property()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             var complexObject = new FakeWithProps { ValueTypeProp = -2, ComplexProp = null };
 
@@ -1474,7 +1474,7 @@
         private void SetWrongComplexTypeTest(Action<InternalEntityPropertyEntry> setValue)
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ComplexPropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
             Assert.Equal(Strings.DbPropertyValues_AttemptToSetValuesFromWrongObject(typeof(Random).Name, typeof(FakeWithProps).Name), Assert.Throws<ArgumentException>(() => setValue(propEntry)).Message);
         }
@@ -1488,7 +1488,7 @@
         {
             // Note that CreateMockInternalEntry sets ValueTypeProp as modified
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
  
             Assert.True(propEntry.IsModified);
         }
@@ -1497,7 +1497,7 @@
         public void IsModified_returns_false_if_property_is_not_in_modified_list()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
             Assert.False(propEntry.IsModified);
         }
@@ -1506,7 +1506,7 @@
         public void IsModified_can_be_set_to_true_when_it_is_currently_false()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
             var mockStateEntry = Mock.Get(entityEntry.ObjectStateEntry);
 
             Assert.False(propEntry.IsModified);
@@ -1521,7 +1521,7 @@
         public void IsModified_can_be_set_to_true_when_it_is_currently_true()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, ValueTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
 
             Assert.True(propEntry.IsModified);
 
@@ -1534,7 +1534,7 @@
         public void IsModified_can_be_set_to_false_when_it_is_currently_false()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new InternalEntityPropertyEntry(entityEntry, RefTypePropertyMetadata);
+            var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
             Assert.False(propEntry.IsModified);
 
@@ -1551,7 +1551,7 @@
         public void Non_generic_DbPropertyEntry_Name_returns_name_of_property_from_internal_entry()
         {
             var internalEntry = new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                FakeNamedFooPropertyMetadata);
+                                                                _fakeNamedFooPropertyMetadata);
             var propEntry = new DbPropertyEntry(internalEntry);
 
             Assert.Equal("Foo", internalEntry.Name);
@@ -1562,7 +1562,7 @@
         public void Generic_DbPropertyEntry_Name_returns_name_of_property_from_internal_entry()
         {
             var internalEntry = new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                FakeNamedFooPropertyMetadata);
+                                                                _fakeNamedFooPropertyMetadata);
             var propEntry = new DbPropertyEntry<FakeWithProps, FakeWithProps>(internalEntry);
 
             Assert.Equal("Foo", internalEntry.Name);
@@ -1572,7 +1572,7 @@
         [Fact]
         public void Non_generic_DbReferenceEntry_Name_returns_name_of_property_from_internal_entry()
         {
-            var internalEntry = new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata);
             var propEntry = new DbReferenceEntry(internalEntry);
 
             Assert.Equal("Reference", internalEntry.Name);
@@ -1582,7 +1582,7 @@
         [Fact]
         public void Generic_DbReferenceEntry_Name_returns_name_of_property_from_internal_entry()
         {
-            var internalEntry = new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata);
             var propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(internalEntry);
 
             Assert.Equal("Reference", internalEntry.Name);
@@ -1592,7 +1592,7 @@
         [Fact]
         public void Non_generic_DbCollectionEntry_Name_returns_name_of_property_from_internal_entry()
         {
-            var internalEntry = new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata);
             var propEntry = new DbCollectionEntry(internalEntry);
 
             Assert.Equal("Collection", internalEntry.Name);
@@ -1602,7 +1602,7 @@
         [Fact]
         public void Generic_DbCollectionEntry_Name_returns_name_of_property_from_internal_entry()
         {
-            var internalEntry = new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata);
             var propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(internalEntry);
 
             Assert.Equal("Collection", internalEntry.Name);
@@ -1617,7 +1617,7 @@
         public void Generic_DbPropertyEntry_can_be_implicitly_converted_to_non_generic_version()
         {
             var propEntry = new DbPropertyEntry<FakeWithProps, FakeEntity>(new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                                            FakeNamedFooPropertyMetadata));
+                                                                                            _fakeNamedFooPropertyMetadata));
 
             NonGenericTestMethod(propEntry, "Foo");
         }
@@ -1630,7 +1630,7 @@
         [Fact]
         public void Generic_DbReferenceEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            var propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, ReferenceMetadata));
+            var propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
 
             NonGenericTestMethod(propEntry, "Reference");
         }
@@ -1643,7 +1643,7 @@
         [Fact]
         public void Generic_DbCollectionEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            var propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, CollectionMetadata));
+            var propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
 
             NonGenericTestMethod(propEntry, "Collection");
         }
@@ -1657,7 +1657,7 @@
         public void Generic_DbPropertyEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_version()
         {
             DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbPropertyEntry<FakeWithProps, FakeEntity>(new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                                                                  FakeNamedFooPropertyMetadata));
+                                                                                                                  _fakeNamedFooPropertyMetadata));
 
             NonGenericTestMethodPropAsMember(propEntry, "Foo");
         }
@@ -1671,7 +1671,7 @@
         [Fact]
         public void Generic_DbReferenceEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, ReferenceMetadata));
+            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
 
             NonGenericTestMethodRefAsMember(propEntry, "Reference");
         }
@@ -1685,7 +1685,7 @@
         [Fact]
         public void Generic_DbCollectionEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, CollectionMetadata));
+            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
 
             NonGenericTestMethodCollectionAsMember(propEntry, "Collection");
         }
@@ -1700,7 +1700,7 @@
         public void Generic_DbPropertyEntry_typed_as_DbMemberEntry_can_be_explicitly_converted_to_non_generic_DbPropertyEntry()
         {
             DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbPropertyEntry<FakeWithProps, FakeEntity>(new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                                                                  FakeNamedFooPropertyMetadata));
+                                                                                                                  _fakeNamedFooPropertyMetadata));
 
             NonGenericTestMethod((DbPropertyEntry)propEntry, "Foo");
         }
@@ -1708,7 +1708,7 @@
         [Fact]
         public void Generic_DbReferenceEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_DbReferenceEntry()
         {
-            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, ReferenceMetadata));
+            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
 
             NonGenericTestMethod((DbReferenceEntry)propEntry, "Reference");
         }
@@ -1716,7 +1716,7 @@
         [Fact]
         public void Generic_DbCollectionEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_DbCollectionEntry()
         {
-            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, CollectionMetadata));
+            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
 
             NonGenericTestMethod((DbCollectionEntry)propEntry, "Collection");
         }
@@ -1741,7 +1741,7 @@
         {
             var relatedEntity = new FakeEntity();
             var entity = new FakeWithProps { Reference = relatedEntity };
-            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _referenceMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1763,7 +1763,7 @@
         private void InternalReferenceEntry_sets_current_value_onto_entity_if_property_exists_implementation(bool isDetached)
         {
             var entity = new FakeWithProps { Reference = new FakeEntity() };
-            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _referenceMetadata);
 
             var relatedEntity = new FakeEntity();
             internalEntry.CurrentValue = relatedEntity;
@@ -1787,7 +1787,7 @@
         {
             var relatedCollection = new List<FakeEntity>();
             var entity = new FakeWithProps { Collection = relatedCollection };
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _collectionMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1809,7 +1809,7 @@
         private void InternalCollectionEntry_sets_current_value_onto_entity_if_property_exists_implementation(bool isDetached)
         {
             var entity = new FakeWithProps { Collection = new List<FakeEntity>() };
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _collectionMetadata);
 
             var relatedCollection = new List<FakeEntity>();
             internalEntry.CurrentValue = relatedCollection;
@@ -1844,7 +1844,7 @@
         {
             var mockRelatedEnd = CreateMockRelatedReference(relatedEntity);
 
-            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object, HiddenReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object, _hiddenReferenceMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1908,7 +1908,7 @@
         {
             var mockRelatedEnd = CreateMockRelatedReference(currentRelatedEntity);
 
-            var internalEntry = new FakeInternalReferenceEntry(CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object, HiddenReferenceMetadata);
+            var internalEntry = new FakeInternalReferenceEntry(CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object, _hiddenReferenceMetadata);
 
             internalEntry.CurrentValue = newRelatedEntity;
 
@@ -1920,7 +1920,7 @@
         public void InternalCollectionEntry_gets_current_value_that_is_the_RelatedEnd_if_navigation_property_has_been_removed_from_entity()
         {
             var relatedCollection = new EntityCollection<FakeEntity>();
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, HiddenCollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, _hiddenCollectionMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1931,7 +1931,7 @@
         public void InternalCollectionEntry_does_nothing_if_attempting_to_set_the_actual_EntityCollection_as_a_current_value_when_navigation_property_has_been_removed_from_entity()
         {
             var relatedCollection = new EntityCollection<FakeEntity>();
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, HiddenCollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, _hiddenCollectionMetadata);
 
             internalEntry.CurrentValue = relatedCollection; // Test that it doesn't throw
         }
@@ -1939,7 +1939,7 @@
         [Fact]
         public void InternalCollectionEntry_throws_when_attempting_to_set_a_new_collection_when_navigation_property_has_been_removed_from_entity()
         {
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), new EntityCollection<FakeEntity>(), isDetached: false).Object, HiddenCollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), new EntityCollection<FakeEntity>(), isDetached: false).Object, _hiddenCollectionMetadata);
 
             Assert.Equal(Strings.DbCollectionEntry_CannotSetCollectionProp("HiddenCollection", typeof(FakeEntity).ToString()), Assert.Throws<NotSupportedException>(() => internalEntry.CurrentValue = new List<FakeEntity>()).Message);
         }
@@ -1948,7 +1948,7 @@
         public void InternalReferenceEntry_throws_getting_current_value_from_detached_entity_if_navigation_property_has_been_removed()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("CurrentValue", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.CurrentValue; }).Message);
         }
@@ -1957,7 +1957,7 @@
         public void InternalReferenceEntry_throws_setting_current_value_from_detached_entity_if_navigation_property_has_been_removed()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_SettingEntityRefNotSupported("Reference", "FakeEntity", "Detached"), Assert.Throws<NotSupportedException>(() => { internalEntry.CurrentValue = null; }).Message);
         }
@@ -1966,7 +1966,7 @@
         public void InternalCollectionEntry_throws_getting_current_value_from_detached_entity_if_navigation_property_has_been_removed()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("CurrentValue", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.CurrentValue; }).Message);
         }
@@ -1975,7 +1975,7 @@
         public void InternalCollectionEntry_throws_setting_current_value_from_detached_entity_if_navigation_property_has_been_removed()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
             Assert.Equal(Strings.DbCollectionEntry_CannotSetCollectionProp("Collection", typeof(FakeEntity).ToString()), Assert.Throws<NotSupportedException>(() => { internalEntry.CurrentValue = null; }).Message);
         }
@@ -1988,7 +1988,7 @@
         public void InternalReferenceEntry_Load_throws_if_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
         }
@@ -1997,7 +1997,7 @@
         public void InternalReferenceEntry_IsLoaded_throws_if_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
         }
@@ -2006,7 +2006,7 @@
         public void InternalReferenceEntry_Query_throws_if_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Query", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Query()).Message);
         }
@@ -2016,7 +2016,7 @@
         public void InternalCollectionEntry_Load_throws_if_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
         }
@@ -2025,7 +2025,7 @@
         public void InternalCollectionEntry_IsLoaded_throws_if_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
         }
@@ -2034,7 +2034,7 @@
         public void InternalCollectionEntry_Query_throws_if_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
             Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Query", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Query()).Message);
         }
@@ -2043,7 +2043,7 @@
         public void InternalReferenceEntry_Name_works_even_when_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, ReferenceMetadata);
+            var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
             Assert.Equal("Reference", internalEntry.Name);
         }
@@ -2052,7 +2052,7 @@
         public void InternalCollectionEntry_Name_works_even_when_used_with_Detached_entity()
         {
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
-            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, CollectionMetadata);
+            var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
             Assert.Equal("Collection", internalEntry.Name);
         }
@@ -2064,7 +2064,7 @@
         internal class InternalEntityPropertyEntryForMock : InternalEntityPropertyEntry
         {
             public InternalEntityPropertyEntryForMock()
-                : base(CreateMockInternalEntry().Object, ComplexPropertyMetadata)
+                : base(CreateMockInternalEntry().Object, _complexPropertyMetadata)
             {
             }
         }
@@ -2073,7 +2073,7 @@
         public void Can_get_nested_property_entry_using_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ValueTypeProp);
 
@@ -2085,7 +2085,7 @@
         public void Can_get_nested_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ValueTypeProp");
 
@@ -2097,7 +2097,7 @@
         public void Can_get_generic_nested_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<int>("ValueTypeProp");
 
@@ -2109,7 +2109,7 @@
         public void Can_get_nested_property_entry_using_string_on_non_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ValueTypeProp");
 
@@ -2121,7 +2121,7 @@
         public void Can_get_nested_complex_property_entry_using_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ComplexProp);
 
@@ -2134,7 +2134,7 @@
         public void Can_get_nested_complex_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp");
 
@@ -2147,7 +2147,7 @@
         public void Can_get_generic_nested_complex_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<FakeWithProps>("ComplexProp");
 
@@ -2160,7 +2160,7 @@
         public void Can_get_nested_complex_property_entry_using_string_on_non_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp");
 
@@ -2173,7 +2173,7 @@
         public void Can_get_nested_complex_property_entry_using_ComplexProperty_with_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty(e => e.ComplexProp);
 
@@ -2185,7 +2185,7 @@
         public void Can_get_nested_complex_property_entry_using_ComplexProperty_with_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty("ComplexProp");
 
@@ -2197,7 +2197,7 @@
         public void Can_get_generic_nested_complex_property_entry_using_ComplexProperty_with_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty<FakeWithProps>("ComplexProp");
 
@@ -2209,7 +2209,7 @@
         public void Can_get_nested_complex_property_entry_using_ComplexProperty_with_string_on_non_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty("ComplexProp");
 
@@ -2697,7 +2697,7 @@
         public void Can_get_double_nested_property_entry_from_DbComplexProperty_using_dotted_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ComplexProp.ComplexProp.ValueTypeProp);
 
@@ -2710,7 +2710,7 @@
         public void Can_get_double_nested_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ValueTypeProp");
 
@@ -2723,7 +2723,7 @@
         public void Can_get_generic_double_nested_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<int>("ComplexProp.ComplexProp.ValueTypeProp");
 
@@ -2736,7 +2736,7 @@
         public void Can_get_double_nested_property_entry_from_DbComplexProperty_using_dotted_string_on_non_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ValueTypeProp");
 
@@ -2749,7 +2749,7 @@
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ComplexProp.ComplexProp.ComplexProp);
 
@@ -2763,7 +2763,7 @@
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ComplexProp");
 
@@ -2776,7 +2776,7 @@
         public void Can_get_generic_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<FakeWithProps>("ComplexProp.ComplexProp.ComplexProp");
 
@@ -2790,7 +2790,7 @@
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_string_on_non_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ComplexProp");
 
@@ -2803,7 +2803,7 @@
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty(e => e.ComplexProp.ComplexProp.ComplexProp);
 
@@ -2816,7 +2816,7 @@
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty("ComplexProp.ComplexProp.ComplexProp");
 
@@ -2828,7 +2828,7 @@
         public void Can_get_generic_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty<FakeWithProps>("ComplexProp.ComplexProp.ComplexProp");
 
@@ -2841,7 +2841,7 @@
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_non_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty("ComplexProp.ComplexProp.ComplexProp");
 
@@ -3917,7 +3917,7 @@
         public void EntityEntity_can_be_obtained_from_nested_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property(e => e.ValueTypeProp).EntityEntry;
 
@@ -3928,7 +3928,7 @@
         public void EntityEntity_can_be_obtained_from_nested_non_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property("ValueTypeProp").EntityEntry;
 
@@ -3939,7 +3939,7 @@
         public void Parent_PropertyEntity_can_be_obtained_from_nested_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property(e => e.ValueTypeProp).ParentProperty;
 
@@ -3950,7 +3950,7 @@
         public void Parent_PropertyEntity_can_be_obtained_from_nested_non_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, ComplexPropertyMetadata));
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property("ValueTypeProp").ParentProperty;
 

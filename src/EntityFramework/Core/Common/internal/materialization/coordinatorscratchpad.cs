@@ -305,7 +305,7 @@
         /// </remarks>
         private sealed class SecurityBoundaryExpressionVisitor : EntityExpressionVisitor
         {
-            private static readonly MethodInfo s_userMaterializationFuncInvokeMethod =
+            private static readonly MethodInfo _userMaterializationFuncInvokeMethod =
                 typeof(Func<DbDataReader, object[], object>).GetMethod("Invoke");
 
             private readonly ParameterExpression _values = Expression.Parameter(typeof(object[]), "values");
@@ -378,7 +378,7 @@
                         return Expression.Convert(
                             Expression.Call(
                                 Expression.Constant(userMaterializationFunc),
-                                s_userMaterializationFuncInvokeMethod,
+                                _userMaterializationFuncInvokeMethod,
                                 Translator.Shaper_Reader,
                                 Expression.NewArrayInit(typeof(object), _initializationArguments)),
                             nex.Type);
@@ -461,7 +461,7 @@
                         return Expression.Convert(
                             Expression.Call(
                                 Expression.Constant(userMaterializationFunc),
-                                s_userMaterializationFuncInvokeMethod,
+                                _userMaterializationFuncInvokeMethod,
                                 Translator.Shaper_Reader,
                                 Expression.NewArrayInit(typeof(object), _initializationArguments)),
                             init.Type);

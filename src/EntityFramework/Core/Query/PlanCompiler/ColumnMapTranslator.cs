@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Singleton instance for the "public" methods to use;
         /// </summary>
-        private static readonly ColumnMapTranslator Instance = new ColumnMapTranslator();
+        private static readonly ColumnMapTranslator _instance = new ColumnMapTranslator();
 
         /// <summary>
         /// Constructor; no one should use this.
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal static ColumnMap Translate(ColumnMap columnMap, ColumnMapTranslatorTranslationDelegate translationDelegate)
         {
-            return columnMap.Accept(Instance, translationDelegate);
+            return columnMap.Accept(_instance, translationDelegate);
         }
 
         /// <summary>

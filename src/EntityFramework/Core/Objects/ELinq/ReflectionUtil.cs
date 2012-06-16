@@ -17,8 +17,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     {
         #region Static information on sequence methods
 
-        private static readonly Dictionary<MethodInfo, SequenceMethod> s_methodMap;
-        private static readonly Dictionary<SequenceMethod, MethodInfo> s_inverseMap;
+        private static readonly Dictionary<MethodInfo, SequenceMethod> _methodMap;
+        private static readonly Dictionary<SequenceMethod, MethodInfo> _inverseMap;
 
         // Initialize method map
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
@@ -469,16 +469,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             // by redirection through canonical method names, determine sequence enum value
             // for all know LINQ operators
-            s_methodMap = new Dictionary<MethodInfo, SequenceMethod>();
-            s_inverseMap = new Dictionary<SequenceMethod, MethodInfo>();
+            _methodMap = new Dictionary<MethodInfo, SequenceMethod>();
+            _inverseMap = new Dictionary<SequenceMethod, MethodInfo>();
             foreach (var method in GetAllLinqOperators())
             {
                 SequenceMethod sequenceMethod;
                 var canonicalMethod = GetCanonicalMethodDescription(method);
                 if (map.TryGetValue(canonicalMethod, out sequenceMethod))
                 {
-                    s_methodMap.Add(method, sequenceMethod);
-                    s_inverseMap[sequenceMethod] = method;
+                    _methodMap.Add(method, sequenceMethod);
+                    _inverseMap[sequenceMethod] = method;
                 }
             }
         }
@@ -496,7 +496,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             method = method.IsGenericMethod
                          ? method.GetGenericMethodDefinition()
                          : method;
-            return s_methodMap.TryGetValue(method, out sequenceMethod);
+            return _methodMap.TryGetValue(method, out sequenceMethod);
         }
 
         /// <summary>
@@ -543,7 +543,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns>true if some method is found; false otherwise</returns>
         internal static bool TryLookupMethod(SequenceMethod sequenceMethod, out MethodInfo method)
         {
-            return s_inverseMap.TryGetValue(sequenceMethod, out method);
+            return _inverseMap.TryGetValue(sequenceMethod, out method);
         }
 
         /// <remarks>

@@ -8,7 +8,7 @@
 
     internal static class StringExtensions
     {
-        private static readonly Regex MigrationIdPattern = new Regex(@"\d{15}_.+");
+        private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");
 
         public static IEnumerable<string> Break(this string s, int width = 1000)
         {
@@ -53,7 +53,7 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            return MigrationIdPattern.IsMatch(migrationId)
+            return _migrationIdPattern.IsMatch(migrationId)
                    || migrationId == DbMigrator.InitialDatabase;
         }
 

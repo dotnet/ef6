@@ -13,21 +13,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     /// Typed Shaper. Includes logic to enumerate results and wraps the _rootCoordinator,
     /// which includes materializer delegates for the root query collection.
     /// </summary>
-    internal sealed class Shaper<T> : Shaper
+    internal class Shaper<T> : Shaper
     {
-        #region private state
-
-        /// <summary>
-        /// Shapers and Coordinators work together in harmony to materialize the data
-        /// from the store; the shaper contains the state, the coordinator contains the
-        /// code.
-        /// </summary>
-        internal readonly Coordinator<T> RootCoordinator;
+        #region Private Fields
 
         /// <summary>
         /// Which type of query is this, object layer (true) or value layer (false)
         /// </summary>
-        private readonly bool IsObjectQuery;
+        private readonly bool _isObjectQuery;
 
         /// <summary>
         /// Keeps track of whether we've completed processing or not.
@@ -47,27 +40,23 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #endregion
 
-        #region constructor
-
         internal Shaper(
             DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption, int stateCount,
             CoordinatorFactory<T> rootCoordinatorFactory, Action checkPermissions, bool readerOwned)
             : base(reader, context, workspace, mergeOption, stateCount)
         {
-            RootCoordinator = new Coordinator<T>(rootCoordinatorFactory, /*parent*/ null, /*next*/ null);
+            RootCoordinator = (Coordinator<T>)rootCoordinatorFactory.CreateCoordinator(parent: null, next: null);
             if (null != checkPermissions)
             {
                 checkPermissions();
             }
-            IsObjectQuery = !(typeof(T) == typeof(RecordState));
+            _isObjectQuery = !(typeof(T) == typeof(RecordState));
             _isActive = true;
             RootCoordinator.Initialize(this);
             _readerOwned = readerOwned;
         }
 
-        #endregion
-
-        #region "public" surface area
+        #region "Public" Surface Area
 
         /// <summary>
         /// Events raised when the shaper has finished enumerating results. Useful for callback 
@@ -82,6 +71,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// this to false.
         /// </summary>
         internal bool DataWaiting { get; set; }
+
+        /// <summary>
+        /// Shapers and Coordinators work together in harmony to materialize the data
+        /// from the store; the shaper contains the state, the coordinator contains the
+        /// code.
+        /// </summary>
+        internal readonly Coordinator<T> RootCoordinator;
 
         /// <summary>
         /// The enumerator that the value-layer bridge will use to read data; all nested
@@ -119,7 +115,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {
             // we can use a simple enumerator if there are no nested results, no keys and no "has data"
             // discriminator
@@ -131,7 +127,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 var rowEnumerator = new RowNestedResultEnumerator(this);
 
-                if (IsObjectQuery)
+                if (_isObjectQuery)
                 {
                     return new ObjectQueryNestedEnumerator(rowEnumerator);
                 }
@@ -144,7 +140,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #endregion
 
-        #region enumerator helpers
+        #region Private Methods
 
         /// <summary>
         /// Called when enumeration of results has completed.
@@ -160,7 +156,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // I'd prefer not to special case this, but value-layer behavior is that you
                     // must explicitly close the data reader; if we automatically dispose of the
                     // reader here, we won't have that behavior.
-                    if (IsObjectQuery)
+                    if (_isObjectQuery)
                     {
                         Reader.Dispose();
                     }
@@ -237,7 +233,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #endregion
 
-        #region simple enumerator
+        #region Simple Enumerator
 
         /// <summary>
         /// Optimized enumerator for queries not including nested results.
@@ -304,7 +300,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #endregion
 
-        #region nested enumerator
+        #region Nested Enumerator
 
         /// <summary>
         /// Enumerates (for each row in the input) an array of all coordinators producing new elements. The array
@@ -469,32 +465,23 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 switch (_state)
                 {
                     case State.Start:
+                        if (TryReadToNextElement())
                         {
-                            if (TryReadToNextElement())
-                            {
-                                // if there's an element in the reader...
-                                ReadElement();
-                            }
-                            else
-                            {
-                                // no data at all...
-                                _state = State.NoRows;
-                            }
-                        }
-                        ;
-                        break;
-                    case State.Reading:
-                        {
+                            // if there's an element in the reader...
                             ReadElement();
                         }
-                        ;
-                        break;
-                    case State.NoRowsLastElementPending:
+                        else
                         {
-                            // nothing to do but move to the next state...
+                            // no data at all...
                             _state = State.NoRows;
                         }
-                        ;
+                        break;
+                    case State.Reading:
+                        ReadElement();
+                        break;
+                    case State.NoRowsLastElementPending:
+                        // nothing to do but move to the next state...
+                        _state = State.NoRows;
                         break;
                 }
 

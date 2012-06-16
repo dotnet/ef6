@@ -18,7 +18,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class EdmModelDiffer
     {
-        private static readonly PrimitiveTypeKind[] ValidIdentityTypes
+        private static readonly PrimitiveTypeKind[] _validIdentityTypes
             = new[]
                   {
                       PrimitiveTypeKind.Byte,
@@ -596,7 +596,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             column.IsIdentity
                 = !string.IsNullOrWhiteSpace(storeGeneratedPatternAttribute)
                   && storeGeneratedPatternAttribute.EqualsIgnoreCase("Identity")
-                  && ValidIdentityTypes.Contains(column.Type);
+                  && _validIdentityTypes.Contains(column.Type);
 
             Facet facet;
             if (typeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, true, out facet)

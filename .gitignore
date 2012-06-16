@@ -16,3 +16,6 @@ TestResults
 packages
 EntityFramework.xml
 EntityFramework.SqlServer.xml
+*.BASE.*
+*.REMOTE.*
+*.LOCAL.*

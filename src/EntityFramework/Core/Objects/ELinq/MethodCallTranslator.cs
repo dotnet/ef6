@@ -34,7 +34,7 @@
                 SequenceMethodTranslator sequenceTranslator;
                 if (ReflectionUtil.TryIdentifySequenceMethod(linq.Method, out sequenceMethod)
                     &&
-                    s_sequenceTranslators.TryGetValue(sequenceMethod, out sequenceTranslator))
+                    _sequenceTranslators.TryGetValue(sequenceMethod, out sequenceTranslator))
                 {
                     return sequenceTranslator.Translate(parent, linq, sequenceMethod);
                 }
@@ -49,7 +49,7 @@
                 if (ObjectQueryCallTranslator.IsCandidateMethod(linq.Method))
                 {
                     ObjectQueryCallTranslator builderTranslator;
-                    if (s_objectQueryTranslators.TryGetValue(linq.Method.Name, out builderTranslator))
+                    if (_objectQueryTranslators.TryGetValue(linq.Method.Name, out builderTranslator))
                     {
                         return builderTranslator.Translate(parent, linq);
                     }
@@ -60,7 +60,7 @@
                     .Cast<DbFunctionAttribute>().FirstOrDefault();
                 if (null != functionAttribute)
                 {
-                    return s_functionCallTranslator.TranslateFunctionCall(parent, linq, functionAttribute);
+                    return _functionCallTranslator.TranslateFunctionCall(parent, linq, functionAttribute);
                 }
 
                 switch (linq.Method.Name)
@@ -81,7 +81,7 @@
                 }
 
                 // fall back on the default translator
-                return s_defaultTranslator.Translate(parent, linq);
+                return _defaultTranslator.Translate(parent, linq);
             }
 
             #region Static members and initializers
@@ -89,18 +89,18 @@
             private const string s_stringsTypeFullName = "Microsoft.VisualBasic.Strings";
 
             // initialize fall-back translator
-            private static readonly CallTranslator s_defaultTranslator = new DefaultTranslator();
-            private static readonly FunctionCallTranslator s_functionCallTranslator = new FunctionCallTranslator();
-            private static readonly Dictionary<MethodInfo, CallTranslator> s_methodTranslators = InitializeMethodTranslators();
+            private static readonly CallTranslator _defaultTranslator = new DefaultTranslator();
+            private static readonly FunctionCallTranslator _functionCallTranslator = new FunctionCallTranslator();
+            private static readonly Dictionary<MethodInfo, CallTranslator> _methodTranslators = InitializeMethodTranslators();
 
-            private static readonly Dictionary<SequenceMethod, SequenceMethodTranslator> s_sequenceTranslators =
+            private static readonly Dictionary<SequenceMethod, SequenceMethodTranslator> _sequenceTranslators =
                 InitializeSequenceMethodTranslators();
 
-            private static readonly Dictionary<string, ObjectQueryCallTranslator> s_objectQueryTranslators =
+            private static readonly Dictionary<string, ObjectQueryCallTranslator> _objectQueryTranslators =
                 InitializeObjectQueryTranslators();
 
             private static bool s_vbMethodsInitialized;
-            private static readonly object s_vbInitializerLock = new object();
+            private static readonly object _vbInitializerLock = new object();
 
             private static Dictionary<MethodInfo, CallTranslator> InitializeMethodTranslators()
             {
@@ -154,14 +154,14 @@
             /// <returns></returns>
             private static bool TryGetCallTranslator(MethodInfo methodInfo, out CallTranslator callTranslator)
             {
-                if (s_methodTranslators.TryGetValue(methodInfo, out callTranslator))
+                if (_methodTranslators.TryGetValue(methodInfo, out callTranslator))
                 {
                     return true;
                 }
                 // check if this is the visual basic assembly
                 if (s_visualBasicAssemblyFullName == methodInfo.DeclaringType.Assembly.FullName)
                 {
-                    lock (s_vbInitializerLock)
+                    lock (_vbInitializerLock)
                     {
                         if (!s_vbMethodsInitialized)
                         {
@@ -169,7 +169,7 @@
                             s_vbMethodsInitialized = true;
                         }
                         // try again
-                        return s_methodTranslators.TryGetValue(methodInfo, out callTranslator);
+                        return _methodTranslators.TryGetValue(methodInfo, out callTranslator);
                     }
                 }
 
@@ -184,7 +184,7 @@
                 {
                     foreach (var method in translator.Methods)
                     {
-                        s_methodTranslators.Add(method, translator);
+                        _methodTranslators.Add(method, translator);
                     }
                 }
             }
@@ -400,7 +400,7 @@
                 protected ObjectQueryBuilderCallTranslator(string methodName, SequenceMethod sequenceEquivalent)
                     : base(methodName)
                 {
-                    var translatorFound = s_sequenceTranslators.TryGetValue(sequenceEquivalent, out _translator);
+                    var translatorFound = _sequenceTranslators.TryGetValue(sequenceEquivalent, out _translator);
                     Debug.Assert(translatorFound, "Translator not found for " + sequenceEquivalent.ToString());
                 }
 
@@ -582,9 +582,9 @@
 
                 #region Static Members
 
-                private static readonly Dictionary<MethodInfo, MethodInfo> s_alternativeMethods = InitializeAlternateMethodInfos();
-                private static bool s_vbMethodsInitialized;
-                private static readonly object s_vbInitializerLock = new object();
+                private static readonly Dictionary<MethodInfo, MethodInfo> _alternativeMethods = InitializeAlternateMethodInfos();
+                private static bool _vbMethodsInitialized;
+                private static readonly object _vbInitializerLock = new object();
 
                 /// <summary>
                 /// Tries to check whether there is an alternative method suggested insted of the given unsupported one. 
@@ -594,22 +594,22 @@
                 /// <returns></returns>
                 private static bool TryGetAlternativeMethod(MethodInfo originalMethodInfo, out MethodInfo suggestedMethodInfo)
                 {
-                    if (s_alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo))
+                    if (_alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo))
                     {
                         return true;
                     }
                     // check if this is the visual basic assembly
                     if (s_visualBasicAssemblyFullName == originalMethodInfo.DeclaringType.Assembly.FullName)
                     {
-                        lock (s_vbInitializerLock)
+                        lock (_vbInitializerLock)
                         {
-                            if (!s_vbMethodsInitialized)
+                            if (!_vbMethodsInitialized)
                             {
                                 InitializeVBMethods(originalMethodInfo.DeclaringType.Assembly);
-                                s_vbMethodsInitialized = true;
+                                _vbMethodsInitialized = true;
                             }
                             // try again
-                            return s_alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo);
+                            return _alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo);
                         }
                     }
                     suggestedMethodInfo = null;
@@ -632,12 +632,12 @@
                 /// <param name="vbAssembly"></param>
                 private static void InitializeVBMethods(Assembly vbAssembly)
                 {
-                    Debug.Assert(!s_vbMethodsInitialized);
+                    Debug.Assert(!_vbMethodsInitialized);
 
                     //Handle { Mid(arg1, ar2), Mid(arg1, arg2, arg3) }
                     var stringsType = vbAssembly.GetType(s_stringsTypeFullName);
 
-                    s_alternativeMethods.Add(
+                    _alternativeMethods.Add(
                         stringsType.GetMethod(
                             "Mid", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(int) }, null),
                         stringsType.GetMethod(
@@ -1693,15 +1693,15 @@
                 private const string s_FirstDayOfWeekFullName = "Microsoft.VisualBasic.FirstDayOfWeek";
                 private const string s_FirstWeekOfYearFullName = "Microsoft.VisualBasic.FirstWeekOfYear";
 
-                private static readonly HashSet<string> s_supportedIntervals = new HashSet<string>
-                                                                                   {
-                                                                                       Year,
-                                                                                       Month,
-                                                                                       Day,
-                                                                                       Hour,
-                                                                                       Minute,
-                                                                                       Second
-                                                                                   };
+                private static readonly HashSet<string> _supportedIntervals = new HashSet<string>
+                                                                                  {
+                                                                                      Year,
+                                                                                      Month,
+                                                                                      Day,
+                                                                                      Hour,
+                                                                                      Minute,
+                                                                                      Second
+                                                                                  };
 
                 internal VBDatePartTranslator(Assembly vbAssembly)
                     : base(GetMethods(vbAssembly))
@@ -1722,7 +1722,7 @@
 
                 // Translation:
                 //      DatePart(DateInterval, date, arg3, arg4)  ->  'DateInterval'(date)
-                // Note: it is only supported for the values of DateInterval listed in s_supportedIntervals.
+                // Note: it is only supported for the values of DateInterval listed in _supportedIntervals.
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
                     Debug.Assert(call.Arguments.Count == 4, "Expecting 4 arguments for Microsoft.VisualBasic.DateAndTime.DatePart");
@@ -1735,7 +1735,7 @@
                     }
 
                     var intervalValue = intervalLinqExpression.Value.ToString();
-                    if (!s_supportedIntervals.Contains(intervalValue))
+                    if (!_supportedIntervals.Contains(intervalValue))
                     {
                         throw new NotSupportedException(
                             Strings.ELinq_UnsupportedVBDatePartInvalidInterval(

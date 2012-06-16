@@ -1,8 +1,8 @@
 namespace CmdLine
 {
     using System;
-    using System.Data.Entity.Migrations.Console.Resources;
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Console.Resources;
     using System.Reflection;
 
     internal class CommandLineParameter

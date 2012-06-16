@@ -24,13 +24,15 @@ namespace System.Data.Entity.Migrations
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
+            var @namespace = "Migrations";
+
             var generatedMigration1
                 = codeGenerator.Generate(
                     "201108162311111_Migration",
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "Migrations",
+                    @namespace,
                     "Migration");
 
             var generatedMigration2
@@ -39,18 +41,17 @@ namespace System.Data.Entity.Migrations
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "Migrations",
+                    @namespace,
                     "Migration1");
 
             var migrationAssembly
                 = new MigrationAssembly(
                     new MigrationCompiler("cs")
                         .Compile(
-                            generatedMigration1.UserCode,
-                            generatedMigration1.DesignerCode,
-                            generatedMigration2.UserCode,
-                            generatedMigration2.DesignerCode),
-                    "Migrations");
+                            @namespace,
+                            generatedMigration1,
+                            generatedMigration2),
+                    @namespace);
 
             Assert.Equal("Migration2", migrationAssembly.UniquifyName("Migration"));
         }
@@ -76,18 +77,20 @@ namespace System.Data.Entity.Migrations
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
+            var @namespace = "Migrations";
+
             var generatedMigration
                 = codeGenerator.Generate(
                     "201108162311111_Migration",
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "Migrations",
+                    @namespace,
                     "Migration");
 
             var migrationAssembly = new MigrationAssembly(
-                new MigrationCompiler("cs").Compile(generatedMigration.UserCode, generatedMigration.DesignerCode),
-                "Migrations");
+                new MigrationCompiler("cs").Compile(@namespace, generatedMigration),
+                @namespace);
 
             Assert.Equal(1, migrationAssembly.MigrationIds.Count());
         }
@@ -97,13 +100,15 @@ namespace System.Data.Entity.Migrations
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
+            var @namespace = "Migrations";
+
             var generatedMigration1
                 = codeGenerator.Generate(
                     "201108162311111_Migration1",
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "Migrations",
+                    @namespace,
                     "Migration1");
 
             var generatedMigration2
@@ -112,7 +117,7 @@ namespace System.Data.Entity.Migrations
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "Migrations",
+                    @namespace,
                     "Migration2");
 
             var generatedMigration3
@@ -121,20 +126,18 @@ namespace System.Data.Entity.Migrations
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "Migrations",
+                    @namespace,
                     "Migration3");
 
             var migrationAssembly
                 = new MigrationAssembly(
                     new MigrationCompiler("cs")
                         .Compile(
-                            generatedMigration1.UserCode,
-                            generatedMigration1.DesignerCode,
-                            generatedMigration2.UserCode,
-                            generatedMigration2.DesignerCode,
-                            generatedMigration3.UserCode,
-                            generatedMigration3.DesignerCode),
-                    "Migrations");
+                            @namespace,
+                            generatedMigration1,
+                            generatedMigration2,
+                            generatedMigration3),
+                    @namespace);
 
             Assert.Equal(3, migrationAssembly.MigrationIds.Count());
             Assert.Equal("201108162311111_Migration1", migrationAssembly.MigrationIds.First());
@@ -146,17 +149,19 @@ namespace System.Data.Entity.Migrations
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
+            var @namespace = "CorrectNamespace";
+
             var generatedMigration
                 = codeGenerator.Generate(
                     "201108162311111_Migration",
                     new MigrationOperation[] { },
                     "Source",
                     "Target",
-                    "CorrectNamespace",
+                    @namespace,
                     "Migration");
 
             var migrationAssembly = new MigrationAssembly(
-                new MigrationCompiler("cs").Compile(generatedMigration.UserCode, generatedMigration.DesignerCode),
+                new MigrationCompiler("cs").Compile(@namespace, generatedMigration),
                 "WrongNamespace");
 
             Assert.Equal(0, migrationAssembly.MigrationIds.Count());

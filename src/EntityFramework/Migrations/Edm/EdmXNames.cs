@@ -7,22 +7,22 @@
 
     internal static class EdmXNames
     {
-        private static readonly XNamespace CsdlNamespaceV2
+        private static readonly XNamespace _csdlNamespaceV2
             = XNamespace.Get("http://schemas.microsoft.com/ado/2008/09/edm");
 
-        private static readonly XNamespace MslNamespaceV2
+        private static readonly XNamespace _mslNamespaceV2
             = XNamespace.Get("http://schemas.microsoft.com/ado/2008/09/mapping/cs");
 
-        private static readonly XNamespace SsdlNamespaceV2
+        private static readonly XNamespace _ssdlNamespaceV2
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
 
-        private static readonly XNamespace CsdlNamespaceV3
+        private static readonly XNamespace _csdlNamespaceV3
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm");
 
-        private static readonly XNamespace MslNamespaceV3
+        private static readonly XNamespace _mslNamespaceV3
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/mapping/cs");
 
-        private static readonly XNamespace SsdlNamespaceV3
+        private static readonly XNamespace _ssdlNamespaceV3
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm/ssdl");
 
         public static string ActionAttribute(this XElement element)
@@ -201,8 +201,8 @@
 
                 return new List<XName>
                            {
-                               CsdlNamespaceV3 + elementName,
-                               CsdlNamespaceV2 + elementName
+                               _csdlNamespaceV3 + elementName,
+                               _csdlNamespaceV2 + elementName
                            };
             }
         }
@@ -228,8 +228,8 @@
 
                 return new List<XName>
                            {
-                               MslNamespaceV3 + elementName,
-                               MslNamespaceV2 + elementName
+                               _mslNamespaceV3 + elementName,
+                               _mslNamespaceV2 + elementName
                            };
             }
         }
@@ -254,8 +254,8 @@
 
                 return new List<XName>
                            {
-                               SsdlNamespaceV3 + elementName,
-                               SsdlNamespaceV2 + elementName
+                               _ssdlNamespaceV3 + elementName,
+                               _ssdlNamespaceV2 + elementName
                            };
             }
         }

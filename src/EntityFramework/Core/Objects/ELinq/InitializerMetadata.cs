@@ -28,13 +28,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private static long s_identifier;
         internal readonly string Identity;
-        private static readonly string s_identifierPrefix = typeof(InitializerMetadata).Name;
+        private static readonly string _identifierPrefix = typeof(InitializerMetadata).Name;
 
         private InitializerMetadata(Type clrType)
         {
             Debug.Assert(null != clrType);
             ClrType = clrType;
-            Identity = s_identifierPrefix + Interlocked.Increment(ref s_identifier).ToString(CultureInfo.InvariantCulture);
+            Identity = _identifierPrefix + Interlocked.Increment(ref s_identifier).ToString(CultureInfo.InvariantCulture);
         }
 
         // Gets the kind of this initializer (grouping, row, etc.)
@@ -488,7 +488,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return _navigationProperty.Equals(otherInitializer._navigationProperty);
             }
 
-            private static readonly MethodInfo s_createEntityCollectionMethod =
+            private static readonly MethodInfo _createEntityCollectionMethod =
                 typeof(EntityCollectionInitializerMetadata).GetMethod(
                     "CreateEntityCollection",
                     BindingFlags.Static | BindingFlags.Public);
@@ -499,7 +499,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Debug.Assert(propertyTranslatorResults[1] is CollectionTranslatorResult, "not a collection?");
 
                 var elementType = GetElementType();
-                var createEntityCollectionMethod = s_createEntityCollectionMethod.MakeGenericMethod(elementType);
+                var createEntityCollectionMethod = _createEntityCollectionMethod.MakeGenericMethod(elementType);
 
                 Expression shaper = Translator.Shaper_Parameter;
                 var owner = propertyTranslatorResults[0].Expression;

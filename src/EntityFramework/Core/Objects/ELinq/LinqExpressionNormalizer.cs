@@ -435,7 +435,7 @@
             return result;
         }
 
-        private static readonly MethodInfo s_relationalOperatorPlaceholderMethod =
+        private static readonly MethodInfo _relationalOperatorPlaceholderMethod =
             typeof(LinqExpressionNormalizer).GetMethod("RelationalOperatorPlaceholder", BindingFlags.Static | BindingFlags.NonPublic);
 
         /// <summary>
@@ -467,7 +467,7 @@
         /// </summary>
         private static bool TryCreateRelationalOperator(ExpressionType op, Expression left, Expression right, out BinaryExpression result)
         {
-            var relationalOperatorPlaceholderMethod = s_relationalOperatorPlaceholderMethod.MakeGenericMethod(left.Type, right.Type);
+            var relationalOperatorPlaceholderMethod = _relationalOperatorPlaceholderMethod.MakeGenericMethod(left.Type, right.Type);
 
             switch (op)
             {

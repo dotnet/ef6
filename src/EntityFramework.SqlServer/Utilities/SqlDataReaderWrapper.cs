@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.SqlServer.Utilities
 {
-    using System;
     using System.Collections;
     using System.Data.SqlClient;
     using System.Data.SqlTypes;
@@ -12,9 +11,9 @@
     /// <summary>
     /// This is a wrapper for <see cref="SqlDataReader"/> that allows a mock implementation to be used.
     /// </summary>
-    internal class SqlDataReaderWrapper : MarshalByRefObject 
+    internal class SqlDataReaderWrapper : MarshalByRefObject
     {
-        private SqlDataReader _sqlDataReader;
+        private readonly SqlDataReader _sqlDataReader;
 
         protected SqlDataReaderWrapper()
         {

@@ -680,9 +680,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (null != nestOp)
             {
 #if DEBUG
-                // check to see if the predicate references any of the collection
-                // expressions. If it doesn't, then we can push the filter down, but
-                // even if it does it's probably OK.
+    // check to see if the predicate references any of the collection
+    // expressions. If it doesn't, then we can push the filter down, but
+    // even if it does it's probably OK.
                 var predicateNodeInfo = Command.GetNodeInfo(n.Child1);
                 foreach (var ci in nestOp.CollectionInfo)
                 {
@@ -1375,10 +1375,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var nestNode = projectNode.Child0;
             var nestOp = nestNode.Op as NestBaseOp;
 #if DEBUG
-            // NOTE: I do not believe that we need to remap the nest op in terms of
-            //       the project op, but I can't prove it right now; if the assert
-            //       below fires, I was wrong.
-            //Dictionary<Var, Var> projectToNestVarMap = new Dictionary<Var, Var>();
+    // NOTE: I do not believe that we need to remap the nest op in terms of
+    //       the project op, but I can't prove it right now; if the assert
+    //       below fires, I was wrong.
+    //Dictionary<Var, Var> projectToNestVarMap = new Dictionary<Var, Var>();
 
             Command.RecomputeNodeInfo(projectNode);
             var projectNodeInfo = Command.GetExtendedNodeInfo(projectNode);

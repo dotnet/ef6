@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
@@ -162,7 +161,6 @@
                 EdmType modelType;
                 int ordinal;
 
-                
                 if (TryGetColumnOrdinalFromReader(reader, prop.Name, out ordinal) &&
                     workspace.TryDetermineCSpaceModelType(propType, out modelType) &&
                     (Helper.IsScalarType(modelType)) &&

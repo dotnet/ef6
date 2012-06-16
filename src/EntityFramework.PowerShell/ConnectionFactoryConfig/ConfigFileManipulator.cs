@@ -44,8 +44,9 @@
             }
 
             var factoryElement = entityFramework
-                .GetOrCreateElement(DefaultConnectionFactoryElementName,
-                                    new XAttribute("type", specification.ConnectionFactoryName));
+                .GetOrCreateElement(
+                    DefaultConnectionFactoryElementName,
+                    new XAttribute("type", specification.ConnectionFactoryName));
 
             AddFactoryArguments(factoryElement, specification);
 

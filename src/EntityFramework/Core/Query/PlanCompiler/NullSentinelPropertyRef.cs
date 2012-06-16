@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     /// </summary>
     internal class NullSentinelPropertyRef : PropertyRef
     {
-        private static readonly NullSentinelPropertyRef s_singleton = new NullSentinelPropertyRef();
+        private static readonly NullSentinelPropertyRef _singleton = new NullSentinelPropertyRef();
 
         private NullSentinelPropertyRef()
         {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal static NullSentinelPropertyRef Instance
         {
-            get { return s_singleton; }
+            get { return _singleton; }
         }
 
         /// <summary>

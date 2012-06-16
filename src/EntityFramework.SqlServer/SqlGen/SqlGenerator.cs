@@ -293,10 +293,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region Statics
 
         private const byte DefaultDecimalPrecision = 18;
-        private static readonly char[] HexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         // Define lists of functions that take string arugments and return strings.
-        private static readonly ISet<string> CanonicalAndStoreStringFunctionsOneArg =
+        private static readonly ISet<string> _canonicalAndStoreStringFunctionsOneArg =
             new HashSet<string>(StringComparer.Ordinal)
                 {
                     "Edm.Trim",
@@ -505,7 +505,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // Literals will not be converted to parameters.
 
             ISqlFragment result;
-            if (BuiltInTypeKind.CollectionType == targetTree.Query.ResultType.EdmType.BuiltInTypeKind)
+            if (BuiltInTypeKind.CollectionType
+                == targetTree.Query.ResultType.EdmType.BuiltInTypeKind)
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
                 Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
@@ -736,7 +737,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 case DbExpressionKind.GreaterThanOrEquals:
                     result = VisitComparisonExpression(" >= ", e.Left, e.Right);
                     break;
-                // The parser does not generate the expression kind below.
+                    // The parser does not generate the expression kind below.
                 case DbExpressionKind.NotEquals:
                     result = VisitComparisonExpression(" <> ", e.Left, e.Right);
                     break;
@@ -810,7 +811,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 return true;
             }
 
-            if (expr.ExpressionKind == DbExpressionKind.Function)
+            if (expr.ExpressionKind
+                == DbExpressionKind.Function)
             {
                 var functionExpr = (DbFunctionExpression)expr;
                 var function = functionExpr.Function;
@@ -824,7 +826,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // All string arguments to the function must be candidates to match target pattern.
                 var functionFullName = function.FullName;
 
-                if (CanonicalAndStoreStringFunctionsOneArg.Contains(functionFullName))
+                if (_canonicalAndStoreStringFunctionsOneArg.Contains(functionFullName))
                 {
                     return MatchTargetPatternForForcingNonUnicode(functionExpr.Arguments[0]);
                 }
@@ -952,7 +954,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         result.Append(
                             EscapeSingleQuote(
                                 ((DateTimeOffset)e.Value).ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture), false
-                            /* IsUnicode */));
+                                /* IsUnicode */));
                         result.Append(", 121)");
                         break;
 
@@ -1020,7 +1022,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                     default:
                         // all known scalar types should been handled already.
-                        throw new NotSupportedException(Strings.NoStoreTypeForEdmType(resultType.EdmType.Name, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
+                        throw new NotSupportedException(
+                            Strings.NoStoreTypeForEdmType(resultType.EdmType.Name, ((PrimitiveType)(resultType.EdmType)).PrimitiveTypeKind));
                 }
             }
             else
@@ -1094,17 +1097,20 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (double.IsNaN(value))
             {
-                throw new NotSupportedException(Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double)));
+                throw new NotSupportedException(
+                    Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double)));
             }
             else if (double.IsPositiveInfinity(value))
             {
-                throw new NotSupportedException(Strings.SqlGen_TypedPositiveInfinityNotSupported(
-                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
+                throw new NotSupportedException(
+                    Strings.SqlGen_TypedPositiveInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
             }
             else if (double.IsNegativeInfinity(value))
             {
-                throw new NotSupportedException(Strings.SqlGen_TypedNegativeInfinityNotSupported(
-                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
+                throw new NotSupportedException(
+                    Strings.SqlGen_TypedNegativeInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Double), typeof(Double).Name));
             }
         }
 
@@ -1117,17 +1123,20 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (float.IsNaN(value))
             {
-                throw new NotSupportedException(Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single)));
+                throw new NotSupportedException(
+                    Strings.SqlGen_TypedNaNNotSupported(Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single)));
             }
             else if (float.IsPositiveInfinity(value))
             {
-                throw new NotSupportedException(Strings.SqlGen_TypedPositiveInfinityNotSupported(
-                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
+                throw new NotSupportedException(
+                    Strings.SqlGen_TypedPositiveInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
             }
             else if (float.IsNegativeInfinity(value))
             {
-                throw new NotSupportedException(Strings.SqlGen_TypedNegativeInfinityNotSupported(
-                    Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
+                throw new NotSupportedException(
+                    Strings.SqlGen_TypedNegativeInfinityNotSupported(
+                        Enum.GetName(typeof(PrimitiveTypeKind), PrimitiveTypeKind.Single), typeof(Single).Name));
             }
         }
 
@@ -1734,7 +1743,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         public override ISqlFragment Visit(DbNewInstanceExpression e)
         {
-            if (BuiltInTypeKind.CollectionType == e.ResultType.EdmType.BuiltInTypeKind)
+            if (BuiltInTypeKind.CollectionType
+                == e.ResultType.EdmType.BuiltInTypeKind)
             {
                 return VisitCollectionConstructor(e);
             }
@@ -2034,7 +2044,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             /// <returns>True if the types are allowed and equal, false otherwise</returns>
             public bool Equals(DbExpression x, DbExpression y)
             {
-                if (x.ExpressionKind != y.ExpressionKind)
+                if (x.ExpressionKind
+                    != y.ExpressionKind)
                 {
                     return false;
                 }
@@ -2729,7 +2740,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             if (kind != DbExpressionKind.Or &&
                 kind != DbExpressionKind.And &&
-                kind != DbExpressionKind.Plus &&
+                kind != DbExpressionKind.Plus
+                &&
                 kind != DbExpressionKind.Multiply)
             {
                 return new[] { left, right };
@@ -3261,7 +3273,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 for (var i = 0; i < e.Arguments.Count; ++i)
                 {
                     var argument = e.Arguments[i];
-                    if (BuiltInTypeKind.RowType == argument.ResultType.EdmType.BuiltInTypeKind)
+                    if (BuiltInTypeKind.RowType
+                        == argument.ResultType.EdmType.BuiltInTypeKind)
                     {
                         // We do not support nested records or other complex objects.
                         throw new NotSupportedException();
@@ -3973,9 +3986,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 case DbExpressionKind.Distinct:
                     return result.Select.Top == null
-                        // #494803: The projection after distinct may not project all 
-                        // columns used in the Order By
-                        // Improvement: Consider getting rid of the Order By instead
+                           // #494803: The projection after distinct may not project all 
+                           // columns used in the Order By
+                           // Improvement: Consider getting rid of the Order By instead
                            && result.OrderBy.IsEmpty;
 
                 case DbExpressionKind.Filter:
@@ -4001,8 +4014,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     // a subset of the input columns
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
-                        // SQLBUDT #513640 - If distinct is specified, the projection may affect
-                        // the cardinality of the results, thus a new statement must be started.
+                           // SQLBUDT #513640 - If distinct is specified, the projection may affect
+                           // the cardinality of the results, thus a new statement must be started.
                            && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Skip:
@@ -4015,10 +4028,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
                            && result.OrderBy.IsEmpty
-                        // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
-                        // to be in the same statement as the Sort (see comment above for the Project case).
-                        // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
-                        // we need to start a new statement. 
+                           // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
+                           // to be in the same statement as the Sort (see comment above for the Project case).
+                           // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
+                           // we need to start a new statement. 
                            && !result.Select.IsDistinct;
 
                 default:
@@ -4215,7 +4228,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var sb = new StringBuilder(binaryArray.Length * 2);
             for (var i = 0; i < binaryArray.Length; i++)
             {
-                sb.Append(HexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(HexDigits[binaryArray[i] & 0x0F]);
+                sb.Append(_hexDigits[(binaryArray[i] & 0xF0) >> 4]).Append(_hexDigits[binaryArray[i] & 0x0F]);
             }
             return sb.ToString();
         }

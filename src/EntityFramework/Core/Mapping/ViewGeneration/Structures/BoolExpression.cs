@@ -379,11 +379,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal BoolExpression MakeCopy()
         {
-            var copy = Create(m_tree.Accept(CopyVisitorInstance));
+            var copy = Create(m_tree.Accept(_copyVisitorInstance));
             return copy;
         }
 
-        private static readonly CopyVisitor CopyVisitorInstance = new CopyVisitor();
+        private static readonly CopyVisitor _copyVisitorInstance = new CopyVisitor();
 
         private class CopyVisitor : BasicVisitor<BoolDomainConstraint>
         {

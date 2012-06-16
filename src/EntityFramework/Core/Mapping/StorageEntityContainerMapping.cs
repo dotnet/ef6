@@ -8,10 +8,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<ViewGeneration.Structures.Cell>;
 
     /// <summary>
@@ -351,10 +349,10 @@ namespace System.Data.Entity.Core.Mapping
         }
 
 #if DEBUG
-        ///<summary>
-        /// The method builds up the spaces required for pretty printing each 
-        /// part of the mapping.
-        ///</summary>
+    ///<summary>
+    /// The method builds up the spaces required for pretty printing each 
+    /// part of the mapping.
+    ///</summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Console.Write(System.String)")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",

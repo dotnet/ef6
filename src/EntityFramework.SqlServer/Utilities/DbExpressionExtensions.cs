@@ -16,7 +16,7 @@ namespace System.Data.Entity.SqlServer.Utilities
         /// descendants of a (non-leaf) node.</param>
         /// <returns>An enumerable containing the leaf nodes.</returns>
         public static IEnumerable<DbExpression> GetLeafNodes(
-            this DbExpression root, 
+            this DbExpression root,
             DbExpressionKind kind,
             Func<DbExpression, IEnumerable<DbExpression>> getChildNodes)
         {

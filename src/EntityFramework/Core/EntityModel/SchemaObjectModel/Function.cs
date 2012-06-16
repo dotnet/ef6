@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         #region Static Fields
 
-        private static readonly Regex s_typeParser = new Regex(
+        private static readonly Regex _typeParser = new Regex(
             @"^(?<modifier>((Collection)|(Ref)))\s*\(\s*(?<typeName>\S*)\s*\)$", RegexOptions.Compiled);
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             isRefType = false;
             typeModifier = TypeModifier.None;
 
-            var match = s_typeParser.Match(type);
+            var match = _typeParser.Match(type);
             if (match.Success)
             {
                 type = match.Groups["typeName"].Value;

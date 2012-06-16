@@ -4,14 +4,14 @@
 
     internal static class TaskHelper
     {
-        static internal Task<T> FromException<T>(Exception ex)
+        internal static Task<T> FromException<T>(Exception ex)
         {
             var completion = new TaskCompletionSource<T>();
             completion.SetException(ex);
             return completion.Task;
         }
 
-        static internal Task<T> FromCancellation<T>()
+        internal static Task<T> FromCancellation<T>()
         {
             var completion = new TaskCompletionSource<T>();
             completion.SetCanceled();

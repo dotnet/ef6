@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
 
     internal static class V2ConventionSet
     {
-        public static readonly IConvention[] Conventions;
+        private static readonly IConvention[] _conventions;
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static V2ConventionSet()
@@ -20,7 +20,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
 
             conventions[columnOrderingConventionIndex] = new ColumnOrderingConventionStrict();
 
-            Conventions = conventions.ToArray();
+            _conventions = conventions.ToArray();
+        }
+
+        public static IConvention[] Conventions
+        {
+            get { return _conventions; }
         }
     }
 }

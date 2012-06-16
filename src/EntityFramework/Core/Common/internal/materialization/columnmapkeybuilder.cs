@@ -269,7 +269,7 @@
         {
             // MultipleDiscriminator maps contain an opaque discriminator delegate, so recompilation
             // is always required. Generate a unique key for the discriminator.
-            // FUTURE(CMeek):: consider using either a separate cache for MultipleDiscriminator OR make the delegate transparent
+            // FUTURE: consider using either a separate cache for MultipleDiscriminator OR make the delegate transparent
             Append(String.Format(CultureInfo.InvariantCulture, "MD-{0}", Guid.NewGuid()));
         }
 

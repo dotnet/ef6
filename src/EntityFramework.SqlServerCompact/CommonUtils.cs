@@ -72,7 +72,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <param name="fileName">Database file path.</param>
         public static void DeleteDatabase(string fileName)
         {
-            var expandedFileName = CommonUtils.ReplaceDataDirectory(fileName);
+            var expandedFileName = ReplaceDataDirectory(fileName);
             if (!DatabaseExists(expandedFileName))
             {
                 throw new InvalidOperationException(EntityRes.GetString(EntityRes.DatabaseDoesNotExist));
@@ -88,7 +88,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <returns></returns>
         public static bool DatabaseExists(string fileName)
         {
-            var expandedFileName = CommonUtils.ReplaceDataDirectory(fileName);
+            var expandedFileName = ReplaceDataDirectory(fileName);
             return File.Exists(expandedFileName);
         }
     }

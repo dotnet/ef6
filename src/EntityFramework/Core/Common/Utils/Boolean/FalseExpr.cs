@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// <typeparam name="T_Identifier">The type of leaf term identifiers in this expression.</typeparam>
     internal sealed class FalseExpr<T_Identifier> : BoolExpr<T_Identifier>
     {
-        private static readonly FalseExpr<T_Identifier> s_value = new FalseExpr<T_Identifier>();
+        private static readonly FalseExpr<T_Identifier> _value = new FalseExpr<T_Identifier>();
 
         // private constructor so that we control existence of False instance
         private FalseExpr()
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         internal static FalseExpr<T_Identifier> Value
         {
-            get { return s_value; }
+            get { return _value; }
         }
 
         internal override ExprType ExprType

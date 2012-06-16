@@ -1,33 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Dictionary>
-    <Words>
-        <Recognized>
-            <Word>Edm</Word>
-            <Word>Edmx</Word>
-            <Word>fwlink</Word>
-            <Word>asax</Word>
-            <Word>Memberwise</Word>
-            <Word>Scaffolded</Word>
-            <Word>Scaffolder</Word>
-            <Word>Ce</Word>
-            <Word>Migrator</Word>
-            <Word>Niladic</Word>
-            <Word>Multiset</Word>
-            <Word>Composable</Word>
-            <Word>memberless</Word>
-            <Word>csdl</Word>
-            <Word>ssdl</Word>
-            <Word>msl</Word>
-        </Recognized>
-        <Compound>
-            <Term CompoundAlternate="StartUp">startup</Term>
-        </Compound>
-    </Words>
-    <Acronyms>
-        <CasingExceptions>
-            <Acronym>Db</Acronym>
-            <Acronym>Ce</Acronym>
-        </CasingExceptions>
-    </Acronyms>
+  <Words>
+    <Recognized>
+      <Word>Edm</Word>
+      <Word>Edmx</Word>
+      <Word>fwlink</Word>
+      <Word>asax</Word>
+      <Word>Memberwise</Word>
+      <Word>Scaffolded</Word>
+      <Word>Scaffolder</Word>
+      <Word>Ce</Word>
+      <Word>Migrator</Word>
+      <Word>Niladic</Word>
+      <Word>Multiset</Word>
+      <Word>Composable</Word>
+      <Word>memberless</Word>
+      <Word>csdl</Word>
+      <Word>ssdl</Word>
+      <Word>msl</Word>
+    </Recognized>
+    <Compound>
+      <Term CompoundAlternate="StartUp">startup</Term>
+    </Compound>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>Db</Acronym>
+      <Acronym>Ce</Acronym>
+    </CasingExceptions>
+  </Acronyms>
 </Dictionary>

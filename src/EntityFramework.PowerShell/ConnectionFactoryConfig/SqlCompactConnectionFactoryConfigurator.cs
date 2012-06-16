@@ -36,7 +36,6 @@
                                    new ConnectionFactorySpecification(
                                         ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                                         ConnectionFactorySpecification.SqlCompactProviderName))
-
                            }));
         }
     }

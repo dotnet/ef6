@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
 
     /// <summary>
     /// Mapping metadata for Complex Types.
@@ -191,11 +190,11 @@ namespace System.Data.Entity.Core.Mapping
         }
 
 #if DEBUG
-        /// <summary>
-        /// This method is primarily for debugging purposes.
-        /// Will be removed shortly.
-        /// </summary>
-        /// <param name="index"></param>
+    /// <summary>
+    /// This method is primarily for debugging purposes.
+    /// Will be removed shortly.
+    /// </summary>
+    /// <param name="index"></param>
         internal void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

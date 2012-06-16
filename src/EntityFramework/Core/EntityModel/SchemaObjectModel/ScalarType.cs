@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal const string DateTimeFormat = @"yyyy-MM-dd HH\:mm\:ss.fffZ";
         internal const string TimeFormat = @"HH\:mm\:ss.fffffffZ";
         internal const string DateTimeOffsetFormat = @"yyyy-MM-dd HH\:mm\:ss.fffffffz";
-        private static readonly Regex _BinaryValueValidator = new Regex("^0[xX][0-9a-fA-F]+$", RegexOptions.Compiled);
+        private static readonly Regex _binaryValueValidator = new Regex("^0[xX][0-9a-fA-F]+$", RegexOptions.Compiled);
 
-        private static readonly Regex _GuidValueValidator = new Regex(
+        private static readonly Regex _guidValueValidator = new Regex(
             "[0-9a-fA-F]{8,8}(-[0-9a-fA-F]{4,4}){3,3}-[0-9a-fA-F]{12,12}", RegexOptions.Compiled);
 
         private readonly PrimitiveType _primitiveType;
@@ -241,7 +241,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private static bool TryParseGuid(string text, out object value)
         {
-            if (!_GuidValueValidator.IsMatch(text))
+            if (!_guidValueValidator.IsMatch(text))
             {
                 value = null;
                 return false;
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private static bool TryParseBinary(string text, out object value)
         {
             //value must look like 0xddddd...
-            if (!_BinaryValueValidator.IsMatch(text))
+            if (!_binaryValueValidator.IsMatch(text))
             {
                 value = null;
                 return false;

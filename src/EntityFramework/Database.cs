@@ -26,7 +26,7 @@
         #region Fields and constructors
 
         // Maps derived DbContext type to strategy that acts on that type.
-        private static readonly ConcurrentDictionary<Type, InitializerLockPair> InitializationStrategies =
+        private static readonly ConcurrentDictionary<Type, InitializerLockPair> _initializationStrategies =
             new ConcurrentDictionary<Type, InitializerLockPair>();
 
         // The default factory object used to create a DbConnection from a database name.
@@ -95,7 +95,7 @@
             where TContext : DbContext
         {
             var executor = strategy == null ? (Action<DbContext>)null : c => strategy.InitializeDatabase((TContext)c);
-            InitializationStrategies.AddOrUpdate(
+            _initializationStrategies.AddOrUpdate(
                 typeof(TContext),
                 new InitializerLockPair(executor, lockStrategy),
                 (t, e) => e.IsLocked && !lockStrategy ? e : new InitializerLockPair(executor, lockStrategy));
@@ -138,7 +138,7 @@
         {
             get
             {
-                return InitializationStrategies.GetOrAdd(
+                return _initializationStrategies.GetOrAdd(
                     _internalContext.Owner.GetType(),
                     t =>
                     new InitializerLockPair(
@@ -496,10 +496,10 @@
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <param name = "parameters">The parameters to apply to the command string.</param>
         /// <returns>A Task containing the result returned by the database after executing the command.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "sql"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken"),
-        SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parameters")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "sql")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parameters")]
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));

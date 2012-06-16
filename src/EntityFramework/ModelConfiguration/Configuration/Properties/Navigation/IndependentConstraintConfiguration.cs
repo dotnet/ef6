@@ -6,15 +6,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
     internal class IndependentConstraintConfiguration : ConstraintConfiguration
     {
-        public static readonly ConstraintConfiguration Instance = new IndependentConstraintConfiguration();
+        private static readonly ConstraintConfiguration _instance = new IndependentConstraintConfiguration();
 
         private IndependentConstraintConfiguration()
         {
         }
 
+        public static ConstraintConfiguration Instance
+        {
+            get { return _instance; }
+        }
+
         internal override ConstraintConfiguration Clone()
         {
-            return Instance;
+            return _instance;
         }
 
         internal override void Configure(

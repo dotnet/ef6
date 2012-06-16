@@ -473,7 +473,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// true if there are more result sets;
         /// false otherwise
         /// </returns>
-        public async override Task<bool> NextResultAsync(CancellationToken cancellationToken)
+        public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
             try
             {

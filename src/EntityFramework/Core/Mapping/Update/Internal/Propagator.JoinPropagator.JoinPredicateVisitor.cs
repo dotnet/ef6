@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 private readonly List<DbExpression> m_leftKeySelectors;
                 private readonly List<DbExpression> m_rightKeySelectors;
-                private static readonly string s_visitorName = typeof(JoinConditionVisitor).FullName;
+                private static readonly string _visitorName = typeof(JoinConditionVisitor).FullName;
 
                 #endregion
 
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 protected override string VisitorName
                 {
-                    get { return s_visitorName; }
+                    get { return _visitorName; }
                 }
 
                 #endregion

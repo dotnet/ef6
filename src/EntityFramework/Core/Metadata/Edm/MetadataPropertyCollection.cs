@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        private static readonly Memoizer<Type, ItemTypeInformation> s_itemTypeMemoizer =
+        private static readonly Memoizer<Type, ItemTypeInformation> _itemTypeMemoizer =
             new Memoizer<Type, ItemTypeInformation>(clrType => new ItemTypeInformation(clrType), null);
 
         // Given an item, returns all system type attributes for the item.
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Retrieves metadata for type.
         private static ItemTypeInformation GetItemTypeInformation(Type clrType)
         {
-            return s_itemTypeMemoizer.Evaluate(clrType);
+            return _itemTypeMemoizer.Evaluate(clrType);
         }
 
         /// <summary>

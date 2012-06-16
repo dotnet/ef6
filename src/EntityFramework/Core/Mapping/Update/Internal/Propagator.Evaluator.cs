@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             #region Fields
 
             private readonly PropagatorResult m_row;
-            private static readonly string s_visitorName = typeof(Evaluator).FullName;
+            private static readonly string _visitorName = typeof(Evaluator).FullName;
 
             #endregion
 
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             protected override string VisitorName
             {
-                get { return s_visitorName; }
+                get { return _visitorName; }
             }
 
             #endregion

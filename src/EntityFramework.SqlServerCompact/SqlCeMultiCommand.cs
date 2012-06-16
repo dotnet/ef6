@@ -1,4 +1,3 @@
-
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Data.Common;

@@ -19,7 +19,7 @@
     {
         #region Infrastructure/setup
 
-        private static readonly string ConnectionString;
+        private static readonly string _connectionString;
 
         static SpatialTests()
         {
@@ -31,7 +31,7 @@
             const string baseConnectionString =
                 @"metadata=.\226644SpatialModel.csdl|.\226644SpatialModel.ssdl|.\226644SpatialModel.msl;
                                                   provider=System.Data.SqlClient;provider connection string='{0}'";
-            ConnectionString = String.Format(CultureInfo.InvariantCulture, baseConnectionString,
+            _connectionString = String.Format(CultureInfo.InvariantCulture, baseConnectionString,
                                              SimpleConnectionString<SpatialNorthwindContext>());
         }
 
@@ -43,7 +43,7 @@
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var suppliers = (from x in context.Suppliers
                                  select
@@ -58,7 +58,7 @@
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var suppliers = (from x in context.Suppliers
                                  select
@@ -80,7 +80,7 @@
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var suppliers = (from x in context.Suppliers
                                  select
@@ -95,7 +95,7 @@
         [Fact]
         public void DbQuery_SelectMany_with_TVFs_and_spatial_types_works()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var results =
                     (from s1 in
@@ -113,7 +113,7 @@
         [Fact]
         public void DbQuery_SelectMany_with_TVFs_and_spatial_types_using_Point_in_function_import_works()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 context.Database.Initialize(force: false);
 
@@ -136,7 +136,7 @@
         [Fact]
         public void DbQuery_SelectMany_with_TVFs_and_spatial_types_using_Point_and_Point_return_in_function_import_works()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 context.Database.Initialize(force: false);
 
@@ -160,7 +160,7 @@
         [Fact]
         public void Can_query_for_strongly_typed_geographic_point_using_type_construction()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var query =
                     @"select value ProductivityApiTests.SupplierWithLocation(-77, N'MyName', Edm.GeographyFromText(""POINT(-122.335576 47.610676)"")) 
@@ -172,7 +172,7 @@
         [Fact]
         public void Can_query_for_strongly_typed_geometric_point_using_type_construction()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var query =
                     @"select value ProductivityApiTests.WidgetWithGeometry(-77, N'MyName', Edm.GeometryFromText(""POINT(-122.335576 47.610676)""), ProductivityApiTests.ComplexWithGeometry(N'A', Edm.GeometryFromText(""POINT(-122.335576 47.610676)""))) 
@@ -190,7 +190,7 @@
         [Fact]
         public void Can_query_for_strongly_typed_geometric_point_using_complex_type_type_construction()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var query =
                     @"select value ProductivityApiTests.ComplexWithGeometry(N'A', Edm.GeometryFromText(""POINT(-122.335576 47.610676)"")) 
@@ -230,7 +230,7 @@
         public void
             Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var query =
                     @"(select o.[AGeometricLineString], 
@@ -256,7 +256,7 @@
         public void
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception()
         {
-            using (var context = new SpatialNorthwindContext(ConnectionString))
+            using (var context = new SpatialNorthwindContext(_connectionString))
             {
                 var query =
                     @"select o.[Location]

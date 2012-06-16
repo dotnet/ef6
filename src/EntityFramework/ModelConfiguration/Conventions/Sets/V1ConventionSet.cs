@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class V1ConventionSet
     {
-        public static readonly IConvention[] Conventions
+        private static readonly IConvention[] _conventions
             = new IConvention[]
                   {
                       // Type Configuration
@@ -48,5 +48,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
                       new ManyToManyCascadeDeleteConvention(),
                       new MappingInheritedPropertiesSupportConvention()
                   };
+
+        public static IConvention[] Conventions
+        {
+            get { return _conventions; }
+        }
     }
 }

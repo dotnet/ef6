@@ -381,7 +381,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             private readonly DbModificationCommandTree _commandTree;
             private readonly List<DbParameter> _parameters;
             private readonly Dictionary<EdmMember, DbParameter> _memberValues;
-            private static readonly AliasGenerator s_parameterNames = new AliasGenerator("@", 1000);
+            private static readonly AliasGenerator _parameterNames = new AliasGenerator("@", 1000);
             private readonly bool _isLocalProvider;
 
             internal List<DbParameter> Parameters
@@ -400,7 +400,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 // Suppress the MaxLength facet in the type usage
                 const bool ignoreMaxLengthFacet = true;
                 var parameter = SqlCeProviderServices.CreateSqlCeParameter(
-                    s_parameterNames.GetName(_parameters.Count), type, value, ignoreMaxLengthFacet, _isLocalProvider);
+                    _parameterNames.GetName(_parameters.Count), type, value, ignoreMaxLengthFacet, _isLocalProvider);
 
                 _parameters.Add(parameter);
 

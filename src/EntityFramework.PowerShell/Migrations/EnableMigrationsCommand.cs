@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Migrations.Resources;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -81,16 +81,7 @@
 
                                 if (scaffoldedMigration != null)
                                 {
-                                    var userCodeFileName = scaffoldedMigration.MigrationId + "."
-                                                           + scaffoldedMigration.Language;
-                                    var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
-                                    var designerCodeFileName = scaffoldedMigration.MigrationId + ".Designer."
-                                                               + scaffoldedMigration.Language;
-                                    var designerCodePath = Path.Combine(
-                                        scaffoldedMigration.Directory, designerCodeFileName);
-
-                                    project.AddFile(userCodePath, scaffoldedMigration.UserCode);
-                                    project.AddFile(designerCodePath, scaffoldedMigration.DesignerCode);
+                                    new MigrationWriter(this).Write(scaffoldedMigration);
 
                                     WriteWarning(
                                         Strings.EnableMigrations_InitialScaffold(scaffoldedMigration.MigrationId));
@@ -137,7 +128,7 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
-            var stream = GetType().Assembly.GetManifestResourceStream("System.Templates." + name);
+            var stream = GetType().Assembly.GetManifestResourceStream("System.Data.Entity.Templates." + name);
             Contract.Assert(stream != null);
 
             using (var reader = new StreamReader(stream, Encoding.UTF8))

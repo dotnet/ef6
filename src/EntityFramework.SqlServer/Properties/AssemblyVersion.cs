@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 [assembly: SecurityTransparent]
-
 [assembly: SecurityCritical]
 [assembly: ComCompatibleVersion(1, 0, 3300, 0)]
 [assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]

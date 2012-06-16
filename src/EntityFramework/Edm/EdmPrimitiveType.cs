@@ -16,104 +16,104 @@ namespace System.Data.Entity.Edm
         : EdmScalarType
 
     {
-        private static readonly EdmPrimitiveType binaryType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Binary);
-        private static readonly EdmPrimitiveType booleanType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Boolean);
-        private static readonly EdmPrimitiveType byteType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Byte);
-        private static readonly EdmPrimitiveType dateTimeType = new EdmPrimitiveType(EdmPrimitiveTypeKind.DateTime);
+        private static readonly EdmPrimitiveType _binaryType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Binary);
+        private static readonly EdmPrimitiveType _booleanType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Boolean);
+        private static readonly EdmPrimitiveType _byteType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Byte);
+        private static readonly EdmPrimitiveType _dateTimeType = new EdmPrimitiveType(EdmPrimitiveTypeKind.DateTime);
 
-        private static readonly EdmPrimitiveType dateTimeOffsetType =
+        private static readonly EdmPrimitiveType _dateTimeOffsetType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset);
 
-        private static readonly EdmPrimitiveType decimalType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Decimal);
-        private static readonly EdmPrimitiveType doubleType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Double);
-        private static readonly EdmPrimitiveType guidType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Guid);
-        private static readonly EdmPrimitiveType int16Type = new EdmPrimitiveType(EdmPrimitiveTypeKind.Int16);
-        private static readonly EdmPrimitiveType int32Type = new EdmPrimitiveType(EdmPrimitiveTypeKind.Int32);
-        private static readonly EdmPrimitiveType int64Type = new EdmPrimitiveType(EdmPrimitiveTypeKind.Int64);
-        private static readonly EdmPrimitiveType sbyteType = new EdmPrimitiveType(EdmPrimitiveTypeKind.SByte);
-        private static readonly EdmPrimitiveType singleType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Single);
-        private static readonly EdmPrimitiveType stringType = new EdmPrimitiveType(EdmPrimitiveTypeKind.String);
-        private static readonly EdmPrimitiveType timeType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Time);
-        private static readonly EdmPrimitiveType geometryType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Geometry);
+        private static readonly EdmPrimitiveType _decimalType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Decimal);
+        private static readonly EdmPrimitiveType _doubleType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Double);
+        private static readonly EdmPrimitiveType _guidType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Guid);
+        private static readonly EdmPrimitiveType _int16Type = new EdmPrimitiveType(EdmPrimitiveTypeKind.Int16);
+        private static readonly EdmPrimitiveType _int32Type = new EdmPrimitiveType(EdmPrimitiveTypeKind.Int32);
+        private static readonly EdmPrimitiveType _int64Type = new EdmPrimitiveType(EdmPrimitiveTypeKind.Int64);
+        private static readonly EdmPrimitiveType _sbyteType = new EdmPrimitiveType(EdmPrimitiveTypeKind.SByte);
+        private static readonly EdmPrimitiveType _singleType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Single);
+        private static readonly EdmPrimitiveType _stringType = new EdmPrimitiveType(EdmPrimitiveTypeKind.String);
+        private static readonly EdmPrimitiveType _timeType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Time);
+        private static readonly EdmPrimitiveType _geometryType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Geometry);
 
-        private static readonly EdmPrimitiveType geometricPointType =
+        private static readonly EdmPrimitiveType _geometricPointType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricPoint);
 
-        private static readonly EdmPrimitiveType geometricLinestringType =
+        private static readonly EdmPrimitiveType _geometricLinestringType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricLinestring);
 
-        private static readonly EdmPrimitiveType geometricPolygonType =
+        private static readonly EdmPrimitiveType _geometricPolygonType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricPolygon);
 
-        private static readonly EdmPrimitiveType geometricMultiPointType =
+        private static readonly EdmPrimitiveType _geometricMultiPointType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricMultiPoint);
 
-        private static readonly EdmPrimitiveType geometricMultiLinestringType =
+        private static readonly EdmPrimitiveType _geometricMultiLinestringType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricMultiLinestring);
 
-        private static readonly EdmPrimitiveType geometricMultiPolygonType = new EdmPrimitiveType(
+        private static readonly EdmPrimitiveType _geometricMultiPolygonType = new EdmPrimitiveType(
             EdmPrimitiveTypeKind.GeometricMultiPolygon);
 
-        private static readonly EdmPrimitiveType geometryCollectionType =
+        private static readonly EdmPrimitiveType _geometryCollectionType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryCollection);
 
-        private static readonly EdmPrimitiveType geographyType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Geography);
+        private static readonly EdmPrimitiveType _geographyType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Geography);
 
-        private static readonly EdmPrimitiveType geographicPointType =
+        private static readonly EdmPrimitiveType _geographicPointType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicPoint);
 
-        private static readonly EdmPrimitiveType geographicLinestringType =
+        private static readonly EdmPrimitiveType _geographicLinestringType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicLinestring);
 
-        private static readonly EdmPrimitiveType geographicPolygonType =
+        private static readonly EdmPrimitiveType _geographicPolygonType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicPolygon);
 
-        private static readonly EdmPrimitiveType geographicMultiPointType =
+        private static readonly EdmPrimitiveType _geographicMultiPointType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicMultiPoint);
 
-        private static readonly EdmPrimitiveType geographicMultiLinestringType =
+        private static readonly EdmPrimitiveType _geographicMultiLinestringType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicMultiLinestring);
 
-        private static readonly EdmPrimitiveType geographicMultiPolygonType =
+        private static readonly EdmPrimitiveType _geographicMultiPolygonType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicMultiPolygon);
 
-        private static readonly EdmPrimitiveType geographyCollectionType =
+        private static readonly EdmPrimitiveType _geographyCollectionType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection);
 
-        private static readonly Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType> typeKindToTypeMap
+        private static readonly Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType> _typeKindToTypeMap
             = new Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType>
                   {
-                      { EdmPrimitiveTypeKind.Binary, binaryType },
-                      { EdmPrimitiveTypeKind.Boolean, booleanType },
-                      { EdmPrimitiveTypeKind.Byte, byteType },
-                      { EdmPrimitiveTypeKind.DateTime, dateTimeType },
-                      { EdmPrimitiveTypeKind.DateTimeOffset, dateTimeOffsetType },
-                      { EdmPrimitiveTypeKind.Decimal, decimalType },
-                      { EdmPrimitiveTypeKind.Double, doubleType },
-                      { EdmPrimitiveTypeKind.Guid, guidType },
-                      { EdmPrimitiveTypeKind.Int16, int16Type },
-                      { EdmPrimitiveTypeKind.Int32, int32Type },
-                      { EdmPrimitiveTypeKind.Int64, int64Type },
-                      { EdmPrimitiveTypeKind.SByte, sbyteType },
-                      { EdmPrimitiveTypeKind.Single, singleType },
-                      { EdmPrimitiveTypeKind.String, stringType },
-                      { EdmPrimitiveTypeKind.Time, timeType },
-                      { EdmPrimitiveTypeKind.Geometry, geometryType },
-                      { EdmPrimitiveTypeKind.GeometricPoint, geometricPointType },
-                      { EdmPrimitiveTypeKind.GeometricLinestring, geometricLinestringType },
-                      { EdmPrimitiveTypeKind.GeometricPolygon, geometricPolygonType },
-                      { EdmPrimitiveTypeKind.GeometricMultiPoint, geometricMultiPointType },
-                      { EdmPrimitiveTypeKind.GeometricMultiLinestring, geometricMultiLinestringType },
-                      { EdmPrimitiveTypeKind.GeometricMultiPolygon, geometricMultiPolygonType },
-                      { EdmPrimitiveTypeKind.GeometryCollection, geometryCollectionType },
-                      { EdmPrimitiveTypeKind.Geography, geographyType },
-                      { EdmPrimitiveTypeKind.GeographicPoint, geographicPointType },
-                      { EdmPrimitiveTypeKind.GeographicLinestring, geographicLinestringType },
-                      { EdmPrimitiveTypeKind.GeographicPolygon, geographicPolygonType },
-                      { EdmPrimitiveTypeKind.GeographicMultiPoint, geographicMultiPointType },
-                      { EdmPrimitiveTypeKind.GeographicMultiLinestring, geographicMultiLinestringType },
-                      { EdmPrimitiveTypeKind.GeographicMultiPolygon, geographicMultiPolygonType },
-                      { EdmPrimitiveTypeKind.GeographyCollection, geographyCollectionType }
+                      { EdmPrimitiveTypeKind.Binary, _binaryType },
+                      { EdmPrimitiveTypeKind.Boolean, _booleanType },
+                      { EdmPrimitiveTypeKind.Byte, _byteType },
+                      { EdmPrimitiveTypeKind.DateTime, _dateTimeType },
+                      { EdmPrimitiveTypeKind.DateTimeOffset, _dateTimeOffsetType },
+                      { EdmPrimitiveTypeKind.Decimal, _decimalType },
+                      { EdmPrimitiveTypeKind.Double, _doubleType },
+                      { EdmPrimitiveTypeKind.Guid, _guidType },
+                      { EdmPrimitiveTypeKind.Int16, _int16Type },
+                      { EdmPrimitiveTypeKind.Int32, _int32Type },
+                      { EdmPrimitiveTypeKind.Int64, _int64Type },
+                      { EdmPrimitiveTypeKind.SByte, _sbyteType },
+                      { EdmPrimitiveTypeKind.Single, _singleType },
+                      { EdmPrimitiveTypeKind.String, _stringType },
+                      { EdmPrimitiveTypeKind.Time, _timeType },
+                      { EdmPrimitiveTypeKind.Geometry, _geometryType },
+                      { EdmPrimitiveTypeKind.GeometricPoint, _geometricPointType },
+                      { EdmPrimitiveTypeKind.GeometricLinestring, _geometricLinestringType },
+                      { EdmPrimitiveTypeKind.GeometricPolygon, _geometricPolygonType },
+                      { EdmPrimitiveTypeKind.GeometricMultiPoint, _geometricMultiPointType },
+                      { EdmPrimitiveTypeKind.GeometricMultiLinestring, _geometricMultiLinestringType },
+                      { EdmPrimitiveTypeKind.GeometricMultiPolygon, _geometricMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeometryCollection, _geometryCollectionType },
+                      { EdmPrimitiveTypeKind.Geography, _geographyType },
+                      { EdmPrimitiveTypeKind.GeographicPoint, _geographicPointType },
+                      { EdmPrimitiveTypeKind.GeographicLinestring, _geographicLinestringType },
+                      { EdmPrimitiveTypeKind.GeographicPolygon, _geographicPolygonType },
+                      { EdmPrimitiveTypeKind.GeographicMultiPoint, _geographicMultiPointType },
+                      { EdmPrimitiveTypeKind.GeographicMultiLinestring, _geographicMultiLinestringType },
+                      { EdmPrimitiveTypeKind.GeographicMultiPolygon, _geographicMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeographyCollection, _geographyCollectionType }
                   };
 
         private readonly EdmPrimitiveTypeKind typeKind;
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Binary
         {
-            get { return binaryType; }
+            get { return _binaryType; }
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Boolean
         {
-            get { return booleanType; }
+            get { return _booleanType; }
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Byte
         {
-            get { return byteType; }
+            get { return _byteType; }
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType DateTime
         {
-            get { return dateTimeType; }
+            get { return _dateTimeType; }
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType DateTimeOffset
         {
-            get { return dateTimeOffsetType; }
+            get { return _dateTimeOffsetType; }
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Decimal
         {
-            get { return decimalType; }
+            get { return _decimalType; }
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Double
         {
-            get { return doubleType; }
+            get { return _doubleType; }
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Guid
         {
-            get { return guidType; }
+            get { return _guidType; }
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Int16
         {
-            get { return int16Type; }
+            get { return _int16Type; }
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Int32
         {
-            get { return int32Type; }
+            get { return _int32Type; }
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Int64
         {
-            get { return int64Type; }
+            get { return _int64Type; }
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType SByte
         {
-            get { return sbyteType; }
+            get { return _sbyteType; }
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Single
         {
-            get { return singleType; }
+            get { return _singleType; }
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType String
         {
-            get { return stringType; }
+            get { return _stringType; }
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace System.Data.Entity.Edm
             Justification = "Used by test code.")]
         public static EdmPrimitiveType Time
         {
-            get { return timeType; }
+            get { return _timeType; }
         }
 
         /// <summary>
@@ -287,8 +287,8 @@ namespace System.Data.Entity.Edm
             EdmPrimitiveTypeKind kind;
             if (EdmUtil.TryGetPrimitiveTypeKindFromString(primitiveTypeName, out kind))
             {
-                Contract.Assert(typeKindToTypeMap.ContainsKey(kind), "Added EdmPrimitiveTypeKind?");
-                return typeKindToTypeMap.TryGetValue(kind, out primitiveType);
+                Contract.Assert(_typeKindToTypeMap.ContainsKey(kind), "Added EdmPrimitiveTypeKind?");
+                return _typeKindToTypeMap.TryGetValue(kind, out primitiveType);
             }
 
             primitiveType = null;

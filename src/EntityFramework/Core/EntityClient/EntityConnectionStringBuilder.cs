@@ -24,15 +24,15 @@ namespace System.Data.Entity.Core.EntityClient
         internal const string ProviderConnectionStringParameterName = "provider connection string";
 
         // An array to hold the keywords
-        private static readonly string[] s_validKeywords = new[]
-                                                               {
-                                                                   NameParameterName,
-                                                                   MetadataParameterName,
-                                                                   ProviderParameterName,
-                                                                   ProviderConnectionStringParameterName
-                                                               };
+        private static readonly string[] _validKeywords = new[]
+                                                              {
+                                                                  NameParameterName,
+                                                                  MetadataParameterName,
+                                                                  ProviderParameterName,
+                                                                  ProviderConnectionStringParameterName
+                                                              };
 
-        private static Hashtable s_synonyms;
+        private static Hashtable _synonyms;
 
         // Information and data used by the connection
         private string _namedConnectionName;
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override ICollection Keys
         {
-            get { return new ReadOnlyCollection<string>(s_validKeywords); }
+            get { return new ReadOnlyCollection<string>(_validKeywords); }
         }
 
         /// <summary>
@@ -151,16 +151,16 @@ namespace System.Data.Entity.Core.EntityClient
             get
             {
                 // Build the synonyms table if we don't have one
-                if (s_synonyms == null)
+                if (_synonyms == null)
                 {
-                    var table = new Hashtable(s_validKeywords.Length);
-                    foreach (var keyword in s_validKeywords)
+                    var table = new Hashtable(_validKeywords.Length);
+                    foreach (var keyword in _validKeywords)
                     {
                         table.Add(keyword, keyword);
                     }
-                    s_synonyms = table;
+                    _synonyms = table;
                 }
-                return s_synonyms;
+                return _synonyms;
             }
         }
 
@@ -258,7 +258,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             Contract.Requires(keyword != null);
 
-            foreach (var validKeyword in s_validKeywords)
+            foreach (var validKeyword in _validKeywords)
             {
                 if (validKeyword.Equals(keyword, StringComparison.OrdinalIgnoreCase))
                 {

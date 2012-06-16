@@ -13,22 +13,22 @@ namespace System.Data.Entity.Core.Common
     public abstract class DbProviderManifest
     {
         /// <summary>Value to pass to GetInformation to get the StoreSchemaDefinition</summary>
-        public static readonly string StoreSchemaDefinition = "StoreSchemaDefinition";
+        public const string StoreSchemaDefinition = "StoreSchemaDefinition";
 
         /// <summary>Value to pass to GetInformation to get the StoreSchemaMapping</summary>
-        public static readonly string StoreSchemaMapping = "StoreSchemaMapping";
+        public const string StoreSchemaMapping = "StoreSchemaMapping";
 
         /// <summary>Value to pass to GetInformation to get the ConceptualSchemaDefinition</summary>
-        public static readonly string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
+        public const string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
 
         /// <summary>Value to pass to GetInformation to get the StoreSchemaDefinitionVersion3</summary>
-        public static readonly string StoreSchemaDefinitionVersion3 = "StoreSchemaDefinitionVersion3";
+        public const string StoreSchemaDefinitionVersion3 = "StoreSchemaDefinitionVersion3";
 
         /// <summary>Value to pass to GetInformation to get the StoreSchemaMappingVersion3</summary>
-        public static readonly string StoreSchemaMappingVersion3 = "StoreSchemaMappingVersion3";
+        public const string StoreSchemaMappingVersion3 = "StoreSchemaMappingVersion3";
 
         /// <summary>Value to pass to GetInformation to get the ConceptualSchemaDefinitionVersion3</summary>
-        public static readonly string ConceptualSchemaDefinitionVersion3 = "ConceptualSchemaDefinitionVersion3";
+        public const string ConceptualSchemaDefinitionVersion3 = "ConceptualSchemaDefinitionVersion3";
 
         // System Facet Info
         /// <summary>

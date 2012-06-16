@@ -2,9 +2,9 @@
 {
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
-    using System.IO;
     using System.Linq;
 
     internal class AddMigrationCommand : MigrationsDomainCommand
@@ -16,7 +16,6 @@
             Execute(
                 () =>
                     {
-                        var project = Project;
                         var rescaffolding = false;
 
                         using (var facade = GetFacade())
@@ -42,36 +41,20 @@
                             WriteLine(Strings.LoggingGenerate(name));
 
                             var scaffoldedMigration = facade.Scaffold(
-                                name, project.GetLanguage(), project.GetRootNamespace(), ignoreChanges);
-
-                            var userCodeFileName = scaffoldedMigration.MigrationId + "." + scaffoldedMigration.Language;
-                            var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
-                            var designerCodeFileName = scaffoldedMigration.MigrationId + ".Designer."
-                                                       + scaffoldedMigration.Language;
-                            var designerCodePath = Path.Combine(scaffoldedMigration.Directory, designerCodeFileName);
-
-                            if (rescaffolding && !force)
-                            {
-                                var absoluteUserCodePath = Path.Combine(project.GetProjectDir(), userCodePath);
-
-                                if (!string.Equals(scaffoldedMigration.UserCode, File.ReadAllText(absoluteUserCodePath)))
-                                {
-                                    WriteWarning(Strings.RescaffoldNoForce(name));
-                                }
-                            }
-                            else
-                            {
-                                project.AddFile(userCodePath, scaffoldedMigration.UserCode);
-                            }
-
-                            project.AddFile(designerCodePath, scaffoldedMigration.DesignerCode);
+                                name, Project.GetLanguage(), Project.GetRootNamespace(), ignoreChanges);
+                            var userCodePath = new MigrationWriter(this)
+                                .Write(
+                                    scaffoldedMigration,
+                                    rescaffolding,
+                                    force,
+                                    name);
 
                             if (!rescaffolding)
                             {
                                 WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
                             }
 
-                            project.OpenFile(userCodePath);
+                            Project.OpenFile(userCodePath);
                         }
                     });
         }

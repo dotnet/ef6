@@ -469,7 +469,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // we should not be wrapping all exceptions
                 if (e.RequiresContext())
                 {
-                    throw new UpdateException(Strings.Update_GeneralExecutionException, e, DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
+                    throw new UpdateException(
+                        Strings.Update_GeneralExecutionException, e,
+                        DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
                 }
                 throw;
             }
@@ -1040,7 +1042,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 ||
                 !ReferenceEquals(actualContainer, referenceContainer))
             {
-                // FUTURE(CMeek):: We use reference equality to determine if two containers have compatible
+                // FUTURE: We use reference equality to determine if two containers have compatible
                 // Metadata. This is overly strict in some scenarios. At present, Metadata does not expose
                 // any services to determine compatibility, so for now this is the best we can do. In most
                 // scenarios, Metadata caching ensures the same container is returned anyways.

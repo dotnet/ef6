@@ -5,7 +5,6 @@
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Copied from System.Data.dll
@@ -36,7 +35,7 @@
             + "[\\s;\u0000]*" // traling whitespace/semicolons and embedded nulls (DataSourceLocator)
                              ;
 
-        private static readonly Regex ConnectionStringRegex = new Regex(
+        private static readonly Regex _connectionStringRegex = new Regex(
             ConnectionStringPattern, RegexOptions.ExplicitCapture | RegexOptions.Compiled);
 #endif
         internal const string DataDirectory = "|datadirectory|";
@@ -46,8 +45,8 @@
         // key not allowed to start with semi-colon or space or contain non-visible characters or end with space
 
         private const string ConnectionStringValidValuePattern = "^[^\u0000]*$"; // value not allowed to contain embedded null   
-        private static readonly Regex ConnectionStringValidKeyRegex = new Regex(ConnectionStringValidKeyPattern, RegexOptions.Compiled);
-        private static readonly Regex ConnectionStringValidValueRegex = new Regex(ConnectionStringValidValuePattern, RegexOptions.Compiled);
+        private static readonly Regex _connectionStringValidKeyRegex = new Regex(ConnectionStringValidKeyPattern, RegexOptions.Compiled);
+        private static readonly Regex _connectionStringValidValueRegex = new Regex(ConnectionStringValidValuePattern, RegexOptions.Compiled);
 #endif
 
         private readonly string _usersConnectionString;
@@ -362,7 +361,7 @@
                         || ('"' == tmpChar))
                     {
                         throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
-                            // unquoted value must not end in quote
+                        // unquoted value must not end in quote
                     }
                     break;
 
@@ -396,7 +395,7 @@
         {
             if (null != keyvalue)
             {
-                var compValue = ConnectionStringValidValueRegex.IsMatch(keyvalue);
+                var compValue = _connectionStringValidValueRegex.IsMatch(keyvalue);
                 Debug.Assert((-1 == keyvalue.IndexOf('\u0000')) == compValue, "IsValueValid mismatch with regex");
                 return (-1 == keyvalue.IndexOf('\u0000'));
             }
@@ -409,7 +408,7 @@
             if (null != keyname)
             {
 #if DEBUG
-                var compValue = ConnectionStringValidKeyRegex.IsMatch(keyname);
+                var compValue = _connectionStringValidKeyRegex.IsMatch(keyname);
                 Debug.Assert(
                     ((0 < keyname.Length) && (';' != keyname[0]) && !Char.IsWhiteSpace(keyname[0]) && (-1 == keyname.IndexOf('\u0000')))
                     == compValue, "IsValueValid mismatch with regex");
@@ -424,7 +423,7 @@
         private static Hashtable SplitConnectionString(string connectionString, Hashtable synonyms)
         {
             var parsetable = new Hashtable();
-            var parser = ConnectionStringRegex;
+            var parser = _connectionStringRegex;
 
             const int KeyIndex = 1, ValueIndex = 2;
             Debug.Assert(KeyIndex == parser.GroupNumberFromName("key"), "wrong key index");
@@ -526,41 +525,41 @@
             try
             {
 #endif
-                var nextStartPosition = 0;
-                var endPosition = connectionString.Length;
-                while (nextStartPosition < endPosition)
-                {
-                    var startPosition = nextStartPosition;
+            var nextStartPosition = 0;
+            var endPosition = connectionString.Length;
+            while (nextStartPosition < endPosition)
+            {
+                var startPosition = nextStartPosition;
 
-                    string keyname, keyvalue;
-                    nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
-                    if (string.IsNullOrEmpty(keyname))
-                    {
-                        // if (nextStartPosition != endPosition) { throw; }
-                        break;
-                    }
+                string keyname, keyvalue;
+                nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
+                if (string.IsNullOrEmpty(keyname))
+                {
+                    // if (nextStartPosition != endPosition) { throw; }
+                    break;
+                }
 
 #if DEBUG
                     Debug.Assert(IsKeyNameValid(keyname), "ParseFailure, invalid keyname");
                     Debug.Assert(IsValueValidInternal(keyvalue), "parse failure, invalid keyvalue");
 #endif
-                    var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
-                    if (!IsKeyNameValid(realkeyname))
-                    {
-                        throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
-                    }
-                    parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
-
-                    if (null != localKeychain)
-                    {
-                        localKeychain = localKeychain.Next = new NameValuePair();
-                    }
-                    else
-                    {
-                        // first time only - don't contain modified chain from UDL file
-                        keychain = localKeychain = new NameValuePair();
-                    }
+                var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
+                if (!IsKeyNameValid(realkeyname))
+                {
+                    throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
                 }
+                parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
+
+                if (null != localKeychain)
+                {
+                    localKeychain = localKeychain.Next = new NameValuePair();
+                }
+                else
+                {
+                    // first time only - don't contain modified chain from UDL file
+                    keychain = localKeychain = new NameValuePair();
+                }
+            }
 #if DEBUG
             }
             catch (ArgumentException e)

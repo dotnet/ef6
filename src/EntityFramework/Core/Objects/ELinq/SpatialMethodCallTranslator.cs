@@ -15,7 +15,7 @@
         {
             private sealed class SpatialMethodCallTranslator : CallTranslator
             {
-                private static readonly Dictionary<MethodInfo, string> methodFunctionRenames = GetRenamedMethodFunctions();
+                private static readonly Dictionary<MethodInfo, string> _methodFunctionRenames = GetRenamedMethodFunctions();
 
                 internal SpatialMethodCallTranslator()
                     : base(GetSupportedMethods())
@@ -244,7 +244,7 @@
                 {
                     var method = call.Method;
                     string canonicalFunctionName;
-                    if (!methodFunctionRenames.TryGetValue(method, out canonicalFunctionName))
+                    if (!_methodFunctionRenames.TryGetValue(method, out canonicalFunctionName))
                     {
                         canonicalFunctionName = "ST" + method.Name;
                     }

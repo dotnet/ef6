@@ -88,6 +88,5 @@ namespace System.Data.Entity.Utilities
             // default instance.
             return AppConfig.DefaultInstance.Providers.GetDbProviderServices(invariantName);
         }
-
     }
 }

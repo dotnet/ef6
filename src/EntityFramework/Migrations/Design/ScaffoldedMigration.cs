@@ -1,10 +1,12 @@
 ﻿namespace System.Data.Entity.Migrations.Design
 {
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents a code-based migration that has been scaffolded and is ready to be written to a file.
     /// </summary>
+    [Serializable]
     public class ScaffoldedMigration
     {
         private string _migrationId;
@@ -12,6 +14,7 @@
         private string _designerCode;
         private string _language;
         private string _directory;
+        private readonly Dictionary<string, object> _resources = new Dictionary<string, object>();
 
         /// <summary>
         ///     Gets or sets the unique identifier for this migration.
@@ -83,6 +86,14 @@
 
                 _directory = value;
             }
+        }
+
+        /// <summary>
+        /// Gets a dictionary of string resources to add to the migration resource file.
+        /// </summary>
+        public IDictionary<string, object> Resources
+        {
+            get { return _resources; }
         }
     }
 }

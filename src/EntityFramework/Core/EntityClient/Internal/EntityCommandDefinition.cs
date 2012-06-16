@@ -45,7 +45,7 @@
         /// </summary>
         private readonly Set<EntitySet> _entitySets;
 
-        private BridgeDataReaderFactory _bridgeDataReaderFactory;
+        private readonly BridgeDataReaderFactory _bridgeDataReaderFactory;
 
         #endregion
 
@@ -57,7 +57,8 @@
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree, BridgeDataReaderFactory factory = null)
+        internal EntityCommandDefinition(
+            DbProviderFactory storeProviderFactory, DbCommandTree commandTree, BridgeDataReaderFactory factory = null)
         {
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
@@ -441,9 +442,11 @@
         /// </summary>
         /// <exception cref="InvalidOperationException">behavior must specify CommandBehavior.SequentialAccess</exception>
         /// <exception cref="InvalidOperationException">input parameters in the entityCommand.Parameters collection must have non-null values.</exception>
-        internal virtual async Task<DbDataReader> ExecuteAsync(EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
+        internal virtual async Task<DbDataReader> ExecuteAsync(
+            EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            if (CommandBehavior.SequentialAccess != (behavior & CommandBehavior.SequentialAccess))
+            if (CommandBehavior.SequentialAccess
+                != (behavior & CommandBehavior.SequentialAccess))
             {
                 throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
@@ -514,17 +517,18 @@
                     // the inner exception of it.
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
                 }
-            
+
                 throw;
             }
-            
+
             return reader;
         }
 
         /// <summary>
         /// Execute the store commands, and return IteratorSources for each one
         /// </summary>
-        internal virtual async Task<DbDataReader> ExecuteStoreCommandsAsync(EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
+        internal virtual async Task<DbDataReader> ExecuteStoreCommandsAsync(
+            EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
         {
             var storeProviderCommand = PrepareEntityCommandBeforeExecution(entityCommand);
 
@@ -774,9 +778,9 @@
         internal class BridgeDataReaderFactory
         {
             internal virtual DbDataReader CreateBridgeDataReader(
-                DbDataReader storeDataReader, 
-                ColumnMap columnMap, 
-                MetadataWorkspace metadataWorkspace, 
+                DbDataReader storeDataReader,
+                ColumnMap columnMap,
+                MetadataWorkspace metadataWorkspace,
                 IEnumerable<ColumnMap> nextResultColumnMaps)
             {
                 return BridgeDataReader.Create(storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);

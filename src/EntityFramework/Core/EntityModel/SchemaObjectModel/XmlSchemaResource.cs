@@ -7,7 +7,7 @@
 
     internal struct XmlSchemaResource
     {
-        private static readonly XmlSchemaResource[] EmptyImportList = new XmlSchemaResource[0];
+        private static readonly XmlSchemaResource[] _emptyImportList = new XmlSchemaResource[0];
 
         public XmlSchemaResource(string namespaceUri, string resourceName, XmlSchemaResource[] importedSchemas)
         {
@@ -25,7 +25,7 @@
             Debug.Assert(!string.IsNullOrEmpty(resourceName), "resourceName is null or empty");
             NamespaceUri = namespaceUri;
             ResourceName = resourceName;
-            ImportedSchemas = EmptyImportList;
+            ImportedSchemas = _emptyImportList;
         }
 
         internal string NamespaceUri;

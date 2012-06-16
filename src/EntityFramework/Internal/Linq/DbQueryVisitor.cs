@@ -19,7 +19,7 @@ namespace System.Data.Entity.Internal.Linq
         private const BindingFlags SetAccessBindingFlags =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-        private static readonly ConcurrentDictionary<Type, Func<ObjectQuery, object>> WrapperFactories =
+        private static readonly ConcurrentDictionary<Type, Func<ObjectQuery, object>> _wrapperFactories =
             new ConcurrentDictionary<Type, Func<ObjectQuery, object>>();
 
         #endregion
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Internal.Linq
                 var elementType = objectQuery.GetType().GetGenericArguments().Single();
 
                 Func<ObjectQuery, object> factory;
-                if (!WrapperFactories.TryGetValue(elementType, out factory))
+                if (!_wrapperFactories.TryGetValue(elementType, out factory))
                 {
                     var genericType = typeof(ReplacementDbQueryWrapper<>).MakeGenericType(elementType);
                     var factoryMethod = genericType.GetMethod(
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Internal.Linq
                     factory =
                         (Func<ObjectQuery, object>)
                         Delegate.CreateDelegate(typeof(Func<ObjectQuery, object>), factoryMethod);
-                    WrapperFactories.TryAdd(elementType, factory);
+                    _wrapperFactories.TryAdd(elementType, factory);
                 }
 
                 var replacement = factory(objectQuery);

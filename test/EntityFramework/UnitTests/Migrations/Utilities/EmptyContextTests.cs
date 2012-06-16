@@ -11,7 +11,7 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
         public class EmptyContextTests : DbTestCase
         {
-            private static readonly XNamespace CsdlNamespace
+            private static readonly XNamespace _csdlNamespace
                 = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm");
 
         [MigrationsTheory]
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Migrations
                     {
                         var model = emptyContext.GetModel();
 
-                        var csdlSchemaNode = model.Descendants(CsdlNamespace + "Schema").Single();
-                        var entityContainer = csdlSchemaNode.Descendants(CsdlNamespace + "EntityContainer").Single();
+                        var csdlSchemaNode = model.Descendants(_csdlNamespace + "Schema").Single();
+                        var entityContainer = csdlSchemaNode.Descendants(_csdlNamespace + "EntityContainer").Single();
                         Assert.Equal(0, entityContainer.Descendants().Count());
                     }
                 }

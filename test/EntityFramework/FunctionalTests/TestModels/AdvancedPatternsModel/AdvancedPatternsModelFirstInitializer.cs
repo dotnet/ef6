@@ -6,7 +6,12 @@
 
     internal class AdvancedPatternsModelFirstInitializer : DropCreateDatabaseAlways<AdvancedPatternsModelFirstContext>
     {
-        public static readonly Guid KnownBuildingGuid = new Guid("21EC2020-3AEA-1069-A2DD-08002B30309D");
+        private static readonly Guid _knownBuildingGuid = new Guid("21EC2020-3AEA-1069-A2DD-08002B30309D");
+
+        public static Guid KnownBuildingGuid
+        {
+            get { return _knownBuildingGuid; }
+        }
 
         protected override void Seed(AdvancedPatternsModelFirstContext context)
         {
@@ -50,7 +55,7 @@
 
             var buildings = new List<BuildingMf>
             {
-                new BuildingMf(KnownBuildingGuid, "Building One", 1500000m,
+                new BuildingMf(_knownBuildingGuid, "Building One", 1500000m,
                                new AddressMf("100 Work St", "Redmond", "WA", "98052", 1, "Clean")),
                 new BuildingMf(Guid.NewGuid(), "Building Two", 1000000m,
                                new AddressMf("200 Work St", "Redmond", "WA", "98052", 2, "Contaminated")),

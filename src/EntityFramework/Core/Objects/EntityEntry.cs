@@ -1424,7 +1424,7 @@
                 }
             }
 #if DEBUG
-                // performance, don't do this work in retail until shadow state is supported
+    // performance, don't do this work in retail until shadow state is supported
             else if (userObject == _wrappedEntity.Entity)
             {
                 Debug.Assert(false, "shadowstate not supported");

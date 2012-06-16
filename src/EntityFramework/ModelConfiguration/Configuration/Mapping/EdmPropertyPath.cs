@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
 
     internal class EdmPropertyPath : IEnumerable<EdmProperty>
     {
-        public static readonly EdmPropertyPath Empty = new EdmPropertyPath();
+        private static readonly EdmPropertyPath _empty = new EdmPropertyPath();
 
         private readonly List<EdmProperty> _components = new List<EdmProperty>();
 
@@ -31,6 +31,11 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
 
         private EdmPropertyPath()
         {
+        }
+
+        public static EdmPropertyPath Empty
+        {
+            get { return _empty; }
         }
 
         public override string ToString()

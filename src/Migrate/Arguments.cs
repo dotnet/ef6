@@ -75,12 +75,14 @@
 
         internal void Validate()
         {
-            if (!string.IsNullOrWhiteSpace(ConnectionStringName) && !string.IsNullOrWhiteSpace(ConnectionString))
+            if (!string.IsNullOrWhiteSpace(ConnectionStringName)
+                && !string.IsNullOrWhiteSpace(ConnectionString))
             {
                 throw Error.AmbiguousConnectionString();
             }
 
-            if (string.IsNullOrWhiteSpace(ConnectionString) != string.IsNullOrWhiteSpace(ConnectionProviderName))
+            if (string.IsNullOrWhiteSpace(ConnectionString)
+                != string.IsNullOrWhiteSpace(ConnectionProviderName))
             {
                 throw Error.MissingConnectionInfo();
             }

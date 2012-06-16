@@ -180,7 +180,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal abstract long Execute(
             Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues);
 
-
         /// <summary>
         /// An asynchronous version of Execute, which executes the current update command.
         /// All server-generated values are added to the generatedValues list. If those values are identifiers, they are
@@ -192,7 +191,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="generatedValues">Aggregator for server generated values.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>Number of rows affected by the command.</returns>
-        internal abstract Task<long> ExecuteAsync(Dictionary<int, object> identifierValues,
+        internal abstract Task<long> ExecuteAsync(
+            Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken);
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// Including the dash (-) character around the name ensures that this will not conflict with
         /// a real data property, because -EntityKey- is not a valid identifier name
         /// </summary>
-        public static readonly string EntityKeyPropertyName = "-EntityKey-";
+        public const string EntityKeyPropertyName = "-EntityKey-";
 
         #region INotifyPropertyChanged Members
 

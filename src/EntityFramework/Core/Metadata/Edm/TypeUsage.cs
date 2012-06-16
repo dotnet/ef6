@@ -386,17 +386,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Set of facets that should be included in identity for TypeUsage
         /// </summary>
         /// <remarks>keep this sorted for binary searching</remarks>
-        private static readonly string[] s_identityFacets = new[]
-                                                                {
-                                                                    DbProviderManifest.DefaultValueFacetName,
-                                                                    DbProviderManifest.FixedLengthFacetName,
-                                                                    DbProviderManifest.MaxLengthFacetName,
-                                                                    DbProviderManifest.NullableFacetName,
-                                                                    DbProviderManifest.PrecisionFacetName,
-                                                                    DbProviderManifest.ScaleFacetName,
-                                                                    DbProviderManifest.UnicodeFacetName,
-                                                                    DbProviderManifest.SridFacetName,
-                                                                };
+        private static readonly string[] _identityFacets = new[]
+                                                               {
+                                                                   DbProviderManifest.DefaultValueFacetName,
+                                                                   DbProviderManifest.FixedLengthFacetName,
+                                                                   DbProviderManifest.MaxLengthFacetName,
+                                                                   DbProviderManifest.NullableFacetName,
+                                                                   DbProviderManifest.PrecisionFacetName,
+                                                                   DbProviderManifest.ScaleFacetName,
+                                                                   DbProviderManifest.UnicodeFacetName,
+                                                                   DbProviderManifest.SridFacetName,
+                                                               };
 
         internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue = EdmConstants.UnboundedValue;
         internal static readonly EdmConstants.Unbounded DefaultPrecisionFacetValue = EdmConstants.UnboundedValue;
@@ -638,7 +638,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 var facet = Facets[j];
 
-                if (0 <= Array.BinarySearch(s_identityFacets, facet.Name, StringComparer.Ordinal))
+                if (0 <= Array.BinarySearch(_identityFacets, facet.Name, StringComparer.Ordinal))
                 {
                     if (first)
                     {

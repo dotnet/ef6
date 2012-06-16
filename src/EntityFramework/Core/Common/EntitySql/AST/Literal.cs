@@ -211,12 +211,12 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 
         #region Conversion Helpers
 
-        private static readonly char[] numberSuffixes = new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'M', 'm', 'D', 'd' };
-        private static readonly char[] floatTokens = new[] { '.', 'E', 'e' };
+        private static readonly char[] _numberSuffixes = new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'M', 'm', 'D', 'd' };
+        private static readonly char[] _floatTokens = new[] { '.', 'E', 'e' };
 
         private static object ConvertNumericLiteral(ErrorContext errCtx, string numericString)
         {
-            var k = numericString.IndexOfAny(numberSuffixes);
+            var k = numericString.IndexOfAny(_numberSuffixes);
             if (-1 != k)
             {
                 var suffix = numericString.Substring(k).ToUpperInvariant();
@@ -313,7 +313,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private static object DefaultNumericConversion(string numericString, ErrorContext errCtx)
         {
             if (-1
-                != numericString.IndexOfAny(floatTokens))
+                != numericString.IndexOfAny(_floatTokens))
             {
                 Double value;
                 if (!Double.TryParse(numericString, NumberStyles.Float, CultureInfo.InvariantCulture, out value))

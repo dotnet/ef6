@@ -19,7 +19,7 @@
             _dispatcher = (DomainDispatcher)_domain.GetData("efDispatcher");
         }
 
-        public Project Project
+        public virtual Project Project
         {
             get { return (Project)_domain.GetData("project"); }
         }
@@ -57,7 +57,7 @@
             _dispatcher.WriteLine(message);
         }
 
-        public void WriteWarning(string message)
+        public virtual void WriteWarning(string message)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(message));
 
@@ -114,11 +114,11 @@
                 configurationFile,
                 dataDirectory,
                 connectionStringInfo)
-            {
-                LogInfoDelegate = WriteLine,
-                LogWarningDelegate = WriteWarning,
-                LogVerboseDelegate = WriteVerbose
-            };
+                       {
+                           LogInfoDelegate = WriteLine,
+                           LogWarningDelegate = WriteWarning,
+                           LogVerboseDelegate = WriteVerbose
+                       };
         }
 
         private void Init()

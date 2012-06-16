@@ -43,22 +43,22 @@
     {
         #region Fields and constructors
 
-        private static readonly MethodInfo InternalContext_CreateObjectAsObject = typeof(InternalContext).GetMethod(
+        private static readonly MethodInfo _createObjectAsObjectMethod = typeof(InternalContext).GetMethod(
             "CreateObjectAsObject", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalContext, object>> EntityFactories =
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, object>> _entityFactories =
             new ConcurrentDictionary<Type, Func<InternalContext, object>>();
 
-        private static readonly MethodInfo InternalContext_ExecuteSqlQueryAsIEnumerable =
+        private static readonly MethodInfo _executeSqlQueryAsIEnumerableMethod =
             typeof(InternalContext).GetMethod(
                 "ExecuteSqlQueryAsIEnumerable", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>
-            QueryExecutors =
+            _queryExecutors =
                 new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>();
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>
-            SetFactories =
+            _setFactories =
                 new ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>();
 
         // The configuration to use for initializers, connection strings and default connection factory
@@ -569,7 +569,7 @@
         private IInternalSetAdapter CreateInternalSet(Type entityType, IInternalSet internalSet)
         {
             Func<InternalContext, IInternalSet, IInternalSetAdapter> factory;
-            if (!SetFactories.TryGetValue(entityType, out factory))
+            if (!_setFactories.TryGetValue(entityType, out factory))
             {
                 // No value type can ever be an entity type in the model
                 if (entityType.IsValueType)
@@ -585,7 +585,7 @@
                     (Func<InternalContext, IInternalSet, IInternalSetAdapter>)
                     Delegate.CreateDelegate(
                         typeof(Func<InternalContext, IInternalSet, IInternalSetAdapter>), factoryMethod);
-                SetFactories.TryAdd(entityType, factory);
+                _setFactories.TryAdd(entityType, factory);
             }
             return factory(this, internalSet);
         }
@@ -701,14 +701,14 @@
             // forced to use MakeGenericMethod.  We compile this into a delegate so that we
             // only take the hit once.
             Func<InternalContext, string, object[], IEnumerable> executor;
-            if (!QueryExecutors.TryGetValue(elementType, out executor))
+            if (!_queryExecutors.TryGetValue(elementType, out executor))
             {
-                var genericExecuteMethod = InternalContext_ExecuteSqlQueryAsIEnumerable.MakeGenericMethod(elementType);
+                var genericExecuteMethod = _executeSqlQueryAsIEnumerableMethod.MakeGenericMethod(elementType);
                 executor =
                     (Func<InternalContext, string, object[], IEnumerable>)
                     Delegate.CreateDelegate(
                         typeof(Func<InternalContext, string, object[], IEnumerable>), genericExecuteMethod);
-                QueryExecutors.TryAdd(elementType, executor);
+                _queryExecutors.TryAdd(elementType, executor);
             }
             return executor(this, sql, parameters);
         }
@@ -848,13 +848,13 @@
         public virtual object CreateObject(Type type)
         {
             Func<InternalContext, object> entityFactory;
-            if (!EntityFactories.TryGetValue(type, out entityFactory))
+            if (!_entityFactories.TryGetValue(type, out entityFactory))
             {
-                var factoryMethod = InternalContext_CreateObjectAsObject.MakeGenericMethod(type);
+                var factoryMethod = _createObjectAsObjectMethod.MakeGenericMethod(type);
                 entityFactory =
                     (Func<InternalContext, object>)
                     Delegate.CreateDelegate(typeof(Func<InternalContext, object>), factoryMethod);
-                EntityFactories.TryAdd(type, entityFactory);
+                _entityFactories.TryAdd(type, entityFactory);
             }
             return entityFactory(this);
         }

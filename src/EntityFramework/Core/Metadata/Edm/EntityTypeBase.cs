@@ -173,7 +173,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (!Members.TryGetValue(keyMember, false, out member))
                 {
                     throw new ArgumentException(Strings.InvalidKeyMember(keyMember));
-                        //--- to do, identify the right exception to throw here
+                    //--- to do, identify the right exception to throw here
                 }
                 // Add the key member to the key member collection 
                 AddKeyMember(member);

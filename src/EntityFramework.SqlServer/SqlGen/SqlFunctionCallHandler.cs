@@ -27,61 +27,86 @@ namespace System.Data.Entity.SqlServer.SqlGen
     {
         #region Static fields, include dictionaries used to dispatch function handling
 
-        private static readonly Dictionary<string, FunctionHandler> StoreFunctionHandlers = InitializeStoreFunctionHandlers();
-        private static readonly Dictionary<string, FunctionHandler> CanonicalFunctionHandlers = InitializeCanonicalFunctionHandlers();
-        private static readonly Dictionary<string, string> FunctionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
+        private static readonly Dictionary<string, FunctionHandler> _storeFunctionHandlers = InitializeStoreFunctionHandlers();
+        private static readonly Dictionary<string, FunctionHandler> _canonicalFunctionHandlers = InitializeCanonicalFunctionHandlers();
+        private static readonly Dictionary<string, string> _functionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
 
-        private static readonly Dictionary<string, string> DateAddFunctionNameToDatepartDictionary =
+        private static readonly Dictionary<string, string> _dateAddFunctionNameToDatepartDictionary =
             InitializeDateAddFunctionNameToDatepartDictionary();
 
-        private static readonly Dictionary<string, string> DateDiffFunctionNameToDatepartDictionary =
+        private static readonly Dictionary<string, string> _dateDiffFunctionNameToDatepartDictionary =
             InitializeDateDiffFunctionNameToDatepartDictionary();
 
-        private static readonly Dictionary<string, FunctionHandler> GeographyFunctionNameToStaticMethodHandlerDictionary =
+        private static readonly Dictionary<string, FunctionHandler> _geographyFunctionNameToStaticMethodHandlerDictionary =
             InitializeGeographyStaticMethodFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> GeographyFunctionNameToInstancePropertyNameDictionary =
+        private static readonly Dictionary<string, string> _geographyFunctionNameToInstancePropertyNameDictionary =
             InitializeGeographyInstancePropertyFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> GeographyRenamedInstanceMethodFunctionDictionary =
+        private static readonly Dictionary<string, string> _geographyRenamedInstanceMethodFunctionDictionary =
             InitializeRenamedGeographyInstanceMethodFunctions();
 
-        private static readonly Dictionary<string, FunctionHandler> GeometryFunctionNameToStaticMethodHandlerDictionary =
+        private static readonly Dictionary<string, FunctionHandler> _geometryFunctionNameToStaticMethodHandlerDictionary =
             InitializeGeometryStaticMethodFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> GeometryFunctionNameToInstancePropertyNameDictionary =
+        private static readonly Dictionary<string, string> _geometryFunctionNameToInstancePropertyNameDictionary =
             InitializeGeometryInstancePropertyFunctionsDictionary();
 
-        private static readonly Dictionary<string, string> GeometryRenamedInstanceMethodFunctionDictionary =
+        private static readonly Dictionary<string, string> _geometryRenamedInstanceMethodFunctionDictionary =
             InitializeRenamedGeometryInstanceMethodFunctions();
 
-        private static readonly ISet<string> DatepartKeywords =
+        private static readonly ISet<string> _datepartKeywords =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    "year", "yy", "yyyy",
-                    "quarter", "qq", "q",
-                    "month", "mm", "m",
-                    "dayofyear", "dy", "y",
-                    "day", "dd", "d",
-                    "week", "wk", "ww",
-                    "weekday", "dw", "w",
-                    "hour", "hh",
-                    "minute", "mi", "n",
-                    "second", "ss", "s",
-                    "millisecond", "ms",
-                    "microsecond", "mcs",
-                    "nanosecond", "ns",
-                    "tzoffset", "tz",
-                    "iso_week", "isoww", "isowk"
+                    "year",
+                    "yy",
+                    "yyyy",
+                    "quarter",
+                    "qq",
+                    "q",
+                    "month",
+                    "mm",
+                    "m",
+                    "dayofyear",
+                    "dy",
+                    "y",
+                    "day",
+                    "dd",
+                    "d",
+                    "week",
+                    "wk",
+                    "ww",
+                    "weekday",
+                    "dw",
+                    "w",
+                    "hour",
+                    "hh",
+                    "minute",
+                    "mi",
+                    "n",
+                    "second",
+                    "ss",
+                    "s",
+                    "millisecond",
+                    "ms",
+                    "microsecond",
+                    "mcs",
+                    "nanosecond",
+                    "ns",
+                    "tzoffset",
+                    "tz",
+                    "iso_week",
+                    "isoww",
+                    "isowk"
                 };
 
-        private static readonly ISet<string> FunctionRequiresReturnTypeCastToInt64
+        private static readonly ISet<string> _functionRequiresReturnTypeCastToInt64
             = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                   {
                       "SqlServer.CHARINDEX"
                   };
 
-        private static readonly ISet<string> FunctionRequiresReturnTypeCastToInt32
+        private static readonly ISet<string> _functionRequiresReturnTypeCastToInt32
             = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                   {
                       "SqlServer.LEN",
@@ -92,13 +117,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                       "Edm.Length"
                   };
 
-        private static readonly ISet<string> FunctionRequiresReturnTypeCastToInt16
+        private static readonly ISet<string> _functionRequiresReturnTypeCastToInt16
             = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                   {
                       "Edm.Abs"
                   };
 
-        private static readonly ISet<string> FunctionRequiresReturnTypeCastToSingle =
+        private static readonly ISet<string> _functionRequiresReturnTypeCastToSingle =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
                     "Edm.Abs",
@@ -107,7 +132,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     "Edm.Ceiling"
                 };
 
-        private static readonly ISet<string> MaxTypeNames
+        private static readonly ISet<string> _maxTypeNames
             = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                   {
                       "varchar(max)",
@@ -599,10 +624,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     : "geography::STGeomFromWKB");
         }
 
-        private static readonly DbExpression defaultGeographySridExpression =
+        private static readonly DbExpression _defaultGeographySridExpression =
             DbExpressionBuilder.Constant(DbGeography.DefaultCoordinateSystemId);
 
-        private static readonly DbExpression defaultGeometrySridExpression =
+        private static readonly DbExpression _defaultGeometrySridExpression =
             DbExpressionBuilder.Constant(DbGeometry.DefaultCoordinateSystemId);
 
         private static ISqlFragment HandleSpatialStaticMethodFunctionAppendSrid(
@@ -615,8 +640,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             else
             {
                 var sridExpression = functionExpression.ResultType.IsPrimitiveType(PrimitiveTypeKind.Geometry)
-                                         ? defaultGeometrySridExpression
-                                         : defaultGeographySridExpression;
+                                         ? _defaultGeometrySridExpression
+                                         : _defaultGeographySridExpression;
                 var result = new SqlBuilder();
                 result.Append(functionName);
                 WriteFunctionArguments(sqlgen, functionExpression.Arguments.Concat(new[] { sridExpression }), result);
@@ -659,7 +684,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static bool IsSpecialStoreFunction(DbFunctionExpression e)
         {
             return IsStoreFunction(e.Function)
-                   && StoreFunctionHandlers.ContainsKey(e.Function.Name);
+                   && _storeFunctionHandlers.ContainsKey(e.Function.Name);
         }
 
         /// <summary>
@@ -671,7 +696,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static bool IsSpecialCanonicalFunction(DbFunctionExpression e)
         {
             return e.Function.IsCanonicalFunction()
-                   && CanonicalFunctionHandlers.ContainsKey(e.Function.Name);
+                   && _canonicalFunctionHandlers.ContainsKey(e.Function.Name);
         }
 
         /// <summary>
@@ -758,18 +783,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             return WrapWithCast(
                 returnType, result =>
-                {
-                    if (functionName == null)
-                    {
-                        WriteFunctionName(result, e.Function);
-                    }
-                    else
-                    {
-                        result.Append(functionName);
-                    }
+                                {
+                                    if (functionName == null)
+                                    {
+                                        WriteFunctionName(result, e.Function);
+                                    }
+                                    else
+                                    {
+                                        result.Append(functionName);
+                                    }
 
-                    HandleFunctionArgumentsDefault(sqlgen, e, result);
-                });
+                                    HandleFunctionArgumentsDefault(sqlgen, e, result);
+                                });
         }
 
         private static ISqlFragment WrapWithCast(string returnType, Action<SqlBuilder> toWrap)
@@ -853,7 +878,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private static ISqlFragment HandleSpecialStoreFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            return HandleSpecialFunction(StoreFunctionHandlers, sqlgen, e);
+            return HandleSpecialFunction(_storeFunctionHandlers, sqlgen, e);
         }
 
         /// <summary>
@@ -863,7 +888,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         private static ISqlFragment HandleSpecialCanonicalFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            return HandleSpecialFunction(CanonicalFunctionHandlers, sqlgen, e);
+            return HandleSpecialFunction(_canonicalFunctionHandlers, sqlgen, e);
         }
 
         /// <summary>
@@ -890,14 +915,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
             if (spatialTypeKind == PrimitiveTypeKind.Geography)
             {
                 return HandleSpatialCanonicalFunction(
-                    sqlgen, functionExpression, GeographyFunctionNameToStaticMethodHandlerDictionary,
-                    GeographyFunctionNameToInstancePropertyNameDictionary, GeographyRenamedInstanceMethodFunctionDictionary);
+                    sqlgen, functionExpression, _geographyFunctionNameToStaticMethodHandlerDictionary,
+                    _geographyFunctionNameToInstancePropertyNameDictionary, _geographyRenamedInstanceMethodFunctionDictionary);
             }
             else
             {
                 return HandleSpatialCanonicalFunction(
-                    sqlgen, functionExpression, GeometryFunctionNameToStaticMethodHandlerDictionary,
-                    GeometryFunctionNameToInstancePropertyNameDictionary, GeometryRenamedInstanceMethodFunctionDictionary);
+                    sqlgen, functionExpression, _geometryFunctionNameToStaticMethodHandlerDictionary,
+                    _geometryFunctionNameToInstancePropertyNameDictionary, _geometryRenamedInstanceMethodFunctionDictionary);
             }
         }
 
@@ -963,27 +988,27 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             return WrapWithCast(
                 castReturnTypeTo, result =>
-                {
-                    var instanceExpression = functionExpression.Arguments[0];
+                                      {
+                                          var instanceExpression = functionExpression.Arguments[0];
 
-                    // Write the instance - if this is another function call, it need not be enclosed in parentheses.
-                    if (instanceExpression.ExpressionKind
-                        != DbExpressionKind.Function)
-                    {
-                        sqlgen.ParenthesizeExpressionIfNeeded(instanceExpression, result);
-                    }
-                    else
-                    {
-                        result.Append(instanceExpression.Accept(sqlgen));
-                    }
-                    result.Append(".");
-                    result.Append(functionName);
+                                          // Write the instance - if this is another function call, it need not be enclosed in parentheses.
+                                          if (instanceExpression.ExpressionKind
+                                              != DbExpressionKind.Function)
+                                          {
+                                              sqlgen.ParenthesizeExpressionIfNeeded(instanceExpression, result);
+                                          }
+                                          else
+                                          {
+                                              result.Append(instanceExpression.Accept(sqlgen));
+                                          }
+                                          result.Append(".");
+                                          result.Append(functionName);
 
-                    if (!isPropertyAccess)
-                    {
-                        WriteFunctionArguments(sqlgen, functionExpression.Arguments.Skip(1), result);
-                    }
-                });
+                                          if (!isPropertyAccess)
+                                          {
+                                              WriteFunctionArguments(sqlgen, functionExpression.Arguments.Skip(1), result);
+                                          }
+                                      });
         }
 
         /// <summary>
@@ -1016,8 +1041,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
             }
             result.Append(" ");
-            Debug.Assert(FunctionNameToOperatorDictionary.ContainsKey(e.Function.Name), "The function can not be mapped to an operator");
-            result.Append(FunctionNameToOperatorDictionary[e.Function.Name]);
+            Debug.Assert(_functionNameToOperatorDictionary.ContainsKey(e.Function.Name), "The function can not be mapped to an operator");
+            result.Append(_functionNameToOperatorDictionary[e.Function.Name]);
             result.Append(" ");
 
             if (parenthesiseArguments)
@@ -1069,21 +1094,24 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var constExpr = e.Arguments[0] as DbConstantExpression;
             if (null == constExpr)
             {
-                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(
+                    Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
             var datepart = constExpr.Value as string;
             if (null == datepart)
             {
-                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(
+                    Strings.SqlGen_InvalidDatePartArgumentExpression(e.Function.NamespaceName, e.Function.Name));
             }
 
             //
             // check if datepart value is valid
             //
-            if (!DatepartKeywords.Contains(datepart))
+            if (!_datepartKeywords.Contains(datepart))
             {
-                throw new InvalidOperationException(Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
+                throw new InvalidOperationException(
+                    Strings.SqlGen_InvalidDatePartArgumentValue(datepart, e.Function.NamespaceName, e.Function.Name));
             }
 
             var result = new SqlBuilder();
@@ -1442,7 +1470,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
 
             result.Append("DATEADD (");
-            result.Append(DateAddFunctionNameToDatepartDictionary[e.Function.Name]);
+            result.Append(_dateAddFunctionNameToDatepartDictionary[e.Function.Name]);
             result.Append(", ");
             result.Append(e.Arguments[1].Accept(sqlgen));
             result.Append(", ");
@@ -1477,7 +1505,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
 
             result.Append("DATEDIFF (");
-            result.Append(DateDiffFunctionNameToDatepartDictionary[e.Function.Name]);
+            result.Append(_dateDiffFunctionNameToDatepartDictionary[e.Function.Name]);
             result.Append(", ");
             result.Append(e.Arguments[0].Accept(sqlgen));
             result.Append(", ");
@@ -1926,7 +1954,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         internal static bool CastReturnTypeToInt64(DbFunctionExpression e)
         {
-            return CastReturnTypeToGivenType(e, FunctionRequiresReturnTypeCastToInt64, PrimitiveTypeKind.Int64);
+            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToInt64, PrimitiveTypeKind.Int64);
         }
 
         /// <summary>
@@ -1936,13 +1964,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         internal static bool CastReturnTypeToInt32(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            if (!FunctionRequiresReturnTypeCastToInt32.Contains(e.Function.FullName))
+            if (!_functionRequiresReturnTypeCastToInt32.Contains(e.Function.FullName))
             {
                 return false;
             }
 
             return e.Arguments.Select(t => sqlgen.StoreItemCollection.StoreProviderManifest.GetStoreType(t.ResultType))
-                .Any(storeType => MaxTypeNames.Contains(storeType.EdmType.Name));
+                .Any(storeType => _maxTypeNames.Contains(storeType.EdmType.Name));
         }
 
         /// <summary>
@@ -1952,7 +1980,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns></returns>
         internal static bool CastReturnTypeToInt16(DbFunctionExpression e)
         {
-            return CastReturnTypeToGivenType(e, FunctionRequiresReturnTypeCastToInt16, PrimitiveTypeKind.Int16);
+            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToInt16, PrimitiveTypeKind.Int16);
         }
 
         /// <summary>
@@ -1965,7 +1993,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             //Do not add the cast for the Round() overload having 2 arguments. 
             //Round(Single,Int32) maps to Round(Double,Int32)due to implicit casting. 
             //We don't need to cast in that case, since we expect a Double as return type there anyways.
-            return CastReturnTypeToGivenType(e, FunctionRequiresReturnTypeCastToSingle, PrimitiveTypeKind.Single);
+            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToSingle, PrimitiveTypeKind.Single);
         }
 
         /// <summary>

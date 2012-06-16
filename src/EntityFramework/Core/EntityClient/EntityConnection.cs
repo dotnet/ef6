@@ -33,14 +33,14 @@ namespace System.Data.Entity.Core.EntityClient
         private const string s_providerConnectionString = "provider connection string";
         private const string s_readerPrefix = "reader://";
 
-        private static readonly StateChangeEventArgs StateChangeClosed = new StateChangeEventArgs(
+        private static readonly StateChangeEventArgs _stateChangeClosed = new StateChangeEventArgs(
             ConnectionState.Open, ConnectionState.Closed);
 
-        private static readonly StateChangeEventArgs StateChangeOpen = new StateChangeEventArgs(
+        private static readonly StateChangeEventArgs _stateChangeOpen = new StateChangeEventArgs(
             ConnectionState.Closed, ConnectionState.Open);
 
         private readonly object _connectionStringLock = new object();
-        private static readonly DbConnectionOptions s_emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
+        private static readonly DbConnectionOptions _emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
 
         // The connection options object having the connection settings needed by this connection
         private DbConnectionOptions _userConnectionOptions;
@@ -82,7 +82,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="connectionString">The connection string, may contain a list of settings for the connection or
         /// just the name of the connection to use</param>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors"), ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
         //For ChangeConnectionString method call. But the paths are not created in this method.        
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
@@ -575,7 +576,8 @@ namespace System.Data.Entity.Core.EntityClient
             var closeStoreConnectionOnFailure = false;
             try
             {
-                if (_storeConnection.State != ConnectionState.Open)
+                if (_storeConnection.State
+                    != ConnectionState.Open)
                 {
                     await _storeConnection.OpenAsync(cancellationToken);
                     closeStoreConnectionOnFailure = true;
@@ -599,7 +601,8 @@ namespace System.Data.Entity.Core.EntityClient
 
             // the following guards against the case when the user closes the underlying store connection
             // in the state change event handler, as a consequence of which we are in the 'Broken' state
-            if (_storeConnection == null || _storeConnection.State != ConnectionState.Open)
+            if (_storeConnection == null
+                || _storeConnection.State != ConnectionState.Open)
             {
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
             }
@@ -652,7 +655,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Create a new command object that uses this connection object.
         /// </summary>
-        public virtual new EntityCommand CreateCommand()
+        public new virtual EntityCommand CreateCommand()
         {
             return new EntityCommand(null, this);
         }
@@ -701,7 +704,7 @@ namespace System.Data.Entity.Core.EntityClient
         private void SetEntityClientConnectionStateToOpen()
         {
             _entityClientConnectionState = ConnectionState.Open;
-            OnStateChange(StateChangeOpen);
+            OnStateChange(_stateChangeOpen);
         }
 
         /// <summary>
@@ -747,7 +750,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// Begins a database transaction
         /// </summary>
         /// <returns>An object representing the new transaction</returns>
-        public virtual new EntityTransaction BeginTransaction()
+        public new virtual EntityTransaction BeginTransaction()
         {
             return base.BeginTransaction() as EntityTransaction;
         }
@@ -757,7 +760,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="isolationLevel">The isolation level of the transaction</param>
         /// <returns>An object representing the new transaction</returns>
-        public virtual new EntityTransaction BeginTransaction(IsolationLevel isolationLevel)
+        public new virtual EntityTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             return base.BeginTransaction(isolationLevel) as EntityTransaction;
         }
@@ -906,7 +909,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 if (raiseStateChangeEvent) // we need to raise the event explicitly
                 {
-                    OnStateChange(StateChangeClosed);
+                    OnStateChange(_stateChangeClosed);
                 }
             }
             base.Dispose(disposing);
@@ -927,7 +930,7 @@ namespace System.Data.Entity.Core.EntityClient
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names which are a Machine resource as part of the connection string
         private void ChangeConnectionString(string newConnectionString)
         {
-            var userConnectionOptions = s_emptyConnectionOptions;
+            var userConnectionOptions = _emptyConnectionOptions;
             if (!String.IsNullOrEmpty(newConnectionString))
             {
                 userConnectionOptions = new DbConnectionOptions(newConnectionString, EntityConnectionStringBuilder.Synonyms);
@@ -1315,7 +1318,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (fireEventOnStateChange)
                 {
-                    OnStateChange(StateChangeClosed);
+                    OnStateChange(_stateChangeClosed);
                 }
                 else
                 {

@@ -26,7 +26,7 @@
             new Lazy<IDbConnectionFactory>(() => new SqlConnectionFactory(), isThreadSafe: true);
 
         private static bool _initializersApplied;
-        private static readonly object Lock = new object();
+        private static readonly object _lock = new object();
 
         private static readonly MethodInfo Database_SetInitializerInternal =
             typeof(Database).GetMethod("SetInitializerInternal", BindingFlags.Static | BindingFlags.NonPublic);
@@ -132,7 +132,7 @@
         {
             if (!_initializersApplied || force)
             {
-                lock (Lock)
+                lock (_lock)
                 {
                     if (!_initializersApplied || force)
                     {
