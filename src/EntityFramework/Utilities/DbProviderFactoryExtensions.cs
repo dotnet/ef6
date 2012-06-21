@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
@@ -84,9 +85,7 @@ namespace System.Data.Entity.Utilities
             var invariantName = factory.GetProviderInvariantName();
             Contract.Assert(invariantName != null);
 
-            // TODO: If context is in use then use the AppConfig from the context rather than the
-            // default instance.
-            return AppConfig.DefaultInstance.Providers.GetDbProviderServices(invariantName);
+            return DbConfiguration.Instance.GetEntityFrameworkProvider(invariantName);
         }
     }
 }

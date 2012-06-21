@@ -162,6 +162,8 @@
         /// </summary>
         public override void DisposeContext()
         {
+            base.DisposeContext();
+
             if (!IsDisposed)
             {
                 _internalConnection.Dispose();

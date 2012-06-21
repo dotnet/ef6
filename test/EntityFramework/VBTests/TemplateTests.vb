@@ -5,8 +5,8 @@ Imports System.Reflection
 Imports System.Transactions
 Imports AdvancedPatternsVB
 Imports Another.Place
-Imports CodeFirstTest
-Imports System.Data.Entity.Core
+Imports System.Data.Entity.Config
+Imports FunctionalTests.TestHelpers
 
 ''' <summary>
 ''' Visual Basic tests that use T4 models generated in Visual Basic.
@@ -19,6 +19,7 @@ Public Class TemplateTests
     Private Const MemberBindingFlags As BindingFlags = BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.Public
 
     Shared Sub New()
+        DbConfiguration.Instance = New FunctionalTestsConfiguration()
         InitializeModelFirstDatabases()
     End Sub
 

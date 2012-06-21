@@ -11,6 +11,7 @@
     using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using System.Linq;
+    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
 
@@ -898,10 +899,10 @@
         // GetProviderManifestTokenChecked method is changed.
         public void Useful_exception_is_thrown_if_model_creation_happens_with_bad_MVC4_connection_string()
         {
-            var previousConnectionFactory = Database.DefaultConnectionFactory;
+            var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             try
             {
-                Database.DefaultConnectionFactory = new SqlConnectionFactory("Data Source=(localdb)\v11.0; Integrated Security=True; MultipleActiveResultSets=True; Connection Timeout=1");
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new SqlConnectionFactory("Data Source=(localdb)\v11.0; Integrated Security=True; MultipleActiveResultSets=True; Connection Timeout=1");
 
                 using (var context = new BadMvcContext())
                 {
@@ -910,7 +911,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = previousConnectionFactory;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = previousConnectionFactory;
             }
         }
 

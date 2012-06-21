@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -29,7 +30,8 @@
 
         // The default factory object used to create a DbConnection from a database name.
         private static readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
-            new Lazy<IDbConnectionFactory>(() => AppConfig.DefaultInstance.DefaultConnectionFactory, isThreadSafe: true);
+            new Lazy<IDbConnectionFactory>(
+                () => AppConfig.DefaultInstance.TryGetDefaultConnectionFactory() ?? new SqlConnectionFactory(), isThreadSafe: true);
 
         private static volatile Lazy<IDbConnectionFactory> _defaultConnectionFactory = _defaultDefaultConnectionFactory;
 
@@ -77,6 +79,8 @@
         /// <value>The database creation strategy.</value>
         public static void SetInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
         {
+            DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
+
             SetInitializerInternal(strategy, lockStrategy: false);
         }
 
@@ -332,6 +336,7 @@
         ///     the config file then <see cref = "SqlConnectionFactory" /> is used. Setting this property in code
         ///     always overrides whatever value is found in the config file.
         /// </remarks>
+        [Obsolete("Set connection factory in config file or set in code using the DbConfiguration class.")]
         public static IDbConnectionFactory DefaultConnectionFactory
         {
             get { return _defaultConnectionFactory.Value; }

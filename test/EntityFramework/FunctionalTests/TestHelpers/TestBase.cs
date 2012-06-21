@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Configuration;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity.Edm.Db.Mapping;
@@ -18,9 +19,15 @@
     using System.Threading.Tasks;
     using System.Transactions;
     using System.Xml.Linq;
+    using FunctionalTests.TestHelpers;
 
     public class TestBase : MarshalByRefObject
     {
+        static TestBase()
+        {
+            DbConfiguration.Instance = new FunctionalTestsConfiguration();
+        }
+
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)
         {
             // Build and clone to check for idempotency issues.

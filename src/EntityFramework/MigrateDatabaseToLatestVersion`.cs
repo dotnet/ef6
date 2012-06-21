@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Diagnostics.Contracts;
@@ -13,6 +14,11 @@
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
         private readonly DbMigrationsConfiguration _config;
+
+        static MigrateDatabaseToLatestVersion()
+        {
+            DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
+        }
 
         /// <summary>
         /// Initializes a new instance of the MigrateDatabaseToLatestVersion class. 

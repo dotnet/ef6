@@ -3,6 +3,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -263,9 +264,7 @@ namespace System.Data.Entity.Internal
                         {
                             // Otherwise figure out the connection factory to use (either the default,
                             // the one set in code, or one provided by DbContextInfo via the AppSettings property
-                            var defaultConnectionFactory = Database.DefaultConnectionFactoryChanged
-                                                               ? Database.DefaultConnectionFactory
-                                                               : AppConfig.DefaultConnectionFactory;
+                            var defaultConnectionFactory = DbConfiguration.Instance.GetDefaultConnectionFactory();
 
                             UnderlyingConnection =
                                 defaultConnectionFactory.CreateConnection(name ?? _nameOrConnectionString);

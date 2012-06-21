@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -93,6 +94,8 @@
                 Contract.Requires(typeof(DbContext).IsAssignableFrom(value));
 
                 _contextType = value;
+                
+                DbConfigurationManager.Instance.EnsureLoadedForContext(_contextType);
             }
         }
 

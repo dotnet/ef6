@@ -3,21 +3,23 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
 
+    // TODO: Consider thread safety
+    // TODO: Consider caching for perf
     internal class RootDependencyResolver : IDbDependencyResolver
     {
         public virtual object Get(Type type, string name)
         {
             if (type == typeof(DbProviderServices))
             {
-                throw new Exception("Could not find EF provider.");
+                return new ProviderServicesFactory().GetInstanceByConvention(name);
             }
 
             if (type == typeof(IDbConnectionFactory))
             {
-                return Database.DefaultConnectionFactory;
+                return new SqlConnectionFactory();
             }
 
-            // TODO Check for IDatabaseInitializer type and return initializer with Database.SetInitializer
+            // TODO: Implement for IDatabaseInitializer
 
             return null;
         }

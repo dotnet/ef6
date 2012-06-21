@@ -5,21 +5,23 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal;
     using System.Diagnostics.Contracts;
 
+    // TODO: Thread safety
     public class DbConfiguration
     {
-        private readonly ResolverChain _resolverChain = new ResolverChain();
+        private readonly CompositeResolver<ResolverChain, ResolverChain> _resolvers
+            = new CompositeResolver<ResolverChain, ResolverChain>(new ResolverChain(), new ResolverChain());
+        
+        private bool _isLocked;
 
         protected internal DbConfiguration()
-            : this(
-                new RootDependencyResolver(), 
-                new ConfigDependencyResolver(AppConfig.DefaultInstance))
+            : this(new AppConfigDependencyResolver(AppConfig.DefaultInstance), new RootDependencyResolver())
         {
         }
 
-        internal DbConfiguration(IDbDependencyResolver rootResolver, IDbDependencyResolver defaultResolver)
+        internal DbConfiguration(IDbDependencyResolver appConfigResolver, IDbDependencyResolver rootResolver)
         {
-            _resolverChain.Add(rootResolver);
-            _resolverChain.Add(defaultResolver);
+            _resolvers.First.Add(appConfigResolver);
+            _resolvers.Second.Add(rootResolver);
         }
 
         public static DbConfiguration Instance
@@ -33,57 +35,78 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public virtual void AddDependencyResolver(IDbDependencyResolver resolver)
+        internal void Lock()
         {
-            Contract.Requires(resolver != null);
-
-            _resolverChain.Add(resolver);
+            _isLocked = true;
         }
 
-        public virtual bool RemoveDependencyResolver(IDbDependencyResolver resolver)
+        internal void AddAppConfigResolver(IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
+            CheckNotLocked();
 
-            return _resolverChain.Remove(resolver);
+            _resolvers.First.Add(resolver);
+        }
+
+        protected void AddDependencyResolver(IDbDependencyResolver resolver)
+        {
+            Contract.Requires(resolver != null);
+            CheckNotLocked();
+
+            // New resolvers always run after the config resolvers so that config always wins over code
+            _resolvers.Second.Add(resolver);
         }
 
         [CLSCompliant(false)]
-        public virtual void AddEntityFrameworkProvider(string providerInvariantName, DbProviderServices provider)
+        protected void AddEntityFrameworkProvider(string providerInvariantName, DbProviderServices provider)
         {
+            CheckNotLocked();
+
             AddDependencyResolver(new SingletonDependencyResolver<DbProviderServices>(provider, providerInvariantName));
         }
 
         [CLSCompliant(false)]
-        public virtual DbProviderServices GetEntityFrameworkProvider(string providerInvariantName)
+        public DbProviderServices GetEntityFrameworkProvider(string providerInvariantName)
         {
-            // TODO: Make sure that places that new the provider get it from here
-            return (DbProviderServices)_resolverChain.Get(typeof(DbProviderServices), providerInvariantName);
+            // TODO: use generic version of Get
+            return (DbProviderServices)_resolvers.Get(typeof(DbProviderServices), providerInvariantName);
         }
 
-        public virtual void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
+        protected void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
         {
+            CheckNotLocked();
+
             AddDependencyResolver(new SingletonDependencyResolver<IDatabaseInitializer<TContext>>(strategy));
         }
 
-        public virtual IDatabaseInitializer<TContext> GetDatabaseInitializer<TContext>() where TContext : DbContext
+        public IDatabaseInitializer<TContext> GetDatabaseInitializer<TContext>() where TContext : DbContext
         {
             // TODO: Make sure that access to the database initializer now uses this method
             // TODO Check how current contextinfo interacts with initializer (don't think it does)
-            return (IDatabaseInitializer<TContext>)_resolverChain.Get(typeof(IDatabaseInitializer<TContext>), null);
+            return (IDatabaseInitializer<TContext>)_resolvers.Get(typeof(IDatabaseInitializer<TContext>), null);
         }
 
-        public virtual IDbConnectionFactory DefaultConnectionFactory
+        public void SetDefaultConnectionFactory(IDbConnectionFactory value)
         {
-            get
+            CheckNotLocked();
+
+            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(value));
+        }
+
+        public IDbConnectionFactory GetDefaultConnectionFactory()
+        {
+            return Database.DefaultConnectionFactoryChanged
+#pragma warning disable 612,618
+                       ? Database.DefaultConnectionFactory
+#pragma warning restore 612,618
+                       : (IDbConnectionFactory)_resolvers.Get(typeof(IDbConnectionFactory), null);
+        }
+
+        private void CheckNotLocked()
+        {
+            if (_isLocked)
             {
-                // TODO: Make setting with old method obsolete
-                return Database.DefaultConnectionFactoryChanged
-                           ? Database.DefaultConnectionFactory
-                           : (IDbConnectionFactory)_resolverChain.Get(typeof(IDbConnectionFactory), null);
-            }
-            set
-            {
-                AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(value));
+                throw new InvalidOperationException("Configuration can only be changed before the configuration is used. Try setting configuration in the constructor of your DbConfiguration class.");
             }
         }
     }

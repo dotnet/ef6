@@ -17,7 +17,6 @@ namespace System.Data.Entity.Infrastructure
         private readonly DbProviderInfo _modelProviderInfo;
         private readonly DbConnectionInfo _connectionInfo;
         private readonly AppConfig _appConfig;
-        private readonly ConfigDependencyResolver _dependencyResolver;
         private readonly Func<DbContext> _activator;
         private readonly string _connectionString;
         private readonly string _connectionProviderName;
@@ -170,9 +169,6 @@ namespace System.Data.Entity.Infrastructure
             _modelProviderInfo = modelProviderInfo;
             _appConfig = config;
             _connectionInfo = connectionInfo;
-            _dependencyResolver = new ConfigDependencyResolver(_appConfig);
-
-            DbConfiguration.Instance.AddDependencyResolver(_dependencyResolver);
 
             _activator = CreateActivator();
 
@@ -183,6 +179,8 @@ namespace System.Data.Entity.Infrastructure
                 if (context != null)
                 {
                     _isConstructible = true;
+
+                    PushConfiguration(context);
 
                     using (context)
                     {
@@ -197,9 +195,12 @@ namespace System.Data.Entity.Infrastructure
             }
         }
 
-        public virtual void PopConfiguration()
+        private void PushConfiguration(DbContext context)
         {
-            DbConfiguration.Instance.RemoveDependencyResolver(_dependencyResolver);
+            DbConfigurationManager.Instance.PushConfuguration(_appConfig, _contextType);
+            
+            context.InternalContext.OnContextDisposing += 
+                (_, __) => DbConfigurationManager.Instance.PopConfuguration(_appConfig);
         }
 
         /// <summary>
@@ -273,6 +274,7 @@ namespace System.Data.Entity.Infrastructure
 
             var context = _activator();
 
+            PushConfiguration(context);
             ConfigureContext(context);
 
             return context;

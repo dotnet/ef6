@@ -180,6 +180,7 @@
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
+    <Compile Include="TestHelpers\DefaultConnectionFactoryResolver.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
     <Compile Include="TestHelpers\EnumeratorExtensions.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
     <Compile Include="TestHelpers\ListExtensions.cs" />
+    <Compile Include="TestHelpers\FunctionalTestsConfiguration.cs" />
     <Compile Include="TestHelpers\PartialTrustFactAttribute.cs" />
     <Compile Include="TestHelpers\PartialTrustClassCommand.cs" />
     <Compile Include="TestHelpers\PartialTrustCommand.cs" />

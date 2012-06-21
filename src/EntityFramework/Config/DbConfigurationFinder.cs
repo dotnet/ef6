@@ -12,23 +12,38 @@ namespace System.Data.Entity.Config
             _typesToSearch = typesToSearch;
         }
 
-        public virtual DbConfiguration FindConfiguration()
+        public virtual Type TryFindConfigurationType()
         {
             var configurations = _typesToSearch
-                .Where(t => typeof(DbConfiguration).IsAssignableFrom(t))
+                .Where(
+                    t => typeof(DbConfiguration).IsAssignableFrom(t)
+                         && t != typeof(DbConfiguration)
+                         && t != typeof(DbProxyConfiguration))
                 .ToList();
-
-            if (configurations.Count == 0)
-            {
-                return new DbConfiguration();
-            }
 
             if (configurations.Count > 1)
             {
                 throw new Exception("Multiple configuration classes defined.");
             }
 
-            return CreateConfiguration(configurations.Single());
+            var configType = configurations.FirstOrDefault();
+
+            if (typeof(DbProxyConfiguration).IsAssignableFrom(configType))
+            {
+                // TODO: Create instance and ask for real configuration type
+            }
+
+            return configType;
+        }
+
+        public virtual DbConfiguration TryCreateConfiguration()
+        {
+            var configType = TryFindConfigurationType();
+
+
+            return configType == null || typeof(DbNullConfiguration).IsAssignableFrom(configType)
+                       ? null
+                       : CreateConfiguration(configType);
         }
 
         private static DbConfiguration CreateConfiguration(Type configurationType)
@@ -55,6 +70,5 @@ namespace System.Data.Entity.Config
 
             return (DbConfiguration)Activator.CreateInstance(configurationType);
         }
-
     }
 }

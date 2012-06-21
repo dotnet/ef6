@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Transactions;
@@ -14,6 +15,11 @@
         where TContext : DbContext
     {
         #region Strategy implementation
+
+        static CreateDatabaseIfNotExists()
+        {
+            DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
+        }
 
         /// <summary>
         ///     Executes the strategy to initialize the database for the given context.
