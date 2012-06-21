@@ -419,7 +419,7 @@
                 {
                     var assemblyName = assembly.GetName().Name;
                     var configurationTypes
-                        = assembly.GetTypes()
+                        = assembly.GetAccessibleTypes()
                             .Where(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
 
                     if (configurationTypeNameSpecified)
@@ -679,7 +679,7 @@
             {
                 var assembly = LoadAssembly();
 
-                var contextTypes = assembly.GetTypes()
+                var contextTypes = assembly.GetAccessibleTypes()
                     .Where(t => typeof(DbContext).IsAssignableFrom(t)).Select(t => t.FullName)
                     .ToList();
 

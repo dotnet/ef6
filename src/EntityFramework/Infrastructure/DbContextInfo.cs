@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Config;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -313,7 +314,7 @@ namespace System.Data.Entity.Infrastructure
             }
 
             var factoryType
-                = (from t in _contextType.Assembly.GetTypes()
+                = (from t in _contextType.Assembly.GetAccessibleTypes()
                    where t.IsClass && typeof(IDbContextFactory<>).MakeGenericType(_contextType).IsAssignableFrom(t)
                    select t).FirstOrDefault();
 

@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     .ConfiguredTypes
                     .Select(t => t.Assembly)
                     .Distinct()
-                    .SelectMany(a => a.GetTypes().Where(type => type.IsValidStructuralType())));
+                    .SelectMany(a => a.GetAccessibleTypes().Where(type => type.IsValidStructuralType())));
         }
 
         public MappingContext MappingContext
@@ -239,7 +239,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (!_knownTypes.Contains(type))
             {
-                _knownTypes.AddRange(type.Assembly.GetTypes().Where(t => t.IsValidStructuralType()));
+                _knownTypes.AddRange(type.Assembly.GetAccessibleTypes().Where(t => t.IsValidStructuralType()));
             }
 
             foreach (var derivedType in _knownTypes.Where(t => t.BaseType == type).ToList())

@@ -3,6 +3,7 @@ namespace System.Data.Entity.Config
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -67,10 +68,10 @@ namespace System.Data.Entity.Config
                 return;
             }
 
+            // TODO: Change to use assembly as key, not context
             _knownContexts.Add(contextType);
 
-            // TODO: Make sure to get types in a partial-trust safe way
-            var finder = new DbConfigurationFinder(contextType.Assembly.GetTypes());
+            var finder = new DbConfigurationFinder(contextType.Assembly.GetAccessibleTypes());
 
             if (_configuration == null)
             {
@@ -108,10 +109,10 @@ namespace System.Data.Entity.Config
 
         public virtual void PushConfuguration(AppConfig config, Type contextType)
         {
-            // TODO: Make sure to get types in a partial-trust safe way
             var configuration = TryLoadFromConfig(config)
-                                ?? new DbConfigurationFinder(contextType.Assembly.GetTypes()).TryCreateConfiguration()
+                                ?? new DbConfigurationFinder(contextType.Assembly.GetAccessibleTypes()).TryCreateConfiguration()
                                 ?? new DbConfiguration();
+
             configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config));
 
             configuration.Lock();

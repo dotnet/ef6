@@ -138,6 +138,7 @@
     <Compile Include="Migrations\Utilities\MigrationWriterTests.cs" />
     <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
     <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
+    <Compile Include="TestHelpers\UnitTestsConfiguration.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />
     <Compile Include="Utilities\DbContextExtensionsTests.cs" />

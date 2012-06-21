@@ -28,27 +28,23 @@ namespace System.Data.Entity.Config
 
             var configType = configurations.FirstOrDefault();
 
-            if (typeof(DbProxyConfiguration).IsAssignableFrom(configType))
-            {
-                // TODO: Create instance and ask for real configuration type
-            }
-
-            return configType;
+            return typeof(DbProxyConfiguration).IsAssignableFrom(configType)
+                       ? CreateConfiguration<DbProxyConfiguration>(configType).ConfigurationToUse()
+                       : configType;
         }
 
         public virtual DbConfiguration TryCreateConfiguration()
         {
             var configType = TryFindConfigurationType();
 
-
             return configType == null || typeof(DbNullConfiguration).IsAssignableFrom(configType)
                        ? null
-                       : CreateConfiguration(configType);
+                       : CreateConfiguration<DbConfiguration>(configType);
         }
 
-        private static DbConfiguration CreateConfiguration(Type configurationType)
+        private static TConfig CreateConfiguration<TConfig>(Type configurationType) where TConfig : DbConfiguration
         {
-            if (!typeof(DbConfiguration).IsAssignableFrom(configurationType))
+            if (!typeof(TConfig).IsAssignableFrom(configurationType))
             {
                 throw new InvalidOperationException("Bad type.");
             }
@@ -68,7 +64,7 @@ namespace System.Data.Entity.Config
                 throw new InvalidOperationException("Is generic.");
             }
 
-            return (DbConfiguration)Activator.CreateInstance(configurationType);
+            return (TConfig)Activator.CreateInstance(configurationType);
         }
     }
 }

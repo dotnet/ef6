@@ -76,6 +76,7 @@
     <Import Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="VBTestsConfiguration.vb" />
     <None Include="packages.config" />
     <Compile Include="TemplateTests.vb" />
     <Compile Include="VbAdvancedPatterns\AddressMf.vb">

@@ -33,7 +33,7 @@
             Contract.Requires(migrationsAssembly != null);
 
             _migrations
-                = (from t in migrationsAssembly.GetTypes()
+                = (from t in migrationsAssembly.GetAccessibleTypes()
                    where t.IsSubclassOf(typeof(DbMigration))
                          && typeof(IMigrationMetadata).IsAssignableFrom(t)
                          && t.GetConstructor(Type.EmptyTypes) != null
