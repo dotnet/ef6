@@ -198,10 +198,10 @@ namespace System.Data.Entity.Infrastructure
 
         private void PushConfiguration(DbContext context)
         {
-            DbConfigurationManager.Instance.PushConfuguration(_appConfig, _contextType);
+            DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType);
             
             context.InternalContext.OnContextDisposing += 
-                (_, __) => DbConfigurationManager.Instance.PopConfuguration(_appConfig);
+                (_, __) => DbConfigurationManager.Instance.PopConfiguration(_appConfig);
         }
 
         /// <summary>

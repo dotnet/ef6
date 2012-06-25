@@ -1,5 +1,7 @@
 namespace System.Data.Entity.Config
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// This interface is implemented by any object that can resolve a dependency, either directly
     /// or through use of an external container.
@@ -23,7 +25,8 @@ namespace System.Data.Entity.Config
         /// <returns>
         /// The resolved dependency, which must be an instance of the given contract type, or
         /// null if the dependency could not be resolved.
-        /// </returns>
+        /// </returns>        
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Get")] // TODO: Change name?
         object Get(Type type, string name);
 
         /// <summary>

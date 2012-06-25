@@ -126,7 +126,7 @@ namespace System.Data.Entity.Config
             _knownAssemblies.Add(contextAssembly);
         }
 
-        public virtual void PushConfuguration(AppConfig config, Type contextType)
+        public virtual void PushConfiguration(AppConfig config, Type contextType)
         {
             Contract.Requires(config != null);
             Contract.Requires(contextType != null);
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Config
             _configurationOverrides.Add(Tuple.Create(config, configuration));
         }
 
-        public virtual void PopConfuguration(AppConfig config)
+        public virtual void PopConfiguration(AppConfig config)
         {
             Contract.Requires(config != null);
 

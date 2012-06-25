@@ -2,20 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Objects;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
     using System.Linq;
+    using FunctionalTests.TestHelpers;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -435,9 +435,12 @@ END";
         [Fact]
         public void ApplicationName_not_set_when_not_sql_connection()
         {
+            var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
+
             try
             {
-                Database.DefaultConnectionFactory = new SqlCeConnectionFactory(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName);
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory
+                    = new SqlCeConnectionFactory(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName);
                 var model = new DbModelBuilder().Build(ProviderRegistry.SqlCe4_ProviderInfo);
                 IObjectContextAdapter objectContextAdapter = new NotSqlAppNameContext(new DbCompiledModel(model));
                 var storeConnection = ((EntityConnection)objectContextAdapter.ObjectContext.Connection).StoreConnection;
@@ -446,7 +449,7 @@ END";
             }
             finally
             {
-                Database.ResetDefaultConnectionFactory();
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = previousConnectionFactory;
             }
         }
 

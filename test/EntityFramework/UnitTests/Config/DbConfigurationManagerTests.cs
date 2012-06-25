@@ -28,12 +28,12 @@ namespace System.Data.Entity.Config
                 var configuration = new Mock<DbConfiguration>().Object;
 
                 manager.SetConfiguration(configuration);
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 var pushed1 = manager.GetConfiguration();
                 Assert.NotSame(configuration, pushed1);
 
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 var pushed2 = manager.GetConfiguration();
                 Assert.NotSame(pushed1, pushed2);
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Config
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var manager = CreateManager(null, mockFinder);
 
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 mockFinder.Verify(m => m.TryCreateConfiguration(It.IsAny<IEnumerable<Type>>()), Times.Once());
 
@@ -308,10 +308,10 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class PushConfuguration
+        public class PushConfiguration
         {
             [Fact]
-            public void PushConfuguration_pushes_and_locks_configuration_from_config_if_found()
+            public void PushConfugiration_pushes_and_locks_configuration_from_config_if_found()
             {
                 var mockConfiguration = new Mock<DbConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
@@ -320,7 +320,7 @@ namespace System.Data.Entity.Config
 
                 var manager = CreateManager(mockLoader, mockFinder);
 
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 mockConfiguration.Verify(m => m.Lock());
                 Assert.Same(mockConfiguration.Object, manager.GetConfiguration());
@@ -329,7 +329,7 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
-            public void PushConfuguration_pushes_and_locks_configuration_discovered_in_context_assembly_if_found()
+            public void PushConfugiration_pushes_and_locks_configuration_discovered_in_context_assembly_if_found()
             {
                 var mockConfiguration = new Mock<DbConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
@@ -338,7 +338,7 @@ namespace System.Data.Entity.Config
 
                 var manager = CreateManager(mockLoader, mockFinder);
 
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 mockConfiguration.Verify(m => m.Lock());
                 Assert.Same(mockConfiguration.Object, manager.GetConfiguration());
@@ -347,7 +347,7 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
-            public void PushConfuguration_pushes_default_configuration_if_no_other_found()
+            public void PushConfugiration_pushes_default_configuration_if_no_other_found()
             {
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 var mockFinder = new Mock<DbConfigurationFinder>();
@@ -356,7 +356,7 @@ namespace System.Data.Entity.Config
 
                 var defaultConfiguration = manager.GetConfiguration();
 
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 Assert.NotSame(defaultConfiguration, manager.GetConfiguration());
                 mockLoader.Verify(m => m.TryLoadFromConfig(AppConfig.DefaultInstance));
@@ -370,13 +370,13 @@ namespace System.Data.Entity.Config
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
 
-                CreateManager(mockLoader).PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                CreateManager(mockLoader).PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 mockConfiguration.Verify(m => m.AddAppConfigResolver(It.IsAny<AppConfigDependencyResolver>()));
             }
         }
 
-        public class PopConfuguration
+        public class PopConfiguration
         {
             [Fact]
             public void PopConfiguration_removes_the_first_configuration_associated_with_the_given_AppConfig()
@@ -388,14 +388,14 @@ namespace System.Data.Entity.Config
 
                 manager.SetConfiguration(configuration);
 
-                manager.PushConfuguration(appConfig1, typeof(DbContext));
+                manager.PushConfiguration(appConfig1, typeof(DbContext));
                 var pushed1 = manager.GetConfiguration();
-                manager.PushConfuguration(appConfig2, typeof(DbContext));
+                manager.PushConfiguration(appConfig2, typeof(DbContext));
 
-                manager.PopConfuguration(appConfig2);
+                manager.PopConfiguration(appConfig2);
                 Assert.Same(pushed1, manager.GetConfiguration());
 
-                manager.PopConfuguration(appConfig1);
+                manager.PopConfiguration(appConfig1);
                 Assert.Same(configuration, manager.GetConfiguration());
             }
 
@@ -404,10 +404,10 @@ namespace System.Data.Entity.Config
             {
                 var manager = CreateManager();
 
-                manager.PushConfuguration(AppConfig.DefaultInstance, typeof(DbContext));
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
                 var pushed1 = manager.GetConfiguration();
 
-                manager.PopConfuguration(new AppConfig(ConfigurationManager.ConnectionStrings));
+                manager.PopConfiguration(new AppConfig(ConfigurationManager.ConnectionStrings));
                 Assert.Same(pushed1, manager.GetConfiguration());
             }
         }

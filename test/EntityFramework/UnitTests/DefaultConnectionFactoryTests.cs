@@ -1,9 +1,9 @@
 ﻿namespace ProductivityApiUnitTests
 {
     using System;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using Xunit;
 
@@ -17,8 +17,10 @@
         [Fact]
         public void DefaultConnectionFactory_is_SqlServerConnectionFactory()
         {
-            Assert.NotNull(Database.DefaultConnectionFactory);
+#pragma warning disable 612,618
             Assert.IsType<SqlConnectionFactory>(Database.DefaultConnectionFactory);
+#pragma warning restore 612,618
+            Assert.IsType<SqlConnectionFactory>(DbConfiguration.Instance.DefaultConnectionFactory);
         }
 
         private class FakeConnectionFactory : IDbConnectionFactory
@@ -34,10 +36,11 @@
         {
             try
             {
+#pragma warning disable 612,618
                 Database.DefaultConnectionFactory = new FakeConnectionFactory();
 
-                Assert.NotNull(Database.DefaultConnectionFactory);
                 Assert.IsType<FakeConnectionFactory>(Database.DefaultConnectionFactory);
+#pragma warning restore 612,618
             }
             finally
             {
@@ -52,7 +55,9 @@
         [Fact]
         public void DefaultConnectionFactory_throws_when_set_to_null()
         {
+#pragma warning disable 612,618
             Assert.Equal("value", Assert.Throws<ArgumentNullException>(() => Database.DefaultConnectionFactory = null).ParamName);
+#pragma warning restore 612,618
         }
 
         #endregion
