@@ -85,7 +85,7 @@ namespace System.Data.Entity.Utilities
             var invariantName = factory.GetProviderInvariantName();
             Contract.Assert(invariantName != null);
 
-            return DbConfiguration.Instance.GetEntityFrameworkProvider(invariantName);
+            return DbConfiguration.Instance.GetProvider(invariantName);
         }
     }
 }

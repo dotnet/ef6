@@ -134,10 +134,12 @@
     <Compile Include="Config\CompositeResolver`.cs" />
     <Compile Include="Config\DbConfiguration.cs" />
     <Compile Include="Config\DbConfigurationFinder.cs" />
+    <Compile Include="Config\DbConfigurationLoader.cs" />
     <Compile Include="Config\DbConfigurationManager.cs" />
     <Compile Include="Config\DbNullConfiguration.cs" />
-    <Compile Include="Config\DbProxyConfiguration.cs" />
+    <Compile Include="Config\DbConfigurationProxy.cs" />
     <Compile Include="Config\IDbDependencyResolver.cs" />
+    <Compile Include="Config\IDbDependencyResolverExtensions.cs" />
     <Compile Include="Config\ProviderServicesFactory.cs" />
     <Compile Include="Config\ResolverChain.cs" />
     <Compile Include="Config\RootDependencyResolver.cs" />

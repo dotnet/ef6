@@ -3,7 +3,7 @@
     using System.Data.Entity.Config;
     using FunctionalTests.TestHelpers;
 
-    public class UnitTestsConfiguration : DbProxyConfiguration
+    public class UnitTestsConfiguration : DbConfigurationProxy
     {
         public override Type ConfigurationToUse()
         {

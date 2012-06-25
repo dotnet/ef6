@@ -7,6 +7,9 @@ namespace System.Data.Entity.Config
     using System.Globalization;
     using System.Reflection;
 
+    /// <summary>
+    /// Responsible for obtaining <see cref="DbProviderServices"/> Singleton instances.
+    /// </summary>
     internal class ProviderServicesFactory
     {
         public virtual DbProviderServices GetInstance(string providerTypeName, string providerInvariantName)

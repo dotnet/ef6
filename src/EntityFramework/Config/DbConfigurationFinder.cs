@@ -1,67 +1,83 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
+    /// <summary>
+    /// Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration"/>.
+    /// </summary>
     internal class DbConfigurationFinder
     {
-        private readonly IEnumerable<Type> _typesToSearch;
-
-        public DbConfigurationFinder(IEnumerable<Type> typesToSearch)
+        public virtual Type TryFindConfigurationType(IEnumerable<Type> typesToSearch)
         {
-            _typesToSearch = typesToSearch;
-        }
+            Contract.Requires(typesToSearch != null);
 
-        public virtual Type TryFindConfigurationType()
-        {
-            var configurations = _typesToSearch
+            var configurations = typesToSearch
                 .Where(
                     t => typeof(DbConfiguration).IsAssignableFrom(t)
                          && t != typeof(DbConfiguration)
-                         && t != typeof(DbProxyConfiguration))
+                         && t != typeof(DbConfigurationProxy)
+                         && !t.IsAbstract
+                         && !t.IsGenericType)
                 .ToList();
 
-            if (configurations.Count > 1)
+            // If there any null configurations then return one of them.
+            var nullConfig = configurations.FirstOrDefault(c => typeof(DbNullConfiguration).IsAssignableFrom(c));
+            if (nullConfig != null)
             {
-                throw new Exception("Multiple configuration classes defined.");
+                return nullConfig;
             }
 
-            var configType = configurations.FirstOrDefault();
+            // Else if there is exactly one proxy config then use it.
+            var proxyConfigs = configurations.Where(c => typeof(DbConfigurationProxy).IsAssignableFrom(c));
+            if (proxyConfigs.Count() > 1)
+            {
+                throw new InvalidOperationException(Strings.MultipleConfigsInAssembly(proxyConfigs.First().Assembly, typeof(DbConfigurationProxy).Name));
+            }
+            if (proxyConfigs.Count() == 1)
+            {
+                return CreateConfiguration<DbConfigurationProxy>(proxyConfigs.First()).ConfigurationToUse();
+            }
 
-            return typeof(DbProxyConfiguration).IsAssignableFrom(configType)
-                       ? CreateConfiguration<DbProxyConfiguration>(configType).ConfigurationToUse()
-                       : configType;
+            // Else if there is exactly one normal config then use it, otherwise return null.
+            if (configurations.Count > 1)
+            {
+                throw new InvalidOperationException(Strings.MultipleConfigsInAssembly(configurations.First().Assembly, typeof(DbConfiguration).Name));
+            }
+
+            return configurations.FirstOrDefault();
         }
 
-        public virtual DbConfiguration TryCreateConfiguration()
+        public virtual DbConfiguration TryCreateConfiguration(IEnumerable<Type> typesToSearch)
         {
-            var configType = TryFindConfigurationType();
+            Contract.Requires(typesToSearch != null);
+
+            var configType = TryFindConfigurationType(typesToSearch);
 
             return configType == null || typeof(DbNullConfiguration).IsAssignableFrom(configType)
                        ? null
                        : CreateConfiguration<DbConfiguration>(configType);
         }
 
-        private static TConfig CreateConfiguration<TConfig>(Type configurationType) where TConfig : DbConfiguration
+        public static TConfig CreateConfiguration<TConfig>(Type configurationType) where TConfig : DbConfiguration
         {
-            if (!typeof(TConfig).IsAssignableFrom(configurationType))
-            {
-                throw new InvalidOperationException("Bad type.");
-            }
+            Contract.Requires(typeof(TConfig).IsAssignableFrom(configurationType));
 
             if (configurationType.GetConstructor(Type.EmptyTypes) == null)
             {
-                throw new InvalidOperationException("No constructor.");
+                throw new InvalidOperationException(Strings.Configuration_NoParameterlessConstructor(configurationType));
             }
 
             if (configurationType.IsAbstract)
             {
-                throw new InvalidOperationException("Is abstract.");
+                throw new InvalidOperationException(Strings.Configuration_AbstractConfigurationType(configurationType));
             }
 
             if (configurationType.IsGenericType)
             {
-                throw new InvalidOperationException("Is generic.");
+                throw new InvalidOperationException(Strings.Configuration_GenericConfigurationType(configurationType));
             }
 
             return (TConfig)Activator.CreateInstance(configurationType);

@@ -491,7 +491,6 @@
 
         private void RunTestWithConnectionFactory(Action connectionFactorySetter, Action test)
         {
-            var currentConnectionFactory = Database.DefaultConnectionFactory;
             connectionFactorySetter();
             try
             {
@@ -499,7 +498,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = currentConnectionFactory;
+                Database.ResetDefaultConnectionFactory();
             }
         }
 

@@ -446,7 +446,7 @@ END";
             }
             finally
             {
-                Database.DefaultConnectionFactory = new SqlConnectionFactory();
+                Database.ResetDefaultConnectionFactory();
             }
         }
 

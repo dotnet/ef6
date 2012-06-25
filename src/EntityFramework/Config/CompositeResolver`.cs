@@ -1,5 +1,11 @@
 namespace System.Data.Entity.Config
 {
+    using System.Diagnostics.Contracts;
+
+    /// <summary>
+    /// Implements a Composite pattern for <see cref="IDbDependencyResolver"/> such that if the first
+    /// resolver can't resolve the dependency then the second resolver will be used.
+    /// </summary>
     internal class CompositeResolver<TFirst, TSecond> : IDbDependencyResolver
         where TFirst : IDbDependencyResolver
         where TSecond :IDbDependencyResolver
@@ -10,6 +16,9 @@ namespace System.Data.Entity.Config
 
         public CompositeResolver(TFirst firstResolver, TSecond secondResolver)
         {
+            Contract.Requires(firstResolver != null);
+            Contract.Requires(secondResolver != null);
+
             _firstResolver = firstResolver;
             _secondResolver = secondResolver;
         }

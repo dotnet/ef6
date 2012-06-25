@@ -5,6 +5,9 @@ namespace System.Data.Entity.Config
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    /// <summary>
+    /// Chain-of-Responsibility implementation for <see cref="IDbDependencyResolver"/> instances.
+    /// </summary>
     internal class ResolverChain : IDbDependencyResolver
     {
         private readonly IList<IDbDependencyResolver> _resolvers = new List<IDbDependencyResolver>();
@@ -14,13 +17,6 @@ namespace System.Data.Entity.Config
             Contract.Requires(resolver != null);
 
             _resolvers.Add(resolver);
-        }
-
-        public virtual bool Remove(IDbDependencyResolver resolver)
-        {
-            Contract.Requires(resolver != null);
-
-            return _resolvers.Remove(resolver);
         }
 
         public virtual object Get(Type type, string name)

@@ -1015,126 +1015,23 @@
 
         }
 
-        public class GetProviderTypeByConvention
+        public class TryGetDbProviderServicesTypeName
         {
             [Fact]
-            public void GetInstanceByConvention_returns_SqlProviderServices_type_for_SqlClient_invariant_name()
+            public void TryGetDbProviderServicesTypeName_returns_null_if_invariant_name_is_not_in_config()
             {
-                Assert.Same(
-                    SqlProviderServices.Instance,
-                    new ProviderServicesFactory().GetInstanceByConvention(SqlClientFactory.Instance.GetProviderInvariantName()));
+                Assert.Null(
+                    CreateAppConfig().Providers.TryGetDbProviderServicesTypeName("System.Data.SqlClient"));
             }
 
             [Fact]
-            public void GetInstanceByConvention_returns_SqlCeProviderServices_type_for_Sql_Compact_invariant_name()
+            public void TryGetDbProviderServicesTypeName_returns_type_name_if_invariant_name_is_in_config()
             {
                 Assert.Equal(
-                    SqlCeProviderServices.Instance,
-                    new ProviderServicesFactory().GetInstanceByConvention("System.Data.SqlServerCe.4.0"));
+                    "I.Is.An.Aeroplane",
+                    CreateAppConfig("Learning.To.Fly", "I.Is.An.Aeroplane")
+                        .Providers.TryGetDbProviderServicesTypeName("Learning.To.Fly"));
             }
-        }
-
-        public class GetDbProviderServices
-        {
-            [Fact]
-            public void GetInstanceByConvention_throws_for_unknown_invariant_name()
-            {
-                Assert.Equal(
-                    Strings.EF6Providers_NoProviderFound("Don't.Come.Around.Here.No.More"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => new ProviderServicesFactory().GetInstanceByConvention("Don't.Come.Around.Here.No.More")).Message);
-            }
-
-            //[Fact]
-            //public void GetDbProviderServices_prefers_provider_from_config_over_by_convention_provider()
-            //{
-            //    Assert.Same(
-            //        FakeProviderWithPublicProperty.Instance,
-            //        CreateAppConfig("System.Data.SqlClient", typeof(FakeProviderWithPublicProperty).AssemblyQualifiedName)
-            //            .Providers.TryGetDbProviderServices("System.Data.SqlClient"));
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_returns_provider_by_convention_if_invariant_name_is_not_in_config()
-            //{
-            //    Assert.Same(
-            //        SqlProviderServices.Instance,
-            //        CreateAppConfig().Providers.TryGetDbProviderServices("System.Data.SqlClient"));
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_uses_public_Instance_property_if_available()
-            //{
-            //    Assert.Same(
-            //        FakeProviderWithPublicProperty.Instance,
-            //        CreateAppConfig("Learning.To.Fly", typeof(FakeProviderWithPublicProperty).AssemblyQualifiedName)
-            //            .Providers.TryGetDbProviderServices("Learning.To.Fly"));
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_uses_public_Instance_field_if_available()
-            //{
-            //    Assert.Same(
-            //        FakeProviderWithPublicField.Instance,
-            //        CreateAppConfig("I.Wanna.Hold.Your.Hand", typeof(FakeProviderWithPublicField).AssemblyQualifiedName)
-            //            .Providers.TryGetDbProviderServices("I.Wanna.Hold.Your.Hand"));
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_uses_non_public_Instance_property_if_available()
-            //{
-            //    Assert.IsType<FakeProviderWithNonPublicProperty>(
-            //        CreateAppConfig("Stairway.To.Heaven", typeof(FakeProviderWithNonPublicProperty).AssemblyQualifiedName)
-            //            .Providers.TryGetDbProviderServices("Stairway.To.Heaven"));
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_uses_non_public_Instance_field_if_available()
-            //{
-            //    Assert.IsType<FakeProviderWithNonPublicField>(
-            //        CreateAppConfig("Does.Anybody.Remember.Laughter?", typeof(FakeProviderWithNonPublicField).AssemblyQualifiedName)
-            //            .Providers.TryGetDbProviderServices("Does.Anybody.Remember.Laughter?"));
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_throws_if_provider_type_cannot_be_loaded()
-            //{
-            //    Assert.Equal(
-            //        Strings.EF6Providers_ProviderTypeMissing("Killer.Queen.ProviderServices, Sheer.Heart.Attack", "Killer.Queen"),
-            //        Assert.Throws<InvalidOperationException>(
-            //            () => CreateAppConfig("Killer.Queen", "Killer.Queen.ProviderServices, Sheer.Heart.Attack")
-            //                      .Providers.TryGetDbProviderServices("Killer.Queen")).Message);
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_throws_if_there_is_no_Instance_field_or_property()
-            //{
-            //    Assert.Equal(
-            //        Strings.EF6Providers_InstanceMissing(typeof(FakeProviderWithNoInstance).AssemblyQualifiedName),
-            //        Assert.Throws<InvalidOperationException>(
-            //            () => CreateAppConfig("One.Headlight", typeof(FakeProviderWithNoInstance).AssemblyQualifiedName)
-            //                      .Providers.TryGetDbProviderServices("One.Headlight")).Message);
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_throws_if_Instance_member_returns_null()
-            //{
-            //    Assert.Equal(
-            //        Strings.EF6Providers_NotDbProviderServices(typeof(FakeProviderWithNullInstance).AssemblyQualifiedName),
-            //        Assert.Throws<InvalidOperationException>(
-            //            () => CreateAppConfig("Another.One.Bites.The.Dust", typeof(FakeProviderWithNullInstance).AssemblyQualifiedName)
-            //                      .Providers.TryGetDbProviderServices("Another.One.Bites.The.Dust")).Message);
-            //}
-
-            //[Fact]
-            //public void GetDbProviderServices_throws_if_Instance_member_is_not_a_DbProviderServices_instance()
-            //{
-            //    Assert.Equal(
-            //        Strings.EF6Providers_NotDbProviderServices(typeof(FakeProviderWithBadInstance).AssemblyQualifiedName),
-            //        Assert.Throws<InvalidOperationException>(
-            //            () => CreateAppConfig("Everlong", typeof(FakeProviderWithBadInstance).AssemblyQualifiedName)
-            //                      .Providers.TryGetDbProviderServices("Everlong")).Message);
-            //}
 
             private static AppConfig CreateAppConfig(string invariantName = null, string typeName = null)
             {
@@ -1149,60 +1046,6 @@
                 mockEFSection.Setup(m => m.Providers).Returns(providers);
 
                 return new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object);
-            }
-
-            public class FakeProviderWithBadInstance : FakeProviderBase
-            {
-                private static readonly Random Instance = new Random();
-            }
-
-            public class FakeProviderWithNullInstance : FakeProviderBase
-            {
-                private static readonly FakeProviderWithNullInstance Instance;
-            }
-
-            public class FakeProviderWithNoInstance : FakeProviderBase
-            {
-            }
-
-            public class FakeProviderWithPublicField : FakeProviderBase
-            {
-                public static readonly FakeProviderWithPublicField Instance = new FakeProviderWithPublicField();
-            }
-
-            public class FakeProviderWithPublicProperty : FakeProviderBase
-            {
-                private static readonly FakeProviderWithPublicProperty Singleton = new FakeProviderWithPublicProperty();
-                public static FakeProviderWithPublicProperty Instance { get { return Singleton; } }
-            }
-
-            public class FakeProviderWithNonPublicField : FakeProviderBase
-            {
-                private static readonly FakeProviderWithNonPublicField Instance = new FakeProviderWithNonPublicField();
-            }
-
-            public class FakeProviderWithNonPublicProperty : FakeProviderBase
-            {
-                private static readonly FakeProviderWithNonPublicProperty Singleton = new FakeProviderWithNonPublicProperty();
-                private static FakeProviderWithNonPublicProperty Instance { get { return Singleton; } }
-            }
-
-            public class FakeProviderBase : DbProviderServices
-            {
-                protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
-                {
-                    throw new NotImplementedException();
-                }
-
-                protected override string GetDbProviderManifestToken(DbConnection connection)
-                {
-                    throw new NotImplementedException();
-                }
-
-                protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
-                {
-                    throw new NotImplementedException();
-                }
             }
         }
     }

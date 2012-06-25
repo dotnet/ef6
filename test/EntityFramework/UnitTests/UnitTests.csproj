@@ -92,6 +92,16 @@
     <Compile Include="CommandLine\_TestHelpers\ThreeRequiredPositionArgs.cs" />
     <Compile Include="CommandLine\_TestHelpers\TwoPropsWithSameSwitch.cs" />
     <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
+    <Compile Include="Config\AppConfigDependencyResolverTests.cs" />
+    <Compile Include="Config\CompositeResolverTests.cs" />
+    <Compile Include="Config\DbConfigurationFinderTests.cs" />
+    <Compile Include="Config\DbConfigurationManagerTests.cs" />
+    <Compile Include="Config\DbConfigurationTests.cs" />
+    <Compile Include="Config\IDbDependencyResolverExtensionsTests.cs" />
+    <Compile Include="Config\ProviderServicesFactoryTests.cs" />
+    <Compile Include="Config\ResolverChainTests.cs" />
+    <Compile Include="Config\RootDependencyResolverTests.cs" />
+    <Compile Include="Config\SingletonDependencyResolverTests.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\ShaperTests.cs" />
     <Compile Include="Core\Objects\ObjectQueryTests.cs" />

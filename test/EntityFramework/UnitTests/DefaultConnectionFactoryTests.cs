@@ -32,7 +32,6 @@
         [Fact]
         public void DefaultConnectionFactory_can_be_changed()
         {
-            var defaultFactory = Database.DefaultConnectionFactory;
             try
             {
                 Database.DefaultConnectionFactory = new FakeConnectionFactory();
@@ -42,7 +41,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = defaultFactory;
+                Database.ResetDefaultConnectionFactory();
             }
         }
 
