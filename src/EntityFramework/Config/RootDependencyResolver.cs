@@ -2,6 +2,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
 
@@ -32,6 +33,11 @@ namespace System.Data.Entity.Config
             if (type == typeof(IDbConnectionFactory))
             {
                 return new SqlConnectionFactory();
+            }
+
+            if (type == typeof(IDbModelCacheKeyFactory))
+            {
+                return new DefaultModelCacheKeyFactory();
             }
 
             Contract.Assert(false, "End of resolver chain reached without resolving dependency.");

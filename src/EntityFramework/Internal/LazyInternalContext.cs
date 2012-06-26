@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
@@ -26,8 +27,8 @@
 
         // A cache from context type and provider invariant name to DbCompiledModel objects such that the model for a derived context type is only used once.
         private static readonly
-            ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>> _cachedModels =
-                new ConcurrentDictionary<Tuple<Type, string>, RetryLazy<LazyInternalContext, DbCompiledModel>>();
+            ConcurrentDictionary<IDbModelCacheKey, RetryLazy<LazyInternalContext, DbCompiledModel>> _cachedModels =
+                new ConcurrentDictionary<IDbModelCacheKey, RetryLazy<LazyInternalContext, DbCompiledModel>>();
 
         // The databases that have been initialized in this app domain in terms of the DbCompiledModel
         // and the connection strings that have been used with that model.
@@ -67,6 +68,8 @@
 
         private Action<DbModelBuilder> _onModelCreating;
 
+        private readonly IDbModelCacheKeyFactory _cacheKeyFactory;
+        
         /// <summary>
         ///     Constructs a <see cref = "LazyInternalContext" /> for the given <see cref = "DbContext" /> owner that will be initialized
         ///     on first use.
@@ -74,13 +77,19 @@
         /// <param name = "owner">The owner <see cref = "DbContext" />.</param>
         /// <param name = "internalConnection">Responsible for creating a connection lazily when the context is used for the first time.</param>
         /// <param name = "model">The model, or null if it will be created by convention</param>
-        public LazyInternalContext(DbContext owner, IInternalConnection internalConnection, DbCompiledModel model)
+        public LazyInternalContext(
+            DbContext owner,
+            IInternalConnection internalConnection,
+            DbCompiledModel model,
+            IDbModelCacheKeyFactory cacheKeyFactory = null)
             : base(owner)
         {
             Contract.Requires(internalConnection != null);
 
             _internalConnection = internalConnection;
             _model = model;
+            _cacheKeyFactory = cacheKeyFactory ?? new DefaultModelCacheKeyFactory();
+
             _createdWithExistingModel = model != null;
         }
 
@@ -368,12 +377,15 @@
                             // try again later when the resource issue has potentially been resolved. To enable this RetryLazy will
                             // try again next time GetValue called. We have to pass the context to GetValue so that the next time it tries
                             // again it will use the new connection.
-                            var model = _cachedModels.GetOrAdd(
-                                Tuple.Create(Owner.GetType(), _internalConnection.ProviderName),
-                                t => new RetryLazy<LazyInternalContext, DbCompiledModel>(CreateModel))
-                                .GetValue(this);
+
+                            var key = _cacheKeyFactory.Create(Owner);
+                                
+                            var model
+                                = _cachedModels.GetOrAdd(
+                                    key, t => new RetryLazy<LazyInternalContext, DbCompiledModel>(CreateModel)).GetValue(this);
 
                             _objectContext = model.CreateObjectContext<ObjectContext>(_internalConnection.Connection);
+
                             // Don't actually set the _model unless we succeed in creating the object context.
                             _model = model;
                         }

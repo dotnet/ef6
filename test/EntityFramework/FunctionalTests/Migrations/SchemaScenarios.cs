@@ -4,10 +4,9 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using Xunit;
 
-    // Tests currently disabled due ot model builder caching issue--anpete is working on this.
-    //[Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
-    //[Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
+    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SchemaScenarios : DbTestCase
     {
         private class CustomSchemaContext : ShopContext_v1
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        //[MigrationsTheory]
+        [MigrationsTheory]
         public void Can_update_when_custom_default_schema()
         {
             DropDatabase();
@@ -34,22 +33,32 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("foo." + HistoryContext.TableName));
         }
 
-        //[MigrationsTheory]
+        private class CustomSchemaContext2 : ShopContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder.HasDefaultSchema("bar");
+            }
+        }
+
+        [MigrationsTheory]
         public void Can_generate_and_update_when_custom_default_schema()
         {
             DropDatabase();
 
-            var migrator = CreateMigrator<CustomSchemaContext>();
+            var migrator = CreateMigrator<CustomSchemaContext2>();
 
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
 
-            migrator = CreateMigrator<CustomSchemaContext>(false, scaffoldedMigrations: generatedMigration);
+            migrator = CreateMigrator<CustomSchemaContext2>(false, scaffoldedMigrations: generatedMigration);
 
             migrator.Update();
 
-            Assert.True(TableExists("foo.OrderLines"));
+            Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("bar." + HistoryContext.TableName));
         }
     }
 }

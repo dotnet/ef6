@@ -2,6 +2,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact;
@@ -15,6 +16,12 @@ namespace System.Data.Entity.Config
             Assert.Same(
                 SqlProviderServices.Instance,
                 new RootDependencyResolver().Get<DbProviderServices>("System.Data.SqlClient"));
+        }
+
+        [Fact]
+        public void The_root_resolver_can_return_a_default_model_cache_key_factory()
+        {
+            Assert.IsType<DefaultModelCacheKeyFactory>(new RootDependencyResolver().Get<IDbModelCacheKeyFactory>());
         }
 
         [Fact]

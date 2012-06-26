@@ -176,7 +176,7 @@ namespace System.Data.Entity
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
 
-            _internalContext = new LazyInternalContext(this, internalConnection, model);
+            _internalContext = new LazyInternalContext(this, internalConnection, model, DbConfiguration.Instance.ModelCacheKeyFactory);
             DiscoverAndInitializeSets();
         }
 
@@ -473,11 +473,6 @@ namespace System.Data.Entity
         }
 
         #endregion
-
-        internal string DefaultSchema
-        {
-            get { return InternalContext.DefaultSchema; }
-        }
 
         #region Hidden Object methods
 

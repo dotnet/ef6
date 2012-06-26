@@ -109,7 +109,10 @@ namespace System.Data.Entity.Migrations
 
                 var connection = context.Database.Connection;
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
-                _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.DefaultSchema);
+
+                _historyRepository 
+                    = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.InternalContext.DefaultSchema);
+
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
                                              : DbProviderServices.GetProviderServices(connection).

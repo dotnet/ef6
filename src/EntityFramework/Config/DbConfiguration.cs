@@ -164,6 +164,21 @@ namespace System.Data.Entity.Config
             }
         }
 
+        public IDbModelCacheKeyFactory ModelCacheKeyFactory
+        {
+            protected internal set
+            {
+                Contract.Requires(value != null);
+                CheckNotLocked("ModelCacheKeyFactory");
+
+                AddDependencyResolver(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(value));
+            }
+            get
+            {
+                return _resolvers.Get<IDbModelCacheKeyFactory>();
+            }
+        }
+
         private void CheckNotLocked(string memberName)
         {
             if (_isLocked)

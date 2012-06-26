@@ -132,6 +132,8 @@
     <Compile Include="Internal\ConfigFile\DatabaseInitializerElementTests.cs" />
     <Compile Include="Internal\ConfigFile\EntityFrameworkSectionTests.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
+    <Compile Include="Internal\DefaultModelCacheFactoryTests.cs" />
+    <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilderTests.cs" />
     <Compile Include="Migrations\Builders\TableBuilderTests.cs" />
     <Compile Include="Migrations\DbMigrationsConfigurationTests.cs" />
