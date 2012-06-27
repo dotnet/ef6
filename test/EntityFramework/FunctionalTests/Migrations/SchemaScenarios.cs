@@ -60,5 +60,23 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("ordering.Orders"));
             Assert.True(TableExists("bar." + HistoryContext.TableName));
         }
+
+        [MigrationsTheory(Skip = "In progress")]
+        public void Can_get_database_migrations_when_custom_default_schema_introduced()
+        {
+            DropDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            Assert.True(TableExists("dbo.OrderLines"));
+            Assert.True(TableExists("ordering.Orders"));
+            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+
+            migrator = CreateMigrator<CustomSchemaContext>();
+
+            Assert.NotEmpty(migrator.GetDatabaseMigrations());
+        }
     }
 }
