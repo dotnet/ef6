@@ -121,6 +121,11 @@
                        };
         }
 
+        public T GetAnonymousArgument<T>(string name)
+        {
+            return (T)_domain.GetData(name);
+        }
+
         private void Init()
         {
             _domain.SetData("wasError", false);

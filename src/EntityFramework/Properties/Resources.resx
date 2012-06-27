@@ -5308,4 +5308,22 @@
   <data name="ConfigurationLocked" xml:space="preserve">
     <value>The call to DbConfiguration.{0} failed because the configuration is locked. The protected methods and properties of DbConfiguration are intended to be called only from the constructor of a class derived from DbConfiguration and cannot be called after the DbConfiguration object is in use.</value>
   </data>
+  <data name="EnableMigrationsForContext" xml:space="preserve">
+    <value>To enable migrations for '{0}', use Enable-Migrations -ContextTypeName {0}.</value>
+  </data>
+  <data name="EnableMigrations_MultipleContexts" xml:space="preserve">
+    <value>More than one context type was found in the assembly '{0}'.</value>
+  </data>
+  <data name="EnableMigrations_MultipleContextsWithName" xml:space="preserve">
+    <value>More than one context type '{0}' was found in the assembly '{1}'. Specify the fully qualified name of the context.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
+  <data name="EnableMigrations_NoContext" xml:space="preserve">
+    <value>No context type was found in the assembly '{0}'.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
+  <data name="EnableMigrations_NoContextWithName" xml:space="preserve">
+    <value>The context type '{0}' was not found in the assembly '{1}'.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
 </root>

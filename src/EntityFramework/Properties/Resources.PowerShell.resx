@@ -142,18 +142,6 @@
   <data name="AutomaticMigrationDisabledInfo" xml:space="preserve">
     <value>You can use the Add-Migration command to write the pending model changes to a code-based migration.</value>
   </data>
-  <data name="EnableMigrations_ManuallyEnterContext" xml:space="preserve">
-    <value>Edit the generated Configuration class to specify the context to enable migrations for.</value>
-  </data>
-  <data name="EnableMigrations_NoContexts" xml:space="preserve">
-    <value>No classes deriving from DbContext found in the current project.</value>
-  </data>
-  <data name="EnableMigrations_MultipleContexts" xml:space="preserve">
-    <value>More than one class deriving from DbContext found in the current project.</value>
-  </data>
-  <data name="EnableMigrations_ErrorFindingContexts" xml:space="preserve">
-    <value>Error while searching for context type (specify -Verbose to see exception details).</value>
-  </data>
   <data name="EnableMigrations_Success" xml:space="preserve">
     <value>Code First Migrations enabled for project {0}.</value>
   </data>

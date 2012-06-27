@@ -13340,6 +13340,46 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ConfigurationLocked, p0);
         }
+
+        /// <summary>
+        /// A string like "To enable migrations for '{0}', use Enable-Migrations -ContextTypeName {0}."
+        /// </summary>
+        internal static string EnableMigrationsForContext(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EnableMigrationsForContext, p0);
+        }
+
+        /// <summary>
+        /// A string like "More than one context type was found in the assembly '{0}'."
+        /// </summary>
+        internal static string EnableMigrations_MultipleContexts(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContexts, p0);
+        }
+
+        /// <summary>
+        /// A string like "More than one context type '{0}' was found in the assembly '{1}'. Specify the fully qualified name of the context."
+        /// </summary>
+        internal static string EnableMigrations_MultipleContextsWithName(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContextsWithName, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "No context type was found in the assembly '{0}'."
+        /// </summary>
+        internal static string EnableMigrations_NoContext(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EnableMigrations_NoContext, p0);
+        }
+
+        /// <summary>
+        /// A string like "The context type '{0}' was not found in the assembly '{1}'."
+        /// </summary>
+        internal static string EnableMigrations_NoContextWithName(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.EnableMigrations_NoContextWithName, p0, p1);
+        }
     } 
 
     /// <summary>
@@ -14890,6 +14930,30 @@ namespace System.Data.Entity.Resources
         internal static Exception InvalidEdmMemberInstance()
         {
             return new ArgumentException(Strings.InvalidEdmMemberInstance);
+        }
+
+        /// <summary>
+        /// Migrations.Infrastructure.MigrationsException with message like "More than one context type '{0}' was found in the assembly '{1}'. Specify the fully qualified name of the context."
+        /// </summary>
+        internal static Exception EnableMigrations_MultipleContextsWithName(object p0, object p1)
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.EnableMigrations_MultipleContextsWithName(p0, p1));
+        }
+
+        /// <summary>
+        /// Migrations.Infrastructure.MigrationsException with message like "No context type was found in the assembly '{0}'."
+        /// </summary>
+        internal static Exception EnableMigrations_NoContext(object p0)
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.EnableMigrations_NoContext(p0));
+        }
+
+        /// <summary>
+        /// Migrations.Infrastructure.MigrationsException with message like "The context type '{0}' was not found in the assembly '{1}'."
+        /// </summary>
+        internal static Exception EnableMigrations_NoContextWithName(object p0, object p1)
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.EnableMigrations_NoContextWithName(p0, p1));
         }
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
@@ -16598,6 +16662,11 @@ namespace System.Data.Entity.Resources
         internal const string Configuration_AbstractConfigurationType = "Configuration_AbstractConfigurationType";
         internal const string Configuration_GenericConfigurationType = "Configuration_GenericConfigurationType";
         internal const string ConfigurationLocked = "ConfigurationLocked";
+        internal const string EnableMigrationsForContext = "EnableMigrationsForContext";
+        internal const string EnableMigrations_MultipleContexts = "EnableMigrations_MultipleContexts";
+        internal const string EnableMigrations_MultipleContextsWithName = "EnableMigrations_MultipleContextsWithName";
+        internal const string EnableMigrations_NoContext = "EnableMigrations_NoContext";
+        internal const string EnableMigrations_NoContextWithName = "EnableMigrations_NoContextWithName";
         
         static EntityRes loader = null;
         ResourceManager resources;
