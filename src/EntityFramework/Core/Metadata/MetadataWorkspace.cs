@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
@@ -18,7 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Xml;
-    using eSQL = System.Data.Entity.Core.Common.EntitySql;
 
     /// <summary>
     /// Runtime Metadata Workspace
@@ -65,19 +65,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentContainsNull(ref assembliesToConsider, "assembliesToConsider");
 
             Func<AssemblyName, Assembly> resolveReference = (AssemblyName referenceName) =>
-                                                                {
-                                                                    foreach (var assembly in assembliesToConsider)
-                                                                    {
-                                                                        if (AssemblyName.ReferenceMatchesDefinition(
-                                                                            referenceName, new AssemblyName(assembly.FullName)))
-                                                                        {
-                                                                            return assembly;
-                                                                        }
-                                                                    }
-                                                                    throw new ArgumentException(
-                                                                        Strings.AssemblyMissingFromAssembliesToConsider(
-                                                                            referenceName.FullName), "assembliesToConsider");
-                                                                };
+                {
+                    foreach (var assembly in assembliesToConsider)
+                    {
+                        if (AssemblyName.ReferenceMatchesDefinition(
+                            referenceName, new AssemblyName(assembly.FullName)))
+                        {
+                            return assembly;
+                        }
+                    }
+                    throw new ArgumentException(
+                        Strings.AssemblyMissingFromAssembliesToConsider(
+                            referenceName.FullName), "assembliesToConsider");
+                };
 
             CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
         }
@@ -160,11 +160,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Create an <see cref="eSQL.EntitySqlParser"/> configured to use the <see cref="DataSpace.CSpace"/> data space.
+        /// Create an <see cref="EntitySqlParser"/> configured to use the <see cref="DataSpace.CSpace"/> data space.
         /// </summary>
-        public virtual eSQL.EntitySqlParser CreateEntitySqlParser()
+        public virtual EntitySqlParser CreateEntitySqlParser()
         {
-            return new eSQL.EntitySqlParser(new ModelPerspective(this));
+            return new EntitySqlParser(new ModelPerspective(this));
         }
 
         /// <summary>

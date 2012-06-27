@@ -43,6 +43,8 @@
         /// </summary>
         private readonly Set<EntitySet> _entitySets;
 
+        private readonly BridgeDataReaderFactory _bridgeDataReaderFactory;
+
         #endregion
 
         #region constructors
@@ -53,10 +55,14 @@
         /// <exception cref="EntityCommandCompilationException">Cannot prepare the command definition for execution; consult the InnerException for more information.</exception>
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal EntityCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+        internal EntityCommandDefinition(
+            DbProviderFactory storeProviderFactory, DbCommandTree commandTree,
+            BridgeDataReaderFactory bridgeDataReaderFactory = null)
         {
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
+
+            _bridgeDataReaderFactory = bridgeDataReaderFactory ?? new BridgeDataReaderFactory();
 
             var storeProviderServices = storeProviderFactory.GetProviderServices();
 
@@ -92,7 +98,7 @@
                 }
                 else
                 {
-                    Debug.Assert(
+                    Contract.Assert(
                         DbCommandTreeKind.Function == commandTree.CommandTreeKind, "only query and function command trees are supported");
                     var entityCommandTree = (DbFunctionCommandTree)commandTree;
 
@@ -122,9 +128,9 @@
 
                     var storeCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandTree);
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(1)
-                                                    {
-                                                        storeCommandDefinition
-                                                    };
+                        {
+                            storeCommandDefinition
+                        };
 
                     var firstResultEntitySet = mapping.FunctionImport.EntitySets.FirstOrDefault();
                     if (firstResultEntitySet != null)
@@ -169,8 +175,9 @@
         /// <summary>
         /// Constructor for testing/mocking purposes.
         /// </summary>
-        internal EntityCommandDefinition()
+        internal EntityCommandDefinition(BridgeDataReaderFactory bridgeDataReaderFactory = null)
         {
+            _bridgeDataReaderFactory = bridgeDataReaderFactory ?? new BridgeDataReaderFactory();
         }
 
         /// <summary>
@@ -412,7 +419,7 @@
                     }
                     else
                     {
-                        result = BridgeDataReader.Create(
+                        result = _bridgeDataReaderFactory.Create(
                             storeDataReader, columnMap, entityCommand.Connection.GetMetadataWorkspace(),
                             GetNextResultColumnMaps(storeDataReader));
                     }

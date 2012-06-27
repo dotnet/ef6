@@ -178,18 +178,18 @@
             var result =
                 (CoordinatorFactory)Activator.CreateInstance(
                     typeof(CoordinatorFactory<>).MakeGenericType(_elementType), new object[]
-                                                                                    {
-                                                                                        Depth,
-                                                                                        StateSlotNumber,
-                                                                                        HasData,
-                                                                                        SetKeys,
-                                                                                        CheckKeys,
-                                                                                        nestedCoordinators,
-                                                                                        element,
-                                                                                        elementWithErrorHandling,
-                                                                                        InitializeCollection,
-                                                                                        recordStateFactories
-                                                                                    });
+                        {
+                            Depth,
+                            StateSlotNumber,
+                            HasData,
+                            SetKeys,
+                            CheckKeys,
+                            nestedCoordinators,
+                            element,
+                            elementWithErrorHandling,
+                            InitializeCollection,
+                            recordStateFactories
+                        });
             return result;
         }
 
@@ -269,7 +269,7 @@
                         var body = Visit(lambda.Body);
 
                         // compile to a delegate
-                        result = Expression.Constant(Translator.Compile(body.Type, body));
+                        result = Expression.Constant(CodeGenEmitter.Compile(body.Type, body));
                     }
                     else
                     {
@@ -379,7 +379,7 @@
                             Expression.Call(
                                 Expression.Constant(userMaterializationFunc),
                                 _userMaterializationFuncInvokeMethod,
-                                Translator.Shaper_Reader,
+                                CodeGenEmitter.Shaper_Reader,
                                 Expression.NewArrayInit(typeof(object), _initializationArguments)),
                             nex.Type);
                     }
@@ -434,7 +434,7 @@
                     {
                         var shaper = m.Expression as ParameterExpression;
                         if (shaper != null
-                            && shaper == Translator.Shaper_Parameter)
+                            && shaper == CodeGenEmitter.Shaper_Parameter)
                         {
                             return _reader;
                         }
@@ -462,7 +462,7 @@
                             Expression.Call(
                                 Expression.Constant(userMaterializationFunc),
                                 _userMaterializationFuncInvokeMethod,
-                                Translator.Shaper_Reader,
+                                CodeGenEmitter.Shaper_Reader,
                                 Expression.NewArrayInit(typeof(object), _initializationArguments)),
                             init.Type);
                     }

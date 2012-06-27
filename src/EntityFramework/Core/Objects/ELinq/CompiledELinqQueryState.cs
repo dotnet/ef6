@@ -18,9 +18,10 @@
         private readonly Guid _cacheToken;
         private readonly object[] _parameterValues;
         private CompiledQueryCacheEntry _cacheEntry;
+        private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
 
         /// <summary>
-        /// Factory method to create a new compiled query state instance
+        /// Creates a new compiled query state instance
         /// </summary>
         /// <param name="elementType">The element type of the new instance (the 'T' of the ObjectQuery&lt;T&gt; that the new state instance will back)"</param>
         /// <param name="context">The object context with which the new instance should be associated</param>
@@ -28,7 +29,8 @@
         /// <param name="cacheToken">The cache token to use when retrieving or storing the new instance's execution plan in the query cache</param>
         /// <param name="parameterValues">The values passed into the CompiledQuery delegate</param>
         internal CompiledELinqQueryState(
-            Type elementType, ObjectContext context, LambdaExpression lambda, Guid cacheToken, object[] parameterValues)
+            Type elementType, ObjectContext context, LambdaExpression lambda, Guid cacheToken, object[] parameterValues,
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, context, lambda)
         {
             Contract.Requires(parameterValues != null);
@@ -38,6 +40,8 @@
 
             EnsureParameters();
             Parameters.SetReadOnly(true);
+
+            _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
@@ -71,7 +75,7 @@
 
                     // Prepare the execution plan using the command tree and the computed effective merge option
                     var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
-                    plan = ObjectQueryExecutionPlan.Prepare(
+                    plan = _objectQueryExecutionPlanFactory.Prepare(
                         ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, parameters, converter.AliasGenerator);
 
                     // Update and retrieve the execution plan
@@ -130,7 +134,7 @@
                     if (plan == null)
                     {
                         // The plan is not present, so prepare it now using the computed effective merge option
-                        plan = ObjectQueryExecutionPlan.Prepare(
+                        plan = _objectQueryExecutionPlanFactory.Prepare(
                             ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, parameters, converter.AliasGenerator);
 
                         // Update the execution plan on the cache entry.
@@ -143,7 +147,7 @@
             // Get parameters from the plan and set them.
             var currentParams = EnsureParameters();
             if (plan.CompiledQueryParameters != null
-                && plan.CompiledQueryParameters.Count > 0)
+                && plan.CompiledQueryParameters.Any())
             {
                 currentParams.SetReadOnly(false);
                 currentParams.Clear();
@@ -155,8 +159,8 @@
                     // queries using that plan, regardless of the values they were actually invoked with, causing incorrect results
                     // when those queries were later executed.
                     //
-                    var convertedParam = pair.Key.ShallowCopy();
-                    var parameterExpression = pair.Value;
+                    var convertedParam = pair.Item1.ShallowCopy();
+                    var parameterExpression = pair.Item2;
                     currentParams.Add(convertedParam);
                     if (parameterExpression != null)
                     {

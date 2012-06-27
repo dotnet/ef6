@@ -1,7 +1,7 @@
 ﻿namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
@@ -124,37 +124,12 @@
             public void GetProviderServices_returns_provider_registered_in_app_config()
             {
                 var mockConnection = new Mock<DbConnection>();
-                mockConnection.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(FakeAdoProvider.Instance);
+                mockConnection.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(FakeSqlProviderFactory.Instance);
 
                 Assert.Same(
-                    FakeEFProvider.Instance,
+                    FakeSqlProviderServices.Instance,
                     DbProviderServices.GetProviderServices(mockConnection.Object));
             }
-        }
-    }
-
-    public class FakeAdoProvider : DbProviderFactory
-    {
-        public static readonly FakeAdoProvider Instance = new FakeAdoProvider();
-    }
-
-    public class FakeEFProvider : DbProviderServices
-    {
-        public static readonly FakeEFProvider Instance = new FakeEFProvider();
-        
-        protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string GetDbProviderManifestToken(DbConnection connection)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
-        {
-            throw new NotImplementedException();
         }
     }
 }

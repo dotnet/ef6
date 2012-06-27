@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// Produces an expression initializing an instance of ClrType (given emitters for input
         /// columns)
         /// </summary>
-        internal abstract Expression Emit(Translator translator, List<TranslatorResult> propertyTranslatorResults);
+        internal abstract Expression Emit(List<TranslatorResult> propertyTranslatorResults);
 
         /// <summary>
         /// Yields expected types for input columns. Null values are returned for children
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 get { return InitializerMetadataKind.Grouping; }
             }
 
-            internal override Expression Emit(Translator translator, List<TranslatorResult> propertyTranslatorResults)
+            internal override Expression Emit(List<TranslatorResult> propertyTranslatorResults)
             {
                 // Create expression of the form:
                 // new Grouping<K, T>(children[0], children[1])
@@ -312,7 +312,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return true;
             }
 
-            internal override Expression Emit(Translator translator, List<TranslatorResult> propertyTranslatorResults)
+            internal override Expression Emit(List<TranslatorResult> propertyTranslatorResults)
             {
                 // Create expression of the form:
                 // _newExpression(children)
@@ -352,10 +352,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
             }
 
-            internal override Expression Emit(Translator translator, List<TranslatorResult> propertyReaders)
+            internal override Expression Emit(List<TranslatorResult> propertyReaders)
             {
                 // ignore sentinel column
-                return base.Emit(translator, new List<TranslatorResult>());
+                return base.Emit(new List<TranslatorResult>());
             }
 
             internal override IEnumerable<Type> GetChildTypes()
@@ -407,7 +407,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return true;
             }
 
-            internal override Expression Emit(Translator translator, List<TranslatorResult> propertyReaders)
+            internal override Expression Emit(List<TranslatorResult> propertyReaders)
             {
                 // Create expression of the form:
                 // _initExpression(children)
@@ -493,7 +493,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     "CreateEntityCollection",
                     BindingFlags.Static | BindingFlags.Public);
 
-            internal override Expression Emit(Translator translator, List<TranslatorResult> propertyTranslatorResults)
+            internal override Expression Emit(List<TranslatorResult> propertyTranslatorResults)
             {
                 Debug.Assert(propertyTranslatorResults.Count > 1, "no properties?");
                 Debug.Assert(propertyTranslatorResults[1] is CollectionTranslatorResult, "not a collection?");
@@ -501,7 +501,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var elementType = GetElementType();
                 var createEntityCollectionMethod = _createEntityCollectionMethod.MakeGenericMethod(elementType);
 
-                Expression shaper = Translator.Shaper_Parameter;
+                Expression shaper = CodeGenEmitter.Shaper_Parameter;
                 var owner = propertyTranslatorResults[0].Expression;
 
                 var collectionResult = propertyTranslatorResults[1] as CollectionTranslatorResult;

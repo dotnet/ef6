@@ -45,7 +45,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         #region Constructors
 
+        /// <summary>
+        /// For testing purposes only.
+        /// </summary>
         internal StoreItemCollection()
+            : base(DataSpace.SSpace)
         {
         }
 

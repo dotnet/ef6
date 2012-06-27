@@ -1,9 +1,9 @@
 ﻿namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
-    using System;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.SqlServer;
 
     /// <summary>
@@ -12,9 +12,11 @@
     /// </summary>
     public class FakeSqlProviderServices : DbProviderServices
     {
+        public static readonly FakeSqlProviderServices Instance = new FakeSqlProviderServices();
+
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            throw new NotImplementedException();
+            return new EntityCommandDefinition();
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)

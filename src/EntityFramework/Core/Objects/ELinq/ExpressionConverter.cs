@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -31,7 +30,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private readonly Expression _expression;
         private readonly BindingContext _bindingContext;
         private Func<bool> _recompileRequired;
-        private List<KeyValuePair<ObjectParameter, QueryParameterExpression>> _parameters;
+        private List<Tuple<ObjectParameter, QueryParameterExpression>> _parameters;
         private Dictionary<DbExpression, Span> _spanMappings;
         private MergeOption? _mergeOption;
         private Dictionary<Type, InitializerMetadata> _initializers;
@@ -222,11 +221,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        internal ReadOnlyCollection<KeyValuePair<ObjectParameter, QueryParameterExpression>> GetParameters()
+        internal IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> GetParameters()
         {
             if (null != _parameters)
             {
-                return _parameters.AsReadOnly();
+                return _parameters;
             }
             return null;
         }
@@ -349,12 +348,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             if (null == _parameters)
             {
-                _parameters = new List<KeyValuePair<ObjectParameter, QueryParameterExpression>>();
+                _parameters = new List<Tuple<ObjectParameter, QueryParameterExpression>>();
             }
-            if (!_parameters.Select(p => p.Value).Contains(queryParameter))
+            if (!_parameters.Select(p => p.Item2).Contains(queryParameter))
             {
                 var parameter = new ObjectParameter(queryParameter.ParameterReference.ParameterName, queryParameter.Type);
-                _parameters.Add(new KeyValuePair<ObjectParameter, QueryParameterExpression>(parameter, queryParameter));
+                _parameters.Add(new Tuple<ObjectParameter, QueryParameterExpression>(parameter, queryParameter));
             }
         }
 
@@ -724,10 +723,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // does not have parameters (and so no parameter references can be in the parsed tree)
             // then the Entity-SQL can be parsed directly using the conversion command tree.
             var objectParameters = inlineQuery.QueryState.Parameters;
-            if (!_funcletizer.IsCompiledQuery ||
-                objectParameters == null
-                ||
-                objectParameters.Count == 0)
+            if (!_funcletizer.IsCompiledQuery
+                || objectParameters == null
+                || objectParameters.Count == 0)
             {
                 // Add parameters if they exist and we haven't yet encountered this inline query.
                 if (isNewInlineQuery && objectParameters != null)
@@ -736,11 +734,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     // in an exception if any duplicate parameter names are encountered.
                     if (_parameters == null)
                     {
-                        _parameters = new List<KeyValuePair<ObjectParameter, QueryParameterExpression>>();
+                        _parameters = new List<Tuple<ObjectParameter, QueryParameterExpression>>();
                     }
                     foreach (var prm in inlineQuery.QueryState.Parameters)
                     {
-                        _parameters.Add(new KeyValuePair<ObjectParameter, QueryParameterExpression>(prm.ShallowCopy(), null));
+                        _parameters.Add(new Tuple<ObjectParameter, QueryParameterExpression>(prm.ShallowCopy(), null));
                     }
                 }
 

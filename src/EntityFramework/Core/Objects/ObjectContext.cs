@@ -72,6 +72,8 @@ namespace System.Data.Entity.Core.Objects
         private ObjectQueryProvider _queryProvider;
 
         private readonly EntityWrapperFactory _entityWrapperFactory;
+        private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
+        private readonly Translator _translator;
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
 
@@ -157,12 +159,17 @@ namespace System.Data.Entity.Core.Objects
             Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
         internal ObjectContext(
             EntityConnection connection,
-            bool isConnectionConstructor)
+            bool isConnectionConstructor,
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
+            Translator translator = null)
         {
             if (connection == null)
             {
                 throw new ArgumentNullException("connection");
             }
+
+            _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
+            _translator = translator ?? new Translator();
 
             _connection = connection;
             _connection.StateChange += ConnectionStateChange;
@@ -216,8 +223,12 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// For testing porpuses only.
         /// </summary>
-        internal ObjectContext()
+        internal ObjectContext(
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
+            Translator translator = null)
         {
+            _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
+            _translator = translator ?? new Translator();
         }
 
         #endregion //Constructors
@@ -2276,7 +2287,7 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                var results = ObjectQueryExecutionPlan.ExecuteCommandTree<object>(this, tree, mergeOption);
+                var results = _objectQueryExecutionPlanFactory.ExecuteCommandTree<object>(this, tree, mergeOption);
 
                 foreach (var entity in results)
                 {
@@ -2780,7 +2791,7 @@ namespace System.Data.Entity.Core.Objects
 
                 // create the shaper
                 var cacheManager = Perspective.MetadataWorkspace.GetQueryCacheManager();
-                var shaperFactory = Translator.TranslateColumnMap<TElement>(
+                var shaperFactory = _translator.TranslateColumnMap<TElement>(
                     cacheManager, commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
                     false);
                 var shaper = shaperFactory.Create(storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader);
@@ -2795,16 +2806,16 @@ namespace System.Data.Entity.Core.Objects
                 // its GetEnumerator is called explicitly, and the resulting enumerator is never disposed.
                 var onReaderDisposeHasRun = false;
                 Action<object, EventArgs> onReaderDispose = (object sender, EventArgs e) =>
-                                                                {
-                                                                    if (!onReaderDisposeHasRun)
-                                                                    {
-                                                                        onReaderDisposeHasRun = true;
-                                                                        // consume the store reader
-                                                                        CommandHelper.ConsumeReader(storeReader);
-                                                                        // trigger event callback
-                                                                        entityCommand.NotifyDataReaderClosing();
-                                                                    }
-                                                                };
+                    {
+                        if (!onReaderDisposeHasRun)
+                        {
+                            onReaderDisposeHasRun = true;
+                            // consume the store reader
+                            CommandHelper.ConsumeReader(storeReader);
+                            // trigger event callback
+                            entityCommand.NotifyDataReaderClosing();
+                        }
+                    };
 
                 if (shaperOwnsReader)
                 {
@@ -3249,9 +3260,9 @@ namespace System.Data.Entity.Core.Objects
             CollectionColumnMap columnMap;
             // for enums that are not in the model we use the enum underlying type
             if (MetadataHelper.TryDetermineCSpaceModelType<TElement>(MetadataWorkspace, out modelEdmType)
-                ||
-                (unwrappedTElement.IsEnum &&
-                 MetadataHelper.TryDetermineCSpaceModelType(unwrappedTElement.GetEnumUnderlyingType(), MetadataWorkspace, out modelEdmType)))
+                || (unwrappedTElement.IsEnum &&
+                    MetadataHelper.TryDetermineCSpaceModelType(
+                        unwrappedTElement.GetEnumUnderlyingType(), MetadataWorkspace, out modelEdmType)))
             {
                 if (entitySet != null
                     && !entitySet.ElementType.IsAssignableFrom(modelEdmType))
@@ -3271,7 +3282,7 @@ namespace System.Data.Entity.Core.Objects
 
             // build a shaper for the column map to produce typed results
             var cacheManager = MetadataWorkspace.GetQueryCacheManager();
-            var shaperFactory = Translator.TranslateColumnMap<TElement>(
+            var shaperFactory = _translator.TranslateColumnMap<TElement>(
                 cacheManager, columnMap, MetadataWorkspace, null, mergeOption, false);
             var shaper = shaperFactory.Create(reader, this, MetadataWorkspace, mergeOption, readerOwned);
             return new ObjectResult<TElement>(shaper, entitySet, MetadataHelper.GetElementType(columnMap.Type), readerOwned);

@@ -233,8 +233,10 @@
     <Compile Include="Core\Common\CommandTrees\DbRefKeyExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
+    <Compile Include="Core\Common\internal\materialization\CodeGenEmitter.cs" />
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
+    <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactory.cs" />
     <Compile Include="Core\Objects\MaterializedDataRecord.cs" />
     <Compile Include="Core\Common\DataRecordInfo.cs" />
     <Compile Include="Core\Common\DbCommandDefinition.cs" />
@@ -335,6 +337,7 @@
     <Compile Include="Core\Common\EntitySql\ValueExpression.cs" />
     <Compile Include="Core\Common\EntityUtil.cs" />
     <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
+    <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactory.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
     <Compile Include="Internal\DefaultModelCacheKey.cs" />

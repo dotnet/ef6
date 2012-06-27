@@ -41,6 +41,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         private readonly bool _allowsLimit;
 
+        private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
+
         /// <summary>
         /// Initializes a new query EntitySqlQueryState instance.
         /// </summary>
@@ -80,7 +82,8 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         internal EntitySqlQueryState(
             Type elementType, string commandText, DbExpression expression, bool allowsLimit, ObjectContext context,
-            ObjectParameterCollection parameters, Span span)
+            ObjectParameterCollection parameters, Span span,
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, context, parameters, span)
         {
             Contract.Requires(commandText != null);
@@ -92,6 +95,7 @@ namespace System.Data.Entity.Core.Objects
             _queryText = commandText;
             _queryExpression = expression;
             _allowsLimit = allowsLimit;
+            _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
         }
 
         /// <summary>
@@ -197,7 +201,7 @@ namespace System.Data.Entity.Core.Objects
                 var queryExpression = Parse();
                 Debug.Assert(queryExpression != null, "EntitySqlQueryState.Parse returned null expression?");
                 var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
-                plan = ObjectQueryExecutionPlan.Prepare(
+                plan = _objectQueryExecutionPlanFactory.Prepare(
                     ObjectContext, tree, ElementType, mergeOption, Span, null, DbExpressionBuilder.AliasGenerator);
 
                 // If caching is enabled then update the cache now.
