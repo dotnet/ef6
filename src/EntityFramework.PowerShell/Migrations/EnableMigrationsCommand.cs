@@ -72,12 +72,14 @@
                     if (!enableAutomaticMigrations && StartUpProject.TryBuild()
                         && project.TryBuild())
                     {
-                        using (var facade = GetFacade())
+                        var configurationTypeName = rootNamespace + ".Migrations.Configuration";
+
+                        using (var facade = GetFacade(configurationTypeName))
                         {
                             WriteLine(Strings.EnableMigrations_BeginInitialScaffold);
 
                             var scaffoldedMigration
-                                = facade.ScaffoldInitialCreate(project.GetLanguage(), project.GetRootNamespace());
+                                = facade.ScaffoldInitialCreate(project.GetLanguage(), rootNamespace);
 
                             if (scaffoldedMigration != null)
                             {

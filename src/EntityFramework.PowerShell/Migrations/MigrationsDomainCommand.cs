@@ -71,9 +71,13 @@
             _dispatcher.WriteVerbose(message);
         }
 
-        public ToolingFacade GetFacade()
+        public ToolingFacade GetFacade(string configurationTypeName = null)
         {
-            var configurationTypeName = (string)Domain.GetData("configurationTypeName");
+            if (configurationTypeName == null)
+            {
+                configurationTypeName = (string)Domain.GetData("configurationTypeName");
+            }
+
             var connectionStringName = (string)Domain.GetData("connectionStringName");
             var connectionString = (string)Domain.GetData("connectionString");
             var connectionProviderName = (string)Domain.GetData("connectionProviderName");
