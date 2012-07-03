@@ -30,8 +30,8 @@
         {
             var instance = new Mock<IPilkington>().Object;
 
-            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance).Get<IPilkington>());
-            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, null).Get<IPilkington>());
+            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance).GetService<IPilkington>());
+            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, null).GetService<IPilkington>());
         }
 
         [Fact]
@@ -39,7 +39,7 @@
         {
             var instance = new Mock<IPilkington>().Object;
 
-            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, "Karl").Get<IPilkington>("Karl"));
+            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IPilkington>("Karl"));
         }
 
         [Fact]
@@ -47,9 +47,9 @@
         {
             var instance = new Mock<IPilkington>().Object;
 
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance).Get<IGervais>());
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, null).Get<IGervais>());
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").Get<IGervais>("Karl"));
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance).GetService<IGervais>());
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, null).GetService<IGervais>());
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IGervais>("Karl"));
         }
 
         [Fact]
@@ -57,9 +57,9 @@
         {
             var instance = new Mock<IPilkington>().Object;
 
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").Get<IPilkington>("Ricky"));
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").Get<IPilkington>());
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").Get<IGervais>("Ricky"));
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IPilkington>("Ricky"));
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IPilkington>());
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IGervais>("Ricky"));
         }
 
         [Fact]

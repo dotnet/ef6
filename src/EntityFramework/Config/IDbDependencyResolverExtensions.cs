@@ -3,53 +3,53 @@ namespace System.Data.Entity.Config
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Extension methods to call the <see cref="IDbDependencyResolver.Get"/> method using
+    /// Extension methods to call the <see cref="IDbDependencyResolver.GetService"/> method using
     /// a generic type parameter and/or no name.
     /// </summary>
     public static class IDbDependencyResolverExtensions
     {
         /// <summary>
-        /// Calls <see cref="IDbDependencyResolver.Get"/> passing the generic type of the method and the given
+        /// Calls <see cref="IDbDependencyResolver.GetService"/> passing the generic type of the method and the given
         /// name as arguments.
         /// </summary>
         /// <typeparam name="T">The contract type to resolve.</typeparam>
         /// <param name="resolver">The resolver to use.</param>
         /// <param name="name">The name of the dependency to resolve.</param>
         /// <returns>The resolved dependency, or null if the resolver could not resolve it.</returns>
-        public static T Get<T>(this IDbDependencyResolver resolver, string name)
+        public static T GetService<T>(this IDbDependencyResolver resolver, string name)
         {
             Contract.Requires(resolver != null);
 
-            return (T)resolver.Get(typeof(T), name);
+            return (T)resolver.GetService(typeof(T), name);
         }
 
         /// <summary>
-        /// Calls <see cref="IDbDependencyResolver.Get"/> passing the generic type of the method as
+        /// Calls <see cref="IDbDependencyResolver.GetService"/> passing the generic type of the method as
         /// the type argument and null for the name argument.
         /// </summary>
         /// <typeparam name="T">The contract type to resolve.</typeparam>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>The resolved dependency, or null if the resolver could not resolve it.</returns>
-        public static T Get<T>(this IDbDependencyResolver resolver)
+        public static T GetService<T>(this IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
 
-            return (T)resolver.Get(typeof(T), null);
+            return (T)resolver.GetService(typeof(T), null);
         }
 
         /// <summary>
-        /// Calls <see cref="IDbDependencyResolver.Get"/> passing the given type argument and using
+        /// Calls <see cref="IDbDependencyResolver.GetService"/> passing the given type argument and using
         /// null for the name argument.
         /// </summary>
         /// <param name="type">The contract type to resolve.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>The resolved dependency, or null if the resolver could not resolve it.</returns>
-        public static object Get(this IDbDependencyResolver resolver, Type type)
+        public static object GetService(this IDbDependencyResolver resolver, Type type)
         {
             Contract.Requires(resolver != null);
             Contract.Requires(type != null);
 
-            return resolver.Get(type, null);
+            return resolver.GetService(type, null);
         }
     }
 }

@@ -26,8 +26,7 @@ namespace System.Data.Entity.Config
         /// The resolved dependency, which must be an instance of the given contract type, or
         /// null if the dependency could not be resolved.
         /// </returns>        
-        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Get")] // TODO: Change name?
-        object Get(Type type, string name);
+        object GetService(Type type, string name);
 
         /// <summary>
         /// This method is called for transient services to give the resolver a chance to release the service

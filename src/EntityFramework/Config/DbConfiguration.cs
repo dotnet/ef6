@@ -119,7 +119,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
-            return _resolvers.Get<DbProviderServices>(providerInvariantName);
+            return _resolvers.GetService<DbProviderServices>(providerInvariantName);
         }
 
         // TODO: Make this actually work
@@ -136,7 +136,7 @@ namespace System.Data.Entity.Config
         {
             // TODO: Make sure that access to the database initializer now uses this method
             // TODO Check how current contextinfo interacts with initializer (don't think it does)
-            return _resolvers.Get<IDatabaseInitializer<TContext>>();
+            return _resolvers.GetService<IDatabaseInitializer<TContext>>();
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace System.Data.Entity.Config
 #pragma warning disable 612,618
                            ? Database.DefaultConnectionFactory
 #pragma warning restore 612,618
-                           : _resolvers.Get<IDbConnectionFactory>();
+                           : _resolvers.GetService<IDbConnectionFactory>();
             }
         }
 
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Config
             }
             get
             {
-                return _resolvers.Get<IDbModelCacheKeyFactory>();
+                return _resolvers.GetService<IDbModelCacheKeyFactory>();
             }
         }
 

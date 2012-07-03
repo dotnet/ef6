@@ -12,7 +12,7 @@ namespace System.Data.Entity.Config
         [Fact]
         public void Get_returns_null_for_empty_chain()
         {
-            Assert.Null(new ResolverChain().Get<IPilkington>());
+            Assert.Null(new ResolverChain().GetService<IPilkington>());
         }
 
         [Fact]
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Config
             chain.Add(mockResolver1.Object);
             chain.Add(mockResolver2.Object);
 
-            Assert.Null(chain.Get<IPilkington>("Karl"));
+            Assert.Null(chain.GetService<IPilkington>("Karl"));
 
-            mockResolver1.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
-            mockResolver2.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
+            mockResolver1.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
+            mockResolver2.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
 
         [Fact]
@@ -45,11 +45,11 @@ namespace System.Data.Entity.Config
             chain.Add(mockResolver2.Object);
             chain.Add(mockResolver3.Object);
 
-            Assert.Same(karl, chain.Get<IPilkington>("Karl"));
+            Assert.Same(karl, chain.GetService<IPilkington>("Karl"));
 
-            mockResolver1.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Never());
-            mockResolver2.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
-            mockResolver3.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
+            mockResolver1.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Never());
+            mockResolver2.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
+            mockResolver3.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Config
         private static Mock<IDbDependencyResolver> CreateMockResolver<T>(string name, T service)
         {
             var mockResolver = new Mock<IDbDependencyResolver>();
-            mockResolver.Setup(m => m.Get(typeof(T), name)).Returns(service);
+            mockResolver.Setup(m => m.GetService(typeof(T), name)).Returns(service);
 
             return mockResolver;
         }

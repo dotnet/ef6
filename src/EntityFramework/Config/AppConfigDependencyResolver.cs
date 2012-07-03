@@ -21,7 +21,7 @@ namespace System.Data.Entity.Config
             _appConfig = appConfig;
         }
 
-        public virtual object Get(Type type, string name)
+        public virtual object GetService(Type type, string name)
         {
             if (type == typeof(DbProviderServices) && !string.IsNullOrWhiteSpace(name))
             {

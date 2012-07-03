@@ -15,13 +15,13 @@ namespace System.Data.Entity.Config
         {
             Assert.Same(
                 SqlProviderServices.Instance,
-                new RootDependencyResolver().Get<DbProviderServices>("System.Data.SqlClient"));
+                new RootDependencyResolver().GetService<DbProviderServices>("System.Data.SqlClient"));
         }
 
         [Fact]
         public void The_root_resolver_can_return_a_default_model_cache_key_factory()
         {
-            Assert.IsType<DefaultModelCacheKeyFactory>(new RootDependencyResolver().Get<IDbModelCacheKeyFactory>());
+            Assert.IsType<DefaultModelCacheKeyFactory>(new RootDependencyResolver().GetService<IDbModelCacheKeyFactory>());
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Config
         {
             Assert.Same(
                 SqlCeProviderServices.Instance,
-                new RootDependencyResolver().Get<DbProviderServices>("System.Data.SqlServerCe.4.0"));
+                new RootDependencyResolver().GetService<DbProviderServices>("System.Data.SqlServerCe.4.0"));
         }
 
         [Fact]
@@ -38,13 +38,13 @@ namespace System.Data.Entity.Config
             Assert.Equal(
                 Strings.EF6Providers_NoProviderFound("Don't.Come.Around.Here.No.More"),
                 Assert.Throws<InvalidOperationException>(
-                    () => new RootDependencyResolver().Get<DbProviderServices>("Don't.Come.Around.Here.No.More")).Message);
+                    () => new RootDependencyResolver().GetService<DbProviderServices>("Don't.Come.Around.Here.No.More")).Message);
         }
 
         [Fact]
         public void The_root_resolver_returns_the_SQL_Server_connection_factory()
         {
-            Assert.IsType<SqlConnectionFactory>(new RootDependencyResolver().Get<IDbConnectionFactory>());
+            Assert.IsType<SqlConnectionFactory>(new RootDependencyResolver().GetService<IDbConnectionFactory>());
         }
 
         [Fact]
@@ -53,17 +53,17 @@ namespace System.Data.Entity.Config
             Assert.Equal(
                 Strings.ProviderInvariantNotPassedToResolver,
                 Assert.Throws<ArgumentException>(
-                    () => new RootDependencyResolver().Get<DbProviderServices>(null)).Message);
+                    () => new RootDependencyResolver().GetService<DbProviderServices>(null)).Message);
 
             Assert.Equal(
                 Strings.ProviderInvariantNotPassedToResolver,
                 Assert.Throws<ArgumentException>(
-                    () => new RootDependencyResolver().Get<DbProviderServices>("")).Message);
+                    () => new RootDependencyResolver().GetService<DbProviderServices>("")).Message);
 
             Assert.Equal(
                 Strings.ProviderInvariantNotPassedToResolver,
                 Assert.Throws<ArgumentException>(
-                    () => new RootDependencyResolver().Get<DbProviderServices>(" ")).Message);
+                    () => new RootDependencyResolver().GetService<DbProviderServices>(" ")).Message);
         }
 
         [Fact]

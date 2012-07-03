@@ -37,7 +37,7 @@ namespace System.Data.Entity.Config
         }
 
         /// <inheritdoc/>
-        public object Get(Type type, string name)
+        public object GetService(Type type, string name)
         {
             return type == typeof(T) && (_name == null || name == _name)
                        ? (object)_singletonInstance

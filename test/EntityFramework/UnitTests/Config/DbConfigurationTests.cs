@@ -221,16 +221,16 @@ namespace System.Data.Entity.Config
             {
                 var mockAppConfigChain = new Mock<ResolverChain>();
                 var configService = new Mock<IDbConnectionFactory>().Object;
-                mockAppConfigChain.Setup(m => m.Get(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(configService);
+                mockAppConfigChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(configService);
 
                 var mockNormalChain = new Mock<ResolverChain>();
                 var normalService = new Mock<IDbConnectionFactory>().Object;
-                mockNormalChain.Setup(m => m.Get(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(normalService);
+                mockNormalChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(normalService);
 
                 Assert.Same(configService, new DbConfiguration(mockAppConfigChain.Object, mockNormalChain.Object).DefaultConnectionFactory);
 
-                mockAppConfigChain.Verify(m => m.Get(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Once());
-                mockNormalChain.Verify(m => m.Get(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Never());
+                mockAppConfigChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Once());
+                mockNormalChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Never());
             }
         }
     }

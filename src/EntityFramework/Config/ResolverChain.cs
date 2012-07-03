@@ -19,11 +19,11 @@ namespace System.Data.Entity.Config
             _resolvers.Add(resolver);
         }
 
-        public virtual object Get(Type type, string name)
+        public virtual object GetService(Type type, string name)
         {
             return _resolvers
                 .Reverse()
-                .Select(r => r.Get(type, name))
+                .Select(r => r.GetService(type, name))
                 .FirstOrDefault(s => s != null);
         }
 

@@ -134,6 +134,7 @@
     <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
     <Compile Include="Internal\DefaultModelCacheFactoryTests.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
+    <Compile Include="Internal\InternalContextTests.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilderTests.cs" />
     <Compile Include="Migrations\Builders\TableBuilderTests.cs" />
     <Compile Include="Migrations\DbMigrationsConfigurationTests.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Utilities\ExpressionExtensionsTests.cs" />
     <Compile Include="Migrations\Extensions\IEnumerableExtensionsTests.cs" />
     <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
+    <Compile Include="Utilities\PartialTrustAssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />
     <Compile Include="Utilities\XDocumentExtensionsTests.cs" />

@@ -200,7 +200,7 @@ namespace System.Data.Entity.Infrastructure
         {
             DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType);
             
-            context.InternalContext.OnContextDisposing += 
+            context.InternalContext.OnDisposing += 
                 (_, __) => DbConfigurationManager.Instance.PopConfiguration(_appConfig);
         }
 

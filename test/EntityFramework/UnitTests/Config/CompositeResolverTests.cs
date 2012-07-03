@@ -12,15 +12,15 @@ namespace System.Data.Entity.Config
             var mockSecondResolver = new Mock<IDbDependencyResolver>();
             
             var karl = new Mock<IPilkington>().Object;
-            mockFirstResolver.Setup(m => m.Get(typeof(IPilkington), "Karl")).Returns(karl);
+            mockFirstResolver.Setup(m => m.GetService(typeof(IPilkington), "Karl")).Returns(karl);
 
             Assert.Same(
                 karl,
                 new CompositeResolver<IDbDependencyResolver, IDbDependencyResolver>(
-                    mockFirstResolver.Object, mockSecondResolver.Object).Get<IPilkington>("Karl"));
+                    mockFirstResolver.Object, mockSecondResolver.Object).GetService<IPilkington>("Karl"));
 
-            mockFirstResolver.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
-            mockSecondResolver.Verify(m => m.Get(It.IsAny<Type>(), It.IsAny<string>()), Times.Never());
+            mockFirstResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
+            mockSecondResolver.Verify(m => m.GetService(It.IsAny<Type>(), It.IsAny<string>()), Times.Never());
         }
 
         [Fact]
@@ -30,15 +30,15 @@ namespace System.Data.Entity.Config
             var mockSecondResolver = new Mock<IDbDependencyResolver>();
             
             var karl = new Mock<IPilkington>().Object;
-            mockSecondResolver.Setup(m => m.Get(typeof(IPilkington), "Karl")).Returns(karl);
+            mockSecondResolver.Setup(m => m.GetService(typeof(IPilkington), "Karl")).Returns(karl);
 
             Assert.Same(
                 karl,
                 new CompositeResolver<IDbDependencyResolver, IDbDependencyResolver>(
-                    mockFirstResolver.Object, mockSecondResolver.Object).Get<IPilkington>("Karl"));
+                    mockFirstResolver.Object, mockSecondResolver.Object).GetService<IPilkington>("Karl"));
 
-            mockFirstResolver.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
-            mockSecondResolver.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
+            mockFirstResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
+            mockSecondResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
 
         [Fact]
@@ -49,10 +49,10 @@ namespace System.Data.Entity.Config
 
             Assert.Null(
                 new CompositeResolver<IDbDependencyResolver, IDbDependencyResolver>(
-                    mockFirstResolver.Object, mockSecondResolver.Object).Get<IPilkington>("Karl"));
+                    mockFirstResolver.Object, mockSecondResolver.Object).GetService<IPilkington>("Karl"));
 
-            mockFirstResolver.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
-            mockSecondResolver.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
+            mockFirstResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
+            mockSecondResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
 
         [Fact]

@@ -26,7 +26,7 @@ namespace System.Data.Entity.Config
         [Fact]
         public void Get_returns_null_for_unknown_contract_type()
         {
-            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).Get<IPilkington>("Karl"));
+            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).GetService<IPilkington>("Karl"));
         }
 
         [Fact]
@@ -34,22 +34,22 @@ namespace System.Data.Entity.Config
         {
             Assert.Same(
                 ProviderServicesFactoryTests.FakeProviderWithPublicProperty.Instance,
-                new AppConfigDependencyResolver(CreateAppConfigWithProvider()).Get<DbProviderServices>("Is.Ee.Avin.A.Larf"));
+                new AppConfigDependencyResolver(CreateAppConfigWithProvider()).GetService<DbProviderServices>("Is.Ee.Avin.A.Larf"));
         }
 
         [Fact]
         public void Get_returns_null_for_unregistered_provider_name()
         {
             Assert.Null(
-                new AppConfigDependencyResolver(CreateAppConfigWithProvider()).Get<DbProviderServices>("Are.You.Avin.A.Larf"));
+                new AppConfigDependencyResolver(CreateAppConfigWithProvider()).GetService<DbProviderServices>("Are.You.Avin.A.Larf"));
         }
 
         [Fact]
         public void Get_returns_null_for_null_empty_or_whitespace_provider_name()
         {
-            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).Get<DbProviderServices>(null));
-            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).Get<DbProviderServices>(""));
-            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).Get<DbProviderServices>(" "));
+            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).GetService<DbProviderServices>(null));
+            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).GetService<DbProviderServices>(""));
+            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).GetService<DbProviderServices>(" "));
         }
 
         [Fact]
@@ -59,13 +59,13 @@ namespace System.Data.Entity.Config
                 new AppConfigDependencyResolver(
                     new AppConfig(
                         CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName)))
-                    .Get<IDbConnectionFactory>());
+                    .GetService<IDbConnectionFactory>());
         }
 
         [Fact]
         public void Get_returns_null_if_no_connection_factory_is_set_in_config()
         {
-            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).Get<IDbConnectionFactory>());
+            Assert.Null(new AppConfigDependencyResolver(CreateAppConfig()).GetService<IDbConnectionFactory>());
         }
 
         [Fact]

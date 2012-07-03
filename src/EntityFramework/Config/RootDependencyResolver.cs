@@ -16,7 +16,7 @@ namespace System.Data.Entity.Config
     internal class RootDependencyResolver : IDbDependencyResolver
     {
         /// <inheritdoc/>
-        public virtual object Get(Type type, string name)
+        public virtual object GetService(Type type, string name)
         {
             // TODO: Handle Database initializer
 

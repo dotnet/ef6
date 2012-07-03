@@ -15,9 +15,9 @@ namespace System.Data.Entity.Config
             var karl = new Mock<IPilkington>().Object;
             var mockResolver = CreateMockResolver(karl);
 
-            Assert.Same(karl, mockResolver.Object.Get<IPilkington>("Karl"));
+            Assert.Same(karl, mockResolver.Object.GetService<IPilkington>("Karl"));
 
-            mockResolver.Verify(m => m.Get(typeof(IPilkington), "Karl"), Times.Once());
+            mockResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
 
         [Fact]
@@ -26,9 +26,9 @@ namespace System.Data.Entity.Config
             var karl = new Mock<IPilkington>().Object;
             var mockResolver = CreateMockResolver(karl);
 
-            Assert.Same(karl, mockResolver.Object.Get<IPilkington>());
+            Assert.Same(karl, mockResolver.Object.GetService<IPilkington>());
 
-            mockResolver.Verify(m => m.Get(typeof(IPilkington), null), Times.Once());
+            mockResolver.Verify(m => m.GetService(typeof(IPilkington), null), Times.Once());
         }
 
         [Fact]
@@ -37,9 +37,9 @@ namespace System.Data.Entity.Config
             var karl = new Mock<IPilkington>().Object;
             var mockResolver = CreateMockResolver(karl);
 
-            Assert.Same(karl, mockResolver.Object.Get(typeof(IPilkington)));
+            Assert.Same(karl, mockResolver.Object.GetService(typeof(IPilkington)));
 
-            mockResolver.Verify(m => m.Get(typeof(IPilkington), null), Times.Once());
+            mockResolver.Verify(m => m.GetService(typeof(IPilkington), null), Times.Once());
         }
 
         [Fact]
@@ -47,25 +47,25 @@ namespace System.Data.Entity.Config
         {
             Assert.Equal(
                 "resolver",
-                Assert.Throws<ArgumentNullException>(() => IDbDependencyResolverExtensions.Get<IPilkington>(null, "Karl")).ParamName);
+                Assert.Throws<ArgumentNullException>(() => IDbDependencyResolverExtensions.GetService<IPilkington>(null, "Karl")).ParamName);
 
             Assert.Equal(
                 "resolver",
-                Assert.Throws<ArgumentNullException>(() => IDbDependencyResolverExtensions.Get<IPilkington>(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => IDbDependencyResolverExtensions.GetService<IPilkington>(null)).ParamName);
 
             Assert.Equal(
                 "resolver",
-                Assert.Throws<ArgumentNullException>(() => IDbDependencyResolverExtensions.Get(null, typeof(IPilkington))).ParamName);
+                Assert.Throws<ArgumentNullException>(() => IDbDependencyResolverExtensions.GetService(null, typeof(IPilkington))).ParamName);
 
             Assert.Equal(
                 "type",
-                Assert.Throws<ArgumentNullException>(() => new Mock<IDbDependencyResolver>().Object.Get(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new Mock<IDbDependencyResolver>().Object.GetService(null)).ParamName);
         }
 
         private static Mock<IDbDependencyResolver> CreateMockResolver(IPilkington karl)
         {
             var mockResolver = new Mock<IDbDependencyResolver>();
-            mockResolver.Setup(m => m.Get(It.IsAny<Type>(), It.IsAny<string>())).Returns(karl);
+            mockResolver.Setup(m => m.GetService(It.IsAny<Type>(), It.IsAny<string>())).Returns(karl);
 
             return mockResolver;
         }
