@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -21,6 +22,30 @@ namespace System.Data.Entity.Core.Common
     [CLSCompliant(false)]
     public abstract class DbProviderServices
     {
+        private readonly Lazy<IDbDependencyResolver> _resolver;
+
+        /// <summary>
+        /// Constructs an EF provider that will use the <see cref="IDbDependencyResolver"/> obtained from
+        /// the app domain <see cref="DbConfiguration"/> Singleton for resolving EF dependencies such
+        /// as the <see cref="DbSpatialServices"/> instance to use.
+        /// </summary>
+        protected DbProviderServices()
+        {
+            _resolver = new Lazy<IDbDependencyResolver>(() => DbConfiguration.Instance.DependencyResolver);
+        }
+
+        /// <summary>
+        /// Constructs an EF provider that will use the given <see cref="IDbDependencyResolver"/> for
+        /// resolving EF dependencies such as the <see cref="DbSpatialServices"/> instance to use.
+        /// </summary>
+        /// <param name="resolver">The resolver to use.</param>
+        protected DbProviderServices(IDbDependencyResolver resolver)
+        {
+            Contract.Requires(resolver != null);
+
+            _resolver = new Lazy<IDbDependencyResolver>(() => resolver);
+        }
+
         /// <summary>
         /// Create a Command Definition object given a command tree.
         /// </summary>
@@ -208,8 +233,16 @@ namespace System.Data.Entity.Core.Common
 
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
-            Contract.Ensures(Contract.Result<DbSpatialServices>() != null); 
-            
+            Contract.Ensures(Contract.Result<DbSpatialServices>() != null);
+
+            // First check if spatial services can be resolved and only if this fails
+            // go on to ask the provider for spatial services.
+            var spatialProvider = _resolver.Value.GetService<DbSpatialServices>();
+            if (spatialProvider != null)
+            {
+                return spatialProvider;
+            }
+
             try
             {
                 var spatialServices = DbGetSpatialServices(manifestToken);

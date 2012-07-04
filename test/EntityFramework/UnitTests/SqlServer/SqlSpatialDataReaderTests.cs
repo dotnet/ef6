@@ -30,7 +30,7 @@
                 mockSqlDataReader.Setup(m => m.GetDataTypeName(0)).Returns("sys.geography");
             }
 
-            var sqlSpatialDataReader = new SqlSpatialDataReader(mockSqlDataReader.Object);
+            var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader.Object);
 
             var convertedDbGeography = sqlSpatialDataReader.GetGeography(0);
 
@@ -57,7 +57,7 @@
                 mockSqlDataReader.Setup(m => m.GetDataTypeName(0)).Returns("sys.geometry");
             }
 
-            var sqlSpatialDataReader = new SqlSpatialDataReader(mockSqlDataReader.Object);
+            var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader.Object);
 
             var convertedDbGeometry = sqlSpatialDataReader.GetGeometry(0);
 

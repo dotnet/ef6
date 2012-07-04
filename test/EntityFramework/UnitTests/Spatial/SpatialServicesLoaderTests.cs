@@ -12,11 +12,21 @@
         [Fact]
         public void SpatialServicesLoader_uses_resolver_to_obtain_spatial_services()
         {
-            var mockResolver = new Mock<IDbDependencyResolver>();
-            var spatialServices = new Mock<DbSpatialServices>().Object;
-            mockResolver.Setup(m => m.GetService(typeof(DbSpatialServices), It.IsAny<string>())).Returns(spatialServices);
+            var mockSpatialServices = new Mock<DbSpatialServices>();
+            mockSpatialServices.Setup(m => m.NativeTypesAvailable).Returns(true);
 
-            Assert.Same(spatialServices, new SpatialServicesLoader(mockResolver.Object).LoadDefaultServices());
+            var mockResolver = new Mock<IDbDependencyResolver>();
+            var mockProvider = new Mock<DbProviderServices>(mockResolver.Object);
+
+            mockResolver
+                .Setup(m => m.GetService(typeof(DbProviderServices), "System.Data.SqlClient"))
+                .Returns(mockProvider.Object);
+
+            mockResolver
+                .Setup(m => m.GetService(typeof(DbSpatialServices), It.IsAny<string>()))
+                .Returns(mockSpatialServices.Object);
+
+            Assert.Same(mockSpatialServices.Object, new SpatialServicesLoader(mockResolver.Object).LoadDefaultServices());
         }
 
         [Fact]

@@ -263,7 +263,7 @@ namespace System.Data.Entity.SqlServer
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
-            return new SqlSpatialDataReader(new SqlDataReaderWrapper(underlyingReader));
+            return new SqlSpatialDataReader(GetSpatialServices(versionHint), new SqlDataReaderWrapper(underlyingReader));
         }
 
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)

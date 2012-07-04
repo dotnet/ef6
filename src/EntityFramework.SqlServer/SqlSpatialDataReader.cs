@@ -13,12 +13,15 @@ namespace System.Data.Entity.SqlServer
     /// </summary>
     internal sealed class SqlSpatialDataReader : DbSpatialDataReader
     {
-        private readonly SqlDataReaderWrapper _reader;
-        private const string geometrySqlType = "sys.geometry";
-        private const string geographySqlType = "sys.geography";
+        private const string GeometrySqlType = "sys.geometry";
+        private const string GeographySqlType = "sys.geography";
 
-        internal SqlSpatialDataReader(SqlDataReaderWrapper underlyingReader)
+        private readonly DbSpatialServices _spatialServices;
+        private readonly SqlDataReaderWrapper _reader;
+
+        internal SqlSpatialDataReader(DbSpatialServices spatialServices, SqlDataReaderWrapper underlyingReader)
         {
+            _spatialServices = spatialServices;
             _reader = underlyingReader;
         }
 
@@ -27,7 +30,7 @@ namespace System.Data.Entity.SqlServer
             EnsureGeographyColumn(ordinal);
             var geogBytes = _reader.GetSqlBytes(ordinal);
             var providerValue = _sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
-            return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
+            return _spatialServices.GeographyFromProviderValue(providerValue);
         }
 
         public override DbGeometry GetGeometry(int ordinal)
@@ -35,7 +38,7 @@ namespace System.Data.Entity.SqlServer
             EnsureGeometryColumn(ordinal);
             var geomBytes = _reader.GetSqlBytes(ordinal);
             var providerValue = _sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
-            return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
+            return _spatialServices.GeometryFromProviderValue(providerValue);
         }
 
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeographyFromBinaryReader =
@@ -51,7 +54,7 @@ namespace System.Data.Entity.SqlServer
         private void EnsureGeographyColumn(int ordinal)
         {
             var fieldTypeName = _reader.GetDataTypeName(ordinal);
-            if (!fieldTypeName.EndsWith(geographySqlType, StringComparison.Ordinal))
+            if (!fieldTypeName.EndsWith(GeographySqlType, StringComparison.Ordinal))
                 // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeographyColumn(fieldTypeName));
@@ -61,7 +64,7 @@ namespace System.Data.Entity.SqlServer
         private void EnsureGeometryColumn(int ordinal)
         {
             var fieldTypeName = _reader.GetDataTypeName(ordinal);
-            if (!fieldTypeName.EndsWith(geometrySqlType, StringComparison.Ordinal))
+            if (!fieldTypeName.EndsWith(GeometrySqlType, StringComparison.Ordinal))
                 // Use EndsWith so that we just see the schema and type name, not the database name.
             {
                 throw new InvalidDataException(Strings.SqlProvider_InvalidGeometryColumn(fieldTypeName));
