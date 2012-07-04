@@ -179,6 +179,15 @@ namespace System.Data.Entity.Config
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="IDbDependencyResolver"/> that is being used to resolve service
+        /// dependencies in the Entity Framework.
+        /// </summary>
+        public virtual IDbDependencyResolver DependencyResolver
+        {
+            get { return _resolvers; }
+        }
+
         private void CheckNotLocked(string memberName)
         {
             if (_isLocked)

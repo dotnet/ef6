@@ -42,6 +42,16 @@
             InitializeMemberInfo(instance);
         }
 
+        /// <inheritdoc/>
+        public override bool NativeTypesAvailable
+        {
+            get
+            {
+                SqlTypesAssembly _;
+                return SqlProviderServices.TryGetSqlTypesAssembly(out _);
+            }
+        }
+
         // Given an assembly purportedly containing SqlServerTypes for spatial values, attempt to 
         // create a corersponding Sql spefic DbSpatialServices value backed by types from that assembly.
         // Uses a dictionary to ensure that there is at most db spatial service per assembly.   It's important that

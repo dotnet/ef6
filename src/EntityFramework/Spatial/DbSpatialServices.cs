@@ -1,8 +1,8 @@
 namespace System.Data.Entity.Spatial
 {
+    using System.Data.Entity.Config;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Reflection;
 
     /// <summary>
     /// A provider-independent service API for geospatial (Geometry/Geography) type support.
@@ -12,46 +12,22 @@ namespace System.Data.Entity.Spatial
     public abstract class DbSpatialServices
     {
         private static readonly Lazy<DbSpatialServices> _defaultServices = new Lazy<DbSpatialServices>(
-            LoadDefaultServices, isThreadSafe: true);
+            () => new SpatialServicesLoader(DbConfiguration.Instance.DependencyResolver).LoadDefaultServices(), isThreadSafe: true);
 
         public static DbSpatialServices Default
         {
             get { return _defaultServices.Value; }
         }
 
-        private static DbSpatialServices LoadDefaultServices()
+        /// <summary>
+        /// Override this property to allow the spatial provider to fail fast when native types or other
+        /// resources needed for the spatial provider to function correctly are not available.
+        /// The default value is <code>true</code> which means that EF will continue with the assumption
+        /// that the provider has the necessary types/resources rather than failing fast.
+        /// </summary>
+        public virtual bool NativeTypesAvailable
         {
-            // This code is used when some static method on DbGeography or DbGeometry is called in which
-            // case we are not using an context instance and don't have a provider available.
-            // What this code therefore does it try to provide some level of functionality by seeing if
-            // the SQL Server spatial types are available and, if so, using a these types to get the
-            // functionality needed for the static methods.
-            // If the SQL Server types are not available, then there is a fall-back to a default
-            // implementation that doesn't support everything.
-
-            // TODO
-            // Even if the the SQL Server types are not available, it may still be that a provider
-            // is available that doesn't depend on the SQL Server types. So this method should look in
-            // the app.config (when this info is there) to find the spatial provider and use that.
-
-            var sqlProviderServicesType = Type.GetType(
-                "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                throwOnError: true);
-
-            if ((bool)sqlProviderServicesType.GetProperty(
-                "SqlTypesAssemblyIsAvailable",
-                BindingFlags.Static | BindingFlags.NonPublic).GetValue(null))
-            {
-                var sqlSpatialServicesType = Type.GetType(
-                    "System.Data.Entity.SqlServer.SqlSpatialServices, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                    throwOnError: true);
-
-                return (DbSpatialServices)sqlSpatialServicesType.GetField(
-                    "Instance",
-                    BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-            }
-
-            return DefaultSpatialServices.Instance;
+            get { return true; }
         }
 
         #region Geography API

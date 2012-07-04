@@ -208,6 +208,8 @@ namespace System.Data.Entity.Core.Common
 
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
+            Contract.Ensures(Contract.Result<DbSpatialServices>() != null); 
+            
             try
             {
                 var spatialServices = DbGetSpatialServices(manifestToken);

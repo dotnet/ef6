@@ -300,16 +300,7 @@ namespace System.Data.Entity.SqlServer
             return sqlTypes;
         }
 
-        internal static bool SqlTypesAssemblyIsAvailable
-        {
-            get
-            {
-                SqlTypesAssembly notUsed;
-                return TryGetSqlTypesAssembly(out notUsed);
-            }
-        }
-
-        private static bool TryGetSqlTypesAssembly(out SqlTypesAssembly sqlTypesAssembly)
+        internal static bool TryGetSqlTypesAssembly(out SqlTypesAssembly sqlTypesAssembly)
         {
             sqlTypesAssembly = SqlTypesAssembly.Latest;
             return sqlTypesAssembly != null;
