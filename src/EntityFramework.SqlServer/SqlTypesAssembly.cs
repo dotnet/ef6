@@ -12,8 +12,12 @@ namespace System.Data.Entity.SqlServer
     /// <summary>
     /// SqlTypesAssembly allows for late binding to the capabilities of a specific version of the Microsoft.SqlServer.Types assembly
     /// </summary>
-    internal sealed class SqlTypesAssembly
+    internal class SqlTypesAssembly
     {
+        public SqlTypesAssembly()
+        {
+        }
+
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public SqlTypesAssembly(Assembly sqlSpatialAssembly)
         {

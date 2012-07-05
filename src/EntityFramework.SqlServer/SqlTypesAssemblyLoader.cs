@@ -10,14 +10,53 @@ namespace System.Data.Entity.SqlServer
 
     internal class SqlTypesAssemblyLoader
     {
-        private static readonly ReadOnlyCollection<string> _preferredSqlTypesAssemblies =
-            new List<string>
-                {
-                    "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                    "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                }.AsReadOnly();
+        private readonly IEnumerable<string> _preferredSqlTypesAssemblies;
+        
+        private readonly Lazy<SqlTypesAssembly> _latestVersion;
 
-        private static SqlTypesAssembly BindToLatest()
+        public SqlTypesAssemblyLoader(IEnumerable<string> assemblyNames = null)
+        {
+            _preferredSqlTypesAssemblies
+                = assemblyNames
+                  ?? new[]
+                      {
+                          "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                          "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                      };
+
+            _latestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
+        }
+
+        /// <summary>
+        /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be
+        /// located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
+        /// </summary>
+        public virtual SqlTypesAssembly TryGetSqlTypesAssembly()
+        {
+            return _latestVersion.Value;
+        }
+
+        public virtual SqlTypesAssembly GetSqlTypesAssembly()
+        {
+            if (_latestVersion.Value == null)
+            {
+                throw new InvalidOperationException(Strings.SqlProvider_SqlTypesAssemblyNotFound);
+            }
+            return _latestVersion.Value;
+        }
+
+        public virtual bool TryGetSqlTypesAssembly(Assembly assembly, out SqlTypesAssembly sqlAssembly)
+        {
+            if (IsKnownAssembly(assembly))
+            {
+                sqlAssembly = new SqlTypesAssembly(assembly);
+                return true;
+            }
+            sqlAssembly = null;
+            return false;
+        }
+
+        private SqlTypesAssembly BindToLatest()
         {
             Assembly sqlTypesAssembly = null;
             foreach (var assemblyFullName in _preferredSqlTypesAssemblies)
@@ -43,18 +82,7 @@ namespace System.Data.Entity.SqlServer
             return null;
         }
 
-        public virtual bool TryGetSqlTypesAssembly(Assembly assembly, out SqlTypesAssembly sqlAssembly)
-        {
-            if (IsKnownAssembly(assembly))
-            {
-                sqlAssembly = new SqlTypesAssembly(assembly);
-                return true;
-            }
-            sqlAssembly = null;
-            return false;
-        }
-
-        private static bool IsKnownAssembly(Assembly assembly)
+        private bool IsKnownAssembly(Assembly assembly)
         {
             foreach (var knownAssemblyFullName in _preferredSqlTypesAssemblies)
             {
@@ -104,25 +132,6 @@ namespace System.Data.Entity.SqlServer
 
             var targetPublicKeyToken = targetAssemblyName.GetPublicKeyToken();
             return targetPublicKeyToken != null && targetPublicKeyToken.SequenceEqual(assemblyName.GetPublicKeyToken());
-        }
-
-        private static readonly Lazy<SqlTypesAssembly> _latestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
-
-        /// <summary>
-        /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
-        /// </summary>
-        public virtual SqlTypesAssembly TryGetSqlTypesAssembly()
-        {
-            return _latestVersion.Value;
-        }
-
-        public virtual SqlTypesAssembly GetSqlTypesAssembly()
-        {
-            if (_latestVersion.Value == null)
-            {
-                throw new InvalidOperationException(Strings.SqlProvider_SqlTypesAssemblyNotFound);
-            }
-            return _latestVersion.Value;
         }
     }
 }

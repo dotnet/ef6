@@ -1,7 +1,10 @@
 ﻿namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Reflection;
+    using System.Runtime.Serialization;
+    using Moq;
     using Xunit;
 
     public class SqlSpatialServicesTests
@@ -141,6 +144,57 @@
 
             Assert.Equal(dbGeometry.ProviderValue, convertedDbGeometry.ProviderValue);
             Assert.Equal(dbGeometry.CoordinateSystemId, convertedDbGeometry.CoordinateSystemId);
+        }
+
+        [Fact]
+        public void SqlSpatialServices_Singleton_uses_SQL_2008_types_on_dev_machine()
+        {
+            Assert.Equal(
+                "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                SqlSpatialServices.Instance.GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName);
+        }
+
+        [Fact]
+        public void SqlSpatialServices_does_not_throw_until_attempt_is_made_to_use_missing_SQL_types_assembly()
+        {
+            var services = new SqlSpatialServices(new SqlTypesAssemblyLoader(new[] { "SomeMissingAssembly" }), l => l.GetSqlTypesAssembly());
+
+            Assert.Equal(
+                Strings.SqlProvider_SqlTypesAssemblyNotFound,
+                Assert.Throws<InvalidOperationException>(
+                    () => services.GeometryFromText("POINT (90 50)")).Message);
+        }
+
+        [Fact]
+        public void SqlSpatialServices_serializaion_constructor_takes_loader_and_assembly_values_from_Singleton()
+        {
+            Assert.Equal(
+                "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                new SqlSpatialServices(null, new StreamingContext()).GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName);
+        }
+
+        [Fact]
+        public void NativeTypesAvailable_returns_true_on_dev_machine_with_SQL_native_types_installed()
+        {
+            Assert.True(SqlSpatialServices.Instance.NativeTypesAvailable);
+        }
+
+        [Fact]
+        public void NativeTypesAvailable_returns_true_if_loader_finds_native_types()
+        {
+            var mockLoader = new Mock<SqlTypesAssemblyLoader>(null);
+            mockLoader.Setup(m => m.TryGetSqlTypesAssembly()).Returns(new Mock<SqlTypesAssembly>().Object);
+
+            Assert.True(new SqlSpatialServices(mockLoader.Object, l => l.GetSqlTypesAssembly()).NativeTypesAvailable);
+        }
+
+        [Fact]
+        public void NativeTypesAvailable_returns_false_if_loader_does_not_find_native_types()
+        {
+            Assert.False(
+                new SqlSpatialServices(
+                    new Mock<SqlTypesAssemblyLoader>(null).Object,
+                    l => l.GetSqlTypesAssembly()).NativeTypesAvailable);
         }
     }
 }

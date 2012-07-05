@@ -36,6 +36,8 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
+        private static readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader = new SqlTypesAssemblyLoader();
+
         /// <summary>
         /// The Singleton instance of the SqlProviderServices type.
         /// </summary>
@@ -427,14 +429,14 @@ namespace System.Data.Entity.SqlServer
                 var geographyValue = value as DbGeography;
                 if (geographyValue != null)
                 {
-                    value = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
+                    value = _sqlTypesAssemblyLoader.GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
                 }
                 else
                 {
                     var geometryValue = value as DbGeometry;
                     if (geometryValue != null)
                     {
-                        value = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
+                        value = _sqlTypesAssemblyLoader.GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
                     }
                 }
             }

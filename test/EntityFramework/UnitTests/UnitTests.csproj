@@ -157,6 +157,7 @@
     <Compile Include="Internal\ConfigFile\ParameterElementTests.cs" />
     <Compile Include="Migrations\Utilities\MigrationWriterTests.cs" />
     <Compile Include="Spatial\SpatialServicesLoaderTests.cs" />
+    <Compile Include="SqlServer\SqlTypesAssemblyLoaderTests.cs" />
     <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
     <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
     <Compile Include="TestHelpers\UnitTestsConfiguration.cs" />

@@ -22,13 +22,13 @@
         private readonly Lazy<SqlTypesAssembly> _sqlTypesAssemblySingleton;
 
         [NonSerialized]
-        private readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader = new SqlTypesAssemblyLoader();
+        private readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader;
 
         public SqlSpatialServices()
         {
         }
 
-        private SqlSpatialServices(SqlTypesAssemblyLoader sqlTypesAssemblyLoader, Func<SqlTypesAssemblyLoader, SqlTypesAssembly> getSqlTypes)
+        public SqlSpatialServices(SqlTypesAssemblyLoader sqlTypesAssemblyLoader, Func<SqlTypesAssemblyLoader, SqlTypesAssembly> getSqlTypes)
         {
             Contract.Requires(getSqlTypes != null);
             Contract.Requires(sqlTypesAssemblyLoader != null);
@@ -41,7 +41,7 @@
             InitializeMemberInfo();
         }
 
-        private SqlSpatialServices(SerializationInfo info, StreamingContext context)
+        public SqlSpatialServices(SerializationInfo info, StreamingContext context)
         {
             _sqlTypesAssemblyLoader = Instance._sqlTypesAssemblyLoader;
             _sqlTypesAssemblySingleton = Instance._sqlTypesAssemblySingleton;
@@ -74,13 +74,14 @@
                         || !_otherSpatialServices.TryGetValue(assembly.FullName, out services))
                     {
                         SqlTypesAssembly sqlAssembly;
-                        if (new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly(assembly, out sqlAssembly))
+                        var loader = new SqlTypesAssemblyLoader();
+                        if (loader.TryGetSqlTypesAssembly(assembly, out sqlAssembly))
                         {
                             if (_otherSpatialServices == null)
                             {
                                 _otherSpatialServices = new Dictionary<string, SqlSpatialServices>(1);
                             }
-                            services = new SqlSpatialServices(new SqlTypesAssemblyLoader(), l => sqlAssembly);
+                            services = new SqlSpatialServices(loader, l => sqlAssembly);
                             _otherSpatialServices.Add(assembly.FullName, services);
                         }
                         else

@@ -139,6 +139,7 @@
     <Compile Include="SqlDdlBuilder.cs" />
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="SqlTypesAssemblyLoader.cs" />
     <Compile Include="SqlVersionUtils.cs" />
     <Compile Include="Utilities\DbExpressionExtensions.cs" />
     <Compile Include="Utilities\EdmFunctionExtensions.cs" />
