@@ -233,5 +233,21 @@ namespace System.Data.Entity.Config
                 mockNormalChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Never());
             }
         }
+
+        public class DependencyResolver
+        {
+            [Fact]
+            public void DependencyResolver_returns_the_dependency_resolver_in_use()
+            {
+                var mockAppConfigChain = new Mock<ResolverChain>();
+                var mockNormalChain = new Mock<ResolverChain>();
+
+                var config = new DbConfiguration(mockAppConfigChain.Object, mockNormalChain.Object);
+                var resolver = (CompositeResolver<ResolverChain, ResolverChain>)config.DependencyResolver;
+
+                Assert.Same(mockAppConfigChain.Object, resolver.First);
+                Assert.Same(mockNormalChain.Object, resolver.Second);
+            }
+        }
     }
 }

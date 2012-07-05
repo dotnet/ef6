@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Common
         /// Create a Command Definition object given a command tree.
         /// </summary>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         /// <remarks>
         /// This method simply delegates to the provider's implementation of CreateDbCommandDefinition.
         /// </remarks>
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common
         /// Create a Command Definition object given a command tree.
         /// </summary>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         /// <remarks>
         /// This method simply delegates to the provider's implementation of CreateDbCommandDefinition.
         /// </remarks>
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="connection">provider manifest previously retrieved from the store provider</param>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         protected abstract DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree);
 
         /// <summary>
@@ -245,13 +245,7 @@ namespace System.Data.Entity.Core.Common
 
             try
             {
-                var spatialServices = DbGetSpatialServices(manifestToken);
-                if (spatialServices == null)
-                {
-                    throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
-                }
-
-                return spatialServices;
+                spatialProvider = DbGetSpatialServices(manifestToken);
             }
             catch (ProviderIncompatibleException)
             {
@@ -259,12 +253,15 @@ namespace System.Data.Entity.Core.Common
             }
             catch (Exception e)
             {
-                if (e.IsCatchableExceptionType())
-                {
-                    throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices, e);
-                }
-                throw;
+                throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices, e);
             }
+
+            if (spatialProvider == null)
+            {
+                throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
+            }
+
+            return spatialProvider;
         }
 
         protected virtual DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string manifestToken)

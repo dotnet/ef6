@@ -51,7 +51,7 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="providerManifest">provider manifest that was determined from metadata</param>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
