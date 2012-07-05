@@ -6,40 +6,46 @@
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]
     internal sealed class SqlSpatialServices : DbSpatialServices, ISerializable
     {
-        /// <summary>
-        /// Do not allow instantiation
-        /// </summary>
-        internal static readonly SqlSpatialServices Instance = new SqlSpatialServices(SqlProviderServices.GetSqlTypesAssembly);
+        internal static readonly SqlSpatialServices Instance 
+            = new SqlSpatialServices(new SqlTypesAssemblyLoader(), l => l.GetSqlTypesAssembly());
 
-        private static Dictionary<string, SqlSpatialServices> otherSpatialServices;
+        private static Dictionary<string, SqlSpatialServices> _otherSpatialServices;
 
         [NonSerialized]
         private readonly Lazy<SqlTypesAssembly> _sqlTypesAssemblySingleton;
 
-        internal SqlSpatialServices()
+        [NonSerialized]
+        private readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader = new SqlTypesAssemblyLoader();
+
+        public SqlSpatialServices()
         {
         }
 
-        private SqlSpatialServices(Func<SqlTypesAssembly> getSqlTypes)
+        private SqlSpatialServices(SqlTypesAssemblyLoader sqlTypesAssemblyLoader, Func<SqlTypesAssemblyLoader, SqlTypesAssembly> getSqlTypes)
         {
-            Debug.Assert(getSqlTypes != null, "Validate SqlTypes assembly delegate before constructing SqlSpatialServiceS");
-            _sqlTypesAssemblySingleton = new Lazy<SqlTypesAssembly>(getSqlTypes, isThreadSafe: true);
+            Contract.Requires(getSqlTypes != null);
+            Contract.Requires(sqlTypesAssemblyLoader != null);
 
-            // Create Singletons that will delay-initialize the MethodInfo and PropertyInfo instances used to invoke SqlGeography/SqlGeometry methods via reflection.
+            _sqlTypesAssemblyLoader = sqlTypesAssemblyLoader;
+            _sqlTypesAssemblySingleton = new Lazy<SqlTypesAssembly>(() => getSqlTypes(sqlTypesAssemblyLoader), isThreadSafe: true);
+
+            // Create Singletons that will delay-initialize the MethodInfo and PropertyInfo instances
+            // used to invoke SqlGeography/SqlGeometry methods via reflection.
             InitializeMemberInfo();
         }
 
         private SqlSpatialServices(SerializationInfo info, StreamingContext context)
         {
-            var instance = Instance;
-            _sqlTypesAssemblySingleton = instance._sqlTypesAssemblySingleton;
-            InitializeMemberInfo(instance);
+            _sqlTypesAssemblyLoader = Instance._sqlTypesAssemblyLoader;
+            _sqlTypesAssemblySingleton = Instance._sqlTypesAssemblySingleton;
+            InitializeMemberInfo(Instance);
         }
 
         /// <inheritdoc/>
@@ -47,36 +53,35 @@
         {
             get
             {
-                SqlTypesAssembly _;
-                return SqlProviderServices.TryGetSqlTypesAssembly(out _);
+                return _sqlTypesAssemblyLoader.TryGetSqlTypesAssembly() != null;
             }
         }
 
         // Given an assembly purportedly containing SqlServerTypes for spatial values, attempt to 
-        // create a corersponding Sql spefic DbSpatialServices value backed by types from that assembly.
+        // create a corresponding SQL specific DbSpatialServices value backed by types from that assembly.
         // Uses a dictionary to ensure that there is at most db spatial service per assembly.   It's important that
         // this be done in a way that ensures that the underlying SqlTypesAssembly value is also atomized,
         // since that's caching compilation.
         // Relies on SqlTypesAssembly to verify that the assembly is appropriate.
         private static bool TryGetSpatialServiceFromAssembly(Assembly assembly, out SqlSpatialServices services)
         {
-            if (otherSpatialServices == null
-                || !otherSpatialServices.TryGetValue(assembly.FullName, out services))
+            if (_otherSpatialServices == null
+                || !_otherSpatialServices.TryGetValue(assembly.FullName, out services))
             {
                 lock (Instance)
                 {
-                    if (otherSpatialServices == null
-                        || !otherSpatialServices.TryGetValue(assembly.FullName, out services))
+                    if (_otherSpatialServices == null
+                        || !_otherSpatialServices.TryGetValue(assembly.FullName, out services))
                     {
                         SqlTypesAssembly sqlAssembly;
-                        if (SqlTypesAssembly.TryGetSqlTypesAssembly(assembly, out sqlAssembly))
+                        if (new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly(assembly, out sqlAssembly))
                         {
-                            if (otherSpatialServices == null)
+                            if (_otherSpatialServices == null)
                             {
-                                otherSpatialServices = new Dictionary<string, SqlSpatialServices>(1);
+                                _otherSpatialServices = new Dictionary<string, SqlSpatialServices>(1);
                             }
-                            services = new SqlSpatialServices(() => sqlAssembly);
-                            otherSpatialServices.Add(assembly.FullName, services);
+                            services = new SqlSpatialServices(new SqlTypesAssemblyLoader(), l => sqlAssembly);
+                            _otherSpatialServices.Add(assembly.FullName, services);
                         }
                         else
                         {

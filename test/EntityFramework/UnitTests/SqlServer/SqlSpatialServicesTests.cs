@@ -102,7 +102,7 @@
         [Fact]
         public void GeographyFromProviderValue_returns_null_for_null_value()
         {
-            var nullSqlGeography = SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType
+            var nullSqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType
                 .GetProperty("Null", BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
             var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(nullSqlGeography.GetValue(null));
 
@@ -113,7 +113,7 @@
         public void GeographyFromProviderValue_returns_DbGeography_for_non_null_value()
         {
             var dbGeography = DbGeography.FromText("POINT (90 50)");
-            var sqlGeography = SqlProviderServices.GetSqlTypesAssembly().ConvertToSqlTypesGeography(dbGeography);
+            var sqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().ConvertToSqlTypesGeography(dbGeography);
 
             var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(sqlGeography);
 
@@ -124,7 +124,7 @@
         [Fact]
         public void GeometryFromProviderValue_returns_null_for_null_value()
         {
-            var nullSqlGeometry = SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType
+            var nullSqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType
                 .GetProperty("Null", BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
             var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(nullSqlGeometry.GetValue(null));
 
@@ -135,7 +135,7 @@
         public void GeometryFromProviderValue_returns_DbGeometry_for_non_null_value()
         {
             var dbGeometry = DbGeometry.FromText("POINT (90 50)");
-            var sqlGeometry = SqlProviderServices.GetSqlTypesAssembly().ConvertToSqlTypesGeometry(dbGeometry);
+            var sqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().ConvertToSqlTypesGeometry(dbGeometry);
 
             var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(sqlGeometry);
 

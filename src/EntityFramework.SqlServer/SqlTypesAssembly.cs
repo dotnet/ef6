@@ -1,13 +1,10 @@
 namespace System.Data.Entity.SqlServer
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Xml;
@@ -17,113 +14,8 @@ namespace System.Data.Entity.SqlServer
     /// </summary>
     internal sealed class SqlTypesAssembly
     {
-        private static readonly ReadOnlyCollection<string> _preferredSqlTypesAssemblies = new List<string>
-                                                                                              {
-                                                                                                  "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                                                                                                  "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                                                                                              }.AsReadOnly();
-
-        private static SqlTypesAssembly BindToLatest()
-        {
-            Assembly sqlTypesAssembly = null;
-            foreach (var assemblyFullName in _preferredSqlTypesAssemblies)
-            {
-                var asmName = new AssemblyName(assemblyFullName);
-                try
-                {
-                    sqlTypesAssembly = Assembly.Load(asmName);
-                    break;
-                }
-                catch (FileNotFoundException)
-                {
-                }
-                catch (FileLoadException)
-                {
-                }
-            }
-
-            if (sqlTypesAssembly != null)
-            {
-                return new SqlTypesAssembly(sqlTypesAssembly);
-            }
-            return null;
-        }
-
-        internal static bool TryGetSqlTypesAssembly(Assembly assembly, out SqlTypesAssembly sqlAssembly)
-        {
-            if (IsKnownAssembly(assembly))
-            {
-                sqlAssembly = new SqlTypesAssembly(assembly);
-                return true;
-            }
-            sqlAssembly = null;
-            return false;
-        }
-
-        private static bool IsKnownAssembly(Assembly assembly)
-        {
-            foreach (var knownAssemblyFullName in _preferredSqlTypesAssemblies)
-            {
-                if (AssemblyNamesMatch(assembly.FullName, new AssemblyName(knownAssemblyFullName)))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static bool AssemblyNamesMatch(string infoRowProviderAssemblyName, AssemblyName targetAssemblyName)
-        {
-            if (string.IsNullOrWhiteSpace(infoRowProviderAssemblyName))
-            {
-                return false;
-            }
-
-            AssemblyName assemblyName;
-            try
-            {
-                assemblyName = new AssemblyName(infoRowProviderAssemblyName);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            // Match the provider assembly details
-            if (!string.Equals(targetAssemblyName.Name, assemblyName.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-
-            if (targetAssemblyName.Version == null
-                || assemblyName.Version == null)
-            {
-                return false;
-            }
-
-            if (targetAssemblyName.Version.Major != assemblyName.Version.Major
-                || targetAssemblyName.Version.Minor != assemblyName.Version.Minor)
-            {
-                return false;
-            }
-
-            var targetPublicKeyToken = targetAssemblyName.GetPublicKeyToken();
-            return targetPublicKeyToken != null && targetPublicKeyToken.SequenceEqual(assemblyName.GetPublicKeyToken());
-        }
-
-        private static readonly Lazy<SqlTypesAssembly> _latestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
-
-        /// <summary>
-        /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
-        /// </summary>
-        internal static SqlTypesAssembly Latest
-        {
-            get { return _latestVersion.Value; }
-        }
-
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private SqlTypesAssembly(Assembly sqlSpatialAssembly)
+        public SqlTypesAssembly(Assembly sqlSpatialAssembly)
         {
             // Retrieve SQL Server spatial types and static constructor methods
             var sqlGeog = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeography", throwOnError: true);

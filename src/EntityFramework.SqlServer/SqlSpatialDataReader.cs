@@ -43,11 +43,11 @@ namespace System.Data.Entity.SqlServer
 
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeographyFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(
-                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeographyType), isThreadSafe: true);
+                () => CreateBinaryReadDelegate(new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType), isThreadSafe: true);
 
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeometryFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(
-                () => CreateBinaryReadDelegate(SqlProviderServices.GetSqlTypesAssembly().SqlGeometryType), isThreadSafe: true);
+                () => CreateBinaryReadDelegate(new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType), isThreadSafe: true);
 
         // test to ensure that the SQL column has the expected SQL type.   Don't use the CLR type to avoid having to worry about differences in 
         // type versions between the client and the database.  

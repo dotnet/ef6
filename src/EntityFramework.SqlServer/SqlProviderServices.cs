@@ -289,23 +289,6 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        internal static SqlTypesAssembly GetSqlTypesAssembly()
-        {
-            SqlTypesAssembly sqlTypes;
-            if (!TryGetSqlTypesAssembly(out sqlTypes))
-            {
-                throw new InvalidOperationException(Strings.SqlProvider_SqlTypesAssemblyNotFound);
-            }
-            Debug.Assert(sqlTypes != null);
-            return sqlTypes;
-        }
-
-        internal static bool TryGetSqlTypesAssembly(out SqlTypesAssembly sqlTypesAssembly)
-        {
-            sqlTypesAssembly = SqlTypesAssembly.Latest;
-            return sqlTypesAssembly != null;
-        }
-
         /// <summary>
         /// Creates a SqlParameter given a name, type, and direction
         /// </summary>
@@ -444,14 +427,14 @@ namespace System.Data.Entity.SqlServer
                 var geographyValue = value as DbGeography;
                 if (geographyValue != null)
                 {
-                    value = GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
+                    value = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
                 }
                 else
                 {
                     var geometryValue = value as DbGeometry;
                     if (geometryValue != null)
                     {
-                        value = GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
+                        value = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
                     }
                 }
             }

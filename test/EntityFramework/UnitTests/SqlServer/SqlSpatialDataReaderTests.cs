@@ -20,7 +20,7 @@
             {
                 var writer = new BinaryWriter(memoryStream);
 
-                var sqlTypes = SqlProviderServices.GetSqlTypesAssembly();
+                var sqlTypes = new SqlTypesAssemblyLoader().GetSqlTypesAssembly();
                 MethodInfo writeMethod = sqlTypes.SqlGeographyType.GetMethod("Write", BindingFlags.Public | BindingFlags.Instance,
                     binder: null, types: new[] { typeof(BinaryWriter) }, modifiers: null);
                 writeMethod.Invoke(dbGeography.ProviderValue, new[] { writer });
@@ -47,7 +47,7 @@
             {
                 var writer = new BinaryWriter(memoryStream);
 
-                var sqlTypes = SqlProviderServices.GetSqlTypesAssembly();
+                var sqlTypes = new SqlTypesAssemblyLoader().GetSqlTypesAssembly();
                 MethodInfo writeMethod = sqlTypes.SqlGeometryType.GetMethod("Write", BindingFlags.Public | BindingFlags.Instance,
                     binder: null, types: new[] { typeof(BinaryWriter) }, modifiers: null);
                 writeMethod.Invoke(dbGeometry.ProviderValue, new[] { writer });
