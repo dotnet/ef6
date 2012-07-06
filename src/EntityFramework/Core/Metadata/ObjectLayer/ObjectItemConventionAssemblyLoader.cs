@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -31,7 +32,7 @@
 
         protected override void LoadTypesFromAssembly()
         {
-            foreach (var type in EntityUtil.GetTypesSpecial(SourceAssembly))
+            foreach (var type in SourceAssembly.GetAccessibleTypes())
             {
                 EdmType cspaceType;
                 if (TryGetCSpaceTypeMatch(type, out cspaceType))

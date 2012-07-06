@@ -461,7 +461,7 @@
                 if (type == null)
                 {
                     var assemblyName = assembly.GetName().Name;
-                    var types = assembly.GetTypes()
+                    var types = assembly.GetAccessibleTypes()
                         .Where(t => typeof(TBase).IsAssignableFrom(t));
 
                     if (typeNameSpecified)

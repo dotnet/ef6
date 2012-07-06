@@ -4,13 +4,14 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
     /// <summary>
     /// Class for representing a collection of items for the object layer.
-    /// Most of the implemetation for actual maintainance of the collection is
+    /// Most of the implementation for actual maintenance of the collection is
     /// done by ItemCollection
     /// </summary>
     internal sealed class ObjectItemAttributeAssemblyLoader : ObjectItemAssemblyLoader
@@ -177,7 +178,7 @@
             LoadRelationshipTypes();
 
             // Loop through each type in the assembly and process it
-            foreach (var type in EntityUtil.GetTypesSpecial(SourceAssembly))
+            foreach (var type in SourceAssembly.GetAccessibleTypes())
             {
                 // If the type doesn't have the same EdmTypeAttribute defined, then it's not a special type
                 // that we care about, skip it.
