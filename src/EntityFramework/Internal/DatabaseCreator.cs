@@ -42,7 +42,7 @@
                             MigrationsNamespace = contextType.Namespace,
                             TargetDatabase =
                                 new DbConnectionInfo(
-                                internalContext.OriginalConnectionString, internalContext.ProviderName)
+                                    internalContext.OriginalConnectionString, internalContext.ProviderName)
                         },
                     internalContext.Owner);
 

@@ -88,9 +88,9 @@
             _connectionStringInfo = connectionStringInfo;
 
             var info = new AppDomainSetup
-                           {
-                               ShadowCopyFiles = "true"
-                           };
+                {
+                    ShadowCopyFiles = "true"
+                };
 
             if (!string.IsNullOrWhiteSpace(workingDirectory))
             {
@@ -140,10 +140,10 @@
         /// <returns>The context type found.</returns>
         public string GetContextType(string contextTypeName)
         {
-            var runner = new GetContextTypeRunner()
-            {
-                ContextTypeName = contextTypeName
-            };
+            var runner = new GetContextTypeRunner
+                {
+                    ContextTypeName = contextTypeName
+                };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -192,10 +192,10 @@
         public void Update(string targetMigration, bool force)
         {
             var runner = new UpdateRunner
-                             {
-                                 TargetMigration = targetMigration,
-                                 Force = force
-                             };
+                {
+                    TargetMigration = targetMigration,
+                    Force = force
+                };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -218,11 +218,11 @@
         {
             var runner
                 = new ScriptUpdateRunner
-                      {
-                          SourceMigration = sourceMigration,
-                          TargetMigration = targetMigration,
-                          Force = force
-                      };
+                    {
+                        SourceMigration = sourceMigration,
+                        TargetMigration = targetMigration,
+                        Force = force
+                    };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -243,12 +243,12 @@
         {
             var runner
                 = new ScaffoldRunner
-                      {
-                          MigrationName = migrationName,
-                          Language = language,
-                          RootNamespace = rootNamespace,
-                          IgnoreChanges = ignoreChanges
-                      };
+                    {
+                        MigrationName = migrationName,
+                        Language = language,
+                        RootNamespace = rootNamespace,
+                        IgnoreChanges = ignoreChanges
+                    };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -266,10 +266,10 @@
         {
             var runner
                 = new InitialCreateScaffoldRunner
-                      {
-                          Language = language,
-                          RootNamespace = rootNamespace
-                      };
+                    {
+                        Language = language,
+                        RootNamespace = rootNamespace
+                    };
 
             ConfigureRunner(runner);
 
@@ -425,11 +425,11 @@
                 var configurationType = FindType<DbMigrationsConfiguration>(
                     ConfigurationTypeName,
                     types => types
-                        .Where(
-                            t => t.GetConstructor(Type.EmptyTypes) != null
-                                && !t.IsAbstract
-                                && !t.IsGenericType)
-                        .ToList(),
+                                 .Where(
+                                     t => t.GetConstructor(Type.EmptyTypes) != null
+                                          && !t.IsAbstract
+                                          && !t.IsGenericType)
+                                 .ToList(),
                     Error.AssemblyMigrator_NoConfiguration,
                     (assembly, types) => Error.AssemblyMigrator_MultipleConfigurations(assembly),
                     Error.AssemblyMigrator_NoConfigurationWithName,
@@ -731,18 +731,18 @@
                     types => types,
                     Error.EnableMigrations_NoContext,
                     (assembly, types) =>
-                    {
-                        var message = new StringBuilder();
-                        message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
-
-                        foreach (var type in types)
                         {
-                            message.AppendLine();
-                            message.Append(Strings.EnableMigrationsForContext(type.FullName));
-                        }
+                            var message = new StringBuilder();
+                            message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
 
-                        return new MigrationsException(message.ToString());
-                    },
+                            foreach (var type in types)
+                            {
+                                message.AppendLine();
+                                message.Append(Strings.EnableMigrationsForContext(type.FullName));
+                            }
+
+                            return new MigrationsException(message.ToString());
+                        },
                     Error.EnableMigrations_NoContextWithName,
                     Error.EnableMigrations_MultipleContextsWithName);
 

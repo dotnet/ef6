@@ -174,12 +174,12 @@
 
             var addForeignKeyOperation
                 = new AddForeignKeyOperation(anonymousArguments)
-                      {
-                          DependentTable = dependentTable,
-                          PrincipalTable = principalTable,
-                          CascadeDelete = cascadeDelete,
-                          Name = name
-                      };
+                    {
+                        DependentTable = dependentTable,
+                        PrincipalTable = principalTable,
+                        CascadeDelete = cascadeDelete,
+                        Name = name
+                    };
 
             dependentColumns.Each(c => addForeignKeyOperation.DependentColumns.Add(c));
 
@@ -211,10 +211,10 @@
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
-                      {
-                          DependentTable = dependentTable,
-                          Name = name
-                      };
+                    {
+                        DependentTable = dependentTable,
+                        Name = name
+                    };
 
             AddOperation(dropForeignKeyOperation);
         }
@@ -285,10 +285,10 @@
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
-                      {
-                          DependentTable = dependentTable,
-                          PrincipalTable = principalTable
-                      };
+                    {
+                        DependentTable = dependentTable,
+                        PrincipalTable = principalTable
+                    };
 
             dependentColumns.Each(c => dropForeignKeyOperation.DependentColumns.Add(c));
 
@@ -528,10 +528,10 @@
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation(anonymousArguments)
-                      {
-                          Table = table,
-                          Name = name
-                      };
+                    {
+                        Table = table,
+                        Name = name
+                    };
 
             columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));
 
@@ -558,10 +558,10 @@
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
-                      {
-                          Table = table,
-                          Name = name,
-                      };
+                    {
+                        Table = table,
+                        Name = name,
+                    };
 
             AddOperation(dropPrimaryKeyOperation);
         }
@@ -584,9 +584,9 @@
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
-                      {
-                          Table = table,
-                      };
+                    {
+                        Table = table,
+                    };
 
             AddOperation(dropPrimaryKeyOperation);
         }
@@ -659,11 +659,11 @@
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
-                      {
-                          Table = table,
-                          IsUnique = unique,
-                          Name = name
-                      };
+                    {
+                        Table = table,
+                        IsUnique = unique,
+                        Name = name
+                    };
 
             columns.Each(c => createIndexOperation.Columns.Add(c));
 
@@ -693,10 +693,10 @@
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
-                      {
-                          Table = table,
-                          Name = name,
-                      };
+                    {
+                        Table = table,
+                        Name = name,
+                    };
 
             AddOperation(dropIndexOperation);
         }
@@ -725,9 +725,9 @@
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
-                      {
-                          Table = table,
-                      };
+                    {
+                        Table = table,
+                    };
 
             columns.Each(c => dropIndexOperation.Columns.Add(c));
 

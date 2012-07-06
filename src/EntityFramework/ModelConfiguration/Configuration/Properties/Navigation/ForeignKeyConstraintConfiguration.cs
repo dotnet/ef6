@@ -78,9 +78,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var associationConstraint
                 = new EdmAssociationConstraint
-                      {
-                          DependentEnd = dependentEnd
-                      };
+                    {
+                        DependentEnd = dependentEnd
+                    };
 
             var dependentProperties = _dependentProperties.AsEnumerable();
 
@@ -89,10 +89,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 var foreignKeys
                     = from p in _dependentProperties
                       select new
-                                 {
-                                     PropertyInfo = p,
-                                     entityTypeConfiguration.Property(new PropertyPath(p)).ColumnOrder
-                                 };
+                          {
+                              PropertyInfo = p,
+                              entityTypeConfiguration.Property(new PropertyPath(p)).ColumnOrder
+                          };
 
                 if ((_dependentProperties.Count > 1)
                     && foreignKeys.Any(p => !p.ColumnOrder.HasValue))

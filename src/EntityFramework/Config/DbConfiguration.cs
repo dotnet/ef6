@@ -18,7 +18,7 @@ namespace System.Data.Entity.Config
     public class DbConfiguration
     {
         private readonly CompositeResolver<ResolverChain, ResolverChain> _resolvers;
-        
+
         private bool _isLocked;
 
         /// <summary>
@@ -173,10 +173,7 @@ namespace System.Data.Entity.Config
 
                 AddDependencyResolver(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(value));
             }
-            get
-            {
-                return _resolvers.GetService<IDbModelCacheKeyFactory>();
-            }
+            get { return _resolvers.GetService<IDbModelCacheKeyFactory>(); }
         }
 
         /// <summary>

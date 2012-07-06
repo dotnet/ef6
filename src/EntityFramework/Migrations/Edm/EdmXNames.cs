@@ -200,10 +200,10 @@
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
                 return new List<XName>
-                           {
-                               _csdlNamespaceV3 + elementName,
-                               _csdlNamespaceV2 + elementName
-                           };
+                    {
+                        _csdlNamespaceV3 + elementName,
+                        _csdlNamespaceV2 + elementName
+                    };
             }
         }
 
@@ -227,10 +227,10 @@
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
                 return new List<XName>
-                           {
-                               _mslNamespaceV3 + elementName,
-                               _mslNamespaceV2 + elementName
-                           };
+                    {
+                        _mslNamespaceV3 + elementName,
+                        _mslNamespaceV2 + elementName
+                    };
             }
         }
 
@@ -253,10 +253,10 @@
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
                 return new List<XName>
-                           {
-                               _ssdlNamespaceV3 + elementName,
-                               _ssdlNamespaceV2 + elementName
-                           };
+                    {
+                        _ssdlNamespaceV3 + elementName,
+                        _ssdlNamespaceV2 + elementName
+                    };
             }
         }
     }

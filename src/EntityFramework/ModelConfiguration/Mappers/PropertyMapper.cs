@@ -69,9 +69,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 if (complexType != null)
                 {
                     property = new EdmProperty
-                                   {
-                                       Name = propertyInfo.Name
-                                   }.AsComplex(complexType);
+                        {
+                            Name = propertyInfo.Name
+                        }.AsComplex(complexType);
                 }
                 else
                 {
@@ -84,9 +84,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                         if (enumType != null)
                         {
                             property = new EdmProperty
-                                           {
-                                               Name = propertyInfo.Name,
-                                           }.AsEnum(enumType);
+                                {
+                                    Name = propertyInfo.Name,
+                                }.AsEnum(enumType);
                             property.PropertyType.IsNullable = isNullable;
                         }
                     }

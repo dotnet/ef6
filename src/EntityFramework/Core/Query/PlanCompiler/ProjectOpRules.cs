@@ -338,12 +338,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         //The order of the rules is important
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_ProjectOpWithNullSentinel,
-                                                        Rule_ProjectOpWithSimpleVarRedefinitions,
-                                                        Rule_ProjectOverProject,
-                                                        Rule_ProjectWithNoLocalDefs,
-                                                    };
+            {
+                Rule_ProjectOpWithNullSentinel,
+                Rule_ProjectOpWithSimpleVarRedefinitions,
+                Rule_ProjectOverProject,
+                Rule_ProjectWithNoLocalDefs,
+            };
 
         #endregion
     }

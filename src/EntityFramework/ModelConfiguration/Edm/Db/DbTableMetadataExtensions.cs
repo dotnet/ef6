@@ -19,9 +19,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
             var tableColumn = new DbTableColumnMetadata
-                                  {
-                                      Name = table.Columns.UniquifyName(name)
-                                  }.Initialize();
+                {
+                    Name = table.Columns.UniquifyName(name)
+                }.Initialize();
 
             tableColumn.SetPreferredName(name);
 

@@ -185,17 +185,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             var result = lambda;
             var newFormals = VisitList(
                 lambda.Variables, varRef =>
-                                      {
-                                          var newVarType = VisitTypeUsage(varRef.ResultType);
-                                          if (!ReferenceEquals(varRef.ResultType, newVarType))
-                                          {
-                                              return CqtBuilder.Variable(newVarType, varRef.VariableName);
-                                          }
-                                          else
-                                          {
-                                              return varRef;
-                                          }
-                                      }
+                    {
+                        var newVarType = VisitTypeUsage(varRef.ResultType);
+                        if (!ReferenceEquals(varRef.ResultType, newVarType))
+                        {
+                            return CqtBuilder.Variable(newVarType, varRef.VariableName);
+                        }
+                        else
+                        {
+                            return varRef;
+                        }
+                    }
                 );
             EnterScope(newFormals.ToArray()); // ToArray: Don't pass the List instance directly to OnEnterScope
             var newBody = VisitExpression(lambda.Body);
@@ -546,17 +546,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             return VisitUnary(
                 expression, exp =>
-                                {
-                                    if (TypeSemantics.IsRowType(exp.ResultType))
-                                    {
-                                        // TODO: Remove this special, non-public, overload that derived classes cannot access
-                                        return CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp);
-                                    }
-                                    else
-                                    {
-                                        return CqtBuilder.IsNull(exp);
-                                    }
-                                }
+                    {
+                        if (TypeSemantics.IsRowType(exp.ResultType))
+                        {
+                            // TODO: Remove this special, non-public, overload that derived classes cannot access
+                            return CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp);
+                        }
+                        else
+                        {
+                            return CqtBuilder.IsNull(exp);
+                        }
+                    }
                 );
         }
 

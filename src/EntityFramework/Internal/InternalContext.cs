@@ -484,7 +484,8 @@
         /// </summary>
         public virtual void DisposeContext()
         {
-            if (!IsDisposed && OnDisposing != null)
+            if (!IsDisposed
+                && OnDisposing != null)
             {
                 OnDisposing(this, new EventArgs());
                 OnDisposing = null;

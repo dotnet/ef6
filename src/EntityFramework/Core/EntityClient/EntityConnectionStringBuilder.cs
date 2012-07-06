@@ -25,12 +25,12 @@ namespace System.Data.Entity.Core.EntityClient
 
         // An array to hold the keywords
         private static readonly string[] _validKeywords = new[]
-                                                              {
-                                                                  NameParameterName,
-                                                                  MetadataParameterName,
-                                                                  ProviderParameterName,
-                                                                  ProviderConnectionStringParameterName
-                                                              };
+            {
+                NameParameterName,
+                MetadataParameterName,
+                ProviderParameterName,
+                ProviderConnectionStringParameterName
+            };
 
         private static Hashtable _synonyms;
 

@@ -74,11 +74,11 @@
                 var securityRulesAttributeConstructor = typeof(SecurityRulesAttribute).GetConstructor(new[] { typeof(SecurityRuleSet) });
 
                 var attributeBuilders = new[]
-                                            {
-                                                new CustomAttributeBuilder(securityTransparentAttributeConstructor, new object[0]),
-                                                new CustomAttributeBuilder(
-                                                    securityRulesAttributeConstructor, new object[1] { SecurityRuleSet.Level1 })
-                                            };
+                    {
+                        new CustomAttributeBuilder(securityTransparentAttributeConstructor, new object[0]),
+                        new CustomAttributeBuilder(
+                            securityRulesAttributeConstructor, new object[1] { SecurityRuleSet.Level1 })
+                    };
 
                 var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
                     assemblyName, s_ProxyAssemblyBuilderAccess, attributeBuilders);
@@ -321,18 +321,18 @@
 
             var propertyName = propertyInfo.Name;
             return (entity) =>
-                       {
-                           var type = entity.GetType();
-                           if (IsProxyType(type))
-                           {
-                               object value;
-                               if (TryGetBasePropertyValue(type, propertyName, entity, out value))
-                               {
-                                   return value;
-                               }
-                           }
-                           return nonProxyGetter(entity);
-                       };
+                {
+                    var type = entity.GetType();
+                    if (IsProxyType(type))
+                    {
+                        object value;
+                        if (TryGetBasePropertyValue(type, propertyName, entity, out value))
+                        {
+                            return value;
+                        }
+                    }
+                    return nonProxyGetter(entity);
+                };
         }
 
         private static bool TryGetBasePropertyValue(Type proxyType, string propertyName, object entity, out object value)
@@ -356,17 +356,17 @@
 
             var propertyName = propertyInfo.Name;
             return (entity, value) =>
-                       {
-                           var type = entity.GetType();
-                           if (IsProxyType(type))
-                           {
-                               if (TrySetBasePropertyValue(type, propertyName, entity, value))
-                               {
-                                   return;
-                               }
-                           }
-                           nonProxySetter(entity, value);
-                       };
+                {
+                    var type = entity.GetType();
+                    if (IsProxyType(type))
+                    {
+                        if (TrySetBasePropertyValue(type, propertyName, entity, value))
+                        {
+                            return;
+                        }
+                    }
+                    nonProxySetter(entity, value);
+                };
         }
 
         private static bool TrySetBasePropertyValue(Type proxyType, string propertyName, object entity, object value)
@@ -529,11 +529,11 @@
         private static Action<object> GetResetFKSetterFlagDelegate(Func<object, object> getEntityWrapperDelegate)
         {
             return (proxy) =>
-                       {
-                           Debug.Assert(getEntityWrapperDelegate != null, "entityWrapperDelegate must not be null");
+                {
+                    Debug.Assert(getEntityWrapperDelegate != null, "entityWrapperDelegate must not be null");
 
-                           ResetFKSetterFlag(getEntityWrapperDelegate(proxy));
-                       };
+                    ResetFKSetterFlag(getEntityWrapperDelegate(proxy));
+                };
         }
 
         /// <summary>

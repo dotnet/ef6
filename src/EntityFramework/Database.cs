@@ -336,7 +336,9 @@
         ///     the config file then <see cref = "SqlConnectionFactory" /> is used. Setting this property in code
         ///     always overrides whatever value is found in the config file.
         /// </remarks>
-        [Obsolete("The default connection factory should be set in the config file or using the DbConfiguration class. See [TODO: Configuration link]")]
+        [Obsolete(
+            "The default connection factory should be set in the config file or using the DbConfiguration class. See [TODO: Configuration link]"
+            )]
         public static IDbConnectionFactory DefaultConnectionFactory
         {
             get { return _defaultConnectionFactory.Value; }

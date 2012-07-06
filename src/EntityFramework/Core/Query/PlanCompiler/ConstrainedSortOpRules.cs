@@ -41,9 +41,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All ConstrainedSortOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_ConstrainedSortOpOverEmptySet,
-                                                    };
+            {
+                Rule_ConstrainedSortOpOverEmptySet,
+            };
 
         #endregion
     }

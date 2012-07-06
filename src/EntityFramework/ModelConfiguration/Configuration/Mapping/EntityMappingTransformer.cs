@@ -213,11 +213,11 @@
                         var dependentColumns = propertyMappings.Select(pm => pm.Column);
 
                         dependentTableInfos = new[]
-                                                  {
-                                                      new KeyValuePair
-                                                          <DbTableMetadata, IEnumerable<DbTableColumnMetadata>>(
-                                                          dependentTable, dependentColumns)
-                                                  };
+                            {
+                                new KeyValuePair
+                                    <DbTableMetadata, IEnumerable<DbTableColumnMetadata>>(
+                                    dependentTable, dependentColumns)
+                            };
                     }
 
                     foreach (var tableInfo in dependentTableInfos)
@@ -281,13 +281,13 @@
             Contract.Requires(fk != null);
 
             var newFk = new DbForeignKeyConstraintMetadata
-                            {
-                                DeleteAction = fk.DeleteAction,
-                                Name =
-                                    database.Schemas.Single().Tables.SelectMany(t => t.ForeignKeyConstraints).
-                                    UniquifyName(fk.Name),
-                                PrincipalTable = fk.PrincipalTable
-                            };
+                {
+                    DeleteAction = fk.DeleteAction,
+                    Name =
+                        database.Schemas.Single().Tables.SelectMany(t => t.ForeignKeyConstraints).
+                            UniquifyName(fk.Name),
+                    PrincipalTable = fk.PrincipalTable
+                };
 
             // Make sure all the dependent columns refer to columns in the newTable
             SetAllDependentColumns(newFk, fk.DependentColumns, toTable.Columns);
@@ -466,9 +466,9 @@
             DbEntityTypeMapping entityTypeMapping, DbEntityTypeMappingFragment templateFragment, DbTableMetadata table)
         {
             var fragment = new DbEntityTypeMappingFragment
-                               {
-                                   Table = table
-                               };
+                {
+                    Table = table
+                };
             entityTypeMapping.TypeMappingFragments.Add(fragment);
 
             // Move all PK mappings to the extra fragment
@@ -635,16 +635,16 @@
             Contract.Requires(entityType != null);
 
             var foreignKeyConstraintMetadata = new DbForeignKeyConstraintMetadata
-                                                   {
-                                                       Name =
-                                                           String.Format(
-                                                               CultureInfo.InvariantCulture,
-                                                               "{0}_TypeConstraint_From_{1}_To_{2}",
-                                                               entityType.Name,
-                                                               principalTable.Name,
-                                                               dependentTable.Name),
-                                                       PrincipalTable = principalTable
-                                                   };
+                {
+                    Name =
+                        String.Format(
+                            CultureInfo.InvariantCulture,
+                            "{0}_TypeConstraint_From_{1}_To_{2}",
+                            entityType.Name,
+                            principalTable.Name,
+                            dependentTable.Name),
+                    PrincipalTable = principalTable
+                };
 
             if (isSplitting)
             {

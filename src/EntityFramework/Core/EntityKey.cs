@@ -310,9 +310,9 @@ namespace System.Data.Entity.Core
                     if (_singletonKeyValue != null)
                     {
                         keyValues = new[]
-                                        {
-                                            new EntityKeyMember(_keyNames[0], _singletonKeyValue)
-                                        };
+                            {
+                                new EntityKeyMember(_keyNames[0], _singletonKeyValue)
+                            };
                     }
                     else
                     {

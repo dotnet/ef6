@@ -11,9 +11,9 @@ namespace System.Data.Entity.Internal
             Contract.Requires(context != null);
 
             string defaultSchema = null;
-            
+
             var historyContext = context as HistoryContext;
-            
+
             if (historyContext != null)
             {
                 defaultSchema = historyContext.DefaultSchema;

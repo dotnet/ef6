@@ -594,22 +594,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All ScalarOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_SimplifyCase,
-                                                        Rule_FlattenCase,
-                                                        Rule_LikeOverConstants,
-                                                        Rule_EqualsOverConstant,
-                                                        Rule_AndOverConstantPred1,
-                                                        Rule_AndOverConstantPred2,
-                                                        Rule_OrOverConstantPred1,
-                                                        Rule_OrOverConstantPred2,
-                                                        Rule_NotOverConstantPred,
-                                                        Rule_IsNullOverConstant,
-                                                        Rule_IsNullOverNullSentinel,
-                                                        Rule_IsNullOverNull,
-                                                        Rule_NullCast,
-                                                        Rule_IsNullOverVarRef,
-                                                    };
+            {
+                Rule_SimplifyCase,
+                Rule_FlattenCase,
+                Rule_LikeOverConstants,
+                Rule_EqualsOverConstant,
+                Rule_AndOverConstantPred1,
+                Rule_AndOverConstantPred2,
+                Rule_OrOverConstantPred1,
+                Rule_OrOverConstantPred2,
+                Rule_NotOverConstantPred,
+                Rule_IsNullOverConstant,
+                Rule_IsNullOverNullSentinel,
+                Rule_IsNullOverNull,
+                Rule_NullCast,
+                Rule_IsNullOverVarRef,
+            };
 
         #endregion
     }

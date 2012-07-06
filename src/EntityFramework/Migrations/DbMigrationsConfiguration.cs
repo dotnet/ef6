@@ -94,7 +94,7 @@
                 Contract.Requires(typeof(DbContext).IsAssignableFrom(value));
 
                 _contextType = value;
-                
+
                 DbConfigurationManager.Instance.EnsureLoadedForContext(_contextType);
             }
         }

@@ -2074,9 +2074,9 @@ namespace System.Data.Entity.Core.Mapping
 
             if (!LoadFunctionImportStructuralType(
                 nav.Clone(), new List<StructuralType>
-                                 {
-                                     complexType
-                                 }, columnRenameMappings, null))
+                    {
+                        complexType
+                    }, columnRenameMappings, null))
             {
                 return false;
             }
@@ -2586,21 +2586,21 @@ namespace System.Data.Entity.Core.Mapping
                             value = ((FunctionImportEntityTypeMappingConditionValue)condition).GetConditionValue(
                                 cPrimitiveType.ClrEquivalentType,
                                 handleTypeNotComparable: () =>
-                                                             {
-                                                                 AddToSchemaErrorWithMemberAndStructure(
-                                                                     Strings.
-                                                                         Mapping_InvalidContent_ConditionMapping_InvalidPrimitiveTypeKind,
-                                                                     column.Name, column.TypeUsage.EdmType.FullName,
-                                                                     StorageMappingErrorCode.ConditionError,
-                                                                     m_sourceLocation, condition.LineInfo, m_parsingErrors);
-                                                             },
+                                    {
+                                        AddToSchemaErrorWithMemberAndStructure(
+                                            Strings.
+                                                Mapping_InvalidContent_ConditionMapping_InvalidPrimitiveTypeKind,
+                                            column.Name, column.TypeUsage.EdmType.FullName,
+                                            StorageMappingErrorCode.ConditionError,
+                                            m_sourceLocation, condition.LineInfo, m_parsingErrors);
+                                    },
                                 handleInvalidConditionValue: () =>
-                                                                 {
-                                                                     AddToSchemaErrors(
-                                                                         Strings.Mapping_ConditionValueTypeMismatch,
-                                                                         StorageMappingErrorCode.ConditionError,
-                                                                         m_sourceLocation, condition.LineInfo, m_parsingErrors);
-                                                                 });
+                                    {
+                                        AddToSchemaErrors(
+                                            Strings.Mapping_ConditionValueTypeMismatch,
+                                            StorageMappingErrorCode.ConditionError,
+                                            m_sourceLocation, condition.LineInfo, m_parsingErrors);
+                                    });
                             if (value == null)
                             {
                                 errorFound = true;
@@ -2914,14 +2914,14 @@ namespace System.Data.Entity.Core.Mapping
                             {
                                 fragment.AddConditionProperty(
                                     conditionMap, duplicateMemberConditionError: (member) =>
-                                                                                     {
-                                                                                         AddToSchemaErrorsWithMemberInfo(
-                                                                                             Strings.
-                                                                                                 Mapping_InvalidContent_Duplicate_Condition_Member,
-                                                                                             member.Name,
-                                                                                             StorageMappingErrorCode.ConditionError,
-                                                                                             m_sourceLocation, navLineInfo, m_parsingErrors);
-                                                                                     });
+                                        {
+                                            AddToSchemaErrorsWithMemberInfo(
+                                                Strings.
+                                                    Mapping_InvalidContent_Duplicate_Condition_Member,
+                                                member.Name,
+                                                StorageMappingErrorCode.ConditionError,
+                                                m_sourceLocation, navLineInfo, m_parsingErrors);
+                                        });
                             }
                             break;
                         default:
@@ -3023,14 +3023,14 @@ namespace System.Data.Entity.Core.Mapping
                         {
                             fragment.AddConditionProperty(
                                 conditionMap, duplicateMemberConditionError: (member) =>
-                                                                                 {
-                                                                                     AddToSchemaErrorsWithMemberInfo(
-                                                                                         Strings.
-                                                                                             Mapping_InvalidContent_Duplicate_Condition_Member,
-                                                                                         member.Name,
-                                                                                         StorageMappingErrorCode.ConditionError,
-                                                                                         m_sourceLocation, navLineInfo, m_parsingErrors);
-                                                                                 });
+                                    {
+                                        AddToSchemaErrorsWithMemberInfo(
+                                            Strings.
+                                                Mapping_InvalidContent_Duplicate_Condition_Member,
+                                            member.Name,
+                                            StorageMappingErrorCode.ConditionError,
+                                            m_sourceLocation, navLineInfo, m_parsingErrors);
+                                    });
                         }
                         break;
                     case StorageMslConstructs.ModificationFunctionMappingElement:
@@ -3346,15 +3346,15 @@ namespace System.Data.Entity.Core.Mapping
                             {
                                 typeMapping.AddConditionProperty(
                                     conditionMap, duplicateMemberConditionError: (member) =>
-                                                                                     {
-                                                                                         AddToSchemaErrorsWithMemberInfo(
-                                                                                             Strings.
-                                                                                                 Mapping_InvalidContent_Duplicate_Condition_Member,
-                                                                                             member.Name,
-                                                                                             StorageMappingErrorCode.ConditionError,
-                                                                                             m_sourceLocation, (IXmlLineInfo)nav,
-                                                                                             m_parsingErrors);
-                                                                                     });
+                                        {
+                                            AddToSchemaErrorsWithMemberInfo(
+                                                Strings.
+                                                    Mapping_InvalidContent_Duplicate_Condition_Member,
+                                                member.Name,
+                                                StorageMappingErrorCode.ConditionError,
+                                                m_sourceLocation, (IXmlLineInfo)nav,
+                                                m_parsingErrors);
+                                        });
                             }
                             break;
                         default:

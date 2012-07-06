@@ -1719,9 +1719,9 @@ namespace System.Data.Entity.Core.Objects
 
             //Check each entry in the other stores to make sure that each non-IEntityWithKey entry is also in _keylessEntityStore
             Dictionary<EntityKey, EntityEntry>[] stores = {
-                                                              _unchangedEntityStore, _modifiedEntityStore, _addedEntityStore,
-                                                              _deletedEntityStore
-                                                          };
+                _unchangedEntityStore, _modifiedEntityStore, _addedEntityStore,
+                _deletedEntityStore
+            };
             foreach (var store in stores)
             {
                 if (null != store)

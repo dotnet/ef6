@@ -34,7 +34,8 @@ namespace System.Data.Entity.Config
             var proxyConfigs = configurations.Where(c => typeof(DbConfigurationProxy).IsAssignableFrom(c));
             if (proxyConfigs.Count() > 1)
             {
-                throw new InvalidOperationException(Strings.MultipleConfigsInAssembly(proxyConfigs.First().Assembly, typeof(DbConfigurationProxy).Name));
+                throw new InvalidOperationException(
+                    Strings.MultipleConfigsInAssembly(proxyConfigs.First().Assembly, typeof(DbConfigurationProxy).Name));
             }
             if (proxyConfigs.Count() == 1)
             {
@@ -44,7 +45,8 @@ namespace System.Data.Entity.Config
             // Else if there is exactly one normal config then use it, otherwise return null.
             if (configurations.Count > 1)
             {
-                throw new InvalidOperationException(Strings.MultipleConfigsInAssembly(configurations.First().Assembly, typeof(DbConfiguration).Name));
+                throw new InvalidOperationException(
+                    Strings.MultipleConfigsInAssembly(configurations.First().Assembly, typeof(DbConfiguration).Name));
             }
 
             return configurations.FirstOrDefault();

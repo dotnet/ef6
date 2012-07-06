@@ -20,7 +20,7 @@ namespace System.Data.Entity.Internal
             var providerElement =
                 _entityFrameworkSettings.Providers.OfType<ProviderElement>().FirstOrDefault(
                     e => providerInvariantName.Equals(e.InvariantName, StringComparison.OrdinalIgnoreCase));
-         
+
             return providerElement == null ? null : providerElement.ProviderTypeName;
         }
     }

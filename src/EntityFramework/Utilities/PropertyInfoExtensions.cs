@@ -68,9 +68,9 @@ namespace System.Data.Entity.Utilities
             if (propertyType.IsPrimitiveType(out primitiveType))
             {
                 var property = new EdmProperty
-                                   {
-                                       Name = propertyInfo.Name
-                                   }.AsPrimitive();
+                    {
+                        Name = propertyInfo.Name
+                    }.AsPrimitive();
 
                 property.PropertyType.EdmType = primitiveType;
                 property.PropertyType.IsNullable = isNullable;

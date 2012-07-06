@@ -1,7 +1,6 @@
 ﻿namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
@@ -69,7 +68,7 @@
         private Action<DbModelBuilder> _onModelCreating;
 
         private readonly IDbModelCacheKeyFactory _cacheKeyFactory;
-        
+
         /// <summary>
         ///     Constructs a <see cref = "LazyInternalContext" /> for the given <see cref = "DbContext" /> owner that will be initialized
         ///     on first use.
@@ -379,7 +378,7 @@
                             // again it will use the new connection.
 
                             var key = _cacheKeyFactory.Create(Owner);
-                                
+
                             var model
                                 = _cachedModels.GetOrAdd(
                                     key, t => new RetryLazy<LazyInternalContext, DbCompiledModel>(CreateModel)).GetValue(this);

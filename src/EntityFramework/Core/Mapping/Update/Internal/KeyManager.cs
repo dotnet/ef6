@@ -23,9 +23,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly Dictionary<EntityKey, int> _keyIdentifiers = new Dictionary<EntityKey, int>();
 
         private readonly List<IdentifierInfo> _identifiers = new List<IdentifierInfo>
-                                                                 {
-                                                                     new IdentifierInfo()
-                                                                 };
+            {
+                new IdentifierInfo()
+            };
 
         private const NodeColor White = 0;
         private const NodeColor Black = 1;

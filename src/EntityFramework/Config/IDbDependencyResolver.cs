@@ -1,7 +1,5 @@
 namespace System.Data.Entity.Config
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// This interface is implemented by any object that can resolve a dependency, either directly
     /// or through use of an external container.

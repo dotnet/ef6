@@ -992,9 +992,9 @@ namespace System.Data.Entity.Core.Mapping
                     {
                         var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(
                             entityContainerMapping, new ConfigViewGenerator
-                                                        {
-                                                            GenerateEsql = true
-                                                        });
+                                {
+                                    GenerateEsql = true
+                                });
                         if (viewGenResults.HasErrors)
                         {
                             ((List<EdmSchemaError>)errors).AddRange(viewGenResults.Errors);

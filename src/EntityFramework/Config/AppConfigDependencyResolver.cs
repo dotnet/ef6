@@ -23,7 +23,8 @@ namespace System.Data.Entity.Config
 
         public virtual object GetService(Type type, string name)
         {
-            if (type == typeof(DbProviderServices) && !string.IsNullOrWhiteSpace(name))
+            if (type == typeof(DbProviderServices)
+                && !string.IsNullOrWhiteSpace(name))
             {
                 var providerTypeName = _appConfig.Providers.TryGetDbProviderServicesTypeName(name);
                 if (providerTypeName != null)

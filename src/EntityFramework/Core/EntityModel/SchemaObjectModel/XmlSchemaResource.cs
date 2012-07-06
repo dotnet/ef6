@@ -51,10 +51,10 @@
         internal static void AddStoreSchemaResourceMapEntries(Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
         {
             XmlSchemaResource[] ssdlImports = {
-                                                  new XmlSchemaResource(
-                                                      XmlConstants.EntityStoreSchemaGeneratorNamespace,
-                                                      "System.Data.Resources.EntityStoreSchemaGenerator.xsd")
-                                              };
+                new XmlSchemaResource(
+                    XmlConstants.EntityStoreSchemaGeneratorNamespace,
+                    "System.Data.Resources.EntityStoreSchemaGenerator.xsd")
+            };
 
             var ssdlSchema = new XmlSchemaResource(XmlConstants.TargetNamespace_1, "System.Data.Resources.SSDLSchema.xsd", ssdlImports);
             schemaResourceMap.Add(ssdlSchema.NamespaceUri, ssdlSchema);
@@ -112,26 +112,26 @@
         internal static void AddEdmSchemaResourceMapEntries(Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
         {
             XmlSchemaResource[] csdlImports = {
-                                                  new XmlSchemaResource(
-                                                      XmlConstants.CodeGenerationSchemaNamespace,
-                                                      "System.Data.Resources.CodeGenerationSchema.xsd")
-                                              };
+                new XmlSchemaResource(
+                    XmlConstants.CodeGenerationSchemaNamespace,
+                    "System.Data.Resources.CodeGenerationSchema.xsd")
+            };
 
             XmlSchemaResource[] csdl2Imports = {
-                                                   new XmlSchemaResource(
-                                                       XmlConstants.CodeGenerationSchemaNamespace,
-                                                       "System.Data.Resources.CodeGenerationSchema.xsd"),
-                                                   new XmlSchemaResource(
-                                                       XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
-                                               };
+                new XmlSchemaResource(
+                    XmlConstants.CodeGenerationSchemaNamespace,
+                    "System.Data.Resources.CodeGenerationSchema.xsd"),
+                new XmlSchemaResource(
+                    XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
+            };
 
             XmlSchemaResource[] csdl3Imports = {
-                                                   new XmlSchemaResource(
-                                                       XmlConstants.CodeGenerationSchemaNamespace,
-                                                       "System.Data.Resources.CodeGenerationSchema.xsd"),
-                                                   new XmlSchemaResource(
-                                                       XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
-                                               };
+                new XmlSchemaResource(
+                    XmlConstants.CodeGenerationSchemaNamespace,
+                    "System.Data.Resources.CodeGenerationSchema.xsd"),
+                new XmlSchemaResource(
+                    XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
+            };
 
             var csdlSchema_1 = new XmlSchemaResource(XmlConstants.ModelNamespace_1, "System.Data.Resources.CSDLSchema_1.xsd", csdlImports);
             schemaResourceMap.Add(csdlSchema_1.NamespaceUri, csdlSchema_1);

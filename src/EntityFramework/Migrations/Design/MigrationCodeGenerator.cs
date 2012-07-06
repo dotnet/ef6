@@ -62,9 +62,9 @@ namespace System.Data.Entity.Migrations.Design
         {
             var namespaces
                 = new List<string>
-                      {
-                          "System.Data.Entity.Migrations"
-                      };
+                    {
+                        "System.Data.Entity.Migrations"
+                    };
 
             if (designer)
             {

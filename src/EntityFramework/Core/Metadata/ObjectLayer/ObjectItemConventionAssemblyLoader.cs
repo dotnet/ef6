@@ -510,9 +510,9 @@
                 var property = new EdmProperty(
                     cspaceProperty.Name, TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = false
-                                          }), clrProperty, type.TypeHandle);
+                            {
+                                Nullable = false
+                            }), clrProperty, type.TypeHandle);
                 ospaceType.AddMember(property);
             }
             else
@@ -808,9 +808,9 @@
                     cspaceProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = nullableFacetValue
-                                          }),
+                            {
+                                Nullable = nullableFacetValue
+                            }),
                     clrProperty,
                     type.TypeHandle);
 

@@ -399,21 +399,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All JoinOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_CrossJoinOverProject1,
-                                                        Rule_CrossJoinOverProject2,
-                                                        Rule_InnerJoinOverProject1,
-                                                        Rule_InnerJoinOverProject2,
-                                                        Rule_OuterJoinOverProject2,
-                                                        Rule_CrossJoinOverFilter1,
-                                                        Rule_CrossJoinOverFilter2,
-                                                        Rule_InnerJoinOverFilter1,
-                                                        Rule_InnerJoinOverFilter2,
-                                                        Rule_OuterJoinOverFilter2,
-                                                        Rule_CrossJoinOverSingleRowTable1,
-                                                        Rule_CrossJoinOverSingleRowTable2,
-                                                        Rule_LeftOuterJoinOverSingleRowTable,
-                                                    };
+            {
+                Rule_CrossJoinOverProject1,
+                Rule_CrossJoinOverProject2,
+                Rule_InnerJoinOverProject1,
+                Rule_InnerJoinOverProject2,
+                Rule_OuterJoinOverProject2,
+                Rule_CrossJoinOverFilter1,
+                Rule_CrossJoinOverFilter2,
+                Rule_InnerJoinOverFilter1,
+                Rule_InnerJoinOverFilter2,
+                Rule_OuterJoinOverFilter2,
+                Rule_CrossJoinOverSingleRowTable1,
+                Rule_CrossJoinOverSingleRowTable2,
+                Rule_LeftOuterJoinOverSingleRowTable,
+            };
 
         #endregion
     }

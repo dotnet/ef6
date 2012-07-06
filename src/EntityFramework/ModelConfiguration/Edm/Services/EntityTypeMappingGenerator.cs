@@ -33,15 +33,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
             var entityTypeMappingFragment = new DbEntityTypeMappingFragment
-                                                {
-                                                    Table = table
-                                                };
+                {
+                    Table = table
+                };
 
             var entityTypeMapping = new DbEntityTypeMapping
-                                        {
-                                            EntityType = entityType,
-                                            IsHierarchyMapping = false
-                                        };
+                {
+                    EntityType = entityType,
+                    IsHierarchyMapping = false
+                };
             entityTypeMapping.TypeMappingFragments.Add(entityTypeMappingFragment);
             entityTypeMapping.SetClrType(entityType.GetClrType());
 

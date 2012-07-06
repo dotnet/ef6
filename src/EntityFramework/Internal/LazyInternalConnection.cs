@@ -327,9 +327,9 @@ namespace System.Data.Entity.Internal
             // Build a list of candidate names that might be found in the app.config/web.config file.
             // The first entry is the full name.
             var candidates = new List<string>
-                                 {
-                                     name
-                                 };
+                {
+                    name
+                };
 
             // Second entry is full name with namespace stripped out.
             var lastDot = name.LastIndexOf('.');

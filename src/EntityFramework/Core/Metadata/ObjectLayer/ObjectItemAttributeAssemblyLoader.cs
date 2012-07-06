@@ -704,9 +704,9 @@
                     property.Name,
                     TypeUsage.Create(
                         primitiveType, new FacetValues
-                                           {
-                                               Nullable = isNullable
-                                           }),
+                            {
+                                Nullable = isNullable
+                            }),
                     property, clrType.TypeHandle);
             }
             return member;
@@ -746,9 +746,9 @@
                     clrProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = edmScalarPropertyAttribute.IsNullable
-                                          }),
+                            {
+                                Nullable = edmScalarPropertyAttribute.IsNullable
+                            }),
                     clrProperty,
                     declaringType.ClrType.TypeHandle);
 
@@ -784,9 +784,9 @@
                     clrProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = false
-                                          }),
+                            {
+                                Nullable = false
+                            }),
                     clrProperty, type.ClrType.TypeHandle);
 
                 type.AddMember(newProperty);

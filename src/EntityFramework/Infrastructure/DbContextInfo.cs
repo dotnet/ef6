@@ -199,8 +199,8 @@ namespace System.Data.Entity.Infrastructure
         private void PushConfiguration(DbContext context)
         {
             DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType);
-            
-            context.InternalContext.OnDisposing += 
+
+            context.InternalContext.OnDisposing +=
                 (_, __) => DbConfigurationManager.Instance.PopConfiguration(_appConfig);
         }
 

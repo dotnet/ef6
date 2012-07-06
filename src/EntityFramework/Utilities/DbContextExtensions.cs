@@ -33,9 +33,9 @@
             {
                 using (var xmlWriter = XmlWriter.Create(
                     memoryStream, new XmlWriterSettings
-                                      {
-                                          Indent = true
-                                      }))
+                        {
+                            Indent = true
+                        }))
                 {
                     writeXml(xmlWriter);
                 }

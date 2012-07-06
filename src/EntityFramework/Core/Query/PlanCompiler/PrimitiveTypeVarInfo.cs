@@ -21,9 +21,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             Debug.Assert(newVar != null, "newVar != null");
             m_newVars = new List<Var>
-                            {
-                                newVar
-                            };
+                {
+                    newVar
+                };
         }
 
         /// <summary>

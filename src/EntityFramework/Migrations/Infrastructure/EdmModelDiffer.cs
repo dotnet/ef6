@@ -20,14 +20,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
     {
         private static readonly PrimitiveTypeKind[] _validIdentityTypes
             = new[]
-                  {
-                      PrimitiveTypeKind.Byte,
-                      PrimitiveTypeKind.Decimal,
-                      PrimitiveTypeKind.Guid,
-                      PrimitiveTypeKind.Int16,
-                      PrimitiveTypeKind.Int32,
-                      PrimitiveTypeKind.Int64
-                  };
+                {
+                    PrimitiveTypeKind.Byte,
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Guid,
+                    PrimitiveTypeKind.Int16,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64
+                };
 
         private class ModelMetadata
         {
@@ -48,21 +48,21 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             _source
                 = new ModelMetadata
-                      {
-                          Model = sourceModel,
-                          StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
-                          ProviderManifest = GetProviderManifest(providerInfo),
-                          ProviderInfo = providerInfo
-                      };
+                    {
+                        Model = sourceModel,
+                        StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
+                        ProviderManifest = GetProviderManifest(providerInfo),
+                        ProviderInfo = providerInfo
+                    };
 
             _target
                 = new ModelMetadata
-                      {
-                          Model = targetModel,
-                          StoreItemCollection = targetModel.GetStoreItemCollection(out providerInfo),
-                          ProviderManifest = GetProviderManifest(providerInfo),
-                          ProviderInfo = providerInfo
-                      };
+                    {
+                        Model = targetModel,
+                        StoreItemCollection = targetModel.GetStoreItemCollection(out providerInfo),
+                        ProviderManifest = GetProviderManifest(providerInfo),
+                        ProviderInfo = providerInfo
+                    };
 
             _consistentProviders
                 = _source.ProviderInfo.ProviderInvariantName.EqualsIgnoreCase(
@@ -289,17 +289,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    from n1 in d1.Descendants(EdmXNames.Ssdl.PropertyRefNames)
                        .Select(x => x.NameAttribute()).Select(
                            (name, index) => new
-                                                {
-                                                    name,
-                                                    index
-                                                })
+                               {
+                                   name,
+                                   index
+                               })
                    from n2 in d2.Descendants(EdmXNames.Ssdl.PropertyRefNames)
                        .Select(x => x.NameAttribute()).Select(
                            (name, index) => new
-                                                {
-                                                    name,
-                                                    index
-                                                })
+                               {
+                                   name,
+                                   index
+                               })
                    where (n1.index == n2.index)
                          && !n1.name.EqualsIgnoreCase(n2.name)
                    let t = GetQualifiedTableName(_target.Model, d2.RoleAttribute())
@@ -465,9 +465,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             string oldTable, string newTable, XElement oldKey, XElement newKey)
         {
             var dropPrimaryKeyOperation = new DropPrimaryKeyOperation
-                                              {
-                                                  Table = oldTable
-                                              };
+                {
+                    Table = oldTable
+                };
 
             oldKey.Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
                 pr => dropPrimaryKeyOperation.Columns.Add(pr.NameAttribute()));
@@ -475,9 +475,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             yield return dropPrimaryKeyOperation;
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation
-                                             {
-                                                 Table = newTable
-                                             };
+                {
+                    Table = newTable
+                };
 
             newKey.Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
                 pr => addPrimaryKeyOperation.Columns.Add(pr.NameAttribute()));
@@ -568,30 +568,30 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var column
                 = new ColumnModel(((PrimitiveType)edmProperty.TypeUsage.EdmType).PrimitiveTypeKind, typeUsage)
-                      {
-                          Name = nameAttribute,
-                          IsNullable
-                              = !string.IsNullOrWhiteSpace(nullableAttribute)
-                                && !Convert.ToBoolean(nullableAttribute, CultureInfo.InvariantCulture)
-                                    ? false
-                                    : (bool?)null,
-                          MaxLength
-                              = !string.IsNullOrWhiteSpace(maxLengthAttribute)
-                                    ? Convert.ToInt32(maxLengthAttribute, CultureInfo.InvariantCulture)
-                                    : (int?)null,
-                          Precision
-                              = !string.IsNullOrWhiteSpace(precisionAttribute)
-                                    ? Convert.ToByte(precisionAttribute, CultureInfo.InvariantCulture)
-                                    : (byte?)null,
-                          Scale
-                              = !string.IsNullOrWhiteSpace(scaleAttribute)
-                                    ? Convert.ToByte(scaleAttribute, CultureInfo.InvariantCulture)
-                                    : (byte?)null,
-                          StoreType
-                              = !storeType.EqualsIgnoreCase(defaultStoreTypeName)
-                                    ? storeType
-                                    : null
-                      };
+                    {
+                        Name = nameAttribute,
+                        IsNullable
+                            = !string.IsNullOrWhiteSpace(nullableAttribute)
+                              && !Convert.ToBoolean(nullableAttribute, CultureInfo.InvariantCulture)
+                                  ? false
+                                  : (bool?)null,
+                        MaxLength
+                            = !string.IsNullOrWhiteSpace(maxLengthAttribute)
+                                  ? Convert.ToInt32(maxLengthAttribute, CultureInfo.InvariantCulture)
+                                  : (int?)null,
+                        Precision
+                            = !string.IsNullOrWhiteSpace(precisionAttribute)
+                                  ? Convert.ToByte(precisionAttribute, CultureInfo.InvariantCulture)
+                                  : (byte?)null,
+                        Scale
+                            = !string.IsNullOrWhiteSpace(scaleAttribute)
+                                  ? Convert.ToByte(scaleAttribute, CultureInfo.InvariantCulture)
+                                  : (byte?)null,
+                        StoreType
+                            = !storeType.EqualsIgnoreCase(defaultStoreTypeName)
+                                  ? storeType
+                                  : null
+                    };
 
             column.IsIdentity
                 = !string.IsNullOrWhiteSpace(storeGeneratedPatternAttribute)
@@ -718,10 +718,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = (from es in model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                    where es.NameAttribute().EqualsIgnoreCase(entitySetName)
                    select new
-                              {
-                                  Schema = es.SchemaAttribute(),
-                                  Table = es.TableAttribute()
-                              })
+                       {
+                           Schema = es.SchemaAttribute(),
+                           Table = es.TableAttribute()
+                       })
                     .Single();
 
             return GetQualifiedTableName(schemaAndTable.Table, schemaAndTable.Schema);
@@ -736,10 +736,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = (from es in model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                    where es.EntityTypeAttribute().EqualsIgnoreCase(entityTypeName)
                    select new
-                              {
-                                  Schema = es.SchemaAttribute(),
-                                  Table = es.TableAttribute()
-                              })
+                       {
+                           Schema = es.SchemaAttribute(),
+                           Table = es.TableAttribute()
+                       })
                     .Single();
 
             return GetQualifiedTableName(schemaAndTable.Table, schemaAndTable.Schema);

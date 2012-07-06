@@ -171,29 +171,29 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var candidates = new HashSet<Expression>();
             var cannotBeNominated = false;
             Func<Expression, Func<Expression, Expression>, Expression> visit = (exp, baseVisit) =>
-                                                                                   {
-                                                                                       if (exp != null)
-                                                                                       {
-                                                                                           var saveCannotBeNominated = cannotBeNominated;
-                                                                                           cannotBeNominated = false;
-                                                                                           baseVisit(exp);
-                                                                                           if (!cannotBeNominated)
-                                                                                           {
-                                                                                               // everyone below me can be nominated, so
-                                                                                               // see if this one can be also
-                                                                                               if (localCriterion(exp))
-                                                                                               {
-                                                                                                   candidates.Add(exp);
-                                                                                               }
-                                                                                               else
-                                                                                               {
-                                                                                                   cannotBeNominated = true;
-                                                                                               }
-                                                                                           }
-                                                                                           cannotBeNominated |= saveCannotBeNominated;
-                                                                                       }
-                                                                                       return exp;
-                                                                                   };
+                {
+                    if (exp != null)
+                    {
+                        var saveCannotBeNominated = cannotBeNominated;
+                        cannotBeNominated = false;
+                        baseVisit(exp);
+                        if (!cannotBeNominated)
+                        {
+                            // everyone below me can be nominated, so
+                            // see if this one can be also
+                            if (localCriterion(exp))
+                            {
+                                candidates.Add(exp);
+                            }
+                            else
+                            {
+                                cannotBeNominated = true;
+                            }
+                        }
+                        cannotBeNominated |= saveCannotBeNominated;
+                    }
+                    return exp;
+                };
             EntityExpressionVisitor.Visit(expression, visit);
             return candidates.Contains;
         }
@@ -423,14 +423,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var parameters = new HashSet<ParameterExpression>();
                     Visit(
                         expression, (exp, baseVisit) =>
-                                        {
-                                            if (null != exp
-                                                && exp.NodeType == ExpressionType.Parameter)
-                                            {
-                                                parameters.Add((ParameterExpression)exp);
-                                            }
-                                            return baseVisit(exp);
-                                        });
+                            {
+                                if (null != exp
+                                    && exp.NodeType == ExpressionType.Parameter)
+                                {
+                                    parameters.Add((ParameterExpression)exp);
+                                }
+                                return baseVisit(exp);
+                            });
 
                     if (parameters.Count != 1)
                     {
