@@ -23,7 +23,7 @@
     {
         #region Infrastructure/setup
 
-        static ConnectionTests()
+        public ConnectionTests()
         {
             CreateMetadataFilesForSimpleModel();
         }

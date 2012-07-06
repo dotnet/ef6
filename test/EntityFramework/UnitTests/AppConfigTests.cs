@@ -5,23 +5,16 @@
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.SqlServer;
-    using System.Data.Entity.SqlServerCompact;
-    using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using Moq;
     using Xunit;
 
     public class AppConfigTests : TestBase
     {
-        public class GetConnectionString
+        public class GetConnectionString : TestBase
         {
             [Fact]
             public void GetConnectionString_from_running_application_config()
@@ -55,7 +48,7 @@
             }
         }
 
-        public class GetDefaultConnectionFactory
+        public class GetDefaultConnectionFactory : TestBase
         {
             private const string SqlExpressBaseConnectionString =
                 @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True";
@@ -248,7 +241,7 @@
             }
         }
 
-        public class ApplyInitializers
+        public class ApplyInitializers : TestBase
         {
             public class FakeForAppConfigWithoutInitializer : DbContextUsingMockInternalContext
             {
@@ -1015,7 +1008,7 @@
 
         }
 
-        public class TryGetDbProviderServicesTypeName
+        public class TryGetDbProviderServicesTypeName : TestBase
         {
             [Fact]
             public void TryGetDbProviderServicesTypeName_returns_null_if_invariant_name_is_not_in_config()

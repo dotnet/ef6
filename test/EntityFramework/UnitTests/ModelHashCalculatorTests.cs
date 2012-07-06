@@ -8,7 +8,7 @@ namespace ProductivityApiUnitTests
     using Moq;
     using Xunit;
 
-    public class ModelHashCalculatorTests
+    public class ModelHashCalculatorTests : TestBase
     {
         [Fact]
         public void ModelHashCalculator_clones_the_model_builder()

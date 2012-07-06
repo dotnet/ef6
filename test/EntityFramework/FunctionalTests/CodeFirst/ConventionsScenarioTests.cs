@@ -11,7 +11,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class ConventionsScenarioTests
+    public sealed class ConventionsScenarioTests : TestBase
     {
         [Fact]
         public void Add_custom_model_convention()

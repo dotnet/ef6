@@ -24,7 +24,7 @@ namespace System.Data.Entity.Migrations
         VB
     }
 
-    public abstract class DbTestCase : IUseFixture<DatabaseProviderFixture>
+    public abstract class DbTestCase : TestBase, IUseFixture<DatabaseProviderFixture>
     {
         private DatabaseProviderFixture _databaseProviderFixture;
 

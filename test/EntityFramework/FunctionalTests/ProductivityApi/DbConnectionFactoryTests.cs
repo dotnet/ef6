@@ -15,13 +15,8 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        private static Assembly _sqlCeAssembly;
-
-        static DbConnectionFactoryTests()
-        {
-            _sqlCeAssembly =
-                new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly;
-        }
+        private static readonly Lazy<Assembly> _sqlCeAssembly 
+            = new Lazy<Assembly>(() => new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly);
 
         #endregion
 
@@ -34,7 +29,7 @@ namespace ProductivityApiTests
                 var connection =
                     new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("FakeDatabaseName"))
             {
-                var sqlCeExceptionType = _sqlCeAssembly.GetType("System.Data.SqlServerCe.SqlCeConnection");
+                var sqlCeExceptionType = _sqlCeAssembly.Value.GetType("System.Data.SqlServerCe.SqlCeConnection");
                 Assert.IsType(sqlCeExceptionType, connection);
                 Assert.Equal("Data Source=|DataDirectory|FakeDatabaseName.sdf; ", connection.ConnectionString);
             }
@@ -48,7 +43,7 @@ namespace ProductivityApiTests
                                                      "Persist Security Info=False");
             using (var connection = factory.CreateConnection("FakeDatabaseName"))
             {
-                var sqlCeExceptionType = _sqlCeAssembly.GetType("System.Data.SqlServerCe.SqlCeConnection");
+                var sqlCeExceptionType = _sqlCeAssembly.Value.GetType("System.Data.SqlServerCe.SqlCeConnection");
                 Assert.IsType(sqlCeExceptionType, connection);
                 Assert.Equal(@"Data Source=C:\VicAndBob\FakeDatabaseName.sdf; Persist Security Info=False",
                              connection.ConnectionString);
@@ -78,7 +73,7 @@ namespace ProductivityApiTests
                                                      "Data Source=VicAndBobsDatabase.sdf");
             using (var connection = factory.CreateConnection("FakeDatabaseName"))
             {
-                var sqlCeExceptionType = _sqlCeAssembly.GetType("System.Data.SqlServerCe.SqlCeException");
+                var sqlCeExceptionType = _sqlCeAssembly.Value.GetType("System.Data.SqlServerCe.SqlCeException");
                 try
                 {
                     connection.Open();
@@ -99,7 +94,7 @@ namespace ProductivityApiTests
                                                      "Whats On The End Of The Stick Vic=Admiral Nelsons Final Flannel");
 
             Assert.Throws<ArgumentException>(() => factory.CreateConnection("Something")).ValidateMessage(
-                _sqlCeAssembly, "ADP_KeywordNotSupported", null, "whats on the end of the stick vic");
+                _sqlCeAssembly.Value, "ADP_KeywordNotSupported", null, "whats on the end of the stick vic");
         }
 
         #endregion
