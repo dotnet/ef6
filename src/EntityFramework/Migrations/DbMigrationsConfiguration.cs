@@ -1,6 +1,5 @@
 ﻿namespace System.Data.Entity.Migrations
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
@@ -18,9 +17,6 @@
     /// </summary>
     public class DbMigrationsConfiguration
     {
-        private readonly Dictionary<string, MigrationSqlGenerator> _sqlGenerators
-            = new Dictionary<string, MigrationSqlGenerator>();
-
         private MigrationCodeGenerator _codeGenerator;
         private Type _contextType;
         private Assembly _migrationsAssembly;
@@ -28,16 +24,23 @@
 
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = "Migrations";
+        private readonly Lazy<DbConfiguration> _mainConfiguration;
 
         /// <summary>
         ///     Initializes a new instance of the DbMigrationsConfiguration class.
         /// </summary>
         public DbMigrationsConfiguration()
+            : this(new Lazy<DbConfiguration>(() => DbConfiguration.Instance))
         {
             SetSqlGenerator("System.Data.SqlClient", new SqlServerMigrationSqlGenerator());
             SetSqlGenerator("System.Data.SqlServerCe.4.0", new SqlCeMigrationSqlGenerator());
 
             CodeGenerator = new CSharpMigrationCodeGenerator();
+        }
+
+        internal DbMigrationsConfiguration(Lazy<DbConfiguration> mainConfiguration)
+        {
+            _mainConfiguration = mainConfiguration;
         }
 
         /// <summary>
@@ -61,7 +64,9 @@
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(migrationSqlGenerator != null);
 
-            _sqlGenerators[providerInvariantName] = migrationSqlGenerator;
+            _mainConfiguration.Value.RootResolver.MigrationsConfigurationResolver.SetSqlGenerator(
+                providerInvariantName,
+                migrationSqlGenerator);
         }
 
         /// <summary>
@@ -73,8 +78,8 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
-            MigrationSqlGenerator migrationSqlGenerator;
-            if (!_sqlGenerators.TryGetValue(providerInvariantName, out migrationSqlGenerator))
+            var migrationSqlGenerator = _mainConfiguration.Value.DependencyResolver.GetService<MigrationSqlGenerator>(providerInvariantName);
+            if (migrationSqlGenerator == null)
             {
                 throw Error.NoSqlGeneratorForProvider(providerInvariantName);
             }

@@ -56,7 +56,10 @@ namespace System.Data.Entity.Config
                 var mockAppConfigChain = new Mock<ResolverChain>();
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
-                new DbConfiguration(mockAppConfigChain.Object, new Mock<ResolverChain>().Object).AddAppConfigResolver(resolver);
+                new DbConfiguration(
+                    mockAppConfigChain.Object, new Mock<ResolverChain>().Object,
+                    new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver())).
+                    AddAppConfigResolver(resolver);
 
                 mockAppConfigChain.Verify(m => m.Add(resolver));
             }
@@ -90,7 +93,10 @@ namespace System.Data.Entity.Config
                 var mockNormalChain = new Mock<ResolverChain>();
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
-                new DbConfiguration(new Mock<ResolverChain>().Object, mockNormalChain.Object).AddDependencyResolver(resolver);
+                new DbConfiguration(
+                    new Mock<ResolverChain>().Object, mockNormalChain.Object,
+                    new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver())).
+                    AddDependencyResolver(resolver);
 
                 mockNormalChain.Verify(m => m.Add(resolver));
             }
@@ -207,12 +213,12 @@ namespace System.Data.Entity.Config
 #pragma warning restore 612,618
 
                     configuration.DefaultConnectionFactory = factory;
-                    
+
                     Assert.Same(legacyFactory, configuration.DefaultConnectionFactory);
                 }
                 finally
                 {
-                    Database.ResetDefaultConnectionFactory();    
+                    Database.ResetDefaultConnectionFactory();
                 }
             }
 
@@ -227,7 +233,12 @@ namespace System.Data.Entity.Config
                 var normalService = new Mock<IDbConnectionFactory>().Object;
                 mockNormalChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(normalService);
 
-                Assert.Same(configService, new DbConfiguration(mockAppConfigChain.Object, mockNormalChain.Object).DefaultConnectionFactory);
+                Assert.Same(
+                    configService,
+                    new DbConfiguration(
+                        mockAppConfigChain.Object, mockNormalChain.Object,
+                        new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver())).
+                        DefaultConnectionFactory);
 
                 mockAppConfigChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Once());
                 mockNormalChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Never());
@@ -242,11 +253,40 @@ namespace System.Data.Entity.Config
                 var mockAppConfigChain = new Mock<ResolverChain>();
                 var mockNormalChain = new Mock<ResolverChain>();
 
-                var config = new DbConfiguration(mockAppConfigChain.Object, mockNormalChain.Object);
+                var config = new DbConfiguration(
+                    mockAppConfigChain.Object, mockNormalChain.Object,
+                    new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver()));
                 var resolver = (CompositeResolver<ResolverChain, ResolverChain>)config.DependencyResolver;
 
                 Assert.Same(mockAppConfigChain.Object, resolver.First);
                 Assert.Same(mockNormalChain.Object, resolver.Second);
+            }
+        }
+
+        public class RootResolver
+        {
+            [Fact]
+            public void RootResolver_returns_the_root_resolver()
+            {
+                var rootResolver = new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver());
+
+                var config = new DbConfiguration(new Mock<ResolverChain>().Object, new Mock<ResolverChain>().Object, rootResolver);
+
+                Assert.Same(rootResolver, config.RootResolver);
+            }
+
+            [Fact]
+            public void RootResolver_is_added_to_the_non_app_config_resolver_chain()
+            {
+                var normalChain = new ResolverChain();
+                var mockRootResolver = new Mock<RootDependencyResolver>(
+                    new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver());
+
+                new DbConfiguration(new Mock<ResolverChain>().Object, normalChain, mockRootResolver.Object);
+
+                normalChain.GetService<object>("Foo");
+
+                mockRootResolver.Verify(m => m.GetService(typeof(object), "Foo"));
             }
         }
     }

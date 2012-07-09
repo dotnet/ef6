@@ -138,8 +138,10 @@
     <Compile Include="Config\DbConfigurationManager.cs" />
     <Compile Include="Config\DbNullConfiguration.cs" />
     <Compile Include="Config\DbConfigurationProxy.cs" />
+    <Compile Include="Config\DefaultProviderServicesResolver.cs" />
     <Compile Include="Config\IDbDependencyResolver.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensions.cs" />
+    <Compile Include="Config\MigrationsConfigurationResolver.cs" />
     <Compile Include="Config\ProviderServicesFactory.cs" />
     <Compile Include="Config\ResolverChain.cs" />
     <Compile Include="Config\RootDependencyResolver.cs" />
