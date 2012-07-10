@@ -1,8 +1,10 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Configuration;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -179,6 +181,8 @@ namespace System.Data.Entity.Infrastructure
                 {
                     _isConstructible = true;
 
+                    PushConfiguration(context);
+
                     using (context)
                     {
                         ConfigureContext(context);
@@ -190,6 +194,14 @@ namespace System.Data.Entity.Infrastructure
                     }
                 }
             }
+        }
+
+        private void PushConfiguration(DbContext context)
+        {
+            DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType);
+            
+            context.InternalContext.OnDisposing += 
+                (_, __) => DbConfigurationManager.Instance.PopConfiguration(_appConfig);
         }
 
         /// <summary>
@@ -263,6 +275,7 @@ namespace System.Data.Entity.Infrastructure
 
             var context = _activator();
 
+            PushConfiguration(context);
             ConfigureContext(context);
 
             return context;
@@ -301,7 +314,7 @@ namespace System.Data.Entity.Infrastructure
             }
 
             var factoryType
-                = (from t in _contextType.Assembly.GetTypes()
+                = (from t in _contextType.Assembly.GetAccessibleTypes()
                    where t.IsClass && typeof(IDbContextFactory<>).MakeGenericType(_contextType).IsAssignableFrom(t)
                    select t).FirstOrDefault();
 

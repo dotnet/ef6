@@ -1,11 +1,10 @@
 ﻿namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Data.Entity.Resources;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -105,7 +104,7 @@
             [Fact]
             public void EntityCommandDefinition_is_executed_with_correct_EntityCommand_and_CommandBehavior()
             {
-                var entityConnection = InitializeEntityConnection();
+                var entityConnection = MockHelper.InitializeEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
@@ -133,7 +132,7 @@
             [Fact]
             public void EntityDataReader_is_created_with_correct_EntityCommand_DbDataReader_and_CommandBehavior()
             {
-                var entityConnection = InitializeEntityConnection();
+                var entityConnection = MockHelper.InitializeEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
@@ -315,8 +314,8 @@
             [Fact]
             public void Calls_ExecuteReader_with_CommandBehavior_set_to_SequentialAccess()
             {
-                var entityConnection = InitializeEntityConnection();
-                var entityCommandDefinition = InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.InitializeEntityConnection();
+                var entityCommandDefinition = MockHelper.InitializeEntityCommandDefinition();
 
                 var entityDataReaderMock = new Mock<EntityDataReader>();
                 var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
@@ -330,8 +329,8 @@
             [Fact]
             public void Iterates_over_all_results_of_EntityDataReader_without_touching_individual_rows()
             {
-                var entityConnection = InitializeEntityConnection();
-                var entityCommandDefinition = InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.InitializeEntityConnection();
+                var entityCommandDefinition = MockHelper.InitializeEntityCommandDefinition();
 
                 int readNextCount = 0;
 
@@ -351,8 +350,8 @@
             [Fact]
             public void Returns_EntityDataReader_RecordsAffected_as_a_result()
             {
-                var entityConnection = InitializeEntityConnection();
-                var entityCommandDefinition = InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.InitializeEntityConnection();
+                var entityCommandDefinition = MockHelper.InitializeEntityCommandDefinition();
 
                 int readNextCount = 0;
 

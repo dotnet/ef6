@@ -872,15 +872,14 @@
                     && underlyingType.IsEnum)
                 {
                     var type = typeof(ErrorHandlingValueReader<>).MakeGenericType(underlyingType);
-                    return
-                        (T)
-                        type.GetMethod(MethodBase.GetCurrentMethod().Name, BindingFlags.NonPublic | BindingFlags.Static).Invoke(
+                    return (T)type.GetMethod(
+                        MethodBase.GetCurrentMethod().Name, BindingFlags.NonPublic | BindingFlags.Static).Invoke(
                             null, new object[] { reader, ordinal });
                 }
 
                 // use the specific reader.GetXXX method
                 bool isNullable;
-                var readerMethod = Translator.GetReaderMethod(typeof(T), out isNullable);
+                var readerMethod = CodeGenEmitter.GetReaderMethod(typeof(T), out isNullable);
                 var result = (T)readerMethod.Invoke(reader, new object[] { ordinal });
                 return result;
             }

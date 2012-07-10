@@ -199,7 +199,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
         }
 
-        [MigrationsTheory(Skip = "No CE Provider")]
+        [MigrationsTheory]
         public void Cross_provider_diff_should_be_clean_when_same_model()
         {
             var modelBuilder = new DbModelBuilder();

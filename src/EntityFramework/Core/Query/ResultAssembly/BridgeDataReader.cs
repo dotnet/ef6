@@ -8,44 +8,43 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// DbDataReader functionality for the bridge.
     /// </summary>
-    internal sealed class BridgeDataReader : DbDataReader, IExtendedDataRecord
+    internal class BridgeDataReader : DbDataReader, IExtendedDataRecord
     {
-        #region private state
+        #region Private state
 
         /// <summary>
         /// Object that holds the state needed by the coordinator and the root enumerator
         /// </summary>
-        private Shaper<RecordState> Shaper;
+        private Shaper<RecordState> _shaper;
 
         /// <summary>
         /// Enumerator over shapers for NextResult() calls. 
         /// Null for nested data readers (depth > 0);
         /// </summary>
-        private IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> NextResultShaperInfoEnumerator;
+        private IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> _nextResultShaperInfoEnumerator;
 
         /// <summary>
         /// The coordinator we're responsible for returning results for.
         /// </summary>
-        private CoordinatorFactory<RecordState> CoordinatorFactory;
+        private CoordinatorFactory<RecordState> _coordinatorFactory;
 
         /// <summary>
         /// The default record (pre-read/past-end) state
         /// </summary>
-        private RecordState DefaultRecordState;
+        private RecordState _defaultRecordState;
 
         /// <summary>
         /// We delegate to this on our getters, to avoid duplicate code.
         /// </summary>
-        private BridgeDataRecord DataRecord;
+        private BridgeDataRecord _dataRecord;
 
         /// <summary>
         /// Do we have a row to read?  Determined in the constructor and
@@ -60,110 +59,72 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #endregion
 
-        #region constructors
+        #region Constructors
 
-        /// <summary>
-        /// Constructor used by the ResultColumn when doing GetValue, and by the Create factory
-        /// method.
-        /// </summary>
-        /// <param name="collection"></param>
-        /// <param name="isRoot"></param>
-        /// <param name="nextResultShaperInfos">enumrator of the shapers for NextResult() calls</param>
         internal BridgeDataReader(
             Shaper<RecordState> shaper, CoordinatorFactory<RecordState> coordinatorFactory, int depth,
             IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> nextResultShaperInfos)
         {
-            Debug.Assert(null != shaper, "null shaper?");
-            Debug.Assert(null != coordinatorFactory, "null coordinatorFactory?");
-            Debug.Assert(depth == 0 || nextResultShaperInfos == null, "Nested data readers should not have multiple result sets.");
+            Contract.Requires(null != shaper);
+            Contract.Requires(null != coordinatorFactory);
+            Contract.Requires(depth == 0 || nextResultShaperInfos == null, "Nested data readers should not have multiple result sets.");
 
-            NextResultShaperInfoEnumerator = nextResultShaperInfos != null ? nextResultShaperInfos : null;
+            _nextResultShaperInfoEnumerator = nextResultShaperInfos;
             SetShaper(shaper, coordinatorFactory, depth);
         }
 
         private void SetShaper(Shaper<RecordState> shaper, CoordinatorFactory<RecordState> coordinatorFactory, int depth)
         {
-            Shaper = shaper;
-            CoordinatorFactory = coordinatorFactory;
-            DataRecord = new BridgeDataRecord(shaper, depth);
+            _shaper = shaper;
+            _coordinatorFactory = coordinatorFactory;
+            _dataRecord = new BridgeDataRecord(shaper, depth);
 
             // To determine whether there are any rows for this coordinator at this place in 
             // the root enumerator, we pretty much just look at it's current record (we'll read 
             // one if there isn't one waiting) and if it matches our coordinator, we've got rows.
             _hasRows = false;
 
-            if (!Shaper.DataWaiting)
+            if (!_shaper.DataWaiting)
             {
-                Shaper.DataWaiting = Shaper.RootEnumerator.MoveNext();
+                _shaper.DataWaiting = _shaper.RootEnumerator.MoveNext();
             }
-            if (Shaper.DataWaiting)
+
+            if (_shaper.DataWaiting)
             {
-                var currentRecord = Shaper.RootEnumerator.Current;
+                var currentRecord = _shaper.RootEnumerator.Current;
 
                 if (null != currentRecord)
                 {
-                    _hasRows = (currentRecord.CoordinatorFactory == CoordinatorFactory);
+                    _hasRows = (currentRecord.CoordinatorFactory == _coordinatorFactory);
                 }
             }
 
             // Once we've created the root enumerator, we can get the default record state
-            DefaultRecordState = coordinatorFactory.GetDefaultRecordState(Shaper);
-            Debug.Assert(null != DefaultRecordState, "no default?");
-        }
-
-        /// <summary>
-        /// The primary factory method to produce the BridgeDataReader; given a store data 
-        /// reader and a column map, create the BridgeDataReader, hooking up the IteratorSources  
-        /// and ResultColumn Hierarchy.  All construction of top level data readers go through
-        /// this method.
-        /// </summary>
-        /// <param name="storeDataReader"></param>
-        /// <param name="columnMap">column map of the first result set</param>
-        /// <param name="nextResultColumnMaps">enumerable of the column maps for NextResult() calls.</param>
-        /// <returns></returns>
-        internal static DbDataReader Create(
-            DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
-        {
-            Debug.Assert(storeDataReader != null, "null storeDataReaders?");
-            Debug.Assert(columnMap != null, "null columnMap?");
-            Debug.Assert(workspace != null, "null workspace?");
-
-            var shaperInfo = CreateShaperInfo(storeDataReader, columnMap, workspace);
-            DbDataReader result = new BridgeDataReader(
-                shaperInfo.Key, shaperInfo.Value, /*depth:*/ 0,
-                GetNextResultShaperInfo(storeDataReader, workspace, nextResultColumnMaps).GetEnumerator());
-            return result;
-        }
-
-        private static KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>> CreateShaperInfo(
-            DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace)
-        {
-            Debug.Assert(storeDataReader != null, "null storeDataReaders?");
-            Debug.Assert(columnMap != null, "null columnMap?");
-            Debug.Assert(workspace != null, "null workspace?");
-
-            var cacheManager = workspace.GetQueryCacheManager();
-            const MergeOption NoTracking = MergeOption.NoTracking;
-
-            var shaperFactory = Translator.TranslateColumnMap<RecordState>(cacheManager, columnMap, workspace, null, NoTracking, true);
-            var recordShaper = shaperFactory.Create(storeDataReader, null, workspace, MergeOption.NoTracking, true);
-
-            return new KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>(
-                recordShaper, recordShaper.RootCoordinator.TypedCoordinatorFactory);
-        }
-
-        private static IEnumerable<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> GetNextResultShaperInfo(
-            DbDataReader storeDataReader, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
-        {
-            foreach (var nextResultColumnMap in nextResultColumnMaps)
-            {
-                yield return CreateShaperInfo(storeDataReader, nextResultColumnMap, workspace);
-            }
+            _defaultRecordState = coordinatorFactory.GetDefaultRecordState(_shaper);
+            Debug.Assert(null != _defaultRecordState, "no default?");
         }
 
         #endregion
 
-        #region helpers
+        #region Helpers
+
+        /// <summary>
+        /// Ensures that the reader is actually open, and throws an exception if not
+        /// </summary>
+        private void AssertReaderIsOpen(string methodName)
+        {
+            if (IsClosed)
+            {
+                if (_dataRecord.IsImplicitlyClosed)
+                {
+                    throw new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
+                }
+                if (_dataRecord.IsExplicitlyClosed)
+                {
+                    throw new InvalidOperationException(Strings.ADP_DataReaderClosed(methodName));
+                }
+            }
+        }
 
         /// <summary>
         /// Implicitly close this (nested) data reader; will be called whenever 
@@ -175,7 +136,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         internal void CloseImplicitly()
         {
             Consume();
-            DataRecord.CloseImplicitly();
+            _dataRecord.CloseImplicitly();
         }
 
         /// <summary>
@@ -185,7 +146,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             while (ReadInternal())
             {
-                ;
             }
         }
 
@@ -234,23 +194,17 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #endregion
 
-        #region data reader specific properties and methods
+        #region DbDataReader implementation
 
-        /// <summary>
-        /// implementation for DbDataReader.Depth property
-        /// </summary>
         public override int Depth
         {
             get
             {
                 AssertReaderIsOpen("Depth");
-                return DataRecord.Depth;
+                return _dataRecord.Depth;
             }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.HasRows property
-        /// </summary>
         public override bool HasRows
         {
             get
@@ -260,9 +214,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.IsClosed property
-        /// </summary>        
         public override bool IsClosed
         {
             get
@@ -271,13 +222,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 // to the data record that we constructed; it has more reasons to 
                 // have to know this than we do in the data reader.  (Of course, 
                 // we look at our own closed state too...)
-                return ((_isClosed) || DataRecord.IsClosed);
+                return ((_isClosed) || _dataRecord.IsClosed);
             }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.RecordsAffected property
-        /// </summary>        
         public override int RecordsAffected
         {
             get
@@ -287,52 +235,31 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 // We defer to the store reader for rows affected count. Note that for queries,
                 // the provider is generally expected to return -1.
                 // FUTURE: when DML is supported, we will need to compute this value ourselves.
-                if (DataRecord.Depth == 0)
+                if (_dataRecord.Depth == 0)
                 {
-                    result = Shaper.Reader.RecordsAffected;
+                    result = _shaper.Reader.RecordsAffected;
                 }
                 return result;
             }
         }
 
-        /// <summary>
-        /// Ensures that the reader is actually open, and throws an exception if not
-        /// </summary>
-        private void AssertReaderIsOpen(string methodName)
-        {
-            if (IsClosed)
-            {
-                if (DataRecord.IsImplicitlyClosed)
-                {
-                    throw new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
-                }
-                if (DataRecord.IsExplicitlyClosed)
-                {
-                    throw new InvalidOperationException(Strings.ADP_DataReaderClosed(methodName));
-                }
-            }
-        }
-
-        /// <summary>
-        /// implementation for DbDataReader.Close() method
-        /// </summary>
         public override void Close()
         {
             // Make sure we explicitly closed the data record, since that's what
             // where using to track closed state.
-            DataRecord.CloseExplicitly();
+            _dataRecord.CloseExplicitly();
 
             if (!_isClosed)
             {
                 _isClosed = true;
 
-                if (0 == DataRecord.Depth)
+                if (0 == _dataRecord.Depth)
                 {
                     // If we're the root collection, we want to ensure the remainder of
                     // the result column hierarchy is closed out, to avoid dangling
                     // references to it, should it be reused. We also want to physically 
                     // close out the source reader as well.
-                    Shaper.Reader.Close();
+                    _shaper.Reader.Close();
                 }
                 else
                 {
@@ -342,16 +269,13 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 }
             }
 
-            if (NextResultShaperInfoEnumerator != null)
+            if (_nextResultShaperInfoEnumerator != null)
             {
-                NextResultShaperInfoEnumerator.Dispose();
-                NextResultShaperInfoEnumerator = null;
+                _nextResultShaperInfoEnumerator.Dispose();
+                _nextResultShaperInfoEnumerator = null;
             }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetEnumerator() method
-        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override IEnumerator GetEnumerator()
         {
@@ -359,45 +283,33 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetSchemaTable() method
-        /// 
-        /// This is awaiting some common code
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException">GetSchemaTable is not supported at this time</exception>
         public override DataTable GetSchemaTable()
         {
             throw new NotSupportedException(Strings.ADP_GetSchemaTableIsNotSupported);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.NextResult() method
-        /// </summary>
-        /// <returns></returns>
         public override bool NextResult()
         {
             AssertReaderIsOpen("NextResult");
 
             // If there is a next result set available, serve it.
-            if (NextResultShaperInfoEnumerator != null &&
-                Shaper.Reader.NextResult()
-                &&
-                NextResultShaperInfoEnumerator.MoveNext())
+            if (_nextResultShaperInfoEnumerator != null
+                && _shaper.Reader.NextResult()
+                && _nextResultShaperInfoEnumerator.MoveNext())
             {
-                Debug.Assert(DataRecord.Depth == 0, "Nested data readers should not have multiple result sets.");
-                var nextResultShaperInfo = NextResultShaperInfoEnumerator.Current;
-                DataRecord.CloseImplicitly();
+                Debug.Assert(_dataRecord.Depth == 0, "Nested data readers should not have multiple result sets.");
+                var nextResultShaperInfo = _nextResultShaperInfoEnumerator.Current;
+                _dataRecord.CloseImplicitly();
                 SetShaper(nextResultShaperInfo.Key, nextResultShaperInfo.Value, depth: 0);
                 return true;
             }
 
-            if (0 == DataRecord.Depth)
+            if (0 == _dataRecord.Depth)
             {
-                // NOTE:: this is required to ensure that output parameter values 
+                // This is required to ensure that output parameter values 
                 // are set in SQL Server, and other providers where they come after
                 // the results.
-                CommandHelper.ConsumeReader(Shaper.Reader);
+                CommandHelper.ConsumeReader(_shaper.Reader);
             }
             else
             {
@@ -406,23 +318,18 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 Consume();
             }
 
-            // SQLBUDT #631726 - ensure we close the records that may be 
-            // outstanding...
-            // SQLBUDT #632494 - do this after we consume the underlying reader 
-            // so we don't run result assembly through it...
+            // Ensure we close the records that may be outstanding.
+            // Do this after we consume the underlying reader 
+            // so we don't run result assembly through it.
             CloseImplicitly();
 
             // Reset any state on our attached data record, since we've now
             // gone past the end of the reader.
-            DataRecord.SetRecordSource(null, false);
+            _dataRecord.SetRecordSource(null, false);
 
             return false;
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.Read() method
-        /// </summary>
-        /// <returns></returns>
         public override bool Read()
         {
             AssertReaderIsOpen("Read");
@@ -431,12 +338,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             // have been returned that they're "implicitly" closed -- that is 
             // we've moved on.  This will also ensure that any records remaining
             // in any active nested readers are consumed
-            DataRecord.CloseImplicitly();
+            _dataRecord.CloseImplicitly();
 
             // OK, now go ahead and advance the source enumerator and set the 
             // record source up 
             var result = ReadInternal();
-            DataRecord.SetRecordSource(Shaper.RootEnumerator.Current, result);
+            _dataRecord.SetRecordSource(_shaper.RootEnumerator.Current, result);
             return result;
         }
 
@@ -455,65 +362,36 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             // If there's nothing waiting for the root enumerator, then attempt
             // to advance it. 
-            if (!Shaper.DataWaiting)
+            if (!_shaper.DataWaiting)
             {
-                Shaper.DataWaiting = Shaper.RootEnumerator.MoveNext();
+                _shaper.DataWaiting = _shaper.RootEnumerator.MoveNext();
             }
 
             // If we have some data (we may have just read it above) then figure
             // out who it belongs to-- us or someone else. We also skip over any
             // records that are for our children (nested readers); if we're being
             // asked to read, it's too late for them to read them.
-            while (Shaper.DataWaiting
-                   && Shaper.RootEnumerator.Current.CoordinatorFactory != CoordinatorFactory
-                   && Shaper.RootEnumerator.Current.CoordinatorFactory.Depth > CoordinatorFactory.Depth)
+            while (_shaper.DataWaiting
+                   && _shaper.RootEnumerator.Current.CoordinatorFactory != _coordinatorFactory
+                   && _shaper.RootEnumerator.Current.CoordinatorFactory.Depth > _coordinatorFactory.Depth)
             {
-                Shaper.DataWaiting = Shaper.RootEnumerator.MoveNext();
+                _shaper.DataWaiting = _shaper.RootEnumerator.MoveNext();
             }
 
-            if (Shaper.DataWaiting)
+            if (_shaper.DataWaiting)
             {
                 // We found something, go ahead and indicate to the shaper we want 
                 // this record, set up the data record, etc.
-                if (Shaper.RootEnumerator.Current.CoordinatorFactory == CoordinatorFactory)
+                if (_shaper.RootEnumerator.Current.CoordinatorFactory == _coordinatorFactory)
                 {
-                    Shaper.DataWaiting = false;
-                    Shaper.RootEnumerator.Current.AcceptPendingValues();
+                    _shaper.DataWaiting = false;
+                    _shaper.RootEnumerator.Current.AcceptPendingValues();
                     result = true;
                 }
             }
             return result;
         }
 
-        #endregion
-
-        #region metadata properties and methods
-
-        /// <summary>
-        /// implementation for DbDataReader.DataRecordInfo property
-        /// </summary>
-        public DataRecordInfo DataRecordInfo
-        {
-            get
-            {
-                AssertReaderIsOpen("DataRecordInfo");
-
-                DataRecordInfo result;
-                if (DataRecord.HasData)
-                {
-                    result = DataRecord.DataRecordInfo;
-                }
-                else
-                {
-                    result = DefaultRecordState.DataRecordInfo;
-                }
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// implementation for DbDataReader.FieldCount property
-        /// </summary>
         public override int FieldCount
         {
             get
@@ -527,106 +405,76 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 // that would probably break folks, I'm leaving it at returning the
                 // base set of columns that all rows will have.
 
-                var result = DefaultRecordState.ColumnCount;
+                var result = _defaultRecordState.ColumnCount;
                 return result;
             }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetDataTypeName() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override string GetDataTypeName(int ordinal)
         {
             AssertReaderIsOpen("GetDataTypeName");
             string result;
-            if (DataRecord.HasData)
+            if (_dataRecord.HasData)
             {
-                result = DataRecord.GetDataTypeName(ordinal);
+                result = _dataRecord.GetDataTypeName(ordinal);
             }
             else
             {
-                result = DefaultRecordState.GetTypeUsage(ordinal).ToString();
+                result = _defaultRecordState.GetTypeUsage(ordinal).ToString();
             }
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetFieldType() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Type GetFieldType(int ordinal)
         {
             AssertReaderIsOpen("GetFieldType");
             Type result;
-            if (DataRecord.HasData)
+            if (_dataRecord.HasData)
             {
-                result = DataRecord.GetFieldType(ordinal);
+                result = _dataRecord.GetFieldType(ordinal);
             }
             else
             {
-                result = GetClrTypeFromTypeMetadata(DefaultRecordState.GetTypeUsage(ordinal));
+                result = GetClrTypeFromTypeMetadata(_defaultRecordState.GetTypeUsage(ordinal));
             }
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetName() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override string GetName(int ordinal)
         {
             AssertReaderIsOpen("GetName");
             string result;
-            if (DataRecord.HasData)
+            if (_dataRecord.HasData)
             {
-                result = DataRecord.GetName(ordinal);
+                result = _dataRecord.GetName(ordinal);
             }
             else
             {
-                result = DefaultRecordState.GetName(ordinal);
+                result = _defaultRecordState.GetName(ordinal);
             }
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetOrdinal() method
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public override int GetOrdinal(string name)
         {
             AssertReaderIsOpen("GetOrdinal");
             int result;
-            if (DataRecord.HasData)
+            if (_dataRecord.HasData)
             {
-                result = DataRecord.GetOrdinal(name);
+                result = _dataRecord.GetOrdinal(name);
             }
             else
             {
-                result = DefaultRecordState.GetOrdinal(name);
+                result = _defaultRecordState.GetOrdinal(name);
             }
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetProviderSpecificFieldType() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException">GetProviderSpecificFieldType is not supported at this time</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override Type GetProviderSpecificFieldType(int ordinal)
         {
             throw new NotSupportedException();
         }
-
-        #endregion
-
-        #region data record properties and methods
 
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
@@ -638,273 +486,154 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
 
-        #region general getter methods and indexer properties
-
-        /// <summary>
-        /// implementation for DbDataReader[ordinal] indexer value getter
-        /// </summary>
         public override object this[int ordinal]
         {
-            get { return DataRecord[ordinal]; }
+            get { return _dataRecord[ordinal]; }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader[name] indexer value getter
-        /// </summary>
         public override object this[string name]
         {
             get
             {
                 var ordinal = GetOrdinal(name);
-                return DataRecord[ordinal];
+                return _dataRecord[ordinal];
             }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetProviderSpecificValue() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException">GetProviderSpecificValue is not supported at this time</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override object GetProviderSpecificValue(int ordinal)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetProviderSpecificValues() method
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException">GetProviderSpecificValues is not supported at this time</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetProviderSpecificValues(object[] values)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetValue() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Object GetValue(int ordinal)
         {
-            return DataRecord.GetValue(ordinal);
+            return _dataRecord.GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetValues() method
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
         public override int GetValues(object[] values)
         {
-            return DataRecord.GetValues(values);
+            return _dataRecord.GetValues(values);
         }
 
-        #endregion
-
-        #region simple scalar value getter methods
-
-        /// <summary>
-        /// implementation for DbDataReader.GetBoolean() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override bool GetBoolean(int ordinal)
         {
-            return DataRecord.GetBoolean(ordinal);
+            return _dataRecord.GetBoolean(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetByte() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override byte GetByte(int ordinal)
         {
-            return DataRecord.GetByte(ordinal);
+            return _dataRecord.GetByte(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetChar() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override char GetChar(int ordinal)
         {
-            return DataRecord.GetChar(ordinal);
+            return _dataRecord.GetChar(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetDateTime() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override DateTime GetDateTime(int ordinal)
         {
-            return DataRecord.GetDateTime(ordinal);
+            return _dataRecord.GetDateTime(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetDecimal() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Decimal GetDecimal(int ordinal)
         {
-            return DataRecord.GetDecimal(ordinal);
+            return _dataRecord.GetDecimal(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetDouble() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override double GetDouble(int ordinal)
         {
-            return DataRecord.GetDouble(ordinal);
+            return _dataRecord.GetDouble(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetFloat() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override float GetFloat(int ordinal)
         {
-            return DataRecord.GetFloat(ordinal);
+            return _dataRecord.GetFloat(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetGuid() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Guid GetGuid(int ordinal)
         {
-            return DataRecord.GetGuid(ordinal);
+            return _dataRecord.GetGuid(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetInt16() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Int16 GetInt16(int ordinal)
         {
-            return DataRecord.GetInt16(ordinal);
+            return _dataRecord.GetInt16(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetInt32() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Int32 GetInt32(int ordinal)
         {
-            return DataRecord.GetInt32(ordinal);
+            return _dataRecord.GetInt32(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetInt64() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override Int64 GetInt64(int ordinal)
         {
-            return DataRecord.GetInt64(ordinal);
+            return _dataRecord.GetInt64(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetString() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override String GetString(int ordinal)
         {
-            return DataRecord.GetString(ordinal);
+            return _dataRecord.GetString(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.IsDBNull() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public override bool IsDBNull(int ordinal)
         {
-            return DataRecord.IsDBNull(ordinal);
+            return _dataRecord.IsDBNull(ordinal);
         }
 
-        #endregion
-
-        #region array scalar value getter methods
-
-        /// <summary>
-        /// implementation for DbDataReader.GetBytes() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <param name="dataOffset"></param>
-        /// <param name="buffer"></param>
-        /// <param name="bufferOffset"></param>
-        /// <param name="length"></param>
-        /// <returns></returns>
         public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
-            return DataRecord.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
+            return _dataRecord.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetChars() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <param name="dataOffset"></param>
-        /// <param name="buffer"></param>
-        /// <param name="bufferOffset"></param>
-        /// <param name="length"></param>
-        /// <returns></returns>
         public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
-            return DataRecord.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
+            return _dataRecord.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
+        }
+
+        protected override DbDataReader GetDbDataReader(int ordinal)
+        {
+            return (DbDataReader)_dataRecord.GetData(ordinal);
         }
 
         #endregion
 
-        #region complex type getters
+        #region IExtendedDataRecord implementation
 
-        /// <summary>
-        /// implementation for DbDataReader.GetData() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
-        protected override DbDataReader GetDbDataReader(int ordinal)
+        public DataRecordInfo DataRecordInfo
         {
-            return (DbDataReader)DataRecord.GetData(ordinal);
+            get
+            {
+                AssertReaderIsOpen("DataRecordInfo");
+
+                DataRecordInfo result;
+                if (_dataRecord.HasData)
+                {
+                    result = _dataRecord.DataRecordInfo;
+                }
+                else
+                {
+                    result = _defaultRecordState.DataRecordInfo;
+                }
+                return result;
+            }
         }
 
-        /// <summary>
-        /// implementation for DbDataReader.GetDataRecord() method
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public DbDataRecord GetDataRecord(int ordinal)
         {
-            return DataRecord.GetDataRecord(ordinal);
+            return _dataRecord.GetDataRecord(ordinal);
         }
 
-        /// <summary>
-        /// Used to return a nested result
-        /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
         public DbDataReader GetDataReader(int ordinal)
         {
             return GetDbDataReader(ordinal);
         }
-
-        #endregion
 
         #endregion
     }

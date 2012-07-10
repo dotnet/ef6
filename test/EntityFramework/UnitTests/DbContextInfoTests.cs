@@ -459,7 +459,9 @@
         [Fact]
         public void Should_use_DefaultConnectionFactory_set_in_code_even_if_one_was_supplied_in_config()
         {
+#pragma warning disable 612,618
             RunTestWithConnectionFactory(() => Database.DefaultConnectionFactory = new SqlConnectionFactory(), () =>
+#pragma warning restore 612,618
             {
                 var config = CreateEmptyConfig().AddDefaultConnectionFactory(
                     "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
@@ -481,7 +483,9 @@
             {
                 Assert.False(Database.DefaultConnectionFactoryChanged);
 
+#pragma warning disable 612,618
                 Database.DefaultConnectionFactory = new SqlConnectionFactory();
+#pragma warning restore 612,618
                 Assert.True(Database.DefaultConnectionFactoryChanged);
 
                 Database.ResetDefaultConnectionFactory();
@@ -491,7 +495,6 @@
 
         private void RunTestWithConnectionFactory(Action connectionFactorySetter, Action test)
         {
-            var currentConnectionFactory = Database.DefaultConnectionFactory;
             connectionFactorySetter();
             try
             {
@@ -499,7 +502,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = currentConnectionFactory;
+                Database.ResetDefaultConnectionFactory();
             }
         }
 

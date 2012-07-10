@@ -91,6 +91,8 @@
 
         private bool _oSpaceLoadingForced;
 
+        public event EventHandler<EventArgs> OnDisposing;
+
         /// <summary>
         ///     Initializes the <see cref = "InternalContext" /> object with its <see cref = "DbContext" /> owner.
         /// </summary>
@@ -482,6 +484,11 @@
         /// </summary>
         public virtual void DisposeContext()
         {
+            if (!IsDisposed && OnDisposing != null)
+            {
+                OnDisposing(this, new EventArgs());
+                OnDisposing = null;
+            }
         }
 
         /// <summary>

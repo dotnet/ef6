@@ -11,6 +11,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
 
     /// <summary>
     ///     Helper class that is used by design time tools to run migrations related  
@@ -130,6 +131,24 @@
             Run(runner);
 
             return (IEnumerable<string>)_appDomain.GetData("result");
+        }
+
+        /// <summary>
+        /// Gets the fully qualified name of a type deriving from <see cref="DbContext" />.
+        /// </summary>
+        /// <param name="contextTypeName">The name of the context type. If null, the single context type found in the assembly will be returned.</param>
+        /// <returns>The context type found.</returns>
+        public string GetContextType(string contextTypeName)
+        {
+            var runner = new GetContextTypeRunner()
+            {
+                ContextTypeName = contextTypeName
+            };
+            ConfigureRunner(runner);
+
+            Run(runner);
+
+            return (string)_appDomain.GetData("result");
         }
 
         /// <summary>
@@ -403,83 +422,95 @@
 
             private DbMigrationsConfiguration FindConfiguration()
             {
-                var configurationTypeNameSpecified = !string.IsNullOrWhiteSpace(ConfigurationTypeName);
+                var configurationType = FindType<DbMigrationsConfiguration>(
+                    ConfigurationTypeName,
+                    types => types
+                        .Where(
+                            t => t.GetConstructor(Type.EmptyTypes) != null
+                                && !t.IsAbstract
+                                && !t.IsGenericType)
+                        .ToList(),
+                    Error.AssemblyMigrator_NoConfiguration,
+                    (assembly, types) => Error.AssemblyMigrator_MultipleConfigurations(assembly),
+                    Error.AssemblyMigrator_NoConfigurationWithName,
+                    Error.AssemblyMigrator_MultipleConfigurationsWithName);
+
+                return CreateConfiguration(configurationType);
+            }
+
+            protected Type FindType<TBase>(
+                string typeName,
+                Func<IEnumerable<Type>, IEnumerable<Type>> filter,
+                Func<string, Exception> noType,
+                Func<string, IEnumerable<Type>, Exception> multipleTypes,
+                Func<string, string, Exception> noTypeWithName,
+                Func<string, string, Exception> multipleTypesWithName)
+            {
+                var typeNameSpecified = !string.IsNullOrWhiteSpace(typeName);
                 var assembly = LoadAssembly();
 
-                Type configurationType = null;
+                Type type = null;
 
                 // Try for a fully-qualified match
-                if (configurationTypeNameSpecified)
+                if (typeNameSpecified)
                 {
-                    configurationType = assembly.GetType(ConfigurationTypeName);
+                    type = assembly.GetType(typeName);
                 }
 
                 // Otherwise, search for it
-                if (configurationType == null)
+                if (type == null)
                 {
                     var assemblyName = assembly.GetName().Name;
-                    var configurationTypes
-                        = assembly.GetTypes()
-                            .Where(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
+                    var types = assembly.GetTypes()
+                        .Where(t => typeof(TBase).IsAssignableFrom(t));
 
-                    if (configurationTypeNameSpecified)
+                    if (typeNameSpecified)
                     {
-                        configurationTypes
-                            = configurationTypes
-                                .Where(
-                                    t =>
-                                    string.Equals(t.Name, ConfigurationTypeName, StringComparison.OrdinalIgnoreCase))
-                                .ToList();
+                        types = types
+                            .Where(t => string.Equals(t.Name, typeName, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
 
                         // Disambiguate using case
-                        if (configurationTypes.Count() > 1)
+                        if (types.Count() > 1)
                         {
-                            configurationTypes
-                                = configurationTypes
-                                    .Where(t => string.Equals(t.Name, ConfigurationTypeName, StringComparison.Ordinal))
-                                    .ToList();
+                            types = types
+                                .Where(t => string.Equals(t.Name, typeName, StringComparison.Ordinal))
+                                .ToList();
                         }
 
-                        if (!configurationTypes.Any())
+                        if (!types.Any())
                         {
-                            throw Error.AssemblyMigrator_NoConfigurationWithName(ConfigurationTypeName, assemblyName);
+                            throw noTypeWithName(typeName, assemblyName);
                         }
 
-                        if (configurationTypes.Count() > 1)
+                        if (types.Count() > 1)
                         {
-                            throw Error.AssemblyMigrator_MultipleConfigurationsWithName(
-                                ConfigurationTypeName, assemblyName);
+                            throw multipleTypesWithName(typeName, assemblyName);
                         }
                     }
                     else
                     {
                         // Filter out unusable types
-                        configurationTypes
-                            = configurationTypes
-                                .Where(
-                                    t => t.GetConstructor(Type.EmptyTypes) != null
-                                         && !t.IsAbstract
-                                         && !t.IsGenericType)
-                                .ToList();
+                        types = filter(types);
 
-                        if (!configurationTypes.Any())
+                        if (!types.Any())
                         {
-                            throw Error.AssemblyMigrator_NoConfiguration(assemblyName);
+                            throw noType(assemblyName);
                         }
 
-                        if (configurationTypes.Count() > 1)
+                        if (types.Count() > 1)
                         {
-                            throw Error.AssemblyMigrator_MultipleConfigurations(assemblyName);
+                            throw multipleTypes(assemblyName, types);
                         }
                     }
 
-                    Contract.Assert(configurationTypes.Count() == 1);
-                    configurationType = configurationTypes.Single();
+                    Contract.Assert(types.Count() == 1);
+                    type = types.Single();
                 }
 
-                Contract.Assert(configurationType != null);
+                Contract.Assert(type != null);
 
-                return CreateConfiguration(configurationType);
+                return type;
             }
 
             protected Assembly LoadAssembly()
@@ -679,11 +710,43 @@
             {
                 var assembly = LoadAssembly();
 
-                var contextTypes = assembly.GetTypes()
+                var contextTypes = assembly.GetAccessibleTypes()
                     .Where(t => typeof(DbContext).IsAssignableFrom(t)).Select(t => t.FullName)
                     .ToList();
 
                 AppDomain.CurrentDomain.SetData("result", contextTypes);
+            }
+        }
+
+        [Serializable]
+        private class GetContextTypeRunner : BaseRunner
+        {
+            public string ContextTypeName { get; set; }
+
+            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
+            protected override void RunCore()
+            {
+                var contextType = FindType<DbContext>(
+                    ContextTypeName,
+                    types => types,
+                    Error.EnableMigrations_NoContext,
+                    (assembly, types) =>
+                    {
+                        var message = new StringBuilder();
+                        message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
+
+                        foreach (var type in types)
+                        {
+                            message.AppendLine();
+                            message.Append(Strings.EnableMigrationsForContext(type.FullName));
+                        }
+
+                        return new MigrationsException(message.ToString());
+                    },
+                    Error.EnableMigrations_NoContextWithName,
+                    Error.EnableMigrations_MultipleContextsWithName);
+
+                AppDomain.CurrentDomain.SetData("result", contextType.FullName);
             }
         }
     }

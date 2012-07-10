@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Config;
     using System.Transactions;
 
     /// <summary>
@@ -15,6 +16,11 @@
         where TContext : DbContext
     {
         #region Strategy implementation
+
+        static DropCreateDatabaseIfModelChanges()
+        {
+            DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
+        }
 
         /// <summary>
         ///     Executes the strategy to initialize the database for the given context.

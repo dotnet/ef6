@@ -1,9 +1,7 @@
 ﻿namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System;
-    using System.Data;
     using System.Data.Common;
-    using System.Reflection;
 
     /// <summary>
     /// Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
@@ -15,14 +13,6 @@
 
         private FakeSqlProviderFactory()
         {
-            var providerTable = (DataTable)typeof(DbProviderFactories).GetMethod("GetProviderTable", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
-
-            var row = providerTable.NewRow();
-            row["Name"] = "FakeSqlClient";
-            row["InvariantName"] = "System.Data.FakeSqlClient";
-            row["Description"] = "Fake SQL Client";
-            row["AssemblyQualifiedName"] = GetType().AssemblyQualifiedName;
-            providerTable.Rows.Add(row);
         }
 
         public static void Initialize()

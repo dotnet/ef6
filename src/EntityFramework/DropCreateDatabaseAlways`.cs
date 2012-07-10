@@ -1,5 +1,7 @@
 ﻿namespace System.Data.Entity
 {
+    using System.Data.Entity.Config;
+
     /// <summary>
     ///     An implementation of IDatabaseInitializer that will always recreate and optionally re-seed the
     ///     database the first time that a context is used in the app domain.
@@ -10,6 +12,11 @@
         where TContext : DbContext
     {
         #region Strategy implementation
+
+        static DropCreateDatabaseAlways()
+        {
+            DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
+        }
 
         /// <summary>
         ///     Executes the strategy to initialize the database for the given context.

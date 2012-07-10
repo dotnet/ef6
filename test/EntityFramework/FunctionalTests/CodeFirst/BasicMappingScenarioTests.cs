@@ -1079,6 +1079,29 @@ namespace FunctionalTests
         public Repro150634_Dependent DependentNavigation { get; set; }
     }
 
+    // 0..1:* IA to derived principal
+
+    public class Repro165020_BaseDependent
+    {
+        public int Id { get; set; }
+    }
+
+    public class Repro165020_DerivedDependent : Repro165020_BaseDependent
+    {
+        public Repro165020_DerivedPrincipal PrincipalNavigation { get; set; }
+    }
+
+    public class Repro165020_BasePrincipal
+    {
+        public Nullable<DateTime> Key1 { get; set; }
+        public decimal Key2 { get; set; }
+    }
+
+    public class Repro165020_DerivedPrincipal : Repro165020_BasePrincipal
+    {
+        public ICollection<Repro165020_DerivedDependent> DependentNavigation { get; set; }
+    }
+
     // composite key with property ordering
 
     public class EntityWithCompositePK
@@ -3627,6 +3650,46 @@ namespace FunctionalTests
             databaseMapping.Assert<ByteDerived2>().DbEqual("image",
                                                            t => t.Columns.Single(c => c.Name == "DerivedData").TypeName);
         }
+
+        [Fact]
+        public void Mapping_store_type_propagates_to_dependent_IA()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Repro165020_BasePrincipal>().Property(p => p.Key1).HasColumnType("date");
+            modelBuilder.Entity<Repro165020_BasePrincipal>().Property(p => p.Key2).HasColumnType("numeric").HasPrecision(15, 5);
+            modelBuilder.Entity<Repro165020_BaseDependent>().Map(mapping =>
+            {
+                mapping.MapInheritedProperties();
+                mapping.ToTable("Repro165020_BaseDependent");
+            });
+            modelBuilder.Entity<Repro165020_BasePrincipal>().Map(mapping =>
+            {
+                mapping.MapInheritedProperties();
+                mapping.ToTable("Repro165020_BasePrincipal");
+            });
+            modelBuilder.Entity<Repro165020_BasePrincipal>().HasKey(e => new
+            {
+                e.Key1,
+                e.Key2,
+            });
+            modelBuilder.Entity<Repro165020_DerivedPrincipal>().Map(mapping =>
+            {
+                mapping.MapInheritedProperties();
+                mapping.ToTable("Repro165020_DerivedPrincipal");
+            });
+
+            modelBuilder.Entity<Repro165020_DerivedDependent>().Map(mapping =>
+            {
+                mapping.MapInheritedProperties();
+                mapping.ToTable("Repro165020_DerivedDependent");
+            });
+
+            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            databaseMapping.Assert<Repro165020_DerivedDependent>().DbEqual("date", t => t.Columns.Single(c => c.Name == "PrincipalNavigation_Key1").TypeName);
+            databaseMapping.Assert<Repro165020_DerivedDependent>().DbEqual("numeric", t => t.Columns.Single(c => c.Name == "PrincipalNavigation_Key2").TypeName);
+        }
+
 
         [Fact]
         public void FK_association_to_principal_base_should_not_make_FK_in_TPC()

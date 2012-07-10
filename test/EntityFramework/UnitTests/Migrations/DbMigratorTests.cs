@@ -291,8 +291,6 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
-
             var migrator = CreateMigrator<ShopContext_v1>(automaticDataLossEnabled: true);
 
             migrator.Update();
@@ -302,12 +300,13 @@ namespace System.Data.Entity.Migrations
             migrator.Update(DbMigrator.InitialDatabase);
 
             Assert.False(TableExists("MigrationsCustomers"));
-            Assert.Null(historyRepository.GetLastModel());
+
+            Assert.Null(new HistoryRepository(ConnectionString, ProviderFactory).GetLastModel());
 
             migrator.Update();
 
             Assert.True(TableExists("MigrationsCustomers"));
-            Assert.NotNull(historyRepository.GetLastModel());
+            Assert.NotNull(new HistoryRepository(ConnectionString, ProviderFactory).GetLastModel());
         }
 
         [MigrationsTheory]
@@ -341,8 +340,6 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
-
             var migrator = CreateMigrator<ShopContext_v1>();
 
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
@@ -358,6 +355,9 @@ namespace System.Data.Entity.Migrations
             migrator.Update(DbMigrator.InitialDatabase);
 
             Assert.False(TableExists("MigrationsCustomers"));
+
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
+
             Assert.Null(historyRepository.GetLastModel());
         }
 

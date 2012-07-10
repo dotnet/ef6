@@ -6,6 +6,7 @@
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
@@ -75,8 +76,8 @@
                 var columnMapMock = new Mock<ColumnMap>(typeUsageMock.Object, "Foo");
 
                 var bridgeDataReader = new Mock<DbDataReader>().Object;
-                var bridgeDataReaderFactoryMock = new Mock<EntityCommandDefinition.BridgeDataReaderFactory>();
-                bridgeDataReaderFactoryMock.Setup(m => m.CreateBridgeDataReader(It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>())).
+                var bridgeDataReaderFactoryMock = new Mock<BridgeDataReaderFactory>(MockBehavior.Loose, null);
+                bridgeDataReaderFactoryMock.Setup(m => m.Create(It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>())).
                     Returns(bridgeDataReader);
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(bridgeDataReaderFactoryMock.Object, null) { CallBase = true };
@@ -174,8 +175,8 @@
                 var columnMapMock = new Mock<ColumnMap>(typeUsageMock.Object, "Foo");
 
                 var bridgeDataReader = new Mock<DbDataReader>().Object;
-                var bridgeDataReaderFactoryMock = new Mock<System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.BridgeDataReaderFactory>();
-                bridgeDataReaderFactoryMock.Setup(m => m.CreateBridgeDataReader(It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>())).
+                var bridgeDataReaderFactoryMock = new Mock<BridgeDataReaderFactory>(MockBehavior.Loose, null);
+                bridgeDataReaderFactoryMock.Setup(m => m.Create(It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>())).
                     Returns(bridgeDataReader);
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(bridgeDataReaderFactoryMock.Object, null) { CallBase = true };

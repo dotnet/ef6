@@ -21,13 +21,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         /// <summary>
         /// Return the expression; wrapped with the appropriate cast/convert
-        /// logic to guarantee it's type.
+        /// logic to guarantee its type.
         /// </summary>
         internal Expression Expression
         {
             get
             {
-                var result = Translator.Emit_EnsureType(ReturnedExpression, RequestedType);
+                var result = CodeGenEmitter.Emit_EnsureType(ReturnedExpression, RequestedType);
                 return result;
             }
         }
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     return ReturnedExpression;
                 }
-                return Translator.Emit_UnwrapAndEnsureType(ReturnedExpression, RequestedType);
+                return CodeGenEmitter.Emit_UnwrapAndEnsureType(ReturnedExpression, RequestedType);
             }
         }
     }

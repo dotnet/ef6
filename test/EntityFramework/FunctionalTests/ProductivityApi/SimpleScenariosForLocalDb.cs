@@ -1,13 +1,12 @@
 ﻿namespace ProductivityApiTests
 {
     using System;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using System.Linq;
     using System.Transactions;
+    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
 
@@ -20,11 +19,11 @@
 
         public SimpleScenariosForLocalDb()
         {
-            _previousConnectionFactory = Database.DefaultConnectionFactory;
+            _previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
 
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
-            Database.DefaultConnectionFactory = new LocalDbConnectionFactory("v11.0");
+            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new LocalDbConnectionFactory("v11.0");
         }
 
         public void Dispose()
@@ -46,7 +45,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = _previousConnectionFactory;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = _previousConnectionFactory;
                 AppDomain.CurrentDomain.SetData("DataDirectory", _previousDataDirectory);
             }
         }

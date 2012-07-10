@@ -1,16 +1,15 @@
 namespace ProductivityApiTests
 {
     using System;
-    using System.Data.Entity.Core;
     using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.IO;
     using System.Linq;
+    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
 
@@ -21,20 +20,20 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        private IDbConnectionFactory _previousConnectionFactory;
+        private readonly IDbConnectionFactory _previousConnectionFactory;
 
         public DbContextTestsForSqlCe()
         {
-            _previousConnectionFactory = Database.DefaultConnectionFactory;
+            _previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
 
             var sqlCeConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0",
                                                                     AppDomain.CurrentDomain.BaseDirectory, "");
-            Database.DefaultConnectionFactory = sqlCeConnectionFactory;
+            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = sqlCeConnectionFactory;
         }
 
         public void Dispose()
         {
-            Database.DefaultConnectionFactory = _previousConnectionFactory;
+            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = _previousConnectionFactory;
         }
 
         #endregion

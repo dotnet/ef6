@@ -4,13 +4,13 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Configuration;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
-    using System.Data.Entity.Edm.Db.Mapping;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.SqlClient;
     using System.IO;
@@ -18,9 +18,15 @@
     using System.Threading.Tasks;
     using System.Transactions;
     using System.Xml.Linq;
+    using FunctionalTests.TestHelpers;
 
     public class TestBase : MarshalByRefObject
     {
+        static TestBase()
+        {
+            DbConfiguration.Instance = new FunctionalTestsConfiguration();
+        }
+
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)
         {
             // Build and clone to check for idempotency issues.

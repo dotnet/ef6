@@ -23,7 +23,7 @@
         private readonly Lazy<IDbConnectionFactory> _defaultConnectionFactory;
 
         private readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
-            new Lazy<IDbConnectionFactory>(() => new SqlConnectionFactory(), isThreadSafe: true);
+            new Lazy<IDbConnectionFactory>(() => null, isThreadSafe: true);
 
         private static bool _initializersApplied;
         private static readonly object _lock = new object();
@@ -109,9 +109,9 @@
         /// <summary>
         /// Gets the default connection factory based on the configuration
         /// </summary>
-        public IDbConnectionFactory DefaultConnectionFactory
+        public IDbConnectionFactory TryGetDefaultConnectionFactory()
         {
-            get { return _defaultConnectionFactory.Value; }
+            return _defaultConnectionFactory.Value;
         }
 
         /// <summary>

@@ -8,6 +8,7 @@
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
+    using FunctionalTests.TestHelpers;
     using Moq;
     using Xunit;
 
@@ -155,13 +156,13 @@
         [Fact]
         public void Changed_connection_factory_is_used_to_create_connection_from_connection_string()
         {
-            var existingFactory = Database.DefaultConnectionFactory;
+            var existingFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             try
             {
                 var mockFactory = new Mock<IDbConnectionFactory>();
                 mockFactory.Setup(f => f.CreateConnection("Database=HardCodedConnectionString")).Returns(new SqlConnection());
 
-                Database.DefaultConnectionFactory = mockFactory.Object;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = mockFactory.Object;
                 using (var internalConnection = new LazyInternalConnection("Database=HardCodedConnectionString"))
                 {
                     var _ = internalConnection.Connection;
@@ -171,7 +172,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = existingFactory;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = existingFactory;
             }
         }
 
@@ -209,13 +210,13 @@
         [Fact]
         public void Changed_by_convention_IDbConnectionFactory_is_used_to_create_connection()
         {
-            var existingFactory = Database.DefaultConnectionFactory;
+            var existingFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             try
             {
                 var mockFactory = new Mock<IDbConnectionFactory>();
                 mockFactory.Setup(f => f.CreateConnection(It.IsAny<string>())).Returns(new SqlConnection());
-                
-                Database.DefaultConnectionFactory = mockFactory.Object;
+
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = mockFactory.Object;
                 using (var internalConnection = new LazyInternalConnection("NameNotInAppConfig"))
                 {
                     var connection = internalConnection.Connection;
@@ -225,7 +226,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = existingFactory;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = existingFactory;
             }
         }
 
@@ -296,10 +297,10 @@
         [Fact]
         public void Changed_default_connection_factory_that_results_in_null_connections_throws()
         {
-            var existingFactory = Database.DefaultConnectionFactory;
+            var existingFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             try
             {
-                Database.DefaultConnectionFactory = new Mock<IDbConnectionFactory>().Object;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new Mock<IDbConnectionFactory>().Object;
                 using (var internalConnection = new LazyInternalConnection("NameNotInAppConfig"))
                 {
                     Assert.Equal(Strings.DbContext_ConnectionFactoryReturnedNullConnection, Assert.Throws<InvalidOperationException>(() => { var _ = internalConnection.Connection; }).Message);
@@ -307,7 +308,7 @@
             }
             finally
             {
-                Database.DefaultConnectionFactory = existingFactory;
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = existingFactory;
             }
         }
 

@@ -23,6 +23,8 @@ namespace System.Data.Entity.Migrations.History
     {
         private readonly string _defaultSchema;
 
+        private bool? _exists;
+
         public HistoryRepository(string connectionString, DbProviderFactory providerFactory, string defaultSchema = null)
             : base(connectionString, providerFactory)
         {
@@ -39,13 +41,13 @@ namespace System.Data.Entity.Migrations.History
         {
             migrationId = null;
 
+            if (!Exists)
+            {
+                return null;
+            }
+
             using (var context = CreateContext())
             {
-                if (!Exists(context))
-                {
-                    return null;
-                }
-
                 var lastModel
                     = context.History
                         .OrderByDescending(h => h.MigrationId)
@@ -72,24 +74,21 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
+            if (!Exists)
+            {
+                return null;
+            }
+
             using (var context = CreateContext())
             {
-                if (!Exists(context))
-                {
-                    return null;
-                }
-
                 var model = context.History
                     .Where(h => h.MigrationId == migrationId)
                     .Select(h => h.Model)
                     .Single();
 
-                if (model == null)
-                {
-                    return null;
-                }
-
-                return new ModelCompressor().Decompress(model);
+                return (model == null)
+                           ? null
+                           : new ModelCompressor().Decompress(model);
             }
         }
 
@@ -97,19 +96,18 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(localMigrations != null);
 
+            if (!Exists)
+            {
+                return localMigrations;
+            }
+
             using (var context = CreateContext())
             {
-                if (!Exists(context))
-                {
-                    return localMigrations;
-                }
-
                 var databaseMigrations = context.History
                     .Select(s => s.MigrationId)
                     .ToList();
-                var pendingMigrations = localMigrations
-                    .Except(databaseMigrations);
 
+                var pendingMigrations = localMigrations.Except(databaseMigrations);
                 var firstDatabaseMigration = databaseMigrations.FirstOrDefault();
                 var firstLocalMigration = localMigrations.FirstOrDefault();
 
@@ -139,11 +137,10 @@ namespace System.Data.Entity.Migrations.History
             using (var context = CreateContext())
             {
                 var query = context.History.AsQueryable();
-                var exists = Exists(context);
 
                 if (migrationId != DbMigrator.InitialDatabase)
                 {
-                    if (!exists
+                    if (!Exists
                         || !context.History.Any(h => h.MigrationId == migrationId))
                     {
                         throw Error.MigrationNotFound(migrationId);
@@ -151,7 +148,7 @@ namespace System.Data.Entity.Migrations.History
 
                     query = query.Where(h => string.Compare(h.MigrationId, migrationId, StringComparison.Ordinal) > 0);
                 }
-                else if (!exists)
+                else if (!Exists)
                 {
                     return Enumerable.Empty<string>();
                 }
@@ -167,13 +164,13 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationName));
 
+            if (!Exists)
+            {
+                return null;
+            }
+
             using (var context = CreateContext())
             {
-                if (!Exists(context))
-                {
-                    return null;
-                }
-
                 var migrationIds
                     = context.History
                         .Select(h => h.MigrationId)
@@ -194,11 +191,19 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual bool Exists()
+        public virtual bool Exists
         {
-            using (var context = CreateContext())
+            get
             {
-                return Exists(context);
+                if (_exists == null)
+                {
+                    using (var context = CreateContext())
+                    {
+                        _exists = QueryExists(context);
+                    }
+                }
+
+                return _exists.Value;
             }
         }
 
@@ -227,13 +232,13 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        private static bool? ColumnExists<TContext, TResult>(
+        private bool? ColumnExists<TContext, TResult>(
             Func<HistoryContextBase<TContext>> createContext, Expression<Func<HistoryRow, TResult>> selector)
             where TContext : DbContext
         {
             using (var context = createContext())
             {
-                if (Exists(context))
+                if (Exists)
                 {
                     try
                     {
@@ -264,6 +269,9 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(modelDiffer != null);
 
+            // force re-query on next access if we are potentially creating the table
+            _exists = null;
+
             using (var connection = CreateConnection())
             {
                 using (var context = createContext(connection))
@@ -286,6 +294,9 @@ namespace System.Data.Entity.Migrations.History
         public virtual MigrationOperation CreateDropTableOperation(EdmModelDiffer modelDiffer)
         {
             Contract.Requires(modelDiffer != null);
+
+            // force re-query on next access if we are potentially dropping the table
+            _exists = null;
 
             using (var connection = CreateConnection())
             {
@@ -352,7 +363,7 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        private static bool Exists<TContext>(HistoryContextBase<TContext> context) where TContext : DbContext
+        private static bool QueryExists<TContext>(HistoryContextBase<TContext> context) where TContext : DbContext
         {
             Contract.Requires(context != null);
 

@@ -1,7 +1,6 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Common.QueryCache;
@@ -9,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Objects.Internal;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -21,8 +21,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private readonly Expression _expression;
         private Func<bool> _recompileRequired;
-        private ReadOnlyCollection<KeyValuePair<ObjectParameter, QueryParameterExpression>> _linqParameters;
+        private IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> _linqParameters;
         private bool _useCSharpNullComparisonBehavior;
+        private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
 
         #endregion
 
@@ -35,7 +36,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="elementType">The element type of the implemented ObjectQuery, as a CLR type.</param>
         /// <param name="context">The ObjectContext with which the implemented ObjectQuery is associated.</param>
         /// <param name="expression">The Linq Expression that defines this query.</param>
-        internal ELinqQueryState(Type elementType, ObjectContext context, Expression expression)
+        internal ELinqQueryState(
+            Type elementType, ObjectContext context, Expression expression,
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, context, null, null)
         {
             //
@@ -48,6 +51,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             _expression = expression;
             _useCSharpNullComparisonBehavior = context.ContextOptions.UseCSharpNullComparisonBehavior;
+            _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
         }
 
         /// <summary>
@@ -57,11 +61,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="elementType">The element type of the implemented ObjectQuery, as a CLR type.</param>
         /// <param name="query">The ObjectQuery from which the state information should be copied.</param>
         /// <param name="expression">The Linq Expression that defines this query.</param>
-        internal ELinqQueryState(Type elementType, ObjectQuery query, Expression expression)
+        internal ELinqQueryState(
+            Type elementType, ObjectQuery query, Expression expression,
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, query)
         {
             Contract.Requires(expression != null);
             _expression = expression;
+            _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
         }
 
         #endregion
@@ -132,7 +139,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
                 _linqParameters = converter.GetParameters();
                 if (_linqParameters != null
-                    && _linqParameters.Count > 0)
+                    && _linqParameters.Any())
                 {
                     var currentParams = EnsureParameters();
                     currentParams.SetReadOnly(false);
@@ -142,7 +149,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         // because parameters are cloned before they are added to the
                         // converter's parameter collection, or they came from this
                         // instance's parameter collection in the first place.
-                        var convertedParam = pair.Key;
+                        var convertedParam = pair.Item1;
                         currentParams.Add(convertedParam);
                     }
                     currentParams.SetReadOnly(true);
@@ -180,7 +187,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if (plan == null)
                 {
                     var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
-                    plan = ObjectQueryExecutionPlan.Prepare(
+                    plan = _objectQueryExecutionPlanFactory.Prepare(
                         ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, null, converter.AliasGenerator);
 
                     // If caching is enabled then update the cache now.
@@ -208,8 +215,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 foreach (var pair in _linqParameters)
                 {
-                    var parameter = pair.Key;
-                    var parameterExpression = pair.Value;
+                    var parameter = pair.Item1;
+                    var parameterExpression = pair.Item2;
                     if (null != parameterExpression)
                     {
                         parameter.Value = parameterExpression.EvaluateParameter(null);

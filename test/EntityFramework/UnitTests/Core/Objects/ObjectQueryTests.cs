@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Core.Objects
 {
+    using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Linq;
     using Moq;
@@ -21,7 +22,7 @@
             objectQueryExecutionPlanMock.Setup(m => m.Execute<object>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
                 .Returns(objectResultMock.Object);
 
-            var objectContextMock = new Mock<ObjectContext>();
+            var objectContextMock = new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator());
             var objectQueryStateMock = new Mock<ObjectQueryState>(typeof(object), objectContextMock.Object, /*parameters:*/ null, /*span:*/ null);
             objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
 

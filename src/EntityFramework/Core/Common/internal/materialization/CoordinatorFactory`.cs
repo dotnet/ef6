@@ -86,6 +86,12 @@
                 nestedCoordinators,
                 recordStateFactories)
         {
+            Contract.Requires(depth >= 0);
+            Contract.Requires(stateSlot >= 0);
+            Contract.Requires(nestedCoordinators != null);
+            Contract.Requires(recordStateFactories != null);
+            Contract.Requires(elementWithErrorHandling != null);
+
             Contract.Assert((element == null) != (wrappedElement == null));
 
             // If we are in a case where a wrapped entity is available, then use it; otherwise use the raw element.
@@ -136,21 +142,21 @@
             : this(
                 depth,
                 stateSlot,
-                Translator.BuildShaperLambda<bool>(hasData),
-                Translator.BuildShaperLambda<bool>(setKeys),
-                Translator.BuildShaperLambda<bool>(checkKeys),
+                CodeGenEmitter.BuildShaperLambda<bool>(hasData),
+                CodeGenEmitter.BuildShaperLambda<bool>(setKeys),
+                CodeGenEmitter.BuildShaperLambda<bool>(checkKeys),
                 nestedCoordinators,
                 typeof(IEntityWrapper).IsAssignableFrom(element.Type)
                     ? null
-                    : Translator.BuildShaperLambda<TElement>(element),
+                    : CodeGenEmitter.BuildShaperLambda<TElement>(element),
                 typeof(IEntityWrapper).IsAssignableFrom(element.Type)
-                    ? Translator.BuildShaperLambda<IEntityWrapper>(element)
+                    ? CodeGenEmitter.BuildShaperLambda<IEntityWrapper>(element)
                     : null,
-                Translator.BuildShaperLambda<TElement>(
+                CodeGenEmitter.BuildShaperLambda<TElement>(
                     typeof(IEntityWrapper).IsAssignableFrom(element.Type)
-                        ? Translator.Emit_UnwrapAndEnsureType(elementWithErrorHandling, typeof(TElement))
+                        ? CodeGenEmitter.Emit_UnwrapAndEnsureType(elementWithErrorHandling, typeof(TElement))
                         : elementWithErrorHandling),
-                Translator.BuildShaperLambda<ICollection<TElement>>(initializeCollection),
+                CodeGenEmitter.BuildShaperLambda<ICollection<TElement>>(initializeCollection),
                 recordStateFactories)
         {
         }

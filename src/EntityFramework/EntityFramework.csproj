@@ -130,6 +130,20 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Config\AppConfigDependencyResolver.cs" />
+    <Compile Include="Config\CompositeResolver`.cs" />
+    <Compile Include="Config\DbConfiguration.cs" />
+    <Compile Include="Config\DbConfigurationFinder.cs" />
+    <Compile Include="Config\DbConfigurationLoader.cs" />
+    <Compile Include="Config\DbConfigurationManager.cs" />
+    <Compile Include="Config\DbNullConfiguration.cs" />
+    <Compile Include="Config\DbConfigurationProxy.cs" />
+    <Compile Include="Config\IDbDependencyResolver.cs" />
+    <Compile Include="Config\IDbDependencyResolverExtensions.cs" />
+    <Compile Include="Config\ProviderServicesFactory.cs" />
+    <Compile Include="Config\ResolverChain.cs" />
+    <Compile Include="Config\RootDependencyResolver.cs" />
+    <Compile Include="Config\SingletonDependencyResolver.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAggregate.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAndExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbApplyExpression.cs" />
@@ -219,8 +233,10 @@
     <Compile Include="Core\Common\CommandTrees\DbRefKeyExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
+    <Compile Include="Core\Common\internal\materialization\CodeGenEmitter.cs" />
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
+    <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactory.cs" />
     <Compile Include="Core\Objects\MaterializedDataRecord.cs" />
     <Compile Include="Core\Common\DataRecordInfo.cs" />
     <Compile Include="Core\Common\DbCommandDefinition.cs" />
@@ -321,9 +337,14 @@
     <Compile Include="Core\Common\EntitySql\ValueExpression.cs" />
     <Compile Include="Core\Common\EntityUtil.cs" />
     <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
+    <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactory.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
     <Compile Include="Internal\IDbEnumerator.cs" />
+    <Compile Include="Internal\DefaultModelCacheKey.cs" />
+    <Compile Include="Internal\DefaultModelCacheKeyFactory.cs" />
+    <Compile Include="Infrastructure\IDbModelCacheKey.cs" />
+    <Compile Include="Infrastructure\IDbModelCacheKeyFactory.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensions.cs" />

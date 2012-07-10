@@ -94,6 +94,89 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
+        public void Can_get_context_type()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _projectDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
+            {
+                var result = facade.GetContextType(null);
+
+                Assert.Equal("ClassLibrary1.Context", result);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_get_context_type_by_name()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _projectDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
+            {
+                var result = facade.GetContextType("Context");
+
+                Assert.Equal("ClassLibrary1.Context", result);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_get_context_type_by_qualified_name()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _projectDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
+            {
+                var result = facade.GetContextType("ClassLibrary1.Context");
+
+                Assert.Equal("ClassLibrary1.Context", result);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Throws_when_context_type_not_found()
+        {
+            ResetDatabase();
+
+            var logBuilder = new StringBuilder();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _projectDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
+            {
+                var ex = Assert.Throws<ToolingException>(
+                    () => facade.GetContextType("MissingContext"));
+            }
+        }
+
+        [MigrationsTheory]
         public void Can_scaffold_initial_create()
         {
             ResetDatabase();

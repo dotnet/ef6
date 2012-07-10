@@ -19,6 +19,10 @@ $knownExceptions = @(
     target database was created by an initializer, an initial migration will be created (unless
     automatic migrations are enabled via the EnableAutomaticMigrations parameter).
 
+.PARAMETER ContextTypeName
+    Specifies the context to use. If omitted, migrations will attempt to locate a
+    single context type in the target project.
+
 .PARAMETER EnableAutomaticMigrations
     Specifies whether automatic migrations will be enabled in the scaffolded migrations configuration.
     If ommitted, automatic migrations will be disabled.
@@ -51,6 +55,7 @@ function Enable-Migrations
 {
     [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName')] 
     param (
+        [string] $ContextTypeName,
         [alias('Auto')]
         [switch] $EnableAutomaticMigrations,
         [string] $ProjectName,
@@ -70,7 +75,7 @@ function Enable-Migrations
 
     try
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent)
+        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent) @{ 'ContextTypeName' = $ContextTypeName }
         $error = Get-RunnerError $runner
         
         if ($error)
@@ -401,9 +406,17 @@ function Remove-Runner($runner)
     [AppDomain]::Unload($runner.Domain)
 }
 
-function Invoke-RunnerCommand($runner, $command, $parameters)
+function Invoke-RunnerCommand($runner, $command, $parameters, $anonymousArguments)
 {
     $domain = $runner.Domain
+
+	if ($anonymousArguments)
+	{
+		$anonymousArguments.GetEnumerator() | %{
+			$domain.SetData($_.Name, $_.Value)
+		}
+	}
+
     $domain.CreateInstanceFrom(
         (Join-Path $runner.ToolsPath EntityFramework.PowerShell.dll),
         $command,

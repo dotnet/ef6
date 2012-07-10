@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Migrations
 {
     using System.ComponentModel;
+    using System.Data.Entity.Config;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -11,6 +12,11 @@
     public class DbMigrationsConfiguration<TContext> : DbMigrationsConfiguration
         where TContext : DbContext
     {
+        static DbMigrationsConfiguration()
+        {
+            DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
+        }
+
         /// <summary>
         ///     Initializes a new instance of the DbMigrationsConfiguration class.
         /// </summary>

@@ -264,7 +264,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal("Migration 2", pendingMigrations.First());
             Assert.Equal("Migration 4", pendingMigrations.Last());
         }
-
+        
         [MigrationsTheory]
         public void GetPendingMigrations_should_ignore_InitialCreate_timestamps()
         {
@@ -357,7 +357,7 @@ namespace System.Data.Entity.Migrations
                 ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
                     ProviderFactory);
 
-            Assert.False(historyRepository.Exists());
+            Assert.False(historyRepository.Exists);
         }
 
         [MigrationsTheory]
@@ -367,7 +367,7 @@ namespace System.Data.Entity.Migrations
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            Assert.False(historyRepository.Exists());
+            Assert.False(historyRepository.Exists);
         }
 
         [MigrationsTheory]
@@ -379,7 +379,7 @@ namespace System.Data.Entity.Migrations
 
             ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
 
-            Assert.True(historyRepository.Exists());
+            Assert.True(historyRepository.Exists);
         }
 
         [MigrationsTheory]

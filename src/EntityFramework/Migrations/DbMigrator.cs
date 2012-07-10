@@ -109,7 +109,10 @@ namespace System.Data.Entity.Migrations
 
                 var connection = context.Database.Connection;
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
-                _historyRepository = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.DefaultSchema);
+
+                _historyRepository 
+                    = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.InternalContext.DefaultSchema);
+
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
                                              : DbProviderServices.GetProviderServices(connection).
@@ -275,8 +278,7 @@ namespace System.Data.Entity.Migrations
         {
             Contract.Requires(onCompatible != null);
 
-            if (!_calledByCreateDatabase
-                && !_historyRepository.Exists())
+            if (!_calledByCreateDatabase && !_historyRepository.Exists)
             {
                 using (var context = _usersContextInfo.CreateInstance())
                 {

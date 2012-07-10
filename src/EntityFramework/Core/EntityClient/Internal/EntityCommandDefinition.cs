@@ -58,10 +58,13 @@
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityCommandDefinition(
-            DbProviderFactory storeProviderFactory, DbCommandTree commandTree, BridgeDataReaderFactory factory = null)
+            DbProviderFactory storeProviderFactory, DbCommandTree commandTree,
+            BridgeDataReaderFactory bridgeDataReaderFactory = null)
         {
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
+
+            _bridgeDataReaderFactory = bridgeDataReaderFactory ?? new BridgeDataReaderFactory();
 
             var storeProviderServices = storeProviderFactory.GetProviderServices();
 
@@ -97,7 +100,7 @@
                 }
                 else
                 {
-                    Debug.Assert(
+                    Contract.Assert(
                         DbCommandTreeKind.Function == commandTree.CommandTreeKind, "only query and function command trees are supported");
                     var entityCommandTree = (DbFunctionCommandTree)commandTree;
 
@@ -127,9 +130,9 @@
 
                     var storeCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandTree);
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(1)
-                                                    {
-                                                        storeCommandDefinition
-                                                    };
+                        {
+                            storeCommandDefinition
+                        };
 
                     var firstResultEntitySet = mapping.FunctionImport.EntitySets.FirstOrDefault();
                     if (firstResultEntitySet != null)
@@ -169,8 +172,6 @@
 
                 throw;
             }
-
-            _bridgeDataReaderFactory = factory ?? new BridgeDataReaderFactory();
         }
 
         /// <summary>
@@ -420,7 +421,7 @@
                     {
                         var metadataWorkspace = entityCommand.Connection.GetMetadataWorkspace();
                         var nextResultColumnMaps = GetNextResultColumnMaps(storeDataReader);
-                        result = _bridgeDataReaderFactory.CreateBridgeDataReader(
+                        result = _bridgeDataReaderFactory.Create(
                             storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);
                     }
                 }
@@ -472,7 +473,7 @@
                     {
                         var metadataWorkspace = entityCommand.Connection.GetMetadataWorkspace();
                         var nextResultColumnMaps = GetNextResultColumnMaps(storeDataReader);
-                        result = _bridgeDataReaderFactory.CreateBridgeDataReader(
+                        result = _bridgeDataReaderFactory.Create(
                             storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);
                     }
                 }
@@ -769,21 +770,6 @@
             {
                 return ColumnMapFactory.CreateFunctionImportStructuralTypeColumnMap(
                     reader, _mapping, _resultSetIndex, _entitySet, _baseStructuralType);
-            }
-        }
-
-        /// <summary>
-        /// Class for test purposes only, used to abstract the creation of bridge <see cref="DbDataReader"/> object.
-        /// </summary>
-        internal class BridgeDataReaderFactory
-        {
-            internal virtual DbDataReader CreateBridgeDataReader(
-                DbDataReader storeDataReader,
-                ColumnMap columnMap,
-                MetadataWorkspace metadataWorkspace,
-                IEnumerable<ColumnMap> nextResultColumnMaps)
-            {
-                return BridgeDataReader.Create(storeDataReader, columnMap, metadataWorkspace, nextResultColumnMaps);
             }
         }
 

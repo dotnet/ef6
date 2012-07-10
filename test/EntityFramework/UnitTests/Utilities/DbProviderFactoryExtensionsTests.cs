@@ -1,13 +1,10 @@
 namespace System.Data.Entity.Utilities
 {
-    using System.Data.Common;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
-    using Moq;
-    using Moq.Protected;
     using Xunit;
 
     public sealed class DbProviderFactoryExtensionsTests
@@ -30,8 +27,8 @@ namespace System.Data.Entity.Utilities
         public void GetProviderServices_returns_provider_registered_in_app_config()
         {
             Assert.Same(
-                FakeEFProvider.Instance,
-                FakeAdoProvider.Instance.GetProviderServices());
+                FakeSqlProviderServices.Instance,
+                FakeSqlProviderFactory.Instance.GetProviderServices());
         }
     }
 }

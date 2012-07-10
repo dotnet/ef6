@@ -141,7 +141,7 @@
             int stateSlotNumber, int columnCount, RecordStateFactory[] nestedRecordStateFactories, DataRecordInfo dataRecordInfo,
             Expression gatherData, string[] propertyNames, TypeUsage[] typeUsages)
             : this(stateSlotNumber, columnCount, nestedRecordStateFactories, dataRecordInfo,
-                Translator.BuildShaperLambda<bool>(gatherData), propertyNames, typeUsages, isColumnNested: null)
+                CodeGenEmitter.BuildShaperLambda<bool>(gatherData), propertyNames, typeUsages, isColumnNested: null)
         {
         }
 

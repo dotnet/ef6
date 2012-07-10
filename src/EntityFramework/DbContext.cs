@@ -3,6 +3,7 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -165,6 +166,8 @@ namespace System.Data.Entity
         {
             Contract.Requires(objectContext != null);
 
+            DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
+
             _internalContext = new EagerInternalContext(this, objectContext, dbContextOwnsObjectContext);
             DiscoverAndInitializeSets();
         }
@@ -174,7 +177,9 @@ namespace System.Data.Entity
         /// </summary>
         private void InitializeLazyInternalContext(IInternalConnection internalConnection, DbCompiledModel model = null)
         {
-            _internalContext = new LazyInternalContext(this, internalConnection, model);
+            DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
+
+            _internalContext = new LazyInternalContext(this, internalConnection, model, DbConfiguration.Instance.ModelCacheKeyFactory);
             DiscoverAndInitializeSets();
         }
 
@@ -560,11 +565,6 @@ namespace System.Data.Entity
         }
 
         #endregion
-
-        internal string DefaultSchema
-        {
-            get { return InternalContext.DefaultSchema; }
-        }
 
         #region Hidden Object methods
 

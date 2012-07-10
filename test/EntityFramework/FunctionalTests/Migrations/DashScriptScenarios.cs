@@ -130,13 +130,16 @@ namespace System.Data.Entity.Migrations
             var version2 = new MigrationScaffolder(migrator1.Configuration).Scaffold("Version2");
 
             var migrator2 = CreateMigrator<ShopContext_v2>(scaffoldedMigrations: version2);
+            
             migrator2.Update();
-            var scriptingDecorator = new MigratorScriptingDecorator(migrator2);
 
             if (!whenDatabaseExists)
             {
                 ResetDatabase();
             }
+
+            var scriptingDecorator 
+                = new MigratorScriptingDecorator(CreateMigrator<ShopContext_v2>(scaffoldedMigrations: version2));
 
             // Act
             var script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version2.MigrationId);
@@ -282,12 +285,14 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v2>(scaffoldedMigrations: new[] { version1, version2 });
             migrator.Update();
 
-            var scriptingDecorator = new MigratorScriptingDecorator(migrator);
-
             if (!whenDatabaseExists)
             {
                 ResetDatabase();
             }
+
+            var scriptingDecorator
+                = new MigratorScriptingDecorator(
+                    CreateMigrator<ShopContext_v2>(scaffoldedMigrations: new[] { version1, version2 }));
 
             var script = scriptingDecorator.ScriptUpdate("Banana", "Apple");
 
