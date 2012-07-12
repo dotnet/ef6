@@ -2,6 +2,7 @@ namespace System.Data.Entity.Config
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Config
             }
             if (proxyConfigs.Count() == 1)
             {
-                return CreateConfiguration<DbConfigurationProxy>(proxyConfigs.First()).ConfigurationToUse();
+                return proxyConfigs.First().CreateInstance<DbConfigurationProxy>().ConfigurationToUse();
             }
 
             // Else if there is exactly one normal config then use it, otherwise return null.
@@ -60,29 +61,7 @@ namespace System.Data.Entity.Config
 
             return configType == null || typeof(DbNullConfiguration).IsAssignableFrom(configType)
                        ? null
-                       : CreateConfiguration<DbConfiguration>(configType);
-        }
-
-        public static TConfig CreateConfiguration<TConfig>(Type configurationType) where TConfig : DbConfiguration
-        {
-            Contract.Requires(typeof(TConfig).IsAssignableFrom(configurationType));
-
-            if (configurationType.GetConstructor(Type.EmptyTypes) == null)
-            {
-                throw new InvalidOperationException(Strings.Configuration_NoParameterlessConstructor(configurationType));
-            }
-
-            if (configurationType.IsAbstract)
-            {
-                throw new InvalidOperationException(Strings.Configuration_AbstractConfigurationType(configurationType));
-            }
-
-            if (configurationType.IsGenericType)
-            {
-                throw new InvalidOperationException(Strings.Configuration_GenericConfigurationType(configurationType));
-            }
-
-            return (TConfig)Activator.CreateInstance(configurationType);
+                       : configType.CreateInstance<DbConfiguration>();
         }
     }
 }

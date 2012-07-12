@@ -117,51 +117,14 @@ namespace System.Data.Entity.Config
                 Assert.IsType<FunctionalTestsConfiguration>(
                     new DbConfigurationFinder().TryCreateConfiguration(new[] { typeof(UnitTestsConfiguration) }));
             }
-
-            [Fact]
-            public void CreateConfiguration_throws_if_type_does_not_have_parameterless_constructor()
-            {
-                Assert.Equal(
-                    Strings.Configuration_NoParameterlessConstructor(typeof(BadConstructorConfiguration)),
-                    Assert.Throws<InvalidOperationException>(
-                        () => DbConfigurationFinder.CreateConfiguration<DbConfiguration>(typeof(BadConstructorConfiguration))).Message);
-            }
-
-            [Fact]
-            public void CreateConfiguration_throws_if_type_is_abstract()
-            {
-                Assert.Equal(
-                    Strings.Configuration_AbstractConfigurationType(typeof(AbstractConfiguration)),
-                    Assert.Throws<InvalidOperationException>(
-                        () => DbConfigurationFinder.CreateConfiguration<DbConfiguration>(typeof(AbstractConfiguration))).Message);
-            }
-
-            [Fact]
-            public void TryCreateConfiguration_throws_if_type_is_generic_type()
-            {
-                Assert.Equal(
-                    Strings.Configuration_GenericConfigurationType(typeof(GenericConfiguration<>)),
-                    Assert.Throws<InvalidOperationException>(
-                        () => DbConfigurationFinder.CreateConfiguration<DbConfiguration>(typeof(GenericConfiguration<>))).Message);
-            }
         }
 
         public abstract class AbstractConfiguration : DbConfiguration
         {
-            public AbstractConfiguration()
-            {
-            }
         }
 
         public class GenericConfiguration<T> : DbConfiguration
         {
-        }
-
-        public abstract class BadConstructorConfiguration : DbConfiguration
-        {
-            protected BadConstructorConfiguration(int _)
-            {
-            }
         }
     }
 }

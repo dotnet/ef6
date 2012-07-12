@@ -230,22 +230,6 @@
     <value>More than one migrations configuration type was found in the assembly '{0}'. Specify the name of the one to use.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
-  <data name="AssemblyMigrator_NonConfigurationType" xml:space="preserve">
-    <value>The type '{0}' is not a migrations configuration type.</value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
-  <data name="AssemblyMigrator_NoDefaultConstructor" xml:space="preserve">
-    <value>The migrations configuration type '{0}' must have a public default constructor.</value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
-  <data name="AssemblyMigrator_AbstractConfigurationType" xml:space="preserve">
-    <value>The migrations configuration type '{0}' must not be abstract.</value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
-  <data name="AssemblyMigrator_GenericConfigurationType" xml:space="preserve">
-    <value>The migrations configuration type '{0}' must not be generic.</value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
   <data name="SqlCeColumnRenameNotSupported" xml:space="preserve">
     <value>Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
@@ -5296,14 +5280,23 @@
   <data name="MultipleConfigsInAssembly" xml:space="preserve">
     <value>The assembly {0} contains more than one type derived from {1}. Either define the DbConfiguration type to use in the application's config file or ensure that the assembly contains at most one type derived from {1}.</value>
   </data>
-  <data name="Configuration_NoParameterlessConstructor" xml:space="preserve">
-    <value>The configuration type '{0}' must have a public parameterless constructor.</value>
+  <data name="CreateInstance_BadMigrationsConfigurationType" xml:space="preserve">
+    <value>The type '{0}' does not extend from '{1}'. Migrations configuration types must extend from '{1}'.</value>
   </data>
-  <data name="Configuration_AbstractConfigurationType" xml:space="preserve">
-    <value>The configuration type '{0}' must not be abstract.</value>
+  <data name="CreateInstance_BadSqlGeneratorType" xml:space="preserve">
+    <value>The type '{0}' does not extend from '{1}'. Migrations SQL generator implementations must extend from '{1}'.</value>
   </data>
-  <data name="Configuration_GenericConfigurationType" xml:space="preserve">
-    <value>The configuration type '{0}' must not be generic.</value>
+  <data name="CreateInstance_NoParameterlessConstructor" xml:space="preserve">
+    <value>Failed to create instance of type '{0}'. The type must have a public parameterless constructor.</value>
+  </data>
+  <data name="CreateInstance_AbstractType" xml:space="preserve">
+    <value>Failed to create instance of type '{0}'. The type must not be abstract.</value>
+  </data>
+  <data name="CreateInstance_GenericType" xml:space="preserve">
+    <value>Failed to create instance of type '{0}'. The type must not be generic.</value>
+  </data>
+  <data name="SqlGeneratorTypeMissing" xml:space="preserve">
+    <value>The Migrations SQL generator type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the assembly is available to the running application.</value>
   </data>
   <data name="ConfigurationLocked" xml:space="preserve">
     <value>The call to DbConfiguration.{0} failed because the configuration is locked. The protected methods and properties of DbConfiguration are intended to be called only from the constructor of a class derived from DbConfiguration and cannot be called after the DbConfiguration object is in use.</value>

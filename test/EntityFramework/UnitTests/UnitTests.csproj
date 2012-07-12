@@ -140,6 +140,7 @@
     <Compile Include="Core\Objects\TestHelpers\ObjectContextForMock.cs" />
     <Compile Include="Internal\ConfigFile\DatabaseInitializerElementTests.cs" />
     <Compile Include="Internal\ConfigFile\EntityFrameworkSectionTests.cs" />
+    <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElementTests.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
     <Compile Include="Internal\DatabaseCreatorTests.cs" />
     <Compile Include="Internal\DefaultModelCacheFactoryTests.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="SqlServer\SqlTypesAssemblyLoaderTests.cs" />
     <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
     <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
+    <Compile Include="TestHelpers\Fake\FakeSqlGenerator.cs" />
     <Compile Include="TestHelpers\UnitTestsConfiguration.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />

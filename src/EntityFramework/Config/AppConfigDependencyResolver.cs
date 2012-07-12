@@ -3,6 +3,10 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
 
     // TODO: Consider thread safety
@@ -23,13 +27,16 @@ namespace System.Data.Entity.Config
 
         public virtual object GetService(Type type, string name)
         {
-            if (type == typeof(DbProviderServices)
-                && !string.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(name))
             {
-                var providerTypeName = _appConfig.Providers.TryGetDbProviderServicesTypeName(name);
-                if (providerTypeName != null)
+                if (type == typeof(DbProviderServices))
                 {
-                    return new ProviderServicesFactory().GetInstance(providerTypeName, name);
+                    return _appConfig.Providers.TryGetDbProviderServices(name);
+                }
+
+                if (type == typeof(MigrationSqlGenerator))
+                {
+                    return _appConfig.Providers.TryGetMigrationSqlGenerator(name);
                 }
             }
 

@@ -435,7 +435,9 @@
                     Error.AssemblyMigrator_NoConfigurationWithName,
                     Error.AssemblyMigrator_MultipleConfigurationsWithName);
 
-                return CreateConfiguration(configurationType);
+                return configurationType.CreateInstance<DbMigrationsConfiguration>(
+                    Strings.CreateInstance_BadMigrationsConfigurationType,
+                    s => new MigrationsException(s));
             }
 
             protected Type FindType<TBase>(
@@ -525,33 +527,6 @@
                         Strings.ToolingFacade_AssemblyNotFound(ex.FileName),
                         ex);
                 }
-            }
-
-            private static DbMigrationsConfiguration CreateConfiguration(Type configurationType)
-            {
-                var configurationTypeName = configurationType.Name;
-
-                if (!typeof(DbMigrationsConfiguration).IsAssignableFrom(configurationType))
-                {
-                    throw Error.AssemblyMigrator_NonConfigurationType(configurationTypeName);
-                }
-
-                if (configurationType.GetConstructor(Type.EmptyTypes) == null)
-                {
-                    throw Error.AssemblyMigrator_NoDefaultConstructor(configurationTypeName);
-                }
-
-                if (configurationType.IsAbstract)
-                {
-                    throw Error.AssemblyMigrator_AbstractConfigurationType(configurationTypeName);
-                }
-
-                if (configurationType.IsGenericType)
-                {
-                    throw Error.AssemblyMigrator_GenericConfigurationType(configurationTypeName);
-                }
-
-                return (DbMigrationsConfiguration)Activator.CreateInstance(configurationType);
             }
         }
 
