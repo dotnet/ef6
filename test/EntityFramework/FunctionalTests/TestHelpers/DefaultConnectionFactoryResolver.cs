@@ -7,7 +7,7 @@ namespace FunctionalTests.TestHelpers
     public class DefaultConnectionFactoryResolver : IDbDependencyResolver
     {
         private static readonly DefaultConnectionFactoryResolver _instance = new DefaultConnectionFactoryResolver();
-        private IDbConnectionFactory _connectionFactory = new SqlConnectionFactory();
+        private volatile IDbConnectionFactory _connectionFactory = new SqlConnectionFactory();
 
         public static DefaultConnectionFactoryResolver Instance
         {

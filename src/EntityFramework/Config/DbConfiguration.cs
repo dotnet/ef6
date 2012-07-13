@@ -7,7 +7,6 @@ namespace System.Data.Entity.Config
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    // TODO: Thread safety
     /// <summary>
     /// A class derived from this class can be placed in the same assembly as a class derived from
     /// <see cref="DbContext"/> to define Entity Framework configuration for an application.
@@ -23,6 +22,8 @@ namespace System.Data.Entity.Config
         private readonly CompositeResolver<ResolverChain, ResolverChain> _resolvers;
         private readonly RootDependencyResolver _rootResolver;
 
+        // This does not need to be volatile since it only protects against inappropriate use not
+        // thread-unsafe use.
         private bool _isLocked;
 
         /// <summary>
@@ -54,6 +55,7 @@ namespace System.Data.Entity.Config
         /// </summary>
         public static DbConfiguration Instance
         {
+            // Note that GetConfiguration and SetConfiguration on DbConfigurationManager are thread-safe.
             get { return DbConfigurationManager.Instance.GetConfiguration(); }
             set
             {

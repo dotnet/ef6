@@ -13,12 +13,18 @@ namespace System.Data.Entity.Internal
     {
         private readonly EntityFrameworkSection _entityFrameworkSettings;
 
+        public ProviderConfig()
+        {
+        }
+
         public ProviderConfig(EntityFrameworkSection entityFrameworkSettings)
         {
+            Contract.Requires(entityFrameworkSettings != null);
+
             _entityFrameworkSettings = entityFrameworkSettings;
         }
 
-        public DbProviderServices TryGetDbProviderServices(string providerInvariantName)
+        public virtual DbProviderServices TryGetDbProviderServices(string providerInvariantName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
@@ -29,7 +35,7 @@ namespace System.Data.Entity.Internal
                        : null;
         }
 
-        public MigrationSqlGenerator TryGetMigrationSqlGenerator(string providerInvariantName)
+        public virtual Func<MigrationSqlGenerator> TryGetMigrationSqlGeneratorFactory(string providerInvariantName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
@@ -46,10 +52,10 @@ namespace System.Data.Entity.Internal
                 {
                     throw new InvalidOperationException(Strings.SqlGeneratorTypeMissing(typeName, providerInvariantName));
                 }
-                return providerType.CreateInstance<MigrationSqlGenerator>(Strings.CreateInstance_BadSqlGeneratorType);
+                return () => providerType.CreateInstance<MigrationSqlGenerator>(Strings.CreateInstance_BadSqlGeneratorType);
             }
 
-            return null;
+            return () => null;
         }
 
         private ProviderElement TryGetProviderElement(string providerInvariantName)

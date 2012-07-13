@@ -1,5 +1,6 @@
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Sql;
     using Moq;
@@ -31,6 +32,47 @@ namespace System.Data.Entity.Migrations
             migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, migrationSqlGenerator);
 
             Assert.Same(migrationSqlGenerator, migrationsConfiguration.GetSqlGenerator(DbProviders.Sql));
+        }
+
+        [Fact]
+        public void SQL_generator_is_obtained_from_migrations_configuration_if_set_in_migrations_configuration()
+        {
+            SetSqlGeneratorTest(setGenerator: true);
+        }
+
+        [Fact]
+        public void SQL_generator_is_obtained_from_DbConfiguration_if_not_set_in_migrations_configuration()
+        {
+            SetSqlGeneratorTest(setGenerator: false);
+        }
+
+        private static void SetSqlGeneratorTest(bool setGenerator)
+        {
+            var generator = new Mock<MigrationSqlGenerator>().Object;
+            var mockResolver = new Mock<IDbDependencyResolver>();
+            mockResolver.Setup(m => m.GetService(typeof(MigrationSqlGenerator), "Gu.Hu.Ha")).Returns(generator);
+
+            var mockConfiguration = new Mock<DbConfiguration>();
+            mockConfiguration.Setup(m => m.DependencyResolver).Returns(mockResolver.Object);
+
+            var migrationsConfiguration = new DbMigrationsConfiguration(new Lazy<DbConfiguration>(() => mockConfiguration.Object));
+
+            if (setGenerator)
+            {
+                generator = new Mock<MigrationSqlGenerator>().Object;
+                migrationsConfiguration.SetSqlGenerator("Gu.Hu.Ha", generator);
+            }
+
+            Assert.Same(generator, migrationsConfiguration.GetSqlGenerator("Gu.Hu.Ha"));
+        }
+
+        [Fact]
+        public void Setting_SQL_generator_does_not_change_generator_set_in_DbConfiguration()
+        {
+            new DbMigrationsConfiguration().SetSqlGenerator(DbProviders.SqlCe, new SqlServerMigrationSqlGenerator());
+
+            Assert.IsType<SqlCeMigrationSqlGenerator>(
+                DbConfiguration.Instance.DependencyResolver.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
         }
     }
 }

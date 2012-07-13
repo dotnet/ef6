@@ -88,7 +88,7 @@
         /// </summary>
         /// <param name="test">The test.</param>
         /// <param name="count">The number of copies to run in parallel.</param>
-        protected void ExecuteInParallel(Action test, int count = 20)
+        protected static void ExecuteInParallel(Action test, int count = 20)
         {
             var tests = new Action[count];
             for (var i = 0; i < count; i++)
