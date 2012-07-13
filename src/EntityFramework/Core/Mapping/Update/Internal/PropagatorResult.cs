@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// requires: for structural types, member values are ordinally aligned with the members of the 

@@ -229,8 +229,8 @@
                             "FunctionImport currently supports only collection result type");
                         var elementType = ((CollectionType)storeResultType.EdmType).TypeUsage;
                         Debug.Assert(
-                            Helper.IsScalarType(elementType.EdmType)
-                            , "FunctionImport supports only Collection(Entity), Collection(Enum) and Collection(Primitive)");
+                            Helper.IsScalarType(elementType.EdmType),
+                            "FunctionImport supports only Collection(Entity), Collection(Enum) and Collection(Primitive)");
 
                         // Build collection column map where the first column of the store result is assumed
                         // to contain the primitive type values.
@@ -557,9 +557,6 @@
 
         private DbCommand PrepareEntityCommandBeforeExecution(EntityCommand entityCommand)
         {
-            // SQLPT #120007433 is the work item to implement MARS support, which we
-            //                  need to do here, but since the PlanCompiler doesn't 
-            //                  have it yet, neither do we...
             if (1 != _mappedCommandDefinitions.Count)
             {
                 throw new NotSupportedException("MARS");

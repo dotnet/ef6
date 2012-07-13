@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
 
     /// <summary>
     /// Mapping metadata for Complex Types.

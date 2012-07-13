@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents the Mapping metadata for an AssociationSet in CS space.
@@ -92,9 +93,9 @@ namespace System.Data.Entity.Core.Mapping
             {
                 typeMapping.Print(index + 5);
             }
-            if (m_modificationFunctionMapping != null)
+            if (ModificationFunctionMapping != null)
             {
-                m_modificationFunctionMapping.Print(index + 5);
+                ModificationFunctionMapping.Print(index + 5);
             }
         }
 #endif

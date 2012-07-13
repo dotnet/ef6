@@ -8,8 +8,10 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Text;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<ViewGeneration.Structures.Cell>;
 
     /// <summary>

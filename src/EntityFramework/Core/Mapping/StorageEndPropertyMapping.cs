@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Mapping metadata for End property of an association.

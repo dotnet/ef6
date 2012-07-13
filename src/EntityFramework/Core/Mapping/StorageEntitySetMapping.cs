@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Text;
 
     /// <summary>
     /// Represents the Mapping metadata for an EnitytSet in CS space.

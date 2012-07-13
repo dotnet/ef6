@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Text;
 
     /// <summary>
     /// Represents the metadata for mapping fragment.
