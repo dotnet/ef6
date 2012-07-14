@@ -43,7 +43,7 @@
         /// <param name="leftParameterName">Name of the left parameter.</param>
         /// <param name="rightValue">The right value.</param>
         /// <param name="rightParameterName">Name of the right parameter.</param>
-        public static void CheckValidRange<TValue>(TValue leftValue, string leftParameterName, TValue rightValue, string rightParameterName) 
+        public static void CheckValidRange<TValue>(TValue leftValue, string leftParameterName, TValue rightValue, string rightParameterName)
             where TValue : struct, IComparable<TValue>
         {
             if (leftValue.CompareTo(rightValue) > 0)
@@ -84,7 +84,7 @@
                 throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, exceptionMessageFormatText, messageArguments));
             }
         }
-        
+
         /// <summary>
         /// Throws InvalidOperationException if specified object is null.
         /// </summary>
@@ -107,7 +107,7 @@
                 throw new InvalidOperationException(message);
             }
         }
-        
+
         /// <summary>
         /// Throws ArgumentException if the given collection is null or empty.
         /// </summary>
@@ -150,7 +150,7 @@
         {
             return new NotSupportedException(EnumerableNotImplementedExceptionMessage);
         }
-        
+
         /// <summary>
         /// Determines whether the specified exception is catchable.
         /// </summary>
@@ -213,6 +213,33 @@
                 throw new InvalidOperationException(
                     "ASSERTION FAILED: " + String.Format(CultureInfo.InvariantCulture, errorMessage, messageArguments));
             }
+        }
+
+        /// <summary>
+        /// Examines the AggregateExceptions thrown by the <paramref name="executor"/>
+        /// and rethrows the inner exception if only one is contained.
+        /// </summary>
+        public static T UnwrapAggregateExceptions<T>(Func<T> executor)
+        {
+            T result;
+            try
+            {
+                result = executor();
+            }
+            catch (AggregateException ae)
+            {
+                var flattenedException = ae.Flatten();
+                if (flattenedException.InnerExceptions.Count == 1)
+                {
+                    throw flattenedException.InnerExceptions.Single();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return result;
         }
     }
 }

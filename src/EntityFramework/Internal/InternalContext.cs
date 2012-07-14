@@ -24,6 +24,8 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
     using SaveOptions = System.Data.Entity.Core.Objects.SaveOptions;
 
@@ -365,6 +367,31 @@
                 var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
                                   (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
                 return ObjectContext.SaveChanges(saveOptions);
+            }
+            catch (UpdateException ex)
+            {
+                throw WrapUpdateException(ex);
+            }
+        }
+
+        public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (ValidateOnSaveEnabled)
+                {
+                    var validationResults = Owner.GetValidationErrors();
+                    if (validationResults.Any())
+                    {
+                        throw new DbEntityValidationException(
+                            Strings.DbEntityValidationException_ValidationFailed, validationResults);
+                    }
+                }
+
+                var shouldDetectChanges = AutoDetectChangesEnabled && !ValidateOnSaveEnabled;
+                var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
+                                  (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
+                return await ObjectContext.SaveChangesAsync(saveOptions, cancellationToken);
             }
             catch (UpdateException ex)
             {
