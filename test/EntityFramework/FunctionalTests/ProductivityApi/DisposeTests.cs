@@ -13,6 +13,7 @@
     using System.Transactions;
     using SimpleModel;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DisposeTests : FunctionalTestBase
     {
@@ -182,21 +183,18 @@
                         storeConnection.ConnectionString.Equals(string.Empty));
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Dispose_does_not_dispose_underlying_ObjectContext_if_DbContext_does_not_own_it()
         {
-            using (new TransactionScope())
+            using (var outerContext = new SimpleModelContext())
             {
-                using (var outerContext = new SimpleModelContext())
+                var objectContext = GetObjectContext(outerContext);
+                using (var context = new SimpleModelContext(objectContext))
                 {
-                    var objectContext = GetObjectContext(outerContext);
-                    using (var context = new SimpleModelContext(objectContext))
-                    {
-                        var product = context.Products.Find(1);
-                    }
-                    // Should not throw since objectContext should not be disposed
-                    objectContext.SaveChanges();
+                    var product = context.Products.Find(1);
                 }
+                // Should not throw since objectContext should not be disposed
+                objectContext.SaveChanges();
             }
         }
 
