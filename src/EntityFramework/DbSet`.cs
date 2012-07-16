@@ -87,11 +87,9 @@ namespace System.Data.Entity
         /// <exception cref = "InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref = "InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
         public Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
-            throw new NotImplementedException();
+            return _internalSet.FindAsync(cancellationToken, keyValues);
         }
 
         #endregion
@@ -224,8 +222,9 @@ namespace System.Data.Entity
         #region IInternalSetAdapter
 
         /// <summary>
-        ///     The internal IQueryable that is backing this DbQuery
+        ///     Gets the underlying internal set.
         /// </summary>
+        /// <value>The internal set.</value>
         IInternalSet IInternalSetAdapter.InternalSet
         {
             get { return _internalSet; }

@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
-    using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     An interface implemented by <see cref = "InternalSet{TEntity}" />.
@@ -17,6 +19,7 @@
         where TEntity : class
     {
         TEntity Find(params object[] keyValues);
+        Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
         TEntity Create();
         TEntity Create(Type derivedEntityType);
         ObservableCollection<TEntity> Local { get; }
@@ -27,6 +30,11 @@
         where TEntity : class
     {
         TEntity IInternalSet<TEntity>.Find(params object[] keyValues)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<TEntity> IInternalSet<TEntity>.FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             throw new NotImplementedException();
         }
@@ -73,7 +81,7 @@
             get { throw new NotImplementedException(); }
         }
 
-        IQueryProvider IInternalQuery.ObjectQueryProvider
+        ObjectQueryProvider IInternalQuery.ObjectQueryProvider
         {
             get { throw new NotImplementedException(); }
         }

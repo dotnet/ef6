@@ -6,6 +6,7 @@
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
@@ -14,6 +15,7 @@
     using System.Linq.Expressions;
     using System.Text;
     using System.Threading;
+    using System.Threading.Tasks;
 
     internal class InternalSet<TEntity> : InternalQuery<TEntity>, IInternalSet<TEntity>
         where TEntity : class
@@ -83,6 +85,50 @@
             // because if the object found was of the wrong type then it would still get into
             // the state manager.
             var entity = FindInStateManager(key) ?? FindInStore(key, "keyValues");
+
+            if (entity != null
+                && !(entity is TEntity))
+            {
+                throw Error.DbSet_WrongEntityTypeFound(entity.GetType().Name, typeof(TEntity).Name);
+            }
+            return (TEntity)entity;
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Find, which
+        ///     finds an entity with the given primary key values.
+        ///     If an entity with the given primary key values exists in the context, then it is
+        ///     returned immediately without making a request to the store.  Otherwise, a request
+        ///     is made to the store for an entity with the given primary key values and this entity,
+        ///     if found, is attached to the context and returned.  If no entity is found in the
+        ///     context or the store, then null is returned.
+        /// </summary>
+        /// <remarks>
+        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// </remarks>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
+        /// <returns>A Task containing the entity found, or null.</returns>
+        /// <exception cref = "InvalidOperationException">Thrown if multiple entities exist in the context with the primary key values given.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        public async Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            // This DetectChanges is useful in the case where objects are added to the graph and then the user
+            // attempts to find one of those added objects.
+            InternalContext.DetectChanges();
+
+            var key = new WrappedEntityKey(EntitySet, EntitySetName, keyValues, "keyValues");
+
+            // First, check for the entity in the state manager.  This includes first checking
+            // for non-Added objects that match the key.  If the entity was not found, then
+            // we check for Added objects.  We don't just use GetObjectByKey
+            // because it would go to the store before checking for Added objects, and also
+            // because if the object found was of the wrong type then it would still get into
+            // the state manager.
+            var entity = FindInStateManager(key) ?? await FindInStoreAsync(key, "keyValues", cancellationToken);
 
             if (entity != null
                 && !(entity is TEntity))
@@ -172,6 +218,33 @@
             try
             {
                 return BuildFindQuery(key).SingleOrDefault();
+            }
+            catch (EntitySqlException ex)
+            {
+                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
+            }
+        }
+
+        /// <summary>
+        ///     An asynchronous version of FindInStore, which
+        ///     finds an entity in the store with the given primary key values, or returns null
+        ///     if no such entity can be found.  This code is adapted from TryGetObjectByKey to
+        ///     include type checking in the query.
+        /// </summary>
+        private async Task<object> FindInStoreAsync(WrappedEntityKey key, string keyValuesParamName, CancellationToken cancellationToken)
+        {
+            Contract.Requires(key != null);
+
+            // If the key has null values, then we cannot query it from the store, so it cannot
+            // be found, so just return null.
+            if (key.HasNullValues)
+            {
+                return null;
+            }
+
+            try
+            {
+                return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken);
             }
             catch (EntitySqlException ex)
             {
@@ -651,7 +724,7 @@
         /// <summary>
         ///     The LINQ query provider for the underlying <see cref = "ObjectQuery" />.
         /// </summary>
-        public override IQueryProvider ObjectQueryProvider
+        public override ObjectQueryProvider ObjectQueryProvider
         {
             get
             {

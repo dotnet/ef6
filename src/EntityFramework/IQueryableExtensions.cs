@@ -9,11 +9,492 @@ namespace System.Data.Entity
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
 
     public static class IQueryableExtensions
     {
+        #region Private static fields
+
+        private static readonly MethodInfo _first = GetMethod(
+            "First", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _first_Predicate = GetMethod(
+            "First", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _firstOrDefault = GetMethod(
+            "FirstOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _firstOrDefault_Predicate = GetMethod(
+            "FirstOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _last = GetMethod(
+            "Last", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _last_Predicate = GetMethod(
+            "Last", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _lastOrDefault = GetMethod(
+            "LastOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _lastOrDefault_Predicate = GetMethod(
+            "LastOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _single = GetMethod(
+            "Single", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _single_Predicate = GetMethod(
+            "Single", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _singleOrDefault = GetMethod(
+            "SingleOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _singleOrDefault_Predicate = GetMethod(
+            "SingleOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _elementAt = GetMethod(
+            "ElementAt", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T), typeof(int)
+                });
+
+        private static readonly MethodInfo _elementAtOrDefault = GetMethod(
+            "ElementAtOrDefault", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T), typeof(int)
+                });
+
+        private static readonly MethodInfo _contains = GetMethod(
+            "Contains", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    T
+                });
+
+        private static readonly MethodInfo _contains_Comparer = GetMethod(
+            "Contains", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    T,
+                    typeof(IEqualityComparer<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _sequenceEqual = GetMethod(
+            "SequenceEqual", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(IEnumerable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _sequenceEqual_Comparer = GetMethod(
+            "SequenceEqual", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(IEnumerable<>).MakeGenericType(T),
+                    typeof(IEqualityComparer<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _any = GetMethod(
+            "Any", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _any_Predicate = GetMethod(
+            "Any", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _all_Predicate = GetMethod(
+            "All", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _count = GetMethod(
+            "Count", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _count_Predicate = GetMethod(
+            "Count", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _longCount = GetMethod(
+            "LongCount", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _longCount_Predicate = GetMethod(
+            "LongCount", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
+
+        private static readonly MethodInfo _min = GetMethod(
+            "Min", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _min_Selector = GetMethod(
+            "Min", (T, U) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
+                });
+
+        private static readonly MethodInfo _max = GetMethod(
+            "Max", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
+
+        private static readonly MethodInfo _max_Selector = GetMethod(
+            "Max", (T, U) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
+                });
+
+        private static readonly MethodInfo _sum_Int = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<int>)
+                });
+
+        private static readonly MethodInfo _sum_IntNullable = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<int?>)
+                });
+
+        private static readonly MethodInfo _sum_Long = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<long>)
+                });
+
+        private static readonly MethodInfo _sum_LongNullable = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<long?>)
+                });
+
+        private static readonly MethodInfo _sum_Float = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<float>)
+                });
+
+        private static readonly MethodInfo _sum_FloatNullable = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<float?>)
+                });
+
+        private static readonly MethodInfo _sum_Double = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<double>)
+                });
+
+        private static readonly MethodInfo _sum_DoubleNullable = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<double?>)
+                });
+
+        private static readonly MethodInfo _sum_Decimal = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<decimal>)
+                });
+
+        private static readonly MethodInfo _sum_DecimalNullable = GetMethod(
+            "Sum", () => new[]
+                {
+                    typeof(IQueryable<decimal?>)
+                });
+
+        private static readonly MethodInfo _sum_Int_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
+                });
+
+        private static readonly MethodInfo _sum_IntNullable_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
+                });
+
+        private static readonly MethodInfo _sum_Long_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
+                });
+
+        private static readonly MethodInfo _sum_LongNullable_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
+                });
+
+        private static readonly MethodInfo _sum_Float_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
+                });
+
+        private static readonly MethodInfo _sum_FloatNullable_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
+                });
+
+        private static readonly MethodInfo _sum_Double_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
+                });
+
+        private static readonly MethodInfo _sum_DoubleNullable_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
+                });
+
+        private static readonly MethodInfo _sum_Decimal_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
+                });
+
+        private static readonly MethodInfo _sum_DecimalNullable_Selector = GetMethod(
+            "Sum", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
+                });
+
+        private static readonly MethodInfo _average_Int = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<int>)
+                });
+
+        private static readonly MethodInfo _average_IntNullable = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<int?>)
+                });
+
+        private static readonly MethodInfo _average_Long = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<long>)
+                });
+
+        private static readonly MethodInfo _average_LongNullable = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<long?>)
+                });
+
+        private static readonly MethodInfo _average_Float = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<float>)
+                });
+
+        private static readonly MethodInfo _average_FloatNullable = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<float?>)
+                });
+
+        private static readonly MethodInfo _average_Double = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<double>)
+                });
+
+        private static readonly MethodInfo _average_DoubleNullable = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<double?>)
+                });
+
+        private static readonly MethodInfo _average_Decimal = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<decimal>)
+                });
+
+        private static readonly MethodInfo _average_DecimalNullable = GetMethod(
+            "Average", () => new[]
+                {
+                    typeof(IQueryable<decimal?>)
+                });
+
+        private static readonly MethodInfo _average_Int_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
+                });
+
+        private static readonly MethodInfo _average_IntNullable_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
+                });
+
+        private static readonly MethodInfo _average_Long_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
+                });
+
+        private static readonly MethodInfo _average_LongNullable_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
+                });
+
+        private static readonly MethodInfo _average_Float_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
+                });
+
+        private static readonly MethodInfo _average_FloatNullable_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
+                });
+
+        private static readonly MethodInfo _average_Double_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
+                });
+
+        private static readonly MethodInfo _average_DoubleNullable_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
+                });
+
+        private static readonly MethodInfo _average_Decimal_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
+                });
+
+        private static readonly MethodInfo _average_DecimalNullable_Selector = GetMethod(
+            "Average", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
+                });
+
+        private static readonly MethodInfo _aggregate = GetMethod(
+            "Aggregate", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(T, T, T))
+                });
+
+        private static readonly MethodInfo _aggregate_Seed = GetMethod(
+            "Aggregate", (T, U) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    U,
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U))
+                });
+
+        private static readonly MethodInfo _aggregate_Seed_Selector = GetMethod(
+            "Aggregate", (T, U, V) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    U,
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U)),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(U, V))
+                });
+
+        #endregion
+
         #region Include
 
         private static readonly Type[] _stringIncludeTypes = new[] { typeof(string) };
@@ -249,6 +730,39 @@ namespace System.Data.Entity
             }
         }
 
+        /// <summary>
+        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref = "DbSet{T}" />, <see cref = "ObjectSet{T}" />,
+        ///     <see cref = "ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see cref = "DbContext" />,
+        ///     <see cref = "ObjectContext" /> or other cache on the client.
+        ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
+        /// </summary>
+        /// <param name = "source">The source query.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        public static Task LoadAsync(this IQueryable source)
+        {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return source.LoadAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref = "DbSet{T}" />, <see cref = "ObjectSet{T}" />,
+        ///     <see cref = "ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see cref = "DbContext" />,
+        ///     <see cref = "ObjectContext" /> or other cache on the client.
+        ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
+        /// </summary>
+        /// <param name = "source">The source query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        public static Task LoadAsync(this IQueryable source, CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return source.ForEachAsync(e => { }, cancellationToken);
+        }
+
         #endregion
 
         #region ForEachAsync
@@ -264,6 +778,7 @@ namespace System.Data.Entity
         {
             Contract.Requires(source != null);
             Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
 
             return source.ForEachAsync(action, CancellationToken.None);
         }
@@ -276,15 +791,22 @@ namespace System.Data.Entity
         /// <param name="action">The action to be executed.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public static Task ForEachAsync(this IQueryable source, Action<object> action, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
             Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
 
-            throw new NotImplementedException();
+            var enumerable = source as IDbAsyncEnumerable;
+
+            if (enumerable != null)
+            {
+                return enumerable.ForEachAsync(action, cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Not_Async(string.Empty);
+            }
         }
 
         /// <summary>
@@ -299,6 +821,7 @@ namespace System.Data.Entity
         {
             Contract.Requires(source != null);
             Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
 
             return source.ForEachAsync(action, CancellationToken.None);
         }
@@ -312,20 +835,61 @@ namespace System.Data.Entity
         /// <param name="action">The action to be executed.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "action")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
             Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
 
-            throw new NotImplementedException();
+            var enumerable = source as IDbAsyncEnumerable<T>;
+            if (enumerable != null)
+            {
+                return enumerable.ForEachAsync(action, cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Not_Async("<" + typeof(T) + ">");
+            }
         }
 
         #endregion
 
-        #region ToListAsync
+        #region Async equivalents of IEnumerable extension methods
+
+        /// <summary>
+        ///     Creates a <see cref = "List{Object}" /> from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        /// </summary>
+        /// <param name="source">The source query.</param>
+        /// <returns>A Task containing a <see cref = "List{Object}" /> that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<List<object>> ToListAsync(this IQueryable source)
+        {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+
+            return source.ToListAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Creates a <see cref = "List{Object}" /> from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        /// </summary>
+        /// <param name="source">The source query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a <see cref = "List{Object}" /> that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static async Task<List<object>> ToListAsync(this IQueryable source, CancellationToken cancellationToken)
+        {
+            // TODO: Uncomment when code contracts support async
+            //Contract.Requires(source != null);
+            //Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            DbHelpers.ThrowIfNull(source, "source");
+
+            var list = new List<object>();
+            await source.ForEachAsync(list.Add, cancellationToken);
+            return list;
+        }
 
         /// <summary>
         ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
@@ -333,11 +897,12 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The source query.</param>
-        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
+        /// <returns>A Task containing a <see cref = "List{T}" /> that contains elements from the input sequence.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
             Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
 
             return source.ToListAsync(CancellationToken.None);
         }
@@ -349,15 +914,2788 @@ namespace System.Data.Entity
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The source query.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "source")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        /// <returns>A Task containing a <see cref = "List{T}" /> that contains elements from the input sequence.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
+        public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
+        {
+            // TODO: Uncomment when code contracts support async
+            //Contract.Requires(source != null);
+            //Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            DbHelpers.ThrowIfNull(source, "source");
+
+            var list = new List<T>();
+            await source.ForEachAsync(list.Add, cancellationToken);
+            return list;
+        }
+
+        /// <summary>
+        ///     Creates a object[] from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        /// </summary>
+        /// <param name="source">The source query.</param>
+        /// <returns>A Task containing a object[] that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<object[]> ToArrayAsync(this IQueryable source)
         {
             Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
 
-            throw new NotImplementedException();
+            return source.ToArrayAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Creates a object[] from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        /// </summary>
+        /// <param name="source">The source query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a object[] that contains elements from the input sequence.</returns>
+        public static async Task<object[]> ToArrayAsync(this IQueryable source, CancellationToken cancellationToken)
+        {
+            // TODO: Uncomment when code contracts support async
+            //Contract.Requires(source != null);
+            //Contract.Ensures(Contract.Result<Task<object[]>>() != null);
+            DbHelpers.ThrowIfNull(source, "source");
+
+            var list = await source.ToListAsync(cancellationToken);
+            return list.ToArray();
+        }
+
+        /// <summary>
+        ///     Creates a T[] from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <returns>A Task containing a T[] that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<T[]> ToArrayAsync<T>(this IQueryable<T> source)
+        {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+
+            return source.ToArrayAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     Creates a T[] from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a T[] that contains elements from the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static async Task<T[]> ToArrayAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
+        {
+            // TODO: Uncomment when code contracts support async
+            //Contract.Requires(source != null);
+            //Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+            DbHelpers.ThrowIfNull(source, "source");
+
+            var list = await source.ToListAsync(cancellationToken);
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, null, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector function and a comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, comparer, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector function and a comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer,
+            CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, comparer, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector and an element selector function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
+        /// <typeparamref name="TElement"/> selected from the input sequence.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, elementSelector, null, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector and an element selector function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
+        /// <typeparamref name="TElement"/> selected from the input sequence.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
+            CancellationToken cancellationToken)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, elementSelector, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector function, a comparer, and an element selector function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
+        /// <typeparamref name="TElement"/> selected from the input sequence.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ToDictionaryAsync(source, keySelector, elementSelector, comparer, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
+        /// according to a specified key selector function, a comparer, and an element selector function.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
+        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
+        /// <typeparamref name="TElement"/> selected from the input sequence.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
+            this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
+            IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
+        {
+            // TODO: Uncomment when code contracts support async
+            //Contract.Requires(source != null);
+            //Contract.Requires(keySelector != null);
+            //Contract.Requires(elementSelector != null);
+            //Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            DbHelpers.ThrowIfNull(source, "source");
+            DbHelpers.ThrowIfNull(keySelector, "keySelector");
+            DbHelpers.ThrowIfNull(elementSelector, "elementSelector");
+
+            var d = new Dictionary<TKey, TElement>(comparer);
+            await source.ForEachAsync(element => d.Add(keySelector(element), elementSelector(element)), cancellationToken);
+            return d;
+        }
+
+        #endregion
+
+        #region Async equivalents of IQueryable extension methods
+
+        // TODO: XML comments for the methods in this region
+        // TODO: Replace if-then-throw with Contracts
+
+        public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.FirstAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _first.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> FirstAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.FirstAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> FirstAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _first_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.FirstOrDefaultAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _firstOrDefault.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> FirstOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.FirstOrDefaultAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> FirstOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _firstOrDefault_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> LastAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.LastAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> LastAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _last.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> LastAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.LastAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> LastAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _last_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.LastOrDefaultAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _lastOrDefault.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> LastOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.LastOrDefaultAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> LastOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _lastOrDefault_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.SingleAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _single.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> SingleAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.SingleAsync(predicate);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> SingleAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _single_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.SingleOrDefaultAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _singleOrDefault.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> SingleOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.SingleOrDefaultAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> SingleOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _singleOrDefault_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, int index)
+        {
+            return source.ElementAtAsync(index, CancellationToken.None);
+        }
+
+        public static Task<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (index < 0)
+            {
+                throw Error.ArgumentOutOfRange("index");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _elementAt.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Constant(index) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> ElementAtOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, int index)
+        {
+            return source.ElementAtOrDefaultAsync(index, CancellationToken.None);
+        }
+
+        public static Task<TSource> ElementAtOrDefaultAsync<TSource>(
+            this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _elementAtOrDefault.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Constant(index) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item)
+        {
+            return source.ContainsAsync(item, CancellationToken.None);
+        }
+
+        public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _contains.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Constant(item, typeof(TSource)) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<bool> ContainsAsync<TSource>(
+            this IQueryable<TSource> source, TSource item, IEqualityComparer<TSource> comparer)
+        {
+            return source.ContainsAsync(item, comparer, CancellationToken.None);
+        }
+
+        public static Task<bool> ContainsAsync<TSource>(
+            this IQueryable<TSource> source, TSource item, IEqualityComparer<TSource> comparer, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _contains_Comparer.MakeGenericMethod(typeof(TSource)),
+                        new[]
+                            {
+                                source.Expression, Expression.Constant(item, typeof(TSource)),
+                                Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))
+                            }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<bool> SequenceEqualAsync<TSource>(
+            this IQueryable<TSource> source1, IEnumerable<TSource> source2)
+        {
+            return source1.SequenceEqualAsync(source2, CancellationToken.None);
+        }
+
+        public static Task<bool> SequenceEqualAsync<TSource>(
+            this IQueryable<TSource> source1, IEnumerable<TSource> source2, CancellationToken cancellationToken)
+        {
+            if (source1 == null)
+            {
+                throw Error.ArgumentNull("source1");
+            }
+            if (source2 == null)
+            {
+                throw Error.ArgumentNull("source2");
+            }
+            var provider = source1.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _sequenceEqual.MakeGenericMethod(typeof(TSource)),
+                        new[] { source1.Expression, GetSourceExpression(source2) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<bool> SequenceEqualAsync<TSource>(
+            this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer)
+        {
+            return source1.SequenceEqualAsync(source2, comparer, CancellationToken.None);
+        }
+
+        public static Task<bool> SequenceEqualAsync<TSource>(
+            this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer,
+            CancellationToken cancellationToken)
+        {
+            if (source1 == null)
+            {
+                throw Error.ArgumentNull("source1");
+            }
+            if (source2 == null)
+            {
+                throw Error.ArgumentNull("source2");
+            }
+            var provider = source1.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _sequenceEqual_Comparer.MakeGenericMethod(typeof(TSource)),
+                        new[]
+                            {
+                                source1.Expression,
+                                GetSourceExpression(source2),
+                                Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))
+                            }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.AnyAsync(CancellationToken.None);
+        }
+
+        public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _any.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<bool> AnyAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.AnyAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<bool> AnyAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _any_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<bool> AllAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.AllAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<bool> AllAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<bool>(
+                    Expression.Call(
+                        null,
+                        _all_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.CountAsync(CancellationToken.None);
+        }
+
+        public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<int>(
+                    Expression.Call(
+                        null,
+                        _count.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int> CountAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.CountAsync(predicate, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int> CountAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<int>(
+                    Expression.Call(
+                        null,
+                        _count_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.LongCountAsync(CancellationToken.None);
+        }
+
+        public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<long>(
+                    Expression.Call(
+                        null,
+                        _longCount.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long> LongCountAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return source.LongCountAsync(predicate);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long> LongCountAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (predicate == null)
+            {
+                throw Error.ArgumentNull("predicate");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<long>(
+                    Expression.Call(
+                        null,
+                        _longCount_Predicate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(predicate) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.MinAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _min.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TResult> MinAsync<TSource, TResult>(
+            this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
+        {
+            return source.MinAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TResult> MinAsync<TSource, TResult>(
+            this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TResult>(
+                    Expression.Call(
+                        null,
+                        _min_Selector.MakeGenericMethod(typeof(TSource), typeof(TResult)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return source.MaxAsync(CancellationToken.None);
+        }
+
+        public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _max.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TResult> MaxAsync<TSource, TResult>(
+            this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
+        {
+            return source.MaxAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TResult> MaxAsync<TSource, TResult>(
+            this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TResult>(
+                    Expression.Call(
+                        null,
+                        _max_Selector.MakeGenericMethod(typeof(TSource), typeof(TResult)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<int> SumAsync(this IQueryable<int> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        public static Task<int> SumAsync(this IQueryable<int> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<int>(
+                    Expression.Call(
+                        null,
+                        _sum_Int,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int?> SumAsync(this IQueryable<int?> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int?> SumAsync(this IQueryable<int?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<int?>(
+                    Expression.Call(
+                        null,
+                        _sum_IntNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<long> SumAsync(this IQueryable<long> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        public static Task<long> SumAsync(this IQueryable<long> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<long>(
+                    Expression.Call(
+                        null,
+                        _sum_Long,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long?> SumAsync(this IQueryable<long?> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long?> SumAsync(this IQueryable<long?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<long?>(
+                    Expression.Call(
+                        null,
+                        _sum_LongNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<float> SumAsync(this IQueryable<float> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        public static Task<float> SumAsync(this IQueryable<float> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float>(
+                    Expression.Call(
+                        null,
+                        _sum_Float,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> SumAsync(this IQueryable<float?> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> SumAsync(this IQueryable<float?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float?>(
+                    Expression.Call(
+                        null,
+                        _sum_FloatNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<double> SumAsync(this IQueryable<double> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        public static Task<double> SumAsync(this IQueryable<double> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _sum_Double,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> SumAsync(this IQueryable<double?> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> SumAsync(this IQueryable<double?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _sum_DoubleNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<decimal> SumAsync(this IQueryable<decimal> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        public static Task<decimal> SumAsync(this IQueryable<decimal> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal>(
+                    Expression.Call(
+                        null,
+                        _sum_Decimal,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> SumAsync(this IQueryable<decimal?> source)
+        {
+            return source.SumAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> SumAsync(this IQueryable<decimal?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal?>(
+                    Expression.Call(
+                        null,
+                        _sum_DecimalNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<int>(
+                    Expression.Call(
+                        null,
+                        _sum_Int_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<int?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<int?>(
+                    Expression.Call(
+                        null,
+                        _sum_IntNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<long>(
+                    Expression.Call(
+                        null,
+                        _sum_Long_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<long?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<long?>(
+                    Expression.Call(
+                        null,
+                        _sum_LongNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float>(
+                    Expression.Call(
+                        null,
+                        _sum_Float_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float?>(
+                    Expression.Call(
+                        null,
+                        _sum_FloatNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _sum_Double_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _sum_DoubleNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal>(
+                    Expression.Call(
+                        null,
+                        _sum_Decimal_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector)
+        {
+            return source.SumAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> SumAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal?>(
+                    Expression.Call(
+                        null,
+                        _sum_DecimalNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<double> AverageAsync(this IQueryable<int> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        public static Task<double> AverageAsync(this IQueryable<int> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _average_Int,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync(this IQueryable<int?> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync(this IQueryable<int?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _average_IntNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<double> AverageAsync(this IQueryable<long> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        public static Task<double> AverageAsync(this IQueryable<long> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _average_Long,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync(this IQueryable<long?> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync(this IQueryable<long?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _average_LongNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<float> AverageAsync(this IQueryable<float> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        public static Task<float> AverageAsync(this IQueryable<float> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float>(
+                    Expression.Call(
+                        null,
+                        _average_Float,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> AverageAsync(this IQueryable<float?> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> AverageAsync(this IQueryable<float?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float?>(
+                    Expression.Call(
+                        null,
+                        _average_FloatNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<double> AverageAsync(this IQueryable<double> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        public static Task<double> AverageAsync(this IQueryable<double> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _average_Double,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync(this IQueryable<double?> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync(this IQueryable<double?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _average_DoubleNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        public static Task<decimal> AverageAsync(this IQueryable<decimal> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        public static Task<decimal> AverageAsync(this IQueryable<decimal> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal>(
+                    Expression.Call(
+                        null,
+                        _average_Decimal,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> AverageAsync(this IQueryable<decimal?> source)
+        {
+            return source.AverageAsync(CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> AverageAsync(this IQueryable<decimal?> source, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal?>(
+                    Expression.Call(
+                        null,
+                        _average_DecimalNullable,
+                        new[] { source.Expression }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _average_Int_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _average_IntNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _average_Long_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _average_LongNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float>(
+                    Expression.Call(
+                        null,
+                        _average_Float_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<float?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<float?>(
+                    Expression.Call(
+                        null,
+                        _average_FloatNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double>(
+                    Expression.Call(
+                        null,
+                        _average_Double_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<double?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<double?>(
+                    Expression.Call(
+                        null,
+                        _average_DoubleNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal>(
+                    Expression.Call(
+                        null,
+                        _average_Decimal_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector)
+        {
+            return source.AverageAsync(selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<decimal?> AverageAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<decimal?>(
+                    Expression.Call(
+                        null,
+                        _average_DecimalNullable_Selector.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> AggregateAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func)
+        {
+            return source.AggregateAsync(func, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TSource> AggregateAsync<TSource>(
+            this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (func == null)
+            {
+                throw Error.ArgumentNull("func");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TSource>(
+                    Expression.Call(
+                        null,
+                        _aggregate.MakeGenericMethod(typeof(TSource)),
+                        new[] { source.Expression, Expression.Quote(func) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TAccumulate> AggregateAsync<TSource, TAccumulate>(
+            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func)
+        {
+            return source.AggregateAsync(seed, func, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TAccumulate> AggregateAsync<TSource, TAccumulate>(
+            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
+            CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (func == null)
+            {
+                throw Error.ArgumentNull("func");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TAccumulate>(
+                    Expression.Call(
+                        null,
+                        _aggregate_Seed.MakeGenericMethod(typeof(TSource), typeof(TAccumulate)),
+                        new[] { source.Expression, Expression.Constant(seed), Expression.Quote(func) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Task<TResult> AggregateAsync<TSource, TAccumulate, TResult>(
+            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
+            Expression<Func<TAccumulate, TResult>> selector)
+        {
+            return source.AggregateAsync(seed, func, selector, CancellationToken.None);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static Task<TResult> AggregateAsync<TSource, TAccumulate, TResult>(
+            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
+            Expression<Func<TAccumulate, TResult>> selector, CancellationToken cancellationToken)
+        {
+            if (source == null)
+            {
+                throw Error.ArgumentNull("source");
+            }
+            if (func == null)
+            {
+                throw Error.ArgumentNull("func");
+            }
+            if (selector == null)
+            {
+                throw Error.ArgumentNull("selector");
+            }
+            var provider = source.Provider as IDbAsyncQueryProvider;
+            if (provider != null)
+            {
+                return provider.ExecuteAsync<TResult>(
+                    Expression.Call(
+                        null,
+                        _aggregate_Seed_Selector.MakeGenericMethod(typeof(TSource), typeof(TAccumulate), typeof(TResult)),
+                        new[] { source.Expression, Expression.Constant(seed), Expression.Quote(func), Expression.Quote(selector) }
+                        ),
+                    cancellationToken);
+            }
+            else
+            {
+                throw Error.IQueryable_Provider_Not_Async();
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private static Expression GetSourceExpression<TSource>(IEnumerable<TSource> source)
+        {
+            var q = source as IQueryable<TSource>;
+            if (q != null)
+            {
+                return q.Expression;
+            }
+            return Expression.Constant(source, typeof(IEnumerable<TSource>));
+        }
+
+        private static MethodInfo GetMethod(string methodName, Func<Type[]> getParameterTypes)
+        {
+            return GetMethod(methodName, getParameterTypes.Method, 0);
+        }
+
+        private static MethodInfo GetMethod(string methodName, Func<Type, Type[]> getParameterTypes)
+        {
+            return GetMethod(methodName, getParameterTypes.Method, 1);
+        }
+
+        private static MethodInfo GetMethod(string methodName, Func<Type, Type, Type[]> getParameterTypes)
+        {
+            return GetMethod(methodName, getParameterTypes.Method, 2);
+        }
+
+        private static MethodInfo GetMethod(string methodName, Func<Type, Type, Type, Type[]> getParameterTypes)
+        {
+            return GetMethod(methodName, getParameterTypes.Method, 3);
+        }
+
+        private static MethodInfo GetMethod(string methodName, MethodInfo getParameterTypesMethod, int genericArgumentsCount)
+        {
+            var candidates = typeof(Queryable).GetMember(methodName, MemberTypes.Method, BindingFlags.Public | BindingFlags.Static);
+
+            foreach (MethodInfo candidate in candidates)
+            {
+                var genericArguments = candidate.GetGenericArguments();
+                if (genericArguments.Length == genericArgumentsCount
+                    && Matches(candidate, (Type[])getParameterTypesMethod.Invoke(null, genericArguments)))
+                {
+                    return candidate;
+                }
+            }
+
+            Contract.Assert(
+                false,
+                String.Format(
+                    "Method '{0}' with parameters '{1}' not found", methodName, PrettyPrint(getParameterTypesMethod, genericArgumentsCount)));
+
+            return null;
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Called from an assert")]
+        private static string PrettyPrint(MethodInfo getParameterTypesMethod, int genericArgumentsCount)
+        {
+            var dummyTypes = new Type[genericArgumentsCount];
+            for (var i = 0; i < genericArgumentsCount; i++)
+            {
+                // TODO: Replace the dummy types with T1, T2, etc.
+                dummyTypes[i] = typeof(object);
+            }
+
+            var parameterTypes = (Type[])getParameterTypesMethod.Invoke(null, dummyTypes);
+            var textRepresentations = new string[parameterTypes.Length];
+
+            for (var i = 0; i < parameterTypes.Length; i++)
+            {
+                textRepresentations[i] = parameterTypes[i].ToString();
+            }
+
+            return "(" + string.Join(", ", textRepresentations) + ")";
+        }
+
+        private static bool Matches(MethodInfo methodInfo, Type[] parameterTypes)
+        {
+            return methodInfo.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes);
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        private static class IdentityFunction<TElement>
+        {
+            public static Func<TElement, TElement> Instance
+            {
+                get { return x => x; }
+            }
         }
 
         #endregion

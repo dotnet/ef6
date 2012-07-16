@@ -5323,6 +5323,14 @@
     <value>Sequence contains more than one element</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="IQueryable_Not_Async" xml:space="preserve">
+    <value>The source IQueryable doesn't implement IDbAsyncEnumerable{0}.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="IQueryable_Provider_Not_Async" xml:space="preserve">
+    <value>The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
   <data name="EmptySequence" xml:space="preserve">
     <value>Sequence contains no elements.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

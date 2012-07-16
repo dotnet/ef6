@@ -12,6 +12,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///   This class implements untyped queries at the object-layer. 
@@ -42,7 +44,7 @@ namespace System.Data.Entity.Core.Objects
         /// Every instance of ObjectQuery get a unique instance of the provider. This helps propagate state information
         /// using the provider through LINQ operators.
         /// </summary>
-        private IQueryProvider _provider;
+        private ObjectQueryProvider _provider;
 
         #endregion
 
@@ -81,39 +83,10 @@ namespace System.Data.Entity.Core.Objects
             get { return _state; }
         }
 
-        #endregion
-
-        #region IQueryable implementation
-
         /// <summary>
-        /// Gets the result element type for this query instance.
+        /// Gets the <see cref="ObjectQueryProvider"/> associated with this query instance.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Type IQueryable.ElementType
-        {
-            get { return _state.ElementType; }
-        }
-
-        /// <summary>
-        /// Gets the expression describing this query. For queries built using
-        /// LINQ builder patterns, returns a full LINQ expression tree; otherwise,
-        /// returns a constant expression wrapping this query. Note that the
-        /// default expression is not cached. This allows us to differentiate
-        /// between LINQ and Entity-SQL queries.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Expression IQueryable.Expression
-        {
-            get { return GetExpression(); }
-        }
-
-        internal abstract Expression GetExpression();
-
-        /// <summary>
-        /// Gets the IQueryProvider associated with this query instance.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IQueryProvider IQueryable.Provider
+        internal ObjectQueryProvider Provider
         {
             get
             {
@@ -269,6 +242,45 @@ namespace System.Data.Entity.Core.Objects
             return ExecuteInternal(mergeOption);
         }
 
+        /// <summary>
+        ///   An asynchronous version of Execute, which
+        ///   allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///   The token to monitor for cancellation requests.
+        /// </param>
+        /// <returns>
+        ///   A Task containing an enumerable for the ObjectQuery results.
+        /// </returns>
+        public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption)
+        {
+            return ExecuteAsync(mergeOption, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///   An asynchronous version of Execute, which
+        ///   allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///   The token to monitor for cancellation requests.
+        /// </param>
+        /// <returns>
+        ///   A Task containing an enumerable for the ObjectQuery results.
+        /// </returns>
+        public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            EntityUtil.CheckArgumentMergeOption(mergeOption);
+            return ExecuteInternalAsync(mergeOption, cancellationToken);
+        }
+
         #region IListSource implementation
 
         /// <summary>
@@ -281,6 +293,43 @@ namespace System.Data.Entity.Core.Objects
         IList IListSource.GetList()
         {
             return GetIListSourceListInternal();
+        }
+
+        #endregion
+
+        #region IQueryable implementation
+
+        /// <summary>
+        /// Gets the result element type for this query instance.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        Type IQueryable.ElementType
+        {
+            get { return _state.ElementType; }
+        }
+
+        /// <summary>
+        /// Gets the expression describing this query. For queries built using
+        /// LINQ builder patterns, returns a full LINQ expression tree; otherwise,
+        /// returns a constant expression wrapping this query. Note that the
+        /// default expression is not cached. This allows us to differentiate
+        /// between LINQ and Entity-SQL queries.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        Expression IQueryable.Expression
+        {
+            get { return GetExpression(); }
+        }
+
+        internal abstract Expression GetExpression();
+
+        /// <summary>
+        /// Gets the IQueryProvider associated with this query instance.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IQueryProvider IQueryable.Provider
+        {
+            get { return Provider; }
         }
 
         #endregion
@@ -321,6 +370,7 @@ namespace System.Data.Entity.Core.Objects
         internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult ExecuteInternal(MergeOption mergeOption);
+        internal abstract Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
         #endregion
     }

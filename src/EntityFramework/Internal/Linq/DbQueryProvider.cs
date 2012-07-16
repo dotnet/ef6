@@ -1,29 +1,33 @@
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     A wrapping query provider that performs expression transformation and then delegates
-    ///     to the <see cref = "ObjectQuery" /> provider.  The <see cref = "IQueryable" /> objects returned are always instances
-    ///     of <see cref = "DbQuery{TResult}" />. This provider is associated with generic <see cref = "DbQuery{T}" /> objects.
+    ///     to the <see cref = "ObjectQuery" /> provider.  The <see cref = "IQueryable" /> objects returned
+    ///     are always instances of <see cref = "DbQuery{TResult}" />. This provider is associated with
+    ///     generic <see cref = "DbQuery{T}" /> objects.
     /// </summary>
-    internal class DbQueryProvider : IQueryProvider
+    internal class DbQueryProvider : IQueryProvider, IDbAsyncQueryProvider
     {
         #region Fields and constructors
 
         private readonly InternalContext _internalContext;
-        private readonly IQueryProvider _provider;
+        private readonly ObjectQueryProvider _provider;
 
         /// <summary>
         ///     Creates a provider that wraps the given provider.
         /// </summary>
         /// <param name = "provider">The provider to wrap.</param>
-        public DbQueryProvider(InternalContext internalContext, IQueryProvider provider)
+        public DbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
         {
             Contract.Requires(internalContext != null);
             Contract.Requires(provider != null);
@@ -73,7 +77,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             _internalContext.Initialize();
 
-            return _provider.Execute<TResult>(expression);
+            return ((IQueryProvider)_provider).Execute<TResult>(expression);
         }
 
         /// <summary>
@@ -83,7 +87,41 @@ namespace System.Data.Entity.Internal.Linq
         {
             _internalContext.Initialize();
 
-            return _provider.Execute(expression);
+            return ((IQueryProvider)_provider).Execute(expression);
+        }
+
+        #endregion
+
+        #region IDbAsyncQueryProvider Members
+
+        IQueryable<TElement> IDbAsyncQueryProvider.CreateQuery<TElement>(Expression expression)
+        {
+            return CreateQuery<TElement>(expression);
+        }
+
+        IQueryable IDbAsyncQueryProvider.CreateQuery(Expression expression)
+        {
+            return CreateQuery(expression);
+        }
+
+        /// <summary>
+        ///     By default, calls the same method on the wrapped provider.
+        /// </summary>
+        Task<TResult> IDbAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        {
+            _internalContext.Initialize();
+
+            return ((IDbAsyncQueryProvider)_provider).ExecuteAsync<TResult>(expression, cancellationToken);
+        }
+
+        /// <summary>
+        ///     By default, calls the same method on the wrapped provider.
+        /// </summary>
+        Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)
+        {
+            _internalContext.Initialize();
+
+            return ((IDbAsyncQueryProvider)_provider).ExecuteAsync(expression, cancellationToken);
         }
 
         #endregion
@@ -114,7 +152,7 @@ namespace System.Data.Entity.Internal.Linq
 
             expression = new DbQueryVisitor().Visit(expression);
 
-            return (ObjectQuery)_provider.CreateQuery(expression);
+            return (ObjectQuery)((IQueryProvider)_provider).CreateQuery(expression);
         }
 
         /// <summary>

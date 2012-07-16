@@ -13382,6 +13382,22 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "The source IQueryable doesn't implement IDbAsyncEnumerable{0}."
+        /// </summary>
+        internal static string IQueryable_Not_Async(object p0)
+        {
+            return EntityRes.GetString(EntityRes.IQueryable_Not_Async, p0);
+        }
+
+        /// <summary>
+        /// A string like "The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider."
+        /// </summary>
+        internal static string IQueryable_Provider_Not_Async
+        {
+            get { return EntityRes.GetString(EntityRes.IQueryable_Provider_Not_Async); }
+        }
+
+        /// <summary>
         /// A string like "Sequence contains no elements."
         /// </summary>
         internal static string EmptySequence
@@ -14938,6 +14954,22 @@ namespace System.Data.Entity.Resources
         internal static Exception MoreThanOneElement()
         {
             return new InvalidOperationException(Strings.MoreThanOneElement);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The source IQueryable doesn't implement IDbAsyncEnumerable{0}."
+        /// </summary>
+        internal static Exception IQueryable_Not_Async(object p0)
+        {
+            return new InvalidOperationException(Strings.IQueryable_Not_Async(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider."
+        /// </summary>
+        internal static Exception IQueryable_Provider_Not_Async()
+        {
+            return new InvalidOperationException(Strings.IQueryable_Provider_Not_Async);
         }
 
         /// <summary>
@@ -16659,6 +16691,8 @@ namespace System.Data.Entity.Resources
         internal const string EnableMigrations_NoContext = "EnableMigrations_NoContext";
         internal const string EnableMigrations_NoContextWithName = "EnableMigrations_NoContextWithName";
         internal const string MoreThanOneElement = "MoreThanOneElement";
+        internal const string IQueryable_Not_Async = "IQueryable_Not_Async";
+        internal const string IQueryable_Provider_Not_Async = "IQueryable_Provider_Not_Async";
         internal const string EmptySequence = "EmptySequence";
         
         static EntityRes loader = null;

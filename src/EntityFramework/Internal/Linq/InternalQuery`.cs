@@ -171,13 +171,13 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     The LINQ query provider for the underlying <see cref = "ObjectQuery" />.
         /// </summary>
-        public virtual IQueryProvider ObjectQueryProvider
+        public virtual ObjectQueryProvider ObjectQueryProvider
         {
             get
             {
                 Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
-                return ((IQueryable)_objectQuery).Provider;
+                return _objectQuery.Provider;
             }
         }
 

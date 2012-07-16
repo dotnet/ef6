@@ -5,7 +5,6 @@
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
-    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -99,7 +98,7 @@
             get { throw new NotImplementedException(); }
         }
 
-        IQueryProvider IInternalQuery.ObjectQueryProvider
+        ObjectQueryProvider IInternalQuery.ObjectQueryProvider
         {
             get { throw new NotImplementedException(); }
         }

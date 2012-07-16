@@ -1,17 +1,21 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// LINQ query provider implementation.
     /// </summary>
-    internal sealed class ObjectQueryProvider : IQueryProvider
+    internal sealed class ObjectQueryProvider : IQueryProvider, IDbAsyncQueryProvider
     {
         // Although ObjectQuery contains a reference to ObjectContext, it is possible
         // that IQueryProvider methods be directly invoked from the ObjectContext.
@@ -45,23 +49,55 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
+        /// Creates a new query from an expression.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the query.</typeparam>
+        /// <param name="expression">Expression forming the query.</param>
+        /// <returns>A new <see cref="ObjectQuery{S}"/> instance.</returns>
+        private ObjectQuery<TElement> CreateQuery<TElement>(Expression expression)
+        {
+            return new ObjectQuery<TElement>(_query == null
+                ? new ELinqQueryState(typeof(TElement), _context, expression)
+                : new ELinqQueryState(typeof(TElement), _query, expression));
+        }
+
+        /// <summary>
+        /// Provides an untyped method capable of creating a strong-typed ObjectQuery
+        /// (based on the <paramref name="ofType"/> argument) and returning it as an
+        /// instance of the untyped (in a generic sense) ObjectQuery base class.
+        /// </summary>
+        /// <param name="expression">The LINQ expression that defines the new query</param>
+        /// <param name="ofType">The result type of the new ObjectQuery</param>
+        /// <returns>A new <see cref="ObjectQuery{ofType}"/>, as an instance of ObjectQuery</returns>
+        private ObjectQuery CreateQuery(Expression expression, Type ofType)
+        {
+            ObjectQueryState queryState = _query == null
+                ?  new ELinqQueryState(ofType, _context, expression)
+                :  new ELinqQueryState(ofType, _query, expression);
+
+            return queryState.CreateQuery();
+        }
+
+        #region IQueryProvider
+
+        /// <summary>
         /// Creates a new query instance using the given LINQ expresion.
         /// The current query is used to produce the context for the new query, but none of its logic
         /// is used.
         /// </summary>
-        /// <typeparam name="S">Element type for query result.</typeparam>
+        /// <typeparam name="TElement">Element type for query result.</typeparam>
         /// <param name="expression">LINQ expression forming the query.</param>
         /// <returns>ObjectQuery implementing the expression logic.</returns>
-        IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
+        IQueryable<TElement> IQueryProvider.CreateQuery<TElement>(Expression expression)
         {
             DbHelpers.ThrowIfNull(expression, "expression");
 
-            if (!typeof(IQueryable<S>).IsAssignableFrom(expression.Type))
+            if (!typeof(IQueryable<TElement>).IsAssignableFrom(expression.Type))
             {
                 throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
 
-            var query = CreateQuery<S>(expression);
+            var query = CreateQuery<TElement>(expression);
 
             return query;
         }
@@ -72,14 +108,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// The current query is used to produce the context for the new query, but none of its logic
         /// is used.
         /// </summary>
-        /// <typeparam name="S">Type of returned value.</typeparam>
+        /// <typeparam name="TResult">Type of returned value.</typeparam>
         /// <param name="expression">Expression to evaluate.</param>
         /// <returns>Single result from execution.</returns>
-        S IQueryProvider.Execute<S>(Expression expression)
+        TResult IQueryProvider.Execute<TResult>(Expression expression)
         {
             DbHelpers.ThrowIfNull(expression, "expression");
 
-            var query = CreateQuery<S>(expression);
+            var query = CreateQuery<TResult>(expression);
 
             return ExecuteSingle(query, expression);
         }
@@ -121,51 +157,39 @@ namespace System.Data.Entity.Core.Objects.ELinq
             DbHelpers.ThrowIfNull(expression, "expression");
 
             var query = CreateQuery(expression, expression.Type);
-            var objQuery = Enumerable.Cast<object>(query);
+            var objQuery = ((IEnumerable)query).Cast<object>();
             return ExecuteSingle(objQuery, expression);
         }
 
-        /// <summary>
-        /// Creates a new query from an expression.
-        /// </summary>
-        /// <typeparam name="S">The element type of the query.</typeparam>
-        /// <param name="expression">Expression forming the query.</param>
-        /// <returns>A new ObjectQuery&lt;S&gt; instance.</returns>
-        private ObjectQuery<S> CreateQuery<S>(Expression expression)
+        #endregion
+
+        #region IDbAsyncQueryProvider
+
+        IQueryable<TElement> IDbAsyncQueryProvider.CreateQuery<TElement>(Expression expression)
         {
-            ObjectQueryState queryState;
-            if (_query == null)
-            {
-                queryState = new ELinqQueryState(typeof(S), _context, expression);
-            }
-            else
-            {
-                queryState = new ELinqQueryState(typeof(S), _query, expression);
-            }
-            return new ObjectQuery<S>(queryState);
+            return ((IQueryProvider)this).CreateQuery<TElement>(expression);
         }
 
-        /// <summary>
-        /// Provides an untyped method capable of creating a strong-typed ObjectQuery
-        /// (based on the <paramref name="ofType"/> argument) and returning it as an
-        /// instance of the untyped (in a generic sense) ObjectQuery base class.
-        /// </summary>
-        /// <param name="expression">The LINQ expression that defines the new query</param>
-        /// <param name="ofType">The result type of the new ObjectQuery</param>
-        /// <returns>A new ObjectQuery&lt;ofType&gt;, as an instance of ObjectQuery</returns>
-        private ObjectQuery CreateQuery(Expression expression, Type ofType)
+        Task<TResult> IDbAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
-            ObjectQueryState queryState;
-            if (_query == null)
-            {
-                queryState = new ELinqQueryState(ofType, _context, expression);
-            }
-            else
-            {
-                queryState = new ELinqQueryState(ofType, _query, expression);
-            }
-            return queryState.CreateQuery();
+            var query = CreateQuery<TResult>(expression);
+
+            return ExecuteSingleAsync(query, expression, cancellationToken);
         }
+
+        IQueryable IDbAsyncQueryProvider.CreateQuery(Expression expression)
+        {
+            return ((IQueryProvider)this).CreateQuery(expression);
+        }
+
+        Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)
+        {
+            var query = CreateQuery(expression, expression.Type);
+            var objQuery = ((IDbAsyncEnumerable)query).Cast<object>();
+            return ExecuteSingleAsync(objQuery, expression, cancellationToken);
+        }
+
+        #endregion
 
         #region Internal Utility API
 
@@ -173,7 +197,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// Uses an expression-specific 'materialization' function to produce
         /// a singleton result from an IEnumerable query result. The function
         /// used depends on the semantics required by the expression that is
-        /// the root of the query. First,FirstOrDefault and SingleOrDefault are
+        /// the root of the query. First, FirstOrDefault and SingleOrDefault are
         /// currently handled as special cases, and the default behavior is to 
         /// use the Enumerable.Single materialization pattern.
         /// </summary>
@@ -208,6 +232,35 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             return (sequence) => { return sequence.Single(); };
+        }
+
+        internal static Task<TResult> ExecuteSingleAsync<TResult>(IDbAsyncEnumerable<TResult> query, Expression queryRoot, CancellationToken cancellationToken)
+        {
+            return GetAsyncElementFunction<TResult>(queryRoot)(query, cancellationToken);
+        }
+
+        private static Func<IDbAsyncEnumerable<TResult>, CancellationToken, Task<TResult>> GetAsyncElementFunction<TResult>(Expression queryRoot)
+        {
+            SequenceMethod seqMethod;
+            if (ReflectionUtil.TryIdentifySequenceMethod(queryRoot, true /*unwrapLambdas*/, out seqMethod))
+            {
+                switch (seqMethod)
+                {
+                    case SequenceMethod.First:
+                    case SequenceMethod.FirstPredicate:
+                        return (sequence, cancellationToken) => { return sequence.FirstAsync(cancellationToken); };
+
+                    case SequenceMethod.FirstOrDefault:
+                    case SequenceMethod.FirstOrDefaultPredicate:
+                        return (sequence, cancellationToken) => { return sequence.FirstOrDefaultAsync(cancellationToken); };
+
+                    case SequenceMethod.SingleOrDefault:
+                    case SequenceMethod.SingleOrDefaultPredicate:
+                        return (sequence, cancellationToken) => { return sequence.SingleOrDefaultAsync(cancellationToken); };
+                }
+            }
+
+            return (sequence, cancellationToken) => { return sequence.SingleAsync(cancellationToken); };
         }
 
         #endregion

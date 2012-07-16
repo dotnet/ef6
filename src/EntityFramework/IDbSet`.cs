@@ -131,6 +131,8 @@
         TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity;
     }
 
+    #region Interface Member Contracts
+
     [ContractClassFor(typeof(IDbSet<>))]
     internal abstract class IDbSetContracts<TEntity> : IDbSet<TEntity>
         where TEntity : class
@@ -206,4 +208,6 @@
             throw new NotImplementedException();
         }
     }
+
+    #endregion
 }

@@ -92,11 +92,9 @@
         }
 
         /// <inheritdoc/>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "keyValues")]
-        public override Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        public override async Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
-            throw new NotImplementedException();
+            return await _internalSet.FindAsync(cancellationToken, keyValues);
         }
 
         /// <inheritdoc/>

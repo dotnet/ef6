@@ -90,8 +90,7 @@
 
             bool hasResults = refreshedValue != null;
             entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
-                .Returns(() => null);
-            entityReferenceMock.Setup(m => m.GetResults<object>(null)).Returns(new[] { refreshedValue });
+                .Returns(() => CreateMockObjectQuery(refreshedValue).Object);
 
             return entityReferenceMock;
         }

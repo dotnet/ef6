@@ -2487,18 +2487,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _isLoaded = false;
         }
 
-        /// <summary>
-        ///  This method is very similar to the private method in Query of U class
-        ///  Only difference is that it calls meterializer with a overload which does
-        ///  not skip the deleted items.
-        /// </summary>
-        /// <param name="query">query of U</param>
-        /// <returns></returns>
-        internal virtual IEnumerable<U> GetResults<U>(ObjectQuery<U> query)
-        {
-            return query.Execute(query.MergeOption);
-        }
-
         internal RelatedEnd GetOtherEndOfRelationship(IEntityWrapper wrappedEntity)
         {
             Contract.Requires(wrappedEntity != null, "IEntityWrapper instance is null.");

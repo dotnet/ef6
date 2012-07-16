@@ -243,7 +243,7 @@ namespace System.Data.Entity.Core.Objects
         ///   A Task containing an enumerable for the ObjectQuery results.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
+        public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
         {
             return ExecuteAsync(mergeOption, CancellationToken.None);
         }
@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.Objects
         ///   A Task containing an enumerable for the ObjectQuery results.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
 
@@ -773,6 +773,12 @@ namespace System.Data.Entity.Core.Objects
         internal override ObjectResult ExecuteInternal(MergeOption mergeOption)
         {
             return GetResults(mergeOption);
+        }
+
+        /// <inheritdoc/>
+        internal async override Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            return await GetResultsAsync(mergeOption, cancellationToken);
         }
 
         /// <summary>
