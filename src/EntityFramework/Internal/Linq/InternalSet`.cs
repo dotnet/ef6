@@ -6,12 +6,14 @@
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
+    using System.Threading;
 
     internal class InternalSet<TEntity> : InternalQuery<TEntity>, IInternalSet<TEntity>
         where TEntity : class
@@ -25,7 +27,7 @@
         private Type _baseType;
 
         /// <summary>
-        ///     Creates a new query that will be backed by the given InternalContext.
+        ///     Creates a new set that will be backed by the given InternalContext.
         /// </summary>
         /// <param name = "internalContext">The backing context.</param>
         public InternalSet(InternalContext internalContext)
@@ -167,6 +169,18 @@
                 return null;
             }
 
+            try
+            {
+                return BuildFindQuery(key).SingleOrDefault();
+            }
+            catch (EntitySqlException ex)
+            {
+                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
+            }
+        }
+
+        private ObjectQuery<TEntity> BuildFindQuery(WrappedEntityKey key)
+        {
             var queryBuilder = new StringBuilder();
             queryBuilder.AppendFormat("SELECT VALUE X FROM {0} AS X WHERE ", QuotedEntitySetName);
 
@@ -185,16 +199,7 @@
                 parameters[i] = new ObjectParameter(name, entityKeyValues[i].Value);
             }
 
-            try
-            {
-                return
-                    InternalContext.ObjectContext.CreateQuery<TEntity>(queryBuilder.ToString(), parameters).
-                        SingleOrDefault();
-            }
-            catch (EntitySqlException ex)
-            {
-                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
-            }
+            return InternalContext.ObjectContext.CreateQuery<TEntity>(queryBuilder.ToString(), parameters);
         }
 
         #endregion
@@ -559,18 +564,72 @@
         #region Raw SQL query
 
         /// <summary>
-        ///     Executes the given SQL query against the database materializing entities into the entity set that
-        ///     backs this set.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the database
+        ///     materializing entities into the entity set that backs this set.
         /// </summary>
         /// <param name = "sql">The SQL quey.</param>
         /// <param name = "asNoTracking">if <c>true</c> then the entities are not tracked, otherwise they are.</param>
         /// <param name = "parameters">The parameters.</param>
         /// <returns>The query results.</returns>
-        public IEnumerable ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
         {
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
-            return InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(sql, EntitySetName, mergeOption, parameters);
+
+            return new LazyEnumerator<TEntity>(() =>
+            {
+                Initialize();
+
+                var disposableEnumerable = InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
+                    sql, EntitySetName, mergeOption, parameters);
+                try
+                {
+                    var result = disposableEnumerable.GetEnumerator();
+                    return result;
+                }
+                catch
+                {
+                    // if there is a problem creating the enumerator, we should dispose
+                    // the enumerable (if there is no problem, the enumerator will take 
+                    // care of the dispose)
+                    disposableEnumerable.Dispose();
+                    throw;
+                }
+
+            });
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the database
+        ///     materializing entities into the entity set that backs this set.
+        /// </summary>
+        /// <param name = "sql">The SQL quey.</param>
+        /// <param name = "asNoTracking">if <c>true</c> then the entities are not tracked, otherwise they are.</param>
+        /// <param name = "parameters">The parameters.</param>
+        /// <returns>The query results.</returns>
+        public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
+        {
+            Initialize();
+            var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
+
+            return new LazyAsyncEnumerator<object>(async () =>
+                {
+                    var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
+                        sql, EntitySetName, mergeOption, CancellationToken.None, parameters);
+
+                    try
+                    {
+                        return ((IDbAsyncEnumerable<TEntity>)disposableEnumerable).GetAsyncEnumerator();
+                    }
+                    catch
+                    {
+                        // if there is a problem creating the enumerator, we should dispose
+                        // the enumerable (if there is no problem, the enumerator will take 
+                        // care of the dispose)
+                        disposableEnumerable.Dispose();
+                        throw;
+                    }
+                });
         }
 
         #endregion
@@ -606,13 +665,27 @@
         #region IEnumerable
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the backing query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         public override IEnumerator<TEntity> GetEnumerator()
         {
             Initialize();
             return base.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}"/> which when enumerated will execute the backing query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        public override IDbAsyncEnumerator<TEntity> GetAsyncEnumerator()
+        {
+            Initialize();
+            return base.GetAsyncEnumerator();
         }
 
         #endregion

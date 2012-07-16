@@ -341,6 +341,11 @@
     <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactory.cs" />
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerableExtensions.cs" />
+    <Compile Include="Infrastructure\DbSqlSetQuery.cs" />
+    <Compile Include="Infrastructure\DbSqlSetQuery`.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerator.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
     <Compile Include="Internal\IDbEnumerator.cs" />
@@ -348,6 +353,8 @@
     <Compile Include="Internal\DefaultModelCacheKeyFactory.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKey.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKeyFactory.cs" />
+    <Compile Include="Internal\LazyAsyncEnumerator.cs" />
+    <Compile Include="Internal\LazyEnumerator`.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
@@ -1209,8 +1216,8 @@
     <Compile Include="Edm\Validation\Internal\DataModelValidationRule`.cs" />
     <Compile Include="EntityState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
-    <Compile Include="Infrastructure\IDbAsyncEnumerator.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerable`.cs" />
+    <Compile Include="Infrastructure\IDbAsyncEnumerator`.cs" />
     <Compile Include="Infrastructure\DbConnectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1550,7 +1557,6 @@
     <Compile Include="Internal\InternalContext.cs" />
     <Compile Include="Internal\InternalSqlNonSetQuery.cs" />
     <Compile Include="Internal\InternalSqlQuery.cs" />
-    <Compile Include="Internal\InternalSqlQuery`.cs" />
     <Compile Include="Internal\InternalSqlSetQuery.cs" />
     <Compile Include="Internal\LazyInternalConnection.cs" />
     <Compile Include="Internal\LazyInternalContext.cs" />

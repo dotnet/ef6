@@ -246,13 +246,13 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated.</returns>
-        public DbSqlQuery<TEntity> SqlQuery(string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlSetQuery{TEntity}" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlSetQuery<TEntity> SqlQuery(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new DbSqlQuery<TEntity>(new InternalSqlSetQuery(_internalSet, sql, false, parameters));
+            return new DbSqlSetQuery<TEntity>(new InternalSqlSetQuery(_internalSet, sql, false, parameters));
         }
 
         #endregion

@@ -1,14 +1,14 @@
 ﻿namespace System.Data.Entity.Infrastructure
 {
+    using System.Collections;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Asynchronous version of the IEnumerator interface that allows elements to be retrieved asynchronously.
+    /// Asynchronous version of the <see cref="IEnumerator"/> interface that allows elements to be retrieved asynchronously.
     /// It is used to interact with Entity Framework queries and shouldn't be implemented by custom classes.
     /// </summary>
-    /// <typeparam name="T">Element type</typeparam>
-    public interface IDbAsyncEnumerator<out T>
+    public interface IDbAsyncEnumerator : IDisposable
     {
         /// <summary>
         /// Advances the enumerator to the next element in the sequence, returning the result asynchronously.
@@ -24,6 +24,6 @@
         /// <summary>
         /// Gets the current element in the iteration. 
         /// </summary>
-        T Current { get; }
+        object Current { get; }
     }
 }

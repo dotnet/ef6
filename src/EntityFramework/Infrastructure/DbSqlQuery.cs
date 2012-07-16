@@ -1,26 +1,22 @@
 ﻿namespace System.Data.Entity.Infrastructure
 {
     using System.Collections;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
-    ///     Represents a SQL query for entities that is created from a <see cref = "DbContext" /> 
+    ///     Represents a SQL query for non-entities that is created from a <see cref = "DbContext" /> 
     ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref = "DbSet" /> instance for the 
-    ///     entity type. The query is not executed when this object is created; it is executed
+    ///     Instances of this class are obtained from the <see cref = "DbContext.Database" /> instance.
+    ///     The query is not executed when this object is created; it is executed
     ///     each time it is enumerated, for example by using foreach.
-    ///     SQL queries for non-entities are created using the <see cref = "DbContext.Database" />.
-    ///     See <see cref = "DbSqlQuery{TEntity}" /> for a generic version of this class.
+    ///     SQL queries for entities are created using the <see cref = "DbSet" />.
+    ///     See <see cref = "DbSqlQuery{TElement}" /> for a generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public class DbSqlQuery : IEnumerable, IListSource, IDbAsyncEnumerable<object>
+    public class DbSqlQuery : IEnumerable, IListSource, IDbAsyncEnumerable
     {
         #region Constructors and fields
 
@@ -40,10 +36,10 @@
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the elements.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
         /// <returns>
-        ///     An <see cref = "T:System.Collections.IEnumerator" /> object that can be used to iterate through the elements.
+        ///     An <see cref="IEnumerator"/> object that can be used to iterate through the elements.
         /// </returns>
         public IEnumerator GetEnumerator()
         {
@@ -55,84 +51,15 @@
         #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        ///     Returns an <see cref="IDbAsyncEnumerable"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        /// <returns>
+        ///     An <see cref="IDbAsyncEnumerable"/> object that can be used to iterate through the elements.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IDbAsyncEnumerator<object> IDbAsyncEnumerable<object>.GetAsyncEnumerator()
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region IDbAsyncEnumerable extension methods
-
-        /// <summary>
-        ///     Enumerates the SQL query asynchronously and executes the provided action on each element.
-        /// </summary>
-        /// <param name="action">The action to be executed.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task ForEachAsync(Action<object> action)
-        {
-            Contract.Requires(action != null);
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     Enumerates the SQL query asynchronously and executes the provided action on each element.
-        /// </summary>
-        /// <param name="action">The action to be executed.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task ForEachAsync(Action<object> action, CancellationToken cancellationToken)
-        {
-            Contract.Requires(action != null);
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     Creates a <see cref = "List{Object}" /> from the SQL query by enumerating it asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{Object}" /> that contains elements from the input sequence.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task<List<object>> ToListAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     Creates a <see cref = "List{Object}" /> from the SQL query by enumerating it asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{Object}" /> that contains elements from the input sequence.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task<List<object>> ToListAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region AsNoTracking
-
-        /// <summary>
-        ///     Returns a new query where the results of the query will not be tracked by the associated
-        ///     <see cref = "DbContext" />.
-        /// </summary>
-        /// <returns>A new query with no-tracking applied.</returns>
-        public DbSqlQuery AsNoTracking()
-        {
-            return new DbSqlQuery(InternalQuery.AsNoTracking());
+            return _internalQuery.GetAsyncEnumerator();
         }
 
         #endregion

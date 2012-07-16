@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -87,6 +88,16 @@
             throw new NotImplementedException();
         }
 
+        Infrastructure.IDbAsyncEnumerator<TEntity> IInternalQuery<TEntity>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        Infrastructure.IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
         IEnumerator<TEntity> IInternalQuery<TEntity>.GetEnumerator()
         {
             throw new NotImplementedException();
@@ -122,7 +133,12 @@
             throw new NotImplementedException();
         }
 
-        IEnumerable IInternalSet.ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        IEnumerator IInternalSet.ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        IDbAsyncEnumerator IInternalSet.ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
         {
             throw new NotImplementedException();
         }

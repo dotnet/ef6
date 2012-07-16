@@ -3433,14 +3433,20 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A Task containing a single integer return value.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "commandText")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = " parameters")]
-        public virtual Task<int> ExecuteStoreCommandAsync(
+        public async virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            throw new NotImplementedException();
+            await EnsureConnectionAsync(cancellationToken);
+
+            try
+            {
+                var command = CreateStoreCommand(commandText, parameters);
+                return await command.ExecuteNonQueryAsync(cancellationToken);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
         }
 
         /// <summary>
@@ -3474,9 +3480,6 @@ namespace System.Data.Entity.Core.Objects
             return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, mergeOption, parameters);
         }
 
-        /// <summary>
-        /// See ExecuteStoreQuery method.
-        /// </summary>
         private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
@@ -3544,15 +3547,12 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "commandText")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = " parameters")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText,
             CancellationToken cancellationToken, params object[] parameters)
         {
-            throw new NotImplementedException();
+            return ExecuteStoreQueryInternalAsync<TElement>(
+                commandText, /*entitySetName:*/null, MergeOption.AppendOnly, cancellationToken, parameters);
         }
 
         /// <summary>
@@ -3587,18 +3587,56 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters">The parameter values to use for the query.</param>
         /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "commandText")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "mergeOption")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = " parameters")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText,
             string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken, params object[] parameters)
         {
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
-            throw new NotImplementedException();
+            return ExecuteStoreQueryInternalAsync<TElement>(
+                commandText, entitySetName, MergeOption.AppendOnly, cancellationToken, parameters);
+        }
+
+        private async Task<ObjectResult<TElement>> ExecuteStoreQueryInternalAsync<TElement>(
+            string commandText, string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken,
+            params object[] parameters)
+        {
+            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
+            // is loaded into the workspace. If the schema types are not loaded
+            // metadata, cache & query would be unable to reason about the type. We
+            // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
+            // auto-load the user's calling assembly and its referenced assemblies.
+            // If the entities in the user's result spans multiple assemblies, the
+            // user must manually call LoadFromAssembly. *GetCallingAssembly returns
+            // the assembly of the method that invoked the currently executing method.
+            MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
+
+            await EnsureConnectionAsync(cancellationToken);
+            DbDataReader reader = null;
+
+            try
+            {
+                var command = CreateStoreCommand(commandText, parameters);
+                reader = await command.ExecuteReaderAsync(cancellationToken);
+            }
+            catch
+            {
+                // We only release the connection when there is an exception. Otherwise, the ObjectResult is
+                // in charge of releasing it.
+                ReleaseConnection();
+                throw;
+            }
+
+            try
+            {
+                return InternalTranslate<TElement>(reader, entitySetName, mergeOption, true);
+            }
+            catch
+            {
+                reader.Dispose();
+                ReleaseConnection();
+                throw;
+            }
         }
 
         /// <summary>

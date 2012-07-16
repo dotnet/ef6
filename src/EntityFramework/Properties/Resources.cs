@@ -13372,6 +13372,22 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.EnableMigrations_NoContextWithName, p0, p1);
         }
+
+        /// <summary>
+        /// A string like "Sequence contains more than one element"
+        /// </summary>
+        internal static string MoreThanOneElement
+        {
+            get { return EntityRes.GetString(EntityRes.MoreThanOneElement); }
+        }
+
+        /// <summary>
+        /// A string like "Sequence contains no elements."
+        /// </summary>
+        internal static string EmptySequence
+        {
+            get { return EntityRes.GetString(EntityRes.EmptySequence); }
+        }
     } 
 
     /// <summary>
@@ -14914,6 +14930,22 @@ namespace System.Data.Entity.Resources
         internal static Exception EnableMigrations_NoContextWithName(object p0, object p1)
         {
             return new Migrations.Infrastructure.MigrationsException(Strings.EnableMigrations_NoContextWithName(p0, p1));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Sequence contains more than one element"
+        /// </summary>
+        internal static Exception MoreThanOneElement()
+        {
+            return new InvalidOperationException(Strings.MoreThanOneElement);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Sequence contains no elements."
+        /// </summary>
+        internal static Exception EmptySequence()
+        {
+            return new InvalidOperationException(Strings.EmptySequence);
         }
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
@@ -16626,6 +16658,8 @@ namespace System.Data.Entity.Resources
         internal const string EnableMigrations_MultipleContextsWithName = "EnableMigrations_MultipleContextsWithName";
         internal const string EnableMigrations_NoContext = "EnableMigrations_NoContext";
         internal const string EnableMigrations_NoContextWithName = "EnableMigrations_NoContextWithName";
+        internal const string MoreThanOneElement = "MoreThanOneElement";
+        internal const string EmptySequence = "EmptySequence";
         
         static EntityRes loader = null;
         ResourceManager resources;

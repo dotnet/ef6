@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable<object>
+    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable
     {
         #region Fields and constructors
 
@@ -60,9 +60,9 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -74,13 +74,13 @@ namespace System.Data.Entity.Infrastructure
         #region IDbAsyncEnumerable
 
         /// <summary>
-        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IDbAsyncEnumerator<object> IDbAsyncEnumerable<object>.GetAsyncEnumerator()
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
-            throw new NotImplementedException();
+            return InternalQuery.GetAsyncEnumerator();
         }
 
         #endregion

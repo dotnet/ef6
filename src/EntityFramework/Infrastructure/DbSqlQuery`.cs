@@ -5,27 +5,27 @@
     using System.ComponentModel;
     using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
-    ///     Represents a SQL query for entities that is created from a <see cref = "DbContext" /> 
+    ///     Represents a SQL query for non-entities that is created from a <see cref = "DbContext" /> 
     ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref = "DbSet{TEntity}" /> instance for the 
-    ///     entity type. The query is not executed when this object is created; it is executed
+    ///     Instances of this class are obtained from the <see cref = "DbContext.Database" /> instance.
+    ///     The query is not executed when this object is created; it is executed
     ///     each time it is enumerated, for example by using foreach.
-    ///     SQL queries for non-entities are created using the <see cref = "DbContext.Database" />.
+    ///     SQL queries for entities are created using the <see cref = "DbSet{TEntity}" />.
     ///     See <see cref = "DbSqlQuery" /> for a non-generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class DbSqlQuery<TEntity> : IEnumerable<TEntity>, IListSource, IDbAsyncEnumerable<TEntity>
-        where TEntity : class
+    public class DbSqlQuery<TElement> : IEnumerable<TElement>, IDbAsyncEnumerable<TElement>, IListSource
     {
         #region Constructors and fields
 
         private readonly InternalSqlQuery _internalQuery;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref = "DbSqlQuery{TResult}" /> class.
+        /// </summary>
+        /// <param name = "internalQuery">The internal query.</param>
         internal DbSqlQuery(InternalSqlQuery internalQuery)
         {
             _internalQuery = internalQuery;
@@ -36,21 +36,21 @@
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the elements.
+        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// An
-        /// <see cref = "IEnumerator{T}" />
-        /// object that can be used to iterate through the elements.
-        public IEnumerator<TEntity> GetEnumerator()
+        /// <returns>
+        ///     An <see cref = "IEnumerator{TEntity}" /> object that can be used to iterate through the elements.
+        /// </returns>
+        public IEnumerator<TElement> GetEnumerator()
         {
-            return (IEnumerator<TEntity>)_internalQuery.GetEnumerator();
+            return (IEnumerator<TElement>)_internalQuery.GetEnumerator();
         }
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the elements.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
         /// <returns>
-        ///     An <see cref = "T:System.Collections.IEnumerator" /> object that can be used to iterate through the elements.
+        ///     An <see cref="IEnumerator"/> object that can be used to iterate through the elements.
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -62,84 +62,27 @@
         #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
+        ///     Returns an <see cref="IDbAsyncEnumerable{T}"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        /// <returns>
+        ///     An <see cref="IDbAsyncEnumerable{T}"/> object that can be used to iterate through the elements.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
+        IDbAsyncEnumerator<TElement> IDbAsyncEnumerable<TElement>.GetAsyncEnumerator()
         {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region IDbAsyncEnumerable extension methods
-
-        /// <summary>
-        ///     Enumerates the SQL query asynchronously and executes the provided action on each element.
-        /// </summary>
-        /// <param name="action">The action to be executed.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task ForEachAsync(Action<TEntity> action)
-        {
-            Contract.Requires(action != null);
-
-            throw new NotImplementedException();
+            return (IDbAsyncEnumerator<TElement>)_internalQuery.GetAsyncEnumerator();
         }
 
         /// <summary>
-        ///     Enumerates the SQL query asynchronously and executes the provided action on each element.
+        ///     Returns an <see cref="IDbAsyncEnumerable"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <param name="action">The action to be executed.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task ForEachAsync(Action<TEntity> action, CancellationToken cancellationToken)
+        /// <returns>
+        ///     An <see cref="IDbAsyncEnumerable"/> object that can be used to iterate through the elements.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
-            Contract.Requires(action != null);
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     Creates a <see cref = "List{TEntity}" /> from the SQL query by enumerating it asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task<List<TEntity>> ToListAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     Creates a <see cref = "List{TEntity}" /> from the SQL query by enumerating it asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{TEntity}" /> that contains elements from the input sequence.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public Task<List<TEntity>> ToListAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region AsNoTracking
-
-        /// <summary>
-        ///     Returns a new query where the results of the query will not be tracked by the associated
-        ///     <see cref = "DbContext" />.
-        /// </summary>
-        /// <returns>A new query with no-tracking applied.</returns>
-        public DbSqlQuery<TEntity> AsNoTracking()
-        {
-            return new DbSqlQuery<TEntity>(InternalQuery.AsNoTracking());
+            return _internalQuery.GetAsyncEnumerator();
         }
 
         #endregion

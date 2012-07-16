@@ -1,6 +1,7 @@
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Internal.Linq
     /// <summary>
     ///     A wrapping query provider that performs expression transformation and then delegates
     ///     to the <see cref = "ObjectQuery" /> provider.  The <see cref = "IQueryable" /> objects returned
-    ///     are always instances of <see cref = "DbQuery{TResult}" /> when the generic CreateQuery method is
+    ///     are instances of <see cref = "DbQuery{TResult}" /> when the generic CreateQuery method is
     ///     used and are instances of <see cref = "DbQuery" /> when the non-generic CreateQuery method
     ///     is used.  This provider is associated with non-generic <see cref = "DbQuery" /> objects.
     /// </summary>
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Internal.Linq
         ///     Creates a provider that wraps the given provider.
         /// </summary>
         /// <param name = "provider">The provider to wrap.</param>
-        public NonGenericDbQueryProvider(InternalContext internalContext, IQueryProvider provider)
+        public NonGenericDbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
             : base(internalContext, provider)
         {
         }

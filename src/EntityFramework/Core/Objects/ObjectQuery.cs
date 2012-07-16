@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public abstract class ObjectQuery : IEnumerable, IOrderedQueryable, IListSource
+    public abstract class ObjectQuery : IEnumerable, IDbAsyncEnumerable, IOrderedQueryable, IListSource
     {
         #region Private Instance Members
 
@@ -128,22 +129,16 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Properties
 
-        // ----------
-        // Properties
-        // ----------
+        #region IListSource implementation
 
-        // ----------------------
-        // IListSource  Properties
-        // ----------------------
-        /// <summary>
-        ///   IListSource.ContainsListCollection implementation. Always returns true.
-        /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get { return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
-            }
+            // this means that the IList we return is the one which contains our actual data, it is not a collection
+            get { return false; }
         }
+
+        #endregion
 
         /// <summary>
         /// Gets the Command Text (if any) for this ObjectQuery.
@@ -208,25 +203,6 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region Public Methods
-
-        // --------------
-        // Public Methods
-        // --------------
-
-        // ----------------------
-        // IListSource  method
-        // ----------------------
-        /// <summary>
-        ///   IListSource.GetList implementation
-        /// </summary>
-        /// <returns>
-        ///   IList interface over the data to bind
-        /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IList IListSource.GetList()
-        {
-            return GetIListSourceListInternal();
-        }
 
         /// <summary>
         ///   Get the provider-specific command text used to execute this query
@@ -293,12 +269,46 @@ namespace System.Data.Entity.Core.Objects
             return ExecuteInternal(mergeOption);
         }
 
+        #region IListSource implementation
+
+        /// <summary>
+        ///   IListSource.GetList implementation
+        /// </summary>
+        /// <returns>
+        ///   IList interface over the data to bind
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IList IListSource.GetList()
+        {
+            return GetIListSourceListInternal();
+        }
+
+        #endregion
+
         #region IEnumerable implementation
 
+        /// <summary>
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumeratorInternal();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable<T> implementation
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return GetAsyncEnumeratorInternal();
         }
 
         #endregion
@@ -308,6 +318,7 @@ namespace System.Data.Entity.Core.Objects
         #region Internal Methods
 
         internal abstract IEnumerator GetEnumeratorInternal();
+        internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult ExecuteInternal(MergeOption mergeOption);
 

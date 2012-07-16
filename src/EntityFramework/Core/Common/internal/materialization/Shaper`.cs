@@ -283,6 +283,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 get { return _shaper.RootCoordinator.Current; }
             }
 
+            object IDbAsyncEnumerator.Current
+            {
+                get { return _shaper.RootCoordinator.Current; }
+            }
+
             public void Dispose()
             {
                 // Technically, calling GC.SuppressFinalize is not required because the class does not
@@ -373,6 +378,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 get { return _current; }
             }
 
+            object IEnumerator.Current
+            {
+                get { return _current; }
+            }
+
+            object IDbAsyncEnumerator.Current
+            {
+                get { return _current; }
+            }
+
             public void Dispose()
             {
                 // Technically, calling GC.SuppressFinalize is not required because the class does not
@@ -380,11 +395,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // in the future, and prevents an FxCop warning.
                 GC.SuppressFinalize(this);
                 _shaper.Finally();
-            }
-
-            object IEnumerator.Current
-            {
-                get { return _current; }
             }
 
             public bool MoveNext()
@@ -521,6 +531,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 get { return _previousElement; }
             }
 
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
+
+            object IDbAsyncEnumerator.Current
+            {
+                get { return Current; }
+            }
+
             public void Dispose()
             {
                 // Technically, calling GC.SuppressFinalize is not required because the class does not
@@ -528,11 +548,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // in the future, and prevents an FxCop warning.
                 GC.SuppressFinalize(this);
                 _rowEnumerator.Dispose();
-            }
-
-            object IEnumerator.Current
-            {
-                get { return Current; }
             }
 
             public bool MoveNext()
@@ -760,6 +775,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 get { return _current; }
             }
 
+            object IEnumerator.Current
+            {
+                get { return _current; }
+            }
+
+            object IDbAsyncEnumerator.Current
+            {
+                get { return _current; }
+            }
+
             public void Dispose()
             {
                 // Technically, calling GC.SuppressFinalize is not required because the class does not
@@ -767,11 +792,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // in the future, and prevents an FxCop warning.
                 GC.SuppressFinalize(this);
                 _rowEnumerator.Dispose();
-            }
-
-            object IEnumerator.Current
-            {
-                get { return _current; }
             }
 
             public bool MoveNext()

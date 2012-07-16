@@ -58,15 +58,13 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection. 
-        /// </summary>
-        public virtual IEnumerator<T> GetEnumerator()
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator()
         {
             return GetDbEnumerator();
         }
 
-        internal IDbEnumerator<T> GetDbEnumerator()
+        internal virtual IDbEnumerator<T> GetDbEnumerator()
         {
             EnsureCanEnumerateResults();
 
@@ -78,10 +76,7 @@ namespace System.Data.Entity.Core.Objects
 
         #region IDbAsyncEnumerable
 
-        /// <summary>
-        /// Gets an enumerator that can be used to asynchronously enumerate the sequence. 
-        /// </summary>
-        /// <returns>Enumerator for asynchronous enumeration over the sequence.</returns>
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
         {
@@ -124,6 +119,11 @@ namespace System.Data.Entity.Core.Objects
                 }
                 _shaper = null;
             }
+        }
+
+        internal override IDbAsyncEnumerator GetAsyncEnumeratorInternal()
+        {
+            return GetDbEnumerator();
         }
 
         internal override IEnumerator GetEnumeratorInternal()

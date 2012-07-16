@@ -2,6 +2,7 @@
 {
     using System.Collections;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -18,6 +19,7 @@
         Type ElementType { get; }
         Expression Expression { get; }
         IQueryProvider ObjectQueryProvider { get; }
+        IDbAsyncEnumerator GetAsyncEnumerator();
         IEnumerator GetEnumerator();
     }
 }

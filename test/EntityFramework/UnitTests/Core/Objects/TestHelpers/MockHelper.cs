@@ -4,6 +4,8 @@
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.TestHelpers;
     using System.Linq.Expressions;
     using Moq;
 
@@ -92,6 +94,38 @@
             entityReferenceMock.Setup(m => m.GetResults<object>(null)).Returns(new[] { refreshedValue });
 
             return entityReferenceMock;
+        }
+
+        internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(TEntity refreshedValue, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
+        {
+            var shaperMock = CreateShaperMock<TEntity>();
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(() =>
+                new DbEnumeratorShim<TEntity>(((IEnumerable<TEntity>)new[] { refreshedValue }).GetEnumerator()));
+            shaper = shaper ?? shaperMock.Object;
+
+            var objectResultMock = new Mock<ObjectResult<TEntity>>(shaper, null, null)
+            {
+                CallBase = true
+            };
+
+            objectContext = objectContext ?? new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator()).Object;
+            var objectQueryStateMock = new Mock<ObjectQueryState>(typeof(TEntity), objectContext, /*parameters:*/ null, /*span:*/ null)
+            {
+                CallBase = true
+            };
+
+            var objectQueryExecutionPlanMock = new Mock<ObjectQueryExecutionPlan>(MockBehavior.Loose, null, null, null, MergeOption.NoTracking, null, null);
+            objectQueryExecutionPlanMock.Setup(m => m.Execute<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
+                .Returns(() => objectResultMock.Object);
+
+            objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
+
+            var objectQueryMock = new Mock<ObjectQuery<TEntity>>(objectQueryStateMock.Object)
+            {
+                CallBase = true
+            };
+
+            return objectQueryMock;
         }
     }
 }

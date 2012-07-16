@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Internal;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Moq;
     using Xunit;

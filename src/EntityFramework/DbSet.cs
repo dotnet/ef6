@@ -255,13 +255,13 @@
         /// </summary>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbSqlQuery" /> object that will execute the query when it is enumerated.</returns>
-        public DbSqlQuery SqlQuery(string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlSetQuery" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlSetQuery SqlQuery(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
+            return new DbSqlSetQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
         }
 
         #endregion

@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity
 {
-    using System.Collections;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Config;
@@ -434,15 +432,13 @@
         /// <typeparam name = "TElement">The type of object returned by the query.</typeparam>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "IEnumerable{TElement}" /> object that will execute the query when it is enumerated.</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlQuery{TElement}" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlQuery<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return
-                new InternalSqlQuery<TElement>(
-                    new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
+            return new DbSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
         }
 
         /// <summary>
@@ -456,14 +452,14 @@
         /// <param name = "elementType">The type of object returned by the query.</param>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "IEnumerable" /> object that will execute the query when it is enumerated.</returns>
-        public IEnumerable SqlQuery(Type elementType, string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlQuery" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlQuery SqlQuery(Type elementType, string sql, params object[] parameters)
         {
             Contract.Requires(elementType != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters);
+            return new DbSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters));
         }
 
         /// <summary>
@@ -504,15 +500,12 @@
         /// <param name = "parameters">The parameters to apply to the command string.</param>
         /// <returns>A Task containing the result returned by the database after executing the command.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "sql")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parameters")]
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            throw new NotImplementedException();
+            return _internalContext.ExecuteSqlCommandAsync(sql, cancellationToken, parameters);
         }
 
         #endregion
