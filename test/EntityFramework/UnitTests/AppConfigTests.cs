@@ -6,22 +6,18 @@
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.ConfigFile;
+    using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.SqlServer;
-    using System.Data.Entity.SqlServerCompact;
-    using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using Moq;
     using Xunit;
 
     public class AppConfigTests : TestBase
     {
-        public class GetConnectionString
+        public class GetConnectionString : TestBase
         {
             [Fact]
             public void GetConnectionString_from_running_application_config()
@@ -55,7 +51,7 @@
             }
         }
 
-        public class GetDefaultConnectionFactory
+        public class GetDefaultConnectionFactory : TestBase
         {
             private const string SqlExpressBaseConnectionString =
                 @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True";
@@ -103,7 +99,8 @@
             {
                 var factory =
                     new AppConfig(
-                        CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactoryNoParams).AssemblyQualifiedName)).TryGetDefaultConnectionFactory();
+                        CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactoryNoParams).AssemblyQualifiedName)).
+                        TryGetDefaultConnectionFactory();
 
                 Assert.IsType<FakeConnectionFactoryNoParams>(factory);
             }
@@ -131,7 +128,7 @@
                         arguments)).TryGetDefaultConnectionFactory();
 
                 Assert.IsType<FakeConnectionFactoryManyParams>(factory);
-                for (int i = 0; i < arguments.Length; i++)
+                for (var i = 0; i < arguments.Length; i++)
                 {
                     Assert.Equal(arguments[i], ((FakeConnectionFactoryManyParams)factory).Args[i]);
                 }
@@ -142,7 +139,8 @@
             {
                 var factory =
                     new AppConfig(
-                        CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactoryOneParam).AssemblyQualifiedName, "")).TryGetDefaultConnectionFactory();
+                        CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactoryOneParam).AssemblyQualifiedName, "")).
+                        TryGetDefaultConnectionFactory();
 
                 Assert.IsType<FakeConnectionFactoryOneParam>(factory);
                 Assert.Equal("", ((FakeConnectionFactoryOneParam)factory).Arg);
@@ -208,7 +206,8 @@
             public void TryGetDefaultConnectionFactory_can_be_used_to_create_instance_of_SqlConnectionFactory()
             {
                 var factory =
-                    new AppConfig(CreateEmptyConfig().AddDefaultConnectionFactory(SqlConnectionFactoryName, "Some Connection String")).TryGetDefaultConnectionFactory();
+                    new AppConfig(CreateEmptyConfig().AddDefaultConnectionFactory(SqlConnectionFactoryName, "Some Connection String")).
+                        TryGetDefaultConnectionFactory();
 
                 Assert.IsType<SqlConnectionFactory>(factory);
                 Assert.Equal("Some Connection String", ((SqlConnectionFactory)factory).BaseConnectionString);
@@ -248,7 +247,7 @@
             }
         }
 
-        public class ApplyInitializers
+        public class ApplyInitializers : TestBase
         {
             public class FakeForAppConfigWithoutInitializer : DbContextUsingMockInternalContext
             {
@@ -257,7 +256,7 @@
             [Fact]
             public void Context_config_without_initializer_doesnt_affect_initializer()
             {
-                Database.SetInitializer<FakeForAppConfigWithoutInitializer>(
+                Database.SetInitializer(
                     new GenericFakeInitializerForAppConfig<FakeForAppConfigWithoutInitializer>());
                 GenericFakeInitializerForAppConfig<FakeForAppConfigWithoutInitializer>.Reset();
 
@@ -424,8 +423,8 @@
                     CreateEmptyConfig().AddContextConfig(
                         typeof(FakeForAppConfigCtorParam).AssemblyQualifiedName,
                         initializerType: typeof(GenericFakeInitializerForAppConfig<FakeForAppConfigCtorParam>).AssemblyQualifiedName,
-                        initializerParameters: new string[] { "TestValue" },
-                        initializerParameterTypes: new string[] { "System.String" }));
+                        initializerParameters: new[] { "TestValue" },
+                        initializerParameterTypes: new[] { "System.String" }));
 
                 config.InternalApplyInitializers(force: true);
 
@@ -453,7 +452,7 @@
                         typeof(FakeForAppConfigAssumeStringCtorParam).AssemblyQualifiedName,
                         initializerType:
                             typeof(GenericFakeInitializerForAppConfig<FakeForAppConfigAssumeStringCtorParam>).AssemblyQualifiedName,
-                        initializerParameters: new string[] { "StringValue" }));
+                        initializerParameters: new[] { "StringValue" }));
 
                 config.InternalApplyInitializers(force: true);
 
@@ -482,7 +481,7 @@
                         typeof(FakeForAppConfigMultipleCtorParams).AssemblyQualifiedName,
                         initializerType:
                             typeof(GenericFakeInitializerForAppConfig<FakeForAppConfigMultipleCtorParams>).AssemblyQualifiedName,
-                        initializerParameters: new string[] { "TestValueOne", "TestValueTwo" }));
+                        initializerParameters: new[] { "TestValueOne", "TestValueTwo" }));
 
                 config.InternalApplyInitializers(force: true);
 
@@ -506,8 +505,8 @@
                     CreateEmptyConfig().AddContextConfig(
                         typeof(FakeForAppConfigNonStringParams).AssemblyQualifiedName,
                         initializerType: typeof(FakeInitializerForAppConfigNonStringParams).AssemblyQualifiedName,
-                        initializerParameters: new string[] { "3" },
-                        initializerParameterTypes: new string[] { "System.Int32" }));
+                        initializerParameters: new[] { "3" },
+                        initializerParameterTypes: new[] { "System.Int32" }));
 
                 config.InternalApplyInitializers(force: true);
 
@@ -529,8 +528,8 @@
                     CreateEmptyConfig().AddContextConfig(
                         typeof(FakeForAppConfigNonStringParams).AssemblyQualifiedName,
                         initializerType: typeof(FakeInitializerForAppConfigNonStringParams).AssemblyQualifiedName,
-                        initializerParameters: new string[] { "99", "MyString" },
-                        initializerParameterTypes: new string[] { "System.Int32", "System.String" }));
+                        initializerParameters: new[] { "99", "MyString" },
+                        initializerParameterTypes: new[] { "System.Int32", "System.String" }));
 
                 config.InternalApplyInitializers(force: true);
 
@@ -553,8 +552,8 @@
                     CreateEmptyConfig().AddContextConfig(
                         typeof(FakeForAppConfigNonStringParams).AssemblyQualifiedName,
                         initializerType: typeof(FakeInitializerForAppConfigNonStringParams).AssemblyQualifiedName,
-                        initializerParameters: new string[] { "MyString", "99" },
-                        initializerParameterTypes: new string[] { "System.String", "System.Int32" }));
+                        initializerParameters: new[] { "MyString", "99" },
+                        initializerParameterTypes: new[] { "System.String", "System.Int32" }));
 
                 Assert.Equal(
                     new InvalidOperationException(
@@ -1012,41 +1011,117 @@
                 Assert.IsType<InvalidOperationException>(exception.InnerException);
                 Assert.Equal(Strings.Database_FailedToResolveType(initializerName), exception.InnerException.Message);
             }
-
         }
 
-        public class TryGetDbProviderServicesTypeName
+        public class TryGetDbProviderServices : TestBase
         {
             [Fact]
-            public void TryGetDbProviderServicesTypeName_returns_null_if_invariant_name_is_not_in_config()
+            public void TryGetDbProviderServices_returns_null_if_invariant_name_is_not_in_config()
             {
-                Assert.Null(
-                    CreateAppConfig().Providers.TryGetDbProviderServicesTypeName("System.Data.SqlClient"));
+                Assert.Null(CreateAppConfig().Providers.TryGetDbProviderServices("System.Data.SqlClient"));
             }
 
             [Fact]
-            public void TryGetDbProviderServicesTypeName_returns_type_name_if_invariant_name_is_in_config()
+            public void TryGetDbProviderServices_returns_provider_if_invariant_name_is_in_config()
+            {
+                Assert.Same(
+                    ProviderServicesFactoryTests.FakeProviderWithPublicProperty.Instance,
+                    CreateAppConfig(
+                        "Learning.To.Fly", typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName)
+                        .Providers
+                        .TryGetDbProviderServices("Learning.To.Fly"));
+            }
+        }
+
+        public class TryGetMigrationSqlGenerator : TestBase
+        {
+            [Fact]
+            public void TryGetMigrationSqlGenerator_returns_null_if_invariant_name_is_not_in_config()
+            {
+                Assert.Null(CreateAppConfig().Providers.TryGetMigrationSqlGenerator("System.Data.SqlClient"));
+            }
+
+            [Fact]
+            public void TryGetMigrationSqlGenerator_returns_null_if_no_migrations_SQL_generator_is_registered()
+            {
+                Assert.Null(
+                    CreateAppConfig(
+                        "Learning.To.Fly", typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName)
+                        .Providers
+                        .TryGetMigrationSqlGenerator("Learning.To.Fly"));
+            }
+
+            public class MySqlGenerator : MigrationSqlGenerator
+            {
+                public override IEnumerable<MigrationStatement> Generate(
+                    IEnumerable<MigrationOperation> migrationOperations,
+                    string providerManifestToken)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            [Fact]
+            public void TryGetMigrationSqlGenerator_returns_generator_if_registered_in_config()
+            {
+                Assert.IsType<MySqlGenerator>(
+                    CreateAppConfig(
+                        "The.Hamster",
+                        typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
+                        typeof(MySqlGenerator).AssemblyQualifiedName)
+                        .Providers
+                        .TryGetMigrationSqlGenerator("The.Hamster"));
+            }
+
+            [Fact]
+            public void TryGetMigrationSqlGenerator_throws_if_type_cannot_be_loaded()
             {
                 Assert.Equal(
-                    "I.Is.An.Aeroplane",
-                    CreateAppConfig("Learning.To.Fly", "I.Is.An.Aeroplane")
-                        .Providers.TryGetDbProviderServicesTypeName("Learning.To.Fly"));
+                    Strings.SqlGeneratorTypeMissing("Ben.Collins", "The.Stig"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => CreateAppConfig(
+                            "The.Stig",
+                            typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
+                            "Ben.Collins")
+                                  .Providers
+                                  .TryGetMigrationSqlGenerator("The.Stig")).Message);
             }
 
-            private static AppConfig CreateAppConfig(string invariantName = null, string typeName = null)
+            [Fact]
+            public void TryGetMigrationSqlGenerator_throws_if_type_cannot_be_used()
             {
-                var mockEFSection = new Mock<EntityFrameworkSection>();
-                mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
-                
-                var providers = new ProviderCollection();
-                if (!string.IsNullOrEmpty(invariantName))
-                {
-                    providers.AddProvider(invariantName, typeName);
-                }
-                mockEFSection.Setup(m => m.Providers).Returns(providers);
-
-                return new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object);
+                Assert.Equal(
+                    Strings.CreateInstance_BadSqlGeneratorType(typeof(object).ToString(), typeof(MigrationSqlGenerator).ToString()),
+                    Assert.Throws<InvalidOperationException>(
+                        () => CreateAppConfig(
+                            "Jezza",
+                            typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
+                            typeof(object).AssemblyQualifiedName)
+                                  .Providers
+                                  .TryGetMigrationSqlGenerator("Jezza")).Message);
             }
+        }
+
+        private static AppConfig CreateAppConfig(string invariantName = null, string typeName = null, string sqlGeneratorName = null)
+        {
+            var mockEFSection = new Mock<EntityFrameworkSection>();
+            mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
+
+            var providers = new ProviderCollection();
+            if (!string.IsNullOrEmpty(invariantName))
+            {
+                var providerElement = providers.AddProvider(invariantName, typeName);
+                if (sqlGeneratorName != null)
+                {
+                    providerElement.SqlGeneratorElement = new MigrationSqlGeneratorElement
+                        {
+                            SqlGeneratorTypeName = sqlGeneratorName
+                        };
+                }
+            }
+            mockEFSection.Setup(m => m.Providers).Returns(providers);
+
+            return new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object);
         }
     }
 
@@ -1078,11 +1153,25 @@
     {
         public List<string> Args { get; set; }
 
-        public FakeConnectionFactoryManyParams(string arg0, string arg1, string arg2, string arg3, string arg4,
-                                               string arg5, string arg6, string arg7, string arg8, string arg9,
-                                               string arg10)
+        public FakeConnectionFactoryManyParams(
+            string arg0, string arg1, string arg2, string arg3, string arg4,
+            string arg5, string arg6, string arg7, string arg8, string arg9,
+            string arg10)
         {
-            Args = new List<string> { arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10 };
+            Args = new List<string>
+                {
+                    arg0,
+                    arg1,
+                    arg2,
+                    arg3,
+                    arg4,
+                    arg5,
+                    arg6,
+                    arg7,
+                    arg8,
+                    arg9,
+                    arg10
+                };
         }
     }
 
@@ -1093,6 +1182,7 @@
     #endregion
 
     #region Fake Initializers
+
     public enum FakeInitializerCtor
     {
         NoArgs,
@@ -1100,7 +1190,8 @@
         TwoArgs
     }
 
-    public class GenericFakeInitializerForAppConfig<T> : IDatabaseInitializer<T> where T : DbContext
+    public class GenericFakeInitializerForAppConfig<T> : IDatabaseInitializer<T>
+        where T : DbContext
     {
         public GenericFakeInitializerForAppConfig()
         {

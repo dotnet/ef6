@@ -30,10 +30,10 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 var dropPrimaryKeyOperation = new DropPrimaryKeyOperation
-                                                  {
-                                                      Name = Name,
-                                                      Table = Table
-                                                  };
+                    {
+                        Name = Name,
+                        Table = Table
+                    };
 
                 Columns.Each(c => dropPrimaryKeyOperation.Columns.Add(c));
 

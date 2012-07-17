@@ -148,30 +148,30 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         }
 
         private static readonly string[] _syndicationItemToTargetPath = new[]
-                                                                            {
-                                                                                String.Empty,
-                                                                                // SyndicationItemProperty.Custom
-                                                                                XmlConstants.SyndAuthorEmail,
-                                                                                XmlConstants.SyndAuthorName,
-                                                                                XmlConstants.SyndAuthorUri,
-                                                                                XmlConstants.SyndContributorEmail,
-                                                                                XmlConstants.SyndContributorName,
-                                                                                XmlConstants.SyndContributorUri,
-                                                                                XmlConstants.SyndUpdated,
-                                                                                XmlConstants.SyndPublished,
-                                                                                XmlConstants.SyndRights,
-                                                                                XmlConstants.SyndSummary,
-                                                                                XmlConstants.SyndTitle,
-                                                                                XmlConstants.SyndCategoryLabel,
-                                                                                XmlConstants.SyndCategoryScheme,
-                                                                                XmlConstants.SyndCategoryTerm,
-                                                                                XmlConstants.SyndLinkHref,
-                                                                                XmlConstants.SyndLinkHrefLang,
-                                                                                XmlConstants.SyndLinkLength,
-                                                                                XmlConstants.SyndLinkRel,
-                                                                                XmlConstants.SyndLinkTitle,
-                                                                                XmlConstants.SyndLinkType,
-                                                                            };
+            {
+                String.Empty,
+                // SyndicationItemProperty.Custom
+                XmlConstants.SyndAuthorEmail,
+                XmlConstants.SyndAuthorName,
+                XmlConstants.SyndAuthorUri,
+                XmlConstants.SyndContributorEmail,
+                XmlConstants.SyndContributorName,
+                XmlConstants.SyndContributorUri,
+                XmlConstants.SyndUpdated,
+                XmlConstants.SyndPublished,
+                XmlConstants.SyndRights,
+                XmlConstants.SyndSummary,
+                XmlConstants.SyndTitle,
+                XmlConstants.SyndCategoryLabel,
+                XmlConstants.SyndCategoryScheme,
+                XmlConstants.SyndCategoryTerm,
+                XmlConstants.SyndLinkHref,
+                XmlConstants.SyndLinkHrefLang,
+                XmlConstants.SyndLinkLength,
+                XmlConstants.SyndLinkRel,
+                XmlConstants.SyndLinkTitle,
+                XmlConstants.SyndLinkType,
+            };
 
         private static string SyndicationTextContentKindToString(object value)
         {
@@ -179,12 +179,12 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         }
 
         private static readonly string[] _syndicationTextContentKindToString = new[]
-                                                                                   {
-                                                                                       XmlConstants.
-                                                                                           SyndContentKindPlaintext,
-                                                                                       XmlConstants.SyndContentKindHtml,
-                                                                                       XmlConstants.SyndContentKindXHtml
-                                                                                   };
+            {
+                XmlConstants.
+                    SyndContentKindPlaintext,
+                XmlConstants.SyndContentKindHtml,
+                XmlConstants.SyndContentKindXHtml
+            };
 
         #endregion
 

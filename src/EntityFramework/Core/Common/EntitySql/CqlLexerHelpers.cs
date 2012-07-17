@@ -61,12 +61,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionaly 
         /// omitted in the character set bellow.
         private static readonly Char[] _newLineCharacters = {
-                                                                '\u000A', // LF - line feed
-                                                                '\u0085', // NEL - next line
-                                                                '\u000B', // VT - vertical tab
-                                                                '\u2028', // LS - line separator
-                                                                '\u2029' // PS - paragraph separator
-                                                            };
+            '\u000A', // LF - line feed
+            '\u0085', // NEL - next line
+            '\u000B', // VT - vertical tab
+            '\u2028', // LS - line separator
+            '\u2029' // PS - paragraph separator
+        };
 
         /// <summary>
         /// Intializes scanner

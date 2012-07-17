@@ -27,10 +27,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
             var enumTypeMember = new EdmEnumTypeMember
-                                     {
-                                         Name = name,
-                                         Value = value
-                                     };
+                {
+                    Name = name,
+                    Value = value
+                };
 
             enumType.Members.Add(enumTypeMember);
 

@@ -62,10 +62,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 Enum.GetNames(type)
                     .Zip(
                         Enum.GetValues(type).Cast<object>(), (n, v) => new
-                                                                           {
-                                                                               n,
-                                                                               v
-                                                                           })
+                            {
+                                n,
+                                v
+                            })
                     .Each(m => enumType.AddMember(m.n, Convert.ToInt64(m.v, CultureInfo.InvariantCulture)));
             }
             else if (type != enumType.GetClrType())

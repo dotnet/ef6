@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     {
         private const string InvariantNameKey = "invariantName";
         private const string TypeKey = "type";
+        private const string MigrationSqlGeneratorKey = "migrationSqlGenerator";
 
         [ConfigurationProperty(InvariantNameKey, IsRequired = true)]
         public string InvariantName
@@ -19,6 +20,13 @@ namespace System.Data.Entity.Internal.ConfigFile
         {
             get { return (string)this[TypeKey]; }
             set { this[TypeKey] = value; }
+        }
+
+        [ConfigurationProperty(MigrationSqlGeneratorKey)]
+        public MigrationSqlGeneratorElement SqlGeneratorElement
+        {
+            get { return (MigrationSqlGeneratorElement)this[MigrationSqlGeneratorKey]; }
+            set { this[MigrationSqlGeneratorKey] = value; }
         }
     }
 }

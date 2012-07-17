@@ -61,9 +61,9 @@ namespace System.Data.Entity.Migrations.Builders
             Contract.Requires(keyExpression != null);
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation(anonymousArguments)
-                                             {
-                                                 Name = name
-                                             };
+                {
+                    Name = name
+                };
 
             keyExpression
                 .GetPropertyAccessList()
@@ -103,10 +103,10 @@ namespace System.Data.Entity.Migrations.Builders
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
-                      {
-                          Table = _createTableOperation.Name,
-                          IsUnique = unique
-                      };
+                    {
+                        Table = _createTableOperation.Name,
+                        IsUnique = unique
+                    };
 
             indexExpression
                 .GetPropertyAccessList()
@@ -156,12 +156,12 @@ namespace System.Data.Entity.Migrations.Builders
             Contract.Requires(dependentKeyExpression != null);
 
             var addForeignKeyOperation = new AddForeignKeyOperation(anonymousArguments)
-                                             {
-                                                 Name = name,
-                                                 PrincipalTable = principalTable,
-                                                 DependentTable = _createTableOperation.Name,
-                                                 CascadeDelete = cascadeDelete
-                                             };
+                {
+                    Name = name,
+                    PrincipalTable = principalTable,
+                    DependentTable = _createTableOperation.Name,
+                    CascadeDelete = cascadeDelete
+                };
 
             dependentKeyExpression
                 .GetPropertyAccessList()

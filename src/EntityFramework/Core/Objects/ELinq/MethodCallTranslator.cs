@@ -199,26 +199,26 @@
             private static IEnumerable<CallTranslator> GetCallTranslators()
             {
                 return new CallTranslator[]
-                           {
-                               new CanonicalFunctionDefaultTranslator(),
-                               new AsUnicodeFunctionTranslator(),
-                               new AsNonUnicodeFunctionTranslator(),
-                               new MathPowerTranslator(),
-                               new GuidNewGuidTranslator(),
-                               new StringContainsTranslator(),
-                               new StartsWithTranslator(),
-                               new EndsWithTranslator(),
-                               new IndexOfTranslator(),
-                               new SubstringTranslator(),
-                               new RemoveTranslator(),
-                               new InsertTranslator(),
-                               new IsNullOrEmptyTranslator(),
-                               new StringConcatTranslator(),
-                               new TrimTranslator(),
-                               new TrimStartTranslator(),
-                               new TrimEndTranslator(),
-                               new SpatialMethodCallTranslator(),
-                           };
+                    {
+                        new CanonicalFunctionDefaultTranslator(),
+                        new AsUnicodeFunctionTranslator(),
+                        new AsNonUnicodeFunctionTranslator(),
+                        new MathPowerTranslator(),
+                        new GuidNewGuidTranslator(),
+                        new StringContainsTranslator(),
+                        new StartsWithTranslator(),
+                        new EndsWithTranslator(),
+                        new IndexOfTranslator(),
+                        new SubstringTranslator(),
+                        new RemoveTranslator(),
+                        new InsertTranslator(),
+                        new IsNullOrEmptyTranslator(),
+                        new StringConcatTranslator(),
+                        new TrimTranslator(),
+                        new TrimStartTranslator(),
+                        new TrimEndTranslator(),
+                        new SpatialMethodCallTranslator(),
+                    };
             }
 
             private static IEnumerable<SequenceMethodTranslator> GetSequenceMethodTranslators()
@@ -895,47 +895,47 @@
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     var result = new List<MethodInfo>
-                                     {
-                                         //Math functions
-                                         typeof(Math).GetMethod(
-                                             "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Round", BindingFlags.Public | BindingFlags.Static, null,
-                                             new[] { typeof(decimal), typeof(int) }, null),
-                                         typeof(Math).GetMethod(
-                                             "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double), typeof(int) },
-                                             null),
-                                         //Decimal functions
-                                         typeof(Decimal).GetMethod(
-                                             "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                                         typeof(Decimal).GetMethod(
-                                             "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                                         typeof(Decimal).GetMethod(
-                                             "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                                         typeof(Decimal).GetMethod(
-                                             "Round", BindingFlags.Public | BindingFlags.Static, null,
-                                             new[] { typeof(decimal), typeof(int) }, null),
-                                         //String functions
-                                         typeof(String).GetMethod(
-                                             "Replace", BindingFlags.Public | BindingFlags.Instance, null,
-                                             new[] { typeof(String), typeof(String) }, null),
-                                         typeof(String).GetMethod(
-                                             "ToLower", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
-                                         typeof(String).GetMethod(
-                                             "ToUpper", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
-                                         typeof(String).GetMethod(
-                                             "Trim", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
-                                     };
+                        {
+                            //Math functions
+                            typeof(Math).GetMethod(
+                                "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Math).GetMethod(
+                                "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
+                            typeof(Math).GetMethod(
+                                "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Math).GetMethod(
+                                "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
+                            typeof(Math).GetMethod(
+                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Math).GetMethod(
+                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
+                            typeof(Math).GetMethod(
+                                "Round", BindingFlags.Public | BindingFlags.Static, null,
+                                new[] { typeof(decimal), typeof(int) }, null),
+                            typeof(Math).GetMethod(
+                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double), typeof(int) },
+                                null),
+                            //Decimal functions
+                            typeof(Decimal).GetMethod(
+                                "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Decimal).GetMethod(
+                                "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Decimal).GetMethod(
+                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Decimal).GetMethod(
+                                "Round", BindingFlags.Public | BindingFlags.Static, null,
+                                new[] { typeof(decimal), typeof(int) }, null),
+                            //String functions
+                            typeof(String).GetMethod(
+                                "Replace", BindingFlags.Public | BindingFlags.Instance, null,
+                                new[] { typeof(String), typeof(String) }, null),
+                            typeof(String).GetMethod(
+                                "ToLower", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
+                            typeof(String).GetMethod(
+                                "ToUpper", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
+                            typeof(String).GetMethod(
+                                "Trim", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
+                        };
 
                     // Math.Abs
                     foreach (
@@ -1050,11 +1050,11 @@
             {
                 internal MathPowerTranslator()
                     : base(new[]
-                               {
-                                   typeof(Math).GetMethod(
-                                       "Pow", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double), typeof(double) },
-                                       null),
-                               })
+                        {
+                            typeof(Math).GetMethod(
+                                "Pow", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double), typeof(double) },
+                                null),
+                        })
                 {
                 }
 
@@ -1074,10 +1074,10 @@
             {
                 internal GuidNewGuidTranslator()
                     : base(new[]
-                               {
-                                   typeof(Guid).GetMethod("NewGuid", BindingFlags.Public | BindingFlags.Static, null, Type.EmptyTypes, null)
-                                   ,
-                               })
+                        {
+                            typeof(Guid).GetMethod("NewGuid", BindingFlags.Public | BindingFlags.Static, null, Type.EmptyTypes, null)
+                            ,
+                        })
                 {
                 }
 
@@ -1694,14 +1694,14 @@
                 private const string s_FirstWeekOfYearFullName = "Microsoft.VisualBasic.FirstWeekOfYear";
 
                 private static readonly HashSet<string> _supportedIntervals = new HashSet<string>
-                                                                                  {
-                                                                                      Year,
-                                                                                      Month,
-                                                                                      Day,
-                                                                                      Hour,
-                                                                                      Minute,
-                                                                                      Second
-                                                                                  };
+                    {
+                        Year,
+                        Month,
+                        Day,
+                        Hour,
+                        Minute,
+                        Second
+                    };
 
                 internal VBDatePartTranslator(Assembly vbAssembly)
                     : base(GetMethods(vbAssembly))

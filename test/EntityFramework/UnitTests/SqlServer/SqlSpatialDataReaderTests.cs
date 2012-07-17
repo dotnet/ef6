@@ -17,7 +17,7 @@
         {
             var dbGeography = DbGeography.FromText("POINT (90 50)");
             var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeography.ProviderValue, "sys.geography");
-            var sqlSpatialDataReader = new SqlSpatialDataReader(mockSqlDataReader);
+            var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
             var convertedDbGeography = sqlSpatialDataReader.GetGeography(0);
 
@@ -29,7 +29,7 @@
         {
             var dbGeography = DbGeography.FromText("POINT (90 50)");
             var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeography.ProviderValue, "sys.geography");
-            var sqlSpatialDataReader = new SqlSpatialDataReader(mockSqlDataReader);
+            var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
             var convertedDbGeography = sqlSpatialDataReader.GetGeographyAsync(0).Result;
 
@@ -41,7 +41,7 @@
         {
             var dbGeometry = DbGeometry.FromText("POINT (90 50)");
             var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeometry.ProviderValue, "sys.geometry");
-            var sqlSpatialDataReader = new SqlSpatialDataReader(mockSqlDataReader);
+            var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
             var convertedDbGeometry = sqlSpatialDataReader.GetGeometry(0);
 
@@ -53,7 +53,7 @@
         {
             var dbGeometry = DbGeometry.FromText("POINT (90 50)");
             var sqlDataReaderWrapper = CreateSqlDataReaderWrapper(dbGeometry.ProviderValue, "sys.geometry");
-            var sqlSpatialDataReader = new SqlSpatialDataReader(sqlDataReaderWrapper);
+            var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, sqlDataReaderWrapper);
 
             var convertedDbGeometry = sqlSpatialDataReader.GetGeometryAsync(0).Result;
 

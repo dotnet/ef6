@@ -84,18 +84,18 @@
                 Object_Parameter);
             var getEntityWrapperDelegate = lambda.Compile();
             Proxy_GetEntityWrapper = (object proxy) =>
-                                         {
-                                             // This code validates that the wrapper points to the proxy that holds the wrapper.
-                                             // This guards against mischief by switching this wrapper out for another one obtained
-                                             // from a different object.
-                                             var wrapper = ((IEntityWrapper)getEntityWrapperDelegate(proxy));
-                                             if (wrapper != null
-                                                 && !ReferenceEquals(wrapper.Entity, proxy))
-                                             {
-                                                 throw new InvalidOperationException(Strings.EntityProxyTypeInfo_ProxyHasWrongWrapper);
-                                             }
-                                             return wrapper;
-                                         };
+                {
+                    // This code validates that the wrapper points to the proxy that holds the wrapper.
+                    // This guards against mischief by switching this wrapper out for another one obtained
+                    // from a different object.
+                    var wrapper = ((IEntityWrapper)getEntityWrapperDelegate(proxy));
+                    if (wrapper != null
+                        && !ReferenceEquals(wrapper.Entity, proxy))
+                    {
+                        throw new InvalidOperationException(Strings.EntityProxyTypeInfo_ProxyHasWrongWrapper);
+                    }
+                    return wrapper;
+                };
 
             // Create the Wrapper setter
             Proxy_SetEntityWrapper = Expression.Lambda<Func<object, object, object>>(

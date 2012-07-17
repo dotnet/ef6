@@ -267,10 +267,10 @@
                                           from pm in cm.PropertyMappings
                                           where pm.EntityType == entityType
                                           select new
-                                                     {
-                                                         cm.Column,
-                                                         Property = pm
-                                                     })
+                                              {
+                                                  cm.Column,
+                                                  Property = pm
+                                              })
             {
                 if (columnMapping.Property.PropertyPath != null
                     &&
@@ -287,10 +287,10 @@
                     else
                     {
                         existingPropertyMapping = new DbEdmPropertyMapping
-                                                      {
-                                                          Column = columnMapping.Column,
-                                                          PropertyPath = columnMapping.Property.PropertyPath
-                                                      };
+                            {
+                                Column = columnMapping.Column,
+                                PropertyPath = columnMapping.Property.PropertyPath
+                            };
                         propertiesTypeMappingFragment.PropertyMappings.Add(existingPropertyMapping);
                     }
                 }
@@ -412,10 +412,10 @@
                            from tmf in etm.TypeMappingFragments
                            where tmf.Table == tableMapping.Table
                            select new
-                                      {
-                                          TypeMapping = etm,
-                                          Fragment = tmf
-                                      }).SingleOrDefault();
+                               {
+                                   TypeMapping = etm,
+                                   Fragment = tmf
+                               }).SingleOrDefault();
 
             if (mapping != null)
             {
@@ -475,18 +475,18 @@
                            .Where(pm1 => tableMapping.EntityTypes.GetEntityTypes(entitySet).Contains(pm1.EntityType))
                            .Count(pms => pms.IsDefaultDiscriminatorCondition) == 1
                  select new
-                            {
-                                ColumnMapping = cm,
-                                PropertyMapping = pm
-                            }).ToArray().Each(
-                                x =>
-                                    {
-                                        x.PropertyMapping.Conditions.Clear();
-                                        if (x.PropertyMapping.PropertyPath == null)
-                                        {
-                                            x.ColumnMapping.PropertyMappings.Remove(x.PropertyMapping);
-                                        }
-                                    });
+                     {
+                         ColumnMapping = cm,
+                         PropertyMapping = pm
+                     }).ToArray().Each(
+                         x =>
+                             {
+                                 x.PropertyMapping.Conditions.Clear();
+                                 if (x.PropertyMapping.PropertyPath == null)
+                                 {
+                                     x.ColumnMapping.PropertyMappings.Remove(x.PropertyMapping);
+                                 }
+                             });
             }
         }
 

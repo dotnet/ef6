@@ -48,12 +48,12 @@ namespace System.Data.Entity.Migrations.Design
 
             var generatedMigration
                 = new ScaffoldedMigration
-                      {
-                          MigrationId = migrationId,
-                          Language = "vb",
-                          UserCode = Generate(operations, @namespace, className),
-                          DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
-                      };
+                    {
+                        MigrationId = migrationId,
+                        Language = "vb",
+                        UserCode = Generate(operations, @namespace, className),
+                        DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
+                    };
 
             if (!string.IsNullOrWhiteSpace(sourceModel))
             {

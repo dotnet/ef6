@@ -71,9 +71,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(entityTypeMappping != null);
 
             var clone = new DbEntityTypeMapping
-                            {
-                                EntityType = entityTypeMappping.EntityType
-                            };
+                {
+                    EntityType = entityTypeMappping.EntityType
+                };
             entityTypeMappping.Annotations.Copy(clone.Annotations);
 
             return clone;

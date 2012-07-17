@@ -51,7 +51,7 @@ namespace FunctionalTests
 
     #endregion
 
-    public sealed class DataServicesTests
+    public sealed class DataServicesTests : TestBase
     {
         [Fact]
         public void Validate_Basic_DataServices_Attributes()

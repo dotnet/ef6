@@ -29,6 +29,17 @@
         {
             Type contextType = context.GetType();
 
+            if (GetEntityFrameworkVersion(contextType) >= new Version(6, 0))
+            {
+                MessageBox.Show(
+                    "Generating views for Entity Framework version 6 is currently not supported.",
+                    "Entity Framework Power Tools",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return;
+            }
+
             try
             {
                 var selectedItem = _package.DTE2.SelectedItems.Item(1);
@@ -135,6 +146,22 @@
 
                 throw;
             }
+        }
+
+        private Version GetEntityFrameworkVersion(Type contextType)
+        {
+            Contract.Requires(contextType != null);
+
+            while (contextType != null
+                && contextType.FullName != "System.Data.Entity.DbContext"
+                && contextType.Assembly.GetName().Name != "EntityFramework")
+            {
+                contextType = contextType.BaseType;
+            }
+
+            Contract.Assert(contextType != null);
+
+            return contextType.Assembly.GetName().Version;
         }
     }
 }

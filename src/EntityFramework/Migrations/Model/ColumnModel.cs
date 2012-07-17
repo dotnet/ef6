@@ -169,23 +169,23 @@ namespace System.Data.Entity.Migrations.Model
 
         private static readonly Dictionary<PrimitiveTypeKind, int> _typeSize // in bytes
             = new Dictionary<PrimitiveTypeKind, int>
-                  {
-                      { PrimitiveTypeKind.Binary, int.MaxValue },
-                      { PrimitiveTypeKind.Boolean, 1 },
-                      { PrimitiveTypeKind.Byte, 1 },
-                      { PrimitiveTypeKind.DateTime, 8 },
-                      { PrimitiveTypeKind.DateTimeOffset, 10 },
-                      { PrimitiveTypeKind.Decimal, 17 },
-                      { PrimitiveTypeKind.Double, 53 },
-                      { PrimitiveTypeKind.Guid, 16 },
-                      { PrimitiveTypeKind.Int16, 2 },
-                      { PrimitiveTypeKind.Int32, 4 },
-                      { PrimitiveTypeKind.Int64, 8 },
-                      { PrimitiveTypeKind.SByte, 1 },
-                      { PrimitiveTypeKind.Single, 4 },
-                      { PrimitiveTypeKind.String, int.MaxValue },
-                      { PrimitiveTypeKind.Time, 5 },
-                  };
+                {
+                    { PrimitiveTypeKind.Binary, int.MaxValue },
+                    { PrimitiveTypeKind.Boolean, 1 },
+                    { PrimitiveTypeKind.Byte, 1 },
+                    { PrimitiveTypeKind.DateTime, 8 },
+                    { PrimitiveTypeKind.DateTimeOffset, 10 },
+                    { PrimitiveTypeKind.Decimal, 17 },
+                    { PrimitiveTypeKind.Double, 53 },
+                    { PrimitiveTypeKind.Guid, 16 },
+                    { PrimitiveTypeKind.Int16, 2 },
+                    { PrimitiveTypeKind.Int32, 4 },
+                    { PrimitiveTypeKind.Int64, 8 },
+                    { PrimitiveTypeKind.SByte, 1 },
+                    { PrimitiveTypeKind.Single, 4 },
+                    { PrimitiveTypeKind.String, int.MaxValue },
+                    { PrimitiveTypeKind.Time, 5 },
+                };
 
         /// <summary>
         ///     Determines if this column is a narrower data type than another column.

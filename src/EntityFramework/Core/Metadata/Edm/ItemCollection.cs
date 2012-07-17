@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     /// <summary>
     /// Class for representing a collection of items.
-    /// Most of the implemetation for actual maintainance of the collection is
+    /// Most of the implementation for actual maintenance of the collection is
     /// done by MetadataCollection
     /// </summary>
     [CLSCompliant(false)]

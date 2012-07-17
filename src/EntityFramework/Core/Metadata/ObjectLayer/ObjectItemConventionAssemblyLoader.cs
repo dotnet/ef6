@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -31,7 +32,7 @@
 
         protected override void LoadTypesFromAssembly()
         {
-            foreach (var type in EntityUtil.GetTypesSpecial(SourceAssembly))
+            foreach (var type in SourceAssembly.GetAccessibleTypes())
             {
                 EdmType cspaceType;
                 if (TryGetCSpaceTypeMatch(type, out cspaceType))
@@ -510,9 +511,9 @@
                 var property = new EdmProperty(
                     cspaceProperty.Name, TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = false
-                                          }), clrProperty, type.TypeHandle);
+                            {
+                                Nullable = false
+                            }), clrProperty, type.TypeHandle);
                 ospaceType.AddMember(property);
             }
             else
@@ -808,9 +809,9 @@
                     cspaceProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = nullableFacetValue
-                                          }),
+                            {
+                                Nullable = nullableFacetValue
+                            }),
                     clrProperty,
                     type.TypeHandle);
 

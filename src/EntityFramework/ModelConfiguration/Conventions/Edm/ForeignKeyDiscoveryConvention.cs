@@ -89,10 +89,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             var constraint
                 = new EdmAssociationConstraint
-                      {
-                          DependentEnd = dependentEnd,
-                          DependentProperties = foreignKeyProperties.ToList()
-                      };
+                    {
+                        DependentEnd = dependentEnd,
+                        DependentProperties = foreignKeyProperties.ToList()
+                    };
 
             associationType.Constraint = constraint;
 

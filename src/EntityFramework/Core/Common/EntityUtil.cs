@@ -5,10 +5,7 @@ namespace System.Data.Entity.Core
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Utilities;
     using System.Data.SqlTypes;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -675,9 +672,9 @@ namespace System.Data.Entity.Core
         }
 
         internal static Dictionary<string, string> COMPILER_VERSION = new Dictionary<string, string>
-                                                                          {
-                                                                              { "CompilerVersion", "V3.5" }
-                                                                          }; //v3.5 required for compiling model files with partial methods.
+            {
+                { "CompilerVersion", "V3.5" }
+            }; //v3.5 required for compiling model files with partial methods.
 
         [FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
         [SecuritySafeCritical]
@@ -687,16 +684,6 @@ namespace System.Data.Entity.Core
         {
             // MDAC 77686
             return Path.GetFullPath(filename);
-        }
-
-        public static IEnumerable<Type> GetTypesSpecial(Assembly assembly)
-        {
-            // TODO: SDE Merge - Check if perf issue that required this code is still needed
-            return ReferenceEquals(assembly, typeof(ObjectContext).Assembly)
-#pragma warning disable 612,618
-                       ? new[] { typeof(HistoryRow), typeof(EdmMetadata) }
-#pragma warning restore 612,618
-                       : assembly.GetAccessibleTypes();
         }
     }
 }

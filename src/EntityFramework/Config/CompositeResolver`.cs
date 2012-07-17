@@ -8,7 +8,7 @@ namespace System.Data.Entity.Config
     /// </summary>
     internal class CompositeResolver<TFirst, TSecond> : IDbDependencyResolver
         where TFirst : IDbDependencyResolver
-        where TSecond :IDbDependencyResolver
+        where TSecond : IDbDependencyResolver
 
     {
         private readonly TFirst _firstResolver;

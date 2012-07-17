@@ -38,8 +38,18 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
         
     foreach (var property in efHost.EntityType.Properties)
     {
+        var typeUsage = code.Escape(property.TypeUsage);
+
+        // Fix-up spatial types for EF6
+        if (efHost.EntityFrameworkVersion >= new Version(6, 0)
+            && typeUsage.StartsWith("System.Data.Spatial."))
+        {
+            typeUsage = typeUsage.Replace(
+                "System.Data.Spatial.",
+                "System.Data.Entity.Spatial.");
+        }
 #>
-        <#= Accessibility.ForProperty(property) #> <#= code.Escape(property.TypeUsage) #> <#= code.Escape(property) #> { get; set; }
+        <#= Accessibility.ForProperty(property) #> <#= typeUsage #> <#= code.Escape(property) #> { get; set; }
 <#
     }
 

@@ -1,10 +1,7 @@
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
-    using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
 
     // TODO: Consider thread safety
     // TODO: Consider caching for perf
@@ -15,39 +12,38 @@ namespace System.Data.Entity.Config
     /// </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
+        private readonly MigrationsConfigurationResolver _migrationsConfigurationResolver;
+        private readonly ResolverChain _resolvers = new ResolverChain();
+
+        public RootDependencyResolver(
+            MigrationsConfigurationResolver migrationsConfigurationResolver,
+            DefaultProviderServicesResolver defaultProviderServicesResolver)
+        {
+            _migrationsConfigurationResolver = migrationsConfigurationResolver;
+
+            _resolvers.Add(_migrationsConfigurationResolver);
+            _resolvers.Add(defaultProviderServicesResolver);
+            _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
+            _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));
+        }
+
+        public MigrationsConfigurationResolver MigrationsConfigurationResolver
+        {
+            get { return _migrationsConfigurationResolver; }
+        }
+
         /// <inheritdoc/>
         public virtual object GetService(Type type, string name)
         {
             // TODO: Handle Database initializer
 
-            if (type == typeof(DbProviderServices))
-            {
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    throw new ArgumentException(Strings.ProviderInvariantNotPassedToResolver);
-                }
-
-                return new ProviderServicesFactory().GetInstanceByConvention(name);
-            }
-
-            if (type == typeof(IDbConnectionFactory))
-            {
-                return new SqlConnectionFactory();
-            }
-
-            if (type == typeof(IDbModelCacheKeyFactory))
-            {
-                return new DefaultModelCacheKeyFactory();
-            }
-
-            Contract.Assert(false, "End of resolver chain reached without resolving dependency.");
-
-            return null;
+            return _resolvers.GetService(type, name);
         }
 
         /// <inheritdoc/>
         public virtual void Release(object service)
         {
+            _resolvers.Release(service);
         }
     }
 }

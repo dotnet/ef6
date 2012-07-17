@@ -53,10 +53,10 @@ namespace System.Data.Entity.Migrations.History
                         .OrderByDescending(h => h.MigrationId)
                         .Select(
                             s => new
-                                     {
-                                         s.MigrationId,
-                                         s.Model
-                                     })
+                                {
+                                    s.MigrationId,
+                                    s.Model
+                                })
                         .FirstOrDefault();
 
                 if (lastModel == null)

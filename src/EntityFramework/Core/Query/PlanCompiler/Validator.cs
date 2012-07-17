@@ -285,17 +285,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly PlanCompiler m_compilerState;
 
         private static readonly PlanCompilerPhase[] _planCompilerPhases = {
-                                                                              PlanCompilerPhase.PreProcessor,
-                                                                              PlanCompilerPhase.AggregatePushdown,
-                                                                              PlanCompilerPhase.Normalization,
-                                                                              PlanCompilerPhase.NTE,
-                                                                              PlanCompilerPhase.ProjectionPruning,
-                                                                              PlanCompilerPhase.NestPullup,
-                                                                              PlanCompilerPhase.Transformations,
-                                                                              PlanCompilerPhase.JoinElimination,
-                                                                              PlanCompilerPhase.CodeGen,
-                                                                              PlanCompilerPhase.PostCodeGen
-                                                                          };
+            PlanCompilerPhase.PreProcessor,
+            PlanCompilerPhase.AggregatePushdown,
+            PlanCompilerPhase.Normalization,
+            PlanCompilerPhase.NTE,
+            PlanCompilerPhase.ProjectionPruning,
+            PlanCompilerPhase.NestPullup,
+            PlanCompilerPhase.Transformations,
+            PlanCompilerPhase.JoinElimination,
+            PlanCompilerPhase.CodeGen,
+            PlanCompilerPhase.PostCodeGen
+        };
 
         private static BitVec s_ValidOpTypes = InitializeOpTypes();
 

@@ -278,38 +278,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The type '{0}' is not a migrations configuration type."
-        /// </summary>
-        internal static string AssemblyMigrator_NonConfigurationType(object p0)
-        {
-            return EntityRes.GetString(EntityRes.AssemblyMigrator_NonConfigurationType, p0);
-        }
-
-        /// <summary>
-        /// A string like "The migrations configuration type '{0}' must have a public default constructor."
-        /// </summary>
-        internal static string AssemblyMigrator_NoDefaultConstructor(object p0)
-        {
-            return EntityRes.GetString(EntityRes.AssemblyMigrator_NoDefaultConstructor, p0);
-        }
-
-        /// <summary>
-        /// A string like "The migrations configuration type '{0}' must not be abstract."
-        /// </summary>
-        internal static string AssemblyMigrator_AbstractConfigurationType(object p0)
-        {
-            return EntityRes.GetString(EntityRes.AssemblyMigrator_AbstractConfigurationType, p0);
-        }
-
-        /// <summary>
-        /// A string like "The migrations configuration type '{0}' must not be generic."
-        /// </summary>
-        internal static string AssemblyMigrator_GenericConfigurationType(object p0)
-        {
-            return EntityRes.GetString(EntityRes.AssemblyMigrator_GenericConfigurationType, p0);
-        }
-
-        /// <summary>
         /// A string like "Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it."
         /// </summary>
         internal static string SqlCeColumnRenameNotSupported
@@ -13310,27 +13278,51 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The configuration type '{0}' must have a public parameterless constructor."
+        /// A string like "The type '{0}' does not extend from '{1}'. Migrations configuration types must extend from '{1}'."
         /// </summary>
-        internal static string Configuration_NoParameterlessConstructor(object p0)
+        internal static string CreateInstance_BadMigrationsConfigurationType(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.Configuration_NoParameterlessConstructor, p0);
+            return EntityRes.GetString(EntityRes.CreateInstance_BadMigrationsConfigurationType, p0, p1);
         }
 
         /// <summary>
-        /// A string like "The configuration type '{0}' must not be abstract."
+        /// A string like "The type '{0}' does not extend from '{1}'. Migrations SQL generator implementations must extend from '{1}'."
         /// </summary>
-        internal static string Configuration_AbstractConfigurationType(object p0)
+        internal static string CreateInstance_BadSqlGeneratorType(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.Configuration_AbstractConfigurationType, p0);
+            return EntityRes.GetString(EntityRes.CreateInstance_BadSqlGeneratorType, p0, p1);
         }
 
         /// <summary>
-        /// A string like "The configuration type '{0}' must not be generic."
+        /// A string like "Failed to create instance of type '{0}'. The type must have a public parameterless constructor."
         /// </summary>
-        internal static string Configuration_GenericConfigurationType(object p0)
+        internal static string CreateInstance_NoParameterlessConstructor(object p0)
         {
-            return EntityRes.GetString(EntityRes.Configuration_GenericConfigurationType, p0);
+            return EntityRes.GetString(EntityRes.CreateInstance_NoParameterlessConstructor, p0);
+        }
+
+        /// <summary>
+        /// A string like "Failed to create instance of type '{0}'. The type must not be abstract."
+        /// </summary>
+        internal static string CreateInstance_AbstractType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.CreateInstance_AbstractType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Failed to create instance of type '{0}'. The type must not be generic."
+        /// </summary>
+        internal static string CreateInstance_GenericType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.CreateInstance_GenericType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The Migrations SQL generator type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the assembly is available to the running application."
+        /// </summary>
+        internal static string SqlGeneratorTypeMissing(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.SqlGeneratorTypeMissing, p0, p1);
         }
 
         /// <summary>
@@ -13498,38 +13490,6 @@ namespace System.Data.Entity.Resources
         internal static Exception AssemblyMigrator_MultipleConfigurations(object p0)
         {
             return new Migrations.Infrastructure.MigrationsException(Strings.AssemblyMigrator_MultipleConfigurations(p0));
-        }
-
-        /// <summary>
-        /// Migrations.Infrastructure.MigrationsException with message like "The type '{0}' is not a migrations configuration type."
-        /// </summary>
-        internal static Exception AssemblyMigrator_NonConfigurationType(object p0)
-        {
-            return new Migrations.Infrastructure.MigrationsException(Strings.AssemblyMigrator_NonConfigurationType(p0));
-        }
-
-        /// <summary>
-        /// Migrations.Infrastructure.MigrationsException with message like "The migrations configuration type '{0}' must have a public default constructor."
-        /// </summary>
-        internal static Exception AssemblyMigrator_NoDefaultConstructor(object p0)
-        {
-            return new Migrations.Infrastructure.MigrationsException(Strings.AssemblyMigrator_NoDefaultConstructor(p0));
-        }
-
-        /// <summary>
-        /// Migrations.Infrastructure.MigrationsException with message like "The migrations configuration type '{0}' must not be abstract."
-        /// </summary>
-        internal static Exception AssemblyMigrator_AbstractConfigurationType(object p0)
-        {
-            return new Migrations.Infrastructure.MigrationsException(Strings.AssemblyMigrator_AbstractConfigurationType(p0));
-        }
-
-        /// <summary>
-        /// Migrations.Infrastructure.MigrationsException with message like "The migrations configuration type '{0}' must not be generic."
-        /// </summary>
-        internal static Exception AssemblyMigrator_GenericConfigurationType(object p0)
-        {
-            return new Migrations.Infrastructure.MigrationsException(Strings.AssemblyMigrator_GenericConfigurationType(p0));
         }
 
         /// <summary>
@@ -15029,10 +14989,6 @@ namespace System.Data.Entity.Resources
         internal const string AssemblyMigrator_MultipleConfigurationsWithName = "AssemblyMigrator_MultipleConfigurationsWithName";
         internal const string AssemblyMigrator_NoConfiguration = "AssemblyMigrator_NoConfiguration";
         internal const string AssemblyMigrator_MultipleConfigurations = "AssemblyMigrator_MultipleConfigurations";
-        internal const string AssemblyMigrator_NonConfigurationType = "AssemblyMigrator_NonConfigurationType";
-        internal const string AssemblyMigrator_NoDefaultConstructor = "AssemblyMigrator_NoDefaultConstructor";
-        internal const string AssemblyMigrator_AbstractConfigurationType = "AssemblyMigrator_AbstractConfigurationType";
-        internal const string AssemblyMigrator_GenericConfigurationType = "AssemblyMigrator_GenericConfigurationType";
         internal const string SqlCeColumnRenameNotSupported = "SqlCeColumnRenameNotSupported";
         internal const string MigrationsNamespaceNotUnderRootNamespace = "MigrationsNamespaceNotUnderRootNamespace";
         internal const string UnableToDispatchAddOrUpdate = "UnableToDispatchAddOrUpdate";
@@ -16658,9 +16614,12 @@ namespace System.Data.Entity.Resources
         internal const string ConfigurationNotDiscovered = "ConfigurationNotDiscovered";
         internal const string SetConfigurationNotDiscovered = "SetConfigurationNotDiscovered";
         internal const string MultipleConfigsInAssembly = "MultipleConfigsInAssembly";
-        internal const string Configuration_NoParameterlessConstructor = "Configuration_NoParameterlessConstructor";
-        internal const string Configuration_AbstractConfigurationType = "Configuration_AbstractConfigurationType";
-        internal const string Configuration_GenericConfigurationType = "Configuration_GenericConfigurationType";
+        internal const string CreateInstance_BadMigrationsConfigurationType = "CreateInstance_BadMigrationsConfigurationType";
+        internal const string CreateInstance_BadSqlGeneratorType = "CreateInstance_BadSqlGeneratorType";
+        internal const string CreateInstance_NoParameterlessConstructor = "CreateInstance_NoParameterlessConstructor";
+        internal const string CreateInstance_AbstractType = "CreateInstance_AbstractType";
+        internal const string CreateInstance_GenericType = "CreateInstance_GenericType";
+        internal const string SqlGeneratorTypeMissing = "SqlGeneratorTypeMissing";
         internal const string ConfigurationLocked = "ConfigurationLocked";
         internal const string EnableMigrationsForContext = "EnableMigrationsForContext";
         internal const string EnableMigrations_MultipleContexts = "EnableMigrations_MultipleContexts";

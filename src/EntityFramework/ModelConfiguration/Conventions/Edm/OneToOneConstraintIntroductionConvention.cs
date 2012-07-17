@@ -34,10 +34,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         dependentEnd = dependentEnd ?? associationType.TargetEnd;
 
                         var constraint = new EdmAssociationConstraint
-                                             {
-                                                 DependentEnd = dependentEnd,
-                                                 DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
-                                             };
+                            {
+                                DependentEnd = dependentEnd,
+                                DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
+                            };
 
                         associationType.Constraint = constraint;
                     }

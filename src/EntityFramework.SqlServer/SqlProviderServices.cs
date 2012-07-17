@@ -36,6 +36,8 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
+        private static readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader = new SqlTypesAssemblyLoader();
+
         /// <summary>
         /// The Singleton instance of the SqlProviderServices type.
         /// </summary>
@@ -49,7 +51,7 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="providerManifest">provider manifest that was determined from metadata</param>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
@@ -263,7 +265,7 @@ namespace System.Data.Entity.SqlServer
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
-            return new SqlSpatialDataReader(new SqlDataReaderWrapper(underlyingReader));
+            return new SqlSpatialDataReader(GetSpatialServices(versionHint), new SqlDataReaderWrapper(underlyingReader));
         }
 
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
@@ -287,32 +289,6 @@ namespace System.Data.Entity.SqlServer
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_Sql2008RequiredForSpatial);
             }
-        }
-
-        internal static SqlTypesAssembly GetSqlTypesAssembly()
-        {
-            SqlTypesAssembly sqlTypes;
-            if (!TryGetSqlTypesAssembly(out sqlTypes))
-            {
-                throw new InvalidOperationException(Strings.SqlProvider_SqlTypesAssemblyNotFound);
-            }
-            Debug.Assert(sqlTypes != null);
-            return sqlTypes;
-        }
-
-        internal static bool SqlTypesAssemblyIsAvailable
-        {
-            get
-            {
-                SqlTypesAssembly notUsed;
-                return TryGetSqlTypesAssembly(out notUsed);
-            }
-        }
-
-        private static bool TryGetSqlTypesAssembly(out SqlTypesAssembly sqlTypesAssembly)
-        {
-            sqlTypesAssembly = SqlTypesAssembly.Latest;
-            return sqlTypesAssembly != null;
         }
 
         /// <summary>
@@ -453,14 +429,14 @@ namespace System.Data.Entity.SqlServer
                 var geographyValue = value as DbGeography;
                 if (geographyValue != null)
                 {
-                    value = GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
+                    value = _sqlTypesAssemblyLoader.GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
                 }
                 else
                 {
                     var geometryValue = value as DbGeometry;
                     if (geometryValue != null)
                     {
-                        value = GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
+                        value = _sqlTypesAssemblyLoader.GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
                     }
                 }
             }

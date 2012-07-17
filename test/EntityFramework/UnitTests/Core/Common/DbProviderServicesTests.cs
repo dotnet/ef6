@@ -1,8 +1,14 @@
 ﻿namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
+
+    using System.Data.Entity.Config;
+    using System.Data.Entity.Core.Common.CommandTrees;
+
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
+
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using Moq;
@@ -129,6 +135,84 @@
                 Assert.Same(
                     FakeSqlProviderServices.Instance,
                     DbProviderServices.GetProviderServices(mockConnection.Object));
+            }
+        }
+
+        public class GetSpatialServices
+        {
+            [Fact]
+            public void GetSpatialServices_uses_resolver_to_obtain_spatial_services()
+            {
+                var mockSpatialServices = new Mock<DbSpatialServices>();
+                var mockResolver = new Mock<IDbDependencyResolver>();
+                mockResolver
+                    .Setup(m => m.GetService(typeof(DbSpatialServices), It.IsAny<string>()))
+                    .Returns(mockSpatialServices.Object);
+
+                Assert.Same(
+                    mockSpatialServices.Object, 
+                    new Mock<DbProviderServices>(mockResolver.Object).Object.GetSpatialServices("X"));
+            }
+
+            [Fact]
+            public void GetSpatialServices_gets_services_from_provider_if_resolver_returns_null()
+            {
+                var mockSpatialServices = new Mock<DbSpatialServices>();
+                var mockResolver = new Mock<IDbDependencyResolver>();
+
+                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                testProvider.Protected()
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Returns(mockSpatialServices.Object);
+
+                Assert.Same(
+                    mockSpatialServices.Object,
+                    testProvider.Object.GetSpatialServices("X"));
+            }
+
+            [Fact]
+            public void GetSpatialServices_throws_if_resolver_returns_null_and_provider_throws()
+            {
+                var mockResolver = new Mock<IDbDependencyResolver>();
+
+                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                testProvider.Protected()
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Throws(new Exception("Fail"));
+
+                Assert.Equal(
+                    Strings.ProviderDidNotReturnSpatialServices,
+                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object.GetSpatialServices("X")).Message);
+            }
+
+            [Fact]
+            public void GetSpatialServices_throws_if_resolver_returns_null_and_provider_throws_ProviderIncompatibleException()
+            {
+                var mockResolver = new Mock<IDbDependencyResolver>();
+
+                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                testProvider.Protected()
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
+
+                Assert.Equal(
+                    Strings.ProviderDidNotReturnSpatialServices,
+                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object.GetSpatialServices("X")).Message);
+            }
+
+            [Fact]
+            public void GetSpatialServices_throws_if_resolver_returns_null_and_provider_returns_null()
+            {
+                var mockResolver = new Mock<IDbDependencyResolver>();
+
+                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                testProvider.Protected()
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Returns((DbSpatialServices)null);
+
+                Assert.Equal(
+                    Strings.ProviderDidNotReturnSpatialServices,
+                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object.GetSpatialServices("X")).Message);
             }
         }
     }

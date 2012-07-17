@@ -92,13 +92,26 @@
         public override void ResetDatabase()
         {
             ExecuteNonQuery(
-                @"IF EXISTS (SELECT name FROM sys.objects WHERE object_id = object_id(N'__MigrationHistory'))
-                    DROP TABLE __MigrationHistory;
-
+                @"DECLARE @sql NVARCHAR(1024);
+                  
+                  DECLARE history_cursor CURSOR FOR
+                  SELECT 'DROP TABLE ' + SCHEMA_NAME(schema_id) + '.' + object_name(object_id) + ';'
+                  FROM sys.objects
+                  WHERE name = '__MigrationHistory'
+                  
+                  OPEN history_cursor;
+                  FETCH NEXT FROM history_cursor INTO @sql;
+                  WHILE @@FETCH_STATUS = 0
+                  BEGIN
+                      EXEC sp_executesql @sql;
+                      FETCH NEXT FROM history_cursor INTO  @sql;
+                  END
+                  CLOSE history_cursor;
+                  DEALLOCATE history_cursor;
+ 
                   DECLARE @constraint_name NVARCHAR(256),
 		                  @table_schema NVARCHAR(100),
-		                  @table_name NVARCHAR(100),
-		                  @sql NVARCHAR(1024);
+		                  @table_name NVARCHAR(100);
                  
                   DECLARE constraint_cursor CURSOR FOR
                   SELECT constraint_name, table_schema, table_name

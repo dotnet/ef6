@@ -52,15 +52,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         .Single();
 
                 var constraint = new EdmAssociationConstraint
-                                     {
-                                         DependentEnd = dependentEnd,
-                                         DependentProperties
-                                             = GetDependentProperties(
-                                                 dependentEnd.EntityType,
-                                                 dependentPropertyNames,
-                                                 declaringEntityType,
-                                                 navigationProperty).ToList()
-                                     };
+                    {
+                        DependentEnd = dependentEnd,
+                        DependentProperties
+                            = GetDependentProperties(
+                                dependentEnd.EntityType,
+                                dependentPropertyNames,
+                                declaringEntityType,
+                                navigationProperty).ToList()
+                    };
 
                 var dependentKeyProperties = dependentEnd.EntityType.KeyProperties();
 

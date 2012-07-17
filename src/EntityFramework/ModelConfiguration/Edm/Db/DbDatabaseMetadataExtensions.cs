@@ -51,9 +51,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
             using (var xmlWriter = XmlWriter.Create(
                 stringBuilder, new XmlWriterSettings
-                                   {
-                                       Indent = true
-                                   }))
+                    {
+                        Indent = true
+                    }))
             {
                 new SsdlSerializer().Serialize(
                     database, providerInfo.ProviderInvariantName, providerInfo.ProviderManifestToken, xmlWriter);
@@ -77,10 +77,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             var uniqueIdentifier = schema.Tables.UniquifyName(name);
 
             var table = new DbTableMetadata
-                            {
-                                Name = uniqueIdentifier,
-                                DatabaseIdentifier = uniqueIdentifier
-                            };
+                {
+                    Name = uniqueIdentifier,
+                    DatabaseIdentifier = uniqueIdentifier
+                };
 
             schema.Tables.Add(table);
 

@@ -76,9 +76,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var entityKey = stateEntry.Source.EntityKey;
 
                 var stateEntries = new HashSet<IEntityStateEntry>
-                                       {
-                                           stateEntry.Source
-                                       };
+                    {
+                        stateEntry.Source
+                    };
 
                 // gather all referenced association ends
                 var collocatedEntries =
@@ -141,22 +141,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Func<DbDataRecord, int, EntityKey> getEntityKey = (record, ordinal) => (EntityKey)record[ordinal];
                 Action<DbDataRecord, Action<IEntityStateEntry>> findMatch = (record, registerTarget) =>
-                                                                                {
-                                                                                    // find the end corresponding to the 'to' end
-                                                                                    var toOrdinal = record.GetOrdinal(endMember.Name);
-                                                                                    Debug.Assert(
-                                                                                        -1 != toOrdinal,
-                                                                                        "to end of relationship doesn't exist in record");
+                    {
+                        // find the end corresponding to the 'to' end
+                        var toOrdinal = record.GetOrdinal(endMember.Name);
+                        Debug.Assert(
+                            -1 != toOrdinal,
+                            "to end of relationship doesn't exist in record");
 
-                                                                                    // the 'from' end must be the other end
-                                                                                    var fromOrdinal = 0 == toOrdinal ? 1 : 0;
+                        // the 'from' end must be the other end
+                        var fromOrdinal = 0 == toOrdinal ? 1 : 0;
 
-                                                                                    if (getEntityKey(record, fromOrdinal) == source)
-                                                                                    {
-                                                                                        stateEntries.Add(candidateEntry);
-                                                                                        registerTarget(candidateEntry);
-                                                                                    }
-                                                                                };
+                        if (getEntityKey(record, fromOrdinal) == source)
+                        {
+                            stateEntries.Add(candidateEntry);
+                            registerTarget(candidateEntry);
+                        }
+                    };
 
                 switch (candidateEntry.State)
                 {

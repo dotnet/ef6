@@ -800,11 +800,11 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // [cs]h and ss that take es as plural form
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord, new List<string>
-                                {
-                                    "ch",
-                                    "sh",
-                                    "ss"
-                                }, (s) => s + "es", Culture, out newSuffixWord))
+                    {
+                        "ch",
+                        "sh",
+                        "ss"
+                    }, (s) => s + "es", Culture, out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }

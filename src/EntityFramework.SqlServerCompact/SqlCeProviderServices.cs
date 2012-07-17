@@ -310,7 +310,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </summary>
         /// <param name="providerManifest">provider manifest that was determined from metadata</param>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
             Debug.Assert(providerManifest != null, "CreateCommandDefinition passed null provider manifest to CreateDbCommandDefinition?");

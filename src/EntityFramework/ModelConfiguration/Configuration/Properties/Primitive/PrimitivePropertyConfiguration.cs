@@ -204,9 +204,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                   select c;
 
             var renamedColumns = new List<DbColumnMetadata>
-                                     {
-                                         column
-                                     };
+                {
+                    column
+                };
 
             // re-uniquify the conflicting columns
             pendingRenames

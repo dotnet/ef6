@@ -109,12 +109,12 @@ namespace System.Data.Entity.Internal
                 }
 
                 Action<DbContext> initializer = dbContext =>
-                                                    {
-                                                        foreach (var initer in initDelegates)
-                                                        {
-                                                            initer(dbContext);
-                                                        }
-                                                    };
+                    {
+                        foreach (var initer in initDelegates)
+                        {
+                            initer(dbContext);
+                        }
+                    };
 
                 setsInfo = new DbContextTypesInitializersPair(entityTypes, initializer);
 

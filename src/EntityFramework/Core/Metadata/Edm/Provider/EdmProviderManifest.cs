@@ -560,45 +560,45 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Max, Min
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Byte,
-                                     PrimitiveTypeKind.DateTime,
-                                     PrimitiveTypeKind.Decimal,
-                                     PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Int16,
-                                     PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64,
-                                     PrimitiveTypeKind.SByte,
-                                     PrimitiveTypeKind.Single,
-                                     PrimitiveTypeKind.String,
-                                     PrimitiveTypeKind.Binary,
-                                     PrimitiveTypeKind.Time,
-                                     PrimitiveTypeKind.DateTimeOffset
-                                 };
+                {
+                    PrimitiveTypeKind.Byte,
+                    PrimitiveTypeKind.DateTime,
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Int16,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64,
+                    PrimitiveTypeKind.SByte,
+                    PrimitiveTypeKind.Single,
+                    PrimitiveTypeKind.String,
+                    PrimitiveTypeKind.Binary,
+                    PrimitiveTypeKind.Time,
+                    PrimitiveTypeKind.DateTimeOffset
+                };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Max", type));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Min", type));
 
             // Avg, Sum
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Decimal,
-                                     PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64
-                                 };
+                {
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64
+                };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Avg", type));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Sum", type));
 
             // STDEV, STDEVP, VAR, VARP
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Decimal,
-                                     PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64
-                                 };
+                {
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64
+                };
 
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDev", type));
@@ -628,13 +628,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Substring, Left, Right overloads 
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Byte,
-                                     PrimitiveTypeKind.Int16,
-                                     PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64,
-                                     PrimitiveTypeKind.SByte
-                                 };
+                {
+                    PrimitiveTypeKind.Byte,
+                    PrimitiveTypeKind.Int16,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64,
+                    PrimitiveTypeKind.SByte
+                };
 
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes,
@@ -669,9 +669,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             #region DateTime Functions
 
             PrimitiveTypeKind[] dateTimeParameterTypes = {
-                                                             PrimitiveTypeKind.DateTimeOffset,
-                                                             PrimitiveTypeKind.DateTime
-                                                         };
+                PrimitiveTypeKind.DateTimeOffset,
+                PrimitiveTypeKind.DateTime
+            };
             EdmProviderManifestFunctionBuilder.ForTypes(
                 dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Year", type, "dateValue"));
             EdmProviderManifestFunctionBuilder.ForTypes(
@@ -682,10 +682,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DayOfYear", type, "dateValue"));
 
             PrimitiveTypeKind[] timeParameterTypes = {
-                                                         PrimitiveTypeKind.DateTimeOffset,
-                                                         PrimitiveTypeKind.DateTime,
-                                                         PrimitiveTypeKind.Time
-                                                     };
+                PrimitiveTypeKind.DateTimeOffset,
+                PrimitiveTypeKind.DateTime,
+                PrimitiveTypeKind.Time
+            };
             EdmProviderManifestFunctionBuilder.ForTypes(
                 timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Hour", type, "timeValue"));
             EdmProviderManifestFunctionBuilder.ForTypes(
@@ -794,21 +794,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Overloads for ROUND, FLOOR, CEILING functions
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Single,
-                                     PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Decimal
-                                 };
+                {
+                    PrimitiveTypeKind.Single,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Decimal
+                };
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Floor", type, "value"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Ceiling", type, "value"));
 
             // Overloads for ROUND, TRUNCATE
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Decimal
-                                 };
+                {
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Decimal
+                };
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes, type => functions.AddFunction(type, "Round", type, "value", PrimitiveTypeKind.Int32, "digits"));
             EdmProviderManifestFunctionBuilder.ForTypes(
@@ -816,30 +816,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Overloads for ABS functions
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Decimal,
-                                     PrimitiveTypeKind.Double,
-                                     PrimitiveTypeKind.Int16,
-                                     PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64,
-                                     PrimitiveTypeKind.Byte,
-                                     PrimitiveTypeKind.Single
-                                 };
+                {
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Int16,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64,
+                    PrimitiveTypeKind.Byte,
+                    PrimitiveTypeKind.Single
+                };
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Abs", type, "value"));
 
             // Overloads for POWER functions
             PrimitiveTypeKind[] powerFirstParameterTypes = {
-                                                               PrimitiveTypeKind.Decimal,
-                                                               PrimitiveTypeKind.Double,
-                                                               PrimitiveTypeKind.Int32,
-                                                               PrimitiveTypeKind.Int64
-                                                           };
+                PrimitiveTypeKind.Decimal,
+                PrimitiveTypeKind.Double,
+                PrimitiveTypeKind.Int32,
+                PrimitiveTypeKind.Int64
+            };
 
             PrimitiveTypeKind[] powerSecondParameterTypes = {
-                                                                PrimitiveTypeKind.Decimal,
-                                                                PrimitiveTypeKind.Double,
-                                                                PrimitiveTypeKind.Int64
-                                                            };
+                PrimitiveTypeKind.Decimal,
+                PrimitiveTypeKind.Double,
+                PrimitiveTypeKind.Int64
+            };
 
             foreach (var kind1 in powerFirstParameterTypes)
             {
@@ -855,12 +855,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Overloads for BitwiseAND, BitwiseNOT, BitwiseOR, BitwiseXOR functions
             parameterTypes = new[]
-                                 {
-                                     PrimitiveTypeKind.Int16,
-                                     PrimitiveTypeKind.Int32,
-                                     PrimitiveTypeKind.Int64,
-                                     PrimitiveTypeKind.Byte
-                                 };
+                {
+                    PrimitiveTypeKind.Int16,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64,
+                    PrimitiveTypeKind.Byte
+                };
 
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes, type => functions.AddFunction(type, "BitwiseAnd", type, "value1", type, "value2"));

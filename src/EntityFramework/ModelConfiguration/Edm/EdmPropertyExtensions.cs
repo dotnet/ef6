@@ -46,9 +46,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(property != null);
 
             property.PropertyType = new EdmTypeReference
-                                        {
-                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                                        };
+                {
+                    PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
+                };
 
             return property;
         }
@@ -59,10 +59,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(complexType != null);
 
             property.PropertyType = new EdmTypeReference
-                                        {
-                                            EdmType = complexType,
-                                            IsNullable = false
-                                        };
+                {
+                    EdmType = complexType,
+                    IsNullable = false
+                };
 
             return property;
         }
@@ -73,10 +73,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(enumType != null);
 
             property.PropertyType = new EdmTypeReference
-                                        {
-                                            EdmType = enumType,
-                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                                        };
+                {
+                    EdmType = enumType,
+                    PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
+                };
 
             return property;
         }

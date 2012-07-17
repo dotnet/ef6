@@ -35,7 +35,7 @@ namespace System.Data.Entity.Migrations
         private static readonly MethodInfo _setInitializerMethod
             = typeof(Database).GetMethod("SetInitializer");
 
-        private readonly XDocument _emptyModel;
+        private readonly Lazy<XDocument> _emptyModel;
         private readonly DbMigrationsConfiguration _configuration;
         private readonly XDocument _currentModel;
         private readonly DbProviderFactory _providerFactory;
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Migrations
                 var connection = context.Database.Connection;
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
 
-                _historyRepository 
+                _historyRepository
                     = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.InternalContext.DefaultSchema);
 
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
@@ -134,11 +134,12 @@ namespace System.Data.Entity.Migrations
                 }
             }
 
-            _emptyModel =
+            _emptyModel = new Lazy<XDocument>(
+                () =>
                 new DbModelBuilder().Build(
                     new DbProviderInfo(
-                        _usersContextInfo.ConnectionProviderName,
-                        _providerManifestToken)).GetModel();
+                    _usersContextInfo.ConnectionProviderName,
+                    _providerManifestToken)).GetModel());
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var migrationOperations
-                = _modelDiffer.Diff(_emptyModel, databaseModel)
+                = _modelDiffer.Diff(_emptyModel.Value, databaseModel)
                     .ToList();
 
             var generatedMigration
@@ -224,7 +225,7 @@ namespace System.Data.Entity.Migrations
             CheckLegacyCompatibility(() => sourceModel = _currentModel);
 
             string sourceMigrationId = null;
-            sourceModel = sourceModel ?? (_historyRepository.GetLastModel(out sourceMigrationId) ?? _emptyModel);
+            sourceModel = sourceModel ?? (_historyRepository.GetLastModel(out sourceMigrationId) ?? _emptyModel.Value);
             var modelCompressor = new ModelCompressor();
 
             var migrationOperations
@@ -250,7 +251,7 @@ namespace System.Data.Entity.Migrations
                 = _configuration.CodeGenerator.Generate(
                     migrationId,
                     migrationOperations,
-                    (sourceModel == _emptyModel)
+                    (sourceModel == _emptyModel.Value)
                     || (sourceModel == _currentModel)
                     || !sourceMigrationId.IsAutomaticMigration()
                         ? null
@@ -278,7 +279,8 @@ namespace System.Data.Entity.Migrations
         {
             Contract.Requires(onCompatible != null);
 
-            if (!_calledByCreateDatabase && !_historyRepository.Exists)
+            if (!_calledByCreateDatabase
+                && !_historyRepository.Exists)
             {
                 using (var context = _usersContextInfo.CreateInstance())
                 {
@@ -490,7 +492,7 @@ namespace System.Data.Entity.Migrations
                 return lastModel;
             }
 
-            return _emptyModel;
+            return _emptyModel.Value;
         }
 
         internal override void Downgrade(IEnumerable<string> pendingMigrations)
@@ -502,7 +504,7 @@ namespace System.Data.Entity.Migrations
                 var nextMigrationId = pendingMigrations.ElementAt(i + 1);
                 var targetModel = (nextMigrationId != InitialDatabase)
                                       ? _historyRepository.GetModel(nextMigrationId)
-                                      : _emptyModel;
+                                      : _emptyModel.Value;
 
                 Contract.Assert(targetModel != null);
 

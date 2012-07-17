@@ -2,4 +2,9 @@
   <configSections>
     <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
   </configSections>
+  <entityFramework>
+    <providers>
+      <provider invariantName="System.Data.SqlServerCe.4.0" type="System.Data.Entity.SqlServerCompact.SqlCeProviderServices, EntityFramework.SqlServerCompact, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
+    </providers>
+  </entityFramework>
 </configuration>

@@ -93,10 +93,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All SingleRowOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_SingleRowOpOverAnything,
-                                                        Rule_SingleRowOpOverProject,
-                                                    };
+            {
+                Rule_SingleRowOpOverAnything,
+                Rule_SingleRowOpOverProject,
+            };
 
         #endregion
     }

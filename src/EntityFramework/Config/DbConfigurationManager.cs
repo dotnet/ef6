@@ -24,6 +24,7 @@ namespace System.Data.Entity.Config
         private readonly DbConfigurationFinder _finder;
         private readonly ISet<Assembly> _knownAssemblies = new HashSet<Assembly>();
         private DbConfiguration _configuration;
+
         private readonly IList<Tuple<AppConfig, DbConfiguration>> _configurationOverrides
             = new List<Tuple<AppConfig, DbConfiguration>>();
 
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Config
             _loader = loader;
             _finder = finder;
         }
-        
+
         public static DbConfigurationManager Instance
         {
             get { return _configManager; }
@@ -67,14 +68,17 @@ namespace System.Data.Entity.Config
                 _configuration = configuration;
                 _configuration.Lock();
             }
-            else if (_configuration.GetType() != configuration.GetType())
+            else if (_configuration.GetType()
+                     != configuration.GetType())
             {
-                if (_configuration.GetType() == typeof(DbConfiguration))
+                if (_configuration.GetType()
+                    == typeof(DbConfiguration))
                 {
                     throw new InvalidOperationException(Strings.DefaultConfigurationUsedBeforeSet(configuration.GetType().Name));
                 }
 
-                throw new InvalidOperationException(Strings.ConfigurationSetTwice(configuration.GetType().Name, _configuration.GetType().Name));
+                throw new InvalidOperationException(
+                    Strings.ConfigurationSetTwice(configuration.GetType().Name, _configuration.GetType().Name));
             }
         }
 
@@ -82,11 +86,11 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(contextType != null);
             Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
-            
+
             var contextAssembly = contextType.Assembly;
 
             if (contextType == typeof(DbContext)
-                || _knownAssemblies.Contains(contextAssembly) 
+                || _knownAssemblies.Contains(contextAssembly)
                 || _configurationOverrides.Count != 0)
             {
                 return;
@@ -105,7 +109,8 @@ namespace System.Data.Entity.Config
                 var foundType = _finder.TryFindConfigurationType(contextType.Assembly.GetAccessibleTypes());
                 if (!typeof(DbNullConfiguration).IsAssignableFrom(foundType))
                 {
-                    if (_configuration.GetType() == typeof(DbConfiguration))
+                    if (_configuration.GetType()
+                        == typeof(DbConfiguration))
                     {
                         if (foundType != null)
                         {
@@ -114,7 +119,8 @@ namespace System.Data.Entity.Config
                     }
                     else
                     {
-                        if (foundType == null || foundType != _configuration.GetType())
+                        if (foundType == null
+                            || foundType != _configuration.GetType())
                         {
                             throw new InvalidOperationException(
                                 Strings.SetConfigurationNotDiscovered(_configuration.GetType().Name, contextType.Name));
@@ -131,7 +137,7 @@ namespace System.Data.Entity.Config
             Contract.Requires(config != null);
             Contract.Requires(contextType != null);
             Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
-            
+
             var configuration = _loader.TryLoadFromConfig(config)
                                 ?? _finder.TryCreateConfiguration(contextType.Assembly.GetAccessibleTypes())
                                 ?? new DbConfiguration();

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Edm;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -130,6 +131,49 @@ namespace System.Data.Entity.Utilities
         public static bool IsPrimitiveType(this Type type, out EdmPrimitiveType primitiveType)
         {
             return _primitiveTypesMap.TryGetValue(type, out primitiveType);
+        }
+
+        public static T CreateInstance<T>(
+            this Type type, 
+            Func<string, string, string> typeMessageFactory,
+            Func<string, Exception> exceptionFactory = null)
+        {
+            Contract.Requires(type != null);
+            Contract.Requires(typeMessageFactory != null);
+
+            exceptionFactory = exceptionFactory ?? (s => new InvalidOperationException(s));
+
+            if (!typeof(T).IsAssignableFrom(type))
+            {
+                throw exceptionFactory(typeMessageFactory(type.ToString(), typeof(T).ToString()));
+            }
+
+            return CreateInstance<T>(type, exceptionFactory);
+        }
+
+        public static T CreateInstance<T>(this Type type, Func<string, Exception> exceptionFactory = null)
+        {
+            Contract.Requires(type != null);
+            Contract.Requires(typeof(T).IsAssignableFrom(type));
+
+            exceptionFactory = exceptionFactory ?? (s => new InvalidOperationException(s));
+
+            if (type.GetConstructor(Type.EmptyTypes) == null)
+            {
+                throw exceptionFactory(Strings.CreateInstance_NoParameterlessConstructor(type));
+            }
+
+            if (type.IsAbstract)
+            {
+                throw exceptionFactory(Strings.CreateInstance_AbstractType(type));
+            }
+
+            if (type.IsGenericType)
+            {
+                throw exceptionFactory(Strings.CreateInstance_GenericType(type));
+            }
+
+            return (T)Activator.CreateInstance(type);
         }
     }
 }

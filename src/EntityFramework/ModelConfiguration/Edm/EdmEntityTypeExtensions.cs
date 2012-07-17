@@ -129,9 +129,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(complexType != null);
 
             var property = new EdmProperty
-                               {
-                                   Name = name
-                               }.AsComplex(complexType);
+                {
+                    Name = name
+                }.AsComplex(complexType);
 
             entityType.DeclaredProperties.Add(property);
 
@@ -173,11 +173,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(associationType != null);
 
             var navigationProperty = new EdmNavigationProperty
-                                         {
-                                             Name = name,
-                                             Association = associationType,
-                                             ResultEnd = associationType.TargetEnd
-                                         };
+                {
+                    Name = name,
+                    Association = associationType,
+                    ResultEnd = associationType.TargetEnd
+                };
 
             entityType.DeclaredNavigationProperties.Add(navigationProperty);
 

@@ -119,11 +119,11 @@ namespace System.Data.Entity.Spatial
             geographyValue.CheckNull("geographyValue");
             var backingValue = CheckCompatible(geographyValue);
             return new DbGeographyWellKnownValue
-                       {
-                           CoordinateSystemId = backingValue.CoordinateSystemId,
-                           WellKnownBinary = backingValue.CloneBinary(),
-                           WellKnownText = backingValue.Text
-                       };
+                {
+                    CoordinateSystemId = backingValue.CoordinateSystemId,
+                    WellKnownBinary = backingValue.CloneBinary(),
+                    WellKnownText = backingValue.Text
+                };
         }
 
         #region Static Constructors - Well Known Binary (WKB)
@@ -479,11 +479,11 @@ namespace System.Data.Entity.Spatial
             geometryValue.CheckNull("geometryValue");
             var backingValue = CheckCompatible(geometryValue);
             return new DbGeometryWellKnownValue
-                       {
-                           CoordinateSystemId = backingValue.CoordinateSystemId,
-                           WellKnownBinary = backingValue.CloneBinary(),
-                           WellKnownText = backingValue.Text
-                       };
+                {
+                    CoordinateSystemId = backingValue.CoordinateSystemId,
+                    WellKnownBinary = backingValue.CloneBinary(),
+                    WellKnownText = backingValue.Text
+                };
         }
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)

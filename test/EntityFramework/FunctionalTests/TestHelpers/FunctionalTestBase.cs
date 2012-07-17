@@ -102,18 +102,25 @@
                 context.Database.Initialize(force: false);
             }
         }
-        
+
+        private static bool _metadataForSimpleModelCreated;
+
         /// <summary>
         /// Creates the metadata files (CSDL/SSDL/MSL) for the SimpleModelContext.
         /// </summary>
         protected static void CreateMetadataFilesForSimpleModel()
         {
-            var builder = SimpleModelContext.CreateBuilder();
-            ModelHelpers.WriteMetadataFiles(builder, @".\SimpleModel");
-
-            using (var connection = SimpleConnection<SimpleModelContext>())
+            if (!_metadataForSimpleModelCreated)
             {
-                new SimpleModelContext(connection, builder.Build(connection).Compile()).Database.Initialize(false);
+                var builder = SimpleModelContext.CreateBuilder();
+                ModelHelpers.WriteMetadataFiles(builder, @".\SimpleModel");
+
+                using (var connection = SimpleConnection<SimpleModelContext>())
+                {
+                    new SimpleModelContext(connection, builder.Build(connection).Compile()).Database.Initialize(false);
+                }
+
+                _metadataForSimpleModelCreated = true;
             }
         }
 

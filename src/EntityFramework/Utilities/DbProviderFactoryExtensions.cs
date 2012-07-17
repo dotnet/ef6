@@ -5,7 +5,6 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

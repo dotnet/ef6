@@ -19,9 +19,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(targetComplexType != null);
 
             var property = new EdmProperty
-                               {
-                                   Name = name
-                               }.AsComplex(targetComplexType);
+                {
+                    Name = name
+                }.AsComplex(targetComplexType);
 
             complexType.DeclaredProperties.Add(property);
 

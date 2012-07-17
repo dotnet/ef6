@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="connection">connection to the underlying provider</param>
         /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an exectable command definition object</returns>
+        /// <returns>an executable command definition object</returns>
         /// <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {

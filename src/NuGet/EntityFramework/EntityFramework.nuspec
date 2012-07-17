@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata schemaVersion="2">
     <id>EntityFramework</id>
-    <version>6.0.0-beta1</version>
+    <version>6.0.0-alpha1</version>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <projectUrl>http://go.microsoft.com/fwlink/?LinkId=242869</projectUrl>
@@ -12,7 +12,6 @@
     <summary>Entity Framework is Microsoft's recommended data access technology for new applications.</summary>
     <language>en-US</language>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Data.Entity" targetFramework="" />
       <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="" />
     </frameworkAssemblies>
   </metadata>

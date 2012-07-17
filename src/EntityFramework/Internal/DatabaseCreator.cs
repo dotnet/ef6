@@ -1,8 +1,10 @@
 ﻿namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Sql;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -10,6 +12,20 @@
     /// </summary>
     internal class DatabaseCreator
     {
+        private readonly Lazy<IDbDependencyResolver> _resolver;
+
+        public DatabaseCreator()
+            : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.Instance.DependencyResolver))
+        {
+        }
+
+        public DatabaseCreator(Lazy<IDbDependencyResolver> resolver)
+        {
+            Contract.Requires(resolver != null);
+
+            _resolver = resolver;
+        }
+
         /// <summary>
         ///     Creates a database using the core provider (i.e. ObjectContext.CreateDatabase) or
         ///     by using Code First Migrations <see cref = "DbMigrator" /> to create an empty database
@@ -27,9 +43,10 @@
             Contract.Requires(createMigrator != null);
             // objectContext may be null when testing.
 
+            var sqlGenerator = _resolver.Value.GetService<MigrationSqlGenerator>(internalContext.ProviderName);
+
             if (internalContext.CodeFirstModel != null
-                && (internalContext.ProviderName == "System.Data.SqlClient"
-                    || internalContext.ProviderName == "System.Data.SqlServerCe.4.0"))
+                && sqlGenerator != null)
             {
                 var contextType = internalContext.Owner.GetType();
 
@@ -42,7 +59,7 @@
                             MigrationsNamespace = contextType.Namespace,
                             TargetDatabase =
                                 new DbConnectionInfo(
-                                internalContext.OriginalConnectionString, internalContext.ProviderName)
+                                    internalContext.OriginalConnectionString, internalContext.ProviderName)
                         },
                     internalContext.Owner);
 

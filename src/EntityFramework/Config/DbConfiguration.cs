@@ -18,7 +18,8 @@ namespace System.Data.Entity.Config
     public class DbConfiguration
     {
         private readonly CompositeResolver<ResolverChain, ResolverChain> _resolvers;
-        
+        private readonly RootDependencyResolver _rootResolver;
+
         private bool _isLocked;
 
         /// <summary>
@@ -26,18 +27,21 @@ namespace System.Data.Entity.Config
         /// and that constructor should call this constructor.
         /// </summary>
         protected internal DbConfiguration()
-            : this(new ResolverChain(), new ResolverChain())
+            : this(
+                new ResolverChain(), new ResolverChain(),
+                new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver()))
         {
             _resolvers.First.Add(new AppConfigDependencyResolver(AppConfig.DefaultInstance));
-            _resolvers.Second.Add(new RootDependencyResolver());
         }
 
-        internal DbConfiguration(ResolverChain appConfigChain, ResolverChain normalResolverChain)
+        internal DbConfiguration(ResolverChain appConfigChain, ResolverChain normalResolverChain, RootDependencyResolver rootResolver)
         {
             Contract.Requires(appConfigChain != null);
             Contract.Requires(normalResolverChain != null);
 
+            _rootResolver = rootResolver;
             _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain, normalResolverChain);
+            _resolvers.Second.Add(_rootResolver);
         }
 
         /// <summary>
@@ -173,10 +177,21 @@ namespace System.Data.Entity.Config
 
                 AddDependencyResolver(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(value));
             }
-            get
-            {
-                return _resolvers.GetService<IDbModelCacheKeyFactory>();
-            }
+            get { return _resolvers.GetService<IDbModelCacheKeyFactory>(); }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IDbDependencyResolver"/> that is being used to resolve service
+        /// dependencies in the Entity Framework.
+        /// </summary>
+        public virtual IDbDependencyResolver DependencyResolver
+        {
+            get { return _resolvers; }
+        }
+
+        internal virtual RootDependencyResolver RootResolver
+        {
+            get { return _rootResolver; }
         }
 
         private void CheckNotLocked(string memberName)
