@@ -344,6 +344,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
+            Throw.IfNull(storeType, "storeType");
+
             var storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
@@ -519,6 +521,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
+            Throw.IfNull(edmType, "edmType");
+
             Debug.Assert(edmType.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = edmType.EdmType as PrimitiveType;
@@ -755,6 +759,8 @@ namespace System.Data.Entity.SqlServer
         /// <returns>Equivalent to the argument, with the wildcard characters and the escape character escaped</returns>
         public override string EscapeLikeArgument(string argument)
         {
+            Throw.IfNull(argument, "argument");
+
             bool usedEscapeCharacter;
             return EscapeLikeText(argument, true, out usedEscapeCharacter);
         }

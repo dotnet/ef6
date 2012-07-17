@@ -582,6 +582,8 @@
         /// <param name="currentEntity">object with modified properties</param>
         public override void ApplyCurrentValues(object currentEntity)
         {
+            DbHelpers.ThrowIfNull(currentEntity, "currentEntity");
+
             ValidateState();
 
             if (IsKeyEntry)
@@ -600,6 +602,8 @@
         /// <param name="originalEntity">The object with original values</param>
         public override void ApplyOriginalValues(object originalEntity)
         {
+            DbHelpers.ThrowIfNull(originalEntity, "originalEntity");
+
             ValidateState();
 
             if (IsKeyEntry)
