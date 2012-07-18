@@ -187,7 +187,7 @@
             Assert.Equal("SomeQuoted String", xcopyCommand.ExcludeFiles);
             Assert.True(xcopyCommand.ArchivedBit);
             Assert.True(xcopyCommand.InferDirectory);
-            Assert.Equal(new DateTime(2011, 7, 8), xcopyCommand.ChangedAfterDate);
+            Assert.Equal(DateTime.Parse("7-8-2011"), xcopyCommand.ChangedAfterDate);            
         }
 
         [Fact]
@@ -262,7 +262,7 @@
         [Fact]
         public void WhenNoAttributesParseWillUsePropertyNames()
         {
-            var args = new[] { "/StringArg:Value/With:Separators", "/BoolY-", "/BoolT", "/Date:12-01-2011", "/Number:23" };
+            var args = new[] { "/StringArg:Value/With:Separators", "/BoolY-", "/BoolT", "/Date:12-1-2011", "/Number:23" };
 
             CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
@@ -271,7 +271,7 @@
             Assert.Equal("Value/With:Separators", actual.StringArg);
             Assert.True(actual.BoolT);
             Assert.False(actual.BoolY);
-            Assert.Equal(new DateTime(2011, 12, 1), actual.Date);
+            Assert.Equal(DateTime.Parse("12-1-2011"), actual.Date);
             Assert.Equal(23, actual.Number);
         }
 
