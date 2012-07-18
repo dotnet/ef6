@@ -14,6 +14,7 @@
         <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.xml" />
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.exe" />
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.x86.exe" />
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell.Utility\bin\$(Configuration)\EntityFramework.PowerShell.Utility.dll" />
         <Copy DestinationFolder="EntityFramework.SqlServerCompact\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
         <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="..\EntityFramework.SqlServerCompact\bin\$(Configuration)\EntityFramework.SqlServerCompact.dll" />
