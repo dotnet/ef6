@@ -124,7 +124,9 @@ namespace System.Data.Entity.Config
 
         public class FakeProviderWithNullInstance : FakeProviderBase
         {
+#pragma warning disable 169 // Used through Reflection
             private static readonly FakeProviderWithNullInstance Instance;
+#pragma warning restore 169
         }
 
         public class FakeProviderWithNoInstance : FakeProviderBase
