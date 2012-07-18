@@ -14,6 +14,7 @@ namespace ProductivityApiTests
     using ConcurrencyModel;
     using SimpleModel;
     using Xunit;
+    using Xunit.Extensions;
 
     /// <summary>
     /// Functional tests for the Property, Reference, and Collection methods on DbEntityEntry.
@@ -163,38 +164,35 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded()
         {
-            using (new TransactionScope())
+            using (var context = new F1Context())
             {
-                using (var context = new F1Context())
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                // Load drivers for the first time
+                driversCollection.Load();
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+
+                // Add a new driver to the database
+                using (var innerContext = new F1Context())
                 {
-                    context.Configuration.LazyLoadingEnabled = false;
-
-                    var team = context.Teams.Find(Team.McLaren);
-                    var driversCollection = context.Entry(team).Collection(t => t.Drivers);
-
-                    // Load drivers for the first time
-                    driversCollection.Load();
-
-                    Assert.True(driversCollection.IsLoaded);
-                    Assert.Equal(3, team.Drivers.Count);
-
-                    // Add a new driver to the database
-                    using (var innerContext = new F1Context())
-                    {
-                        innerContext.Drivers.Add(new Driver { Name = "Larry David", TeamId = Team.McLaren });
-                        innerContext.SaveChanges();
-                    }
-
-                    // Now force load again
-                    Assert.True(driversCollection.IsLoaded);
-                    driversCollection.Load();
-
-                    Assert.True(driversCollection.IsLoaded);
-                    Assert.Equal(4, team.Drivers.Count);
+                    innerContext.Drivers.Add(new Driver { Name = "Larry David", TeamId = Team.McLaren });
+                    innerContext.SaveChanges();
                 }
+
+                // Now force load again
+                Assert.True(driversCollection.IsLoaded);
+                driversCollection.Load();
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(4, team.Drivers.Count);
             }
         }
 
@@ -1230,7 +1228,7 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), 
+                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"),
                              Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges(null)).Message);
             }
         }
@@ -1621,7 +1619,7 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), 
+                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"),
                              Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged(null)).Message);
             }
         }
@@ -1751,7 +1749,7 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), 
+                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"),
                              Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty(null)).Message);
 
                 Assert.Equal(EntityState.Unchanged, stateEntry.State);

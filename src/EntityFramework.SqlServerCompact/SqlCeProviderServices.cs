@@ -47,13 +47,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns>T-SQL script for generating schema objects.</returns>
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
-            #region Argument check
-
-            ADP1.CheckArgumentNull(providerManifestToken, "ProviderManifestToken");
-            ADP1.CheckArgumentNull(storeItemCollection, "StoreItemCollection");
-
-            #endregion
-
             // Call the helper for creating schema objects.
             return string.Concat(SqlDdlBuilder.CreateObjectsScript(storeItemCollection, true).ToArray());
         }
@@ -69,12 +62,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns>Bool indicating whether database exists or not.</returns>
         protected override bool DbDatabaseExists(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
-            #region Check arguments
-
-            ADP1.CheckArgumentNull(connection, "Connection");
-
-            #endregion
-
             // Validate and cast the connection.
             ValidateConnection(connection);
 
@@ -108,12 +95,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="storeItemCollection"></param>
         protected override void DbDeleteDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
-            #region Check arguments
-
-            ADP1.CheckArgumentNull(connection, "Connection");
-
-            #endregion
-
             // Validate that connection is a SqlCeConnection.
             ValidateConnection(connection);
 
@@ -415,8 +396,6 @@ namespace System.Data.Entity.SqlServerCompact
         //
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
-            ADP1.CheckArgumentNull(connection, "connection");
-
             // vamshikb: Do we need to validate the connection and connection string
             // before returning the ProviderManifestToken????
 

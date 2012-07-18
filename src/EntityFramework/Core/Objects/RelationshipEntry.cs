@@ -170,12 +170,12 @@
         }
 
         /// <summary>
-        /// Original values of entity
+        /// Original values
         /// </summary>
         /// <param></param>
         /// <returns> DbDataRecord </returns>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            public override DbDataRecord OriginalValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override DbDataRecord OriginalValues
         {
             get
             {
@@ -195,12 +195,12 @@
         }
 
         /// <summary>
-        /// Current values of entity/ DataRow
+        /// Current values
         /// </summary>
         /// <param></param>
         /// <returns> DbUpdatableDataRecord </returns>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] // don't have debugger view expand this
-            public override CurrentValueRecord CurrentValues
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override CurrentValueRecord CurrentValues
         {
             get
             {

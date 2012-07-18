@@ -3,6 +3,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Collections;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// Represents one end of a relationship.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    [ContractClass(typeof(IRelatedEndContracts))]
     public interface IRelatedEnd
     {
         // ----------
@@ -167,4 +169,109 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>        
         IEnumerator GetEnumerator();
     }
+
+    #region Interface Member Contracts
+
+    [ContractClassFor(typeof(IRelatedEnd))]
+    internal abstract class IRelatedEndContracts : IRelatedEnd
+    {
+        public bool IsLoaded
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string RelationshipName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string SourceRoleName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string TargetRoleName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public RelationshipSet RelationshipSet
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Load(MergeOption mergeOption)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LoadAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(IEntityWithRelationships entity)
+        {
+            Contract.Requires(entity != null);
+
+            throw new NotImplementedException();
+        }
+
+        public void Add(object entity)
+        {
+            Contract.Requires(entity != null);
+
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(IEntityWithRelationships entity)
+        {
+            Contract.Requires(entity != null);
+
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(object entity)
+        {
+            Contract.Requires(entity != null);
+
+            throw new NotImplementedException();
+        }
+
+        public void Attach(IEntityWithRelationships entity)
+        {
+            Contract.Requires(entity != null);
+
+            throw new NotImplementedException();
+        }
+
+        public void Attach(object entity)
+        {
+            Contract.Requires(entity != null);
+
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable CreateSourceQuery()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion
 }

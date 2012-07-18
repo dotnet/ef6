@@ -9,6 +9,7 @@
     using System.Linq;
     using System.Transactions;
     using Xunit;
+    using Xunit.Extensions;
 
     public class ChangeTrackingProxyTests : FunctionalTestBase
     {
@@ -31,78 +32,72 @@
 
         #region DeleteObject throws a collection modified exception with change tracking proxies (Dev11 71937, 209773)
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_71937()
         {
-            using (new TransactionScope())
+            using (var context = new GranniesContext())
             {
-                using (var context = new GranniesContext())
-                {
-                    var g = context.Grannys.Add(context.Grannys.Create());
+                var g = context.Grannys.Add(context.Grannys.Create());
 
-                    var c = context.Children.Add(context.Children.Create());
-                    c.Name = "Child";
+                var c = context.Children.Add(context.Children.Create());
+                c.Name = "Child";
 
-                    var h = context.Houses.Add(context.Houses.Create());
+                var h = context.Houses.Add(context.Houses.Create());
 
-                    g.Children.Add(c);
-                    g.House = h;
+                g.Children.Add(c);
+                g.House = h;
 
-                    context.SaveChanges();
+                context.SaveChanges();
 
-                    context.Children.Remove(c); // This would previously throw
+                context.Children.Remove(c); // This would previously throw
 
-                    Assert.Equal(EntityState.Deleted, context.Entry(c).State);
-                    Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
-                    Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
+                Assert.Equal(EntityState.Deleted, context.Entry(c).State);
+                Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
+                Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
 
-                    Assert.Null(c.House);
-                    Assert.Null(c.Granny);
+                Assert.Null(c.House);
+                Assert.Null(c.Granny);
 
-                    Assert.Equal(0, g.Children.Count);
-                    Assert.Same(h, g.House);
+                Assert.Equal(0, g.Children.Count);
+                Assert.Same(h, g.House);
 
-                    Assert.Equal(0, h.Children.Count);
-                    Assert.Same(g, h.Granny);
+                Assert.Equal(0, h.Children.Count);
+                Assert.Same(g, h.Granny);
 
-                    context.SaveChanges();
+                context.SaveChanges();
 
-                    Assert.Equal(EntityState.Detached, context.Entry(c).State);
-                    Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
-                    Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
+                Assert.Equal(EntityState.Detached, context.Entry(c).State);
+                Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
+                Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
 
-                    Assert.Null(c.House);
-                    Assert.Null(c.Granny);
+                Assert.Null(c.House);
+                Assert.Null(c.Granny);
 
-                    Assert.Equal(0, g.Children.Count);
-                    Assert.Same(h, g.House);
+                Assert.Equal(0, g.Children.Count);
+                Assert.Same(h, g.House);
 
-                    Assert.Equal(0, h.Children.Count);
-                    Assert.Same(g, h.Granny);
-                }
+                Assert.Equal(0, h.Children.Count);
+                Assert.Same(g, h.Granny);
             }
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_209773()
         {
-            using (new TransactionScope())
+            using (var context = new HaveToDoContext())
             {
-                using (var context = new HaveToDoContext())
-                {
-                    var group = context.ComplexExams.Where(e => e.Code == "group").Single();
-                    var _ = group.Training.Id;
+                var group = context.ComplexExams.Where(e => e.Code == "group").Single();
+                var _ = group.Training.Id;
 
-                    context.ComplexExams.Remove(group); // This would previously throw
+                context.ComplexExams.Remove(group); // This would previously throw
 
-                    Assert.Equal(EntityState.Deleted, context.Entry(group).State);
-                    Assert.Equal(0, group.Exams.Count);
+                Assert.Equal(EntityState.Deleted, context.Entry(group).State);
+                Assert.Equal(0, group.Exams.Count);
 
-                    context.SaveChanges();
+                context.SaveChanges();
 
-                    Assert.Equal(EntityState.Detached, context.Entry(group).State);
-                    Assert.Equal(0, group.Exams.Count);
-                }
+                Assert.Equal(EntityState.Detached, context.Entry(group).State);
+                Assert.Equal(0, group.Exams.Count);
             }
         }
 

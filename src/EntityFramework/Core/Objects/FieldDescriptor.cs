@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     internal sealed class FieldDescriptor : PropertyDescriptor
@@ -16,6 +16,15 @@ namespace System.Data.Entity.Core.Objects
         private readonly Type _fieldType;
         private readonly Type _itemType;
         private readonly bool _isReadOnly;
+
+        /// <summary>
+        /// For testing purpuses only.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        internal FieldDescriptor(string propertyName)
+            : base(propertyName, null)
+        {
+        }
 
         /// <summary>
         /// Construct a new instance of the FieldDescriptor class that describes a property
@@ -71,8 +80,7 @@ namespace System.Data.Entity.Core.Objects
                     Facet nullable;
                     if (result.IsValueType &&
                         typeUsage.Facets.TryGetValue(DbProviderManifest.NullableFacetName, false, out nullable)
-                        &&
-                        ((bool)nullable.Value))
+                        && ((bool)nullable.Value))
                     {
                         result = typeof(Nullable<>).MakeGenericType(result);
                     }
@@ -128,7 +136,7 @@ namespace System.Data.Entity.Core.Objects
 
         public override object GetValue(object item)
         {
-            Contract.Requires(item != null);
+            DbHelpers.ThrowIfNull(item, "item");
 
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
@@ -157,7 +165,8 @@ namespace System.Data.Entity.Core.Objects
 
         public override void SetValue(object item, object value)
         {
-            Contract.Requires(item != null);
+            DbHelpers.ThrowIfNull(item, "item");
+
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
                 throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);

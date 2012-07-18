@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Package;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     
     <PropertyGroup>
         <Configuration>Release</Configuration>
@@ -14,36 +14,28 @@
                  Properties="$(BuildProperties)"/>
     </Target>
     
-    <Target Name="Default" DependsOnTargets="Test;Package" />
-    
-    <Target Name="RestorePackages">
-        <!--
-        This can't build in parallel because of NuGet package restore race conditions.
-        When this is fixed in NuGet, we can remove the CSPROJ part of this target.
-
-        NOTE: These projects are hand selected to be the minimum # of CSPROJ files that
-              ensure we've restored every remote package. If another collision is found,
-              please review the project list as appropriate.
-        -->
+    <Target Name="PreRestorePackages">
         <ItemGroup>
             <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
         </ItemGroup>
-        
         <Message Text="Restoring NuGet packages..." Importance="High" />
-        
-        <MSBuild
-            Projects="@(RestoreCsProjFiles)"
-            BuildInParallel="false"
-            Targets="RestorePackages" />
     </Target>
     
-    <Target Name="Build" DependsOnTargets="RestorePackages">
+    <Target Name="RestorePackages" DependsOnTargets="PreRestorePackages">
+        <MSBuild Projects="@(RestoreCsProjFiles)" Targets="EnableRestore;RestorePackages" />
+    </Target>
+
+    <Target Name="RestorePackagesSafe" DependsOnTargets="PreRestorePackages">
+        <MSBuild Projects="@(RestoreCsProjFiles)" Targets="RestorePackages" />
+    </Target>
+    
+    <Target Name="Build" DependsOnTargets="RestorePackagesSafe">
         <MSBuild Targets="Build" 
                  Projects="$(SolutionFile)"
                  Properties="$(BuildProperties);BuildPackages=false" />
     </Target>
 
-    <Target Name="Rebuild" DependsOnTargets="RestorePackages">
+    <Target Name="Rebuild" DependsOnTargets="RestorePackagesSafe">
         <MSBuild Targets="Rebuild" 
                  Projects="$(SolutionFile)"
                  Properties="$(BuildProperties);BuildPackages=false" />
@@ -54,7 +46,7 @@
                  Properties="$(BuildProperties)" />
     </Target>
 
-    <Target Name="Package">
+    <Target Name="Package" DependsOnTargets="Rebuild">
         <MSBuild Targets="Rebuild"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
                  Properties="$(BuildProperties);Platform=AnyCPU;DefineConstants=INTERNALS_INVISIBLE;RunCodeAnalysis=false" />

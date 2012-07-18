@@ -123,5 +123,26 @@
                 }
             }
         }
+
+        [Fact]
+        public void GetStoreType_throws_for_null_argument()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SqlProviderManifest("2008").GetStoreType(null));
+        }
+
+        [Fact]
+        public void GetEdmType_throws_for_null_argument()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SqlProviderManifest("2008").GetEdmType(null));
+        }
+        
+        [Fact]
+        public void EscapeLikeArgument_throws_for_null_argument()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SqlProviderManifest("2008").EscapeLikeArgument(null));
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -107,7 +108,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                Contract.Requires(name != null);
+                DbHelpers.ThrowIfNull(name, "name");
                 return _storeDataReader[name];
             }
         }
@@ -358,7 +359,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The ordinal of the column</returns>
         public override int GetOrdinal(string name)
         {
-            Contract.Requires(name != null);
+            DbHelpers.ThrowIfNull(name, "name");
+
             return _storeDataReader.GetOrdinal(name);
         }
 

@@ -18,7 +18,7 @@
     [PartialTrustFixture]
     public class PartialTrustTests : FunctionalTestBase
     {
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbContextInfo_works_under_partial_trust()
         {
             var contextInfo = new DbContextInfo(typeof(AdvancedPatternsMasterContext),
@@ -29,7 +29,7 @@
             Assert.NotNull(context);
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -42,7 +42,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -56,7 +56,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_DbSet_creation_works_under_partial_trust()
         {
             using (var context = new EmptyContext())
@@ -67,7 +67,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbEntityEntry_Member_works_for_collections_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -81,7 +81,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_DbSet_Create_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -94,7 +94,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -129,7 +129,7 @@
             public DbSet<Product> Products { get; set; }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbContext_set_initialization_works_under_partial_trust()
         {
             Database.SetInitializer<PartialTrustSetsContext>(null);
@@ -140,7 +140,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Non_generic_store_query_works_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -151,7 +151,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void SelectMany_works_under_partial_trust()
         {
             using (var context = new SimpleModelForLinq())
@@ -167,7 +167,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Setting_current_value_of_reference_nav_prop_works_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -196,7 +196,7 @@
             }
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust()
         {
             var results = new ClassWithContextField().Test();
@@ -204,7 +204,7 @@
             Assert.Equal(7, results.Count);
         }
 
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void PropertyConstraintException_can_be_serialized_and_deserialized_under_partial_trust()
         {
             try
@@ -231,7 +231,7 @@
         }
 
         // Dev11 216491
-        [Fact(Skip = "SDE Merge - No partial trust yet")]
+        // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()
         {
             using (var sandbox = new PartialTrustSandbox(grantReflectionPermission: true))

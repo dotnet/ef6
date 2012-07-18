@@ -2,10 +2,10 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
     using System.ComponentModel;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Manages a list suitable for data binding.
@@ -291,7 +291,7 @@ namespace System.Data.Entity.Core.Objects
 
         int IList.Add(object value)
         {
-            Contract.Requires(value != null);
+            DbHelpers.ThrowIfNull(value, "value");
 
             EnsureWritableList();
 
@@ -389,7 +389,7 @@ namespace System.Data.Entity.Core.Objects
 
         void IList.Remove(object value)
         {
-            Contract.Requires(value != null);
+            DbHelpers.ThrowIfNull(value, "value");
 
             EnsureWritableList();
 

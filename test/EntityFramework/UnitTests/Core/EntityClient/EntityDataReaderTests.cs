@@ -90,6 +90,26 @@
                 methodInvoke(entityDataReader);
                 dbDataReaderMock.Verify(mockMethodInvoke, Times.Once());
             }
+
+            [Fact]
+            public void GetOrdinal_throws_for_null_argument()
+            {
+                var dbDataReaderMock = new Mock<DbDataReader>();
+                var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
+
+                Assert.Throws<ArgumentNullException>(
+                    () => entityDataReader.GetOrdinal(null));
+            }
+
+            [Fact]
+            public void Indexer_throws_for_null_argument()
+            {
+                var dbDataReaderMock = new Mock<DbDataReader>();
+                var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
+
+                Assert.Throws<ArgumentNullException>(
+                    () => entityDataReader[(string)null]);
+            }
         }
 
         [Fact]

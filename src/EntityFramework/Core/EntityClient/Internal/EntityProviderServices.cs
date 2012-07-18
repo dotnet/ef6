@@ -5,7 +5,6 @@
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -27,9 +26,6 @@
         /// <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            Contract.Requires(providerManifest != null);
-            Contract.Requires(commandTree != null);
-
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
         }
@@ -37,7 +33,7 @@
         internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
         {
             Contract.Requires(storeProviderFactory != null);
-            Debug.Assert(commandTree != null, "Command Tree cannot be null");
+            Contract.Requires(commandTree != null);
 
             return new EntityCommandDefinition(storeProviderFactory, commandTree);
         }
@@ -48,8 +44,6 @@
         /// <param name="commandTree">The command tree for which the data space should be validated</param>
         internal override void ValidateDataSpace(DbCommandTree commandTree)
         {
-            Debug.Assert(commandTree != null, "Ensure command tree is non-null before calling ValidateDataSpace");
-
             if (commandTree.DataSpace
                 != DataSpace.CSpace)
             {
@@ -68,13 +62,11 @@
         /// <exception cref="InvalidCastException">prototype argument must be a EntityCommand</exception>
         public override DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
-            Contract.Requires(prototype != null);
             return ((EntityCommand)prototype).GetCommandDefinition();
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
-            Contract.Requires(connection != null);
             if (connection.GetType()
                 != typeof(EntityConnection))
             {
@@ -84,9 +76,8 @@
             return MetadataItem.EdmProviderManifest.Token;
         }
 
-        protected override DbProviderManifest GetDbProviderManifest(string versionHint)
+        protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
         {
-            Contract.Requires(versionHint != null);
             return MetadataItem.EdmProviderManifest;
         }
     }

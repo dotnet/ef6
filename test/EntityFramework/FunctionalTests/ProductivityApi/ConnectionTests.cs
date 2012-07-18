@@ -163,7 +163,7 @@
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Closed);
         }
 
-        [Fact(Skip = "Cannot create EntityConnection with open connection.")]
+        // TODO: [Fact(Skip = "Cannot create EntityConnection with open connection.")]
         public void Existing_connection_is_open_if_it_started_open()
         {
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Open);
@@ -890,7 +890,7 @@
         {
         }
 
-        [Fact(Skip = @"DbConnection timeout issue.")]
+        // TODO: [Fact(Skip = @"DbConnection timeout issue.")]
         // Ignored for now because even with Connection Timeout=1 the connection to a bad server
         // can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
         // SqlConnection which is that the timeout specified is a minimum value and if the APIs being called
@@ -923,7 +923,7 @@
             }
         }
 
-        [Fact(Skip = @"DbConnection timeout issue.")]
+        // TODO: [Fact(Skip = @"DbConnection timeout issue.")]
         // Ignored for now because even with Connection Timeout=1 the connection to a bad server
         // can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
         // SqlConnection which is that the timeout specified is a minimum value and if the APIs being called

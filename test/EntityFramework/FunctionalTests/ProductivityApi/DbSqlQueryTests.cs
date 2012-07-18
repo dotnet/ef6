@@ -11,6 +11,7 @@
     using AdvancedPatternsModel;
     using SimpleModel;
     using Xunit;
+    using Xunit.Extensions;
 
     /// <summary>
     /// Functional tests for DbSqlQuery and other raw SQL functionality. 
@@ -291,7 +292,7 @@
                 var query = context.Products.SqlQuery("select * from Categories");
 
                 Assert.Throws<EntityCommandExecutionException>(() => query.ToList()).ValidateMessage(
-                    "ADP_InvalidDataReaderMissingColumnForType", 
+                    "ADP_InvalidDataReaderMissingColumnForType",
                     "SimpleModel.Product", "CategoryId");
             }
         }
@@ -445,7 +446,7 @@
             {
                 var query = context.Database.SqlQuery<TElement>("select * from Products");
                 Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
-                    "ObjectContext_InvalidTypeForStoreQuery", 
+                    "ObjectContext_InvalidTypeForStoreQuery",
                     typeof(TElement).ToString());
             }
         }
@@ -503,38 +504,32 @@
 
         #region SQL command tests
 
-        [Fact]
+        [Fact, AutoRollback]
         public void SQL_commands_can_be_executed_against_the_database()
         {
-            using (new TransactionScope())
+            using (var context = new SimpleModelContext())
             {
-                using (var context = new SimpleModelContext())
-                {
-                    var result =
-                        context.Database.ExecuteSqlCommand(
-                            "update Products set Name = 'Vegemite' where Name = 'Marmite'");
+                var result =
+                    context.Database.ExecuteSqlCommand(
+                        "update Products set Name = 'Vegemite' where Name = 'Marmite'");
 
-                    Assert.Equal(1, result);
+                Assert.Equal(1, result);
 
-                    Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
-                }
+                Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
             }
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database()
         {
-            using (new TransactionScope())
+            using (var context = new SimpleModelContext())
             {
-                using (var context = new SimpleModelContext())
-                {
-                    var result = context.Database.ExecuteSqlCommand("update Products set Name = {0} where Name = {1}",
-                                                                    "Vegemite", "Marmite");
+                var result = context.Database.ExecuteSqlCommand("update Products set Name = {0} where Name = {1}",
+                                                                "Vegemite", "Marmite");
 
-                    Assert.Equal(1, result);
+                Assert.Equal(1, result);
 
-                    Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
-                }
+                Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
             }
         }
 

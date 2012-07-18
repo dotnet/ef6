@@ -21,7 +21,7 @@
 
             private void Calls_collection_override_passing_in_null(MergeOption mergeOption)
             {
-                var entityCollectionMock = CreateMockEntityCollection<object>(null);
+                var entityCollectionMock = MockHelper.CreateMockEntityCollection<object>(null);
 
                 int timesLoadCalled = 0;
                 entityCollectionMock.Setup(m => m.Load(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>()))
@@ -60,7 +60,7 @@
 
             private void Calls_merge_passing_in_expected_values(List<IEntityWrapper> collection, MergeOption mergeOption, object refreshedValue)
             {
-                var entityCollectionMock = CreateMockEntityCollection<object>(refreshedValue);
+                var entityCollectionMock = MockHelper.CreateMockEntityCollection<object>(refreshedValue);
 
                 int timesMergeCalled = 0;
                 if (collection == null)
@@ -95,17 +95,32 @@
                     refreshedValue == null ? "null" : "not null"));
             }
 
-            private static Mock<EntityCollection<TEntity>> CreateMockEntityCollection<TEntity>(TEntity refreshedValue)
-                where TEntity : class
+            [Fact]
+            public void Add_generic_throws_for_null_argument()
             {
-                var entityReferenceMock = new Mock<EntityCollection<TEntity>>() { CallBase = true };
+                Assert.Throws<ArgumentNullException>(
+                    () => MockHelper.CreateMockEntityCollection<string>(null).Object.Add(null));
+            }
 
-                bool hasResults = refreshedValue != null;
-                entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
-                    .Returns(() => null);
-                entityReferenceMock.Setup(m => m.GetResults<object>(null)).Returns(new[] { refreshedValue });
+            [Fact]
+            public void Add_object_throws_for_null_argument()
+            {
+                Assert.Throws<ArgumentNullException>(
+                    () => ((IRelatedEnd)MockHelper.CreateMockEntityCollection<string>(null).Object).Add((object)null));
+            }
 
-                return entityReferenceMock;
+            [Fact]
+            public void Add_IEntityWithRelationships_throws_for_null_argument()
+            {
+                Assert.Throws<ArgumentNullException>(
+                    () => ((IRelatedEnd)MockHelper.CreateMockEntityCollection<string>(null).Object).Add((IEntityWithRelationships)null));
+            }
+
+            [Fact]
+            public void Remove_throws_for_null_argument()
+            {
+                Assert.Throws<ArgumentNullException>(
+                    () => MockHelper.CreateMockEntityCollection<object>(null).Object.Remove(null));
             }
         }
     }

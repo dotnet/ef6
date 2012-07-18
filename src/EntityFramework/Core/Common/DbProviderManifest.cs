@@ -5,11 +5,13 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Xml;
 
     /// <summary>
     /// Metadata Interface for all CLR types types
     /// </summary>
+    [ContractClass(typeof(DbProviderManifestContracts))]
     public abstract class DbProviderManifest
     {
         /// <summary>Value to pass to GetInformation to get the StoreSchemaDefinition</summary>
@@ -163,8 +165,7 @@ namespace System.Data.Entity.Core.Common
             {
                 // if the provider returned null for the conceptual schema definition, return the default one
                 if (informationType == ConceptualSchemaDefinitionVersion3
-                    ||
-                    informationType == ConceptualSchemaDefinition)
+                    || informationType == ConceptualSchemaDefinition)
                 {
                     return DbProviderServices.GetConceptualSchemaDefinition(informationType);
                 }
@@ -198,7 +199,31 @@ namespace System.Data.Entity.Core.Common
         /// <returns>The argument with the wildcards and the escape character escaped</returns>
         public virtual string EscapeLikeArgument(string argument)
         {
+            Contract.Requires(argument != null);
+
             throw new ProviderIncompatibleException(Strings.ProviderShouldOverrideEscapeLikeArgument);
         }
     }
+
+    #region Base Member Contracts
+
+    [ContractClassFor(typeof(DbProviderManifest))]
+    internal abstract class DbProviderManifestContracts : DbProviderManifest
+    {
+        public override TypeUsage GetEdmType(TypeUsage storeType)
+        {
+            Contract.Requires(storeType != null);
+
+            throw new NotImplementedException();
+        }
+
+        public override TypeUsage GetStoreType(TypeUsage edmType)
+        {
+            Contract.Requires(edmType != null);
+
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion
 }

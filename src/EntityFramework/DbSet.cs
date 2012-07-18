@@ -19,6 +19,7 @@
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
+    [ContractClass(typeof(DbSetContracts))]
     public abstract class DbSet : DbQuery, IInternalSetAdapter
     {
         #region Fields and constructors
@@ -284,6 +285,21 @@
         public new Type GetType()
         {
             return base.GetType();
+        }
+
+        #endregion
+
+        #region Base Member Contracts
+
+        [ContractClassFor(typeof(DbSet))]
+        private abstract class DbSetContracts : DbSet
+        {
+            public override object Create(Type derivedEntityType)
+            {
+                Contract.Requires(derivedEntityType != null);
+
+                throw new NotImplementedException();
+            }
         }
 
         #endregion

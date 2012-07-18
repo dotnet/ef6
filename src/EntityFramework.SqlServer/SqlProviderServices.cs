@@ -219,8 +219,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
-            Contract.Requires(connection != null);
-
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             if (string.IsNullOrEmpty(sqlConnection.ConnectionString))
@@ -256,8 +254,6 @@ namespace System.Data.Entity.SqlServer
 
         protected override DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string versionHint)
         {
-            Contract.Requires(fromReader != null);
-
             ValidateVersionHint(versionHint);
 
             var underlyingReader = fromReader as SqlDataReader;
@@ -732,8 +728,6 @@ namespace System.Data.Entity.SqlServer
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
-            Contract.Requires(providerManifestToken != null);
-            Contract.Requires(storeItemCollection != null);
             var version = SqlVersionUtils.GetSqlVersion(providerManifestToken);
             return CreateObjectsScript(version, storeItemCollection);
         }
@@ -751,9 +745,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            Contract.Requires(connection != null);
-            Contract.Requires(storeItemCollection != null);
-
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             string databaseName, dataFileName, logFileName;
             GetOrGenerateDatabaseNameAndGetFileNames(sqlConnection, out databaseName, out dataFileName, out logFileName);
@@ -916,9 +907,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            Contract.Requires(connection != null);
-            Contract.Requires(storeItemCollection != null);
-
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 
@@ -1007,8 +995,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            Contract.Requires(connection != null);
-            Contract.Requires(storeItemCollection != null);
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);

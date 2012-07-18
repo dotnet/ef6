@@ -61,7 +61,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("bar." + HistoryContext.TableName));
         }
 
-        [MigrationsTheory(Skip = "In progress")]
+        // TODO: [MigrationsTheory(Skip = "In progress")]
         public void Can_get_database_migrations_when_custom_default_schema_introduced()
         {
             DropDatabase();

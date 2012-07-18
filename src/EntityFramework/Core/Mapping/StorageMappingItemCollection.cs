@@ -869,7 +869,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <exception cref="ArgumentException"> Thrown if mapping space is not valid</exception>
         internal override Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
-            Contract.Requires(identity != null);
             if (typeSpace != DataSpace.CSpace)
             {
                 throw new InvalidOperationException(Strings.Mapping_Storage_InvalidSpace(typeSpace));
@@ -923,7 +922,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="item"></param>
         internal override Map GetMap(GlobalItem item)
         {
-            Contract.Requires(item != null);
             var typeSpace = item.DataSpace;
             if (typeSpace != DataSpace.CSpace)
             {
@@ -1512,8 +1510,4 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
     }
-
-//---- ItemCollection
 }
-
-//---- 

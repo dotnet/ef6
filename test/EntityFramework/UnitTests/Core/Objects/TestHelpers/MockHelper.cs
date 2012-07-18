@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Linq.Expressions;
     using Moq;
 
@@ -78,6 +79,19 @@
                 elementWithErrorHandling: element,
                 initializeCollection: null,
                 recordStateFactories: recordStateFactories);
+        }
+
+        internal static Mock<EntityCollection<TEntity>> CreateMockEntityCollection<TEntity>(TEntity refreshedValue)
+            where TEntity : class
+        {
+            var entityReferenceMock = new Mock<EntityCollection<TEntity>>() { CallBase = true };
+
+            bool hasResults = refreshedValue != null;
+            entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
+                .Returns(() => null);
+            entityReferenceMock.Setup(m => m.GetResults<object>(null)).Returns(new[] { refreshedValue });
+
+            return entityReferenceMock;
         }
     }
 }

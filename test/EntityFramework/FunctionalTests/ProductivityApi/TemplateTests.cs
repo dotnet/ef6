@@ -14,6 +14,7 @@
     using FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns;
     using FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel;
     using Xunit;
+    using Xunit.Extensions;
 
     /// <summary>
     /// Tests for context/entity classes generated from productivity T4 templates.
@@ -94,32 +95,29 @@
             return building18;
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Read_and_write_using_MonsterModel_created_from_T4_template()
         {
-            using (new TransactionScope())
+            int orderId;
+            int? customerId;
+
+            using (var context = new MonsterModel())
             {
-                int orderId;
-                int? customerId;
+                var entry = context.Entry(CreateOrder());
+                entry.State = EntityState.Added;
 
-                using (var context = new MonsterModel())
-                {
-                    var entry = context.Entry(CreateOrder());
-                    entry.State = EntityState.Added;
+                context.SaveChanges();
 
-                    context.SaveChanges();
+                orderId = entry.Entity.OrderId;
+                customerId = entry.Entity.CustomerId;
+            }
 
-                    orderId = entry.Entity.OrderId;
-                    customerId = entry.Entity.CustomerId;
-                }
+            using (var context = new MonsterModel())
+            {
+                var order = context.Order.Include(o => o.Customer).Single(o => o.CustomerId == customerId);
 
-                using (var context = new MonsterModel())
-                {
-                    var order = context.Order.Include(o => o.Customer).Single(o => o.CustomerId == customerId);
-
-                    Assert.Equal(orderId, order.OrderId);
-                    Assert.True(order.Customer.Orders.Contains(order));
-                }
+                Assert.Equal(orderId, order.OrderId);
+                Assert.True(order.Customer.Orders.Contains(order));
             }
         }
 

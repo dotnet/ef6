@@ -24,6 +24,7 @@
     using DaFunc;
     using SimpleModel;
     using Xunit;
+    using Xunit.Extensions;
 
     /// <summary>
     /// Tests for the primary methods on DbContext.
@@ -563,76 +564,70 @@
 
         #region Positive SaveChanges tests
 
-        [Fact]
+        [Fact, AutoRollback]
         public void SaveChanges_saves_Added_Modified_Deleted_entities()
         {
-            using (new TransactionScope())
+            using (var context = new SimpleModelContext())
             {
-                using (var context = new SimpleModelContext())
+                // Modified
+                var product1 = context.Products.Find(1);
+                product1.Name = "Smarties";
+
+                // Deleted
+                var product2 = context.Products.Find(2);
+                context.Products.Remove(product2);
+
+                // Added
+                var product3 = new Product() { Name = "Branston Pickle" };
+                context.Products.Add(product3);
+
+                // Validate state before Save
+                Assert.Equal(3, GetStateEntries(context).Count());
+                Assert.Equal(EntityState.Modified, GetStateEntry(context, product1).State);
+                Assert.Equal(EntityState.Deleted, GetStateEntry(context, product2).State);
+                Assert.Equal(EntityState.Added, GetStateEntry(context, product3).State);
+
+                // Save
+                int savedCount = context.SaveChanges();
+                Assert.Equal(3, savedCount);
+
+                // Validate state after Save
+                Assert.Equal(2, GetStateEntries(context).Count());
+                Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product1).State);
+                Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product3).State);
+
+                using (var context2 = new SimpleModelContext())
                 {
-                    // Modified
-                    var product1 = context.Products.Find(1);
-                    product1.Name = "Smarties";
+                    var product1s = context2.Products.Find(product1.Id);
+                    var product2s = context2.Products.Find(product2.Id);
+                    var product3s = context2.Products.Find(product3.Id);
 
-                    // Deleted
-                    var product2 = context.Products.Find(2);
-                    context.Products.Remove(product2);
+                    Assert.NotNull(product1s);
+                    Assert.Null(product2s);
+                    Assert.NotNull(product3s);
 
-                    // Added
-                    var product3 = new Product() { Name = "Branston Pickle" };
-                    context.Products.Add(product3);
+                    Assert.Equal("Smarties", product1s.Name);
+                    Assert.Equal("Branston Pickle", product3s.Name);
 
-                    // Validate state before Save
-                    Assert.Equal(3, GetStateEntries(context).Count());
-                    Assert.Equal(EntityState.Modified, GetStateEntry(context, product1).State);
-                    Assert.Equal(EntityState.Deleted, GetStateEntry(context, product2).State);
-                    Assert.Equal(EntityState.Added, GetStateEntry(context, product3).State);
-
-                    // Save
-                    int savedCount = context.SaveChanges();
-                    Assert.Equal(3, savedCount);
-
-                    // Validate state after Save
                     Assert.Equal(2, GetStateEntries(context).Count());
-                    Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product1).State);
-                    Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product3).State);
-
-                    using (var context2 = new SimpleModelContext())
-                    {
-                        var product1s = context2.Products.Find(product1.Id);
-                        var product2s = context2.Products.Find(product2.Id);
-                        var product3s = context2.Products.Find(product3.Id);
-
-                        Assert.NotNull(product1s);
-                        Assert.Null(product2s);
-                        Assert.NotNull(product3s);
-
-                        Assert.Equal("Smarties", product1s.Name);
-                        Assert.Equal("Branston Pickle", product3s.Name);
-
-                        Assert.Equal(2, GetStateEntries(context).Count());
-                        Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product1s).State);
-                        Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product3s).State);
-                    }
+                    Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product1s).State);
+                    Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product3s).State);
                 }
             }
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void SaveChanges_performs_DetectChanges()
         {
             // NOTE: This is split out into a seperate test from the above test because 
             //       it is important no other APIs are called between the modification 
             //       and calling SaveChanges due to other APIs calling DetectChanges implicitly
-            using (new TransactionScope())
+            using (var context = new SimpleModelContext())
             {
-                using (var context = new SimpleModelContext())
-                {
-                    var prod = context.Products.Find(1);
-                    prod.Name = "Cascade Draught";
-                    int savedCount = context.SaveChanges();
-                    Assert.Equal(1, savedCount);
-                }
+                var prod = context.Products.Find(1);
+                prod.Name = "Cascade Draught";
+                int savedCount = context.SaveChanges();
+                Assert.Equal(1, savedCount);
             }
         }
 
@@ -712,27 +707,22 @@
             }
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void SaveChanges_bubbles_UpdateException()
         {
-            using (new TransactionScope())
+            using (var context = new SimpleModelContext())
             {
-                using (var context = new SimpleModelContext())
-                {
-                    var prod = new Product() { Name = "Wallaby Sausages", CategoryId = "AUSSIE FOODS" };
-                    context.Products.Add(prod);
+                var prod = new Product() { Name = "Wallaby Sausages", CategoryId = "AUSSIE FOODS" };
+                context.Products.Add(prod);
 
-                    Assert.Throws<DbUpdateException>(() => context.SaveChanges()).ValidateMessage(
-                        "Update_GeneralExecutionException");
-                }
+                Assert.Throws<DbUpdateException>(() => context.SaveChanges()).ValidateMessage(
+                    "Update_GeneralExecutionException");
             }
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void SaveChanges_bubbles_exception_during_AcceptChanges()
         {
-            using (new TransactionScope())
-            {
                 using (var context = new SimpleModelContext())
                 {
                     var cat1 = new Category { Id = "AUSSIE FOODS" };
@@ -746,7 +736,6 @@
                     Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
                         "ObjectContext_AcceptAllChangesFailure");
                 }
-            }
         }
 
         [Fact]

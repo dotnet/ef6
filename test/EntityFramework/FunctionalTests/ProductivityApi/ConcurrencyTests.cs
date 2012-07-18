@@ -12,6 +12,7 @@
     using AdvancedPatternsModel;
     using ConcurrencyModel;
     using Xunit;
+    using Xunit.Extensions;
 
     /// <summary>
     /// Functional tests for concurrency exceptions.
@@ -38,7 +39,7 @@
 
         #region Concurrency resolution with FK associations
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values()
         {
             ConcurrencyTest(ClientPodiums, (c, ex) =>
@@ -48,7 +49,7 @@
                                            });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values()
         {
             ConcurrencyTest(StorePodiums, (c, ex) =>
@@ -60,7 +61,7 @@
                                           });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values()
         {
             ConcurrencyTest(10, (c, ex) =>
@@ -71,7 +72,7 @@
                                 });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values_using_objects()
         {
             ConcurrencyTest(ClientPodiums, (c, ex) =>
@@ -82,7 +83,7 @@
                                            });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_objects()
         {
             ConcurrencyTest(StorePodiums, (c, ex) =>
@@ -94,7 +95,7 @@
                                           });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values_using_objects()
         {
             ConcurrencyTest(10, (c, ex) =>
@@ -105,7 +106,7 @@
                                 });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values_using_cloned_property_values()
         {
             ConcurrencyTest(ClientPodiums, (c, ex) =>
@@ -116,7 +117,7 @@
                                            });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_cloned_property_values()
         {
             ConcurrencyTest(StorePodiums, (c, ex) =>
@@ -128,7 +129,7 @@
                                           });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values_using_cloned_property_values()
         {
             ConcurrencyTest(10, (c, ex) =>
@@ -139,7 +140,7 @@
                                 });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_equivalent_of_accept_changes()
         {
             ConcurrencyTest(StorePodiums, (c, ex) =>
@@ -150,13 +151,13 @@
                                           });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_Reload()
         {
             ConcurrencyTest(StorePodiums, (c, ex) => ex.Entries.Single().Reload());
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Two_concurrency_issues_in_one_to_one_related_entities_can_be_handled_by_dealing_with_dependent_first()
         {
             ConcurrencyTest(c =>
@@ -198,7 +199,7 @@
                             });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void
             Two_concurrency_issues_in_one_to_many_related_entities_can_be_handled_by_dealing_with_dependent_first()
         {
@@ -241,7 +242,7 @@
                             });
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Concurrency_issue_where_the_FK_is_the_concurrency_token_can_be_handled()
         {
             ConcurrencyTest(
@@ -276,7 +277,7 @@
                     "DbContext_IndependentAssociationUpdateException", message);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Change_in_independent_association_results_in_independent_association_exception()
         {
             ConcurrencyTest(
@@ -290,7 +291,7 @@
                 null);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Change_in_independent_association_after_change_in_different_concurrency_token_results_in_independent_association_exception()
         {
             ConcurrencyTest(c => c.Teams.Single(t => t.Id == Team.Ferrari).FastestLaps = 0,
@@ -306,7 +307,7 @@
                             null);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void
             Attempting_to_delete_same_relationship_twice_for_many_to_many_results_in_independent_association_exception()
         {
@@ -322,7 +323,7 @@
                 null);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void
             Attempting_to_add_same_relationship_twice_for_many_to_many_results_in_independent_association_exception()
         {
@@ -342,7 +343,7 @@
 
         #region Concurrency exceptions with complex types
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Concurrency_issue_where_a_complex_type_nested_member_is_the_concurrency_token_can_be_handled()
         {
             ConcurrencyTest(c => c.Engines.Single(s => s.Name == "CA2010").StorageLocation.Latitude = 47.642576,
@@ -362,7 +363,7 @@
 
         #region Tests for update exceptions involving adding and deleting entities
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Adding_the_same_entity_twice_results_in_DbUpdateException()
         {
             ConcurrencyTest(
@@ -377,7 +378,7 @@
                 null);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Deleting_the_same_entity_twice_results_in_DbUpdateConcurrencyException()
         {
             ConcurrencyTest(c => c.Drivers.Remove(c.Drivers.Single(d => d.Name == "Fernando Alonso")),
@@ -393,7 +394,7 @@
                             c => Assert.Null(c.Drivers.SingleOrDefault(d => d.Name == "Fernando Alonso")));
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Deleting_the_same_entity_twice_when_entity_has_independent_association_results_in_DbIndependentAssociationUpdateException()
         {
             ConcurrencyTest(c => c.Teams.Remove(c.Teams.Single(t => t.Id == Team.Hispania)),
@@ -406,7 +407,7 @@
                             null);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Updating_then_deleting_the_same_entity_results_in_DbUpdateConcurrencyException()
         {
             ConcurrencyTest(c => c.Drivers.Single(d => d.Name == "Fernando Alonso").Wins = 1,
@@ -423,7 +424,7 @@
                             c => Assert.Equal(1, c.Drivers.Single(d => d.Name == "Fernando Alonso").Wins));
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Updating_then_deleting_the_same_entity_results_in_DbUpdateConcurrencyException_which_can_be_resolved_with_store_values()
         {
             ConcurrencyTest(c => c.Drivers.Single(d => d.Name == "Fernando Alonso").Wins = 1,
@@ -444,7 +445,7 @@
                             c => Assert.Equal(1, c.Drivers.Single(d => d.Name == "Fernando Alonso").Wins));
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Deleting_then_updating_the_same_entity_results_in_DbUpdateConcurrencyException()
         {
             ConcurrencyTest(c => c.Drivers.Remove(c.Drivers.Single(d => d.Name == "Fernando Alonso")),
@@ -461,7 +462,7 @@
                             c => Assert.Null(c.Drivers.SingleOrDefault(d => d.Name == "Fernando Alonso")));
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void Deleting_then_updating_the_same_entity_results_in_DbUpdateConcurrencyException_which_can_be_resolved_with_store_values()
         {
             ConcurrencyTest(c => c.Drivers.Remove(c.Drivers.Single(d => d.Name == "Fernando Alonso")),
@@ -547,7 +548,7 @@
 
         #region Serialization of exceptions
 
-        [Fact]
+        [Fact, AutoRollback]
         public void DbUpdateException_can_be_serialized_but_does_not_serialize_entries()
         {
             ConcurrencyTest(
@@ -558,7 +559,7 @@
                 null);
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void DbUpdateConcurrencyException_can_be_serialized_but_does_not_serialize_entries()
         {
             ConcurrencyTest(c => c.Teams.Find(Team.McLaren).Races = 1,
@@ -581,7 +582,7 @@
             Assert.Null(deserializedException.Entries.SingleOrDefault());
         }
 
-        [Fact]
+        [Fact, AutoRollback]
         public void DbUpdateException_for_independent_association_error_can_be_serialized()
         {
             ConcurrencyTest(c => c.Teams.Remove(c.Teams.Single(t => t.Id == Team.Hispania)),
@@ -704,37 +705,34 @@
         private void ConcurrencyTest(Action<F1Context> storeChange, Action<F1Context> clientChange,
                                      Action<F1Context, DbUpdateException> resolver, Action<F1Context> validator)
         {
-            using (new TransactionScope())
+            using (var context = new F1Context())
             {
-                using (var context = new F1Context())
+                clientChange(context);
+
+                using (var innerContext = new F1Context())
                 {
-                    clientChange(context);
+                    storeChange(innerContext);
+                    innerContext.SaveChanges();
+                }
 
-                    using (var innerContext = new F1Context())
-                    {
-                        storeChange(innerContext);
-                        innerContext.SaveChanges();
-                    }
+                try
+                {
+                    context.SaveChanges();
+                    Assert.True(false);
+                }
+                catch (DbUpdateException ex)
+                {
+                    Assert.IsAssignableFrom<UpdateException>(ex.InnerException);
 
-                    try
+                    resolver(context, ex);
+
+                    if (validator != null)
                     {
                         context.SaveChanges();
-                        Assert.True(false);
-                    }
-                    catch (DbUpdateException ex)
-                    {
-                        Assert.IsAssignableFrom<UpdateException>(ex.InnerException);
 
-                        resolver(context, ex);
-
-                        if (validator != null)
+                        using (var validationContext = new F1Context())
                         {
-                            context.SaveChanges();
-
-                            using (var validationContext = new F1Context())
-                            {
-                                validator(validationContext);
-                            }
+                            validator(validationContext);
                         }
                     }
                 }

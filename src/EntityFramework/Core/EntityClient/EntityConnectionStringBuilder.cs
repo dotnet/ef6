@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Class representing a connection string builder for the entity client provider
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                Contract.Requires(keyword != null);
+                DbHelpers.ThrowIfNull(keyword, "keyword");
 
                 // Just access the properties to get the value since the fields, which the properties will be accessing, will
                 // have already been set when the connection string is set
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
             set
             {
-                Contract.Requires(keyword != null);
+                DbHelpers.ThrowIfNull(keyword, "keyword");
 
                 // If a null value is set, just remove the parameter and return
                 if (value == null)
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if this connections string builder contains the specific key</returns>
         public override bool ContainsKey(string keyword)
         {
-            Contract.Requires(keyword != null);
+            DbHelpers.ThrowIfNull(keyword, "keyword");
 
             foreach (var validKeyword in _validKeywords)
             {
@@ -277,8 +277,6 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if the value is retrieved</returns>
         public override bool TryGetValue(string keyword, out object value)
         {
-            Contract.Requires(keyword != null);
-
             if (ContainsKey(keyword))
             {
                 value = this[keyword];
@@ -296,8 +294,6 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>True if the parameter is removed</returns>
         public override bool Remove(string keyword)
         {
-            Contract.Requires(keyword != null);
-
             // Convert the given object into a string
             if (string.Compare(keyword, MetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0)
             {

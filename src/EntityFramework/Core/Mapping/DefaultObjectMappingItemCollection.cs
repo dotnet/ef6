@@ -184,7 +184,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="item"></param>
         internal override Map GetMap(GlobalItem item)
         {
-            Contract.Requires(item != null);
             Map map;
             if (!TryGetMap(item, out map))
             {
