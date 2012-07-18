@@ -18,7 +18,6 @@ When right-clicking on a file containing a derived DbContext class, the followin
     <MoreInfoUrl>http://blogs.msdn.com/b/adonet</MoreInfoUrl>
     <License>License.rtf</License>
     <GettingStartedGuide>http://blogs.msdn.com/b/adonet</GettingStartedGuide>
-    <Icon>db.png</Icon>
     <PreviewImage>menu.png</PreviewImage>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
