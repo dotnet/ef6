@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Internal
 {
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -42,6 +43,7 @@
         /// </summary>
         /// <param name = "input">The input to the initializer; ignored if initialization has already succeeded.</param>
         /// <returns>The initialized object.</returns>
+        [DebuggerStepThrough]
         public TResult GetValue(TInput input)
         {
             // This code is taken from System.Lazy with the parts of that class that we are not using removed

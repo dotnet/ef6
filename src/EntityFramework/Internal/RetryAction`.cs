@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Internal
 {
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -33,6 +34,7 @@
         ///     Performs the action unless it has already been successfully performed before.
         /// </summary>
         /// <param name = "input">The input to the action; ignored if the action has already succeeded.</param>
+        [DebuggerStepThrough]
         public void PerformAction(TInput input)
         {
             // This code is taken from System.Lazy with the parts of that class that we are not using removed
