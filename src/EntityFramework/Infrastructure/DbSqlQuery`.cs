@@ -7,22 +7,25 @@
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a SQL query for entities that is created from a <see cref = "DbContext" /> 
+    ///     Represents a SQL query for non-entities that is created from a <see cref = "DbContext" /> 
     ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref = "DbSet{TEntity}" /> instance for the 
-    ///     entity type. The query is not executed when this object is created; it is executed
+    ///     Instances of this class are obtained from the <see cref = "DbContext.Database" /> instance.
+    ///     The query is not executed when this object is created; it is executed
     ///     each time it is enumerated, for example by using foreach.
-    ///     SQL queries for non-entities are created using the <see cref = "DbContext.Database" />.
+    ///     SQL queries for entities are created using the <see cref = "DbSet{TEntity}" />.
     ///     See <see cref = "DbSqlQuery" /> for a non-generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class DbSqlQuery<TEntity> : IEnumerable<TEntity>, IListSource
-        where TEntity : class
+    public class DbSqlQuery<TElement> : IEnumerable<TElement>, IDbAsyncEnumerable<TElement>, IListSource
     {
         #region Constructors and fields
 
         private readonly InternalSqlQuery _internalQuery;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref = "DbSqlQuery{TResult}" /> class.
+        /// </summary>
+        /// <param name = "internalQuery">The internal query.</param>
         internal DbSqlQuery(InternalSqlQuery internalQuery)
         {
             _internalQuery = internalQuery;
@@ -33,21 +36,21 @@
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the elements.
+        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// An
-        /// <see cref = "IEnumerator{T}" />
-        /// object that can be used to iterate through the elements.
-        public IEnumerator<TEntity> GetEnumerator()
+        /// <returns>
+        ///     An <see cref = "IEnumerator{TEntity}" /> object that can be used to iterate through the elements.
+        /// </returns>
+        public IEnumerator<TElement> GetEnumerator()
         {
-            return (IEnumerator<TEntity>)_internalQuery.GetEnumerator();
+            return (IEnumerator<TElement>)_internalQuery.GetEnumerator();
         }
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the elements.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
         /// <returns>
-        ///     An <see cref = "T:System.Collections.IEnumerator" /> object that can be used to iterate through the elements.
+        ///     An <see cref="IEnumerator"/> object that can be used to iterate through the elements.
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -56,16 +59,30 @@
 
         #endregion
 
-        #region AsNoTracking
+        #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        ///     Returns a new query where the results of the query will not be tracked by the associated
-        ///     <see cref = "DbContext" />.
+        ///     Returns an <see cref="IDbAsyncEnumerable{T}"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>A new query with no-tracking applied.</returns>
-        public DbSqlQuery<TEntity> AsNoTracking()
+        /// <returns>
+        ///     An <see cref="IDbAsyncEnumerable{T}"/> object that can be used to iterate through the elements.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<TElement> IDbAsyncEnumerable<TElement>.GetAsyncEnumerator()
         {
-            return new DbSqlQuery<TEntity>(InternalQuery.AsNoTracking());
+            return (IDbAsyncEnumerator<TElement>)_internalQuery.GetAsyncEnumerator();
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerable"/> which when enumerated will execute the SQL query against the database.
+        /// </summary>
+        /// <returns>
+        ///     An <see cref="IDbAsyncEnumerable"/> object that can be used to iterate through the elements.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return _internalQuery.GetAsyncEnumerator();
         }
 
         #endregion

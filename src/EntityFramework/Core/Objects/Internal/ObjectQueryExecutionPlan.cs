@@ -9,6 +9,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see cref="ObjectQuery"/>
@@ -81,6 +83,67 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 // acquire store reader
                 storeReader = commandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
+
+                var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
+                var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+
+                // create materializer delegate
+                TypeUsage resultItemEdmType;
+
+                if (ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+                {
+                    resultItemEdmType = ((CollectionType)ResultType.EdmType).TypeUsage;
+                }
+                else
+                {
+                    resultItemEdmType = ResultType;
+                }
+
+                return new ObjectResult<TResultType>(shaper, _singleEntitySet, resultItemEdmType);
+            }
+            catch (Exception)
+            {
+                if (null != storeReader)
+                {
+                    // Note: The caller is responsible for disposing reader if creating
+                    // the enumerator fails.
+                    storeReader.Dispose();
+                }
+                throw;
+            }
+        }
+
+        internal async virtual Task<ObjectResult<TResultType>> ExecuteAsync<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues,
+            CancellationToken cancellationToken)
+        {
+            DbDataReader storeReader = null;
+            try
+            {
+                // create entity command (just do this to snarf store command)
+                var commandDefinition = (EntityCommandDefinition)CommandDefinition;
+                var entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
+
+                // pass through parameters and timeout values
+                if (context.CommandTimeout.HasValue)
+                {
+                    entityCommand.CommandTimeout = context.CommandTimeout.Value;
+                }
+
+                if (parameterValues != null)
+                {
+                    foreach (var parameter in parameterValues)
+                    {
+                        var index = entityCommand.Parameters.IndexOf(parameter.Name);
+
+                        if (index != -1)
+                        {
+                            entityCommand.Parameters[index].Value = parameter.Value ?? DBNull.Value;
+                        }
+                    }
+                }
+
+                // acquire store reader
+                storeReader = await commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken);
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
                 var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);

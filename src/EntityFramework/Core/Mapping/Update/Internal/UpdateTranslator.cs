@@ -16,6 +16,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This class performs to following tasks to persist C-Space changes to the store:
@@ -412,6 +414,53 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // Remember the data sources so that we can throw meaningful exception
                     source = command;
                     var rowsAffected = command.Execute(identifierValues, generatedValues);
+                    ValidateRowsAffected(rowsAffected, source);
+                }
+            }
+            catch (Exception e)
+            {
+                // we should not be wrapping all exceptions
+                if (e.RequiresContext())
+                {
+                    throw new UpdateException(
+                        Strings.Update_GeneralExecutionException, e,
+                        DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
+                }
+                throw;
+            }
+
+            BackPropagateServerGen(generatedValues);
+
+            var totalStateEntries = AcceptChanges();
+
+            return totalStateEntries;
+        }
+
+        /// <summary>
+        /// An asynchronous version of Update, which 
+        /// persists state manager changes to the store.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing the total number of state entries affected.</returns>
+        internal virtual async Task<int> UpdateAsync(CancellationToken cancellationToken)
+        {
+            // tracks values for identifiers in this session
+            var identifierValues = new Dictionary<int, object>();
+
+            // tracks values for generated values in this session
+            var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
+
+            var orderedCommands = ProduceCommands();
+
+            // used to track the source of commands being processed in case an exception is thrown
+            UpdateCommand source = null;
+            try
+            {
+                foreach (var command in orderedCommands)
+                {
+                    // Remember the data sources so that we can throw meaningful exception
+                    source = command;
+                    var rowsAffected = await command.ExecuteAsync(identifierValues, generatedValues, cancellationToken);
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }

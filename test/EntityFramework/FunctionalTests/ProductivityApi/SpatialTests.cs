@@ -41,31 +41,55 @@
 
         // Dev11 226644
         [Fact]
-        public void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works()
+        public void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works_sync()
+        {
+            DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works(ToList);
+        }
+
+        [Fact]
+        public void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works_async()
+        {
+            DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works(ToListAsync);
+        }
+
+        private void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works(
+            Func<IQueryable<IQueryable<SupplierWithLocation>>, List<IQueryable<SupplierWithLocation>>> toList)
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
-                var suppliers = (from x in context.Suppliers
-                                 select
-                                     context.SuppliersWithinRange(1000,
-                                                                  DbGeography.FromText("POINT(-122.335576 47.610676)",
-                                                                                       4326))).ToList();
+                var suppliers = toList(from x in context.Suppliers
+                                       select
+                                         context.SuppliersWithinRange(1000,
+                                            DbGeography.FromText("POINT(-122.335576 47.610676)",
+                                                4326)));
 
                 Assert.Equal(16, suppliers.Count);
             }
         }
 
         [Fact]
-        public void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works()
+        public void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works_sync()
+        {
+            DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works(ToList);
+        }
+
+        [Fact]
+        public void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works_async()
+        {
+            DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works(ToListAsync);
+        }
+
+        private void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works(
+            Func<IQueryable<IQueryable<SupplierWithLocation>>, List<IQueryable<SupplierWithLocation>>> toList)
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
-                var suppliers = (from x in context.Suppliers
-                                 select
-                                     SpatialNorthwindContext.StaticSuppliersWithinRange(1000,
-                                                                                        DbGeography.FromText(
-                                                                                            "POINT(-122.335576 47.610676)",
-                                                                                            4326))).ToList();
+                var suppliers = toList(from x in context.Suppliers
+                                       select
+                                         SpatialNorthwindContext.StaticSuppliersWithinRange(1000,
+                                            DbGeography.FromText(
+                                                "POINT(-122.335576 47.610676)",
+                                                4326)));
 
                 Assert.Equal(16, suppliers.Count);
             }
@@ -78,7 +102,19 @@
         }
 
         [Fact]
-        public void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works()
+        public void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works_sync()
+        {
+            DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works(ToList);
+        }
+
+        [Fact]
+        public void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works_async()
+        {
+            DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works(ToListAsync);
+        }
+
+        private void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works(
+            Func<IQueryable<IQueryable<SupplierWithLocation>>, List<IQueryable<SupplierWithLocation>>> toList)
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
@@ -226,9 +262,24 @@
         #region Tests for materializing spatial types using eSQL
 
         // Dev11 260655
+
         [Fact]
         public void
-            Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception()
+            Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception_sync()
+        {
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToList);
+        }
+
+        [Fact]
+        public void
+            Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception_async()
+        {
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToListAsync);
+        }
+
+        private void
+            Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception(
+            Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
@@ -239,7 +290,7 @@
                                left outer join [SpatialNorthwindContext].[PolygonWidgets] as [i]
                                on Edm.SpatialCrosses(o.[AGeometricLineString],i.[AGeometricPolygon]))";
 
-                var results = ExecuteESqlQuery(context, query);
+                var results = ExecuteESqlQuery(context, query, toList);
 
                 Assert.Equal(2, results.Count);
                 foreach (var result in results)
@@ -254,7 +305,21 @@
 
         [Fact]
         public void
-            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception()
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception_sync()
+        {
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToList);
+        }
+
+        [Fact]
+        public void
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception_async()
+        {
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToListAsync);
+        }
+
+        private void
+            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(
+            Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
@@ -262,7 +327,7 @@
                     @"select o.[Location]
                               from [SpatialNorthwindContext].[Suppliers] as [o]";
 
-                var results = ExecuteESqlQuery(context, query);
+                var results = ExecuteESqlQuery(context, query, toList);
 
                 Assert.Equal(16, results.Count);
                 foreach (var result in results)
@@ -273,12 +338,32 @@
             }
         }
 
-        private List<DbDataRecord> ExecuteESqlQuery(DbContext context, string query)
+        private List<DbDataRecord> ExecuteESqlQuery(DbContext context, string query,
+            Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             var objectContext = ((IObjectContextAdapter)context).ObjectContext;
             objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly);
 
-            return objectContext.CreateQuery<DbDataRecord>(query).ToList();
+            return toList(objectContext.CreateQuery<DbDataRecord>(query));
+        }
+
+        private List<DbDataRecord> ExecuteESqlQueryAsync(DbContext context, string query,
+            Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
+        {
+            var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly);
+
+            return  toList(objectContext.CreateQuery<DbDataRecord>(query));
+        }
+
+        private List<T> ToList<T>(IQueryable<T> query)
+        {
+            return query.ToList();
+        }
+
+        private List<T> ToListAsync<T>(IQueryable<T> query)
+        {
+            return query.ToListAsync().Result;
         }
 
         #endregion

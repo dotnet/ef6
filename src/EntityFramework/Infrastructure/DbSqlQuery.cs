@@ -6,17 +6,17 @@
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a SQL query for entities that is created from a <see cref = "DbContext" /> 
+    ///     Represents a SQL query for non-entities that is created from a <see cref = "DbContext" /> 
     ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref = "DbSet" /> instance for the 
-    ///     entity type. The query is not executed when this object is created; it is executed
+    ///     Instances of this class are obtained from the <see cref = "DbContext.Database" /> instance.
+    ///     The query is not executed when this object is created; it is executed
     ///     each time it is enumerated, for example by using foreach.
-    ///     SQL queries for non-entities are created using the <see cref = "DbContext.Database" />.
-    ///     See <see cref = "DbSqlQuery{TEntity}" /> for a generic version of this class.
+    ///     SQL queries for entities are created using the <see cref = "DbSet" />.
+    ///     See <see cref = "DbSqlQuery{TElement}" /> for a generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public class DbSqlQuery : IEnumerable, IListSource
+    public class DbSqlQuery : IEnumerable, IListSource, IDbAsyncEnumerable
     {
         #region Constructors and fields
 
@@ -36,10 +36,10 @@
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the elements.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
         /// <returns>
-        ///     An <see cref = "T:System.Collections.IEnumerator" /> object that can be used to iterate through the elements.
+        ///     An <see cref="IEnumerator"/> object that can be used to iterate through the elements.
         /// </returns>
         public IEnumerator GetEnumerator()
         {
@@ -48,16 +48,18 @@
 
         #endregion
 
-        #region AsNoTracking
+        #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        ///     Returns a new query where the results of the query will not be tracked by the associated
-        ///     <see cref = "DbContext" />.
+        ///     Returns an <see cref="IDbAsyncEnumerable"/> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>A new query with no-tracking applied.</returns>
-        public DbSqlQuery AsNoTracking()
+        /// <returns>
+        ///     An <see cref="IDbAsyncEnumerable"/> object that can be used to iterate through the elements.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
-            return new DbSqlQuery(InternalQuery.AsNoTracking());
+            return _internalQuery.GetAsyncEnumerator();
         }
 
         #endregion

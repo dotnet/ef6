@@ -2385,9 +2385,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 "Unrecognized JoinType specified in DbJoinExpression");
 
 #if DEBUG
-            //
-            // Assert that the DbJoinExpression is producing a collection result with a record element type.
-            // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
+    //
+    // Assert that the DbJoinExpression is producing a collection result with a record element type.
+    // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbJoinExpression");
 #endif
 
@@ -2488,9 +2488,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbApplyExpression e)
         {
 #if DEBUG
-            //
-            // Assert that the DbJoinExpression is producing a collection result with a record element type.
-            // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
+    //
+    // Assert that the DbJoinExpression is producing a collection result with a record element type.
+    // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbApplyExpression");
 #endif
 
@@ -2553,7 +2553,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbGroupByExpression e)
         {
 #if DEBUG
-            // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
+    // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "DbGroupByExpression has invalid result Type (not record collection)");
 #endif
 

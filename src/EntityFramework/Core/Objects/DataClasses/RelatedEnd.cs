@@ -12,6 +12,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -727,9 +729,29 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
+        /// An asynchronous version of Load, which
+        /// loads the related entity or entities into the related end using the default merge option.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public Task LoadAsync(CancellationToken cancellationToken)
+        {
+            return LoadAsync(DefaultMergeOption, cancellationToken);
+        }
+
+        /// <summary>
         /// Loads the related entity or entities into the local related end using the supplied MergeOption.        
         /// </summary>
         public abstract void Load(MergeOption mergeOption);
+
+        /// <summary>
+        /// An asynchronous version of Load, which
+        /// loads the related entity or entities into the related end using the specified merge option.
+        /// </summary>
+        /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public abstract Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
         internal void DeferredLoad()
         {
@@ -2463,18 +2485,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             // Detached entity should have IsLoaded property set to false
             _isLoaded = false;
-        }
-
-        /// <summary>
-        ///  This method is very similar to the private method in Query of U class
-        ///  Only difference is that it calls meterializer with a overload which does
-        ///  not skip the deleted items.
-        /// </summary>
-        /// <param name="query">query of U</param>
-        /// <returns></returns>
-        internal virtual IEnumerable<U> GetResults<U>(ObjectQuery<U> query)
-        {
-            return query.Execute(query.MergeOption);
         }
 
         internal RelatedEnd GetOtherEndOfRelationship(IEntityWrapper wrappedEntity)

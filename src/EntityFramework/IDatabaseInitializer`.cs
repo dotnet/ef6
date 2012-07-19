@@ -8,8 +8,8 @@
     ///     This initialization can conditionally create the database and/or seed it with data.
     ///     The strategy used is set using the static InitializationStrategy property of the
     ///     <see cref = "Database" /> class.
-    ///     The following implementations are provided: <see cref = "DropCreateDatabaseIfModelChanges{TContext}<TContext>"/>,
-    ///                                                                                                            <see cref = "DropCreateDatabaseAlways{TContext}<TContext>"/>, <see cref = "CreateDatabaseIfNotExists{TContext}<TContext>"/>.
+    ///     The following implementations are provided: <see cref = "DropCreateDatabaseIfModelChanges{TContext}"/>,
+    ///     <see cref = "DropCreateDatabaseAlways{TContext}"/>, <see cref = "CreateDatabaseIfNotExists{TContext}"/>.
     /// </summary>
     [ContractClass(typeof(IDatabaseInitializerContracts<>))]
     public interface IDatabaseInitializer<in TContext>
@@ -22,6 +22,8 @@
         void InitializeDatabase(TContext context);
     }
 
+    #region Interface Member Contracts
+
     [ContractClassFor(typeof(IDatabaseInitializer<>))]
     internal abstract class IDatabaseInitializerContracts<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
@@ -33,4 +35,6 @@
             throw new NotImplementedException();
         }
     }
+
+    #endregion
 }

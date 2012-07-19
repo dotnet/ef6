@@ -3,6 +3,8 @@ namespace System.Data.Entity.Internal.Linq
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -169,13 +171,13 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     The LINQ query provider for the underlying <see cref = "ObjectQuery" />.
         /// </summary>
-        public virtual IQueryProvider ObjectQueryProvider
+        public virtual ObjectQueryProvider ObjectQueryProvider
         {
             get
             {
                 Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
-                return ((IQueryable)_objectQuery).Provider;
+                return _objectQuery.Provider;
             }
         }
 
@@ -192,9 +194,9 @@ namespace System.Data.Entity.Internal.Linq
         #region IEnumerable
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         public virtual IEnumerator<TElement> GetEnumerator()
         {
             Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
@@ -205,12 +207,38 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         IEnumerator IInternalQuery.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        public virtual IDbAsyncEnumerator<TElement> GetAsyncEnumerator()
+        {
+            Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+
+            InternalContext.Initialize();
+
+            return ((IDbAsyncEnumerable<TElement>)_objectQuery).GetAsyncEnumerator();
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
+        {
+            return GetAsyncEnumerator();
         }
 
         #endregion

@@ -1,7 +1,6 @@
-using md = System.Data.Entity.Core.Metadata.Edm;
-
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics;
     using System.Text;
@@ -254,7 +253,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             base.Visit(op, n);
             if (m_compilerState.Phase > PlanCompilerPhase.PreProcessor
-                && op.Type.EdmType.BuiltInTypeKind == md.BuiltInTypeKind.EntityType)
+                && op.Type.EdmType.BuiltInTypeKind == BuiltInTypeKind.EntityType)
             {
                 Assert(
                     op.Scoped,

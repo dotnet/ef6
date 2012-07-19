@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
+    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable
     {
         #region Fields and constructors
 
@@ -60,13 +60,27 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return InternalQuery.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return InternalQuery.GetAsyncEnumerator();
         }
 
         #endregion

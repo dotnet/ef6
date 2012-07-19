@@ -42,8 +42,6 @@ namespace System.Data.Entity.Core.Mapping
 
         #region Fields
 
-        private StorageAssociationSetModificationFunctionMapping m_modificationFunctionMapping;
-
         #endregion
 
         #region Properties
@@ -51,11 +49,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Gets or sets function mapping information for this association set. May be null.
         /// </summary>
-        internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping
-        {
-            get { return m_modificationFunctionMapping; }
-            set { m_modificationFunctionMapping = value; }
-        }
+        internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 
         internal EntitySetBase StoreEntitySet
         {
@@ -75,11 +69,11 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
 #if DEBUG
-        /// <summary>
-        /// This method is primarily for debugging purposes.
-        /// Will be removed shortly.
-        /// </summary>
-        /// <param name="index"></param>
+    /// <summary>
+    /// This method is primarily for debugging purposes.
+    /// Will be removed shortly.
+    /// </summary>
+    /// <param name="index"></param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
@@ -99,9 +93,9 @@ namespace System.Data.Entity.Core.Mapping
             {
                 typeMapping.Print(index + 5);
             }
-            if (m_modificationFunctionMapping != null)
+            if (ModificationFunctionMapping != null)
             {
-                m_modificationFunctionMapping.Print(index + 5);
+                ModificationFunctionMapping.Print(index + 5);
             }
         }
 #endif

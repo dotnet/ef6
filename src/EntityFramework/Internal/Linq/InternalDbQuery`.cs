@@ -11,7 +11,7 @@
     ///     still implements <see cref = "IQueryable{T}" />.
     /// </summary>
     /// <typeparam name = "TElement">The type of the element.</typeparam>
-    internal class InternalDbQuery<TElement> : DbQuery, IOrderedQueryable<TElement>
+    internal class InternalDbQuery<TElement> : DbQuery, IOrderedQueryable<TElement>, IDbAsyncEnumerable<TElement>
     {
         #region Fields and constructors
 
@@ -64,15 +64,28 @@
 
         #endregion
 
-        #region GetEnumerator
+        #region IEnumerable implementation
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns>An enumerator for the query</returns>
         public IEnumerator<TElement> GetEnumerator()
         {
             return _internalQuery.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable implementation
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}"/> which when enumerated will execute the query against the database.
+        /// </summary>
+        /// <returns>An enumerator for the query</returns>
+        public IDbAsyncEnumerator<TElement> GetAsyncEnumerator()
+        {
+            return _internalQuery.GetAsyncEnumerator();
         }
 
         #endregion

@@ -14,6 +14,8 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Class representing a command for the conceptual layer
@@ -444,13 +446,80 @@ namespace System.Data.Entity.Core.EntityClient
         /// for anything but an entity collection result</exception>
         public new virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
-            Prepare(); // prepare the query first
+            // prepare the query first
+            Prepare();
             var reader = _entityDataReaderFactory.CreateEntityDataReader(
                 this,
                 _commandDefinition.Execute(this, behavior),
                 behavior);
 
             _dataReader = reader;
+            return reader;
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteReader, which
+        /// executes the command and returns a data reader for reading the results. May only
+        /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
+        /// </summary>
+        /// <param name="behavior">The behavior to use when executing the command</param>
+        /// <returns>A Task containing sn EntityDataReader object.</returns>
+        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
+        /// for anything but an entity collection result</exception>
+        public new Task<EntityDataReader> ExecuteReaderAsync()
+        {
+            return ExecuteReaderAsync(CommandBehavior.Default, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteReader, which
+        /// executes the command and returns a data reader for reading the results. May only
+        /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A Task containing sn EntityDataReader object.</returns>
+        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
+        /// for anything but an entity collection result</exception>
+        public new Task<EntityDataReader> ExecuteReaderAsync(CancellationToken cancellationToken)
+        {
+            return ExecuteReaderAsync(CommandBehavior.Default, cancellationToken);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteReader, which
+        /// executes the command and returns a data reader for reading the results. May only
+        /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
+        /// </summary>
+        /// <param name="behavior">The behavior to use when executing the command</param>
+        /// <returns>A Task containing sn EntityDataReader object.</returns>
+        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
+        /// for anything but an entity collection result</exception>
+        public new Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior)
+        {
+            return ExecuteReaderAsync(behavior, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteReader, which
+        /// executes the command and returns a data reader for reading the results. May only
+        /// be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
+        /// </summary>
+        /// <param name="behavior">The behavior to use when executing the command</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A Task containing sn EntityDataReader object.</returns>
+        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
+        /// for anything but an entity collection result</exception>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "behavior")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public new virtual async Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+        {
+            // prepare the query first
+            Prepare();
+            var dbDataReader = await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken);
+            var reader = _entityDataReaderFactory.CreateEntityDataReader(this, dbDataReader, behavior);
+            _dataReader = reader;
+
             return reader;
         }
 
@@ -465,18 +534,43 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
+        /// An asynchronous version of ExecuteDbDataReader, which
+        /// executes the command and returns a data reader for reading the results
+        /// </summary>
+        /// <param name="behavior">The behavior to use when executing the command</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        protected override async Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+        {
+            return await ExecuteReaderAsync(behavior, cancellationToken);
+        }
+
+        /// <summary>
         /// Executes the command and discard any results returned from the command
         /// </summary>
         /// <returns>Number of rows affected</returns>
         public override int ExecuteNonQuery()
         {
-            return ExecuteScalar(
-                reader =>
-                    {
-                        // consume reader before checking records affected
-                        CommandHelper.ConsumeReader(reader);
-                        return reader.RecordsAffected;
-                    });
+            using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
+            {
+                CommandHelper.ConsumeReader(reader);
+                return reader.RecordsAffected;
+            }
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteNonQuery, which
+        /// executes the command and discard any results returned from the command
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
+        {
+            using (var reader = await ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+            {
+                await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                return reader.RecordsAffected;
+            }
         }
 
         /// <summary>
@@ -485,27 +579,14 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns>The result in the first column in the first row</returns>
         public override object ExecuteScalar()
         {
-            return ExecuteScalar(
-                reader =>
-                    {
-                        var result = reader.Read() ? reader.GetValue(0) : null;
-                        // consume reader before retrieving parameters
-                        CommandHelper.ConsumeReader(reader);
-                        return result;
-                    });
-        }
-
-        /// <summary>
-        /// Executes a reader and retrieves a scalar value using the given resultSelector delegate
-        /// </summary>
-        private T_Result ExecuteScalar<T_Result>(Func<DbDataReader, T_Result> resultSelector)
-        {
-            T_Result result;
             using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
             {
-                result = resultSelector(reader);
+                var result = reader.Read() ? reader.GetValue(0) : null;
+
+                // consume reader before retrieving parameters
+                CommandHelper.ConsumeReader(reader);
+                return result;
             }
-            return result;
         }
 
         /// <summary>
@@ -654,6 +735,26 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             return entityCommandDefinition;
+        }
+
+        /// <summary>
+        /// Given an entity command, returns the associated entity transaction and performs validation
+        /// to ensure the transaction is consistent.
+        /// </summary>
+        /// <returns>Entity transaction</returns>
+        internal virtual EntityTransaction ValidateAndGetEntityTransaction()
+        {
+            // Check to make sure that either the command has no transaction associated with it, or it
+            // matches the one used by the connection
+            if (Transaction != null
+                && Transaction != Connection.CurrentTransaction)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_InvalidTransactionForCommand);
+            }
+
+            // Now we have asserted that EntityCommand either has no transaction or has one that matches the
+            // one used in the connection, we can simply use the connection's transaction object
+            return Connection.CurrentTransaction;
         }
 
         /// <summary>

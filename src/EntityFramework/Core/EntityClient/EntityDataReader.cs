@@ -8,6 +8,9 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A data reader class for the entity client provider
@@ -463,6 +466,28 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
+        /// An asynchronous version of NextResult, which
+        /// moves the reader to the next result set when reading a batch of statements
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>
+        /// A Task containing the result of the operation:
+        /// true if there are more result sets;
+        /// false otherwise
+        /// </returns>
+        public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await _storeDataReader.NextResultAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
+            }
+        }
+
+        /// <summary>
         /// Move the reader to the next row of the current result set
         /// </summary>
         /// <returns>
@@ -472,6 +497,21 @@ namespace System.Data.Entity.Core.EntityClient
         public override bool Read()
         {
             return _storeDataReader.Read();
+        }
+
+        /// <summary>
+        /// An asynchronous version of Read, which
+        /// moves the reader to the next row of the current result set
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>
+        /// A Task containing the result of the operation:
+        /// true if there are more rows;
+        /// false otherwise.
+        /// </returns>
+        public override Task<bool> ReadAsync(CancellationToken cancellationToken)
+        {
+            return _storeDataReader.ReadAsync(cancellationToken);
         }
 
         /// <summary>

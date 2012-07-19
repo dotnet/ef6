@@ -3,12 +3,10 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
     using System.Security.Cryptography;
 
     // Helper functions to get metadata information
@@ -123,7 +121,7 @@ namespace System.Data.Entity.Core.Common.Utils
             }
 
             EdmType modelEdmType;
-            if (!TryDetermineCSpaceModelType<TElement>(workspace, out modelEdmType)
+            if (!workspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType)
                 ||
                 !modelEdmType.EdmEquals(spatialNormalizedEdmType))
             {
@@ -155,35 +153,6 @@ namespace System.Data.Entity.Core.Common.Utils
                     Debug.Fail("unrecognized mode " + mode.ToString());
                     return default(ParameterDirection);
             }
-        }
-
-        // requires: workspace
-        // Determines CSpace EntityType associated with the type argument T
-        internal static bool TryDetermineCSpaceModelType<T>(MetadataWorkspace workspace, out EdmType modelEdmType)
-        {
-            return TryDetermineCSpaceModelType(typeof(T), workspace, out modelEdmType);
-        }
-
-        internal static bool TryDetermineCSpaceModelType(Type type, MetadataWorkspace workspace, out EdmType modelEdmType)
-        {
-            Debug.Assert(null != workspace);
-            var nonNullabelType = TypeSystem.GetNonNullableType(type);
-            // make sure the workspace knows about T
-            workspace.ImplicitLoadAssemblyForType(nonNullabelType, Assembly.GetCallingAssembly());
-            var objectItemCollection = (ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace);
-            EdmType objectEdmType;
-            if (objectItemCollection.TryGetItem(nonNullabelType.FullName, out objectEdmType))
-            {
-                Map map;
-                if (workspace.TryGetMap(objectEdmType, DataSpace.OCSpace, out map))
-                {
-                    var objectMapping = (ObjectTypeMapping)map;
-                    modelEdmType = objectMapping.EdmType;
-                    return true;
-                }
-            }
-            modelEdmType = null;
-            return false;
         }
 
         // effects: Returns true iff member is present in type.Members

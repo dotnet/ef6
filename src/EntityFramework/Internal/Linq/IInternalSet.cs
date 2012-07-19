@@ -2,8 +2,9 @@
 {
     using System.Collections;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
-    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -18,7 +19,8 @@
         void Remove(object entity);
         void Initialize();
         void TryInitialize();
-        IEnumerable ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters);
+        IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters);
+        IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters);
     }
 
     [ContractClassFor(typeof(IInternalSet))]
@@ -55,7 +57,15 @@
             throw new NotImplementedException();
         }
 
-        IEnumerable IInternalSet.ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        IEnumerator IInternalSet.ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        {
+            Contract.Requires(sql != null);
+            Contract.Requires(parameters != null);
+
+            throw new NotImplementedException();
+        }
+
+        IDbAsyncEnumerator IInternalSet.ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
         {
             Contract.Requires(sql != null);
             Contract.Requires(parameters != null);
@@ -88,9 +98,14 @@
             get { throw new NotImplementedException(); }
         }
 
-        IQueryProvider IInternalQuery.ObjectQueryProvider
+        ObjectQueryProvider IInternalQuery.ObjectQueryProvider
         {
             get { throw new NotImplementedException(); }
+        }
+
+        IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerator IInternalQuery.GetEnumerator()

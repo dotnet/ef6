@@ -5,12 +5,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -169,49 +172,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _suppressEvents = true; // we do not want any event during the bulk operation
             try
             {
-                List<TEntity> refreshedValue = null;
+                IList<TEntity> refreshedValue = null;
                 if (hasResults)
                 {
                     // Only issue a query if we know it can produce results (in the case of FK, there may not be any 
                     // results).
-                    refreshedValue = new List<TEntity>(GetResults(sourceQuery));
+                    var objectResult = sourceQuery.Execute(sourceQuery.MergeOption);
+                    refreshedValue = objectResult.ToList();
                 }
-                if (null == refreshedValue
-                    || refreshedValue.Count == 0)
-                {
-                    if (!((AssociationType)RelationMetadata).IsForeignKey
-                        && ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
-                    {
-                        //query returned zero related end; one related end was expected.
-                        throw new InvalidOperationException(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound);
-                    }
-                    else if (mergeOption == MergeOption.OverwriteChanges
-                             || mergeOption == MergeOption.PreserveChanges)
-                    {
-                        // This entity is not related to anything in this AssociationSet and Role on the server.
-                        // If there is an existing _cachedValue, we may need to clear it out, based on the MergeOption
-                        var sourceKey = WrappedOwner.EntityKey;
-                        if ((object)sourceKey == null)
-                        {
-                            throw Error.EntityKey_UnexpectedNull();
-                        }
-                        ObjectContext.ObjectStateManager.RemoveRelationships(
-                            mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndMember);
-                    }
-                    // else this is NoTracking or AppendOnly, and no entity was retrieved by the Load, so there's nothing extra to do
 
-                    // Since we have no value and are not doing a merge, the last step is to set IsLoaded to true
-                    _isLoaded = true;
-                }
-                else if (refreshedValue.Count == 1)
-                {
-                    Merge(refreshedValue, mergeOption, true /*setIsLoaded*/);
-                }
-                else
-                {
-                    // More than 1 result, which is non-recoverable data inconsistency
-                    throw new InvalidOperationException(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound);
-                }
+                HandleRefreshedValue(mergeOption, refreshedValue);
             }
             finally
             {
@@ -219,6 +189,83 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             // fire the AssociationChange with Refresh
             OnAssociationChanged(CollectionChangeAction.Refresh, null);
+        }
+
+        /// <summary>
+        /// An asynchronous version of Load, which
+        /// loads the related entity or entities into the related end using the specified merge option.
+        /// </summary>
+        /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        public override async Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            CheckOwnerNull();
+
+            // Validate that the Load is possible
+            bool hasResults;
+            var sourceQuery = ValidateLoad<TEntity>(mergeOption, "EntityReference", out hasResults);
+
+            _suppressEvents = true; // we do not want any event during the bulk operation
+            try
+            {
+                IList<TEntity> refreshedValue = null;
+                if (hasResults)
+                {
+                    // Only issue a query if we know it can produce results (in the case of FK, there may not be any 
+                    // results).
+                    var objectResult = await sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken);
+                    refreshedValue = await objectResult.ToListAsync(cancellationToken);
+                }
+
+                HandleRefreshedValue(mergeOption, refreshedValue);
+            }
+            finally
+            {
+                _suppressEvents = false;
+            }
+            // fire the AssociationChange with Refresh
+            OnAssociationChanged(CollectionChangeAction.Refresh, null);
+        }
+
+        private void HandleRefreshedValue(MergeOption mergeOption, IList<TEntity> refreshedValue)
+        {
+            if (null == refreshedValue
+                || !refreshedValue.Any())
+            {
+                if (!((AssociationType)RelationMetadata).IsForeignKey
+                    && ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
+                {
+                    //query returned zero related end; one related end was expected.
+                    throw new InvalidOperationException(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound);
+                }
+                else if (mergeOption == MergeOption.OverwriteChanges
+                         || mergeOption == MergeOption.PreserveChanges)
+                {
+                    // This entity is not related to anything in this AssociationSet and Role on the server.
+                    // If there is an existing _cachedValue, we may need to clear it out, based on the MergeOption
+                    var sourceKey = WrappedOwner.EntityKey;
+                    if ((object)sourceKey == null)
+                    {
+                        throw Error.EntityKey_UnexpectedNull();
+                    }
+                    ObjectContext.ObjectStateManager.RemoveRelationships(
+                        mergeOption, (AssociationSet)RelationshipSet, sourceKey, (AssociationEndMember)FromEndMember);
+                }
+                // else this is NoTracking or AppendOnly, and no entity was retrieved by the Load, so there's nothing extra to do
+
+                // Since we have no value and are not doing a merge, the last step is to set IsLoaded to true
+                _isLoaded = true;
+            }
+            else if (refreshedValue.Count() == 1)
+            {
+                Merge(refreshedValue, mergeOption, true /*setIsLoaded*/);
+            }
+            else
+            {
+                // More than 1 result, which is non-recoverable data inconsistency
+                throw new InvalidOperationException(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound);
+            }
         }
 
         /// <summary>

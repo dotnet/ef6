@@ -28,6 +28,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
 
     /// <summary>
@@ -1546,6 +1548,150 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
+        /// Ensures that the connection is opened for an operation that requires an open connection to the store.
+        /// Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">If the <see cref="ObjectContext"/> instance has been disposed.</exception>
+        internal async virtual Task EnsureConnectionAsync(CancellationToken cancellationToken)
+        {
+            if (ConnectionState.Closed
+                == Connection.State)
+            {
+                await Connection.OpenAsync(cancellationToken);
+                _openedConnection = true;
+            }
+
+            if (_openedConnection)
+            {
+                _connectionRequestCount++;
+            }
+
+            // Check the connection was opened correctly
+            if (Connection.State == ConnectionState.Closed
+                || Connection.State == ConnectionState.Broken)
+            {
+                var message = Strings.EntityClient_ExecutingOnClosedConnection(
+                    Connection.State == ConnectionState.Closed
+                        ? Strings.EntityClient_ConnectionStateClosed
+                        : Strings.EntityClient_ConnectionStateBroken);
+                throw new InvalidOperationException(message);
+            }
+
+            try
+            {
+                // Make sure the necessary metadata is registered
+                EnsureMetadata();
+
+                #region EnsureContextIsEnlistedInCurrentTransaction
+
+                // The following conditions are no longer valid since Metadata Independence.
+                Debug.Assert(ConnectionState.Open == Connection.State, "Connection must be open.");
+
+                // IF YOU MODIFIED THIS TABLE YOU MUST UPDATE TESTS IN SaveChangesTransactionTests SUITE ACCORDINGLY AS SOME CASES REFER TO NUMBERS IN THIS TABLE
+                //
+                // TABLE OF ACTIONS WE PERFORM HERE:
+                //
+                //  #  lastTransaction     currentTransaction         ConnectionState   WillClose      Action                                  Behavior when no explicit transaction (started with .ElistTransaction())     Behavior with explicit transaction (started with .ElistTransaction())
+                //  1   null                null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
+                //  2   non-null tx1        non-null tx1               Open              No             no-op;                                  the last transaction will be used                                            N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
+                //  3   null                non-null                   Closed            Yes            connection.Open();                      Opening connection will automatically enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
+                //  4   null                non-null                   Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
+                //  5   non-null            null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
+                //  6   non-null            null                       Closed            Yes            no-op;                                  implicit transaction will be created and used                                N/A - cannot enlist in transaction on a closed connection
+                //  7   non-null tx1        non-null tx2               Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
+                //  8   non-null tx1        non-null tx2               Open              Yes            connection.Close(); connection.Open();  Re-opening connection will automatically enlist into Transaction.Current     N/A - only applies to TransactionScope - requires two transactions and CommitableTransaction and TransactionScope cannot be mixed
+                //  9   non-null tx1        non-null tx2               Closed            Yes            connection.Open();                      Opening connection will automatcially enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
+
+                var currentTransaction = Transaction.Current;
+
+                var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) ||
+                                            (null != _lastTransaction && !_lastTransaction.Equals(currentTransaction));
+
+                if (transactionHasChanged)
+                {
+                    if (!_openedConnection)
+                    {
+                        // We didn't open the connection so, just try to enlist the connection in the current transaction. 
+                        // Note that the connection can already be enlisted in a transaction (since the user opened 
+                        // it s/he could enlist it manually using EntityConnection.EnlistTransaction() method). If the 
+                        // transaction the connection is enlisted in has not completed (e.g. nested transaction) this call 
+                        // will fail (throw). Also currentTransaction can be null here which means that the transaction
+                        // used in the previous operation has completed. In this case we should not enlist the connection
+                        // in "null" transaction as the user might have enlisted in a transaction manually between calls by 
+                        // calling EntityConnection.EnlistTransaction() method. Enlisting with null would in this case mean "unenlist" 
+                        // and would cause an exception (see above). Had the user not enlisted in a transaction between the calls
+                        // enlisting with null would be a no-op - so again no reason to do it. 
+                        if (currentTransaction != null)
+                        {
+                            Connection.EnlistTransaction(currentTransaction);
+                        }
+                    }
+                    else if (_connectionRequestCount > 1)
+                    {
+                        // We opened the connection. In addition we are here because there are multiple
+                        // active requests going on (read: enumerators that has not been disposed yet) 
+                        // using the same connection. (If there is only one active request e.g. like SaveChanges
+                        // or single enumerator there is no need for any specific transaction handling - either
+                        // we use the implicit ambient transaction (Transaction.Current) if one exists or we 
+                        // will create our own local transaction. Also if there is only one active request
+                        // the user could not enlist it in a transaction using EntityConnection.EnlistTransaction()
+                        // because we opened the connection).
+                        // If there are multiple active requests the user might have "played" with transactions
+                        // after the first transaction. This code tries to deal with this kind of changes.
+
+                        if (null == _lastTransaction)
+                        {
+                            Debug.Assert(currentTransaction != null, "transaction has changed and the lastTransaction was null");
+
+                            // Two cases here: 
+                            // - the previous operation was not run inside a transaction created by the user while this one is - just
+                            //   enlist the connection in the transaction
+                            // - the previous operation ran withing explicit transaction started with EntityConnection.EnlistTransaction()
+                            //   method - try enlisting the connection in the transaction. This may fail however if the transactions 
+                            //   are nested as you cannot enlist the connection in the transaction until the previous transaction has
+                            //   completed.
+                            Connection.EnlistTransaction(currentTransaction);
+                        }
+                        else
+                        {
+                            // We'll close and reopen the connection to get the benefit of automatic transaction enlistment.
+                            // Remarks: We get here only if there is more than one active query (e.g. nested foreach or two subsequent queries or SaveChanges
+                            // inside a for each) and each of these queries are using a different transaction (note that using TransactionScopeOption.Required 
+                            // will not create a new transaction if an ambient transaction already exists - the ambient transaction will be used and we will 
+                            // not end up in this code path). If we get here we are already in a loss-loss situation - we cannot enlist to the second transaction
+                            // as this would cause an exception saying that there is already an active transaction that needs to be committed or rolled back
+                            // before we can enlist the connection to a new transaction. The other option (and this is what we do here) is to close and reopen
+                            // the connection. This will enlist the newly opened connection to the second transaction but will also close the reader being used
+                            // by the first active query. As a result when trying to continue reading results from the first query the user will get an exception
+                            // saying that calling "Read" on a closed data reader is not a valid operation.
+                            Connection.Close();
+                            await Connection.OpenAsync(cancellationToken);
+                            _openedConnection = true;
+                            _connectionRequestCount++;
+                        }
+                    }
+                }
+                else
+                {
+                    // we don't need to do anything, nothing has changed.
+                }
+
+                // If we get here, we have an open connection, either enlisted in the current
+                // transaction (if it's non-null) or unenlisted from all transactions (if the
+                // current transaction is null)
+                _lastTransaction = currentTransaction;
+
+                #endregion
+            }
+            catch (Exception)
+            {
+                // when the connection is unable to enlist properly or another error occured, be sure to release this connection
+                ReleaseConnection();
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Resets the state of connection management when the connection becomes closed.
         /// </summary>
         /// <param name="sender"></param>
@@ -2351,6 +2497,27 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public Task<Int32> SaveChangesAsync()
+        {
+            return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
+        }
+
+        /// <summary>
         /// Persists all updates to the store.
         /// This API is obsolete.  Please use SaveChanges(SaveOptions options) instead.
         /// SaveChanges(true) is equivalent to SaveChanges() -- That is it detects changes and
@@ -2383,6 +2550,58 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public virtual int SaveChanges(SaveOptions options)
         {
+            PrepareToSaveChanges(options);
+
+            var entriesAffected =
+                ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
+
+            // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
+            if (0 < entriesAffected)
+            {
+                entriesAffected = SaveChangesToStore(options);
+            }
+
+            ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+            return entriesAffected;
+        }
+
+        /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <param name="options">Describes behavior options of SaveChanges</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public Task<Int32> SaveChangesAsync(SaveOptions options)
+        {
+            return SaveChangesAsync(options, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// An asynchronous version of SaveChanges, which
+        /// persists all updates to the store.
+        /// </summary>
+        /// <param name="options">Describes behavior options of SaveChanges</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <returns>A task representing the asynchronous operation</returns>
+        public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
+        {
+            PrepareToSaveChanges(options);
+
+            var entriesAffected =
+                Task.FromResult(ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified));
+
+            // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
+            if (0 < entriesAffected.Result)
+            {
+                entriesAffected = SaveChangesToStoreAsync(options, cancellationToken);
+            }
+
+            ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+            return entriesAffected;
+        }
+
+        private void PrepareToSaveChanges(SaveOptions options)
+        {
             if (_disposed)
             {
                 throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
@@ -2401,18 +2620,6 @@ namespace System.Data.Entity.Core.Objects
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CommitWithConceptualNull);
             }
-
-            var entriesAffected =
-                ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
-
-            // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
-            if (0 < entriesAffected)
-            {
-                entriesAffected = SaveChangesToStore(options);
-            }
-
-            ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            return entriesAffected;
         }
 
         private int SaveChangesToStore(SaveOptions options)
@@ -2505,6 +2712,95 @@ namespace System.Data.Entity.Core.Objects
             return entriesAffected;
         }
 
+        private async Task<int> SaveChangesToStoreAsync(SaveOptions options, CancellationToken cancellationToken)
+        {
+            int entriesAffected;
+            var mustReleaseConnection = false;
+            var connection = (EntityConnection)Connection;
+            // get data adapter
+            if (_adapter == null)
+            {
+                _adapter = (IEntityAdapter)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(IEntityAdapter));
+            }
+
+            // only accept changes after the local transaction commits
+            _adapter.AcceptChangesDuringUpdate = false;
+            _adapter.Connection = connection;
+            _adapter.CommandTimeout = CommandTimeout;
+
+            try
+            {
+                await EnsureConnectionAsync(cancellationToken);
+                mustReleaseConnection = true;
+
+                // determine what transaction to enlist in
+                var needLocalTransaction = false;
+
+                if (null == connection.CurrentTransaction
+                    && !connection.EnlistedInUserTransaction)
+                {
+                    // If there isn't a local transaction started by the user, we'll attempt to enlist 
+                    // on the current SysTx transaction so we don't need to construct a local
+                    // transaction.
+                    needLocalTransaction = (null == _lastTransaction);
+                }
+
+                // else the user already has his own local transaction going; user will do the abort or commit.
+                DbTransaction localTransaction = null;
+                try
+                {
+                    // EntityConnection tracks the CurrentTransaction we don't need to pass it around
+                    if (needLocalTransaction)
+                    {
+                        localTransaction = connection.BeginTransaction();
+                    }
+
+                    entriesAffected = await _adapter.UpdateAsync(ObjectStateManager, cancellationToken);
+
+                    if (null != localTransaction)
+                    {
+                        // we started the local transaction; so we also commit it
+                        localTransaction.Commit();
+                    }
+                    // else on success with no exception is thrown, user generally commits the transaction
+                }
+                finally
+                {
+                    if (null != localTransaction)
+                    {
+                        // we started the local transaction; so it requires disposal (rollback if not previously committed
+                        localTransaction.Dispose();
+                    }
+                    // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
+                }
+            }
+            finally
+            {
+                if (mustReleaseConnection)
+                {
+                    // Release the connection when we are done with the save
+                    ReleaseConnection();
+                }
+            }
+
+            if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
+            {
+                // only accept changes after the local transaction commits
+
+                try
+                {
+                    AcceptAllChanges();
+                }
+                catch (Exception e)
+                {
+                    // If AcceptAllChanges throw - let's inform user that changes in database were committed 
+                    // and that Context and Database can be in inconsistent state.
+                    throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
+                }
+            }
+
+            return entriesAffected;
+        }
         #endregion //SaveChanges
 
         /// <summary>
@@ -3116,6 +3412,44 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
+        /// An asynchronous version of ExecuteStoreCommand, which
+        /// executes a command against the database server that does not return a sequence of objects.
+        /// The command is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing a single integer return value.</returns>
+        public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
+        {
+            return ExecuteStoreCommandAsync(commandText, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreCommand, which
+        /// executes a command against the database server that does not return a sequence of objects.
+        /// The command is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A Task containing a single integer return value.</returns>
+        public async virtual Task<int> ExecuteStoreCommandAsync(
+            string commandText, CancellationToken cancellationToken, params object[] parameters)
+        {
+            await EnsureConnectionAsync(cancellationToken);
+
+            try
+            {
+                var command = CreateStoreCommand(commandText, parameters);
+                return await command.ExecuteNonQueryAsync(cancellationToken);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
+
+        /// <summary>
         /// Execute the sequence returning query against the database server.
         /// The query is specified using the server's native query language, such as SQL.
         /// </summary>
@@ -3146,9 +3480,6 @@ namespace System.Data.Entity.Core.Objects
             return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, mergeOption, parameters);
         }
 
-        /// <summary>
-        /// See ExecuteStoreQuery method.
-        /// </summary>
         private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
@@ -3169,6 +3500,124 @@ namespace System.Data.Entity.Core.Objects
             {
                 var command = CreateStoreCommand(commandText, parameters);
                 reader = command.ExecuteReader();
+            }
+            catch
+            {
+                // We only release the connection when there is an exception. Otherwise, the ObjectResult is
+                // in charge of releasing it.
+                ReleaseConnection();
+                throw;
+            }
+
+            try
+            {
+                return InternalTranslate<TElement>(reader, entitySetName, mergeOption, true);
+            }
+            catch
+            {
+                reader.Dispose();
+                ReleaseConnection();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// executes the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the result sequence.</typeparam>
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText, params object[] parameters)
+        {
+            return ExecuteStoreQueryAsync<TElement>(commandText, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// executes the sequence returning query against the database server.
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the result sequence.</typeparam>
+        /// <param name="commandText">The query specified in the server's native query language.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
+            string commandText,
+            CancellationToken cancellationToken, params object[] parameters)
+        {
+            return ExecuteStoreQueryInternalAsync<TElement>(
+                commandText, /*entitySetName:*/null, MergeOption.AppendOnly, cancellationToken, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// execute the sequence returning query against the database server. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
+        /// <param name="commandText">The DbDataReader to translate</param>
+        /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
+        /// <param name="mergeOption">Merge option to use for entity results.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
+            string commandText,
+            string entitySetName, MergeOption mergeOption, params object[] parameters)
+        {
+            return ExecuteStoreQueryAsync<TElement>(commandText, entitySetName, mergeOption, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// execute the sequence returning query against the database server. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the resulting sequence</typeparam>
+        /// <param name="commandText">The DbDataReader to translate</param>
+        /// <param name="entitySetName">The entity set in which results should be tracked. Null indicates there is no entity set.</param>
+        /// <param name="mergeOption">Merge option to use for entity results.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="parameters">The parameter values to use for the query.</param>
+        /// <returns>A Task containing an enumeration of objects of type <typeparamref name="TElement"/>.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
+            string commandText,
+            string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken, params object[] parameters)
+        {
+            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+
+            return ExecuteStoreQueryInternalAsync<TElement>(
+                commandText, entitySetName, MergeOption.AppendOnly, cancellationToken, parameters);
+        }
+
+        private async Task<ObjectResult<TElement>> ExecuteStoreQueryInternalAsync<TElement>(
+            string commandText, string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken,
+            params object[] parameters)
+        {
+            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
+            // is loaded into the workspace. If the schema types are not loaded
+            // metadata, cache & query would be unable to reason about the type. We
+            // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
+            // auto-load the user's calling assembly and its referenced assemblies.
+            // If the entities in the user's result spans multiple assemblies, the
+            // user must manually call LoadFromAssembly. *GetCallingAssembly returns
+            // the assembly of the method that invoked the currently executing method.
+            MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
+
+            await EnsureConnectionAsync(cancellationToken);
+            DbDataReader reader = null;
+
+            try
+            {
+                var command = CreateStoreCommand(commandText, parameters);
+                reader = await command.ExecuteReaderAsync(cancellationToken);
             }
             catch
             {
@@ -3259,10 +3708,9 @@ namespace System.Data.Entity.Core.Objects
             var unwrappedTElement = Nullable.GetUnderlyingType(typeof(TElement)) ?? typeof(TElement);
             CollectionColumnMap columnMap;
             // for enums that are not in the model we use the enum underlying type
-            if (MetadataHelper.TryDetermineCSpaceModelType<TElement>(MetadataWorkspace, out modelEdmType)
+            if (MetadataWorkspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType)
                 || (unwrappedTElement.IsEnum &&
-                    MetadataHelper.TryDetermineCSpaceModelType(
-                        unwrappedTElement.GetEnumUnderlyingType(), MetadataWorkspace, out modelEdmType)))
+                 MetadataWorkspace.TryDetermineCSpaceModelType(unwrappedTElement.GetEnumUnderlyingType(), out modelEdmType)))
             {
                 if (entitySet != null
                     && !entitySet.ElementType.IsAssignableFrom(modelEdmType))

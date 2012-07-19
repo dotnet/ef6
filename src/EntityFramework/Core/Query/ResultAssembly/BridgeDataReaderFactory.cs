@@ -27,7 +27,7 @@
         /// <param name="columnMap">column map of the first result set</param>
         /// <param name="nextResultColumnMaps">enumerable of the column maps for NextResult() calls.</param>
         /// <returns></returns>
-        public DbDataReader Create(
+        public virtual DbDataReader Create(
             DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
         {
             Contract.Requires(storeDataReader != null);

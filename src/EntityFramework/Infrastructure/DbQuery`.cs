@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure
     /// <typeparam name = "TResult">The type of entity to query for.</typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
-    public class DbQuery<TResult> : IOrderedQueryable<TResult>, IListSource, IInternalQueryAdapter
+    public class DbQuery<TResult> : IOrderedQueryable<TResult>, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable<TResult>
     {
         #region Fields and constructors
 
@@ -105,9 +105,9 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<TResult> IEnumerable<TResult>.GetEnumerator()
         {
@@ -115,13 +115,37 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _internalQuery.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return _internalQuery.GetAsyncEnumerator();
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<TResult> IDbAsyncEnumerable<TResult>.GetAsyncEnumerator()
+        {
+            return _internalQuery.GetAsyncEnumerator();
         }
 
         #endregion

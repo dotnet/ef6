@@ -2,6 +2,7 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
     using System.ComponentModel;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -10,34 +11,40 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public abstract class ObjectResult : IEnumerable, IDisposable, IListSource
+    public abstract class ObjectResult : IEnumerable, IDbAsyncEnumerable, IDisposable, IListSource
     {
         internal ObjectResult()
         {
         }
 
+        /// <inheritdoc/>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return GetAsyncEnumeratorInternal();
+        }
+
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumeratorInternal();
         }
 
-        // ----------------------
-        // IListSource  Properties
-        // ----------------------
+        #region IListSource
+
         /// <summary>
         ///   IListSource.ContainsListCollection implementation. Always returns false.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get { return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
+            get
+            {
+                return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
             }
         }
 
-        // ----------------------
-        // IListSource  method
-        // ----------------------
         /// <summary>
         ///   IListSource.GetList implementation
         /// </summary>
@@ -49,6 +56,8 @@ namespace System.Data.Entity.Core.Objects
         {
             return GetIListSourceListInternal();
         }
+
+        #endregion
 
         public abstract Type ElementType { get; }
 
@@ -67,6 +76,7 @@ namespace System.Data.Entity.Core.Objects
             return GetNextResultInternal<TElement>();
         }
 
+        internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
         internal abstract IEnumerator GetEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult<TElement> GetNextResultInternal<TElement>();

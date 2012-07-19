@@ -3,8 +3,9 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
-    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -16,6 +17,7 @@
     {
         IInternalQuery<TElement> Include(string path);
         IInternalQuery<TElement> AsNoTracking();
+        new IDbAsyncEnumerator<TElement> GetAsyncEnumerator();
         new IEnumerator<TElement> GetEnumerator();
     }
 
@@ -47,7 +49,7 @@
             get { throw new NotImplementedException(); }
         }
 
-        IQueryProvider IInternalQuery.ObjectQueryProvider
+        ObjectQueryProvider IInternalQuery.ObjectQueryProvider
         {
             get { throw new NotImplementedException(); }
         }
@@ -60,6 +62,16 @@
         }
 
         IInternalQuery<TElement> IInternalQuery<TElement>.AsNoTracking()
+        {
+            throw new NotImplementedException();
+        }
+
+        IDbAsyncEnumerator<TElement> IInternalQuery<TElement>.GetAsyncEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
         {
             throw new NotImplementedException();
         }

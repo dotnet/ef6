@@ -16,7 +16,6 @@
 
             var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Loose, metadataWorkspace, dbConnection, true) { CallBase = true };
             entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
-            //entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
             entityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
             entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("foo");
             var entityConnection = entityConnectionMock.Object;
@@ -27,7 +26,7 @@
         public static EntityCommandDefinition InitializeEntityCommandDefinition()
         {
             var storeDataReader = new Mock<DbDataReader>().Object;
-            var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, new BridgeDataReaderFactory());
+            var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
             entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
             entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                 Returns(storeDataReader);

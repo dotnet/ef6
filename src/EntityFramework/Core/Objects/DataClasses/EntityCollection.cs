@@ -6,11 +6,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Collection of entities modeling a particular EDM construct
@@ -197,16 +200,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return ObjectViewFactory.CreateViewForEntityCollection(rootEntityType, this);
         }
 
-        /// <summary>
-        /// Loads the related entity or entities into the local collection using the supplied MergeOption.
-        /// Do merge if collection was already filled
-        /// </summary>
+        /// <inheritdoc/>
         public override void Load(MergeOption mergeOption)
         {
             CheckOwnerNull();
 
             //Pass in null to indicate the CreateSourceQuery method should be used.
             Load(null, mergeOption);
+            // do not fire the AssociationChanged event here,
+            // once it is fired in one level deeper, (at Internal void Load(IEnumerable<T>)), you don't need to add the event at other
+            // API that call (Internal void Load(IEnumerable<T>))
+        }
+
+        /// <inheritdoc/>
+        public override Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            CheckOwnerNull();
+
+            //Pass in null to indicate the CreateSourceQuery method should be used.
+            return LoadAsync(null, mergeOption, cancellationToken);
             // do not fire the AssociationChanged event here,
             // once it is fired in one level deeper, (at Internal void Load(IEnumerable<T>)), you don't need to add the event at other
             // API that call (Internal void Load(IEnumerable<T>))
@@ -275,10 +287,55 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (collection == null)
                 {
-                    Merge(
-                        hasResults
-                            ? GetResults(sourceQuery)
-                            : Enumerable.Empty<TEntity>(), mergeOption, true /*setIsLoaded*/);
+                    IEnumerable<TEntity> refreshedValues;
+                    if (hasResults)
+                    {
+                        refreshedValues = sourceQuery.Execute(sourceQuery.MergeOption);
+                    }
+                    else
+                    {
+                        refreshedValues = Enumerable.Empty<TEntity>();
+                    }
+
+                    Merge(refreshedValues, mergeOption, true /*setIsLoaded*/);
+                }
+                else
+                {
+                    Merge<TEntity>(collection, mergeOption, true /*setIsLoaded*/);
+                }
+            }
+            finally
+            {
+                _suppressEvents = false;
+            }
+            // fire the AssociationChange with Refresh
+            OnAssociationChanged(CollectionChangeAction.Refresh, null);
+        }
+
+        internal virtual async Task LoadAsync(List<IEntityWrapper> collection, MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            // Validate that the Load is possible
+            bool hasResults;
+            var sourceQuery = ValidateLoad<TEntity>(mergeOption, "EntityCollection", out hasResults);
+
+            // we do not want any Add or Remove event to be fired during Merge, we will fire a Refresh event at the end if everything is successful
+            _suppressEvents = true;
+            try
+            {
+                if (collection == null)
+                {
+                    IEnumerable<TEntity> refreshedValues;
+                    if (hasResults)
+                    {
+                        var queryResult = await sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken);
+                        refreshedValues = await queryResult.ToListAsync(cancellationToken);
+                    }
+                    else
+                    {
+                        refreshedValues = Enumerable.Empty<TEntity>();
+                    }
+
+                    Merge(refreshedValues, mergeOption, true /*setIsLoaded*/);
                 }
                 else
                 {

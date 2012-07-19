@@ -110,7 +110,9 @@
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\Objects\DataClasses\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactoryTests.cs" />
+    <Compile Include="Core\Objects\Internal\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionStringBuilderTests.cs" />
     <Compile Include="Core\Objects\ELinq\ObjectQueryProviderTests.cs" />
     <Compile Include="Core\Objects\EntityEntryTests.cs" />
@@ -127,6 +129,8 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
     <Compile Include="Internal\ConfigFile\ContextElementTests.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
+    <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
+    <Compile Include="Core\EntityClient\EntityCommandDefinitionTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandTests.cs" />
     <Compile Include="Core\Common\CommandTrees\BasicExpressionVisitorTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionRebinderTests.cs" />
@@ -168,11 +172,13 @@
     <Compile Include="Internal\ConfigFile\ParameterCollectionTests.cs" />
     <Compile Include="Internal\ConfigFile\ParameterElementTests.cs" />
     <Compile Include="Migrations\Utilities\MigrationWriterTests.cs" />
+    <Compile Include="Spatial\DbSpatialDataReaderTests.cs" />
     <Compile Include="Spatial\DbSpatialServicesTests.cs" />
     <Compile Include="Spatial\SpatialServicesLoaderTests.cs" />
     <Compile Include="SqlServer\SqlTypesAssemblyLoaderTests.cs" />
     <Compile Include="SqlServer\SqlProviderManifestTests.cs" />
     <Compile Include="SqlServer\SqlSpatialDataReaderTests.cs" />
+    <Compile Include="TestHelpers\DbEnumerator.cs" />
     <Compile Include="TestHelpers\Fake\FakeSqlGenerator.cs" />
     <Compile Include="TestHelpers\UnitTestsConfiguration.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
@@ -184,6 +190,7 @@
     <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
     <Compile Include="Utilities\PartialTrustAssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
+    <Compile Include="Utilities\TaskHelperTests.cs" />
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />
     <Compile Include="Utilities\XDocumentExtensionsTests.cs" />
     <Compile Include="Migrations\History\HistoryRepositoryTests.cs" />

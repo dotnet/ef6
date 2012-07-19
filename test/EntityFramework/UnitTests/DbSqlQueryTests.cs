@@ -47,7 +47,7 @@
         [Fact]
         public void Generic_non_entity_SQL_query_ToString_returns_the_query()
         {
-            var query = new InternalSqlQuery<FakeEntity>(CreateInternalNonSetQuery("select * from products"));
+            var query = new DbSqlQuery<FakeEntity>(CreateInternalNonSetQuery("select * from products"));
 
             Assert.Equal("select * from products", query.ToString());
         }
@@ -55,7 +55,7 @@
         [Fact]
         public void Generic_non_entity_SQL_query_ToString_returns_the_query_but_not_the_parameters()
         {
-            var query = new InternalSqlQuery<FakeEntity>(CreateInternalNonSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
+            var query = new DbSqlQuery<FakeEntity>(CreateInternalNonSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
 
             Assert.Equal("select * from Products where Id < {0} and CategoryId = {1}", query.ToString());
         }
@@ -63,7 +63,7 @@
         [Fact]
         public void Non_generic_DbSqlQuery_ToString_returns_the_query()
         {
-            var query = new DbSqlQuery(CreateInternalSetQuery("select * from products"));
+            var query = new DbSqlSetQuery(CreateInternalSetQuery("select * from products"));
 
             Assert.Equal("select * from products", query.ToString());
         }
@@ -79,7 +79,7 @@
         [Fact]
         public void Generic_DbSqlQuery_ToString_returns_the_query()
         {
-            var query = new DbSqlQuery<FakeEntity>(CreateInternalSetQuery("select * from products"));
+            var query = new DbSqlSetQuery<FakeEntity>(CreateInternalSetQuery("select * from products"));
 
             Assert.Equal("select * from products", query.ToString());
         }
@@ -87,7 +87,7 @@
         [Fact]
         public void Generic_DbSqlQuery_ToString_returns_the_query_but_not_the_parameters()
         {
-            var query = new DbSqlQuery<FakeEntity>(CreateInternalSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
+            var query = new DbSqlSetQuery<FakeEntity>(CreateInternalSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
 
             Assert.Equal("select * from Products where Id < {0} and CategoryId = {1}", query.ToString());
         }
@@ -99,14 +99,14 @@
         [Fact]
         public void Generic_DbSqlQuery_AsNoTracking_returns_new_object_with_no_tracking_flag_set()
         {
-            var query = new DbSqlQuery<FakeEntity>(CreateInternalSetQuery("query", 1, 2));
+            var query = new DbSqlSetQuery<FakeEntity>(CreateInternalSetQuery("query", 1, 2));
             DynamicNoTrackingTest(query);
         }
 
         [Fact]
         public void Non_generic_DbSqlQuery_AsNoTracking_returns_new_object_with_no_tracking_flag_set()
         {
-            var query = new DbSqlQuery(CreateInternalSetQuery("query", 1, 2));
+            var query = new DbSqlSetQuery(CreateInternalSetQuery("query", 1, 2));
             DynamicNoTrackingTest(query);
         }
 
@@ -306,7 +306,7 @@
         [Fact]
         public void Non_entity_SQL_query_ContainsListCollection_returns_false()
         {
-            var query = new InternalSqlQuery<FakeEntity>(CreateInternalNonSetQuery("query"));
+            var query = new DbSqlQuery<FakeEntity>(CreateInternalNonSetQuery("query"));
 
             Assert.False(((IListSource)query).ContainsListCollection);
         }
@@ -322,7 +322,7 @@
         [Fact]
         public void Non_entity_SQL_query_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
         {
-            var query = new InternalSqlQuery<Random>(CreateInternalNonSetQuery("query"));
+            var query = new DbSqlQuery<Random>(CreateInternalNonSetQuery("query"));
 
             Assert.Equal(Strings.DbQuery_BindingToDbQueryNotSupported, Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
         }
@@ -338,7 +338,7 @@
         [Fact]
         public void DbSqlQuery_ContainsListCollection_returns_false()
         {
-            var query = new DbSqlQuery<FakeEntity>(CreateInternalSetQuery("query"));
+            var query = new DbSqlSetQuery<FakeEntity>(CreateInternalSetQuery("query"));
 
             Assert.False(((IListSource)query).ContainsListCollection);
         }
@@ -346,7 +346,7 @@
         [Fact]
         public void Non_generic_DbSqlQuery_ContainsListCollection_returns_false()
         {
-            var query = new DbSqlQuery(CreateInternalSetQuery("query"));
+            var query = new DbSqlSetQuery(CreateInternalSetQuery("query"));
 
             Assert.False(((IListSource)query).ContainsListCollection);
         }
@@ -354,7 +354,7 @@
         [Fact]
         public void DbSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
         {
-            var query = new DbSqlQuery<FakeEntity>(CreateInternalSetQuery("query"));
+            var query = new DbSqlSetQuery<FakeEntity>(CreateInternalSetQuery("query"));
 
             Assert.Equal(Strings.DbQuery_BindingToDbQueryNotSupported, Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
         }
@@ -362,7 +362,7 @@
         [Fact]
         public void Non_generic_DbSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
         {
-            var query = new DbSqlQuery(CreateInternalSetQuery("query"));
+            var query = new DbSqlSetQuery(CreateInternalSetQuery("query"));
 
             Assert.Equal(Strings.DbQuery_BindingToDbQueryNotSupported, Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
         }

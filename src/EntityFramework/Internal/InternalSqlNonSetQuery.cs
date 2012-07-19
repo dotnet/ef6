@@ -1,6 +1,7 @@
 ﻿namespace System.Data.Entity.Internal
 {
     using System.Collections;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -47,15 +48,30 @@
 
         #endregion
 
-        #region GetEnumerator
+        #region IEnumerable implementation
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the results.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
         /// <returns>The query results.</returns>
         public override IEnumerator GetEnumerator()
         {
-            return _internalContext.ExecuteSqlQuery(_elementType, Sql, Parameters).GetEnumerator();
+            return _internalContext.ExecuteSqlQuery(_elementType, Sql, Parameters);
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable implementation
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     database backing this context. The results are not materialized as entities or tracked.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        public override IDbAsyncEnumerator GetAsyncEnumerator()
+        {
+            return _internalContext.ExecuteSqlQueryAsync(_elementType, Sql, Parameters);
         }
 
         #endregion

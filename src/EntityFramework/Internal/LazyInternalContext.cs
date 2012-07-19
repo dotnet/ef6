@@ -10,6 +10,8 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     A <see cref = "LazyInternalContext" /> is a concrete <see cref = "InternalContext" /> type that will lazily create the
@@ -157,6 +159,11 @@
         public override int SaveChanges()
         {
             return ObjectContextInUse == null ? 0 : base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return ObjectContextInUse == null ? Task.FromResult(0) : base.SaveChangesAsync(cancellationToken);
         }
 
         #endregion

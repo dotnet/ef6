@@ -6,6 +6,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
 
@@ -13,7 +15,7 @@ namespace System.Data.Entity.Core.Objects
     /// This class represents the result of the <see cref="ObjectQuery{T}.Execute"/> method.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class ObjectResult<T> : ObjectResult, IEnumerable<T>
+    public class ObjectResult<T> : ObjectResult, IEnumerable<T>, IDbAsyncEnumerable<T>
     {
         private Shaper<T> _shaper;
         private DbDataReader _reader;
@@ -56,10 +58,13 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection. 
-        /// </summary>
-        public virtual IEnumerator<T> GetEnumerator()
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return GetDbEnumerator();
+        }
+
+        internal virtual IDbEnumerator<T> GetDbEnumerator()
         {
             EnsureCanEnumerateResults();
 
@@ -68,6 +73,17 @@ namespace System.Data.Entity.Core.Objects
             var result = shaper.GetEnumerator();
             return result;
         }
+
+        #region IDbAsyncEnumerable
+
+        /// <inheritdoc/>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
+        {
+            return GetDbEnumerator();
+        }
+
+        #endregion
 
         /// <summary>
         /// Performs tasks associated with freeing, releasing, or resetting resources. 
@@ -105,9 +121,14 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        internal override IDbAsyncEnumerator GetAsyncEnumeratorInternal()
+        {
+            return GetDbEnumerator();
+        }
+
         internal override IEnumerator GetEnumeratorInternal()
         {
-            return (this).GetEnumerator();
+            return GetDbEnumerator();
         }
 
         internal override IList GetIListSourceListInternal()

@@ -24,6 +24,8 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
     using SaveOptions = System.Data.Entity.Core.Objects.SaveOptions;
 
@@ -49,13 +51,21 @@
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, object>> _entityFactories =
             new ConcurrentDictionary<Type, Func<InternalContext, object>>();
 
-        private static readonly MethodInfo _executeSqlQueryAsIEnumerableMethod =
+        private static readonly MethodInfo _executeSqlQueryAsIEnumeratorMethod =
             typeof(InternalContext).GetMethod(
-                "ExecuteSqlQueryAsIEnumerable", BindingFlags.Instance | BindingFlags.NonPublic);
+                "ExecuteSqlQueryAsIEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>
+        private static readonly MethodInfo _executeSqlQueryAsIDbAsyncEnumeratorMethod =
+            typeof(InternalContext).GetMethod(
+                "ExecuteSqlQueryAsIDbAsyncEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerator>>
             _queryExecutors =
-                new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerable>>();
+                new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerator>>();
+
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IDbAsyncEnumerator>>
+            _asyncQueryExecutors =
+                new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IDbAsyncEnumerator>>();
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>
             _setFactories =
@@ -372,6 +382,31 @@
             }
         }
 
+        public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (ValidateOnSaveEnabled)
+                {
+                    var validationResults = Owner.GetValidationErrors();
+                    if (validationResults.Any())
+                    {
+                        throw new DbEntityValidationException(
+                            Strings.DbEntityValidationException_ValidationFailed, validationResults);
+                    }
+                }
+
+                var shouldDetectChanges = AutoDetectChangesEnabled && !ValidateOnSaveEnabled;
+                var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
+                                  (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
+                return await ObjectContext.SaveChangesAsync(saveOptions, cancellationToken);
+            }
+            catch (UpdateException ex)
+            {
+                throw WrapUpdateException(ex);
+            }
+        }
+
         #endregion
 
         #region Initialization
@@ -678,44 +713,99 @@
         #region Raw SQL query
 
         /// <summary>
-        ///     Executes the given SQL query against the database backing this context.  The results are not materialized as
-        ///     entities or tracked.
+        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the given SQL query against the
+        ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
         /// <typeparam name = "TElement">The type of the element.</typeparam>
         /// <param name = "sql">The SQL.</param>
         /// <param name = "parameters">The parameters.</param>
         /// <returns>The query results.</returns>
-        public virtual IEnumerable<TElement> ExecuteSqlQuery<TElement>(string sql, object[] parameters)
+        public virtual IEnumerator<TElement> ExecuteSqlQuery<TElement>(string sql, object[] parameters)
         {
             Contract.Requires(sql != null);
             Contract.Requires(parameters != null);
+            Contract.Ensures(Contract.Result<IEnumerator<TElement>>() != null);
 
-            Initialize();
+            return new LazyEnumerator<TElement>(() =>
+            {
+                Initialize();
 
-            return ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
+                var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
+                try
+                {
+                    var result = disposableEnumerable.GetEnumerator();
+                    return result;
+                }
+                catch
+                {
+                    // if there is a problem creating the enumerator, we should dispose
+                    // the enumerable (if there is no problem, the enumerator will take 
+                    // care of the dispose)
+                    disposableEnumerable.Dispose();
+                    throw;
+                }
+
+            });
         }
 
         /// <summary>
-        ///     Executes the given SQL query against the database backing this context.  The results are not materialized as
-        ///     entities or tracked.
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the given SQL query against the
+        ///     database backing this context. The results are not materialized as entities or tracked.
+        /// </summary>
+        /// <typeparam name = "TElement">The type of the element.</typeparam>
+        /// <param name = "sql">The SQL.</param>
+        /// <param name = "parameters">The parameters.</param>
+        /// <returns>Task containing the query results.</returns>
+        public virtual IDbAsyncEnumerator<TElement> ExecuteSqlQueryAsync<TElement>(string sql, object[] parameters)
+        {
+            Contract.Requires(sql != null);
+            Contract.Requires(parameters != null);
+            Contract.Ensures(Contract.Result<IDbAsyncEnumerator<TElement>>() != null);
+
+            return new LazyAsyncEnumerator<TElement>(async () =>
+            {
+                //Not initializing asynchronously as it's not expected to be done frequently
+                Initialize();
+
+                var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                    sql, CancellationToken.None, parameters);
+
+                try
+                {
+                    return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
+                }
+                catch
+                {
+                    // if there is a problem creating the enumerator, we should dispose
+                    // the enumerable (if there is no problem, the enumerator will take 
+                    // care of the dispose)
+                    disposableEnumerable.Dispose();
+                    throw;
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
         /// <param name = "elementType">Type of the element.</param>
         /// <param name = "sql">The SQL.</param>
         /// <param name = "parameters">The parameters.</param>
         /// <returns>The query results.</returns>
-        public virtual IEnumerable ExecuteSqlQuery(Type elementType, string sql, object[] parameters)
+        public virtual IEnumerator ExecuteSqlQuery(Type elementType, string sql, object[] parameters)
         {
             // There is no non-generic ExecuteStoreQuery method on ObjectContext so we are
             // forced to use MakeGenericMethod.  We compile this into a delegate so that we
             // only take the hit once.
-            Func<InternalContext, string, object[], IEnumerable> executor;
+            Func<InternalContext, string, object[], IEnumerator> executor;
             if (!_queryExecutors.TryGetValue(elementType, out executor))
             {
-                var genericExecuteMethod = _executeSqlQueryAsIEnumerableMethod.MakeGenericMethod(elementType);
+                var genericExecuteMethod = _executeSqlQueryAsIEnumeratorMethod.MakeGenericMethod(elementType);
                 executor =
-                    (Func<InternalContext, string, object[], IEnumerable>)
+                    (Func<InternalContext, string, object[], IEnumerator>)
                     Delegate.CreateDelegate(
-                        typeof(Func<InternalContext, string, object[], IEnumerable>), genericExecuteMethod);
+                        typeof(Func<InternalContext, string, object[], IEnumerator>), genericExecuteMethod);
                 _queryExecutors.TryAdd(elementType, executor);
             }
             return executor(this, sql, parameters);
@@ -725,9 +815,46 @@
         ///     Calls the generic ExecuteSqlQuery but with a non-generic return type so that it
         ///     has the correct signature to be used with CreateDelegate above.
         /// </summary>
-        private IEnumerable ExecuteSqlQueryAsIEnumerable<TElement>(string sql, object[] parameters)
+        private IEnumerator ExecuteSqlQueryAsIEnumerator<TElement>(string sql, object[] parameters)
         {
             return ExecuteSqlQuery<TElement>(sql, parameters);
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     database backing this context. The results are not materialized as entities or tracked.
+        /// </summary>
+        /// <param name = "elementType">Type of the element.</param>
+        /// <param name = "sql">The SQL.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "parameters">The parameters.</param>
+        /// <returns>The query results.</returns>
+        public virtual IDbAsyncEnumerator ExecuteSqlQueryAsync(Type elementType, string sql, object[] parameters)
+        {
+            // There is no non-generic ExecuteStoreQuery method on ObjectContext so we are
+            // forced to use MakeGenericMethod.  We compile this into a delegate so that we
+            // only take the hit once.
+            Func<InternalContext, string, object[], IDbAsyncEnumerator> executor;
+            if (!_asyncQueryExecutors.TryGetValue(elementType, out executor))
+            {
+                var genericExecuteMethod = _executeSqlQueryAsIDbAsyncEnumeratorMethod.MakeGenericMethod(elementType);
+                executor =
+                    (Func<InternalContext, string, object[], IDbAsyncEnumerator>)
+                    Delegate.CreateDelegate(
+                        typeof(Func<InternalContext, string, object[], IDbAsyncEnumerator>), genericExecuteMethod);
+                _asyncQueryExecutors.TryAdd(elementType, executor);
+            }
+            return executor(this, sql, parameters);
+        }
+
+        /// <summary>
+        ///     Calls the generic ExecuteSqlQueryAsync but with an object return type so that it
+        ///     has the correct signature to be used with CreateDelegate above.
+        /// </summary>
+        private IDbAsyncEnumerator ExecuteSqlQueryAsIDbAsyncEnumerator<TElement>(string sql, object[] parameters)
+            where TElement : class
+        {
+            return ExecuteSqlQueryAsync<TElement>(sql, parameters);
         }
 
         /// <summary>
@@ -744,6 +871,25 @@
             Initialize();
 
             return ObjectContext.ExecuteStoreCommand(sql, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteSqlCommand, which
+        ///     executes the given SQL command against the database backing this context.
+        /// </summary>
+        /// <param name = "sql">The SQL.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "parameters">The parameters.</param>
+        /// <returns>A Task containing the return value from the database.</returns>
+        public virtual Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, object[] parameters)
+        {
+            Contract.Requires(sql != null);
+            Contract.Requires(parameters != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
+            Initialize();
+
+            return ObjectContext.ExecuteStoreCommandAsync(sql, cancellationToken, parameters);
         }
 
         #endregion

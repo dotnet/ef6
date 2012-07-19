@@ -10,6 +10,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -18,6 +20,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///   ObjectQuery implements strongly-typed queries at the object-layer.
@@ -26,7 +30,7 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     /// <typeparam name="T">The result type of this ObjectQuery</typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class ObjectQuery<T> : ObjectQuery, IEnumerable<T>, IOrderedQueryable<T>
+    public class ObjectQuery<T> : ObjectQuery, IOrderedQueryable<T>, IEnumerable<T>, IDbAsyncEnumerable<T>
     {
         #region Private Static Members
 
@@ -225,6 +229,45 @@ namespace System.Data.Entity.Core.Objects
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             return GetResults(mergeOption);
+        }
+
+        /// <summary>
+        ///   An asynchronous version of Execute, which
+        ///   allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <returns>
+        ///   A Task containing an enumerable for the ObjectQuery results.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
+        {
+            return ExecuteAsync(mergeOption, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///   An asynchronous version of Execute, which
+        ///   allows explicit query evaluation with a specified merge
+        ///   option which will override the merge option property.
+        /// </summary>
+        /// <param name="mergeOption">
+        ///   The MergeOption to use when executing the query.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///   The token to monitor for cancellation requests.
+        /// </param>
+        /// <returns>
+        ///   A Task containing an enumerable for the ObjectQuery results.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            EntityUtil.CheckArgumentMergeOption(mergeOption);
+
+            return GetResultsAsync(mergeOption, cancellationToken);
         }
 
         /// <summary>
@@ -650,45 +693,92 @@ namespace System.Data.Entity.Core.Objects
         #region IEnumerable<T> implementation
 
         /// <summary>
-        ///   These methods are the "executors" for the query. They can be called
-        ///   directly, or indirectly (by foreach'ing through the query, for example).
+        ///     Returns an <see cref="IEnumerator{T}"/> which when enumerated will execute the given SQL query against the database.
         /// </summary>
+        /// <returns>The query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            var disposableEnumerable = GetResults(null);
-            try
+            return new LazyEnumerator<T>(() =>
             {
-                var result = disposableEnumerable.GetEnumerator();
-                return result;
-            }
-            catch
+                var disposableEnumerable = GetResults(null);
+                try
+                {
+                    var result = disposableEnumerable.GetEnumerator();
+                    return result;
+                }
+                catch
+                {
+                    // if there is a problem creating the enumerator, we should dispose
+                    // the enumerable (if there is no problem, the enumerator will take 
+                    // care of the dispose)
+                    disposableEnumerable.Dispose();
+                    throw;
+                }
+            });
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable<T> implementation
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{T}"/> which when enumerated will execute the given SQL query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
+        {
+            return new LazyAsyncEnumerator<T>(async () =>
             {
-                // if there is a problem creating the enumerator, we should dispose
-                // the enumerable (if there is no problem, the enumerator will take 
-                // care of the dispose)
-                disposableEnumerable.Dispose();
-                throw;
-            }
+                var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None);
+                try
+                {
+                    return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
+                }
+                catch
+                {
+                    // if there is a problem creating the enumerator, we should dispose
+                    // the enumerable (if there is no problem, the enumerator will take 
+                    // care of the dispose)
+                    disposableEnumerable.Dispose();
+                    throw;
+                }
+            });
         }
 
         #endregion
 
         #region ObjectQuery Overrides
 
+        /// <inheritdoc/>
         internal override IEnumerator GetEnumeratorInternal()
         {
             return ((IEnumerable<T>)this).GetEnumerator();
         }
 
+        /// <inheritdoc/>
+        internal override IDbAsyncEnumerator GetAsyncEnumeratorInternal()
+        {
+            return ((IDbAsyncEnumerable<T>)this).GetAsyncEnumerator();
+        }
+
+        /// <inheritdoc/>
         internal override IList GetIListSourceListInternal()
         {
             return ((IListSource)GetResults(null)).GetList();
         }
 
+        /// <inheritdoc/>
         internal override ObjectResult ExecuteInternal(MergeOption mergeOption)
         {
             return GetResults(mergeOption);
+        }
+
+        /// <inheritdoc/>
+        internal async override Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        {
+            return await GetResultsAsync(mergeOption, cancellationToken);
         }
 
         /// <summary>
@@ -760,6 +850,22 @@ namespace System.Data.Entity.Core.Objects
             {
                 var execPlan = QueryState.GetExecutionPlan(forMergeOption);
                 return execPlan.Execute<T>(QueryState.ObjectContext, QueryState.Parameters);
+            }
+            catch
+            {
+                QueryState.ObjectContext.ReleaseConnection();
+                throw;
+            }
+        }
+
+        private async Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
+        {
+            await QueryState.ObjectContext.EnsureConnectionAsync(cancellationToken);
+
+            try
+            {
+                var execPlan = QueryState.GetExecutionPlan(forMergeOption);
+                return await execPlan.ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken);
             }
             catch
             {

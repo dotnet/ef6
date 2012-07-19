@@ -5,6 +5,7 @@
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.SqlServer;
+    using Moq;
 
     /// <summary>
     /// Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
@@ -16,7 +17,7 @@
 
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            return new EntityCommandDefinition();
+            return new Mock<EntityCommandDefinition>(MockBehavior.Loose, null, null).Object;
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)

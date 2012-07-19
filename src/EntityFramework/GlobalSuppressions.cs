@@ -190,3 +190,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member",
         Target = "System.Data.Entity.Core.Common.EntitySql.CqlParser.#yyparse()")]
+[assembly: 
+    SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Scope = "member",
+        Target = "System.Data.Entity.IQueryableExtensions.#.cctor()")]
+[assembly: 
+    SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member",
+        Target = "System.Data.Entity.IQueryableExtensions.#.cctor()")]

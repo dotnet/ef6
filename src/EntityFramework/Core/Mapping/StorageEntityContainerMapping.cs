@@ -351,10 +351,10 @@ namespace System.Data.Entity.Core.Mapping
         }
 
 #if DEBUG
-        ///<summary>
-        /// The method builds up the spaces required for pretty printing each 
-        /// part of the mapping.
-        ///</summary>
+    ///<summary>
+    /// The method builds up the spaces required for pretty printing each 
+    /// part of the mapping.
+    ///</summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Console.Write(System.String)")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",

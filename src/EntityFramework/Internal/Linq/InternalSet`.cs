@@ -6,12 +6,16 @@
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class InternalSet<TEntity> : InternalQuery<TEntity>, IInternalSet<TEntity>
         where TEntity : class
@@ -25,7 +29,7 @@
         private Type _baseType;
 
         /// <summary>
-        ///     Creates a new query that will be backed by the given InternalContext.
+        ///     Creates a new set that will be backed by the given InternalContext.
         /// </summary>
         /// <param name = "internalContext">The backing context.</param>
         public InternalSet(InternalContext internalContext)
@@ -81,6 +85,50 @@
             // because if the object found was of the wrong type then it would still get into
             // the state manager.
             var entity = FindInStateManager(key) ?? FindInStore(key, "keyValues");
+
+            if (entity != null
+                && !(entity is TEntity))
+            {
+                throw Error.DbSet_WrongEntityTypeFound(entity.GetType().Name, typeof(TEntity).Name);
+            }
+            return (TEntity)entity;
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Find, which
+        ///     finds an entity with the given primary key values.
+        ///     If an entity with the given primary key values exists in the context, then it is
+        ///     returned immediately without making a request to the store.  Otherwise, a request
+        ///     is made to the store for an entity with the given primary key values and this entity,
+        ///     if found, is attached to the context and returned.  If no entity is found in the
+        ///     context or the store, then null is returned.
+        /// </summary>
+        /// <remarks>
+        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// </remarks>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
+        /// <returns>A Task containing the entity found, or null.</returns>
+        /// <exception cref = "InvalidOperationException">Thrown if multiple entities exist in the context with the primary key values given.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
+        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        public async Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            // This DetectChanges is useful in the case where objects are added to the graph and then the user
+            // attempts to find one of those added objects.
+            InternalContext.DetectChanges();
+
+            var key = new WrappedEntityKey(EntitySet, EntitySetName, keyValues, "keyValues");
+
+            // First, check for the entity in the state manager.  This includes first checking
+            // for non-Added objects that match the key.  If the entity was not found, then
+            // we check for Added objects.  We don't just use GetObjectByKey
+            // because it would go to the store before checking for Added objects, and also
+            // because if the object found was of the wrong type then it would still get into
+            // the state manager.
+            var entity = FindInStateManager(key) ?? await FindInStoreAsync(key, "keyValues", cancellationToken);
 
             if (entity != null
                 && !(entity is TEntity))
@@ -167,6 +215,45 @@
                 return null;
             }
 
+            try
+            {
+                return BuildFindQuery(key).SingleOrDefault();
+            }
+            catch (EntitySqlException ex)
+            {
+                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
+            }
+        }
+
+        /// <summary>
+        ///     An asynchronous version of FindInStore, which
+        ///     finds an entity in the store with the given primary key values, or returns null
+        ///     if no such entity can be found.  This code is adapted from TryGetObjectByKey to
+        ///     include type checking in the query.
+        /// </summary>
+        private async Task<object> FindInStoreAsync(WrappedEntityKey key, string keyValuesParamName, CancellationToken cancellationToken)
+        {
+            Contract.Requires(key != null);
+
+            // If the key has null values, then we cannot query it from the store, so it cannot
+            // be found, so just return null.
+            if (key.HasNullValues)
+            {
+                return null;
+            }
+
+            try
+            {
+                return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken);
+            }
+            catch (EntitySqlException ex)
+            {
+                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
+            }
+        }
+
+        private ObjectQuery<TEntity> BuildFindQuery(WrappedEntityKey key)
+        {
             var queryBuilder = new StringBuilder();
             queryBuilder.AppendFormat("SELECT VALUE X FROM {0} AS X WHERE ", QuotedEntitySetName);
 
@@ -185,16 +272,7 @@
                 parameters[i] = new ObjectParameter(name, entityKeyValues[i].Value);
             }
 
-            try
-            {
-                return
-                    InternalContext.ObjectContext.CreateQuery<TEntity>(queryBuilder.ToString(), parameters).
-                        SingleOrDefault();
-            }
-            catch (EntitySqlException ex)
-            {
-                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
-            }
+            return InternalContext.ObjectContext.CreateQuery<TEntity>(queryBuilder.ToString(), parameters);
         }
 
         #endregion
@@ -559,18 +637,72 @@
         #region Raw SQL query
 
         /// <summary>
-        ///     Executes the given SQL query against the database materializing entities into the entity set that
-        ///     backs this set.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the database
+        ///     materializing entities into the entity set that backs this set.
         /// </summary>
         /// <param name = "sql">The SQL quey.</param>
         /// <param name = "asNoTracking">if <c>true</c> then the entities are not tracked, otherwise they are.</param>
         /// <param name = "parameters">The parameters.</param>
         /// <returns>The query results.</returns>
-        public IEnumerable ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
         {
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
-            return InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(sql, EntitySetName, mergeOption, parameters);
+
+            return new LazyEnumerator<TEntity>(() =>
+            {
+                Initialize();
+
+                var disposableEnumerable = InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
+                    sql, EntitySetName, mergeOption, parameters);
+                try
+                {
+                    var result = disposableEnumerable.GetEnumerator();
+                    return result;
+                }
+                catch
+                {
+                    // if there is a problem creating the enumerator, we should dispose
+                    // the enumerable (if there is no problem, the enumerator will take 
+                    // care of the dispose)
+                    disposableEnumerable.Dispose();
+                    throw;
+                }
+
+            });
+        }
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the database
+        ///     materializing entities into the entity set that backs this set.
+        /// </summary>
+        /// <param name = "sql">The SQL quey.</param>
+        /// <param name = "asNoTracking">if <c>true</c> then the entities are not tracked, otherwise they are.</param>
+        /// <param name = "parameters">The parameters.</param>
+        /// <returns>The query results.</returns>
+        public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
+        {
+            Initialize();
+            var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
+
+            return new LazyAsyncEnumerator<object>(async () =>
+                {
+                    var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
+                        sql, EntitySetName, mergeOption, CancellationToken.None, parameters);
+
+                    try
+                    {
+                        return ((IDbAsyncEnumerable<TEntity>)disposableEnumerable).GetAsyncEnumerator();
+                    }
+                    catch
+                    {
+                        // if there is a problem creating the enumerator, we should dispose
+                        // the enumerable (if there is no problem, the enumerator will take 
+                        // care of the dispose)
+                        disposableEnumerable.Dispose();
+                        throw;
+                    }
+                });
         }
 
         #endregion
@@ -592,7 +724,7 @@
         /// <summary>
         ///     The LINQ query provider for the underlying <see cref = "ObjectQuery" />.
         /// </summary>
-        public override IQueryProvider ObjectQueryProvider
+        public override ObjectQueryProvider ObjectQueryProvider
         {
             get
             {
@@ -606,13 +738,27 @@
         #region IEnumerable
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the backing query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         public override IEnumerator<TEntity> GetEnumerator()
         {
             Initialize();
             return base.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}"/> which when enumerated will execute the backing query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        public override IDbAsyncEnumerator<TEntity> GetAsyncEnumerator()
+        {
+            Initialize();
+            return base.GetAsyncEnumerator();
         }
 
         #endregion

@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// In-memory implementation of IDbSet based on a <see cref="HashSet"/>
@@ -36,6 +38,11 @@
             }
 
             return _findFunc(_data);
+        }
+
+        public Task<T> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            throw new NotImplementedException();
         }
 
         public T Add(T item)

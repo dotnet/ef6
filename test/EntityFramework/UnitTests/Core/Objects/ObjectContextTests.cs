@@ -7,6 +7,7 @@
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Threading;
     using Moq;
     using Moq.Protected;
     using Xunit;

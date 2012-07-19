@@ -1,36 +1,27 @@
 ﻿namespace System.Data.Entity.Core.Objects
 {
-    using System.Data.Entity.Core.Common.Internal.Materialization;
-    using System.Data.Entity.Core.Objects.Internal;
-    using System.Linq;
+    using System.Collections.Generic;
+    using System.Data.Entity.TestHelpers;
     using Moq;
     using Xunit;
 
     public class ObjectQueryTests
     {
         [Fact]
-        public void GetEnumerator_calls_ObjectResult_GetEnumerator()
+        public void GetEnumerator_calls_Shaper_GetEnumerator_lazily()
         {
-            var objectQueryExecutionPlanMock = new Mock<ObjectQueryExecutionPlan>(
-                /*commandDefinition*/ null, /*resultShaperFactory*/ null, /*resultType*/ null, MergeOption.AppendOnly,
-                /*singleEntitySet*/ null,/*compiledQueryParameters*/ null);
-
             var shaperMock = MockHelper.CreateShaperMock<object>();
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(() =>
+                new DbEnumeratorShim<object>(((IEnumerable<object>)new[] { new object() }).GetEnumerator()));
+            var objectQuery = MockHelper.CreateMockObjectQuery(null, shaperMock.Object).Object;
 
-            var objectResultMock = new Mock<ObjectResult<object>>(MockBehavior.Loose, shaperMock.Object, /*singleEntitySet*/ null, /*resultItemType*/ null);
-            objectResultMock.Setup(m => m.GetEnumerator()).Returns(Enumerable.Empty<object>().GetEnumerator());
-            objectQueryExecutionPlanMock.Setup(m => m.Execute<object>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
-                .Returns(objectResultMock.Object);
+            var enumerator = objectQuery.GetEnumeratorInternal();
 
-            var objectContextMock = new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator());
-            var objectQueryStateMock = new Mock<ObjectQueryState>(typeof(object), objectContextMock.Object, /*parameters:*/ null, /*span:*/ null);
-            objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
+            shaperMock.Verify(m => m.GetEnumerator(), Times.Never());
 
-            var objectQuery = new ObjectQuery<object>(objectQueryStateMock.Object);
+            enumerator.MoveNext();
 
-            objectQuery.GetEnumeratorInternal();
-
-            objectResultMock.Verify(m => m.GetEnumerator(), Times.Once());
+            shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
         }
     }
 }

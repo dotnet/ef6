@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity
 {
-    using System.Collections;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Config;
@@ -12,6 +10,8 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     An instances of this class is obtained from an <see cref = "DbContext" /> object and can be used
@@ -432,15 +432,13 @@
         /// <typeparam name = "TElement">The type of object returned by the query.</typeparam>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "IEnumerable{TElement}" /> object that will execute the query when it is enumerated.</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlQuery{TElement}" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlQuery<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return
-                new InternalSqlQuery<TElement>(
-                    new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
+            return new DbSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
         }
 
         /// <summary>
@@ -454,14 +452,14 @@
         /// <param name = "elementType">The type of object returned by the query.</param>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "IEnumerable" /> object that will execute the query when it is enumerated.</returns>
-        public IEnumerable SqlQuery(Type elementType, string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlQuery" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlQuery SqlQuery(Type elementType, string sql, params object[] parameters)
         {
             Contract.Requires(elementType != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters);
+            return new DbSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters));
         }
 
         /// <summary>
@@ -476,6 +474,38 @@
             Contract.Requires(parameters != null);
 
             return _internalContext.ExecuteSqlCommand(sql, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteSqlCommand, which
+        ///     executes the given DDL/DML command against the database.
+        /// </summary>
+        /// <param name = "sql">The command string.</param>
+        /// <param name = "parameters">The parameters to apply to the command string.</param>
+        /// <returns>A Task containing the result returned by the database after executing the command.</returns>
+        public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Contract.Requires(parameters != null);
+
+            return ExecuteSqlCommandAsync(sql, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteSqlCommand, which
+        ///     executes the given DDL/DML command against the database.
+        /// </summary>
+        /// <param name = "sql">The command string.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name = "parameters">The parameters to apply to the command string.</param>
+        /// <returns>A Task containing the result returned by the database after executing the command.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Contract.Requires(parameters != null);
+
+            return _internalContext.ExecuteSqlCommandAsync(sql, cancellationToken, parameters);
         }
 
         #endregion

@@ -5,6 +5,8 @@
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class SimpleModelContextWithNoData : DbContext
     {
@@ -56,6 +58,12 @@
         {
             SaveChangesCalled = true;
             return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            SaveChangesCalled = true;
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

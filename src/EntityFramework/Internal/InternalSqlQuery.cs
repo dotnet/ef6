@@ -2,6 +2,7 @@
 {
     using System.Collections;
     using System.ComponentModel;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
 
@@ -9,7 +10,7 @@
     ///     Represents a raw SQL query against the context that may be for entities in an entity set
     ///     or for some other non-entity element type.
     /// </summary>
-    internal abstract class InternalSqlQuery : IEnumerable, IListSource
+    internal abstract class InternalSqlQuery : IEnumerable, IDbAsyncEnumerable, IListSource
     {
         #region Constructors and fields
 
@@ -57,7 +58,7 @@
         #region AsNoTracking
 
         /// <summary>
-        ///     If the query is would track entities, then this method returns a new query that will
+        ///     If the query is tracking entities, then this method returns a new query that will
         ///     not track entities.
         /// </summary>
         /// <returns>A no-tracking query.</returns>
@@ -65,13 +66,23 @@
 
         #endregion
 
-        #region GetEnumerator
+        #region IEnumerable implementation
 
         /// <summary>
-        ///     Executes the query and returns an enumerator for the results.
+        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the database.
         /// </summary>
         /// <returns>The query results.</returns>
         public abstract IEnumerator GetEnumerator();
+
+        #endregion
+
+        #region IDbAsyncEnumerable implementation
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        public abstract IDbAsyncEnumerator GetAsyncEnumerator();
 
         #endregion
 

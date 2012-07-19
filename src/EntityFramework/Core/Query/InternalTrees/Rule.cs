@@ -84,9 +84,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
 #if DEBUG
-        /// <summary>
-        /// The method name for the rule
-        /// </summary>
+    /// <summary>
+    /// The method name for the rule
+    /// </summary>
         internal string MethodName
         {
             get { return m_nodeDelegate.Method.Name; }

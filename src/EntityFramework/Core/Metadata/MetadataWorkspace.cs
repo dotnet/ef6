@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -1515,6 +1516,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Debug.Assert(null != _itemsSSpace, "_itemsSSpace must not be null");
             return _itemsSSpace.QueryCacheManager;
+        }
+
+        internal bool TryDetermineCSpaceModelType<T>(out EdmType modelEdmType)
+        {
+            return TryDetermineCSpaceModelType(typeof(T), out modelEdmType);
+        }
+
+        internal virtual bool TryDetermineCSpaceModelType(Type type, out EdmType modelEdmType)
+        {
+            var nonNullableType = TypeSystem.GetNonNullableType(type);
+
+            // make sure the workspace knows about T
+            ImplicitLoadAssemblyForType(nonNullableType, Assembly.GetCallingAssembly());
+            var objectItemCollection = (ObjectItemCollection)GetItemCollection(DataSpace.OSpace);
+            EdmType objectEdmType;
+            if (objectItemCollection.TryGetItem(nonNullableType.FullName, out objectEdmType))
+            {
+                Map map;
+                if (TryGetMap(objectEdmType, DataSpace.OCSpace, out map))
+                {
+                    var objectMapping = (ObjectTypeMapping)map;
+                    modelEdmType = objectMapping.EdmType;
+                    return true;
+                }
+            }
+
+            modelEdmType = null;
+
+            return false;
         }
 
         #endregion

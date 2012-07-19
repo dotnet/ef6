@@ -14,6 +14,8 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
     using IsolationLevel = System.Data.IsolationLevel;
 
@@ -540,6 +542,62 @@ namespace System.Data.Entity.Core.EntityClient
                 EntityRes.EntityClient_ProviderSpecificError,
                 @"Open",
                 ref closeStoreConnectionOnFailure);
+
+            // the following guards against the case when the user closes the underlying store connection
+            // in the state change event handler, as a consequence of which we are in the 'Broken' state
+            if (_storeConnection == null
+                || _storeConnection.State != ConnectionState.Open)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+            }
+
+            InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
+            SetEntityClientConnectionStateToOpen();
+        }
+
+        /// <summary>
+        /// An asynchronous version of Open, which
+        /// establishes a connection to the data store by calling the Open method on the underlying data provider
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public override async Task OpenAsync(CancellationToken cancellationToken)
+        {
+            if (_storeConnection == null)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+            }
+
+            if (State != ConnectionState.Closed)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
+            }
+
+            var closeStoreConnectionOnFailure = false;
+            try
+            {
+                if (_storeConnection.State
+                    != ConnectionState.Open)
+                {
+                    await _storeConnection.OpenAsync(cancellationToken);
+                    closeStoreConnectionOnFailure = true;
+                }
+
+                ResetStoreConnection(_storeConnection, originalConnection: null, closeOriginalConnection: false);
+
+                // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
+                ClearTransactions();
+            }
+            catch (Exception e)
+            {
+                if (e.IsCatchableExceptionType())
+                {
+                    var exceptionMessage = EntityRes.GetString(EntityRes.EntityClient_ProviderSpecificError, @"Open");
+                    throw new EntityException(exceptionMessage, e);
+                }
+
+                throw;
+            }
 
             // the following guards against the case when the user closes the underlying store connection
             // in the state change event handler, as a consequence of which we are in the 'Broken' state

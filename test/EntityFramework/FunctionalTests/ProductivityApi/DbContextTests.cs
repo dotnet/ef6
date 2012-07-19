@@ -3,18 +3,15 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
-    using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Validation;
-    using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
     using System.Globalization;
     using System.Linq;
     using System.Transactions;
@@ -567,6 +564,17 @@
         [Fact, AutoRollback]
         public void SaveChanges_saves_Added_Modified_Deleted_entities()
         {
+            SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChanges());
+        }
+
+        [Fact, AutoRollback]
+        public void SaveChangesAsync_saves_Added_Modified_Deleted_entities()
+        {
+            SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChangesAsync().Result);
+        }
+
+        private void SaveChanges_saves_Added_Modified_Deleted_entities_implementation(Func<DbContext, int> saveChanges)
+        {
             using (var context = new SimpleModelContext())
             {
                 // Modified
@@ -588,7 +596,7 @@
                 Assert.Equal(EntityState.Added, GetStateEntry(context, product3).State);
 
                 // Save
-                int savedCount = context.SaveChanges();
+                int savedCount = saveChanges(context);
                 Assert.Equal(3, savedCount);
 
                 // Validate state after Save
@@ -619,14 +627,26 @@
         [Fact, AutoRollback]
         public void SaveChanges_performs_DetectChanges()
         {
+            SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChanges());
+        }
+
+        [Fact, AutoRollback]
+        public void SaveChangesAsync_performs_DetectChanges()
+        {
+            SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChangesAsync().Result);
+        }
+
+        private void SaveChanges_performs_DetectChanges_implementation(Func<DbContext, int> saveChanges)
+        {
             // NOTE: This is split out into a seperate test from the above test because 
             //       it is important no other APIs are called between the modification 
             //       and calling SaveChanges due to other APIs calling DetectChanges implicitly
+
             using (var context = new SimpleModelContext())
             {
                 var prod = context.Products.Find(1);
                 prod.Name = "Cascade Draught";
-                int savedCount = context.SaveChanges();
+                int savedCount = saveChanges(context);
                 Assert.Equal(1, savedCount);
             }
         }
@@ -637,6 +657,15 @@
             using (var context = new SimpleModelContext())
             {
                 Assert.Equal(0, context.SaveChanges());
+            }
+        }
+
+        [Fact]
+        public void SaveChangesAsync_on_uninitialized_context_does_not_throw()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                Assert.Equal(0, context.SaveChangesAsync().Result);
             }
         }
 
@@ -670,6 +699,36 @@
             }
         }
 
+        public class SaveChangesAsyncDoesntInitializeContext : DbContext
+        {
+            public SaveChangesAsyncDoesntInitializeContext()
+            {
+                Database.SetInitializer<SaveChangesAsyncDoesntInitializeContext>(null);
+            }
+
+            public bool InitializationHappened { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                InitializationHappened = true;
+            }
+        }
+
+        [Fact]
+        public void SaveChangesAsync_on_uninitialized_context_does_not_cause_context_to_be_initialized()
+        {
+            using (var context = new SaveChangesAsyncDoesntInitializeContext())
+            {
+                context.SaveChangesAsync().Wait();
+
+                Assert.False(context.InitializationHappened);
+
+                var _ = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.True(context.InitializationHappened);
+            }
+        }
+
         [Fact]
         public void SaveChanges_is_virtual()
         {
@@ -680,12 +739,34 @@
             }
         }
 
+        [Fact]
+        public void SaveChangesAsync_is_virtual()
+        {
+            using (DbContext context = new SimpleModelContextWithNoData())
+            {
+                Assert.Equal(0, context.SaveChangesAsync().Result);
+                Assert.True(((SimpleModelContextWithNoData)context).SaveChangesCalled);
+            }
+        }
+
         #endregion
 
         #region Negative SaveChanges tests
 
         [Fact]
         public void SaveChanges_bubbles_presave_exception()
+        {
+            SaveChanges_bubbles_presave_exception_implementation((c) => c.SaveChanges());
+        }
+
+        [Fact]
+        public void SaveChangesAsync_bubbles_presave_exception()
+        {
+            SaveChanges_bubbles_presave_exception_implementation(
+                (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
+        }
+
+        private void SaveChanges_bubbles_presave_exception_implementation(Func<DbContext, int> saveChanges)
         {
             EnsureDatabaseInitialized(() => new AdvancedPatternsMasterContext());
 
@@ -710,6 +791,18 @@
         [Fact, AutoRollback]
         public void SaveChanges_bubbles_UpdateException()
         {
+            SaveChanges_bubbles_UpdateException_implementation((c) => c.SaveChanges());
+        }
+
+        [Fact, AutoRollback]
+        public void SaveChangesAsync_bubbles_UpdateException()
+        {
+            SaveChanges_bubbles_UpdateException_implementation(
+                (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
+        }
+
+        private void SaveChanges_bubbles_UpdateException_implementation(Func<DbContext, int> saveChanges)
+        {
             using (var context = new SimpleModelContext())
             {
                 var prod = new Product() { Name = "Wallaby Sausages", CategoryId = "AUSSIE FOODS" };
@@ -723,23 +816,47 @@
         [Fact, AutoRollback]
         public void SaveChanges_bubbles_exception_during_AcceptChanges()
         {
-                using (var context = new SimpleModelContext())
-                {
-                    var cat1 = new Category { Id = "AUSSIE FOODS" };
-                    var cat2 = new Category { Id = "AUSSIE FOODS" };
+            SaveChanges_bubbles_exception_during_AcceptChanges_implementation((c) => c.SaveChanges());
+        }
 
-                    context.Categories.Attach(cat1);
-                    context.Categories.Add(cat2);
+        [Fact, AutoRollback]
+        public void SaveChangesAsync_bubbles_exception_during_AcceptChanges()
+        {
+            SaveChanges_bubbles_exception_during_AcceptChanges_implementation(
+                (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
+        }
 
-                    // Accept will fail because of PK violation
-                    // (cat1 doesn't actually exist in the store so update pipeline will succeed)
-                    Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
-                        "ObjectContext_AcceptAllChangesFailure");
-                }
+        private void SaveChanges_bubbles_exception_during_AcceptChanges_implementation(Func<DbContext, int> saveChanges)
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var cat1 = new Category { Id = "AUSSIE FOODS" };
+                var cat2 = new Category { Id = "AUSSIE FOODS" };
+
+                context.Categories.Attach(cat1);
+                context.Categories.Add(cat2);
+
+                // Accept will fail because of PK violation
+                // (cat1 doesn't actually exist in the store so update pipeline will succeed)
+                Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
+                    "ObjectContext_AcceptAllChangesFailure");
+            }
         }
 
         [Fact]
         public void SaveChanges_throws_on_validation_errors()
+        {
+            SaveChanges_throws_on_validation_errors_implementation((c) => c.SaveChanges());
+        }
+
+        [Fact]
+        public void SaveChangesAsync_throws_on_validation_errors()
+        {
+            SaveChanges_throws_on_validation_errors_implementation(
+                (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
+        }
+
+        public void SaveChanges_throws_on_validation_errors_implementation(Func<DbContext, int> saveChanges)
         {
             using (var context = new ValidationTestContext())
             {

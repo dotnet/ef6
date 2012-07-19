@@ -31,10 +31,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="filePaths">Paths (URIs)to the CSDL files or resources</param>
         internal EdmItemCollection(
             IEnumerable<XmlReader> xmlReaders,
-            IEnumerable<string> filePaths)
+            IEnumerable<string> filePaths,
+            bool skipInitialization = false)
             : base(DataSpace.CSpace)
         {
-            Init(xmlReaders, filePaths, true /*throwOnErrors*/);
+            if (!skipInitialization)
+            {
+                Init(xmlReaders, filePaths, true /*throwOnErrors*/);
+            }
         }
 
         /// <summary>

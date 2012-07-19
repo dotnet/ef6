@@ -416,11 +416,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private bool m_reapplyNullabilityRules;
         private readonly Stack<Node> m_relOpAncestors = new Stack<Node>();
 #if DEBUG
-        /// <summary>
-        /// Used to see all the applied rules. 
-        /// One way to use it is to put a conditional breakpoint at the end of
-        /// PostProcessSubTree with the condition m_relOpAncestors.Count == 0
-        /// </summary>
+    /// <summary>
+    /// Used to see all the applied rules. 
+    /// One way to use it is to put a conditional breakpoint at the end of
+    /// PostProcessSubTree with the condition m_relOpAncestors.Count == 0
+    /// </summary>
         internal readonly StringBuilder appliedRules = new StringBuilder();
 #endif
 

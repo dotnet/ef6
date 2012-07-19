@@ -3,8 +3,11 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     An instance of this internal class is created whenever an instance of the public <see cref = "DbSet{TEntity}" />
@@ -12,7 +15,7 @@
     ///     still implements <see cref = "IQueryable{T}" />.
     /// </summary>
     /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-    internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>
+    internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>, IDbAsyncEnumerable<TEntity>
         where TEntity : class
     {
         #region Fields and constructors
@@ -66,9 +69,7 @@
             get { return _internalSet; }
         }
 
-        /// <summary>
-        ///     See comments in <see cref = "DbQuery" />.
-        /// </summary>
+        /// <inheritdoc/>
         public override DbQuery Include(string path)
         {
             // We need this because the Code Contract gets compiled out in the release build even though
@@ -78,41 +79,37 @@
             return new InternalDbQuery<TEntity>(_internalSet.Include(path));
         }
 
-        /// <summary>
-        ///     See comments in <see cref = "DbQuery" />.
-        /// </summary>
+        /// <inheritdoc/>
         public override DbQuery AsNoTracking()
         {
             return new InternalDbQuery<TEntity>(_internalSet.AsNoTracking());
         }
 
-        /// <summary>
-        ///     See comments in <see cref = "DbSet{TEntity}" />.
-        /// </summary>
+        /// <inheritdoc/>
         public override object Find(params object[] keyValues)
         {
             return _internalSet.Find(keyValues);
         }
 
-        /// <summary>
-        ///     See comments in <see cref = "DbSet{TEntity}" />.
-        /// </summary>
+        /// <inheritdoc/>
+        public override async Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return await _internalSet.FindAsync(cancellationToken, keyValues);
+        }
+
+        /// <inheritdoc/>
         public override IList Local
         {
             get { return _internalSet.Local; }
         }
 
-        /// <summary>
-        ///     See comments in <see cref = "DbSet{TEntity}" />.
-        /// </summary>
+        /// <inheritdoc/>
         public override object Create()
         {
             return _internalSet.Create();
         }
 
-        /// <summary>
-        ///     See comments in <see cref = "DbSet{TEntity}" />.
-        /// </summary>
+        /// <inheritdoc/>
         public override object Create(Type derivedEntityType)
         {
             // We need this because the Code Contract gets compiled out in the release build even though
@@ -127,12 +124,25 @@
         #region GetEnumerator
 
         /// <summary>
-        ///     Gets the enumeration of this query causing it to be executed against the store.
+        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the backing query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns>The query results.</returns>
         public IEnumerator<TEntity> GetEnumerator()
         {
             return _internalSet.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IDbAsyncEnumerable
+
+        /// <summary>
+        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}"/> which when enumerated will execute the backing query against the database.
+        /// </summary>
+        /// <returns>The query results.</returns>
+        public IDbAsyncEnumerator<TEntity> GetAsyncEnumerator()
+        {
+            return _internalSet.GetAsyncEnumerator();
         }
 
         #endregion
