@@ -128,13 +128,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             _this.EnsureDatabaseExists();
         }
 
-        internal virtual void RevertMigration(string migrationId, DbMigration migration, XDocument targetModel)
+        internal virtual void RevertMigration(string migrationId, DbMigration migration, XDocument sourceModel, XDocument targetModel)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
             Contract.Requires(migration != null);
+            Contract.Requires(sourceModel != null);
             Contract.Requires(targetModel != null);
 
-            _this.RevertMigration(migrationId, migration, targetModel);
+            _this.RevertMigration(migrationId, migration, sourceModel, targetModel);
         }
 
         internal virtual void SeedDatabase()
@@ -185,13 +186,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
             return _this.GetMigration(migrationId);
-        }
-
-        internal virtual bool IsFirstMigrationIncludingAutomatics(string migrationId)
-        {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-
-            return _this.IsFirstMigrationIncludingAutomatics(migrationId);
         }
 
         internal virtual string TargetDatabase

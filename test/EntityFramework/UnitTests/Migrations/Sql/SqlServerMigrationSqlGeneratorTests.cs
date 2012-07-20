@@ -163,7 +163,7 @@ CREATE TABLE [foo].[Customers] (
         [Fact]
         public void Generate_can_output_create_table_as_system_object_statement()
         {
-            var createTableOperation = new CreateTableOperation("Customers", new { IsMSShipped = true });
+            var createTableOperation = new CreateTableOperation("Customers") { IsSystem = true };
             var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
             createTableOperation.Columns.Add(idColumn);
             createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });

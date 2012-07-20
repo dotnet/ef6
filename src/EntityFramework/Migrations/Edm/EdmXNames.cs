@@ -26,6 +26,18 @@ namespace System.Data.Entity.Migrations.Edm
         private static readonly XNamespace _ssdlNamespaceV3
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm/ssdl");
 
+        private static readonly XNamespace _annotationsNamespace
+            = XNamespace.Get("http://schemas.microsoft.com/ado/2009/02/edm/annotation");
+
+        public static readonly XName IsSystem = _annotationsNamespace + "IsSystem";
+
+        public static string IsSystemAttribute(this XElement element)
+        {
+            Contract.Requires(element != null);
+
+            return (string)element.Attribute(IsSystem);
+        }
+
         public static string ActionAttribute(this XElement element)
         {
             Contract.Requires(element != null);
@@ -215,6 +227,8 @@ namespace System.Data.Entity.Migrations.Edm
 
             public static readonly IEnumerable<XName> ComplexPropertyNames = Names("ComplexProperty");
             public static readonly IEnumerable<XName> ConditionNames = Names("Condition");
+            public static readonly IEnumerable<XName> EntityContainerMappingNames = Names("EntityContainerMapping");
+            public static readonly IEnumerable<XName> EntitySetMappingNames = Names("EntitySetMapping");
             public static readonly IEnumerable<XName> EntityTypeMappingNames = Names("EntityTypeMapping");
 
             [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
@@ -240,6 +254,7 @@ namespace System.Data.Entity.Migrations.Edm
             public static readonly IEnumerable<XName> AssociationNames = Names("Association");
             public static readonly IEnumerable<XName> DependentNames = Names("Dependent");
             public static readonly IEnumerable<XName> EndNames = Names("End");
+            public static readonly IEnumerable<XName> EntityContainerNames = Names("EntityContainer");
             public static readonly IEnumerable<XName> EntitySetNames = Names("EntitySet");
             public static readonly IEnumerable<XName> EntityTypeNames = Names("EntityType");
             public static readonly IEnumerable<XName> KeyNames = Names("Key");

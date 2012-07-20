@@ -146,11 +146,7 @@ namespace System.Data.Entity.Migrations.Sql
         {
             Contract.Requires(createTableOperation != null);
 
-            object isMsShippedValue;
-            createTableOperation.AnonymousArguments.TryGetValue("IsMSShipped", out isMsShippedValue);
-            var isMsShipped = isMsShippedValue as bool?;
-
-            if (isMsShipped == true)
+            if (createTableOperation.IsSystem)
             {
                 using (var writer = Writer())
                 {

@@ -159,6 +159,7 @@
     <Compile Include="Migrations\AutoAndGenerateScenarios.cs" />
     <Compile Include="Migrations\AutoAndGenerateTestCase.cs" />
     <Compile Include="Migrations\BasicMigrationScenarios.cs" />
+    <Compile Include="Migrations\UpgradeScenarios.cs" />
     <Compile Include="Migrations\SchemaScenarios.cs" />
     <Compile Include="Migrations\CreateIndexScenarios.cs" />
     <Compile Include="Migrations\CreateTableScenarios.cs" />
@@ -592,7 +593,6 @@
     <Compile Include="TestHelpers\ConnectionEventsTracker.cs" />
     <Compile Include="TestHelpers\ConstructionStrategies.cs" />
     <Compile Include="TestHelpers\DbContextExtensions.cs" />
-    <Compile Include="TestHelpers\DbModelExtensions.cs" />
     <Compile Include="TestHelpers\EntityTypeConfigurationExtensions.cs" />
     <Compile Include="TestHelpers\ExceptionTestExtensions.cs" />
     <Compile Include="TestHelpers\ExceptionHelpers.cs" />

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Diagnostics.Contracts;
 
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public virtual void CreateDatabase(
             InternalContext internalContext,
-            Func<DbMigrationsConfiguration, DbContext, DbMigrator> createMigrator,
+            Func<DbMigrationsConfiguration, DbContext, MigratorBase> createMigrator,
             ObjectContext objectContext)
         {
             Contract.Requires(internalContext != null);

@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -21,6 +22,26 @@ namespace System.Data.Entity.Migrations
     public class HistoryRepositoryTests : DbTestCase
     {
         [MigrationsTheory]
+        public void AppendHistoryModel_should_add_system_elements_and_normalize_namespaces()
+        {
+            var historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory);
+
+            var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
+            modelBuilder.Entity<FakeEntity>();
+
+            var model = modelBuilder.Build(ProviderInfo).GetModel();
+
+            historyRepository.AppendHistoryModel(model, ProviderInfo);
+
+            Assert.Equal(1, model.Descendants(EdmXNames.Csdl.EntityTypeNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
+            Assert.Equal(1, model.Descendants(EdmXNames.Msl.EntitySetMappingNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
+            Assert.Equal(1, model.Descendants(EdmXNames.Ssdl.EntityTypeNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
+            Assert.Equal(1, model.Descendants(EdmXNames.Ssdl.EntitySetNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
+
+        }
+
+        [MigrationsTheory]
         public void GetUpgradeOperations_should_return_add_product_version_column_when_not_present()
         {
             ResetDatabase();
@@ -28,8 +49,7 @@ namespace System.Data.Entity.Migrations
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            var createTableOperation = (CreateTableOperation)
-                                       historyRepository.CreateCreateTableOperation(new EdmModelDiffer());
+            var createTableOperation = GetCreateHistoryTableOperation();
 
             createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
 
@@ -62,21 +82,21 @@ namespace System.Data.Entity.Migrations
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
+            ExecuteOperations(GetCreateHistoryTableOperation());
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("Migration1", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("Migration1", model)
+                    });
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("Migration2", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("Migration2", model)
+                    });
 
             var migrations = historyRepository.GetMigrationsSince(DbMigrator.InitialDatabase);
 
@@ -92,21 +112,21 @@ namespace System.Data.Entity.Migrations
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
+            ExecuteOperations(GetCreateHistoryTableOperation());
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("201109192032331_Migration1", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("201109192032331_Migration1", model)
+                    });
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("201109192032332_Migration2", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("201109192032332_Migration2", model)
+                    });
 
             var migrationId = historyRepository.GetMigrationId("Migration1");
 
@@ -125,30 +145,33 @@ namespace System.Data.Entity.Migrations
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
+            ExecuteOperations(GetCreateHistoryTableOperation());
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("201109192032331_Migration", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("201109192032331_Migration", model)
+                    });
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("201109192032332_Migration", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("201109192032332_Migration", model)
+                    });
 
-            Assert.Equal(Strings.AmbiguousMigrationName("Migration"), Assert.Throws<MigrationsException>(() => historyRepository.GetMigrationId("Migration")).Message);
+            Assert.Equal(
+                Strings.AmbiguousMigrationName("Migration"),
+                Assert.Throws<MigrationsException>(() => historyRepository.GetMigrationId("Migration")).Message);
         }
 
         [MigrationsTheory]
         public void GetMigrationId_should_return_null_when_no_database()
         {
             var historyRepository
-            = new HistoryRepository(ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"), ProviderFactory);
+                = new HistoryRepository(
+                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"), ProviderFactory);
 
             Assert.Null(historyRepository.GetMigrationId(DbMigrator.InitialDatabase));
         }
@@ -161,21 +184,21 @@ namespace System.Data.Entity.Migrations
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
+            ExecuteOperations(GetCreateHistoryTableOperation());
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("Migration1", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("Migration1", model)
+                    });
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("Migration2", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("Migration2", model)
+                    });
 
             var migrations = historyRepository.GetMigrationsSince("Migration1");
 
@@ -191,21 +214,21 @@ namespace System.Data.Entity.Migrations
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
+            ExecuteOperations(GetCreateHistoryTableOperation());
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("Migration1", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("Migration1", model)
+                    });
 
             ExecuteOperations(
                 new[]
-                        {
-                            historyRepository.CreateInsertOperation("Migration2", model)
-                        });
+                    {
+                        historyRepository.CreateInsertOperation("Migration2", model)
+                    });
 
             var migrations = historyRepository.GetMigrationsSince("Migration2");
 
@@ -217,7 +240,7 @@ namespace System.Data.Entity.Migrations
         {
             var historyRepository
                 = new HistoryRepository(
-                ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
+                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
                     ProviderFactory);
 
             Assert.False(historyRepository.GetPendingMigrations(Enumerable.Empty<string>()).Any());
@@ -253,7 +276,7 @@ namespace System.Data.Entity.Migrations
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
-                historyRepository.CreateCreateTableOperation(new EdmModelDiffer()),
+                GetCreateHistoryTableOperation(),
                 historyRepository.CreateInsertOperation("Migration 1", model),
                 historyRepository.CreateInsertOperation("Migration 3", model),
                 historyRepository.CreateInsertOperation("Migration 5", model));
@@ -265,7 +288,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal("Migration 2", pendingMigrations.First());
             Assert.Equal("Migration 4", pendingMigrations.Last());
         }
-        
+
         [MigrationsTheory]
         public void GetPendingMigrations_should_ignore_InitialCreate_timestamps()
         {
@@ -276,7 +299,7 @@ namespace System.Data.Entity.Migrations
             var model = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
-                historyRepository.CreateCreateTableOperation(new EdmModelDiffer()),
+                GetCreateHistoryTableOperation(),
                 historyRepository.CreateInsertOperation("000000000000001_InitialCreate", model));
 
             var pendingMigrations = historyRepository.GetPendingMigrations(
@@ -290,7 +313,7 @@ namespace System.Data.Entity.Migrations
         {
             var historyRepository
                 = new HistoryRepository(
-                ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
+                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
                     ProviderFactory);
 
             var modelBuilder = new DbModelBuilder();
@@ -336,7 +359,7 @@ namespace System.Data.Entity.Migrations
             var model1 = CreateContext<ShopContext_v1>().GetModel();
 
             ExecuteOperations(
-                historyRepository.CreateCreateTableOperation(new EdmModelDiffer()),
+                GetCreateHistoryTableOperation(),
                 historyRepository.CreateInsertOperation("Migration 1", model1));
 
             ExecuteOperations(
@@ -355,7 +378,7 @@ namespace System.Data.Entity.Migrations
         {
             var historyRepository
                 = new HistoryRepository(
-                ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
+                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
                     ProviderFactory);
 
             Assert.False(historyRepository.Exists);
@@ -378,7 +401,7 @@ namespace System.Data.Entity.Migrations
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            ExecuteOperations(historyRepository.CreateCreateTableOperation(new EdmModelDiffer()));
+            ExecuteOperations(GetCreateHistoryTableOperation());
 
             Assert.True(historyRepository.Exists);
         }
@@ -386,13 +409,9 @@ namespace System.Data.Entity.Migrations
         [MigrationsTheory]
         public void GetCreateOperation_should_return_valid_create_table_operation()
         {
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
-
-            var createTableOperation = (CreateTableOperation)
-                                       historyRepository.CreateCreateTableOperation(new EdmModelDiffer());
+            var createTableOperation = GetCreateHistoryTableOperation();
 
             Assert.Equal("dbo." + HistoryContext.TableName, createTableOperation.Name);
-            Assert.True((bool)createTableOperation.AnonymousArguments["IsMSShipped"]);
             Assert.Equal(3, createTableOperation.Columns.Count());
 
             var migrationColumn = createTableOperation.Columns.Single(c => c.Name == "MigrationId");
@@ -418,19 +437,23 @@ namespace System.Data.Entity.Migrations
             var model = modelBuilder.Build(ProviderInfo);
 
             var edmxString = new StringBuilder();
-            using (var xmlWriter = XmlWriter.Create(edmxString, new XmlWriterSettings { Indent = true }))
+            using (var xmlWriter = XmlWriter.Create(
+                edmxString, new XmlWriterSettings
+                                {
+                                    Indent = true
+                                }))
             {
                 EdmxWriter.WriteEdmx(model, xmlWriter);
             }
 
-            var modelDocument = model.ToXDocument();
+            var modelDocument = model.GetModel();
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
             var insertHistoryOperation
                 = (InsertHistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
 
             Assert.Equal("Migration1", insertHistoryOperation.MigrationId);
-            Assert.Equal((object)new ModelCompressor().Compress(modelDocument), (object)insertHistoryOperation.Model);
+            Assert.Equal(new ModelCompressor().Compress(modelDocument), (object)insertHistoryOperation.Model);
         }
 
         [MigrationsTheory]
@@ -475,25 +498,25 @@ namespace System.Data.Entity.Migrations
 
                     historyContext.History.Add(
                         new HistoryRow
-                        {
-                            MigrationId = "227309030010001_Migration1",
+                            {
+                                MigrationId = "227309030010001_Migration1",
 #pragma warning disable 612,618
-                            CreatedOn = new DateTime(2273, 9, 3, 0, 10, 0, 0, DateTimeKind.Utc),
+                                CreatedOn = new DateTime(2273, 9, 3, 0, 10, 0, 0, DateTimeKind.Utc),
 #pragma warning restore 612,618
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = "",
-                        });
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = "",
+                            });
 
                     historyContext.History.Add(
                         new HistoryRow
-                        {
-                            MigrationId = "227209030010001_Migration2", // Id is before
+                            {
+                                MigrationId = "227209030010001_Migration2", // Id is before
 #pragma warning disable 612,618
-                            CreatedOn = new DateTime(2274, 9, 3, 0, 10, 0, 0, DateTimeKind.Utc), // CreatedOn is after
+                                CreatedOn = new DateTime(2274, 9, 3, 0, 10, 0, 0, DateTimeKind.Utc), // CreatedOn is after
 #pragma warning restore 612,618
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = "",
-                        });
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = "",
+                            });
 
                     historyContext.SaveChanges();
                 }

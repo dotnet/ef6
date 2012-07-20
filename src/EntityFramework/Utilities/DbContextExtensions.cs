@@ -18,15 +18,8 @@ namespace System.Data.Entity.Utilities
             return GetModel(w => EdmxWriter.WriteEdmx(context, w));
         }
 
-        public static XDocument GetModel(this DbModel model)
-        {
-            Contract.Requires(model != null);
-
-            return GetModel(w => EdmxWriter.WriteEdmx(model, w));
-        }
-
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        private static XDocument GetModel(Action<XmlWriter> writeXml)
+        public static XDocument GetModel(Action<XmlWriter> writeXml)
         {
             Contract.Requires(writeXml != null);
 

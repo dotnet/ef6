@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Edm;
+    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
@@ -22,14 +23,11 @@ namespace System.Data.Entity.Migrations.History
 
     internal class HistoryRepository : RepositoryBase
     {
-        private readonly string _defaultSchema;
-
         private bool? _exists;
 
-        public HistoryRepository(string connectionString, DbProviderFactory providerFactory, string defaultSchema = null)
+        public HistoryRepository(string connectionString, DbProviderFactory providerFactory)
             : base(connectionString, providerFactory)
         {
-            _defaultSchema = defaultSchema;
         }
 
         public virtual XDocument GetLastModel()
@@ -54,10 +52,10 @@ namespace System.Data.Entity.Migrations.History
                         .OrderByDescending(h => h.MigrationId)
                         .Select(
                             s => new
-                                {
-                                    s.MigrationId,
-                                    s.Model
-                                })
+                                     {
+                                         s.MigrationId,
+                                         s.Model
+                                     })
                         .FirstOrDefault();
 
                 if (lastModel == null)
@@ -259,70 +257,13 @@ namespace System.Data.Entity.Migrations.History
             return null;
         }
 
-        public virtual MigrationOperation CreateCreateTableOperation(EdmModelDiffer modelDiffer)
-        {
-            return CreateCreateTableOperation(CreateContext, modelDiffer);
-        }
-
-        public virtual MigrationOperation CreateCreateTableOperation<TContext>(
-            Func<DbConnection, HistoryContextBase<TContext>> createContext, EdmModelDiffer modelDiffer)
-            where TContext : DbContext
-        {
-            Contract.Requires(modelDiffer != null);
-
-            // force re-query on next access if we are potentially creating the table
-            _exists = null;
-
-            using (var connection = CreateConnection())
-            {
-                using (var context = createContext(connection))
-                {
-                    using (var emptyContext = new EmptyContext(connection))
-                    {
-                        var operations
-                            = modelDiffer.Diff(emptyContext.GetModel(), context.GetModel());
-
-                        var createTableOperation = operations.OfType<CreateTableOperation>().Single();
-
-                        createTableOperation.AnonymousArguments.Add("IsMSShipped", true);
-
-                        return createTableOperation;
-                    }
-                }
-            }
-        }
-
-        public virtual MigrationOperation CreateDropTableOperation(EdmModelDiffer modelDiffer)
-        {
-            Contract.Requires(modelDiffer != null);
-
-            // force re-query on next access if we are potentially dropping the table
-            _exists = null;
-
-            using (var connection = CreateConnection())
-            {
-                using (var context = CreateContext(connection))
-                {
-                    using (var emptyContext = new EmptyContext(connection))
-                    {
-                        var operations
-                            = modelDiffer.Diff(context.GetModel(), emptyContext.GetModel());
-
-                        var dropTableOperation = operations.OfType<DropTableOperation>().Single();
-
-                        return dropTableOperation;
-                    }
-                }
-            }
-        }
-
         public virtual MigrationOperation CreateInsertOperation(string migrationId, XDocument model)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
             Contract.Requires(model != null);
 
             // TODO: Can we somehow use DbInsertCommandTree?
-            return new InsertHistoryOperation(TableName, migrationId, new ModelCompressor().Compress(model));
+            return new InsertHistoryOperation(HistoryContext.TableName, migrationId, new ModelCompressor().Compress(model));
         }
 
         public virtual MigrationOperation CreateDeleteOperation(string migrationId)
@@ -330,17 +271,7 @@ namespace System.Data.Entity.Migrations.History
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
             // TODO: Can we somehow use DbInsertCommandTree?
-            return new DeleteHistoryOperation(TableName, migrationId);
-        }
-
-        private string TableName
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(_defaultSchema)
-                           ? _defaultSchema + "." + HistoryContext.TableName
-                           : HistoryContext.TableName;
-            }
+            return new DeleteHistoryOperation(HistoryContext.TableName, migrationId);
         }
 
         public virtual void BootstrapUsingEFProviderDdl(XDocument model)
@@ -362,6 +293,11 @@ namespace System.Data.Entity.Migrations.History
 
                 context.SaveChanges();
             }
+        }
+
+        public virtual void ResetExists()
+        {
+            _exists = null;
         }
 
         private static bool QueryExists<TContext>(HistoryContextBase<TContext> context) where TContext : DbContext
@@ -392,7 +328,44 @@ namespace System.Data.Entity.Migrations.History
 
         private HistoryContext CreateContext(DbConnection connection = null)
         {
-            return new HistoryContext(connection ?? CreateConnection(), connection == null, _defaultSchema);
+            return new HistoryContext(connection ?? CreateConnection(), connection == null, null);
+        }
+
+        public virtual void AppendHistoryModel(XDocument model, DbProviderInfo providerInfo)
+        {
+            Contract.Requires(model != null);
+            Contract.Requires(providerInfo != null);
+
+            var csdlNamespace = model.Descendants(EdmXNames.Csdl.SchemaNames).Single().Name.Namespace;
+            var mslNamespace = model.Descendants(EdmXNames.Msl.MappingNames).Single().Name.Namespace;
+            var ssdlNamespace = model.Descendants(EdmXNames.Ssdl.SchemaNames).Single().Name.Namespace;
+
+            using (var context = CreateContext())
+            {
+                // prevent having to lookup the provider info.
+                context.InternalContext.ModelProviderInfo = providerInfo;
+
+                var historyModel = context.GetModel();
+
+                var entityType = historyModel.Descendants(EdmXNames.Csdl.EntityTypeNames).Single();
+                var entitySetMapping = historyModel.Descendants(EdmXNames.Msl.EntitySetMappingNames).Single();
+                var storeEntityType = historyModel.Descendants(EdmXNames.Ssdl.EntityTypeNames).Single();
+                var storeEntitySet = historyModel.Descendants(EdmXNames.Ssdl.EntitySetNames).Single();
+
+                new[] { entityType, entitySetMapping, storeEntityType, storeEntitySet }
+                    .Each(x => x.SetAttributeValue(EdmXNames.IsSystem, true));
+
+                // normalize namespaces
+                entityType.DescendantsAndSelf().Each(e => e.Name = csdlNamespace + e.Name.LocalName);
+                entitySetMapping.DescendantsAndSelf().Each(e => e.Name = mslNamespace + e.Name.LocalName);
+                storeEntityType.DescendantsAndSelf().Each(e => e.Name = ssdlNamespace + e.Name.LocalName);
+                storeEntitySet.DescendantsAndSelf().Each(e => e.Name = ssdlNamespace + e.Name.LocalName);
+
+                model.Descendants(EdmXNames.Csdl.SchemaNames).Single().Add(entityType);
+                model.Descendants(EdmXNames.Msl.EntityContainerMappingNames).Single().Add(entitySetMapping);
+                model.Descendants(EdmXNames.Ssdl.SchemaNames).Single().Add(storeEntityType);
+                model.Descendants(EdmXNames.Ssdl.EntityContainerNames).Single().Add(storeEntitySet);
+            }
         }
     }
 }

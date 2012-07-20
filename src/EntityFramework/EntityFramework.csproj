@@ -361,6 +361,7 @@
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
+    <Compile Include="Utilities\DbModelExtensions.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensions.cs" />
     <Compile Include="Utilities\ExceptionExtensions.cs" />
     <Compile Include="Core\Common\FieldMetadata.cs" />

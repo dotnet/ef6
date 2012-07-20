@@ -260,12 +260,10 @@ namespace System.Data.Entity.Migrations
 
             var scriptingDecorator = new MigratorScriptingDecorator(migrator);
 
-            // Act
             var script = scriptingDecorator.ScriptUpdate(null, DbMigrator.InitialDatabase);
 
-            // Assert
             Assert.True(script.Contains(DropMetadataStatement));
-            Assert.True(script.Contains("Version1"));
+            Assert.False(script.Contains("Version1"));
         }
 
         [MigrationsTheory]

@@ -112,7 +112,7 @@ namespace System.Data.Entity.Migrations
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
 
                 _historyRepository
-                    = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, context.InternalContext.DefaultSchema);
+                    = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory);
 
                 _providerManifestToken = context.InternalContext.ModelProviderInfo != null
                                              ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
@@ -135,12 +135,12 @@ namespace System.Data.Entity.Migrations
                 }
             }
 
-            _emptyModel = new Lazy<XDocument>(
-                () =>
-                new DbModelBuilder().Build(
-                    new DbProviderInfo(
-                    _usersContextInfo.ConnectionProviderName,
-                    _providerManifestToken)).GetModel());
+            var providerInfo
+                = new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken);
+
+            _emptyModel = new Lazy<XDocument>(() => new DbModelBuilder().Build(providerInfo).GetModel());
+
+            _historyRepository.AppendHistoryModel(_currentModel, providerInfo);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace System.Data.Entity.Migrations
                     () => ExecuteOperations(
                         MigrationAssembly.CreateBootstrapMigrationId(),
                         _currentModel,
-                        new List<MigrationOperation>(),
+                        _modelDiffer.Diff(_emptyModel.Value, _currentModel, true).Where(o => o.IsSystem),
                         false));
             }
 
@@ -472,7 +472,9 @@ namespace System.Data.Entity.Migrations
         {
             Contract.Requires(model != null);
 
-            return _modelDiffer.Diff(GetLastModel(lastMigration), model).Any();
+            var sourceModel = GetLastModel(lastMigration);
+
+            return _modelDiffer.Diff(sourceModel, model, ReferenceEquals(sourceModel, _emptyModel.Value)).Any();
         }
 
         private XDocument GetLastModel(DbMigration lastMigration, string currentMigrationId = null)
@@ -509,30 +511,54 @@ namespace System.Data.Entity.Migrations
 
                 Contract.Assert(targetModel != null);
 
+                var sourceModel = _historyRepository.GetModel(migrationId);
+
                 if (migration == null)
                 {
-                    var sourceModel = _historyRepository.GetModel(migrationId);
-
                     base.AutoMigrate(migrationId, sourceModel, targetModel, downgrading: true);
                 }
                 else
                 {
-                    base.RevertMigration(migrationId, migration, targetModel);
+                    base.RevertMigration(migrationId, migration, sourceModel, targetModel);
                 }
             }
         }
 
-        internal override void RevertMigration(string migrationId, DbMigration migration, XDocument targetModel)
+        internal override void RevertMigration(string migrationId, DbMigration migration, XDocument sourceModel, XDocument targetModel)
         {
+            var includeSystemOps = false;
+
+            if (ReferenceEquals(targetModel, _emptyModel.Value))
+            {
+                includeSystemOps = true;
+
+                if (!sourceModel.HasSystemOperations())
+                {
+                    // upgrade scenario, inject the history model
+                    _historyRepository
+                        .AppendHistoryModel(
+                            sourceModel,
+                            new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken));
+                }
+            }
+
+            var systemOperations
+                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
+                    .Where(o => o.IsSystem);
+
             migration.Down();
 
-            ExecuteOperations(migrationId, targetModel, migration.Operations.ToList(), downgrading: true);
+            ExecuteOperations(migrationId, targetModel, migration.Operations.Concat(systemOperations), downgrading: true);
         }
 
         internal override void ApplyMigration(DbMigration migration, DbMigration lastMigration)
         {
             var migrationMetadata = (IMigrationMetadata)migration;
             var compressor = new ModelCompressor();
+
+            var lastModel = GetLastModel(lastMigration, migrationMetadata.Id);
+            var targetModel = compressor.Decompress(Convert.FromBase64String(migrationMetadata.Target));
+            var systemOperations = Enumerable.Empty<MigrationOperation>();
 
             if (migrationMetadata.Source != null)
             {
@@ -543,24 +569,62 @@ namespace System.Data.Entity.Migrations
                 {
                     base.AutoMigrate(
                         migrationMetadata.Id.ToAutomaticMigrationId(),
-                        GetLastModel(lastMigration, migrationMetadata.Id),
+                        lastModel,
                         sourceModel,
                         downgrading: false);
                 }
             }
+            else
+            {
+                var includeSystemOps = false;
+
+                if (ReferenceEquals(lastModel, _emptyModel.Value))
+                {
+                    includeSystemOps = true;
+
+                    if (!targetModel.HasSystemOperations())
+                    {
+                        // upgrade scenario, inject the history model
+                        _historyRepository
+                            .AppendHistoryModel(
+                                targetModel,
+                                new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken));
+                    }
+                }
+
+                systemOperations
+                    = _modelDiffer.Diff(lastModel, targetModel, includeSystemOps)
+                        .Where(o => o.IsSystem);
+            }
 
             migration.Up();
 
-            var targetModel = compressor.Decompress(Convert.FromBase64String(migrationMetadata.Target));
-
-            ExecuteOperations(migrationMetadata.Id, targetModel, migration.Operations.ToList(), false);
+            ExecuteOperations(migrationMetadata.Id, targetModel, migration.Operations.Concat(systemOperations), false);
         }
 
         internal override void AutoMigrate(
             string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
         {
+            var includeSystemOps = false;
+
+            if (ReferenceEquals(downgrading ? targetModel : sourceModel, _emptyModel.Value))
+            {
+                includeSystemOps = true;
+
+                var appendableModel = downgrading ? sourceModel : targetModel;
+
+                if (!appendableModel.HasSystemOperations())
+                {
+                    // upgrade scenario, inject the history model
+                    _historyRepository
+                        .AppendHistoryModel(
+                            appendableModel,
+                            new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken));
+                }
+            }
+
             var operations
-                = _modelDiffer.Diff(sourceModel, targetModel)
+                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
                     .ToList();
 
             if (!_configuration.AutomaticMigrationDataLossAllowed
@@ -594,25 +658,13 @@ namespace System.Data.Entity.Migrations
                     .Concat(newTableForeignKeys)
                     .ToList();
 
-            var isFirstMigration = IsFirstMigration(migrationId, downgrading);
-
-            if (downgrading)
+            if (!downgrading)
+            {
+                orderedOperations.Add(_historyRepository.CreateInsertOperation(migrationId, targetModel));
+            }
+            else if (!operations.Any(o => o.IsSystem && o is DropTableOperation))
             {
                 orderedOperations.Add(_historyRepository.CreateDeleteOperation(migrationId));
-
-                if (isFirstMigration)
-                {
-                    orderedOperations.Add(_historyRepository.CreateDropTableOperation(_modelDiffer));
-                }
-            }
-            else
-            {
-                if (isFirstMigration)
-                {
-                    orderedOperations.Add(_historyRepository.CreateCreateTableOperation(_modelDiffer));
-                }
-
-                orderedOperations.Add(_historyRepository.CreateInsertOperation(migrationId, targetModel));
             }
 
             var migrationStatements = SqlGenerator.Generate(orderedOperations, _providerManifestToken);
@@ -627,6 +679,11 @@ namespace System.Data.Entity.Migrations
             }
 
             base.ExecuteStatements(migrationStatements);
+
+            if (operations.Any(o => o.IsSystem))
+            {
+                _historyRepository.ResetExists();
+            }
         }
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
@@ -654,6 +711,8 @@ namespace System.Data.Entity.Migrations
             {
                 return;
             }
+
+            //Console.WriteLine(migrationStatement.Sql);
 
             if (!migrationStatement.SuppressTransaction)
             {
@@ -756,6 +815,7 @@ namespace System.Data.Entity.Migrations
                 if (!Database.Exists(connection))
                 {
                     new DatabaseCreator().Create(connection);
+
                     _emptyMigrationNeeded = true;
                 }
                 else
@@ -768,41 +828,6 @@ namespace System.Data.Entity.Migrations
         internal override DbMigration GetMigration(string migrationId)
         {
             return _migrationAssembly.GetMigration(migrationId);
-        }
-
-        internal override bool IsFirstMigrationIncludingAutomatics(string migrationId)
-        {
-            var firstMigrationId = _historyRepository.GetMigrationsSince(InitialDatabase).LastOrDefault();
-
-            // If this is the first applied migration, return true; otherwise false
-            return firstMigrationId == null
-                   || string.Equals(migrationId, firstMigrationId, StringComparison.Ordinal);
-        }
-
-        private bool IsFirstMigration(string migrationId, bool downgrading)
-        {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Assert(migrationId.IsValidMigrationId());
-
-            if (downgrading)
-            {
-                var firstMigrationId = _historyRepository.GetMigrationsSince(InitialDatabase).LastOrDefault();
-                Contract.Assert(firstMigrationId != null);
-
-                return string.Equals(migrationId, firstMigrationId, StringComparison.Ordinal);
-            }
-
-            var firstExplicitMigrationId = _migrationAssembly.MigrationIds.FirstOrDefault();
-
-            // If this comes before or is the first explicit migration...
-            if (firstExplicitMigrationId == null
-                || string.Equals(migrationId, firstExplicitMigrationId, StringComparison.Ordinal)
-                || string.CompareOrdinal(migrationId, firstExplicitMigrationId) < 0)
-            {
-                return base.IsFirstMigrationIncludingAutomatics(migrationId);
-            }
-
-            return false;
         }
 
         private DbConnection CreateConnection()

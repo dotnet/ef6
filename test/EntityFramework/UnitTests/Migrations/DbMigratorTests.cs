@@ -52,11 +52,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory);
-
-            var createTableOperation = (CreateTableOperation)
-                                   historyRepository.CreateCreateTableOperation(c => new LegacyHistoryContext(c, false), new EdmModelDiffer());
+            var createTableOperation = GetLegacyHistoryCreateTableOperation();
 
             createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
             createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Hash" });
@@ -90,11 +86,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory);
-
-            var createTableOperation = (CreateTableOperation)
-                                   historyRepository.CreateCreateTableOperation(c => new LegacyHistoryContext(c, false), new EdmModelDiffer());
+            var createTableOperation = GetLegacyHistoryCreateTableOperation();
 
             createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
             createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Hash" });
@@ -115,6 +107,20 @@ namespace System.Data.Entity.Migrations
             Assert.True(ColumnExists(HistoryContext.TableName, "ProductVersion"));
             Assert.False(ColumnExists(HistoryContext.TableName, "Hash"));
             Assert.False(ColumnExists(HistoryContext.TableName, "CreatedOn"));
+        }
+
+        private CreateTableOperation GetLegacyHistoryCreateTableOperation()
+        {
+            var connection = ProviderFactory.CreateConnection();
+
+            connection.ConnectionString = ConnectionString;
+
+            return (CreateTableOperation)
+                   new EdmModelDiffer().Diff(
+                       new DbModelBuilder().Build(ProviderInfo).GetModel(),
+                       new LegacyHistoryContext(connection).GetModel(),
+                       includeSystemOperations: true)
+                       .Single();
         }
 
         [MigrationsTheory]

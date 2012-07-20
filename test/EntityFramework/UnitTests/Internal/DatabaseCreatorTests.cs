@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.SqlClient;
     using Moq;
@@ -81,12 +82,12 @@ namespace System.Data.Entity.Internal
             var mockContext = CreateMockContextForMigrator(mockOperations);
             mockContext.Setup(m => m.ProviderName).Returns(provider);
 
-            Mock<DbMigrator> mockMigrator = null;
+            Mock<MigratorBase> mockMigrator = null;
 
             new DatabaseCreator(new Lazy<IDbDependencyResolver>(() => resolver ?? DbConfiguration.Instance.DependencyResolver))
                 .CreateDatabase(
                     mockContext.Object,
-                    (config, context) => (mockMigrator = new Mock<DbMigrator>(config, context)).Object,
+                    (config, context) => (mockMigrator = new Mock<MigratorBase>(null)).Object,
                     null);
 
             mockMigrator.Verify(m => m.Update(null), Times.Once());

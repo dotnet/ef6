@@ -1,14 +1,17 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
-    using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.Migrations.UserRoles_v2;
     using System.Linq;
     using Xunit;
 
@@ -16,6 +19,52 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        [MigrationsTheory]
+        public void System_operations_are_ignored_by_default()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo).GetModel();
+
+            modelBuilder = new DbModelBuilder();
+
+            var model2 = modelBuilder.Build(ProviderInfo).GetModel();
+
+            new HistoryRepository(ConnectionString, ProviderFactory).AppendHistoryModel(model2, ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1, model2);
+
+            Assert.Equal(0, operations.Count());
+        }
+
+        [MigrationsTheory]
+        public void System_operations_are_included_when_requested()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo).GetModel();
+
+            modelBuilder = new DbModelBuilder();
+
+            var model2 = modelBuilder.Build(ProviderInfo).GetModel();
+
+            new HistoryRepository(ConnectionString, ProviderFactory).AppendHistoryModel(model2, ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1, model2, includeSystemOperations: true);
+
+            var createTableOperation
+                = operations.OfType<CreateTableOperation>().Single();
+
+            Assert.True(createTableOperation.IsSystem);
+
+            operations = new EdmModelDiffer().Diff(model2, model1, includeSystemOperations: true);
+
+            var dropTableOperation
+                = operations.OfType<DropTableOperation>().Single();
+
+            Assert.True(dropTableOperation.IsSystem);
+        }
+
         [MigrationsTheory]
         public void Can_diff_identical_models_at_different_edm_versions_and_no_diffs_produced()
         {
@@ -32,7 +81,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
         }
@@ -53,7 +102,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
         }
@@ -69,12 +118,12 @@ namespace System.Data.Entity.Migrations
 
             modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<UserRoles_v2.User2>();
+            modelBuilder.Entity<User2>();
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(13, operations.Count());
         }
@@ -90,12 +139,17 @@ namespace System.Data.Entity.Migrations
 
             modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<OrderLine>().HasKey(ol => new { ol.Id, ol.OrderId });
+            modelBuilder.Entity<OrderLine>().HasKey(
+                ol => new
+                          {
+                              ol.Id,
+                              ol.OrderId
+                          });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(3, operations.Count());
 
@@ -127,7 +181,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             Assert.True(operations.Single() is RenameColumnOperation);
@@ -144,13 +198,18 @@ namespace System.Data.Entity.Migrations
 
             modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<OrderLine>().HasKey(ol => new { ol.Id, ol.OrderId });
+            modelBuilder.Entity<OrderLine>().HasKey(
+                ol => new
+                          {
+                              ol.Id,
+                              ol.OrderId
+                          });
             modelBuilder.Entity<OrderLine>().Property(ol => ol.Id).HasColumnName("pk_ID");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(3, operations.Count());
 
@@ -178,13 +237,18 @@ namespace System.Data.Entity.Migrations
             modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<OrderLine>()
-                .HasKey(ol => new { ol.Id, ol.OrderId })
+                .HasKey(
+                    ol => new
+                              {
+                                  ol.Id,
+                                  ol.OrderId
+                              })
                 .ToTable("tbl_OrderLines");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
 
@@ -210,14 +274,13 @@ namespace System.Data.Entity.Migrations
             var model1 = modelBuilder.Build(new DbProviderInfo(DbProviders.Sql, "2008"));
 
             modelBuilder = new DbModelBuilder();
-            modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
 
             modelBuilder.Entity<Order>();
 
             var model2 = modelBuilder.Build(new DbProviderInfo(DbProviders.SqlCe, "4"));
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
         }
@@ -238,7 +301,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
@@ -269,7 +332,7 @@ namespace System.Data.Entity.Migrations
             var model1 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var column = operations.OfType<AddColumnOperation>().Single().Column;
@@ -288,10 +351,10 @@ namespace System.Data.Entity.Migrations
 
             WhenSqlCe(
                 () =>
-                {
-                    modelBuilder.Entity<MigrationsStore>().Ignore(e => e.Location);
-                    modelBuilder.Entity<MigrationsStore>().Ignore(e => e.FloorPlan);
-                });
+                    {
+                        modelBuilder.Entity<MigrationsStore>().Ignore(e => e.Location);
+                        modelBuilder.Entity<MigrationsStore>().Ignore(e => e.FloorPlan);
+                    });
 
             modelBuilder
                 .Entity<MigrationsStore>()
@@ -301,7 +364,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
@@ -323,7 +386,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var column = operations.OfType<AlterColumnOperation>().Single().Column;
@@ -364,7 +427,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.OfType<AddForeignKeyOperation>().Count());
             var createTableOperation = operations.OfType<CreateTableOperation>().Single(t => t.Name == "ordering.Orders");
@@ -395,7 +458,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             Assert.Equal(1, operations.OfType<CreateTableOperation>().Count());
@@ -413,7 +476,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             var createTableOperation = operations.OfType<CreateTableOperation>().Single();
 
@@ -438,7 +501,7 @@ namespace System.Data.Entity.Migrations
             var model1 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var addColumnOperation = operations.OfType<AddColumnOperation>().Single();
@@ -461,7 +524,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
             Assert.Equal(2, operations.OfType<CreateTableOperation>().Count());
@@ -489,7 +552,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
             Assert.Equal(1, operations.OfType<DropForeignKeyOperation>().Count());
@@ -518,7 +581,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
         }
@@ -535,7 +598,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model2.ToXDocument(), model1.ToXDocument());
+                model2.GetModel(), model1.GetModel());
 
             Assert.Equal(4, operations.Count());
             Assert.Equal(2, operations.OfType<DropTableOperation>().Count());
@@ -568,7 +631,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var inverse = (CreateTableOperation)operations.OfType<DropTableOperation>().Single().Inverse;
@@ -592,7 +655,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var moveTableOperation = operations.OfType<MoveTableOperation>().Single();
@@ -615,7 +678,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var tableRename = operations.OfType<RenameTableOperation>().Single();
@@ -638,7 +701,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
@@ -657,16 +720,27 @@ namespace System.Data.Entity.Migrations
             modelBuilder.Entity<MigrationsCustomer>()
                 .Map(
                     mc =>
-                    {
-                        mc.Properties(c => new { c.Id, c.FullName, HomeAddress = c.HomeAddress, WorkAddress = c.WorkAddress });
-                        mc.ToTable("MigrationsCustomers");
-                    })
+                        {
+                            mc.Properties(
+                                c => new
+                                         {
+                                             c.Id,
+                                             c.FullName,
+                                             c.HomeAddress,
+                                             c.WorkAddress
+                                         });
+                            mc.ToTable("MigrationsCustomers");
+                        })
                 .Map(
                     mc =>
-                    {
-                        mc.Properties(c => new { c.Name });
-                        mc.ToTable("Customers_Split");
-                    });
+                        {
+                            mc.Properties(
+                                c => new
+                                         {
+                                             c.Name
+                                         });
+                            mc.ToTable("Customers_Split");
+                        });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -675,7 +749,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
@@ -701,7 +775,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
 
@@ -724,7 +798,12 @@ namespace System.Data.Entity.Migrations
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<MigrationsCustomer>();
-            modelBuilder.Entity<MigrationsCustomer>().HasKey(p => new { p.Id, p.Name });
+            modelBuilder.Entity<MigrationsCustomer>().HasKey(
+                p => new
+                         {
+                             p.Id,
+                             p.Name
+                         });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -736,7 +815,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
 
@@ -767,7 +846,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
@@ -794,7 +873,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
@@ -821,7 +900,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(5, operations.Count());
 
@@ -855,10 +934,10 @@ namespace System.Data.Entity.Migrations
                 .Entity<MigrationsCustomer>()
                 .Map(
                     c =>
-                    {
-                        c.Requires("disc0").HasValue("2");
-                        c.Requires("disc1").HasValue("PC");
-                    });
+                        {
+                            c.Requires("disc0").HasValue("2");
+                            c.Requires("disc1").HasValue("PC");
+                        });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -868,15 +947,15 @@ namespace System.Data.Entity.Migrations
                 .Entity<MigrationsCustomer>()
                 .Map(
                     c =>
-                    {
-                        c.Requires("new_disc1").HasValue("PC");
-                        c.Requires("new_disc0").HasValue("2");
-                    });
+                        {
+                            c.Requires("new_disc1").HasValue("PC");
+                            c.Requires("new_disc0").HasValue("2");
+                        });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
 
@@ -907,7 +986,7 @@ namespace System.Data.Entity.Migrations
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(
-                model1.ToXDocument(), model2.ToXDocument());
+                model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
         }

@@ -1,8 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Edm;
+    using System.Xml.Linq;
     using Xunit;
 
     public class XDocumentExtensionsTests
@@ -17,6 +20,14 @@ namespace System.Data.Entity.Utilities
             Assert.NotNull(providerInfo);
             Assert.Equal("System.Data.SqlClient", providerInfo.ProviderInvariantName);
             Assert.Equal("2008", providerInfo.ProviderManifestToken);
+        }
+
+        [Fact]
+        public void HasSystemOperations_should_return_true_when_any_element_has_is_system_attribute()
+        {
+            var xdocument = new XDocument(new XElement("foo", new XAttribute(EdmXNames.IsSystem, "true")));
+
+            Assert.True(xdocument.HasSystemOperations());
         }
     }
 }

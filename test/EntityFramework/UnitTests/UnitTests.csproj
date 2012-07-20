@@ -184,6 +184,7 @@
     <Compile Include="TestHelpers\UnitTestsConfiguration.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />
+    <Compile Include="Utilities\DbModelExtensionsTests.cs" />
     <Compile Include="Utilities\DbContextExtensionsTests.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensionsTests.cs" />
     <Compile Include="Utilities\ExpressionExtensionsTests.cs" />

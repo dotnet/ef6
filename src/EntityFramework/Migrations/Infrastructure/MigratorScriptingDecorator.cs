@@ -102,18 +102,5 @@ namespace System.Data.Entity.Migrations.Infrastructure
         internal override void SeedDatabase()
         {
         }
-
-        internal override bool IsFirstMigrationIncludingAutomatics(string migrationId)
-        {
-            if (migrationId.IsAutomaticMigration())
-            {
-                return true;
-            }
-
-            var migration = base.GetMigration(migrationId);
-            var migrationMetadata = (IMigrationMetadata)migration;
-
-            return (migrationMetadata.Source == null);
-        }
     }
 }

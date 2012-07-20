@@ -6,10 +6,13 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
+    using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using Xunit;
 
@@ -282,6 +285,36 @@ namespace System.Data.Entity.Migrations
                         command.ExecuteNonQuery();
                     }
                 }
+            }
+        }
+
+        public CreateTableOperation GetCreateHistoryTableOperation()
+        {
+            using (var connection = ProviderFactory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+
+                return (CreateTableOperation)
+                       new EdmModelDiffer().Diff(
+                           new DbModelBuilder().Build(ProviderInfo).GetModel(),
+                           new HistoryContext(connection, contextOwnsConnection: true, defaultSchema: null).GetModel(),
+                           includeSystemOperations: true)
+                           .Single();
+            }
+        }
+
+        public DropTableOperation GetDropHistoryTableOperation()
+        {
+            using (var connection = ProviderFactory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+
+                return (DropTableOperation)
+                       new EdmModelDiffer().Diff(
+                           new HistoryContext(connection, contextOwnsConnection: true, defaultSchema: null).GetModel(),
+                           new DbModelBuilder().Build(ProviderInfo).GetModel(),
+                           includeSystemOperations: true)
+                           .Single();
             }
         }
     }

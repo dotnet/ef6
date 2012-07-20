@@ -2,6 +2,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
     using System.IO;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Migrations
 
             var modelCompressor = new ModelCompressor();
 
-            var bytes = modelCompressor.Compress(model.ToXDocument());
+            var bytes = modelCompressor.Compress(model.GetModel());
 
             Assert.True(bytes.Length > 2000);
 

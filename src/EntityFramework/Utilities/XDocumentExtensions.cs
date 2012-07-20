@@ -22,5 +22,12 @@ namespace System.Data.Entity.Utilities
 
             return new StoreItemCollection(new[] { schemaElement.CreateReader() });
         }
+
+        public static bool HasSystemOperations(this XDocument model)
+        {
+            Contract.Requires(model != null);
+
+            return model.Descendants().Attributes(EdmXNames.IsSystem).Any();
+        }
     }
 }
