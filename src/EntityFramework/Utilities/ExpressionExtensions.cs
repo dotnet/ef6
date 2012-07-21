@@ -29,7 +29,7 @@ namespace System.Data.Entity.Utilities
         public static PropertyPath GetSimplePropertyAccess(this LambdaExpression propertyAccessExpression)
         {
             Contract.Requires(propertyAccessExpression != null);
-            Contract.Assert(propertyAccessExpression.Parameters.Count() == 1);
+            Contract.Assert(propertyAccessExpression.Parameters.Count == 1);
 
             var propertyPath
                 = propertyAccessExpression
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Utilities
         public static PropertyPath GetComplexPropertyAccess(this LambdaExpression propertyAccessExpression)
         {
             Contract.Requires(propertyAccessExpression != null);
-            Contract.Assert(propertyAccessExpression.Parameters.Count() == 1);
+            Contract.Assert(propertyAccessExpression.Parameters.Count == 1);
 
             var propertyPath
                 = propertyAccessExpression
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Utilities
         public static IEnumerable<PropertyPath> GetSimplePropertyAccessList(this LambdaExpression propertyAccessExpression)
         {
             Contract.Requires(propertyAccessExpression != null);
-            Contract.Assert(propertyAccessExpression.Parameters.Count() == 1);
+            Contract.Assert(propertyAccessExpression.Parameters.Count == 1);
 
             var propertyPaths
                 = MatchPropertyAccessList(propertyAccessExpression, (p, e) => e.MatchSimplePropertyAccess(p));
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Utilities
         public static IEnumerable<PropertyPath> GetComplexPropertyAccessList(this LambdaExpression propertyAccessExpression)
         {
             Contract.Requires(propertyAccessExpression != null);
-            Contract.Assert(propertyAccessExpression.Parameters.Count() == 1);
+            Contract.Assert(propertyAccessExpression.Parameters.Count == 1);
 
             var propertyPaths
                 = MatchPropertyAccessList(propertyAccessExpression, (p, e) => e.MatchComplexPropertyAccess(p));
@@ -148,7 +148,7 @@ namespace System.Data.Entity.Utilities
 
             var propertyPath = MatchPropertyAccess(parameterExpression, propertyAccessExpression);
 
-            return propertyPath != null && propertyPath.Count() == 1 ? propertyPath : null;
+            return propertyPath != null && propertyPath.Count == 1 ? propertyPath : null;
         }
 
         private static PropertyPath MatchComplexPropertyAccess(
