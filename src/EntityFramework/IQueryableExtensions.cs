@@ -1216,19 +1216,20 @@ namespace System.Data.Entity
         #region Async equivalents of IQueryable extension methods
 
         // TODO: XML comments for the methods in this region
-        // TODO: Replace if-then-throw with Contracts
 
         public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.FirstAsync(CancellationToken.None);
         }
 
         public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1250,6 +1251,10 @@ namespace System.Data.Entity
         public static Task<TSource> FirstAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.FirstAsync(predicate, CancellationToken.None);
         }
 
@@ -1258,14 +1263,10 @@ namespace System.Data.Entity
         public static Task<TSource> FirstAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1285,15 +1286,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.FirstOrDefaultAsync(CancellationToken.None);
         }
 
         public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1315,6 +1318,10 @@ namespace System.Data.Entity
         public static Task<TSource> FirstOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.FirstOrDefaultAsync(predicate, CancellationToken.None);
         }
 
@@ -1323,14 +1330,10 @@ namespace System.Data.Entity
         public static Task<TSource> FirstOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1350,15 +1353,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> LastAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.LastAsync(CancellationToken.None);
         }
 
         public static Task<TSource> LastAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1380,6 +1385,10 @@ namespace System.Data.Entity
         public static Task<TSource> LastAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.LastAsync(predicate, CancellationToken.None);
         }
 
@@ -1388,14 +1397,10 @@ namespace System.Data.Entity
         public static Task<TSource> LastAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1415,15 +1420,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.LastOrDefaultAsync(CancellationToken.None);
         }
 
         public static Task<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1445,6 +1452,10 @@ namespace System.Data.Entity
         public static Task<TSource> LastOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.LastOrDefaultAsync(predicate, CancellationToken.None);
         }
 
@@ -1453,14 +1464,10 @@ namespace System.Data.Entity
         public static Task<TSource> LastOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1480,15 +1487,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.SingleAsync(CancellationToken.None);
         }
 
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1510,6 +1519,10 @@ namespace System.Data.Entity
         public static Task<TSource> SingleAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.SingleAsync(predicate);
         }
 
@@ -1518,14 +1531,10 @@ namespace System.Data.Entity
         public static Task<TSource> SingleAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1545,15 +1554,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.SingleOrDefaultAsync(CancellationToken.None);
         }
 
         public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1575,6 +1586,10 @@ namespace System.Data.Entity
         public static Task<TSource> SingleOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.SingleOrDefaultAsync(predicate, CancellationToken.None);
         }
 
@@ -1583,14 +1598,10 @@ namespace System.Data.Entity
         public static Task<TSource> SingleOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1610,19 +1621,19 @@ namespace System.Data.Entity
 
         public static Task<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, int index)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(index >= 0);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.ElementAtAsync(index, CancellationToken.None);
         }
 
         public static Task<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (index < 0)
-            {
-                throw Error.ArgumentOutOfRange("index");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(index >= 0);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1643,16 +1654,18 @@ namespace System.Data.Entity
         public static Task<TSource> ElementAtOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, int index)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.ElementAtOrDefaultAsync(index, CancellationToken.None);
         }
 
         public static Task<TSource> ElementAtOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1672,15 +1685,17 @@ namespace System.Data.Entity
 
         public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source.ContainsAsync(item, CancellationToken.None);
         }
 
         public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1701,16 +1716,18 @@ namespace System.Data.Entity
         public static Task<bool> ContainsAsync<TSource>(
             this IQueryable<TSource> source, TSource item, IEqualityComparer<TSource> comparer)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source.ContainsAsync(item, comparer, CancellationToken.None);
         }
 
         public static Task<bool> ContainsAsync<TSource>(
             this IQueryable<TSource> source, TSource item, IEqualityComparer<TSource> comparer, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1735,20 +1752,20 @@ namespace System.Data.Entity
         public static Task<bool> SequenceEqualAsync<TSource>(
             this IQueryable<TSource> source1, IEnumerable<TSource> source2)
         {
+            Contract.Requires(source1 != null);
+            Contract.Requires(source2 != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source1.SequenceEqualAsync(source2, CancellationToken.None);
         }
 
         public static Task<bool> SequenceEqualAsync<TSource>(
             this IQueryable<TSource> source1, IEnumerable<TSource> source2, CancellationToken cancellationToken)
         {
-            if (source1 == null)
-            {
-                throw Error.ArgumentNull("source1");
-            }
-            if (source2 == null)
-            {
-                throw Error.ArgumentNull("source2");
-            }
+            Contract.Requires(source1 != null);
+            Contract.Requires(source2 != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source1.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1769,6 +1786,10 @@ namespace System.Data.Entity
         public static Task<bool> SequenceEqualAsync<TSource>(
             this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer)
         {
+            Contract.Requires(source1 != null);
+            Contract.Requires(source2 != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source1.SequenceEqualAsync(source2, comparer, CancellationToken.None);
         }
 
@@ -1776,14 +1797,10 @@ namespace System.Data.Entity
             this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer,
             CancellationToken cancellationToken)
         {
-            if (source1 == null)
-            {
-                throw Error.ArgumentNull("source1");
-            }
-            if (source2 == null)
-            {
-                throw Error.ArgumentNull("source2");
-            }
+            Contract.Requires(source1 != null);
+            Contract.Requires(source2 != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source1.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1808,15 +1825,17 @@ namespace System.Data.Entity
 
         public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source.AnyAsync(CancellationToken.None);
         }
 
         public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1838,6 +1857,10 @@ namespace System.Data.Entity
         public static Task<bool> AnyAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source.AnyAsync(predicate, CancellationToken.None);
         }
 
@@ -1846,14 +1869,10 @@ namespace System.Data.Entity
         public static Task<bool> AnyAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1875,6 +1894,10 @@ namespace System.Data.Entity
         public static Task<bool> AllAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             return source.AllAsync(predicate, CancellationToken.None);
         }
 
@@ -1883,14 +1906,10 @@ namespace System.Data.Entity
         public static Task<bool> AllAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1910,15 +1929,17 @@ namespace System.Data.Entity
 
         public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             return source.CountAsync(CancellationToken.None);
         }
 
         public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1940,6 +1961,10 @@ namespace System.Data.Entity
         public static Task<int> CountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             return source.CountAsync(predicate, CancellationToken.None);
         }
 
@@ -1948,14 +1973,10 @@ namespace System.Data.Entity
         public static Task<int> CountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -1975,15 +1996,17 @@ namespace System.Data.Entity
 
         public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             return source.LongCountAsync(CancellationToken.None);
         }
 
         public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2005,6 +2028,10 @@ namespace System.Data.Entity
         public static Task<long> LongCountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             return source.LongCountAsync(predicate);
         }
 
@@ -2013,14 +2040,10 @@ namespace System.Data.Entity
         public static Task<long> LongCountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (predicate == null)
-            {
-                throw Error.ArgumentNull("predicate");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2040,15 +2063,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.MinAsync(CancellationToken.None);
         }
 
         public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2070,6 +2095,10 @@ namespace System.Data.Entity
         public static Task<TResult> MinAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<TResult>>() != null);
+
             return source.MinAsync(selector, CancellationToken.None);
         }
 
@@ -2078,14 +2107,10 @@ namespace System.Data.Entity
         public static Task<TResult> MinAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<TResult>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2105,15 +2130,17 @@ namespace System.Data.Entity
 
         public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.MaxAsync(CancellationToken.None);
         }
 
         public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2135,6 +2162,10 @@ namespace System.Data.Entity
         public static Task<TResult> MaxAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.MaxAsync(selector, CancellationToken.None);
         }
 
@@ -2143,14 +2174,10 @@ namespace System.Data.Entity
         public static Task<TResult> MaxAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2170,15 +2197,17 @@ namespace System.Data.Entity
 
         public static Task<int> SumAsync(this IQueryable<int> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         public static Task<int> SumAsync(this IQueryable<int> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2199,16 +2228,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int?> SumAsync(this IQueryable<int?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int?> SumAsync(this IQueryable<int?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2228,15 +2259,17 @@ namespace System.Data.Entity
 
         public static Task<long> SumAsync(this IQueryable<long> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         public static Task<long> SumAsync(this IQueryable<long> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2257,16 +2290,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long?> SumAsync(this IQueryable<long?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long?> SumAsync(this IQueryable<long?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2286,15 +2321,17 @@ namespace System.Data.Entity
 
         public static Task<float> SumAsync(this IQueryable<float> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         public static Task<float> SumAsync(this IQueryable<float> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2315,16 +2352,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> SumAsync(this IQueryable<float?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> SumAsync(this IQueryable<float?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2344,15 +2383,17 @@ namespace System.Data.Entity
 
         public static Task<double> SumAsync(this IQueryable<double> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         public static Task<double> SumAsync(this IQueryable<double> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2373,16 +2414,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> SumAsync(this IQueryable<double?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> SumAsync(this IQueryable<double?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2402,15 +2445,17 @@ namespace System.Data.Entity
 
         public static Task<decimal> SumAsync(this IQueryable<decimal> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         public static Task<decimal> SumAsync(this IQueryable<decimal> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2431,16 +2476,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> SumAsync(this IQueryable<decimal?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             return source.SumAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> SumAsync(this IQueryable<decimal?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2462,6 +2509,10 @@ namespace System.Data.Entity
         public static Task<int> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2470,14 +2521,10 @@ namespace System.Data.Entity
         public static Task<int> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2499,6 +2546,10 @@ namespace System.Data.Entity
         public static Task<int?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2507,14 +2558,10 @@ namespace System.Data.Entity
         public static Task<int?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2536,6 +2583,10 @@ namespace System.Data.Entity
         public static Task<long> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2544,14 +2595,10 @@ namespace System.Data.Entity
         public static Task<long> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2573,6 +2620,10 @@ namespace System.Data.Entity
         public static Task<long?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2581,14 +2632,10 @@ namespace System.Data.Entity
         public static Task<long?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2610,6 +2657,10 @@ namespace System.Data.Entity
         public static Task<float> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2618,14 +2669,10 @@ namespace System.Data.Entity
         public static Task<float> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2647,6 +2694,10 @@ namespace System.Data.Entity
         public static Task<float?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2655,14 +2706,10 @@ namespace System.Data.Entity
         public static Task<float?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2684,6 +2731,10 @@ namespace System.Data.Entity
         public static Task<double> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2692,14 +2743,10 @@ namespace System.Data.Entity
         public static Task<double> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2721,6 +2768,10 @@ namespace System.Data.Entity
         public static Task<double?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2729,14 +2780,10 @@ namespace System.Data.Entity
         public static Task<double?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2758,6 +2805,10 @@ namespace System.Data.Entity
         public static Task<decimal> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2766,14 +2817,10 @@ namespace System.Data.Entity
         public static Task<decimal> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2795,6 +2842,10 @@ namespace System.Data.Entity
         public static Task<decimal?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             return source.SumAsync(selector, CancellationToken.None);
         }
 
@@ -2803,14 +2854,10 @@ namespace System.Data.Entity
         public static Task<decimal?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2830,15 +2877,17 @@ namespace System.Data.Entity
 
         public static Task<double> AverageAsync(this IQueryable<int> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         public static Task<double> AverageAsync(this IQueryable<int> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2859,16 +2908,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<int?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<int?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2888,15 +2939,17 @@ namespace System.Data.Entity
 
         public static Task<double> AverageAsync(this IQueryable<long> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         public static Task<double> AverageAsync(this IQueryable<long> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2917,16 +2970,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<long?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<long?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2946,15 +3001,17 @@ namespace System.Data.Entity
 
         public static Task<float> AverageAsync(this IQueryable<float> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         public static Task<float> AverageAsync(this IQueryable<float> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -2975,16 +3032,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> AverageAsync(this IQueryable<float?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> AverageAsync(this IQueryable<float?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3004,15 +3063,17 @@ namespace System.Data.Entity
 
         public static Task<double> AverageAsync(this IQueryable<double> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         public static Task<double> AverageAsync(this IQueryable<double> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3033,16 +3094,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<double?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<double?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3062,15 +3125,17 @@ namespace System.Data.Entity
 
         public static Task<decimal> AverageAsync(this IQueryable<decimal> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         public static Task<decimal> AverageAsync(this IQueryable<decimal> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3091,16 +3156,18 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> AverageAsync(this IQueryable<decimal?> source)
         {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             return source.AverageAsync(CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> AverageAsync(this IQueryable<decimal?> source, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3122,6 +3189,10 @@ namespace System.Data.Entity
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3130,14 +3201,10 @@ namespace System.Data.Entity
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3159,6 +3226,10 @@ namespace System.Data.Entity
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3167,14 +3238,10 @@ namespace System.Data.Entity
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3196,6 +3263,10 @@ namespace System.Data.Entity
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3204,14 +3275,10 @@ namespace System.Data.Entity
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3233,6 +3300,10 @@ namespace System.Data.Entity
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3241,14 +3312,10 @@ namespace System.Data.Entity
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3270,6 +3337,10 @@ namespace System.Data.Entity
         public static Task<float> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3278,14 +3349,10 @@ namespace System.Data.Entity
         public static Task<float> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3307,6 +3374,10 @@ namespace System.Data.Entity
         public static Task<float?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3315,14 +3386,10 @@ namespace System.Data.Entity
         public static Task<float?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3344,6 +3411,10 @@ namespace System.Data.Entity
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3352,14 +3423,10 @@ namespace System.Data.Entity
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3381,6 +3448,10 @@ namespace System.Data.Entity
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3389,14 +3460,10 @@ namespace System.Data.Entity
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3418,6 +3485,10 @@ namespace System.Data.Entity
         public static Task<decimal> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3426,14 +3497,10 @@ namespace System.Data.Entity
         public static Task<decimal> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3455,6 +3522,10 @@ namespace System.Data.Entity
         public static Task<decimal?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             return source.AverageAsync(selector, CancellationToken.None);
         }
 
@@ -3463,14 +3534,10 @@ namespace System.Data.Entity
         public static Task<decimal?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3492,6 +3559,10 @@ namespace System.Data.Entity
         public static Task<TSource> AggregateAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(func != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.AggregateAsync(func, CancellationToken.None);
         }
 
@@ -3500,14 +3571,10 @@ namespace System.Data.Entity
         public static Task<TSource> AggregateAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (func == null)
-            {
-                throw Error.ArgumentNull("func");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(func != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3529,6 +3596,10 @@ namespace System.Data.Entity
         public static Task<TAccumulate> AggregateAsync<TSource, TAccumulate>(
             this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(func != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.AggregateAsync(seed, func, CancellationToken.None);
         }
 
@@ -3538,14 +3609,10 @@ namespace System.Data.Entity
             this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
             CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (func == null)
-            {
-                throw Error.ArgumentNull("func");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(func != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
@@ -3568,6 +3635,11 @@ namespace System.Data.Entity
             this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
             Expression<Func<TAccumulate, TResult>> selector)
         {
+            Contract.Requires(source != null);
+            Contract.Requires(func != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             return source.AggregateAsync(seed, func, selector, CancellationToken.None);
         }
 
@@ -3577,18 +3649,11 @@ namespace System.Data.Entity
             this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
             Expression<Func<TAccumulate, TResult>> selector, CancellationToken cancellationToken)
         {
-            if (source == null)
-            {
-                throw Error.ArgumentNull("source");
-            }
-            if (func == null)
-            {
-                throw Error.ArgumentNull("func");
-            }
-            if (selector == null)
-            {
-                throw Error.ArgumentNull("selector");
-            }
+            Contract.Requires(source != null);
+            Contract.Requires(func != null);
+            Contract.Requires(selector != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
             {
