@@ -16,7 +16,7 @@ namespace System.Data.Entity.SqlServer
         private readonly StringBuilder unencodedStringBuilder = new StringBuilder();
         private readonly HashSet<EntitySet> ignoredEntitySets = new HashSet<EntitySet>();
 
-        #region Pulblic Surface
+        #region Public Surface
 
         internal static string CreateObjectsScript(StoreItemCollection itemCollection, bool createSchemas)
         {
