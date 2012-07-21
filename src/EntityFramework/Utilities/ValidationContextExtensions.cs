@@ -3,12 +3,15 @@ namespace System.Data.Entity.Utilities
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Internal;
+    using System.Diagnostics.Contracts;
 
     internal static class ValidationContextExtensions
     {
         public static void SetDisplayName(
             this ValidationContext validationContext, InternalMemberEntry property, DisplayAttribute displayAttribute)
         {
+            Contract.Requires(validationContext != null);
+
             var displayName = displayAttribute == null ? null : displayAttribute.Name;
             if (property == null)
             {

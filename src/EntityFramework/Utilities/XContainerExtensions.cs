@@ -25,17 +25,26 @@ namespace System.Data.Entity.Utilities
 
         public static IEnumerable<XElement> Descendants(this XContainer container, IEnumerable<XName> name)
         {
+            Contract.Requires(container != null);
+            Contract.Requires(name != null);
+
             return name.SelectMany(container.Descendants);
         }
 
         public static IEnumerable<XElement> Elements(this XContainer container, IEnumerable<XName> name)
         {
+            Contract.Requires(container != null);
+            Contract.Requires(name != null);
+
             return name.SelectMany(container.Elements);
         }
 
         public static IEnumerable<XElement> Descendants<T>(this IEnumerable<T> source, IEnumerable<XName> name)
             where T : XContainer
         {
+            Contract.Requires(source != null);
+            Contract.Requires(name != null);
+
             return name.SelectMany(n => source.SelectMany(c => c.Descendants(n)));
         }
     }
