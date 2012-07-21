@@ -27,8 +27,16 @@ namespace System.Data.Entity
         ///     Executes the strategy to initialize the database for the given context.
         /// </summary>
         /// <param name = "context">The context.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="context"/> is <c>null</c>.
+        /// </exception>
         public void InitializeDatabase(TContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+
             bool databaseExists;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
