@@ -7,6 +7,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// A class derived from this class can be placed in the same assembly as a class derived from
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Config
         protected internal void AddDependencyResolver(IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
-            CheckNotLocked("AddDependencyResolver");
+            CheckNotLocked();
 
             // New resolvers always run after the config resolvers so that config always wins over code
             _resolvers.Second.Add(resolver);
@@ -113,7 +114,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(provider != null);
-            CheckNotLocked("AddProvider");
+            CheckNotLocked();
 
             AddDependencyResolver(new SingletonDependencyResolver<DbProviderServices>(provider, providerInvariantName));
         }
@@ -136,7 +137,7 @@ namespace System.Data.Entity.Config
         protected internal void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
         {
             Contract.Requires(strategy != null);
-            CheckNotLocked("SetDatabaseInitializer");
+            CheckNotLocked();
 
             AddDependencyResolver(new SingletonDependencyResolver<IDatabaseInitializer<TContext>>(strategy));
         }
@@ -160,7 +161,7 @@ namespace System.Data.Entity.Config
             protected internal set
             {
                 Contract.Requires(value != null);
-                CheckNotLocked("DefaultConnectionFactory");
+                CheckNotLocked();
 
                 AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(value));
             }
@@ -179,7 +180,7 @@ namespace System.Data.Entity.Config
             protected internal set
             {
                 Contract.Requires(value != null);
-                CheckNotLocked("ModelCacheKeyFactory");
+                CheckNotLocked();
 
                 AddDependencyResolver(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(value));
             }
@@ -200,7 +201,7 @@ namespace System.Data.Entity.Config
             get { return _rootResolver; }
         }
 
-        private void CheckNotLocked(string memberName)
+        private void CheckNotLocked([CallerMemberName] string memberName = null)
         {
             if (_isLocked)
             {
