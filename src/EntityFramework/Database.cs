@@ -15,7 +15,7 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An instances of this class is obtained from an <see cref = "DbContext" /> object and can be used
+    ///     An instance of this class is obtained from an <see cref = "DbContext" /> object and can be used
     ///     to manage the actual database backing a DbContext or connection.
     ///     This includes creating, deleting, and checking for the existence of a database.
     ///     Note that deletion and checking for existence of a database can be performed using just a
@@ -92,7 +92,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name = "TContext">The type of the context.</typeparam>
         /// <param name = "strategy">The strategy.</param>
-        /// <param name = "lockStrategy">if set to <c>true</c> then the strategy is locked.</param>
+        /// <param name = "lockStrategy">If set to <c>true</c> then the strategy is locked.</param>
         internal static void SetInitializerInternal<TContext>(
             IDatabaseInitializer<TContext> strategy, bool lockStrategy)
             where TContext : DbContext
@@ -117,7 +117,7 @@ namespace System.Data.Entity
         ///     before starting some operation where doing so lazily will cause issues, such as when the
         ///     operation is part of a transaction.
         /// </summary>
-        /// <param name = "force">if set to <c>true</c> the initializer is run even if it has already been run.</param>
+        /// <param name = "force">If set to <c>true</c> the initializer is run even if it has already been run.</param>
         public void Initialize(bool force)
         {
             if (force)
@@ -332,7 +332,7 @@ namespace System.Data.Entity
         ///     This is used when just a database name or connection string is given to <see cref = "DbContext" /> or when
         ///     the no database name or connection is given to DbContext in which case the name of
         ///     the context class is passed to this factory in order to generate a DbConnection.
-        ///     By default, the <see cref = "IDbConnectionFactory" /> instance to use is read from the applications .config
+        ///     By default, the <see cref = "IDbConnectionFactory" /> instance to use is read from the application's .config
         ///     file from the "EntityFramework DefaultConnectionFactory" entry in appSettings. If no entry is found in
         ///     the config file then <see cref = "SqlConnectionFactory" /> is used. Setting this property in code
         ///     always overrides whatever value is found in the config file.
@@ -407,7 +407,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Returns an empty ObjectContext that can be used to perform delete/exists operations.
         /// </summary>
-        /// <param name = "connection">The connection for which to create an ObjectContext</param>
+        /// <param name = "connection">The connection for which to create an ObjectContext.</param>
         /// <returns>The empty context.</returns>
         private static ObjectContext CreateEmptyObjectContext(DbConnection connection)
         {

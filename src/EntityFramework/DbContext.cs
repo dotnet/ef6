@@ -125,7 +125,8 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Constructs a new context instance using the existing connection to connect to a database.
-        ///     The connection will not be disposed when the context is disposed.
+        ///     The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection"/>
+        ///     is <c>false</c>.
         /// </summary>
         /// <param name = "existingConnection">An existing connection to use for the new context.</param>
         /// <param name = "contextOwnsConnection">If set to <c>true</c> the connection is disposed when
@@ -141,7 +142,8 @@ namespace System.Data.Entity
         /// <summary>
         ///     Constructs a new context instance using the existing connection to connect to a database,
         ///     and initializes it from the given model.
-        ///     The connection will not be disposed when the context is disposed.
+        ///     The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection"/>
+        ///     is <c>false</c>.
         ///     <param name = "existingConnection">An existing connection to use for the new context.</param>
         ///     <param name = "model">The model that will back this context.</param>
         ///     <param name = "contextOwnsConnection">If set to <c>true</c> the connection is disposed when
@@ -281,7 +283,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database.
+        ///     Saves all changes made in this context to the underlying database asynchronously.
         /// </summary>
         /// <returns>The number of objects written to the underlying database.</returns>
         /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
@@ -366,7 +368,7 @@ namespace System.Data.Entity
         ///     added and modified entities.
         /// </summary>
         /// <param name = "entityEntry">DbEntityEntry instance that is supposed to be validated.</param>
-        /// <returns>true to proceed with validation. false otherwise.</returns>
+        /// <returns>true to proceed with validation; false otherwise.</returns>
         protected virtual bool ShouldValidateEntity(DbEntityEntry entityEntry)
         {
             Contract.Requires(entityEntry != null);
@@ -379,7 +381,7 @@ namespace System.Data.Entity
         ///     Called by <see cref = "GetValidationErrors" />.
         /// </summary>
         /// <param name = "entityEntry">DbEntityEntry instance to be validated.</param>
-        /// <param name = "items">User defined dictionary containing additional info for custom validation.
+        /// <param name = "items">User-defined dictionary containing additional info for custom validation.
         ///     It will be passed to <see cref = "System.ComponentModel.DataAnnotations.ValidationContext" />
         ///     and will be exposed as <see cref = "System.ComponentModel.DataAnnotations.ValidationContext.Items" />.
         ///     This parameter is optional and can be null.</param>
@@ -396,7 +398,7 @@ namespace System.Data.Entity
         ///     Internal method that calls the protected ValidateEntity method.
         /// </summary>
         /// <param name = "entityEntry">DbEntityEntry instance to be validated.</param>
-        /// <param name = "items">User defined dictionary containing additional info for custom validation.
+        /// <param name = "items">User-defined dictionary containing additional info for custom validation.
         ///     It will be passed to <see cref = "System.ComponentModel.DataAnnotations.ValidationContext" />
         ///     and will be exposed as <see cref = "System.ComponentModel.DataAnnotations.ValidationContext.Items" />.
         ///     This parameter is optional and can be null.</param>

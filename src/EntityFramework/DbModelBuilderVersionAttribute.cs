@@ -4,7 +4,7 @@ namespace System.Data.Entity
     /// <summary>
     ///     This attribute can be applied to a class derived from <see cref = "DbContext" /> to set which
     ///     version of the DbContext and <see cref = "DbModelBuilder" /> conventions should be used when building
-    ///     a model from code--also know as "Code First". See the <see cref = "DbModelBuilderVersion" />
+    ///     a model from code--also known as "Code First". See the <see cref = "DbModelBuilderVersion" />
     ///     enumeration for details about DbModelBuilder versions.
     /// </summary>
     /// <remarks>

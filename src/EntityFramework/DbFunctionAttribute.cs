@@ -16,8 +16,8 @@ namespace System.Data.Entity
         /// <summary>
         /// Creates a new DbFunctionAttribute instance.
         /// </summary>
-        /// <param name="namespaceName">The namespace name of the EDM function represented by the attributed method</param>
-        /// <param name="functionName">The function name of the EDM function represented by the attributed method</param>
+        /// <param name="namespaceName">The namespace name of the EDM function represented by the attributed method.</param>
+        /// <param name="functionName">The function name of the EDM function represented by the attributed method.</param>
         public DbFunctionAttribute(string namespaceName, string functionName)
         {
             _namespaceName = namespaceName;
@@ -25,7 +25,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// The namespace name of the EDM function represented by the attributed method
+        /// The namespace name of the EDM function represented by the attributed method.
         /// </summary>
         public string NamespaceName
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// The function name of the EDM function represented by the attributed method
+        /// The function name of the EDM function represented by the attributed method.
         /// </summary>
         public string FunctionName
         {

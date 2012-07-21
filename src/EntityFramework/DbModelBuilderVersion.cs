@@ -8,7 +8,7 @@ namespace System.Data.Entity
     ///     class or can be used in the <see cref = "DbModelBuilderVersionAttribute" /> applied to
     ///     a class derived from <see cref = "DbContext" />. The value used defines which version of
     ///     the DbContext and DbModelBuilder conventions should be used when building a model from
-    ///     code--also know as "Code First".
+    ///     code--also known as "Code First".
     /// </summary>
     /// <remarks>
     ///     Using DbModelBuilderVersion.Latest ensures that all the latest functionality is available

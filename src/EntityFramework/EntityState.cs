@@ -4,7 +4,7 @@ namespace System.Data.Entity
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Describes state of an entity
+    /// Describes the state of an entity.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames")]
     [Flags]
