@@ -2,6 +2,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.Resources;
     using System.Transactions;
 
     /// <summary>
@@ -34,7 +35,7 @@ namespace System.Data.Entity
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw Error.ArgumentNull("context");
             }
 
             bool databaseExists;

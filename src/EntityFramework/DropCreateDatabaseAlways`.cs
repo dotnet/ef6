@@ -2,6 +2,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -31,7 +32,7 @@ namespace System.Data.Entity
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw Error.ArgumentNull("context");
             }
 
             context.Database.Delete();
