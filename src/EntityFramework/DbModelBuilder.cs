@@ -166,7 +166,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Excludes a type(s) from the model. This is used to remove types from the model that were added 
+        ///     Excludes the specified type(s) from the model. This is used to remove types from the model that were added 
         ///     by convention during initial model discovery.
         /// </summary>
         /// <param name = "types">The types to be excluded from the model.</param>
@@ -318,6 +318,8 @@ namespace System.Data.Entity
 
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
+            Contract.Requires(providerInfo != null);
+
             var providerFactory = DbProviderFactories.GetFactory(providerInfo.ProviderInvariantName);
             var providerServices = providerFactory.GetProviderServices();
             var providerManifest = providerServices.GetProviderManifest(providerInfo.ProviderManifestToken);
