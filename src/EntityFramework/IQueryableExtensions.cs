@@ -510,8 +510,8 @@ namespace System.Data.Entity
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
         ///     the returned instance of the IQueryable<T>. Other instances of IQueryable<T> and the object context itself are not affected.
-        ///                                                                                  Because the Include method returns the query object, you can call this method multiple times on an IQueryable<T> to
-        ///                                                                                                                                                                                                   specify multiple paths for the query.
+        ///     Because the Include method returns the query object, you can call this method multiple times on an IQueryable<T> to
+        ///     specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name = "T">The type of entity being queried.</typeparam>
         /// <param name = "source">The source IQueryable on which to call Include.</param>
@@ -555,8 +555,8 @@ namespace System.Data.Entity
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
         ///     the returned instance of the IQueryable<T>. Other instances of IQueryable<T> and the object context itself are not affected.
-        ///                                                                                  Because the Include method returns the query object, you can call this method multiple times on an IQueryable<T> to
-        ///                                                                                                                                                                                                   specify multiple paths for the query.
+        ///     Because the Include method returns the query object, you can call this method multiple times on an IQueryable<T> to
+        ///     specify multiple paths for the query.
         /// </remarks>
         /// <param name = "source">The source IQueryable on which to call Include.</param>
         /// <param name = "path">The dot-separated list of related objects to return in the query results.</param>
@@ -583,6 +583,8 @@ namespace System.Data.Entity
         /// </summary>
         private static T CommonInclude<T>(T source, string path)
         {
+            Contract.Requires(source != null);
+
             var includeMethod = source.GetType().GetMethod("Include", _stringIncludeTypes);
             if (includeMethod != null
                 && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
@@ -613,8 +615,8 @@ namespace System.Data.Entity
         ///     If the source IQueryable does not have a matching method, then this method does nothing.
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
         ///     When you call the Include method, the query path is only valid on the returned instance of the IQueryable<T>. Other
-        ///                                                                                                                  instances of IQueryable<T> and the object context itself are not affected.  Because the Include method returns the
-        ///                                                                                                                                             query object, you can call this method multiple times on an IQueryable<T> to specify multiple paths for the query.
+        ///     instances of IQueryable<T> and the object context itself are not affected.  Because the Include method returns the
+        ///     query object, you can call this method multiple times on an IQueryable<T> to specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name = "T">The type of entity being queried.</typeparam>
         /// <typeparam name = "TProperty">The type of navigation property being included.</typeparam>
