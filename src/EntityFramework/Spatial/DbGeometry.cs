@@ -715,8 +715,8 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Gets the number of elements in this DbGeometry value, if it represents a geometry collection.
-        /// <returns>The number of elements in this geometry value, if it represents a collection of other geometry values; otherwise <c>null</c>.</returns>
         /// </summary>
+        /// <returns>The number of elements in this geometry value, if it represents a collection of other geometry values; otherwise <c>null</c>.</returns>
         public int? ElementCount
         {
             get { return _spatialProvider.GetElementCount(this); }
@@ -724,9 +724,9 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Returns an element of this DbGeometry value from a specific position, if it represents a geometry collection.
+        /// </summary>
         /// <param name="index">The position within this geometry value from which the element should be taken.</param>
         /// <returns>The element in this geometry value at the specified position, if it represents a collection of other geometry values; otherwise <c>null</c>.</returns>
-        /// </summary>
         public DbGeometry ElementAt(int index)
         {
             return _spatialProvider.ElementAt(this, index);
@@ -883,8 +883,8 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Gets the number of interior rings in this DbGeometry value, if it represents a polygon.
-        /// <returns>The number of elements in this geometry value, if it represents a polygon; otherwise <c>null</c>.</returns>
         /// </summary>
+        /// <returns>The number of elements in this geometry value, if it represents a polygon; otherwise <c>null</c>.</returns>
         public int? InteriorRingCount
         {
             get { return _spatialProvider.GetInteriorRingCount(this); }
@@ -892,9 +892,9 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Returns an interior ring from this DbGeometry value at a specific position, if it represents a polygon.
+        /// </summary>
         /// <param name="index">The position within this geometry value from which the interior ring should be taken.</param>
         /// <returns>The interior ring in this geometry value at the specified position, if it represents a polygon; otherwise <c>null</c>.</returns>
-        /// </summary>
         public DbGeometry InteriorRingAt(int index)
         {
             return _spatialProvider.InteriorRingAt(this, index);

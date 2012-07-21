@@ -623,8 +623,8 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Gets the Latitude coordinate of this DbGeography value, if it represents a point.
-        /// <returns>The Latitude coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
+        /// <returns>The Latitude coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         public double? Latitude
         {
             get { return _spatialProvider.GetLatitude(this); }
@@ -632,8 +632,8 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Gets the Longitude coordinate of this DbGeography value, if it represents a point.
-        /// <returns>The Longitude coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
+        /// <returns>The Longitude coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         public double? Longitude
         {
             get { return _spatialProvider.GetLongitude(this); }
@@ -641,8 +641,8 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Gets the elevation (Z coordinate) of this DbGeography value, if it represents a point.
-        /// <returns>The elevation (Z coordinate) value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
+        /// <returns>The elevation (Z coordinate) value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         public double? Elevation
         {
             get { return _spatialProvider.GetElevation(this); }
@@ -650,8 +650,8 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         /// Gets the M (Measure) coordinate of this DbGeography value, if it represents a point.
-        /// <returns>The M (Measure) coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         /// </summary>
+        /// <returns>The M (Measure) coordinate value of this geography value, if it represents a point; otherwise <c>null</c>.</returns>
         public double? Measure
         {
             get { return _spatialProvider.GetMeasure(this); }

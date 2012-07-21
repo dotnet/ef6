@@ -20,7 +20,7 @@ namespace System.Data.Entity.Validation
         private DbEntityValidationExceptionState _state = new DbEntityValidationExceptionState();
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException
+        ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
         public DbEntityValidationException()
             : this(Strings.DbEntityValidationException_ValidationFailed)
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException
+        ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         public DbEntityValidationException(string message)
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException
+        ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         /// <param name = "entityValidationResults">Validation results.</param>
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException
+        ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         /// <param name = "innerException">The inner exception.</param>
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException
+        ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         /// <param name = "entityValidationResults">Validation results.</param>

@@ -15,7 +15,7 @@ namespace System.Data.Entity.Config
         /// Attempts to resolve a dependency for a given contract type and optionally a given name.
         /// If the resolver cannot resolve the dependency then it must return null and not throw. This
         /// allows resolvers to be used in a Chain of Responsibility pattern such that multiple resolvers
-        /// can be asked to resolver a dependency until one finally does.
+        /// can be asked to resolve a dependency until one finally does.
         /// </summary>
         /// <param name="type">
         /// The interface or abstract base class that defines the dependency to be resolved.

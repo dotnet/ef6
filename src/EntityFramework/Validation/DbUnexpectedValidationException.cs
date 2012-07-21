@@ -12,7 +12,7 @@ namespace System.Data.Entity.Validation
     public class DbUnexpectedValidationException : DataException
     {
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException
+        ///     Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         public DbUnexpectedValidationException()
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException
+        ///     Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         public DbUnexpectedValidationException(string message)
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException
+        ///     Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
         /// <param name = "message">The exception message.</param>
         /// <param name = "innerException">The inner exception.</param>

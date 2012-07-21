@@ -8,7 +8,7 @@ namespace System.Data.Entity.Validation
     public class DbValidationError
     {
         /// <summary>
-        ///     Name of the invalid property. Can be null (e.g. for entity level validations)
+        ///     Name of the invalid property. Can be null (e.g. for entity level validations).
         /// </summary>
         private readonly string _propertyName;
 
