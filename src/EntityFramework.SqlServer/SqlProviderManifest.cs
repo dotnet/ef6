@@ -24,6 +24,7 @@ namespace System.Data.Entity.SqlServer
         internal const string TokenSql8 = "2000";
         internal const string TokenSql9 = "2005";
         internal const string TokenSql10 = "2008";
+        internal const string TokenSql11 = "2012";
 
         // '~' is the same escape character that L2S uses
         internal const char LikeEscapeChar = '~';
@@ -35,7 +36,7 @@ namespace System.Data.Entity.SqlServer
         private readonly SqlVersion _version = SqlVersion.Sql9;
 
         /// <summary>
-        /// maximum size of sql server unicode 
+        /// Maximum size of SQL Server unicode 
         /// </summary>
         private const int varcharMaxSize = 8000;
 
@@ -50,9 +51,9 @@ namespace System.Data.Entity.SqlServer
         #region Constructors
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="SqlProviderManifest"/> class.
         /// </summary>
-        /// <param name="manifestToken">A token used to infer the capabilities of the store</param>
+        /// <param name="manifestToken">A token used to infer the capabilities of the store.</param>
         public SqlProviderManifest(string manifestToken)
             : base(GetProviderManifest())
         {
@@ -115,6 +116,8 @@ namespace System.Data.Entity.SqlServer
         /// <returns>The escaped string that can be used as pattern in a LIKE expression</returns>
         internal static string EscapeLikeText(string text, bool alwaysEscapeEscapeChar, out bool usedEscapeChar)
         {
+            Contract.Requires(text != null);
+
             usedEscapeChar = false;
             if (!(text.Contains("%") || text.Contains("_") || text.Contains("[")
                   || text.Contains("^") || alwaysEscapeEscapeChar && text.Contains(LikeEscapeCharToString)))
@@ -175,15 +178,16 @@ namespace System.Data.Entity.SqlServer
         {
             if (_primitiveTypes == null)
             {
-                if (_version == SqlVersion.Sql10)
+                if (_version == SqlVersion.Sql10 ||
+                    _version == SqlServer.SqlVersion.Sql11)
                 {
                     _primitiveTypes = base.GetStoreTypes();
                 }
                 else
                 {
                     var primitiveTypes = new List<PrimitiveType>(base.GetStoreTypes());
-                    Debug.Assert((_version == SqlVersion.Sql8) || (_version == SqlVersion.Sql9), "Found verion other than Sql 8, 9 or 10");
-                    //Remove the Katmai types for both Sql8 and Sql9
+                    Debug.Assert((_version == SqlVersion.Sql8) || (_version == SqlVersion.Sql9), "Found verion other than SQL 8, 9, 10 or 11.");
+                    //Remove the Katmai types for both SQL 8 and SQL 9
                     primitiveTypes.RemoveAll(
                         delegate(PrimitiveType primitiveType)
                             {
@@ -196,7 +200,7 @@ namespace System.Data.Entity.SqlServer
                                        name.Equals("geometry", StringComparison.Ordinal);
                             }
                         );
-                    //Remove the types that won't work in Sql8
+                    //Remove the types that won't work in SQL 8
                     if (_version == SqlVersion.Sql8)
                     {
                         // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
@@ -219,13 +223,14 @@ namespace System.Data.Entity.SqlServer
         {
             if (_functions == null)
             {
-                if (_version == SqlVersion.Sql10)
+                if (_version == SqlVersion.Sql10 ||
+                    _version == SqlServer.SqlVersion.Sql11)
                 {
                     _functions = base.GetStoreFunctions();
                 }
                 else
                 {
-                    //Remove the functions over katmai types from both Sql 9 and Sql 8.
+                    //Remove the functions over katmai types from both SQL 9 and SQL 8.
                     var functions = base.GetStoreFunctions().Where(f => !IsKatmaiOrNewer(f));
                     if (_version == SqlVersion.Sql8)
                     {

@@ -2,25 +2,30 @@
 namespace System.Data.Entity.SqlServer
 {
     /// <summary>
-    /// This enum describes the current server version
+    /// This enumeration describes the current SQL Server version.
     /// </summary>
     internal enum SqlVersion
     {
         /// <summary>
-        /// Sql Server 8
+        /// SQL Server 8 (2000).
         /// </summary>
         Sql8 = 80,
 
         /// <summary>
-        /// Sql Server 9
+        /// SQL Server 9 (2005).
         /// </summary>
         Sql9 = 90,
 
         /// <summary>
-        /// Sql Server 10
+        /// SQL Server 10 (2008).
         /// </summary>
         Sql10 = 100,
 
-        // higher versions go here
+        /// <summary>
+        /// SQL Server 11 (2012).
+        /// </summary>
+        Sql11 = 110,
+
+        // Higher versions go here
     }
 }

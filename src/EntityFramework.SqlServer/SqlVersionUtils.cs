@@ -7,13 +7,13 @@ namespace System.Data.Entity.SqlServer
     using System.Globalization;
 
     /// <summary>
-    /// This class is a simple utility class that determines the sql version from the 
-    /// connection
+    /// This class is a simple utility class that determines the SQL Server version from the 
+    /// connection.
     /// </summary>
     internal static class SqlVersionUtils
     {
         /// <summary>
-        /// Get the SqlVersion from the connection. Returns one of Sql8, Sql9, Sql10
+        /// Get the SqlVersion from the connection. Returns one of Sql8, Sql9, Sql10, Sql11
         /// The passed connection must be open
         /// </summary>
         /// <param name="connection">current sql connection</param>
@@ -22,7 +22,12 @@ namespace System.Data.Entity.SqlServer
         {
             Debug.Assert(connection.State == ConnectionState.Open, "Expected an open connection");
             var majorVersion = Int32.Parse(connection.ServerVersion.Substring(0, 2), CultureInfo.InvariantCulture);
-            if (majorVersion >= 10)
+
+            if (majorVersion >= 11)
+            {
+                return SqlVersion.Sql11;
+            }
+            else if (majorVersion == 10)
             {
                 return SqlVersion.Sql10;
             }
@@ -50,6 +55,9 @@ namespace System.Data.Entity.SqlServer
                 case SqlVersion.Sql10:
                     return SqlProviderManifest.TokenSql10;
 
+                case SqlVersion.Sql11:
+                    return SqlProviderManifest.TokenSql11;
+
                 default:
                     throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
@@ -69,6 +77,9 @@ namespace System.Data.Entity.SqlServer
 
                     case SqlProviderManifest.TokenSql10:
                         return SqlVersion.Sql10;
+
+                    case SqlProviderManifest.TokenSql11:
+                        return SqlVersion.Sql11;
                 }
             }
 
