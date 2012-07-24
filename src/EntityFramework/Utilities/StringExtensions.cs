@@ -5,6 +5,7 @@
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Text.RegularExpressions;
 
     [SuppressMessage("Microsoft.Contracts", "CC1036",
@@ -71,7 +72,7 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            var timeStampInt = Convert.ToInt64(migrationId.Substring(0, 15)) - 1;
+            var timeStampInt = Convert.ToInt64(migrationId.Substring(0, 15), CultureInfo.InvariantCulture) - 1;
 
             return timeStampInt + migrationId.Substring(15) + "_" + Strings.AutomaticMigration;
         }
