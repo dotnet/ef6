@@ -8,7 +8,7 @@
     using System.Text.RegularExpressions;
 
     [SuppressMessage("Microsoft.Contracts", "CC1036",
-        Justification ="Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
+        Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     internal static class StringExtensions
     {
         private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");
@@ -67,34 +67,13 @@
             return migrationId.EndsWith(Strings.AutomaticMigration, StringComparison.Ordinal);
         }
 
-        public static bool ComesBefore(this string migrationId1, string migrationId2)
+        public static string ToAutomaticMigrationId(this string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId1));
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId2));
-            Contract.Assert(migrationId1.IsValidMigrationId());
-            Contract.Assert(migrationId2.IsValidMigrationId());
+            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            var migration1TimeStamp = migrationId1.Substring(0, 15);
-            var migration2TimeStamp = migrationId2.Substring(0, 15);
+            var timeStampInt = Convert.ToInt64(migrationId.Substring(0, 15)) - 1;
 
-            var comparison = string.CompareOrdinal(migration1TimeStamp, migration2TimeStamp);
-
-            if (comparison > 0)
-            {
-                return false;
-            }
-
-            if (comparison == 0)
-            {
-                if (migrationId1 == migrationId2 + "_" + Strings.AutomaticMigration)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            return true;
+            return timeStampInt + migrationId.Substring(15) + "_" + Strings.AutomaticMigration;
         }
     }
 }

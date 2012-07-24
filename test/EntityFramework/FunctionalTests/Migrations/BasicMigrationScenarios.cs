@@ -146,5 +146,33 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(TableExists("MigrationsStores"));
         }
+
+        [MigrationsTheory]
+        public void Can_downgrade_with_leading_automatic_when_database_empty()
+        {
+            ResetDatabase();
+
+            CreateMigrator<ShopContext_v1>().Update();
+
+            var migrator = CreateMigrator<ShopContext_v2>();
+
+            var scaffoldedMigration 
+                = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
+
+            migrator 
+                = CreateMigrator<ShopContext_v2>(
+                    scaffoldedMigrations: scaffoldedMigration,
+                    automaticDataLossEnabled: true);
+
+            ResetDatabase();
+
+            migrator.Update();
+
+            Assert.True(TableExists("OrderLines"));
+
+            migrator.Update("0");
+
+            Assert.False(TableExists("OrderLines"));
+        }
     }
 }

@@ -63,15 +63,6 @@ namespace System.Data.Entity.Utilities
         }
 
         [Fact]
-        public void ComesBefore_detects_order()
-        {
-            Assert.False(StringExtensions.ComesBefore("111111111111112_Foo", "111111111111111_Foo"));
-            Assert.False(StringExtensions.ComesBefore("111111111111111_Foo", "111111111111111_Foo_AutomaticMigration"));
-            Assert.True(StringExtensions.ComesBefore("111111111111111_Foo_AutomaticMigration", "111111111111111_Foo"));
-            Assert.True(StringExtensions.ComesBefore("111111111111111_Foo", "111111111111112_Foo"));
-        }
-
-        [Fact]
         public void RestrictTo_should_limit_string_length()
         {
             Assert.Equal("123", StringExtensions.RestrictTo("123", 5));
@@ -80,6 +71,13 @@ namespace System.Data.Entity.Utilities
             Assert.Equal("", StringExtensions.RestrictTo("12345", 0));
             Assert.Equal("", StringExtensions.RestrictTo("", 0));
             Assert.Equal(null, StringExtensions.RestrictTo(null, 0));
+        }
+
+        [Fact]
+        public void ToAutomaticMigrationId_should_rewind_timestamp_and_append_auto_string()
+        {
+            Assert.Equal("201205054534555_Foo_AutomaticMigration", StringExtensions.ToAutomaticMigrationId("201205054534556_Foo"));
+            Assert.Equal("111111111111109_Foo_AutomaticMigration", StringExtensions.ToAutomaticMigrationId("111111111111110_Foo"));
         }
     }
 }

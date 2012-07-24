@@ -487,7 +487,7 @@ namespace System.Data.Entity.Migrations
             var lastModel = _historyRepository.GetLastModel(out migrationId);
 
             if (lastModel != null
-                && (currentMigrationId == null || migrationId.ComesBefore(currentMigrationId)))
+                && (currentMigrationId == null || string.CompareOrdinal(migrationId, currentMigrationId) < 0))
             {
                 return lastModel;
             }
@@ -541,7 +541,7 @@ namespace System.Data.Entity.Migrations
                 if (IsModelOutOfDate(sourceModel, lastMigration))
                 {
                     base.AutoMigrate(
-                        migrationMetadata.Id + "_" + Strings.AutomaticMigration,
+                        migrationMetadata.Id.ToAutomaticMigrationId(),
                         GetLastModel(lastMigration, migrationMetadata.Id),
                         sourceModel,
                         downgrading: false);
@@ -796,7 +796,7 @@ namespace System.Data.Entity.Migrations
             // If this comes before or is the first explicit migration...
             if (firstExplicitMigrationId == null
                 || string.Equals(migrationId, firstExplicitMigrationId, StringComparison.Ordinal)
-                || migrationId.ComesBefore(firstExplicitMigrationId))
+                || string.CompareOrdinal(migrationId, firstExplicitMigrationId) < 0)
             {
                 return base.IsFirstMigrationIncludingAutomatics(migrationId);
             }
