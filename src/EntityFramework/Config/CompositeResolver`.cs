@@ -9,8 +9,8 @@ namespace System.Data.Entity.Config
     internal class CompositeResolver<TFirst, TSecond> : IDbDependencyResolver
         where TFirst : IDbDependencyResolver
         where TSecond : IDbDependencyResolver
-
     {
+        // DbConfiguration depends on this class being immutable
         private readonly TFirst _firstResolver;
         private readonly TSecond _secondResolver;
 

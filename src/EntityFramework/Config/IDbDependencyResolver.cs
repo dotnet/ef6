@@ -4,6 +4,10 @@ namespace System.Data.Entity.Config
     /// This interface is implemented by any object that can resolve a dependency, either directly
     /// or through use of an external container.
     /// </summary>
+    /// <remarks>
+    /// Note that multiple threads may call into the same IDbDependencyResolver instance which means
+    /// that implementations of this interface must be either immutable or thread-safe.
+    /// </remarks>
     public interface IDbDependencyResolver
     {
         /// <summary>

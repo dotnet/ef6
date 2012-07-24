@@ -1,10 +1,14 @@
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.TestHelpers;
+    using System.Linq;
     using Moq;
+    using SimpleModel;
     using Xunit;
 
     public class DbConfigurationManagerTests : TestBase
@@ -19,7 +23,7 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class GetConfiguration
+        public class GetConfiguration : TestBase
         {
             [Fact]
             public void GetConfiguration_returns_the_configuration_at_the_top_of_the_stack_if_overriding_configurations_have_been_pushed()
@@ -61,9 +65,51 @@ namespace System.Data.Entity.Config
                 Assert.NotNull(configuration);
                 Assert.Same(configuration, manager.GetConfiguration());
             }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void GetConfiguration_for_default_value_can_be_called_from_multiple_threads_concurrently()
+            {
+                ConfigurationThreadTest(m => { }, m => { });
+            }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void GetConfiguration_for_pushed_config_can_be_called_from_multiple_threads_concurrently()
+            {
+                ConfigurationThreadTest(m => m.PushConfiguration(AppConfig.DefaultInstance, typeof(SimpleModelContext)), m => { });
+            }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void GetConfiguration_for_pushed_and_popped_config_can_be_called_from_multiple_threads_concurrently()
+            {
+                ConfigurationThreadTest(
+                    m =>
+                        {
+                            m.PushConfiguration(AppConfig.DefaultInstance, typeof(SimpleModelContext));
+                            m.PopConfiguration(AppConfig.DefaultInstance);
+                        },
+                    m => { });
+            }
         }
 
-        public class SetConfiguration
+        public class SetConfiguration : TestBase
         {
             [Fact]
             public void SetConfiguration_sets_and_locks_the_configuration_if_none_was_previously_set_and_config_file_has_none()
@@ -135,9 +181,23 @@ namespace System.Data.Entity.Config
                     Strings.DefaultConfigurationUsedBeforeSet(configuration.GetType().Name),
                     Assert.Throws<InvalidOperationException>(() => manager.SetConfiguration(configuration)).Message);
             }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void SetConfiguration_can_be_called_from_multiple_threads_concurrently_and_only_one_will_win()
+            {
+                ConfigurationThreadTest(
+                    m => { },
+                    m => m.SetConfiguration(new UnitTestsConfiguration()));
+            }
         }
 
-        public class EnsureLoadedForContext
+        public class EnsureLoadedForContext : TestBase
         {
             [Fact]
             public void EnsureLoadedForContext_loads_configuration_from_context_assembly_if_none_was_previously_used()
@@ -306,6 +366,38 @@ namespace System.Data.Entity.Config
                     Assert.Throws<InvalidOperationException>(
                         () => manager.EnsureLoadedForContext(typeof(FakeContext))).Message);
             }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void EnsureLoadedForContext_can_be_called_from_multiple_threads_concurrently_before_configuration_has_been_used()
+            {
+                ConfigurationThreadTest(
+                    m => { },
+                    m => m.EnsureLoadedForContext(typeof(SimpleModelContext)));
+            }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void EnsureLoadedForContext_can_be_called_from_multiple_threads_concurrently_after_push_and_pop()
+            {
+                ConfigurationThreadTest(
+                    m =>
+                        {
+                            m.PushConfiguration(AppConfig.DefaultInstance, typeof(SimpleModelContext));
+                            m.PopConfiguration(AppConfig.DefaultInstance);
+                        },
+                    m => m.EnsureLoadedForContext(typeof(SimpleModelContext)));
+            }
         }
 
         public class PushConfiguration
@@ -374,6 +466,32 @@ namespace System.Data.Entity.Config
 
                 mockConfiguration.Verify(m => m.AddAppConfigResolver(It.IsAny<AppConfigDependencyResolver>()));
             }
+
+            /// <summary>
+            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+            /// issues. As with any test of this type just because the test passes does not mean that the code is
+            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            /// </summary>
+            [Fact]
+            public void Configurations_can_be_pushed_and_popped_from_multiple_threads_concurrently()
+            {
+                for (var i = 0; i < 30; i++)
+                {
+                    var manager = new DbConfigurationManager(new DbConfigurationLoader(), new DbConfigurationFinder());
+                    var config = manager.GetConfiguration();
+
+                    ExecuteInParallel(
+                        () =>
+                            {
+                                var appConfig = new AppConfig(new ConnectionStringSettingsCollection());
+                                manager.PushConfiguration(appConfig, typeof(SimpleModelContext));
+                                manager.PopConfiguration(appConfig);
+                            });
+
+                    Assert.Same(config, manager.GetConfiguration());
+                }
+            }
         }
 
         public class PopConfiguration
@@ -427,6 +545,26 @@ namespace System.Data.Entity.Config
 
         public class FakeContext : DbContext
         {
+        }
+
+        private static void ConfigurationThreadTest(Action<DbConfigurationManager> beforeThreads, Action<DbConfigurationManager> inThreads)
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                var configurationBag = new ConcurrentBag<DbConfiguration>();
+                var manager = new DbConfigurationManager(new DbConfigurationLoader(), new DbConfigurationFinder());
+                beforeThreads(manager);
+
+                ExecuteInParallel(
+                    () =>
+                        {
+                            inThreads(manager);
+                            configurationBag.Add(manager.GetConfiguration());
+                        });
+
+                Assert.Equal(20, configurationBag.Count);
+                Assert.True(configurationBag.All(c => manager.GetConfiguration() == c));
+            }
         }
     }
 }

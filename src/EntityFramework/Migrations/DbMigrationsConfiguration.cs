@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
@@ -17,6 +18,9 @@
     /// </summary>
     public class DbMigrationsConfiguration
     {
+        private readonly Dictionary<string, MigrationSqlGenerator> _sqlGenerators
+            = new Dictionary<string, MigrationSqlGenerator>();
+
         private MigrationCodeGenerator _codeGenerator;
         private Type _contextType;
         private Assembly _migrationsAssembly;
@@ -64,9 +68,7 @@
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(migrationSqlGenerator != null);
 
-            _mainConfiguration.Value.RootResolver.MigrationsConfigurationResolver.SetSqlGenerator(
-                providerInvariantName,
-                migrationSqlGenerator);
+            _sqlGenerators[providerInvariantName] = migrationSqlGenerator;
         }
 
         /// <summary>
@@ -78,10 +80,14 @@
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
-            var migrationSqlGenerator = _mainConfiguration.Value.DependencyResolver.GetService<MigrationSqlGenerator>(providerInvariantName);
-            if (migrationSqlGenerator == null)
+            MigrationSqlGenerator migrationSqlGenerator;
+            if (!_sqlGenerators.TryGetValue(providerInvariantName, out migrationSqlGenerator))
             {
-                throw Error.NoSqlGeneratorForProvider(providerInvariantName);
+                migrationSqlGenerator = _mainConfiguration.Value.DependencyResolver.GetService<MigrationSqlGenerator>(providerInvariantName);
+                if (migrationSqlGenerator == null)
+                {
+                    throw Error.NoSqlGeneratorForProvider(providerInvariantName);
+                }
             }
 
             return migrationSqlGenerator;

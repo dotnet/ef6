@@ -109,7 +109,7 @@
         /// <summary>
         /// Gets the default connection factory based on the configuration
         /// </summary>
-        public IDbConnectionFactory TryGetDefaultConnectionFactory()
+        public virtual IDbConnectionFactory TryGetDefaultConnectionFactory()
         {
             return _defaultConnectionFactory.Value;
         }
@@ -217,7 +217,7 @@
             return settings;
         }
 
-        public ProviderConfig Providers
+        public virtual ProviderConfig Providers
         {
             get { return new ProviderConfig(_entityFrameworkSettings); }
         }

@@ -1033,22 +1033,22 @@
             }
         }
 
-        public class TryGetMigrationSqlGenerator : TestBase
+        public class TryGetMigrationSqlGeneratorFactory : TestBase
         {
             [Fact]
-            public void TryGetMigrationSqlGenerator_returns_null_if_invariant_name_is_not_in_config()
+            public void TryGetMigrationSqlGeneratorFactory_returns_factory_for_null_if_invariant_name_is_not_in_config()
             {
-                Assert.Null(CreateAppConfig().Providers.TryGetMigrationSqlGenerator("System.Data.SqlClient"));
+                Assert.Null(CreateAppConfig().Providers.TryGetMigrationSqlGeneratorFactory("System.Data.SqlClient")());
             }
 
             [Fact]
-            public void TryGetMigrationSqlGenerator_returns_null_if_no_migrations_SQL_generator_is_registered()
+            public void TryGetMigrationSqlGeneratorFactory_returns_factory_for_null_if_no_migrations_SQL_generator_is_registered()
             {
                 Assert.Null(
                     CreateAppConfig(
                         "Learning.To.Fly", typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName)
                         .Providers
-                        .TryGetMigrationSqlGenerator("Learning.To.Fly"));
+                        .TryGetMigrationSqlGeneratorFactory("Learning.To.Fly")());
             }
 
             public class MySqlGenerator : MigrationSqlGenerator
@@ -1062,7 +1062,7 @@
             }
 
             [Fact]
-            public void TryGetMigrationSqlGenerator_returns_generator_if_registered_in_config()
+            public void TryGetMigrationSqlGeneratorFactory_returns_generator_if_registered_in_config()
             {
                 Assert.IsType<MySqlGenerator>(
                     CreateAppConfig(
@@ -1070,11 +1070,11 @@
                         typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
                         typeof(MySqlGenerator).AssemblyQualifiedName)
                         .Providers
-                        .TryGetMigrationSqlGenerator("The.Hamster"));
+                        .TryGetMigrationSqlGeneratorFactory("The.Hamster")());
             }
 
             [Fact]
-            public void TryGetMigrationSqlGenerator_throws_if_type_cannot_be_loaded()
+            public void TryGetMigrationSqlGeneratorFactory_throws_if_type_cannot_be_loaded()
             {
                 Assert.Equal(
                     Strings.SqlGeneratorTypeMissing("Ben.Collins", "The.Stig"),
@@ -1084,11 +1084,11 @@
                             typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
                             "Ben.Collins")
                                   .Providers
-                                  .TryGetMigrationSqlGenerator("The.Stig")).Message);
+                                  .TryGetMigrationSqlGeneratorFactory("The.Stig")).Message);
             }
 
             [Fact]
-            public void TryGetMigrationSqlGenerator_throws_if_type_cannot_be_used()
+            public void TryGetMigrationSqlGeneratorFactory_throws_if_type_cannot_be_used()
             {
                 Assert.Equal(
                     Strings.CreateInstance_BadSqlGeneratorType(typeof(object).ToString(), typeof(MigrationSqlGenerator).ToString()),
@@ -1098,7 +1098,7 @@
                             typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
                             typeof(object).AssemblyQualifiedName)
                                   .Providers
-                                  .TryGetMigrationSqlGenerator("Jezza")).Message);
+                                  .TryGetMigrationSqlGeneratorFactory("Jezza")()).Message);
             }
         }
 

@@ -1,16 +1,19 @@
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Concurrent;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.SqlServer;
+    using System.Linq;
     using Moq;
     using Xunit;
 
-    public class RootDependencyResolverTests
+    public class RootDependencyResolverTests : TestBase
     {
         [Fact]
-        public void The_root_resolver_uses_the_default_provider_services_resolver()
+        public void The_root_resolver_uses_the_default_provider_services_resolver_and_caches_provider_instances()
         {
             var providerServices = new Mock<DbProviderServices>().Object;
             var mockProviderResolver = new Mock<DefaultProviderServicesResolver>();
@@ -18,10 +21,12 @@ namespace System.Data.Entity.Config
                 .Setup(m => m.GetService(typeof(DbProviderServices), "FooClient"))
                 .Returns(providerServices);
 
-            Assert.Same(
-                providerServices,
-                new RootDependencyResolver(new MigrationsConfigurationResolver(), mockProviderResolver.Object)
-                    .GetService<DbProviderServices>("FooClient"));
+            var resolver = new RootDependencyResolver(new MigrationsConfigurationResolver(), mockProviderResolver.Object);
+
+            Assert.Same(providerServices, resolver.GetService<DbProviderServices>("FooClient"));
+            mockProviderResolver.Verify(m => m.GetService(typeof(DbProviderServices), "FooClient"), Times.Once());
+            Assert.Same(providerServices, resolver.GetService<DbProviderServices>("FooClient"));
+            mockProviderResolver.Verify(m => m.GetService(typeof(DbProviderServices), "FooClient"), Times.Once());
         }
 
         [Fact]
@@ -59,6 +64,30 @@ namespace System.Data.Entity.Config
         public void Release_does_not_throw()
         {
             new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver()).Release(new object());
+        }
+
+        /// <summary>
+        /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+        /// issues. As with any test of this type just because the test passes does not mean that the code is
+        /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+        /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+        /// </summary>
+        [Fact]
+        public void GetService_can_be_accessed_from_multiple_threads_concurrently()
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                var bag = new ConcurrentBag<DbProviderServices>();
+
+                var resolver = new RootDependencyResolver(
+                    new MigrationsConfigurationResolver(),
+                    new DefaultProviderServicesResolver());
+
+                ExecuteInParallel(() => bag.Add(resolver.GetService<DbProviderServices>("System.Data.SqlClient")));
+
+                Assert.Equal(20, bag.Count);
+                Assert.True(bag.All(c => SqlProviderServices.Instance == c));
+            }
         }
     }
 }

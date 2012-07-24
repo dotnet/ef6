@@ -131,6 +131,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
+    <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
     <Compile Include="Config\DbConfiguration.cs" />
     <Compile Include="Config\DbConfigurationFinder.cs" />

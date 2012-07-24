@@ -7,6 +7,9 @@ namespace System.Data.Entity.Config
     /// the same instance and does nothing on Release.
     /// </summary>
     /// <typeparam name="T">The type that defines the contract for the dependency that will be resolved.</typeparam>
+    /// <remarks>
+    /// This class is immutable such that instances can be accessed by multiple threads at the same time.
+    /// </remarks>
     public class SingletonDependencyResolver<T> : IDbDependencyResolver
     {
         private readonly T _singletonInstance;
