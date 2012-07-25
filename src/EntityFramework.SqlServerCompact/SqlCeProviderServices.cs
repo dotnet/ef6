@@ -1,16 +1,4 @@
-//------------------------------------------------------------------------------
-// <copyright file="SqlCommandDefinitionBuilder.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//
-// @owner  stevesta, smurali
-//
-// This file has been pulled from the devdiv source depot and modified for SQLCE.
-// Location of original file: 
-// Branch: //depot/devdiv/Orcas/feature/AdoNetF1
-// Location: F:/AdoNetF1/ndp/fx/src/DataEntity/System/Data/SqlClient/
-//------------------------------------------------------------------------------
-
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.Generic;

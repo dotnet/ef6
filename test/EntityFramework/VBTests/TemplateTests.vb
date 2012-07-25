@@ -1,4 +1,5 @@
-﻿Imports System.Data.Entity
+﻿' Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+Imports System.Data.Entity
 Imports System.Data.Entity.Infrastructure
 Imports System.Data.Entity.Core.Objects
 Imports System.Reflection

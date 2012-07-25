@@ -1,4 +1,5 @@
-﻿namespace System.Data.Entity.Core.Objects.Internal
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;

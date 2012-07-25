@@ -1,4 +1,5 @@
-﻿using NodeColor = System.Byte;
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+using NodeColor = System.Byte;
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {

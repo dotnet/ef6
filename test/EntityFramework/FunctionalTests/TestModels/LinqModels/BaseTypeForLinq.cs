@@ -1,4 +1,5 @@
-﻿namespace SimpleModel
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace SimpleModel
 {
     /// <summary>
     /// A base type used for all entities used for DbQuery LINQ tests.

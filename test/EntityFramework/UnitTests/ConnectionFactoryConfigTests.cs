@@ -1,4 +1,5 @@
-﻿namespace EntityFramework.PowerShell.UnitTests
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace EntityFramework.PowerShell.UnitTests
 {
     // An alias is required because Error, Strings, IEnumerableExtensions etc. are defined in EntityFramework.dll and EntityFramework.PowerShell.dll
     extern alias powershell;

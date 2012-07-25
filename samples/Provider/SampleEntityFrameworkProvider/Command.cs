@@ -1,17 +1,4 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="Command.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//---------------------------------------------------------------------
-
-/*////////////////////////////////////////////////////////////////////////
- * Sample ADO.NET Entity Framework Provider
- *
- * This partial Command class implements ICloneable so the Entity 
- * Framework's provider agnostic logic can clone commands
- */
-////////////////////////////////////////////////////////////////////////
-
+﻿// ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 using System;
 using System.Data.Common;
 

@@ -1,4 +1,5 @@
-﻿namespace LazyUnicorns
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace LazyUnicorns
 {
     public interface IHasIsLoaded
     {

@@ -1,4 +1,5 @@
-﻿namespace System.Data.Entity.Core.Common.EntitySql
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;

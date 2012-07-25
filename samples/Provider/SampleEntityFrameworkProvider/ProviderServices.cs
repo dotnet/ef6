@@ -1,23 +1,4 @@
-//---------------------------------------------------------------------
-// <copyright file="ProviderServices.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//---------------------------------------------------------------------
-
-/*/////////////////////////////////////////////////////////////////////////////
- * Sample ADO.NET Entity Frameworke Provider for Visual Studio 2010 notes
- *
- * The ProviderServices class is the starting point for accessing
- * the SQL generation layer to convert CommandTrees into DbCommands
- * and additional data store information such as the provider manifest, 
- * which describes type store specific mappings and functions, and the
- * store specific mapping files to generate queries for table and column
- * information. ProviderServices class also includes entry points for 
- * creating databases by executing DDL scripts, as well as support for 
- * checking if a database exists and deleting databases
- */
-////////////////////////////////////////////////////////////////////////////
-
+﻿// ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 using System;
 using System.Collections.Generic;
 using System.Data;

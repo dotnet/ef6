@@ -1,4 +1,5 @@
-﻿namespace CmdLine
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace CmdLine
 {
     using System;
     using System.Collections.Generic;

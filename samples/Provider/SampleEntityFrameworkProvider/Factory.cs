@@ -1,19 +1,4 @@
-//---------------------------------------------------------------------
-// <copyright file="Factory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//---------------------------------------------------------------------
-
-/*/////////////////////////////////////////////////////////////////////////////
- * Sample ADO.NET Entity Framework Provider
- *
- * This partial ProviderFactory class implements the IServiceProvider interface
- * and supports returning instances of a ProviderServices class.
- * The Entity Framework uses IServiceProvider to access the ProviderServices
- * class given a ProviderFactory
- */
-////////////////////////////////////////////////////////////////////////////
-
+﻿// ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 using System;
 using System.Data.Common;
 

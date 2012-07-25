@@ -1,7 +1,4 @@
-// The classes here have been pulled from the devdiv source depot and modified for SQLCE.
-// Original class is DbProviderManifest in System.Data.Common namespace.
-//
-
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 namespace System.Data.Entity.SqlServerCompact
 {
     internal class ProviderManifest

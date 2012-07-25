@@ -1,24 +1,4 @@
-//---------------------------------------------------------------------
-// <copyright file="Factory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//---------------------------------------------------------------------
-
-/*/////////////////////////////////////////////////////////////////////////////
- * Sample ADO.NET Entity Framework Provider
- * 
- * This factory class creates and returns ADO.NET 2.0 SqlClient components
- * Leveraging the pre-existing components decreases the amount of code
- * for the sample and makes it easier to demonstrate how to enhance an
- * existing ADO.NET 2.0 provider to support the Entity Framework
- * Since the Entity Framework does require extending the Connection class, the
- * sample uses its own Connection class that internally relies on SqlConnection
- * The sample also uses its own Command class because of the interaction
- * between the Command and Connection classes
- */
-////////////////////////////////////////////////////////////////////////////
-
-
+﻿// ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 using System;
 using System.Collections.Generic;
 using System.Text;

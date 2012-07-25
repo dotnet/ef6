@@ -1,18 +1,4 @@
-//---------------------------------------------------------------------
-// <copyright file="Connection.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//---------------------------------------------------------------------
-
-/*////////////////////////////////////////////////////////////////////////
- * Sample ADO.NET Entity Framework Provider
- *
- * This partial Connection class overrides the protected DbProviderFactory
- * property so the Entity Framework's provider agnostic logic can access
- * the ProviderFactory class for a provider given a Connection
- */
-////////////////////////////////////////////////////////////////////////
-
+﻿// ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 using System;
 using System.Collections.Generic;
 using System.Text;

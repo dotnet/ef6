@@ -1,4 +1,5 @@
-﻿namespace System.Data.Entity.Migrations.Sql
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace System.Data.Entity.Migrations.Sql
 {
     /// <summary>
     ///     Represents a migration operation that has been translated into a SQL statement.

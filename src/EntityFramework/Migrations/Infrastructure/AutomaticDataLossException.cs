@@ -1,4 +1,5 @@
-﻿namespace System.Data.Entity.Migrations.Infrastructure
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;

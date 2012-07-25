@@ -1,3 +1,4 @@
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     // We use CompositeKey on both sides of the dictionary because it is used both to identify rows that should be 

@@ -1,16 +1,4 @@
-// Dev notes -1
-// why we need this class: in order to keep the view alive, we have to listen to evens from entities and
-// also EntityCollection/ObjectStateManager they exists in. listening to event will prevent the view to be 
-// disposed, hence GC'ed due to having a strong reference; and to avoid this situation we have to introduce 
-// a new layer which will have a weakreference to view (1-so it can go out of scope, 2- this layer will listen to 
-// the events and notify the view - by calling its APIS-  for any change that happens)
-
-// Dev notes -2
-// following statement is valid on current existing CLR: 
-// lets say Customer is an Entity, Array[Customer] is not Array[Entity]; it is not supported
-// to do the work around we have to use a non-Generic interface/class so we can pass the view 
-// to ObjectViewListener safely (IObjectView)
-
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
