@@ -84,6 +84,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\SharedAssemblyVersionInfo.cs">
+      <Link>SharedAssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="CmdLine\CommandArgument.cs" />
     <Compile Include="CmdLine\CommandArgumentHelp.cs" />

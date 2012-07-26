@@ -154,6 +154,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\SharedAssemblyVersionInfo.cs">
+      <Link>Properties\SharedAssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="ConnectionFactoryConfig\ConnectionFactorySpecification.cs" />
     <Compile Include="ConnectionFactoryConfig\VersionMapper.cs" />
     <Compile Include="Migrations\AddMigrationCommand.cs" />
