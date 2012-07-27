@@ -347,8 +347,8 @@
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerableExtensions.cs" />
-    <Compile Include="Infrastructure\DbSqlSetQuery.cs" />
-    <Compile Include="Infrastructure\DbSqlSetQuery`.cs" />
+    <Compile Include="Infrastructure\DbSqlQuery.cs" />
+    <Compile Include="Infrastructure\DbSqlQuery`.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerator.cs" />
     <Compile Include="Infrastructure\IDbAsyncQueryProvider.cs" />
     <Compile Include="Infrastructure\IDbAsyncQueryProviderExtensions.cs" />
@@ -1509,8 +1509,8 @@
     <Compile Include="Infrastructure\DbQuery`.cs" />
     <Compile Include="Infrastructure\DbReferenceEntry.cs" />
     <Compile Include="Infrastructure\DbReferenceEntry`.cs" />
-    <Compile Include="Infrastructure\DbSqlQuery.cs" />
-    <Compile Include="Infrastructure\DbSqlQuery`.cs" />
+    <Compile Include="Infrastructure\DbRawSqlQuery.cs" />
+    <Compile Include="Infrastructure\DbRawSqlQuery`.cs" />
     <Compile Include="Infrastructure\DbUpdateConcurrencyException.cs" />
     <Compile Include="Infrastructure\DbUpdateException.cs" />
     <Compile Include="Infrastructure\EdmMetadata.cs" />

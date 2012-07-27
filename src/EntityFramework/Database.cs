@@ -433,13 +433,13 @@ namespace System.Data.Entity
         /// <typeparam name = "TElement">The type of object returned by the query.</typeparam>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbSqlQuery{TElement}" /> object that will execute the query when it is enumerated.</returns>
-        public DbSqlQuery<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbRawSqlQuery{TElement}" /> object that will execute the query when it is enumerated.</returns>
+        public DbRawSqlQuery<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new DbSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
+            return new DbRawSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
         }
 
         /// <summary>
@@ -453,14 +453,14 @@ namespace System.Data.Entity
         /// <param name = "elementType">The type of object returned by the query.</param>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbSqlQuery" /> object that will execute the query when it is enumerated.</returns>
-        public DbSqlQuery SqlQuery(Type elementType, string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbRawSqlQuery" /> object that will execute the query when it is enumerated.</returns>
+        public DbRawSqlQuery SqlQuery(Type elementType, string sql, params object[] parameters)
         {
             Contract.Requires(elementType != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new DbSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters));
+            return new DbRawSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters));
         }
 
         /// <summary>

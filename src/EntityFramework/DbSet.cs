@@ -248,7 +248,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates a raw SQL query that will return entities in this set.  By default, the
         ///     entities returned are tracked by the context; this can be changed by calling
-        ///     AsNoTracking on the <see cref = "DbSqlQuery" /> returned.
+        ///     AsNoTracking on the <see cref = "DbRawSqlQuery" /> returned.
         ///     Note that the entities returned are always of the type for this set and never of
         ///     a derived type.  If the table or tables queried may contain data for other entity
         ///     types, then the SQL query must be written appropriately to ensure that only entities of
@@ -256,13 +256,13 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name = "sql">The SQL query string.</param>
         /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbSqlSetQuery" /> object that will execute the query when it is enumerated.</returns>
-        public DbSqlSetQuery SqlQuery(string sql, params object[] parameters)
+        /// <returns>A <see cref = "DbSqlQuery" /> object that will execute the query when it is enumerated.</returns>
+        public DbSqlQuery SqlQuery(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
             Contract.Requires(parameters != null);
 
-            return new DbSqlSetQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
+            return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
         }
 
         #endregion

@@ -755,7 +755,7 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="DbQuery_BindingToDbQueryNotSupported" xml:space="preserve">
-    <value>Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList().</value>
+    <value>Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery, DbRawSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList().</value>
     <comment>## ExceptionType=NotSupportedException</comment>
   </data>
   <data name="DbExtensions_InvalidIncludePathExpression" xml:space="preserve">

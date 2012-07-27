@@ -128,6 +128,7 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
     <Compile Include="Core\Query\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
+    <Compile Include="DbRawSqlQueryTests.cs.cs" />
     <Compile Include="Internal\ConfigFile\ContextElementTests.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
     <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
