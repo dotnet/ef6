@@ -850,6 +850,17 @@ END";
         }
 
         #endregion
+
+        #region Set tests
+
+        [Fact]
+        public void Passing_null_type_to_Non_generic_Set_method_throws()
+        {
+            var context = new Mock<InternalContextForMock> { CallBase = true }.Object.Owner;
+            Assert.Equal("entityType", Assert.Throws<ArgumentNullException>(() => context.Set(null)).ParamName);
+        }
+
+        #endregion
     }
 
     public class PersistEntity
