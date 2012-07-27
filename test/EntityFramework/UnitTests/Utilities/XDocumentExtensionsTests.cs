@@ -19,7 +19,8 @@ namespace System.Data.Entity.Utilities
             Assert.NotNull(storeItemCollection);
             Assert.NotNull(providerInfo);
             Assert.Equal("System.Data.SqlClient", providerInfo.ProviderInvariantName);
-            Assert.Equal("2008", providerInfo.ProviderManifestToken);
+            // May return 2008 or 2012 depending on what version is installed on your dev box
+            Assert.True(providerInfo.ProviderManifestToken == "2008" || providerInfo.ProviderManifestToken == "2012");
         }
 
         [Fact]

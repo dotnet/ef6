@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
@@ -7,7 +8,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// A class derived from this class can be placed in the same assembly as a class derived from
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Config
         protected internal void AddDependencyResolver(IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
-            CheckNotLocked();
+            CheckNotLocked("AddDependencyResolver");
 
             // New resolvers always run after the config resolvers so that config always wins over code
             _resolvers.Second.Add(resolver);
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(provider != null);
-            CheckNotLocked();
+            CheckNotLocked("AddProvider");
 
             AddDependencyResolver(new SingletonDependencyResolver<DbProviderServices>(provider, providerInvariantName));
         }
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Config
         protected internal void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
         {
             Contract.Requires(strategy != null);
-            CheckNotLocked();
+            CheckNotLocked("SetDatabaseInitializer");
 
             AddDependencyResolver(new SingletonDependencyResolver<IDatabaseInitializer<TContext>>(strategy));
         }
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Config
             protected internal set
             {
                 Contract.Requires(value != null);
-                CheckNotLocked();
+                CheckNotLocked("DefaultConnectionFactory");
 
                 AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(value));
             }
@@ -180,7 +180,7 @@ namespace System.Data.Entity.Config
             protected internal set
             {
                 Contract.Requires(value != null);
-                CheckNotLocked();
+                CheckNotLocked("ModelCacheKeyFactory");
 
                 AddDependencyResolver(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(value));
             }
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Config
             get { return _rootResolver; }
         }
 
-        private void CheckNotLocked([CallerMemberName] string memberName = null)
+        private void CheckNotLocked(string memberName)
         {
             if (_isLocked)
             {

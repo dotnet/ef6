@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
-    using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     An implementation of IDatabaseInitializer that will always recreate and optionally re-seed the
@@ -30,11 +29,6 @@ namespace System.Data.Entity
         /// </exception>
         public void InitializeDatabase(TContext context)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull("context");
-            }
-
             context.Database.Delete();
             context.Database.Create();
             Seed(context);

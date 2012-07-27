@@ -1655,6 +1655,7 @@ namespace System.Data.Entity
             this IQueryable<TSource> source, int index)
         {
             Contract.Requires(source != null);
+            Contract.Requires(index >= 0);
             Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             return source.ElementAtOrDefaultAsync(index, CancellationToken.None);
@@ -1664,6 +1665,7 @@ namespace System.Data.Entity
             this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
+            Contract.Requires(index >= 0);
             Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             var provider = source.Provider as IDbAsyncQueryProvider;

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
-    using System.Data.Entity.Resources;
     using System.Transactions;
 
     /// <summary>
@@ -33,11 +33,6 @@ namespace System.Data.Entity
         /// </exception>
         public void InitializeDatabase(TContext context)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull("context");
-            }
-
             bool databaseExists;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {

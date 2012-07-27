@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
@@ -179,14 +180,16 @@ namespace System.Data.Entity.SqlServer
             if (_primitiveTypes == null)
             {
                 if (_version == SqlVersion.Sql10 ||
-                    _version == SqlServer.SqlVersion.Sql11)
+                    _version == SqlVersion.Sql11)
                 {
                     _primitiveTypes = base.GetStoreTypes();
                 }
                 else
                 {
                     var primitiveTypes = new List<PrimitiveType>(base.GetStoreTypes());
-                    Debug.Assert((_version == SqlVersion.Sql8) || (_version == SqlVersion.Sql9), "Found verion other than SQL 8, 9, 10 or 11.");
+                    Debug.Assert(
+                        (_version == SqlVersion.Sql8) || (_version == SqlVersion.Sql9),
+                        "Found version other than SQL 8, 9, 10 or 11.");
                     //Remove the Katmai types for both SQL 8 and SQL 9
                     primitiveTypes.RemoveAll(
                         delegate(PrimitiveType primitiveType)
@@ -224,7 +227,7 @@ namespace System.Data.Entity.SqlServer
             if (_functions == null)
             {
                 if (_version == SqlVersion.Sql10 ||
-                    _version == SqlServer.SqlVersion.Sql11)
+                    _version == SqlVersion.Sql11)
                 {
                     _functions = base.GetStoreFunctions();
                 }

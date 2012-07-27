@@ -20,6 +20,10 @@ namespace System.Data.Entity.Utilities
             @"^\s*\!\s*string\s*\.\s*IsNullOrWhiteSpace\s*\(\s*(@?[\w]+)\s*\)\s*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private static readonly Regex _isLessThan = new Regex(
+            @"^\s*(@?\w+)\s*>\=\s*\d+\s*$",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         public static Regex IsNotNull
         {
             get { return _isNotNull; }
@@ -47,6 +51,12 @@ namespace System.Data.Entity.Utilities
                     && match.Success)
                 {
                     throw Error.ArgumentIsNullOrWhitespace(match.Groups[1].Value);
+                }
+
+                if (((match = _isLessThan.Match(conditionText)) != null)
+                    && match.Success)
+                {
+                    throw Error.ArgumentOutOfRange(match.Groups[1].Value);
                 }
 
                 throw Error.PreconditionFailed(conditionText, userMessage);

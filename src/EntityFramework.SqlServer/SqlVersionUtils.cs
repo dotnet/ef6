@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Common;
     using System.Data.Entity.SqlServer.Resources;
-    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -18,7 +19,7 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="connection">current sql connection</param>
         /// <returns>Sql Version for the current connection</returns>
-        internal static SqlVersion GetSqlVersion(SqlConnection connection)
+        internal static SqlVersion GetSqlVersion(DbConnection connection)
         {
             Debug.Assert(connection.State == ConnectionState.Open, "Expected an open connection");
             var majorVersion = Int32.Parse(connection.ServerVersion.Substring(0, 2), CultureInfo.InvariantCulture);
@@ -27,19 +28,19 @@ namespace System.Data.Entity.SqlServer
             {
                 return SqlVersion.Sql11;
             }
-            else if (majorVersion == 10)
+
+            if (majorVersion == 10)
             {
                 return SqlVersion.Sql10;
             }
-            else if (majorVersion == 9)
+
+            if (majorVersion == 9)
             {
                 return SqlVersion.Sql9;
             }
-            else
-            {
-                Debug.Assert(majorVersion == 8, "not version 8");
-                return SqlVersion.Sql8;
-            }
+
+            Debug.Assert(majorVersion == 8, "not version 8");
+            return SqlVersion.Sql8;
         }
 
         internal static string GetVersionHint(SqlVersion version)
