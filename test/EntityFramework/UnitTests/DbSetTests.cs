@@ -3,6 +3,7 @@ namespace ProductivityApiUnitTests
 {
     using System;
     using System.Data.Entity;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
@@ -149,6 +150,74 @@ namespace ProductivityApiUnitTests
             var retVal = set.Remove(entity);
 
             Assert.Same(entity, retVal);
+        }
+
+        #endregion
+
+        #region Query construction tests
+
+        [Fact]
+        public void Passing_null_SQL_to_generic_entity_query_method_throws()
+        {
+            var set = new DbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("sql"), Assert.Throws<ArgumentException>(() => set.SqlQuery(null)).Message);
+        }
+
+        [Fact]
+        public void Passing_empty_SQL_string_to_generic_entity_query_method_throws()
+        {
+            var set = new DbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("sql"), Assert.Throws<ArgumentException>(() => set.SqlQuery("")).Message);
+        }
+
+        [Fact]
+        public void Passing_whitespace_SQL_string_to_generic_entity_query_method_throws()
+        {
+            var set = new DbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("sql"), Assert.Throws<ArgumentException>(() => set.SqlQuery(" ")).Message);
+        }
+
+        [Fact]
+        public void Passing_null_parameters_to_generic_entity_query_method_throws()
+        {
+            var set = new DbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal("parameters", Assert.Throws<ArgumentNullException>(() => set.SqlQuery("query", null)).ParamName);
+        }
+
+        [Fact]
+        public void Passing_null_SQL_to_non_generic_entity_query_method_throws()
+        {
+            var set = new InternalDbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("sql"), Assert.Throws<ArgumentException>(() => set.SqlQuery(null)).Message);
+        }
+
+        [Fact]
+        public void Passing_empty_SQL_string_to_non_generic_entity_query_method_throws()
+        {
+            var set = new InternalDbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("sql"), Assert.Throws<ArgumentException>(() => set.SqlQuery("")).Message);
+        }
+
+        [Fact]
+        public void Passing_whitespace_SQL_string_to_non_generic_entity_query_method_throws()
+        {
+            var set = new InternalDbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("sql"), Assert.Throws<ArgumentException>(() => set.SqlQuery(" ")).Message);
+        }
+
+        [Fact]
+        public void Passing_null_parameters_to_non_generic_entity_query_method_throws()
+        {
+            var set = new InternalDbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
+
+            Assert.Equal("parameters", Assert.Throws<ArgumentNullException>(() => set.SqlQuery("query", null)).ParamName);
         }
 
         #endregion

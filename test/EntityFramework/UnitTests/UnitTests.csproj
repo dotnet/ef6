@@ -128,7 +128,7 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
     <Compile Include="Core\Query\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
-    <Compile Include="DbRawSqlQueryTests.cs.cs" />
+    <Compile Include="DbSqlQueryTests.cs" />
     <Compile Include="Internal\ConfigFile\ContextElementTests.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
     <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
@@ -161,6 +161,14 @@
     <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
     <Compile Include="Internal\InternalContextTests.cs" />
     <Compile Include="IQueryableExtensionsTests.cs" />
+    <Compile Include="Internal\InternalSqlNonSetQueryTests.cs" />
+    <Compile Include="Internal\Linq\TestHelpers\InternalSetForMock`.cs" />
+    <Compile Include="Internal\TestHelpers\InternalCollectionEntryForMock.cs" />
+    <Compile Include="Internal\TestHelpers\InternalContextForMock.cs" />
+    <Compile Include="Internal\TestHelpers\InternalContextForMockWithRealContext`.cs" />
+    <Compile Include="Internal\TestHelpers\InternalContextForMock`.cs" />
+    <Compile Include="Internal\TestHelpers\InternalReferenceEntryForMock.cs" />
+    <Compile Include="Internal\TestHelpers\MockHelper.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilderTests.cs" />
     <Compile Include="Migrations\Builders\TableBuilderTests.cs" />
     <Compile Include="Migrations\DbMigrationsConfigurationTests.cs" />
@@ -184,6 +192,7 @@
     <Compile Include="SqlServer\SqlVersionUtilsTests.cs" />
     <Compile Include="TestHelpers\DbEnumerator.cs" />
     <Compile Include="TestHelpers\Fake\FakeSqlGenerator.cs" />
+    <Compile Include="TestHelpers\Mock\DbContextUsingMockInternalContext.cs" />
     <Compile Include="TestHelpers\UnitTestsConfiguration.cs" />
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />
@@ -245,7 +254,6 @@
     <Compile Include="Migrations\Utilities\TemplateProcessorTests.cs" />
     <Compile Include="Migrations\Utilities\UtcNowGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\EntityTypeConfigurationTests.cs" />
-    <Compile Include="TestHelpers\Mock\InternalSetForMock`.cs" />
     <Compile Include="TestHelpers\Mock\MockAssembly.cs" />
     <Compile Include="TestHelpers\Mock\MockPropertyInfo.cs" />
     <Compile Include="TestHelpers\Mock\MockType.cs" />
@@ -261,11 +269,6 @@
     </Compile>
     <Compile Include="TestHelpers\Fake\FakeSqlProviderFactory.cs" />
     <Compile Include="TestHelpers\Fake\FakeSqlProviderServices.cs" />
-    <Compile Include="TestHelpers\Mock\InternalCollectionEntryForMock.cs" />
-    <Compile Include="TestHelpers\Mock\InternalContextForMock.cs" />
-    <Compile Include="TestHelpers\Mock\InternalContextForMockWithRealContext`.cs" />
-    <Compile Include="TestHelpers\Mock\InternalContextForMock`.cs" />
-    <Compile Include="TestHelpers\Mock\InternalReferenceEntryForMock.cs" />
     <Compile Include="TestHelpers\TestInternalPropertyBag`.cs" />
     <Compile Include="ModelConfiguration\ComplexTypeConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationRegistrarTests.cs" />
@@ -379,7 +382,7 @@
     <Compile Include="DbEntityEntryTests.cs" />
     <Compile Include="DbPropertyValuesTests.cs" />
     <Compile Include="DbSetTests.cs" />
-    <Compile Include="DbSqlQueryTests.cs" />
+    <Compile Include="DbRawSqlQueryTests.cs" />
     <Compile Include="DefaultConnectionFactoryTests.cs" />
     <Compile Include="EdmMetadataRepositoryTests.cs" />
     <Compile Include="IncludeTests.cs" />
