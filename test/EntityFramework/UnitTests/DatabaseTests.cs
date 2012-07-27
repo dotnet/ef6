@@ -132,7 +132,64 @@ namespace ProductivityApiUnitTests
                 internalContextMock.Verify(m => m.ExecuteSqlCommand("query", new object[0]), Times.Once());
             }
         }
-        
+
+        public class ExecuteSqlCommandAsync
+        {
+            [Fact]
+            public void With_null_SQL_throws()
+            {
+                var database = new Database(new Mock<InternalContextForMock>().Object);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("sql"),
+                    Assert.Throws<ArgumentException>(() => database.ExecuteSqlCommandAsync(null).Result).Message);
+            }
+
+            [Fact]
+            public void With_empty_SQL_throws()
+            {
+                var database = new Database(new Mock<InternalContextForMock>().Object);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("sql"),
+                    Assert.Throws<ArgumentException>(() => database.ExecuteSqlCommandAsync("").Result).Message);
+            }
+
+            [Fact]
+            public void With_whitespace_SQL_throws()
+            {
+                var database = new Database(new Mock<InternalContextForMock>().Object);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("sql"),
+                    Assert.Throws<ArgumentException>(() => database.ExecuteSqlCommandAsync(" ").Result).Message);
+            }
+
+            [Fact]
+            public void With_null_parameters_throws()
+            {
+                var database = new Database(new Mock<InternalContextForMock>().Object);
+
+                Assert.Equal(
+                    "parameters",
+                    Assert.Throws<ArgumentNullException>(() => database.ExecuteSqlCommandAsync("query", null).Result).ParamName);
+            }
+
+            [Fact]
+            public void With_valid_arguments_doesnt_throw()
+            {
+                var internalContextMock = new Mock<InternalContextForMock>();
+                internalContextMock.Setup(
+                    m => m.ExecuteSqlCommandAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                    .Returns(Task.FromResult(1));
+                var database = new Database(internalContextMock.Object);
+
+                Assert.NotNull(database.ExecuteSqlCommandAsync("query").Result);
+                internalContextMock.Verify(
+                    m => m.ExecuteSqlCommandAsync("query", CancellationToken.None, It.IsAny<object[]>()), Times.Once());
+            }
+        }
+
         public class SqlQuery_Generic
         {
             [Fact]
