@@ -234,7 +234,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         private async Task<object> FindInStoreAsync(WrappedEntityKey key, string keyValuesParamName, CancellationToken cancellationToken)
         {
-            Contract.Requires(key != null);
+            //Contract.Requires(key != null);
+            DbHelpers.ThrowIfNull(key, "key");
 
             // If the key has null values, then we cannot query it from the store, so it cannot
             // be found, so just return null.
@@ -247,10 +248,21 @@ namespace System.Data.Entity.Internal.Linq
             {
                 return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken);
             }
-            catch (EntitySqlException ex)
+            catch (AggregateException ae)
             {
-                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
+                ae.Flatten().Handle(ex =>
+                    {
+                        var ese = ex as EntitySqlException;
+                        if (ese != null)
+                        {
+                            throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
+                        }
+                        return false;
+                    });
             }
+
+            Contract.Assert(false, "This code is unreachable, but the compiler can't prove it.");
+            return null;
         }
 
         private ObjectQuery<TEntity> BuildFindQuery(WrappedEntityKey key)

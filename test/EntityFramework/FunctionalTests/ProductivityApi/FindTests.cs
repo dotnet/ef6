@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
     using System.Collections;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Linq;
     using AdvancedPatternsModel;
     using AllTypeKeysModel;
@@ -27,9 +27,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_returns_null_if_entity_is_not_found()
+        {
+            Find_returns_null_if_entity_is_not_found_implementation(c => c.Products.FindAsync(-666).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_returns_null_if_entity_is_not_found()
         {
             Find_returns_null_if_entity_is_not_found_implementation(c => c.Set(typeof(Product)).Find(-666));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_returns_null_if_entity_is_not_found()
+        {
+            Find_returns_null_if_entity_is_not_found_implementation(c => c.Set(typeof(Product)).FindAsync(-666).Result);
         }
 
         private void Find_returns_null_if_entity_is_not_found_implementation(Func<SimpleModelContext, object> find)
@@ -50,9 +62,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_with_int_key_returns_Entity_from_store()
+        {
+            Find_with_int_key_returns_Entity_from_store_implementation(c => c.Products.FindAsync(1).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_with_int_key_returns_Entity_from_store()
         {
             Find_with_int_key_returns_Entity_from_store_implementation(c => c.Set(typeof(Product)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_with_int_key_returns_Entity_from_store()
+        {
+            Find_with_int_key_returns_Entity_from_store_implementation(c => c.Set(typeof(Product)).FindAsync(1).Result);
         }
 
         private void Find_with_int_key_returns_Entity_from_store_implementation(Func<SimpleModelContext, object> find)
@@ -75,10 +99,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_with_int_key_on_Base_Set_returns_derived_entity_from_store()
+        {
+            Find_with_int_key_on_Base_Set_returns_derived_entity_from_store_implementation(c => c.Products.FindAsync(7).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_with_int_key_on_Base_Set_returns_derived_entity_from_store()
         {
             Find_with_int_key_on_Base_Set_returns_derived_entity_from_store_implementation(
                 c => c.Set(typeof(Product)).Find(7));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_with_int_key_on_Base_Set_returns_derived_entity_from_store()
+        {
+            Find_with_int_key_on_Base_Set_returns_derived_entity_from_store_implementation(
+                c => c.Set(typeof(Product)).FindAsync(7).Result);
         }
 
         private void Find_with_int_key_on_Base_Set_returns_derived_entity_from_store_implementation(
@@ -98,9 +135,20 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_with_string_key_returns_entity_from_store()
         {
+            Find_with_string_key_returns_entity_from_store_implementation(s => s.Find("Medications"));
+        }
+
+        [Fact]
+        public void FindAsync_with_string_key_returns_entity_from_store()
+        {
+            Find_with_string_key_returns_entity_from_store_implementation(s => s.FindAsync("Medications").Result);
+        }
+
+        private void Find_with_string_key_returns_entity_from_store_implementation(Func<DbSet<Category>, Category> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                var category = context.Categories.Find("Medications");
+                var category = find(context.Categories);
 
                 Assert.NotNull(category);
                 Assert.Equal("Medications", category.Id);
@@ -112,13 +160,24 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_with_binary_key_returns_entity_from_store()
         {
+            Find_with_binary_key_returns_entity_from_store_implementation((s, k) => s.Find(k));
+        }
+
+        [Fact]
+        public void FindAsync_with_binary_key_returns_entity_from_store()
+        {
+            Find_with_binary_key_returns_entity_from_store_implementation((s, k) => s.FindAsync(k).Result);
+        }
+
+        private void Find_with_binary_key_returns_entity_from_store_implementation(Func<DbSet<Whiteboard>, byte[], Whiteboard> find)
+        {
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange
                 var byteKey = new byte[] { 1, 9, 7, 3 };
 
                 // Act
-                var whiteBoard = context.Whiteboards.Find(byteKey);
+                var whiteBoard = find(context.Whiteboards, byteKey);
 
                 // Assert findings
                 Assert.NotNull(whiteBoard);
@@ -134,9 +193,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_with_int_key_returns_entity_from_state_manager()
+        {
+            Find_with_int_key_returns_entity_from_state_manager_implementation(c => c.Products.FindAsync(2).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_with_int_key_returns_entity_from_state_manager()
         {
             Find_with_int_key_returns_entity_from_state_manager_implementation(c => c.Set(typeof(Product)).Find(2));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_with_int_key_returns_entity_from_state_manager()
+        {
+            Find_with_int_key_returns_entity_from_state_manager_implementation(c => c.Set(typeof(Product)).FindAsync(2).Result);
         }
 
         private void Find_with_int_key_returns_entity_from_state_manager_implementation(
@@ -161,9 +232,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_with_int_key_returns_derived_entity_state_manager()
+        {
+            Find_with_int_key_returns_derived_entity_state_manager_implementation(c => c.Products.FindAsync(7).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_with_int_key_returns_derived_entity_state_manager()
         {
             Find_with_int_key_returns_derived_entity_state_manager_implementation(c => c.Set(typeof(Product)).Find(7));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_with_int_key_returns_derived_entity_state_manager()
+        {
+            Find_with_int_key_returns_derived_entity_state_manager_implementation(c => c.Set(typeof(Product)).FindAsync(7).Result);
         }
 
         private void Find_with_int_key_returns_derived_entity_state_manager_implementation(
@@ -188,10 +271,21 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_with_string_key_returns_entity_from_state_manager()
         {
+            Find_with_string_key_returns_entity_from_state_manager_implementation(s => s.Find("Beverages"));
+        }
+
+        [Fact]
+        public void FindAsync_with_string_key_returns_entity_from_state_manager()
+        {
+            Find_with_string_key_returns_entity_from_state_manager_implementation(s => s.FindAsync("Beverages").Result);
+        }
+
+        private void Find_with_string_key_returns_entity_from_state_manager_implementation(Func<DbSet<Category>, Category> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                var category1 = context.Categories.Find("Beverages");
-                var category2 = context.Categories.Find("Beverages");
+                var category1 = find(context.Categories);
+                var category2 = find(context.Categories);
 
                 Assert.Same(category1, category2);
                 Assert.Equal("Beverages", category1.Id);
@@ -203,14 +297,25 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_with_binary_key_returns_entity_from_state_manager()
         {
+            Find_with_binary_key_returns_entity_from_state_manager_implementation((s, k) => s.Find(k));
+        }
+
+        [Fact]
+        public void FindAsync_with_binary_key_returns_entity_from_state_manager()
+        {
+            Find_with_binary_key_returns_entity_from_state_manager_implementation((s, k) => s.FindAsync(k).Result);
+        }
+
+        private void Find_with_binary_key_returns_entity_from_state_manager_implementation(Func<DbSet<Whiteboard>, byte[], Whiteboard> find)
+        {
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange
                 var byteKey = new byte[] { 1, 9, 7, 3 };
-                var whiteBoard = context.Whiteboards.Find(byteKey);
+                var whiteBoard = find(context.Whiteboards, byteKey);
 
                 // Act
-                var whiteBoard2 = context.Whiteboards.Find(byteKey);
+                var whiteBoard2 = find(context.Whiteboards, byteKey);
 
                 // Assert Findings
                 Assert.Same(whiteBoard2, whiteBoard);
@@ -226,10 +331,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_with_int_key_returns_Added_entity_from_state_manager()
+        {
+            Find_with_int_key_returns_Added_entity_from_state_manager_implementation(c => c.Products.FindAsync(-1).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_with_int_key_returns_Added_entity_from_state_manager()
         {
             Find_with_int_key_returns_Added_entity_from_state_manager_implementation(
                 c => c.Set(typeof(Product)).Find(-1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_with_int_key_returns_Added_entity_from_state_manager()
+        {
+            Find_with_int_key_returns_Added_entity_from_state_manager_implementation(
+                c => c.Set(typeof(Product)).FindAsync(-1).Result);
         }
 
         private void Find_with_int_key_returns_Added_entity_from_state_manager_implementation(
@@ -237,7 +355,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new Product() { Id = -1, Name = "Italian Radicals" };
+                var addedProduct = new Product
+                                       {
+                                           Id = -1,
+                                           Name = "Italian Radicals"
+                                       };
                 context.Products.Add(addedProduct);
 
                 var foundProduct = (Product)find(context);
@@ -256,10 +378,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_with_int_key_returns_added_derived_entity_from_state_manager()
+        {
+            Find_with_int_key_returns_added_derived_entity_from_state_manager_implementation(c => c.Products.FindAsync(7).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_with_int_key_returns_added_derived_entity_from_state_manager()
         {
             Find_with_int_key_returns_added_derived_entity_from_state_manager_implementation(
                 c => c.Set(typeof(Product)).Find(7));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_with_int_key_returns_added_derived_entity_from_state_manager()
+        {
+            Find_with_int_key_returns_added_derived_entity_from_state_manager_implementation(
+                c => c.Set(typeof(Product)).FindAsync(7).Result);
         }
 
         private void Find_with_int_key_returns_added_derived_entity_from_state_manager_implementation(
@@ -287,12 +422,26 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_with_string_key_returns_Added_entity_from_state_manager()
         {
+            Find_with_string_key_returns_Added_entity_from_state_manager_implementation(s => s.Find("NorthStar Center"));
+        }
+
+        [Fact]
+        public void FindAsync_with_string_key_returns_Added_entity_from_state_manager()
+        {
+            Find_with_string_key_returns_Added_entity_from_state_manager_implementation(s => s.FindAsync("NorthStar Center").Result);
+        }
+
+        private void Find_with_string_key_returns_Added_entity_from_state_manager_implementation(Func<DbSet<Category>, Category> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                var addedCategory = new Category() { Id = "NorthStar Center" };
+                var addedCategory = new Category
+                                        {
+                                            Id = "NorthStar Center"
+                                        };
                 context.Categories.Add(addedCategory);
 
-                var foundCategory = context.Categories.Find("NorthStar Center");
+                var foundCategory = find(context.Categories);
 
                 Assert.Same(addedCategory, foundCategory);
                 Assert.Equal("NorthStar Center", addedCategory.Id);
@@ -304,22 +453,42 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_with_binary_key_returns_Added_entity_from_state_manager()
         {
+            Find_with_binary_key_returns_Added_entity_from_state_manager_implementation(
+                (s, k) => s.Find(k));
+        }
+
+        [Fact]
+        public void FindAsync_with_binary_key_returns_Added_entity_from_state_manager()
+        {
+            Find_with_binary_key_returns_Added_entity_from_state_manager_implementation(
+                (s, k) => s.FindAsync(k).Result);
+        }
+
+        private void Find_with_binary_key_returns_Added_entity_from_state_manager_implementation(
+            Func<DbSet<Whiteboard>, byte[], Whiteboard> find)
+        {
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange
                 var byteKey = new byte[] { 1, 2, 3, 4 };
-                var whiteBoard = new Whiteboard { iD = byteKey, AssetTag = "AMZN-PacMed-1012" };
+                var whiteBoard = new Whiteboard
+                                     {
+                                         iD = byteKey,
+                                         AssetTag = "AMZN-PacMed-1012"
+                                     };
                 context.Set<Whiteboard>().Add(whiteBoard);
 
                 // Act
-                var foundWhiteBoard = context.Whiteboards.Find(byteKey);
+                var foundWhiteBoard = find(context.Whiteboards, byteKey);
 
                 // Assert Findings
                 Assert.Same(foundWhiteBoard, whiteBoard);
                 Assert.NotNull(foundWhiteBoard);
                 Assert.True(StructuralComparisons.StructuralEqualityComparer.Equals(foundWhiteBoard.iD, byteKey));
-                Assert.True(StructuralComparisons.StructuralEqualityComparer.Equals(foundWhiteBoard.AssetTag,
-                                                                                    "AMZN-PacMed-1012"));
+                Assert.True(
+                    StructuralComparisons.StructuralEqualityComparer.Equals(
+                        foundWhiteBoard.AssetTag,
+                        "AMZN-PacMed-1012"));
             }
         }
 
@@ -330,17 +499,33 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_returns_Deleted_entity_from_state_manager()
+        {
+            Find_returns_Deleted_entity_from_state_manager_implementation(c => c.Categories.FindAsync("Xiaohe Tomb complex").Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_returns_Deleted_entity_from_state_manager()
         {
             Find_returns_Deleted_entity_from_state_manager_implementation(
                 c => c.Set(typeof(Category)).Find("Xiaohe Tomb complex"));
         }
 
+        [Fact]
+        public void Non_generic_FindAsync_returns_Deleted_entity_from_state_manager()
+        {
+            Find_returns_Deleted_entity_from_state_manager_implementation(
+                c => c.Set(typeof(Category)).FindAsync("Xiaohe Tomb complex").Result);
+        }
+
         private void Find_returns_Deleted_entity_from_state_manager_implementation(Func<SimpleModelContext, object> find)
         {
             using (var context = new SimpleModelContext())
             {
-                var deletedCategory = new Category() { Id = "Xiaohe Tomb complex" };
+                var deletedCategory = new Category
+                                          {
+                                              Id = "Xiaohe Tomb complex"
+                                          };
                 context.Categories.Add(deletedCategory);
                 GetObjectContext(context).AcceptAllChanges();
                 context.Categories.Remove(deletedCategory);
@@ -362,10 +547,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store()
+        {
+            Find_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store_implementation(
+                c => c.Products.FindAsync(1).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store()
         {
             Find_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store_implementation(
                 c => c.Set(typeof(Product)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store()
+        {
+            Find_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store_implementation(
+                c => c.Set(typeof(Product)).FindAsync(1).Result);
         }
 
         private void Find_returns_Added_entity_from_state_manager_even_if_key_matches_entity_in_store_implementation(
@@ -373,7 +572,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new Product() { Id = 1, Name = "Vegemite" };
+                var addedProduct = new Product
+                                       {
+                                           Id = 1,
+                                           Name = "Vegemite"
+                                       };
                 context.Products.Add(addedProduct);
 
                 var foundProduct = (Product)find(context);
@@ -394,10 +597,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity()
+        {
+            Find_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity_implementation(
+                c => c.Products.FindAsync(1).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity()
         {
             Find_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity_implementation(
                 c => c.Set(typeof(Product)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity()
+        {
+            Find_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity_implementation(
+                c => c.Set(typeof(Product)).FindAsync(1).Result);
         }
 
         private void Find_returns_Unchanged_entity_from_state_manager_even_if_key_matches_Added_entity_implementation(
@@ -406,7 +623,11 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var unchangedProduct = context.Products.Find(1);
-                var addedProduct = new Product() { Id = 1, Name = "Vegemite" };
+                var addedProduct = new Product
+                                       {
+                                           Id = 1,
+                                           Name = "Vegemite"
+                                       };
                 context.Products.Add(addedProduct);
 
                 var foundProduct = (Product)find(context);
@@ -426,46 +647,91 @@ namespace ProductivityApiTests
         public void Find_derived_type_from_state_manager_in_unchanged_state_even_though_its_key_matches_Added_derived_entity_Sanity_test()
         {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
-                <FeaturedProduct>(useNonGeneric: false);
+                <FeaturedProduct>(useNonGeneric: false, useAsync: false);
+        }
+
+        [Fact]
+        public void
+            FindAsync_derived_type_from_state_manager_in_unchanged_state_even_though_its_key_matches_Added_derived_entity_Sanity_test()
+        {
+            Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
+                <FeaturedProduct>(useNonGeneric: false, useAsync: true);
         }
 
         [Fact]
         public void Find_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test()
         {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
-                <Product>(useNonGeneric: false);
+                <Product>(useNonGeneric: false, useAsync: false);
         }
 
         [Fact]
-        public void Non_generic_Find_derived_type_from_state_manager_in_unchanged_state_even_though_its_key_matches_Added_derived_entity_Sanity_test()
+        public void FindAsync_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test()
         {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
-                <FeaturedProduct>(useNonGeneric: true);
+                <Product>(useNonGeneric: false, useAsync: true);
         }
 
         [Fact]
-        public void Non_generic_Find_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test()
+        public void
+            Non_generic_Find_derived_type_from_state_manager_in_unchanged_state_even_though_its_key_matches_Added_derived_entity_Sanity_test
+            ()
         {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
-                <Product>(useNonGeneric: true);
+                <FeaturedProduct>(useNonGeneric: true, useAsync: false);
         }
 
-        private void
+        [Fact]
+        public void
+            Non_generic_FindAsync_derived_type_from_state_manager_in_unchanged_state_even_though_its_key_matches_Added_derived_entity_Sanity_test
+            ()
+        {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
-            <T>(bool useNonGeneric, int keyToFind = 7)
+                <FeaturedProduct>(useNonGeneric: true, useAsync: true);
+        }
+
+        [Fact]
+        public void
+            Non_generic_Find_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test()
+        {
+            Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
+                <Product>(useNonGeneric: true, useAsync: false);
+        }
+
+        [Fact]
+        public void
+            Non_generic_FindAsync_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test(
+            )
+        {
+            Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
+                <Product>(useNonGeneric: true, useAsync: true);
+        }
+
+        private void Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation<T>(
+            bool useNonGeneric, bool useAsync)
             where T : class
         {
+            var keyToFind = 7;
             using (var context = new SimpleModelContext())
             {
                 // Arrange
                 var product = context.Set<FeaturedProduct>().Find(7);
-                var addedProduct = new FeaturedProduct { Id = 7, Name = "Benz", CategoryId = "Cars" };
+                var addedProduct = new FeaturedProduct
+                                       {
+                                           Id = 7,
+                                           Name = "Benz",
+                                           CategoryId = "Cars"
+                                       };
                 context.Products.Add(addedProduct);
 
                 // Act
                 var foundProduct = useNonGeneric
-                                       ? (T)context.Set(typeof(T)).Find(keyToFind)
-                                       : context.Set<T>().Find(keyToFind);
+                                       ? useAsync
+                                             ? (T)context.Set(typeof(T)).FindAsync(keyToFind).Result
+                                             : (T)context.Set(typeof(T)).Find(keyToFind)
+                                       : useAsync
+                                             ? context.Set<T>().FindAsync(keyToFind).Result
+                                             : context.Set<T>().Find(keyToFind);
 
                 // Assert
                 Assert.Same(foundProduct, product);
@@ -478,45 +744,86 @@ namespace ProductivityApiTests
         public void Find_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
         {
             Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
-                <FeaturedProduct>(useNonGeneric: false);
+                <FeaturedProduct>(useNonGeneric: false, useAsync: false);
+        }
+
+        [Fact]
+        public void FindAsync_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
+        {
+            Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
+                <FeaturedProduct>(useNonGeneric: false, useAsync: true);
         }
 
         [Fact]
         public void Find_on_Base_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
         {
             Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity<Product>(
-                useNonGeneric: false);
+                useNonGeneric: false, useAsync: false);
         }
 
         [Fact]
-        public void Non_generic_Find_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
-        {
-            Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
-                <FeaturedProduct>(useNonGeneric: true);
-        }
-
-        [Fact]
-        public void Non_generic_Find_on_Base_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
+        public void FindAsync_on_Base_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
         {
             Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity<Product>(
-                useNonGeneric: true);
+                useNonGeneric: false, useAsync: true);
+        }
+
+        [Fact]
+        public void
+            Non_generic_Find_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
+        {
+            Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
+                <FeaturedProduct>(useNonGeneric: true, useAsync: false);
+        }
+
+        [Fact]
+        public void
+            Non_generic_FindAsync_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
+        {
+            Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
+                <FeaturedProduct>(useNonGeneric: true, useAsync: true);
+        }
+
+        [Fact]
+        public void
+            Non_generic_Find_on_Base_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
+        {
+            Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity<Product>(
+                useNonGeneric: true, useAsync: false);
+        }
+
+        [Fact]
+        public void
+            Non_generic_FindAsync_on_Base_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity()
+        {
+            Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity<Product>(
+                useNonGeneric: true, useAsync: true);
         }
 
         private void Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity<T>(
-            bool useNonGeneric, int keyToFind = 7)
+            bool useNonGeneric, bool useAsync)
             where T : class
         {
+            var keyToFind = 7;
             using (var context = new SimpleModelContext())
             {
                 // Arrange
                 var unchangedProduct = context.Set<FeaturedProduct>().Find(7);
-                var addedProduct = new Product() { Id = 7, Name = "Nutella" };
+                var addedProduct = new Product
+                                       {
+                                           Id = 7,
+                                           Name = "Nutella"
+                                       };
                 context.Products.Add(addedProduct);
 
                 // Act
                 dynamic foundProduct = useNonGeneric
-                                           ? (T)context.Set(typeof(T)).Find(keyToFind)
-                                           : context.Set<T>().Find(keyToFind);
+                                           ? useAsync
+                                                 ? context.Set(typeof(T)).FindAsync(keyToFind).Result
+                                                 : context.Set(typeof(T)).Find(keyToFind)
+                                           : useAsync
+                                                 ? context.Set<T>().FindAsync(keyToFind).Result
+                                                 : context.Set<T>().Find(keyToFind);
 
                 // Assert
                 Assert.NotNull(foundProduct);
@@ -534,10 +841,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_added_entity_with_string_key_with_default_value_of_null()
+        {
+            Find_added_entity_with_string_key_with_default_value_of_null_implementation(c => c.Categories.FindAsync(null).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_added_entity_with_string_key_with_default_value_of_null()
         {
             Find_added_entity_with_string_key_with_default_value_of_null_implementation(
                 c => c.Set(typeof(Category)).Find(null));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_added_entity_with_string_key_with_default_value_of_null()
+        {
+            Find_added_entity_with_string_key_with_default_value_of_null_implementation(
+                c => c.Set(typeof(Category)).FindAsync(null).Result);
         }
 
         private void Find_added_entity_with_string_key_with_default_value_of_null_implementation(
@@ -546,7 +866,11 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var newCategory = new Category { Id = null, DetailedDescription = "Cakes" };
+                var newCategory = new Category
+                                      {
+                                          Id = null,
+                                          DetailedDescription = "Cakes"
+                                      };
                 context.Categories.Add(newCategory);
 
                 // Act
@@ -564,9 +888,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_for_base_type_can_return_derived_type()
+        {
+            Find_for_base_type_can_return_derived_type_implementation(c => c.Products.FindAsync(7).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_for_base_type_can_return_derived_type()
         {
             Find_for_base_type_can_return_derived_type_implementation(c => c.Set(typeof(Product)).Find(7));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_for_base_type_can_return_derived_type()
+        {
+            Find_for_base_type_can_return_derived_type_implementation(c => c.Set(typeof(Product)).FindAsync(7).Result);
         }
 
         private void Find_for_base_type_can_return_derived_type_implementation(Func<SimpleModelContext, object> find)
@@ -590,10 +926,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_returns_null_for_null_key_values_in_array()
+        {
+            Find_returns_null_for_null_key_values_in_array_implementation(c => c.Products.FindAsync(new object[] { null }).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_returns_null_for_null_key_values_in_array()
         {
             Find_returns_null_for_null_key_values_in_array_implementation(
                 c => c.Set(typeof(Product)).Find(new object[] { null }));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_returns_null_for_null_key_values_in_array()
+        {
+            Find_returns_null_for_null_key_values_in_array_implementation(
+                c => c.Set(typeof(Product)).FindAsync(new object[] { null }).Result);
         }
 
         private void Find_returns_null_for_null_key_values_in_array_implementation(Func<SimpleModelContext, object> find)
@@ -610,10 +959,21 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_on_Derived_Set_a_derived_entity_that_lives_in_store_Sanity_test()
         {
+            Find_on_Derived_Set_a_derived_entity_that_lives_in_store_Sanity_test_implementation(s => s.Find(7));
+        }
+
+        [Fact]
+        public void FindAsync_on_Derived_Set_a_derived_entity_that_lives_in_store_Sanity_test()
+        {
+            Find_on_Derived_Set_a_derived_entity_that_lives_in_store_Sanity_test_implementation(s => s.FindAsync(7).Result);
+        }
+
+        private void Find_on_Derived_Set_a_derived_entity_that_lives_in_store_Sanity_test_implementation(Func<DbSet<FeaturedProduct>, FeaturedProduct> find)
+        {
             using (var context = new SimpleModelContext())
             {
                 // Act
-                var product = context.Set<FeaturedProduct>().Find(7);
+                var product = find(context.Set<FeaturedProduct>());
 
                 // Assert
                 Assert.NotNull(product);
@@ -624,13 +984,24 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_on_Derived_Set_a_derived_entity_that_lives_in_state_manager_Sanity_test()
         {
+            Find_on_Derived_Set_a_derived_entity_that_lives_in_state_manager_Sanity_test_implementation(s => s.Find(7));
+        }
+
+        [Fact]
+        public void FindAsync_on_Derived_Set_a_derived_entity_that_lives_in_state_manager_Sanity_test()
+        {
+            Find_on_Derived_Set_a_derived_entity_that_lives_in_state_manager_Sanity_test_implementation(s => s.FindAsync(7).Result);
+        }
+
+        private void Find_on_Derived_Set_a_derived_entity_that_lives_in_state_manager_Sanity_test_implementation(Func<DbSet<FeaturedProduct>, FeaturedProduct> find)
+        {
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var product = context.Set<FeaturedProduct>().Find(7);
+                var product = find(context.Set<FeaturedProduct>());
 
                 // Act
-                var product2 = context.Set<FeaturedProduct>().Find(7);
+                var product2 = find(context.Set<FeaturedProduct>());
 
                 // Assert
                 Assert.Same(product2, product);
@@ -642,14 +1013,30 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_derived_entity_in_added_state_from_state_manager_Sanity_test()
         {
+            Find_derived_entity_in_added_state_from_state_manager_Sanity_test_implementation(s => s.Find(7));
+        }
+
+        [Fact]
+        public void FindAsync_derived_entity_in_added_state_from_state_manager_Sanity_test()
+        {
+            Find_derived_entity_in_added_state_from_state_manager_Sanity_test_implementation(s => s.FindAsync(7).Result);
+        }
+
+        private void Find_derived_entity_in_added_state_from_state_manager_Sanity_test_implementation(Func<DbSet<FeaturedProduct>, FeaturedProduct> find)
+        {
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var newProduct = new FeaturedProduct { Id = 7, Name = "Red Bull", CategoryId = "Beverages" };
+                var newProduct = new FeaturedProduct
+                                     {
+                                         Id = 7,
+                                         Name = "Red Bull",
+                                         CategoryId = "Beverages"
+                                     };
                 context.Products.Add(newProduct);
 
                 // Act
-                var product = context.Set<FeaturedProduct>().Find(7);
+                var product = find(context.Set<FeaturedProduct>());
 
                 // Assert
                 Assert.Same(product, newProduct);
@@ -666,10 +1053,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call()
+        {
+            Find_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call_implementation(
+                c => c.Products.FindAsync(-55).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call()
         {
             Find_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call_implementation(
                 c => c.Set(typeof(Product)).Find(-55));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call()
+        {
+            Find_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call_implementation(
+                c => c.Set(typeof(Product)).FindAsync(-55).Result);
         }
 
         private void Find_an_entity_which_was_just_detected_by_Detect_Changes_in_the_Find_Call_implementation(
@@ -678,10 +1079,18 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Cakes", DetailedDescription = "Cakes And Bakes" };
+                var category = new Category
+                                   {
+                                       Id = "Cakes",
+                                       DetailedDescription = "Cakes And Bakes"
+                                   };
                 context.Categories.Attach(category);
 
-                var product = new Product { Id = -55, Name = "Red Velvet" };
+                var product = new Product
+                                  {
+                                      Id = -55,
+                                      Name = "Red Velvet"
+                                  };
                 category.Products.Add(product);
 
                 // Act
@@ -700,9 +1109,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_treats_null_array_as_single_null_value()
+        {
+            Find_treats_null_array_as_single_null_value_implementation(c => c.Products.FindAsync(null).Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_treats_null_array_as_single_null_value()
         {
             Find_treats_null_array_as_single_null_value_implementation(c => c.Set(typeof(Product)).Find(null));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_treats_null_array_as_single_null_value()
+        {
+            Find_treats_null_array_as_single_null_value_implementation(c => c.Set(typeof(Product)).FindAsync(null).Result);
         }
 
         private void Find_treats_null_array_as_single_null_value_implementation(Func<SimpleModelContext, object> find)
@@ -724,78 +1145,146 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_entity_with_bool_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<BoolKeyEntity>(true);
+            Find_entity_with_key_from_store_implementation<BoolKeyEntity>((s, v) => s.Find(v), true);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_bool_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<BoolKeyEntity>((s, v) => s.FindAsync(v).Result, true);
         }
 
         [Fact]
         public void Find_entity_with_float_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<FloatKeyEntity>(33.2F);
+            Find_entity_with_key_from_store_implementation<FloatKeyEntity>((s, v) => s.Find(v), 33.2F);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_float_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<FloatKeyEntity>((s, v) => s.FindAsync(v).Result, 33.2F);
         }
 
         [Fact]
         public void Find_entity_with_decimal_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<DecimalKeyEntity>(300.5m);
+            Find_entity_with_key_from_store_implementation<DecimalKeyEntity>((s, v) => s.Find(v), 300.5m);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_decimal_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<DecimalKeyEntity>((s, v) => s.FindAsync(v).Result, 300.5m);
         }
 
         [Fact]
         public void Find_entity_with_double_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<DoubleKeyEntity>(1.7E+3D);
+            Find_entity_with_key_from_store_implementation<DoubleKeyEntity>((s, v) => s.Find(v), 1.7E+3D);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_double_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<DoubleKeyEntity>((s, v) => s.FindAsync(v).Result, 1.7E+3D);
         }
 
         [Fact]
         public void Find_entity_with_long_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<LongKeyEntity>(4294967296L);
+            Find_entity_with_key_from_store_implementation<LongKeyEntity>((s, v) => s.Find(v), 4294967296L);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_long_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<LongKeyEntity>((s, v) => s.FindAsync(v).Result, 4294967296L);
         }
 
         [Fact]
         public void Find_entity_with_short_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<ShortKeyEntity>((short)32767);
+            Find_entity_with_key_from_store_implementation<ShortKeyEntity>((s, v) => s.Find(v), (short)32767);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_short_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<ShortKeyEntity>((s, v) => s.FindAsync(v).Result, (short)32767);
         }
 
         [Fact]
         public void Find_entity_with_byte_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<ByteKeyEntity>((byte)255);
+            Find_entity_with_key_from_store_implementation<ByteKeyEntity>((s, v) => s.Find(v), (byte)255);
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_byte_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<ByteKeyEntity>((s, v) => s.FindAsync(v).Result, (byte)255);
         }
 
         [Fact]
         public void Find_entity_with_Guid_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<GuidKeyEntity>(
+            Find_entity_with_key_from_store_implementation<GuidKeyEntity>((s, v) => s.Find(v),
+                Guid.Parse("F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4"));
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_Guid_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<GuidKeyEntity>((s, v) => s.FindAsync(v).Result,
                 Guid.Parse("F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4"));
         }
 
         [Fact]
         public void Find_entity_with_TimeSpan_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<TimeSpanKeyEntity>(new TimeSpan(2, 14, 18));
+            Find_entity_with_key_from_store_implementation<TimeSpanKeyEntity>((s, v) => s.Find(v), new TimeSpan(2, 14, 18));
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_TimeSpan_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<TimeSpanKeyEntity>((s, v) => s.FindAsync(v).Result, new TimeSpan(2, 14, 18));
         }
 
         [Fact]
         public void Find_entity_with_DateTime_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<DateTimeKeyEntity>(new DateTime(2008, 5, 1, 8, 30, 52));
+            Find_entity_with_key_from_store_implementation<DateTimeKeyEntity>((s, v) => s.Find(v), new DateTime(2008, 5, 1, 8, 30, 52));
+        }
+
+        [Fact]
+        public void FindAsync_entity_with_DateTime_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<DateTimeKeyEntity>((s, v) => s.FindAsync(v).Result, new DateTime(2008, 5, 1, 8, 30, 52));
         }
 
         [Fact]
         public void Find_entity_with_DateTimeOffset_key_from_store()
         {
-            Find_entity_with_key_from_store_implementation<DateTimeOffSetKeyEntity>(
+            Find_entity_with_key_from_store_implementation<DateTimeOffSetKeyEntity>((s, v) => s.Find(v),
                 new DateTimeOffset(new DateTime(2008, 5, 1, 8, 30, 52)));
         }
 
-        private void Find_entity_with_key_from_store_implementation<T>(object value)
+        [Fact]
+        public void FindAsync_entity_with_DateTimeOffset_key_from_store()
+        {
+            Find_entity_with_key_from_store_implementation<DateTimeOffSetKeyEntity>((s, v) => s.FindAsync(v).Result,
+                new DateTimeOffset(new DateTime(2008, 5, 1, 8, 30, 52)));
+        }
+
+        private void Find_entity_with_key_from_store_implementation<T>(Func<DbSet<T>, object, object> find, object value)
             where T : class
         {
             using (var context = new AllTypeKeysContext())
             {
                 // Act
-                dynamic found = context.Set<T>().Find(value);
+                dynamic found = find(context.Set<T>(), value);
 
                 // Assert
                 Assert.NotNull(found);
@@ -816,12 +1305,30 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_from_store()
+        {
+            Find_an_entity_with_Composite_Key_from_store_implementation(
+                c => c.CompositeKeyEntities.FindAsync(new byte[] { 201, 202, 203, 204 }, 4, "TheOneWithBinaryKeyLength4").Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_an_entity_with_Composite_Key_from_store()
         {
             Find_an_entity_with_Composite_Key_from_store_implementation(
                 c =>
-                c.Set(typeof(CompositeKeyEntity)).Find(new byte[] { 201, 202, 203, 204 }, 4,
-                                                       "TheOneWithBinaryKeyLength4"));
+                c.Set(typeof(CompositeKeyEntity)).Find(
+                    new byte[] { 201, 202, 203, 204 }, 4,
+                    "TheOneWithBinaryKeyLength4"));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_an_entity_with_Composite_Key_from_store()
+        {
+            Find_an_entity_with_Composite_Key_from_store_implementation(
+                c =>
+                c.Set(typeof(CompositeKeyEntity)).FindAsync(
+                    new byte[] { 201, 202, 203, 204 }, 4,
+                    "TheOneWithBinaryKeyLength4").Result);
         }
 
         private void Find_an_entity_with_Composite_Key_from_store_implementation(Func<AllTypeKeysContext, object> find)
@@ -844,11 +1351,26 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_from_state_manager_unchanged()
+        {
+            Find_an_entity_with_Composite_Key_from_state_manager_unchanged_implementation(
+                c => c.CompositeKeyEntities.FindAsync(new byte[] { 1, 2, 3, 4, 5, 6 }, 6, "TheOneWithBinaryKeyLength6").Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_an_entity_with_Composite_Key_from_state_manager_unchanged()
         {
             Find_an_entity_with_Composite_Key_from_state_manager_unchanged_implementation(
                 c =>
                 c.Set(typeof(CompositeKeyEntity)).Find(new byte[] { 1, 2, 3, 4, 5, 6 }, 6, "TheOneWithBinaryKeyLength6"));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_an_entity_with_Composite_Key_from_state_manager_unchanged()
+        {
+            Find_an_entity_with_Composite_Key_from_state_manager_unchanged_implementation(
+                c =>
+                c.Set(typeof(CompositeKeyEntity)).FindAsync(new byte[] { 1, 2, 3, 4, 5, 6 }, 6, "TheOneWithBinaryKeyLength6").Result);
         }
 
         private void Find_an_entity_with_Composite_Key_from_state_manager_unchanged_implementation(
@@ -857,8 +1379,9 @@ namespace ProductivityApiTests
             using (var context = new AllTypeKeysContext())
             {
                 // Arrange
-                var foundEntity = context.CompositeKeyEntities.Find(new byte[] { 1, 2, 3, 4, 5, 6 }, 6,
-                                                                    "TheOneWithBinaryKeyLength6");
+                var foundEntity = context.CompositeKeyEntities.Find(
+                    new byte[] { 1, 2, 3, 4, 5, 6 }, 6,
+                    "TheOneWithBinaryKeyLength6");
 
                 // Act
                 var foundEntity2 = (CompositeKeyEntity)find(context);
@@ -877,11 +1400,26 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_from_state_manager_Added()
+        {
+            Find_an_entity_with_Composite_Key_from_state_manager_Added_implementation(
+                c => c.CompositeKeyEntities.FindAsync(new byte[] { 1, 2, 3, 4, 5, 6 }, 6, "TheOneWithBinaryKeyLength6").Result);
+        }
+
+        [Fact]
         public void Non_generic_Find_an_entity_with_Composite_Key_from_state_manager_Added()
         {
             Find_an_entity_with_Composite_Key_from_state_manager_Added_implementation(
                 c =>
                 c.Set(typeof(CompositeKeyEntity)).Find(new byte[] { 1, 2, 3, 4, 5, 6 }, 6, "TheOneWithBinaryKeyLength6"));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_an_entity_with_Composite_Key_from_state_manager_Added()
+        {
+            Find_an_entity_with_Composite_Key_from_state_manager_Added_implementation(
+                c =>
+                c.Set(typeof(CompositeKeyEntity)).FindAsync(new byte[] { 1, 2, 3, 4, 5, 6 }, 6, "TheOneWithBinaryKeyLength6").Result);
         }
 
         private void Find_an_entity_with_Composite_Key_from_state_manager_Added_implementation(
@@ -891,11 +1429,11 @@ namespace ProductivityApiTests
             {
                 // Arrange
                 var compositeKeyEntity = new CompositeKeyEntity
-                                         {
-                                             intKey = 6,
-                                             binaryKey = new byte[] { 1, 2, 3, 4, 5, 6 },
-                                             stringKey = "TheOneWithBinaryKeyLength6"
-                                         };
+                                             {
+                                                 intKey = 6,
+                                                 binaryKey = new byte[] { 1, 2, 3, 4, 5, 6 },
+                                                 stringKey = "TheOneWithBinaryKeyLength6"
+                                             };
                 context.CompositeKeyEntities.Add(compositeKeyEntity);
 
                 // Act
@@ -910,11 +1448,29 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_store()
         {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_store_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.Find(
+                    3,
+                    "TheOneWithBinaryKeyLength3",
+                    new byte[] { 230, 231, 232 }));
+        }
+
+        [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_store()
+        {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_store_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.FindAsync(
+                    3,
+                    "TheOneWithBinaryKeyLength3",
+                    new byte[] { 230, 231, 232 }).Result);
+        }
+
+        private void Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_store_implementation(
+            Func<AllTypeKeysContext, CompositeKeyEntityWithOrderingAnnotations> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
-                var foundEntity = context.CompositeKeyEntitiesWithOrderingAnnotations.Find(3,
-                                                                                           "TheOneWithBinaryKeyLength3",
-                                                                                           new byte[] { 230, 231, 232 });
+                var foundEntity = find(context);
 
                 Assert.NotNull(foundEntity);
                 Assert.Equal(3, foundEntity.intKey);
@@ -926,18 +1482,34 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_unchanged()
         {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_unchanged_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.Find(
+                    3,
+                    "TheOneWithBinaryKeyLength3",
+                    new byte[] { 230, 231, 232 }));
+        }
+
+        [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_unchanged()
+        {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_unchanged_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.FindAsync(
+                    3,
+                    "TheOneWithBinaryKeyLength3",
+                    new byte[] { 230, 231, 232 }).Result);
+        }
+
+        private void Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_unchanged_implementation(
+            Func<AllTypeKeysContext, CompositeKeyEntityWithOrderingAnnotations> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
                 // Arrange
-                var foundEntity = context.CompositeKeyEntitiesWithOrderingAnnotations.Find(3,
-                                                                                           "TheOneWithBinaryKeyLength3",
-                                                                                           new byte[] { 230, 231, 232 });
+                var foundEntity = find(context);
 
                 // Act
                 // The ordering defined in the data annotation is Int, String, Binary
-                var foundEntity2 = context.CompositeKeyEntitiesWithOrderingAnnotations.Find(3,
-                                                                                            "TheOneWithBinaryKeyLength3",
-                                                                                            new byte[] { 230, 231, 232 });
+                var foundEntity2 = find(context);
 
                 // Assert
                 Assert.NotNull(foundEntity2);
@@ -949,21 +1521,41 @@ namespace ProductivityApiTests
         public void
             Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_added()
         {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_added_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.Find(
+                    3,
+                    "TheOneWithBinaryKeyLength3",
+                    new byte[] { 230, 231, 232 }));
+        }
+
+        [Fact]
+        public void
+            FindAsync_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_added()
+        {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_added_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.FindAsync(
+                    3,
+                    "TheOneWithBinaryKeyLength3",
+                    new byte[] { 230, 231, 232 }).Result);
+        }
+
+        private void
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_DataMember_Ordering_from_state_manager_added_implementation(
+            Func<AllTypeKeysContext, CompositeKeyEntityWithOrderingAnnotations> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
                 // Arrange
                 var compositeEntity = new CompositeKeyEntityWithOrderingAnnotations
-                                      {
-                                          intKey = 3,
-                                          stringKey = "TheOneWithBinaryKeyLength3",
-                                          binaryKey = new byte[] { 230, 231, 232 }
-                                      };
+                                          {
+                                              intKey = 3,
+                                              stringKey = "TheOneWithBinaryKeyLength3",
+                                              binaryKey = new byte[] { 230, 231, 232 }
+                                          };
                 context.CompositeKeyEntitiesWithOrderingAnnotations.Add(compositeEntity);
 
                 // Act, the ordering defined in the data annotation is Int, String, Binary
-                var foundEntity = context.CompositeKeyEntitiesWithOrderingAnnotations.Find(3,
-                                                                                           "TheOneWithBinaryKeyLength3",
-                                                                                           new byte[] { 230, 231, 232 });
+                var foundEntity = find(context);
 
                 // Assert
                 Assert.NotNull(foundEntity);
@@ -978,19 +1570,34 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_throws_for_wrong_number_of_key_values()
         {
-            using (var context = new SimpleModelContext())
-            {
-                Assert.Throws<ArgumentException>(() => context.Products.Find(1, 2)).ValidateMessage(
-                    "DbSet_WrongNumberOfKeyValuesPassed", "keyValues");
-            }
+            Find_throws_for_wrong_number_of_key_values_implementation(c => c.Products.Find(1, 2));
+        }
+
+        [Fact]
+        public void FindAsync_throws_for_wrong_number_of_key_values()
+        {
+            Find_throws_for_wrong_number_of_key_values_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Products.FindAsync(1, 2).Result));
         }
 
         [Fact]
         public void Non_generic_Find_throws_for_wrong_number_of_key_values()
         {
+            Find_throws_for_wrong_number_of_key_values_implementation(c => c.Set(typeof(Product)).Find(1, 2));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_for_wrong_number_of_key_values()
+        {
+            Find_throws_for_wrong_number_of_key_values_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(Product)).FindAsync(1, 2).Result));
+        }
+
+        private void Find_throws_for_wrong_number_of_key_values_implementation(Func<SimpleModelContext, object> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                Assert.Throws<ArgumentException>(() => context.Set(typeof(Product)).Find(1, 2)).ValidateMessage(
+                Assert.Throws<ArgumentException>(() => find(context)).ValidateMessage(
                     "DbSet_WrongNumberOfKeyValuesPassed", "keyValues");
             }
         }
@@ -998,19 +1605,34 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_throws_for_zero_key_values()
         {
-            using (var context = new SimpleModelContext())
-            {
-                Assert.Throws<ArgumentException>(() => context.Products.Find()).ValidateMessage(
-                    "DbSet_WrongNumberOfKeyValuesPassed", "keyValues");
-            }
+            Find_throws_for_zero_key_values_implementation(c => c.Products.Find());
+        }
+
+        [Fact]
+        public void FindAsync_throws_for_zero_key_values()
+        {
+            Find_throws_for_zero_key_values_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Products.FindAsync().Result));
         }
 
         [Fact]
         public void Non_generic_Find_throws_for_zero_key_values()
         {
+            Find_throws_for_zero_key_values_implementation(c => c.Set(typeof(Product)).Find());
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_for_zero_key_values()
+        {
+            Find_throws_for_zero_key_values_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(Product)).FindAsync().Result));
+        }
+
+        private void Find_throws_for_zero_key_values_implementation(Func<SimpleModelContext, object> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                Assert.Throws<ArgumentException>(() => context.Set(typeof(Product)).Find()).ValidateMessage(
+                Assert.Throws<ArgumentException>(() => find(context)).ValidateMessage(
                     "DbSet_WrongNumberOfKeyValuesPassed", "keyValues");
             }
         }
@@ -1022,9 +1644,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_throws_for_key_values_of_wrong_type()
+        {
+            Find_throws_for_key_values_of_wrong_type_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Products.FindAsync("Cetina, Aragon").Result));
+        }
+
+        [Fact]
         public void Non_generic_Find_throws_for_key_values_of_wrong_type()
         {
             Find_throws_for_key_values_of_wrong_type_implementation(c => c.Set(typeof(Product)).Find("Cetina, Aragon"));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_for_key_values_of_wrong_type()
+        {
+            Find_throws_for_key_values_of_wrong_type_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(Product)).FindAsync("Cetina, Aragon").Result));
         }
 
         private void Find_throws_for_key_values_of_wrong_type_implementation(Func<SimpleModelContext, object> find)
@@ -1049,11 +1685,33 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_throws_if_multiple_Added_entities_match_key()
         {
+            Find_throws_if_multiple_Added_entities_match_key_implementation(c => c.Products.Find(1));
+        }
+
+        [Fact]
+        public void FindAsync_throws_if_multiple_Added_entities_match_key()
+        {
+            Find_throws_if_multiple_Added_entities_match_key_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Products.FindAsync(1).Result));
+        }
+
+        private void Find_throws_if_multiple_Added_entities_match_key_implementation(Func<SimpleModelContext, object> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                context.Products.Add(new Product() { Id = 1, Name = "Coke" });
-                context.Products.Add(new Product() { Id = 1, Name = "Pepsi" });
-                Assert.Throws<InvalidOperationException>(() => context.Products.Find(1)).ValidateMessage(
+                context.Products.Add(
+                    new Product
+                        {
+                            Id = 1,
+                            Name = "Coke"
+                        });
+                context.Products.Add(
+                    new Product
+                        {
+                            Id = 1,
+                            Name = "Pepsi"
+                        });
+                Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
                     "DbSet_MultipleAddedEntitiesFound");
             }
         }
@@ -1065,16 +1723,35 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_throws_on_disposed_context()
+        {
+            Find_throws_on_disposed_context_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Products.FindAsync(1).Result));
+        }
+
+        [Fact]
         public void Non_generic_Find_throws_on_disposed_context()
         {
             Find_throws_on_disposed_context_implementation(c => c.Set(typeof(Product)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_on_disposed_context()
+        {
+            Find_throws_on_disposed_context_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(Product)).FindAsync(1).Result));
         }
 
         private void Find_throws_on_disposed_context_implementation(Func<SimpleModelContext, object> find)
         {
             using (var context = new SimpleModelContext())
             {
-                context.Products.Add(new Product() { Id = 1, Name = "Coke" });
+                context.Products.Add(
+                    new Product
+                        {
+                            Id = 1,
+                            Name = "Coke"
+                        });
                 context.Dispose();
                 Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage("DbContext_Disposed");
             }
@@ -1087,39 +1764,69 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_throws_when_type_not_valid_for_current_context()
         {
-            using (var context = new SimpleModelContext())
-            {
-                Assert.Throws<InvalidOperationException>(() => context.Set<DummyEntity>().Find(1)).ValidateMessage(
-                    "DbSet_EntityTypeNotInModel", "DummyEntity");
-            }
+            Find_throws_when_type_not_valid_for_current_context_implementation(c => c.Set<DummyEntity>().Find(1));
+        }
+
+        [Fact]
+        public void FindAsync_throws_when_type_not_valid_for_current_context()
+        {
+            Find_throws_when_type_not_valid_for_current_context_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set<DummyEntity>().FindAsync(1).Result));
         }
 
         [Fact]
         public void Non_generic_Find_throws_when_type_not_valid_for_current_context()
         {
+            Find_throws_when_type_not_valid_for_current_context_implementation(c => c.Set(typeof(DummyEntity)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_when_type_not_valid_for_current_context()
+        {
+            Find_throws_when_type_not_valid_for_current_context_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(DummyEntity)).FindAsync(1).Result));
+        }
+
+        private void Find_throws_when_type_not_valid_for_current_context_implementation(Func<SimpleModelContext, object> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                Assert.Throws<InvalidOperationException>(() => context.Set(typeof(DummyEntity)).Find(1)).ValidateMessage
-                    ("DbSet_EntityTypeNotInModel", "DummyEntity");
+                Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
+                    "DbSet_EntityTypeNotInModel", "DummyEntity");
             }
         }
 
         [Fact]
         public void Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context()
         {
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                Assert.Throws<InvalidOperationException>(() => context.Set<Address>().Find(1)).ValidateMessage(
-                    "DbSet_DbSetUsedWithComplexType", "Address");
-            }
+            Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context_implementation(c => c.Set<Address>().Find(1));
+        }
+
+        [Fact]
+        public void FindAsync_throws_when_type_is_complex_type_which_is_not_valid_for_current_context()
+        {
+            Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set<Address>().FindAsync(1).Result));
         }
 
         [Fact]
         public void Non_generic_Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context()
         {
+            Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context_implementation(c => c.Set(typeof(Address)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_when_type_is_complex_type_which_is_not_valid_for_current_context()
+        {
+            Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(Address)).FindAsync(1).Result));
+        }
+
+        private void Find_throws_when_type_is_complex_type_which_is_not_valid_for_current_context_implementation(Func<AdvancedPatternsMasterContext, object> find)
+        {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                Assert.Throws<InvalidOperationException>(() => context.Set(typeof(Address)).Find(1)).ValidateMessage(
+                Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
                     "DbSet_DbSetUsedWithComplexType", "Address");
             }
         }
@@ -1127,23 +1834,36 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_throws_if_requested_type_does_not_match_actual_type_in_store()
         {
-            using (var context = new SimpleModelContext())
-            {
-                Assert.Throws<InvalidOperationException>(() => context.Set<FeaturedProduct>().Find(1)).ValidateMessage(
-                    "Materializer_InvalidCastReference", 
-                    "SimpleModel.Product", "SimpleModel.FeaturedProduct");
-                Assert.Equal(0, GetStateEntries(context).Count());
-            }
+            Find_throws_if_requested_type_does_not_match_actual_type_in_store_implementation(c => c.Set<FeaturedProduct>().Find(1));
+        }
+
+        [Fact]
+        public void FindAsync_throws_if_requested_type_does_not_match_actual_type_in_store()
+        {
+            Find_throws_if_requested_type_does_not_match_actual_type_in_store_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set<FeaturedProduct>().FindAsync(1).Result));
         }
 
         [Fact]
         public void Non_generic_Find_throws_if_requested_type_does_not_match_actual_type_in_store()
         {
+            Find_throws_if_requested_type_does_not_match_actual_type_in_store_implementation(c => c.Set(typeof(FeaturedProduct)).Find(1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_if_requested_type_does_not_match_actual_type_in_store()
+        {
+            Find_throws_if_requested_type_does_not_match_actual_type_in_store_implementation(c => ExceptionHelpers.UnwrapAggregateExceptions(
+                () => c.Set(typeof(FeaturedProduct)).FindAsync(1).Result));
+        }
+
+        private void Find_throws_if_requested_type_does_not_match_actual_type_in_store_implementation(Func<SimpleModelContext, object> find)
+        {
             using (var context = new SimpleModelContext())
             {
-                Assert.Throws<InvalidOperationException>(() => context.Set(typeof(FeaturedProduct)).Find(1)).
-                    ValidateMessage("Materializer_InvalidCastReference", 
-                                    "SimpleModel.Product", "SimpleModel.FeaturedProduct");
+                Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
+                    "Materializer_InvalidCastReference",
+                    "SimpleModel.Product", "SimpleModel.FeaturedProduct");
                 Assert.Equal(0, GetStateEntries(context).Count());
             }
         }
@@ -1156,10 +1876,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_throws_if_requested_type_does_not_match_actual_type_in_state_manager()
+        {
+            Find_throws_if_requested_type_does_not_match_actual_type_in_state_manager_implementation(
+                 c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set<FeaturedProduct>().FindAsync(1).Result));
+        }
+
+        [Fact]
         public void Non_generic_Find_throws_if_requested_type_does_not_match_actual_type_in_state_manager()
         {
             Find_throws_if_requested_type_does_not_match_actual_type_in_state_manager_implementation(
                 c => c.Set(typeof(FeaturedProduct)).Find(1));
+        }
+        [Fact]
+        public void Non_generic_FindAsync_throws_if_requested_type_does_not_match_actual_type_in_state_manager()
+        {
+            Find_throws_if_requested_type_does_not_match_actual_type_in_state_manager_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set(typeof(FeaturedProduct)).FindAsync(1).Result));
         }
 
         private void Find_throws_if_requested_type_does_not_match_actual_type_in_state_manager_implementation(
@@ -1184,10 +1917,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager()
+        {
+            Find_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set<FeaturedProduct>().FindAsync(-1).Result));
+        }
+
+        [Fact]
         public void Non_generic_Find_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager()
         {
             Find_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager_implementation(
                 c => c.Set(typeof(FeaturedProduct)).Find(-1));
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager()
+        {
+            Find_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set(typeof(FeaturedProduct)).FindAsync(-1).Result));
         }
 
         private void Find_throws_if_requested_type_does_not_match_actual_Added_type_in_state_manager_implementation(
@@ -1196,7 +1943,12 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                context.Products.Add(new Product() { Id = -1, Name = "Green Jello" });
+                context.Products.Add(
+                    new Product
+                        {
+                            Id = -1,
+                            Name = "Green Jello"
+                        });
 
                 // Act
                 Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
@@ -1205,35 +1957,65 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Find_in_derived_set_when_matching_base_type_lives_in_state_manager_in_added_state_and_matching_derived_type_lives_in_store()
+        public void
+            Find_in_derived_set_when_matching_base_type_lives_in_state_manager_in_added_state_and_matching_derived_type_lives_in_store()
         {
             Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
-                (EntityState.Added);
+                (EntityState.Added, c => c.Set<FeaturedProduct>().Find(7));
         }
 
         [Fact]
-        public void Find_in_derived_set_when_matching_base_type_lives_in_state_manager_in_unchanged_state_and_matching_derived_type_lives_in_store()
+        public void
+            FindAsync_in_derived_set_when_matching_base_type_lives_in_state_manager_in_added_state_and_matching_derived_type_lives_in_store()
         {
             Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
-                (EntityState.Unchanged);
+                (EntityState.Added, c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set<FeaturedProduct>().FindAsync(7).Result));
         }
 
         [Fact]
-        public void Find_in_derived_set_when_matching_base_type_lives_in_state_manager_in_deleted_state_and_matching_derived_type_lives_in_store()
+        public void
+            Find_in_derived_set_when_matching_base_type_lives_in_state_manager_in_unchanged_state_and_matching_derived_type_lives_in_store()
         {
             Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
-                (EntityState.Deleted);
+                (EntityState.Unchanged, c => c.Set<FeaturedProduct>().Find(7));
+        }
+        [Fact]
+        public void
+            FindAsync_in_derived_set_when_matching_base_type_lives_in_state_manager_in_unchanged_state_and_matching_derived_type_lives_in_store()
+        {
+            Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
+                (EntityState.Unchanged, c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set<FeaturedProduct>().FindAsync(7).Result));
+        }
+
+        [Fact]
+        public void
+            Find_in_derived_set_when_matching_base_type_lives_in_state_manager_in_deleted_state_and_matching_derived_type_lives_in_store()
+        {
+            Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
+                (EntityState.Deleted, c => c.Set<FeaturedProduct>().Find(7));
+        }
+        [Fact]
+        public void
+            FindAsync_in_derived_set_when_matching_base_type_lives_in_state_manager_in_deleted_state_and_matching_derived_type_lives_in_store()
+        {
+            Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
+                (EntityState.Deleted, c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set<FeaturedProduct>().FindAsync(7).Result));
         }
 
         private void
             Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store
-            (EntityState entityState)
+            (EntityState entityState, Func<SimpleModelContext, object> find)
         {
             using (var context = new SimpleModelContext())
             {
                 // Arrange
                 // There is a derived Featured Product with Id 7 stored in the DB.
-                var product = new Product { Id = 7, Name = "Benz", CategoryId = "Cars" };
+                var product = new Product
+                                  {
+                                      Id = 7,
+                                      Name = "Benz",
+                                      CategoryId = "Cars"
+                                  };
 
                 switch (entityState)
                 {
@@ -1256,13 +2038,32 @@ namespace ProductivityApiTests
                 Assert.True(GetStateEntry(context, product).State == entityState);
 
                 // Act and Assert
-                Assert.Throws<InvalidOperationException>(() => context.Set<FeaturedProduct>().Find(7)).ValidateMessage(
+                Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
                     "DbSet_WrongEntityTypeFound", "Product", "FeaturedProduct");
             }
         }
 
         [Fact]
-        public void Find_in_derived_set_when_matching_base_type_entity_lives_in_unchanged_and_matching_derived_type_lives_in_added_state_in_state_manager()
+        public void
+            Find_in_derived_set_when_matching_base_type_entity_lives_in_unchanged_and_matching_derived_type_lives_in_added_state_in_state_manager
+            ()
+        {
+            Find_in_derived_set_when_matching_base_type_entity_lives_in_unchanged_and_matching_derived_type_lives_in_added_state_in_state_manager_implementation
+                (c => c.Set<FeaturedProduct>().Find(7));
+        }
+
+        [Fact]
+        public void
+            FindAsync_in_derived_set_when_matching_base_type_entity_lives_in_unchanged_and_matching_derived_type_lives_in_added_state_in_state_manager
+            ()
+        {
+            Find_in_derived_set_when_matching_base_type_entity_lives_in_unchanged_and_matching_derived_type_lives_in_added_state_in_state_manager_implementation
+                (c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set<FeaturedProduct>().FindAsync(7).Result));
+        }
+
+        private void
+            Find_in_derived_set_when_matching_base_type_entity_lives_in_unchanged_and_matching_derived_type_lives_in_added_state_in_state_manager_implementation
+            (Func<SimpleModelContext, object> find)
         {
             using (var context = new SimpleModelContext())
             {
@@ -1271,11 +2072,16 @@ namespace ProductivityApiTests
                 var actualProduct = context.Products.Find(7);
                 context.Products.Add(actualProduct);
 
-                var product = new Product { Id = 7, Name = "Benz", CategoryId = "Cars" };
+                var product = new Product
+                                  {
+                                      Id = 7,
+                                      Name = "Benz",
+                                      CategoryId = "Cars"
+                                  };
                 context.Set<Product>().Attach(product);
-                
+
                 // Act and Assert
-                Assert.Throws<InvalidOperationException>(() => context.Set<FeaturedProduct>().Find(7)).ValidateMessage(
+                Assert.Throws<InvalidOperationException>(() => find(context)).ValidateMessage(
                     "DbSet_WrongEntityTypeFound", "Product", "FeaturedProduct");
             }
         }
@@ -1290,13 +2096,34 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_with_wrong_order_of_Keys()
+        {
+            // The right ordering is binary, int, string
+            Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.CompositeKeyEntities.FindAsync(4, new byte[] { 201, 202, 203, 204 }, "TheOneWithBinaryKeyLength4").Result),
+                findInStateManager: false);
+        }
+
+        [Fact]
         public void Non_generic_Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys()
         {
             // The right ordering is binary, int, string
             Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
                 c =>
-                c.Set(typeof(CompositeKeyEntity)).Find(4, new byte[] { 201, 202, 203, 204 },
-                                                       "TheOneWithBinaryKeyLength4"), findInStateManager: false);
+                c.Set(typeof(CompositeKeyEntity)).Find(
+                    4, new byte[] { 201, 202, 203, 204 },
+                    "TheOneWithBinaryKeyLength4"), findInStateManager: false);
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_an_entity_with_Composite_Key_with_wrong_order_of_Keys()
+        {
+            // The right ordering is binary, int, string
+            Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                c.Set(typeof(CompositeKeyEntity)).FindAsync(
+                    4, new byte[] { 201, 202, 203, 204 },
+                    "TheOneWithBinaryKeyLength4").Result), findInStateManager: false);
         }
 
         [Fact]
@@ -1309,13 +2136,32 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void FindAsync_an_entity_already_in_the_state_manager_with_Composite_Key_with_wrong_order_of_Keys()
+        {
+            // The right ordering is binary, int, string
+            Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.CompositeKeyEntities.FindAsync(4, new byte[] { 201, 202, 203, 204 }, "TheOneWithBinaryKeyLength4").Result),
+                findInStateManager: true);
+        }
+
+        [Fact]
         public void Non_generic_Find_an_entity_already_in_the_state_manager_with_Composite_Key_with_wrong_order_of_Keys()
         {
             // The right ordering is binary, int, string
             Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
-                c =>
-                c.Set(typeof(CompositeKeyEntity)).Find(4, new byte[] { 201, 202, 203, 204 },
-                                                       "TheOneWithBinaryKeyLength4"), findInStateManager: true);
+                c => c.Set(typeof(CompositeKeyEntity)).Find(
+                    4, new byte[] { 201, 202, 203, 204 },
+                    "TheOneWithBinaryKeyLength4"), findInStateManager: true);
+        }
+
+        [Fact]
+        public void Non_generic_FindAsync_an_entity_already_in_the_state_manager_with_Composite_Key_with_wrong_order_of_Keys()
+        {
+            // The right ordering is binary, int, string
+            Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.Set(typeof(CompositeKeyEntity)).FindAsync(
+                    4, new byte[] { 201, 202, 203, 204 },
+                    "TheOneWithBinaryKeyLength4").Result), findInStateManager: true);
         }
 
         private void Find_an_entity_with_Composite_Key_with_wrong_order_of_Keys_implementation(
@@ -1325,8 +2171,9 @@ namespace ProductivityApiTests
             {
                 if (findInStateManager)
                 {
-                    var actual = context.CompositeKeyEntities.Find(new byte[] { 201, 202, 203, 204 }, 4,
-                                                                   "TheOneWithBinaryKeyLength4");
+                    var actual = context.CompositeKeyEntities.Find(
+                        new byte[] { 201, 202, 203, 204 }, 4,
+                        "TheOneWithBinaryKeyLength4");
                     Assert.NotNull(actual);
                 }
                 try
@@ -1338,8 +2185,10 @@ namespace ProductivityApiTests
                 {
                     Assert.Equal("keyValues", ex.ParamName);
                     var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
-                    new StringResourceVerifier(new AssemblyResourceLookup(EntityFrameworkAssembly,
-                                                                          "System.Data.Entity.Properties.Resources")).
+                    new StringResourceVerifier(
+                        new AssemblyResourceLookup(
+                            EntityFrameworkAssembly,
+                            "System.Data.Entity.Properties.Resources")).
                         VerifyMatch("DbSet_WrongKeyValueType", withNoParam);
 
                     Assert.IsType<EntitySqlException>(ex.InnerException);
@@ -1352,13 +2201,28 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_returns_added_entity_which_contains_partially_null_composite_key()
         {
+            Find_returns_added_entity_which_contains_partially_null_composite_key_implementation(s => s.Find(null, 6, "TheOneWithNullBinaryKey"));
+        }
+
+        [Fact]
+        public void FindAsync_returns_added_entity_which_contains_partially_null_composite_key()
+        {
+            Find_returns_added_entity_which_contains_partially_null_composite_key_implementation(s => s.FindAsync(null, 6, "TheOneWithNullBinaryKey").Result);
+        }
+
+        private void Find_returns_added_entity_which_contains_partially_null_composite_key_implementation(Func<DbSet<CompositeKeyEntity>, CompositeKeyEntity> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
                 var compositeKeyEntity = new CompositeKeyEntity
-                                         { intKey = 6, binaryKey = null, stringKey = "TheOneWithNullBinaryKey" };
+                                             {
+                                                 intKey = 6,
+                                                 binaryKey = null,
+                                                 stringKey = "TheOneWithNullBinaryKey"
+                                             };
                 context.CompositeKeyEntities.Add(compositeKeyEntity);
 
-                var foundEntity = context.CompositeKeyEntities.Find(null, 6, "TheOneWithNullBinaryKey");
+                var foundEntity = find(context.CompositeKeyEntities);
 
                 Assert.NotNull(foundEntity);
                 Assert.Same(foundEntity, compositeKeyEntity);
@@ -1368,30 +2232,57 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_returns_null_when_no_added_entity_which_contains_partially_null_composite_key_is_found()
         {
+            Find_returns_null_when_no_added_entity_which_contains_partially_null_composite_key_is_found_implementation(s => s.Find(null, 6, "TheOneWithNullBinaryKey"));
+        }
+
+        [Fact]
+        public void FindAsync_returns_null_when_no_added_entity_which_contains_partially_null_composite_key_is_found()
+        {
+            Find_returns_null_when_no_added_entity_which_contains_partially_null_composite_key_is_found_implementation(s => s.FindAsync(null, 6, "TheOneWithNullBinaryKey").Result);
+        }
+
+        private void Find_returns_null_when_no_added_entity_which_contains_partially_null_composite_key_is_found_implementation(Func<DbSet<CompositeKeyEntity>, CompositeKeyEntity> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
-                Assert.Null(context.CompositeKeyEntities.Find(null, 6, "TheOneWithNullBinaryKey"));
+                Assert.Null(find(context.CompositeKeyEntities));
             }
         }
 
         [Fact]
         public void Find_an_entity_with_Composite_Key_With_Key_Annotations_With_Wrong_Ordering_defined()
         {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_Wrong_Ordering_defined_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.Find(
+                    new byte[] { 1, 2, 3, 4 }, "Composite1", 1));
+        }
+
+        [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_With_Key_Annotations_With_Wrong_Ordering_defined()
+        {
+            Find_an_entity_with_Composite_Key_With_Key_Annotations_With_Wrong_Ordering_defined_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.CompositeKeyEntitiesWithOrderingAnnotations.FindAsync(
+                    new byte[] { 1, 2, 3, 4 }, "Composite1", 1).Result));
+        }
+
+        private void Find_an_entity_with_Composite_Key_With_Key_Annotations_With_Wrong_Ordering_defined_implementation(Action<AllTypeKeysContext> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
                 try
                 {
                     // Right ordering is integer, string, binary
-                    var foundEntity = context.CompositeKeyEntitiesWithOrderingAnnotations.Find(
-                        new byte[] { 1, 2, 3, 4 }, "Composite1", 1);
+                    find(context);
                     Assert.True(false);
                 }
                 catch (ArgumentException ex)
                 {
                     Assert.Equal("keyValues", ex.ParamName);
                     var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
-                    new StringResourceVerifier(new AssemblyResourceLookup(EntityFrameworkAssembly,
-                                                                          "System.Data.Entity.Properties.Resources")).
+                    new StringResourceVerifier(
+                        new AssemblyResourceLookup(
+                            EntityFrameworkAssembly,
+                            "System.Data.Entity.Properties.Resources")).
                         VerifyMatch("DbSet_WrongKeyValueType", withNoParam);
 
                     Assert.IsType<EntitySqlException>(ex.InnerException);
@@ -1404,11 +2295,24 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_an_entity_with_Composite_Key_With_No_Ordering_Defined()
         {
+            Find_an_entity_with_Composite_Key_With_No_Ordering_Defined_implementation(
+                c => c.CompositeKeyEntities.Find(new byte[] { 1, 2, 3, 4 }, 2.3F, 1));
+        }
+
+        [Fact]
+        public void FindAsync_an_entity_with_Composite_Key_With_No_Ordering_Defined()
+        {
+            Find_an_entity_with_Composite_Key_With_No_Ordering_Defined_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                    c.CompositeKeyEntities.FindAsync(new byte[] { 1, 2, 3, 4 }, 2.3F, 1).Result));
+        }
+
+        private void Find_an_entity_with_Composite_Key_With_No_Ordering_Defined_implementation(Action<NoOrderingContext> find)
+        {
             using (var context = new NoOrderingContext())
             {
-                // context.CompositeKeyEntities.Find(new byte[] { 1, 2, 3, 4 }, 2.3F, 1);
                 Assert.Throws<InvalidOperationException>(
-                    () => context.CompositeKeyEntities.Find(new byte[] { 1, 2, 3, 4 }, 2.3F, 1)).ValidateMessage(
+                    () => find(context)).ValidateMessage(
                         "ModelGeneration_UnableToDetermineKeyOrder",
                         typeof(CompositeKeyEntityWithNoOrdering).ToString());
             }
@@ -1417,12 +2321,26 @@ namespace ProductivityApiTests
         [Fact]
         public void Find_composite_entity_by_specifying_some_of_its_keys_in_an_array()
         {
+            Find_composite_entity_by_specifying_some_of_its_keys_in_an_array_implementation(
+                c => c.CompositeKeyEntitiesWithOrderingAnnotations.Find(
+                    new object[] { 2, "TheOneWithBinaryKeyLength2" }, new byte[] { 220, 221 }));
+        }
+
+        [Fact]
+        public void FindAsync_composite_entity_by_specifying_some_of_its_keys_in_an_array()
+        {
+            Find_composite_entity_by_specifying_some_of_its_keys_in_an_array_implementation(
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.CompositeKeyEntitiesWithOrderingAnnotations.FindAsync(
+                    new object[] { 2, "TheOneWithBinaryKeyLength2" }, new byte[] { 220, 221 }).Result));
+        }
+
+        private void Find_composite_entity_by_specifying_some_of_its_keys_in_an_array_implementation(Action<AllTypeKeysContext> find)
+        {
             using (var context = new AllTypeKeysContext())
             {
                 Assert.Throws<ArgumentException>(
                     () =>
-                    context.CompositeKeyEntitiesWithOrderingAnnotations.Find(
-                        new object[] { 2, "TheOneWithBinaryKeyLength2" }, new byte[] { 220, 221 })).ValidateMessage(
+                    find(context)).ValidateMessage(
                             "DbSet_WrongNumberOfKeyValuesPassed", "keyValues");
             }
         }
