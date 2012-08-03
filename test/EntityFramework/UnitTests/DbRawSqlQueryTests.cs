@@ -27,9 +27,9 @@ namespace System.Data.Entity
         [Fact]
         public void Generic_non_entity_SQL_query_ToString_returns_the_query_but_not_the_parameters()
         {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
+            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", 4, "Beverages"));
 
-            Assert.Equal("select * from Products where Id < {0} and CategoryId = {1}", query.ToString());
+            Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
         }
 
         [Fact]
@@ -43,9 +43,9 @@ namespace System.Data.Entity
         [Fact]
         public void Non_generic_DbSqlQuery_ToString_returns_the_query_but_not_the_parameters()
         {
-            var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
+            var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", 4, "Beverages"));
 
-            Assert.Equal("select * from Products where Id < {0} and CategoryId = {1}", query.ToString());
+            Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
         }
 
         [Fact]
@@ -59,9 +59,9 @@ namespace System.Data.Entity
         [Fact]
         public void Generic_DbSqlQuery_ToString_returns_the_query_but_not_the_parameters()
         {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = {1}", 4, "Beverages"));
+            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", 4, "Beverages"));
 
-            Assert.Equal("select * from Products where Id < {0} and CategoryId = {1}", query.ToString());
+            Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
         }
 
         #endregion
