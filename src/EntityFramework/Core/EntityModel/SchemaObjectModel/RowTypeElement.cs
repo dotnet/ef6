@@ -16,10 +16,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         #region constructor
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parentElement"></param>
         internal RowTypeElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -41,7 +37,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             var property = new RowTypePropertyElement(this);
             property.Parse(reader);
-            _properties.Add(property, true, Strings.DuplicateEntityContainerMemberName /*TODO CHECK Is this string OK?*/);
+            _properties.Add(property, true, Strings.DuplicateEntityContainerMemberName);
         }
 
         #endregion

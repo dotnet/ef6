@@ -27,8 +27,6 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1>(new CreateSimpleIndexMigration());
 
             migrator.Update();
-
-            // TODO: Verify
         }
 
         private class CreateCompositeIndexMigration : DbMigration
@@ -51,8 +49,6 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1, CreateCompositeIndexMigration>();
 
             migrator.Update();
-
-            // TODO: Verify
         }
 
         [MigrationsTheory]

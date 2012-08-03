@@ -291,7 +291,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override IEnumerable<IEntityWrapper> GetWrappedEntities()
         {
-            // TODO Make this more efficient!
             return _wrappedCachedValue.Entity == null ? new IEntityWrapper[0] : new[] { _wrappedCachedValue };
         }
 

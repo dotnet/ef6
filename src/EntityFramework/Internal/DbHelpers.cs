@@ -182,10 +182,6 @@ namespace System.Data.Entity.Internal
         {
             Contract.Requires(nameOrConnectionString != null);
 
-            // TODO: Once we merge with System.Data.Entity we can use the full connection string parsing that is present there.
-            // For now we use a heuristic which could give a false positive on a very strange store connection string,
-            // but that seems very, very unlikely.
-
             var tokens = nameOrConnectionString.ToUpperInvariant().Split('=', ';').Select(t => t.Trim());
             return tokens.Contains("PROVIDER") && tokens.Contains("PROVIDER CONNECTION STRING")
                    && tokens.Contains("METADATA");

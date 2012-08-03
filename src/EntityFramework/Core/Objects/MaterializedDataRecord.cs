@@ -157,7 +157,6 @@ namespace System.Data.Entity.Core.Objects
             }
             catch (Exception e)
             {
-                // UNDONE - should not be catching all exceptions!!!
                 if (e.IsCatchableExceptionType())
                 {
                     cbytes = data.Length;
@@ -258,7 +257,6 @@ namespace System.Data.Entity.Core.Objects
             }
             catch (Exception e)
             {
-                // UNDONE - should not be catching all exceptions!!!
                 if (e.IsCatchableExceptionType())
                 {
                     cchars = data.Length;

@@ -87,7 +87,6 @@ namespace System.Data.Entity.Internal
         /// <returns>True if the entity property is modified.</returns>
         public override bool EntityPropertyIsModified()
         {
-            // TODO: Change this to be more efficient when we are integrated with core EF
             return InternalEntityEntry.ObjectStateEntry.GetModifiedProperties().Contains(Name);
         }
 

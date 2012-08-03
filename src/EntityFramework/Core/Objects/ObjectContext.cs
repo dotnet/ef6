@@ -3254,19 +3254,6 @@ namespace System.Data.Entity.Core.Objects
         /// 
         /// See <see cref="EntityProxyFactory"/> class for more information about proxy type generation.
         /// </remarks>
-        // Use one of the following methods to retrieve an enumeration of all CLR types mapped to O-Space EntityType objects:
-        // TODO: This could be tricky, as we're forcing the user to ensure OSpace metadata is loaded.
-        // This might justify an overload that takes no arguments, that does what is outlined in this example.
-        // 
-        // Method 1
-        // ObjectItemCollection ospaceItems = // retrieve item collection, ensure it is loaded
-        // var types = ospaceItems.GetItems<EntityType>().Select( entityType => ospaceItems.GetClrType(entityType) )
-        //
-        // Method 2
-        // ObjectItemCollection ospaceItems = // retrieve item collection, ensure it is loaded
-        // var types = from entityType in ospaceItems.GetItems<EntityType>() select ospaceItems.GetClrType(entityType)
-        // TODO: List of names possibly better than CreateProxyTypes:
-        // LoadEntityTypeMetadata (this disrupts the semantics of the sample methods above, since it implies we load metadata)
         public virtual void CreateProxyTypes(IEnumerable<Type> types)
         {
             var ospaceItems = (ObjectItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.OSpace);

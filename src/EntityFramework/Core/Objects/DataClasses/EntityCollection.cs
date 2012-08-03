@@ -242,7 +242,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             Contract.Requires(entities != null);
             CheckOwnerNull();
-            // TODO: Make this more efficient
             IList<IEntityWrapper> wrappedEntities = new List<IEntityWrapper>();
             foreach (var entity in entities)
             {
@@ -792,7 +791,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             TargetAccessor.PropertyName, WrappedOwner.Entity.GetType().FullName));
                 }
 
-                // TODO PERF: If the 'value' has a method "Contains", use it.
                 foreach (var o in enumerable)
                 {
                     if (Equals(o, wrapper.Entity))

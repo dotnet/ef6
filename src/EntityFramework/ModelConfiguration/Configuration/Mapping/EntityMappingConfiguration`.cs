@@ -20,7 +20,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private readonly EntityMappingConfiguration _entityMappingConfiguration;
 
-        // TODO: Should this be public
         public EntityMappingConfiguration()
             : this(new EntityMappingConfiguration())
         {

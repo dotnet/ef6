@@ -17,7 +17,7 @@ namespace System.Data.Entity.Config
     /// Configuration is set by calling protected methods and setting protected properties of this
     /// class in the constructor of your derived type.
     /// The type to use can also be registered in the config file of the application.
-    /// See [TODO: Link for configuration] for more information about Entity Framework configuration.
+    /// See http://go.microsoft.com/fwlink/?LinkId=260883 for more information about Entity Framework configuration.
     /// </summary>
     [SuppressMessage("Microsoft.Contracts", "CC1036",
         Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]

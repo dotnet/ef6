@@ -225,8 +225,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return InvokeCanonicalFunction("Concat", string1, string2);
         }
 
-        // TODO: Contains has to return DbExpression to allow Contains(collection, element) to be supported later.
-
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'Contains' function with the
         /// specified arguments, which must each have a string result type. The result type of the expression is
@@ -378,8 +376,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             Contract.Requires(prefix != null);
             return InvokeCanonicalFunction("StartsWith", stringArgument, prefix);
         }
-
-        // TODO: Substring(argument, start)?
 
         /// <summary>
         /// Creates a <see cref="DbFunctionExpression"/> that invokes the canonical 'Substring' function with the

@@ -3368,7 +3368,7 @@ namespace System.Data.Entity.Core.Objects
 
             var entitySet = associationSet.AssociationSetEnds[0].EntitySet;
             if (entitySet.Name
-                != entity.EntityKey.EntitySetName) // TODO_HIGH by name - is it enough?
+                != entity.EntityKey.EntitySetName)
             {
                 return entitySet;
             }

@@ -228,13 +228,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 return ((CollectionType)type.EdmType).TypeUsage;
             }
-            else if (TypeSemantics.IsReferenceType(type))
+            if (TypeSemantics.IsReferenceType(type))
             {
-                // TODO: pragyaa. Uncomment code when TypeUsage constructor
-                // has been made public.
-                // We should typically not reach this code path anyway.
-                //
-                //return new TypeUsage(((RefType)type.EdmType).ElementType);
                 throw new NotSupportedException(String.Empty);
             }
             return null;

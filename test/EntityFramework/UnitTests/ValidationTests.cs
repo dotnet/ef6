@@ -1689,8 +1689,6 @@ namespace ProductivityApiUnitTests.Validation
                 .IsValid);
         }
 
-        // TODO: test cases for other properties
-
         #endregion
 
         #region DbEntityValidationException tests

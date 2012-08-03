@@ -5248,10 +5248,10 @@
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="EF6Providers_NoProviderFound" xml:space="preserve">
-    <value>No Entity Framework provider found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See [TODO: EF6 providers link] for more information.</value>
+    <value>No Entity Framework provider found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.</value>
   </data>
   <data name="EF6Providers_ProviderTypeMissing" xml:space="preserve">
-    <value>The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See [TODO: EF6 providers link] for more information.</value>
+    <value>The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.</value>
   </data>
   <data name="EF6Providers_InstanceMissing" xml:space="preserve">
     <value>The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.</value>
@@ -5266,16 +5266,16 @@
     <value>No name was passed to the IDbDependencyResolver.Get method. The provider invariant name must be supplied when attempting to resolve a DbProviderServices dependency.</value>
   </data>
   <data name="DefaultConfigurationUsedBeforeSet" xml:space="preserve">
-    <value>The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See [TODO: Configuration link] for more information.</value>
+    <value>The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
   <data name="ConfigurationSetTwice" xml:space="preserve">
-    <value>An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See [TODO: Configuration link] for more information.</value>
+    <value>An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
   <data name="ConfigurationNotDiscovered" xml:space="preserve">
-    <value>The default DbConfiguration instance was used by the Entity Framework before the '{0}' type was discovered. An instance of '{0}' must be set at application start before using any Entity Framework features or must be registered in the application's config file. See [TODO: Configuration link] for more information.</value>
+    <value>The default DbConfiguration instance was used by the Entity Framework before the '{0}' type was discovered. An instance of '{0}' must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
   <data name="SetConfigurationNotDiscovered" xml:space="preserve">
-    <value>An instance of '{0}' was set but this type was not discovered in the same assembly as the '{1}' context. A DbConfiguration type can be set in the config file, or it must be part of the same assembly as the DbContext type. See [TODO: Configuration link] for more information.</value>
+    <value>An instance of '{0}' was set but this type was not discovered in the same assembly as the '{1}' context. A DbConfiguration type can be set in the config file, or it must be part of the same assembly as the DbContext type. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
   <data name="MultipleConfigsInAssembly" xml:space="preserve">
     <value>The assembly {0} contains more than one type derived from {1}. Either define the DbConfiguration type to use in the application's config file or ensure that the assembly contains at most one type derived from {1}.</value>

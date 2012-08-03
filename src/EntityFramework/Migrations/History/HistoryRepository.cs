@@ -262,7 +262,6 @@ namespace System.Data.Entity.Migrations.History
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
             Contract.Requires(model != null);
 
-            // TODO: Can we somehow use DbInsertCommandTree?
             return new InsertHistoryOperation(HistoryContext.TableName, migrationId, new ModelCompressor().Compress(model));
         }
 
@@ -270,7 +269,6 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
 
-            // TODO: Can we somehow use DbInsertCommandTree?
             return new DeleteHistoryOperation(HistoryContext.TableName, migrationId);
         }
 

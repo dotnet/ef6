@@ -132,7 +132,6 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        // TODO: EF6 providers should expose this functionality
         private interface IPseudoProvider
         {
             string StoreSchemaTablesQuery { get; }

@@ -164,7 +164,8 @@ namespace ProductivityApiTests
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Closed);
         }
 
-        // TODO: [Fact(Skip = "Cannot create EntityConnection with open connection.")]
+        // [Fact(Skip = "Cannot create EntityConnection with open connection.")]
+        // See http://entityframework.codeplex.com/workitem/45
         public void Existing_connection_is_open_if_it_started_open()
         {
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Open);
@@ -891,7 +892,7 @@ namespace ProductivityApiTests
         {
         }
 
-        // TODO: [Fact(Skip = @"DbConnection timeout issue.")]
+        // [Fact(Skip = @"DbConnection timeout issue.")]
         // Ignored for now because even with Connection Timeout=1 the connection to a bad server
         // can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
         // SqlConnection which is that the timeout specified is a minimum value and if the APIs being called
@@ -924,7 +925,7 @@ namespace ProductivityApiTests
             }
         }
 
-        // TODO: [Fact(Skip = @"DbConnection timeout issue.")]
+        // [Fact(Skip = @"DbConnection timeout issue.")]
         // Ignored for now because even with Connection Timeout=1 the connection to a bad server
         // can still take over 20 seconds to fail. This is apparently because of the way timeouts work on
         // SqlConnection which is that the timeout specified is a minimum value and if the APIs being called

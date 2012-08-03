@@ -13,9 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // all the types that we encountered while loading - this may contain types from various assemblies
         private readonly Dictionary<string, EdmType> _typesInLoading;
 
-        // TODO_REFACTOR: consider moving all the Convetion based specific stuff to a specific class derived from 
-        // ObjectItemLoadingSessionData
-
         private readonly LoadMessageLogger _loadMessageLogger;
 
         // list of errors encountered during loading

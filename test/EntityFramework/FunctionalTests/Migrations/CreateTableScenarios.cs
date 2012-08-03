@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -14,10 +16,19 @@ namespace System.Data.Entity.Migrations
         {
             public override void Up()
             {
-                CreateTable("Oob_Principal", t => new { Id = t.Int() })
+                CreateTable(
+                    "Oob_Principal", t => new
+                        {
+                            Id = t.Int()
+                        })
                     .PrimaryKey(t => t.Id);
 
-                CreateTable("Oob_Dependent", t => new { Id = t.Int(), Fk = t.Int() })
+                CreateTable(
+                    "Oob_Dependent", t => new
+                        {
+                            Id = t.Int(),
+                            Fk = t.Int()
+                        })
                     .ForeignKey("Oob_Principal", t => t.Fk);
             }
         }
@@ -52,14 +63,20 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(1, foreignKey.KeyColumnUsages.Count());
             Assert.True(foreignKey.KeyColumnUsages.Any(kcu => kcu.ColumnName == "Fk"));
             Assert.Equal(1, foreignKey.UniqueConstraint.KeyColumnUsages.Count());
-            Assert.True(foreignKey.UniqueConstraint.KeyColumnUsages.Any(kcu => kcu.ColumnTableName == "Oob_Principal" && kcu.ColumnName == "Id"));
+            Assert.True(
+                foreignKey.UniqueConstraint.KeyColumnUsages.Any(kcu => kcu.ColumnTableName == "Oob_Principal" && kcu.ColumnName == "Id"));
         }
 
         private class CreateOobTableInvalidFkMigration : DbMigration
         {
             public override void Up()
             {
-                CreateTable("Oob_Dependent", t => new { Id = t.Int(), Fk = t.Int() })
+                CreateTable(
+                    "Oob_Dependent", t => new
+                        {
+                            Id = t.Int(),
+                            Fk = t.Int()
+                        })
                     .ForeignKey("Oob_Principal", t => t.Fk);
             }
         }
@@ -75,15 +92,19 @@ namespace System.Data.Entity.Migrations
 
             migrator = CreateMigrator<ShopContext_v1>(new CreateOobTableInvalidFkMigration());
 
-            // TODO: Use the resource string
-            Assert.Equal(new MigrationsException("The Foreign Key on table 'Oob_Dependent' with columns 'Fk' could not be created because the principal key columns could not be determined. Use the AddForeignKey fluent API to fully specify the Foreign Key.").Message, Assert.Throws<MigrationsException>(() => migrator.Update()).Message);
+            Assert.Equal(
+                Strings.PartialFkOperation("Oob_Dependent", "Fk"), Assert.Throws<MigrationsException>(() => migrator.Update()).Message);
         }
 
         private class CreateCustomColumnNameMigration : DbMigration
         {
             public override void Up()
             {
-                CreateTable("Foo", t => new { Id = t.Int(name: "12 Foo Id") });
+                CreateTable(
+                    "Foo", t => new
+                        {
+                            Id = t.Int(name: "12 Foo Id")
+                        });
             }
         }
 

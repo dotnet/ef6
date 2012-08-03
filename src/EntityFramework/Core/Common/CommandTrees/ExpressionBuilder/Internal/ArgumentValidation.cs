@@ -870,7 +870,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             resultType = argument.ResultType;
             if (!TypeSemantics.IsNumericType(resultType))
             {
-                // TODO: UnaryMinus-specific message?
                 throw new ArgumentException(Strings.Cqt_Arithmetic_NumericCommonType);
             }
             //If argument to UnaryMinus is an unsigned type, promote return type to next higher, signed type.
@@ -965,7 +964,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             //
             if (!TypeHelpers.IsValidIsNullOpType(argument.ResultType))
             {
-                // TODO: Remove the non-public 'allow row type' behavior from the validation and construction APIs
                 if (!allowRowType
                     || !TypeSemantics.IsRowType(argument.ResultType))
                 {
@@ -1582,12 +1580,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentException(Strings.Cqt_NewInstance_CollectionTypeRequired, "collectionType");
             }
 
-            // TODO: Automatically construct collection type?
-            //if (!TypeSemantics.IsCollectionType(collectionType))
-            //{
-            //    collectionType = CommandTreeTypeHelper.CreateCollectionResultType(collectionType);
-            //}
-
             validElements = new DbExpressionList(new DbExpression[] { });
             return collectionType;
         }
@@ -1691,7 +1683,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
                     // The source end type must be the same type or a supertype of the Entity instance type
                     var expectedSourceType = TypeHelpers.GetEdmType<RefType>(relatedRef.SourceEnd.TypeUsage).ElementType;
-                    // TODO: EdmEquals does not ensure both types are from the same metadataworkspace
                     if (!entityType.EdmEquals(expectedSourceType)
                         &&
                         !entityType.IsSubtypeOf(expectedSourceType))

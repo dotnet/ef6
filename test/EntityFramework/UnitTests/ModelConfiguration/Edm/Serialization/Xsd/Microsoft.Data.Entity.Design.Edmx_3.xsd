@@ -90,7 +90,6 @@
     </xs:sequence>
     <xs:attribute name="Name" type="xs:string" use="required" />
     <!-- workaround for our model test to pass -->
-    <!-- TODO, we need to move this new value to a new XSD version -->
     <xs:attribute name="DiagramId" type="xs:string" use="optional" />
     <xs:attribute name="ZoomLevel" type="xs:int" use="optional" />
     <xs:attribute name="ShowGrid" type="xs:boolean" use="optional" />

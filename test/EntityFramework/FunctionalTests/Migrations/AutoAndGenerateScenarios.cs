@@ -704,7 +704,6 @@ namespace System.Data.Entity.Migrations
         }
     }
 
-    // TODO: integer-float conversions
     public abstract class AutoAndGenerateScenarios_AlterColumnType<TContextV1, TContextV2>
         : AutoAndGenerateTestCase<TContextV1, TContextV2>
         where TContextV1 : DbContext

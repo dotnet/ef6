@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Collections.Generic;
@@ -19,10 +20,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
         internal static bool AreRelationshipEndsEqual(
             KeyValuePair<EdmAssociationSet, EdmEntitySet> left, KeyValuePair<EdmAssociationSet, EdmEntitySet> right)
         {
-            // TODO: consider build up a back pointer cache
             if (ReferenceEquals(left.Value, right.Value)
-                &&
-                ReferenceEquals(left.Key.ElementType, right.Key.ElementType))
+                && ReferenceEquals(left.Key.ElementType, right.Key.ElementType))
             {
                 return true;
             }

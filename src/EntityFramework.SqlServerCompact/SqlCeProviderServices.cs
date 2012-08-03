@@ -331,7 +331,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             if (_isLocalProvider)
             {
-                Debug.Assert(command is SqlCeMultiCommand, "SqlCeMultiCommand expected!!!");
+                Debug.Assert(command is SqlCeMultiCommand, "SqlCeMultiCommand expected");
                 // Set the multiple command texts for the command object
                 ((SqlCeMultiCommand)command).CommandTexts = commandTexts;
             }

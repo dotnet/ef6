@@ -134,7 +134,8 @@ namespace ProductivityApiTests
 
         // Skipped due to Dev10.882884  DCR: PI: DbContext cannot be created with an already-open existing connection 
         // EntityConnection is created in the call "Database.Exists(connection)"
-        // TODO: [Fact(Skip = "Dev10.882884")]
+        // [Fact(Skip = "Dev10.882884")]
+        // See http://entityframework.codeplex.com/workitem/45
         public void DatabaseExists_returns_true_for_existing_database_when_using_static_method_taking_existing_connection_which_is_opened()
         {
             using (var connection = SimpleConnection<SimpleModelContext>())

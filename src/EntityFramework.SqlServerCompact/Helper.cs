@@ -27,9 +27,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         internal static bool IsUnboundedFacetValue(Facet facet)
         {
-            // TODO: vamshikb
-            // Use return object.ReferenceEquals(facet.Value, EdmConstants.UnboundedValue);
-            // when EdmConstants.UnboundedValue is made public.
             return (null == facet.Value || facet.IsUnbounded);
         }
     }

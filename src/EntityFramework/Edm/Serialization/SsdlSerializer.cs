@@ -22,9 +22,6 @@ namespace System.Data.Entity.Edm.Serialization
             Contract.Requires(dbDatabase != null);
             Contract.Requires(xmlWriter != null);
 
-            // validate the model first
-            // TODO: Add the validation code once the DbSchema Validator is done.
-
             var visitor = new DbModelSsdlSerializationVisitor(xmlWriter, dbDatabase.Version);
 
             visitor.Visit(dbDatabase, provider, providerManifestToken);

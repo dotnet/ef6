@@ -177,10 +177,9 @@ namespace System.Data.Entity.SqlServerCompact
                     var first = true;
                     foreach (var keyMember in entitySet.ElementType.KeyMembers)
                     {
-                        // VSTS Bug ID: 845968
+                        // CodePlex issue: http://entityframework.codeplex.com/workitem/437
                         // Throw an exception if key member is of server generated guid type.
                         // This is because DML operations won't succeed if key column is of server generated with GUID type.
-                        // TODO: Remove this once the DML is fixed to retrieve back server generated GUID column values.
                         if (IsServerGeneratedGuid(keyMember))
                         {
                             throw ADP1.ServerGeneratedGuidKeyNotSupportedException(keyMember.Name);

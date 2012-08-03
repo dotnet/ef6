@@ -57,7 +57,6 @@ namespace System.Data.Entity.Spatial
 
         private static Exception SpatialServicesUnavailable()
         {
-            // TODO_SPATIAL: This is thrown for all APIs that cannot be implemented without spatial capabilities. Consider adding a message that indicates why this is the case and how it can be mitigated (like EnsureSqlTypesAssembly does).
             return new NotImplementedException();
         }
 

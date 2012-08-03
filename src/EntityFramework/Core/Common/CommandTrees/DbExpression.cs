@@ -342,21 +342,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return FromInt64(value);
         }
 
-        //// TODO: SByte is not CLS-compliant
-        //public static DbExpression FromSByte(sbyte? value)
-        //{
-        //    if (!value.HasValue)
-        //    {
-        //        return ExpressionBuilder.DbExpressionBuilder.CreatePrimitiveNullExpression(PrimitiveTypeKind.SByte);
-        //    }
-        //    return ExpressionBuilder.DbExpressionBuilder.Constant(value.Value);
-        //}
-
-        //public static implicit operator DbExpression(sbyte? value)
-        //{
-        //    return DbExpression.FromSByte(value);
-        //}
-
         /// <summary>
         /// Creates a <see cref="DbExpression"/> that represents the specified (nullable) Single value
         /// </summary>
@@ -394,8 +379,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             return FromString(value);
         }
-
-        // TODO: TimeSpan for Time?
 
         #endregion
 

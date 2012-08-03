@@ -123,10 +123,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             }
         }
 
-        // TODO willa: it's oddd that the client also has to call LoadSchemaElement.   We should investigate what it would take to make this the 
-        // sole client of LoadSchemaElement (perhaps by passing the resulting EdmType as an out parameter.   I'm uncomfortable with the alternative in which 
-        // the required edmType is passed in as a parameter here, because it's used to build the typeUsage which will then be cached in the typeUsageBuilder.   
-        // We'd have to do something to enusre that this.Type and this.TypeUsage didn't become "out of sync".   
         internal void EnsureEnumTypeFacets(
             Converter.ConversionCache convertedItemCache, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {

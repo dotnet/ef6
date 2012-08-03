@@ -28,8 +28,6 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1, DropSimpleIndexMigration>();
 
             migrator.Update();
-
-            // TODO: Verify
         }
 
         private class DropCompositeIndexMigration : DbMigration
@@ -53,8 +51,6 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1, DropCompositeIndexMigration>();
 
             migrator.Update();
-
-            // TODO: Verify
         }
 
         private class DropIndexWithName : DbMigration
@@ -78,8 +74,6 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1, DropIndexWithName>();
 
             migrator.Update();
-
-            // TODO: Verify
         }
     }
 }

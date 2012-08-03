@@ -676,7 +676,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                     isDependentRoleKeyProperty,
                                     "The properties in the PrincipalRole must be the key of the Entity type referred to by the principal role");
 
-                                // TODO fix the versioning after the real version class from the builder class checkin
                                 var v1Behavior = context.ValidationContextVersion <= DataModelVersions.Version1_1;
 
                                 // Since the FromProperty must be the key of the FromRole, the FromRole cannot be '*' as multiplicity
@@ -1122,12 +1121,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         }
                     });
-
-        #endregion
-
-        #region EdmTypeReference
-
-        // TODO: Need the EdmProviderManifest to have the facet description to validate on the PrimitiveTypeFacets
 
         #endregion
 

@@ -19,8 +19,6 @@ namespace System.Data.Entity.Edm.Serialization
             Contract.Requires(databaseMapping != null);
             Contract.Requires(xmlWriter != null);
 
-            // TODO: add the validation for MSL
-
             var schemaWriter = new DbModelMslSchemaWriter(xmlWriter, databaseMapping.Model.Version);
 
             schemaWriter.WriteSchema(databaseMapping);

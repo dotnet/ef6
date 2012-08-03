@@ -143,8 +143,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             Assert.Equal(Strings.KeyPropertyNotFound(("Id"), "E"), Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
         }
 
-        //TODO: Need to test Nav Prop stuff...
-
         [Fact]
         public void AddMappingConfiguration_multiple_mapping_fragments_for_same_table_should_throw()
         {
@@ -182,7 +180,5 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             entityTypeConfiguration.AddMappingConfiguration(
                 new EntityMappingConfiguration { TableName = new DatabaseName("E1TableExtended") });
         }
-
-        //TODO: Test case for when table name is not configured, should not throw, default name preserved.
     }
 }

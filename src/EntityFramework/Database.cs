@@ -294,7 +294,7 @@ namespace System.Data.Entity
         ///     always overrides whatever value is found in the config file.
         /// </remarks>
         [Obsolete(
-            "The default connection factory should be set in the config file or using the DbConfiguration class. See [TODO: Configuration link]"
+            "The default connection factory should be set in the config file or using the DbConfiguration class. (See http://go.microsoft.com/fwlink/?LinkId=260883)"
             )]
         public static IDbConnectionFactory DefaultConnectionFactory
         {

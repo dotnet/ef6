@@ -512,7 +512,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbRefExpression e)
         {
-            //TODO (katicad): UniqueConstraints
             VisitExprKind(e.ExpressionKind);
             _key.Append("(ESET(");
             _key.Append(e.EntitySet.EntityContainer.Name);

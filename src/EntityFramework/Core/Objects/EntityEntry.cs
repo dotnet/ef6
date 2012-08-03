@@ -3671,7 +3671,7 @@ namespace System.Data.Entity.Core.Objects
                                       relatedEnd.ReferenceValue.ObjectStateEntry == null ||
                                       relatedEnd.ReferenceValue.ObjectStateEntry.State != EntityState.Added);
 
-            // TODO_HIGH: The code below has evolved to what it is now and could possibly be refactored to
+            // Note that the code below has evolved to what it is now and could possibly be refactored to
             // simplify the logic.
             relatedEnd.SetCachedForeignKey(foreignKey, this);
             ObjectStateManager.ForgetEntryWithConceptualNull(this, resetAllKeys: false);
@@ -3805,7 +3805,6 @@ namespace System.Data.Entity.Core.Objects
                 principalKey = null;
                 return false;
             }
-            // TODO_HIGH:: a reference may be explicitly null, in which we return true and set principalKey to null.
             principalKey = relatedEnd.EntityKey ?? relatedEnd.CachedValue.ObjectStateEntry.EntityKey;
             return principalKey != null;
         }

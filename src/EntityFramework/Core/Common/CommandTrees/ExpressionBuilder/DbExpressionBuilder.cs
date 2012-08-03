@@ -2072,9 +2072,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return CreateApply(source, apply, DbExpressionBuilder.CrossApply);
         }
 
-        // TODO: CrossApply<T>?
-        // public static DbProjectExpression CrossApply<TResultType>(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply, Func<DbExpression, DbExpression, TResult> selector)
-
         /// <summary>
         /// Creates a new <see cref="DbApplyExpression"/> that evaluates the given <paramref name="apply"/> expression once for each element of a given input set,
         /// producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply"/> evaluates to an empty set have an apply column value of <code>null</code>.
@@ -2095,11 +2092,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             return CreateApply(source, apply, DbExpressionBuilder.OuterApply);
         }
-
-        // TODO: OuterApply<T>?
-        // public static DbProjectExpression OuterApply<TResultType>(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply, Func<DbExpression, DbExpression, TResult> selector)
-
-        // TODO: CrossJoin(KeyValuePair<string, DbExpression> source, KeyValuePair<string, DbExpression> input, params KeyValuePair<string, DbExpression>[] inputs)
 
         /// <summary>
         /// Creates a new <see cref="DbJoinExpression"/> that joins the sets specified by the left and right expressions,

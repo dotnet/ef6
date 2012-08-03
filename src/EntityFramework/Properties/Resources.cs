@@ -13190,7 +13190,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "No Entity Framework provider found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See [TODO: EF6 providers link] for more information."
+        /// A string like "No Entity Framework provider found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
         /// </summary>
         internal static string EF6Providers_NoProviderFound(object p0)
         {
@@ -13198,7 +13198,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See [TODO: EF6 providers link] for more information."
+        /// A string like "The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
         /// </summary>
         internal static string EF6Providers_ProviderTypeMissing(object p0, object p1)
         {
@@ -13238,7 +13238,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See [TODO: Configuration link] for more information."
+        /// A string like "The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string DefaultConfigurationUsedBeforeSet(object p0)
         {
@@ -13246,7 +13246,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See [TODO: Configuration link] for more information."
+        /// A string like "An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string ConfigurationSetTwice(object p0, object p1)
         {
@@ -13254,7 +13254,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The default DbConfiguration instance was used by the Entity Framework before the '{0}' type was discovered. An instance of '{0}' must be set at application start before using any Entity Framework features or must be registered in the application's config file. See [TODO: Configuration link] for more information."
+        /// A string like "The default DbConfiguration instance was used by the Entity Framework before the '{0}' type was discovered. An instance of '{0}' must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string ConfigurationNotDiscovered(object p0)
         {
@@ -13262,7 +13262,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "An instance of '{0}' was set but this type was not discovered in the same assembly as the '{1}' context. A DbConfiguration type can be set in the config file, or it must be part of the same assembly as the DbContext type. See [TODO: Configuration link] for more information."
+        /// A string like "An instance of '{0}' was set but this type was not discovered in the same assembly as the '{1}' context. A DbConfiguration type can be set in the config file, or it must be part of the same assembly as the DbContext type. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string SetConfigurationNotDiscovered(object p0, object p1)
         {

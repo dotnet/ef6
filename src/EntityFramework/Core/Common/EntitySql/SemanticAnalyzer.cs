@@ -5057,8 +5057,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     {
                         var args = ConvertEqualCompArgs(bltInExpr, sr);
 
-                        // TODO: simoncav_080604: This was originally CreateNotExpression(CreateEqualsExpression(left, right))
-                        // and this semantic is maintained with left.Equal(right).Not(), but left.NotEqual seems the correct implementation?
+                        // This was originally CreateNotExpression(CreateEqualsExpression(left, right))
+                        // and this semantic is maintained with left.Equal(right).Not(), even though left.NotEqual
+                        // seems like the more obvious (correct?) implementation.
                         return args.Left.Equal(args.Right).Not();
                     });
 

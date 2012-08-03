@@ -16,7 +16,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _lockObject = lockObject;
             _globalAssemblyCache = globalAssemblyCache;
 #pragma warning disable 0618
-            //@TODO: This overload of Monitor.Enter is obsolete.  Please change this to use Monitor.Enter(ref bool), and remove the pragmas   -- ericeil
             Monitor.Enter(_lockObject);
 #pragma warning restore 0618
         }

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
@@ -338,7 +339,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             RelationshipEndMember source, RelationshipEndMember target, out RelationshipEndMember newSource,
             out RelationshipEndMember newTarget)
         {
-            // TODO: EdmEquals does not ensure both types are from the same metadataworkspace
             Debug.Assert(source.DeclaringType.EdmEquals(target.DeclaringType), "Relationship ends not declared by same relationship type?");
             var mappedType = (RelationshipType)VisitType(target.DeclaringType);
 
@@ -546,19 +546,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public override DbExpression Visit(DbIsNullExpression expression)
         {
             return VisitUnary(
-                expression, exp =>
-                    {
-                        if (TypeSemantics.IsRowType(exp.ResultType))
-                        {
-                            // TODO: Remove this special, non-public, overload that derived classes cannot access
-                            return CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp);
-                        }
-                        else
-                        {
-                            return CqtBuilder.IsNull(exp);
-                        }
-                    }
-                );
+                expression,
+                exp =>
+                TypeSemantics.IsRowType(exp.ResultType)
+                    ? CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp)
+                    : CqtBuilder.IsNull(exp));
         }
 
         public override DbExpression Visit(DbArithmeticExpression expression)
@@ -623,18 +615,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbElementExpression expression)
         {
-            Func<DbExpression, DbExpression> resultConstructor;
-            if (expression.IsSinglePropertyUnwrapped)
-            {
-                // TODO: Remove this special, non-public, overload that derived classes cannot access
-                resultConstructor = CqtBuilder.CreateElementExpressionUnwrapSingleProperty;
-            }
-            else
-            {
-                resultConstructor = CqtBuilder.Element;
-            }
-
-            return VisitUnary(expression, resultConstructor);
+            return VisitUnary(
+                expression, expression.IsSinglePropertyUnwrapped
+                                ? (Func<DbExpression, DbExpression>)CqtBuilder.CreateElementExpressionUnwrapSingleProperty
+                                : CqtBuilder.Element);
         }
 
         public override DbExpression Visit(DbIsEmptyExpression expression)

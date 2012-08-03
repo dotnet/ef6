@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -2386,9 +2387,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 "Unrecognized JoinType specified in DbJoinExpression");
 
 #if DEBUG
-    //
-    // Assert that the DbJoinExpression is producing a collection result with a record element type.
-    // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
+            //
+            // Assert that the DbJoinExpression is producing a collection result with a record element type.
+            // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbJoinExpression");
 #endif
 
@@ -2489,9 +2490,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbApplyExpression e)
         {
 #if DEBUG
-    //
-    // Assert that the DbJoinExpression is producing a collection result with a record element type.
-    // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
+            //
+            // Assert that the DbJoinExpression is producing a collection result with a record element type.
+            // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbApplyExpression");
 #endif
 
@@ -2554,7 +2555,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(DbGroupByExpression e)
         {
 #if DEBUG
-    // !!! IsCollectionOfRecord() is defined only in DEBUG  !!!
+            // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "DbGroupByExpression has invalid result Type (not record collection)");
 #endif
 
@@ -2690,7 +2691,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return ProjectNewRecord(
                 groupByNode,
                 ExtractElementRowType(e.ResultType),
-                outputVarSet //todo: it is not correct to pass a varvec where an ordered list is expected
+                outputVarSet
                 );
         }
 

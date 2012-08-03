@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // Validate that the specified target entity is of a type that can be reached by navigating to the specified relationship end
             var endType = TypeHelpers.GetEdmType<RefType>(targetEnd.TypeUsage).ElementType;
             var targetType = TypeHelpers.GetEdmType<RefType>(targetEntityRef.ResultType).ElementType;
-            // TODO: EdmEquals does not ensure both types are from the same metadataworkspace
+
             if (!endType.EdmEquals(targetType)
                 && !TypeSemantics.IsSubTypeOf(targetType, endType))
             {

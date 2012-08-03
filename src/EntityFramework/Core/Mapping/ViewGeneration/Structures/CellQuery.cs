@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// [WARNING}
         /// After cell merging boolean expression can (most likely) have disjunctions (OR node)
         /// to represent the condition that a tuple came from either of the merged cells.
-        /// In this case original where clause IS MERGED CLAUSE with OR!!!
+        /// In this case original where clause IS MERGED CLAUSE with OR.
         /// So don't call this after merging. It'll throw or debug assert from within GetConjunctsFromWC()
         /// </summary>
         internal IEnumerable<MemberRestriction> Conditions

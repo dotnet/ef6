@@ -109,7 +109,7 @@ namespace System.Data.Entity.SqlServerCompact
             get { return commandTexts; }
             set
             {
-                Debug.Assert(value == null || value.Length <= 2, "Atmost 2 queries are expected at any point of time!!!");
+                Debug.Assert(value == null || value.Length <= 2, "At most 2 queries are expected at any point of time.");
                 commandTexts = value ?? new string[1];
             }
         }

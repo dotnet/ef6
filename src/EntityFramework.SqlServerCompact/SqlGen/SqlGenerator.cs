@@ -1445,43 +1445,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return result;
         }
 
-#if METHOD_EXPRESSION
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="e"></param>
-    /// <returns>A <see cref="SqlBuilder"/></returns>
-    // TODO: pragyaa. what's a Method Expression ?
-        public override ISqlFragment Visit(MethodExpression e)
-        {
-            SqlBuilder result = new SqlBuilder();
-
-            result.Append(e.Instance.Accept(this));
-            result.Append(".");
-            result.Append(QuoteIdentifier(e.Method.Name));
-            result.Append("(");
-
-            // Since the VariableReferenceExpression is a proper child of ours, we can reset
-            // isVarSingle.
-            VariableReferenceExpression VariableReferenceExpression = e.Instance as VariableReferenceExpression;
-            if (VariableReferenceExpression != null)
-            {
-                isVarRefSingle = false;
-            }
-
-            string separator = "";
-            foreach (Expression argument in e.Arguments)
-            {
-                result.Append(separator);
-                result.Append(argument.Accept(this));
-                separator = ", ";
-            }
-            result.Append(")");
-
-            return result;
-        }
-#endif
-
         /// <summary>
         /// DbNewInstanceExpression is allowed as a child of DbProjectExpression only.
         /// If anyone else is the parent, we throw.
@@ -1639,7 +1602,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
             // Project is compatible with Filter
             // but not with Project, GroupBy
-            // TODO: pragyaa. see what our behavior is here. Handle case accordingly.
             if (!IsCompatible(result, e.ExpressionKind))
             {
                 result = CreateNewSelectStatement(result, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
@@ -4109,8 +4071,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <returns></returns>
         private static bool IsStoreFunction(EdmFunction function)
         {
-            // TODO: pragyaa. make it public in parent.
-            // return function.BuiltInAttribute;
             return (bool)function.MetadataProperties["BuiltInAttribute"].Value && !TypeHelpers.IsCanonicalFunction(function);
         }
 
