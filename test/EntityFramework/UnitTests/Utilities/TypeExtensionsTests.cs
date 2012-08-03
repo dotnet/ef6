@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Collections;
@@ -142,6 +143,51 @@ namespace System.Data.Entity.Utilities
                 Assert.Equal(typeof(int), elementType);
                 Assert.True(typeof(ICollection_should_correctly_detect_collections_fixture).IsCollection(out elementType));
                 Assert.Equal(typeof(bool), elementType);
+            }
+        }
+
+        public class TryGetElementType
+        {
+            [Fact]
+            public void TryGetElementType_returns_element_type_for_given_interface()
+            {
+                Assert.Same(typeof(string), typeof(ICollection<string>).TryGetElementType(typeof(ICollection<>)));
+                Assert.Same(typeof(DbContext), typeof(IDatabaseInitializer<DbContext>).TryGetElementType(typeof(IDatabaseInitializer<>)));
+                Assert.Same(typeof(int), typeof(List<int>).TryGetElementType(typeof(IList<>)));
+                Assert.Same(
+                    typeof(DbContext), typeof(MultipleImplementor<DbContext, string>).TryGetElementType(typeof(IDatabaseInitializer<>)));
+                Assert.Same(typeof(string), typeof(MultipleImplementor<DbContext, string>).TryGetElementType(typeof(IEnumerable<>)));
+            }
+
+            [Fact]
+            public void TryGetElementType_returns_null_if_type_is_generic_type_definition()
+            {
+                Assert.Null(typeof(ICollection<>).TryGetElementType(typeof(ICollection<>)));
+            }
+
+            [Fact]
+            public void TryGetElementType_returns_null_if_type_doesnt_implement_interface()
+            {
+                Assert.Null(typeof(ICollection<string>).TryGetElementType(typeof(IDatabaseInitializer<>)));
+                Assert.Null(typeof(Random).TryGetElementType(typeof(IDatabaseInitializer<>)));
+            }
+
+            public class MultipleImplementor<TContext, TElement> : IDatabaseInitializer<TContext>, IEnumerable<TElement>
+                where TContext : DbContext
+            {
+                public void InitializeDatabase(TContext context)
+                {
+                }
+
+                public IEnumerator<TElement> GetEnumerator()
+                {
+                    throw new NotImplementedException();
+                }
+
+                IEnumerator IEnumerable.GetEnumerator()
+                {
+                    return GetEnumerator();
+                }
             }
         }
 

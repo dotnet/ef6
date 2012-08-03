@@ -5,9 +5,11 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     /// <summary>
     /// A class derived from this class can be placed in the same assembly as a class derived from
@@ -21,8 +23,8 @@ namespace System.Data.Entity.Config
         Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     public class DbConfiguration
     {
-        private readonly CompositeResolver<ResolverChain, ResolverChain> _resolvers;
-        private readonly RootDependencyResolver _rootResolver;
+        private CompositeResolver<ResolverChain, ResolverChain> _resolvers;
+        private RootDependencyResolver _rootResolver;
 
         // This does not need to be volatile since it only protects against inappropriate use not
         // thread-unsafe use.
@@ -33,9 +35,7 @@ namespace System.Data.Entity.Config
         /// and that constructor should call this constructor.
         /// </summary>
         protected internal DbConfiguration()
-            : this(
-                new ResolverChain(), new ResolverChain(),
-                new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver()))
+            : this(new ResolverChain(), new ResolverChain(), new RootDependencyResolver())
         {
             _resolvers.First.Add(new AppConfigDependencyResolver(AppConfig.DefaultInstance));
         }
@@ -133,23 +133,6 @@ namespace System.Data.Entity.Config
             return _resolvers.GetService<DbProviderServices>(providerInvariantName);
         }
 
-        // TODO: Make this actually work
-        protected internal void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
-        {
-            Contract.Requires(strategy != null);
-            CheckNotLocked("SetDatabaseInitializer");
-
-            AddDependencyResolver(new SingletonDependencyResolver<IDatabaseInitializer<TContext>>(strategy));
-        }
-
-        // TODO: Make this actually work
-        public IDatabaseInitializer<TContext> GetDatabaseInitializer<TContext>() where TContext : DbContext
-        {
-            // TODO: Make sure that access to the database initializer now uses this method
-            // TODO Check how current contextinfo interacts with initializer (don't think it does)
-            return _resolvers.GetService<IDatabaseInitializer<TContext>>();
-        }
-
         /// <summary>
         /// The <see cref="IDbConnectionFactory"/> that is used to create connections by convention if no other
         /// connection string or connection is given to or can be discovered by <see cref="DbContext"/>.
@@ -199,6 +182,28 @@ namespace System.Data.Entity.Config
         internal virtual RootDependencyResolver RootResolver
         {
             get { return _rootResolver; }
+        }
+
+        /// <summary>
+        /// This method is not thread-safe and should only be used to switch in a different root resolver
+        /// before the configuration is locked and set. It is used for pushing a new configuration by
+        /// DbContextInfo while maintaining legacy settings (such as database initializers) that are
+        /// set on the root resolver.
+        /// </summary>
+        internal virtual void SwitchInRootResolver(RootDependencyResolver value)
+        {
+            Contract.Requires(value != null);
+            
+            Contract.Assert(!_isLocked);
+
+            // The following is not thread-safe but this code is only called when pushing a configuration
+            // and happens to a new DbConfiguration before it has been set and locked.
+            var newChain = new ResolverChain();
+            newChain.Add(value);
+            _resolvers.Second.Resolvers.Skip(1).Each(newChain.Add);
+
+            _rootResolver = value;
+            _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(_resolvers.First, newChain);
         }
 
         private void CheckNotLocked(string memberName)

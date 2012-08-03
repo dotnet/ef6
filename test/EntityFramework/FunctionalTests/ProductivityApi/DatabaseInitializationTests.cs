@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -8,6 +9,8 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.History;
     using System.Linq;
     using System.Transactions;
     using BadMappingModel;
@@ -253,8 +256,9 @@ namespace ProductivityApiTests
 
             using (var context = new SimpleContextForCreateDatabaseIfNotExists())
             {
-                Initializer_does_nothing_if_database_exists_and_model_matches(context, useTransaction: true,
-                                                                              useLocal: false);
+                Initializer_does_nothing_if_database_exists_and_model_matches(
+                    context, useTransaction: true,
+                    useLocal: false);
             }
         }
 
@@ -266,8 +270,9 @@ namespace ProductivityApiTests
 
             using (var context = new SimpleContextForCreateDatabaseIfNotExists())
             {
-                Initializer_does_nothing_if_database_exists_and_model_matches(context, useTransaction: true,
-                                                                              useLocal: true);
+                Initializer_does_nothing_if_database_exists_and_model_matches(
+                    context, useTransaction: true,
+                    useLocal: true);
             }
         }
 
@@ -279,8 +284,9 @@ namespace ProductivityApiTests
 
             using (var context = new SimpleContextForDropCreateDatabaseIfModelChanges())
             {
-                Initializer_does_nothing_if_database_exists_and_model_matches(context, useTransaction: true,
-                                                                              useLocal: false);
+                Initializer_does_nothing_if_database_exists_and_model_matches(
+                    context, useTransaction: true,
+                    useLocal: false);
             }
         }
 
@@ -293,14 +299,16 @@ namespace ProductivityApiTests
 
             using (var context = new SimpleContextForDropCreateDatabaseIfModelChanges())
             {
-                Initializer_does_nothing_if_database_exists_and_model_matches(context, useTransaction: true,
-                                                                              useLocal: true);
+                Initializer_does_nothing_if_database_exists_and_model_matches(
+                    context, useTransaction: true,
+                    useLocal: true);
             }
         }
 
-        private void Initializer_does_nothing_if_database_exists_and_model_matches(SimpleModelContext context,
-                                                                                   bool useTransaction = false,
-                                                                                   bool useLocal = false)
+        private void Initializer_does_nothing_if_database_exists_and_model_matches(
+            SimpleModelContext context,
+            bool useTransaction = false,
+            bool useLocal = false)
         {
             context.Database.Initialize(force: true);
 
@@ -347,7 +355,6 @@ namespace ProductivityApiTests
             Assert.True(categoriesInDatabase.Any(c => c.Id == "Watchers"));
             Assert.True(categoriesInDatabase.Any(c => c.Id == "Slayers"));
 
-
             if (localTransaction != null)
             {
                 CloseEntityConnection(context);
@@ -388,7 +395,11 @@ namespace ProductivityApiTests
                     ((IObjectContextAdapter)poker).ObjectContext.CreateDatabaseScript());
 
 #pragma warning disable 612,618
-                poker.Metadata.Add(new EdmMetadata { ModelHash = hash });
+                poker.Metadata.Add(
+                    new EdmMetadata
+                        {
+                            ModelHash = hash
+                        });
 #pragma warning restore 612,618
 
                 poker.SaveChanges();
@@ -407,14 +418,14 @@ namespace ProductivityApiTests
             {
             }
 
-            public virtual DbSet<System.Data.Entity.Migrations.History.HistoryRow> History { get; set; }
+            public virtual DbSet<HistoryRow> History { get; set; }
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<System.Data.Entity.Migrations.History.HistoryRow>().ToTable(MigrationHistoryTableName);
-                modelBuilder.Entity<System.Data.Entity.Migrations.History.HistoryRow>().HasKey(h => h.MigrationId);
+                modelBuilder.Entity<HistoryRow>().ToTable(MigrationHistoryTableName);
+                modelBuilder.Entity<HistoryRow>().HasKey(h => h.MigrationId);
 #pragma warning disable 612,618
-                modelBuilder.Entity<System.Data.Entity.Migrations.History.HistoryRow>().Ignore(h => h.CreatedOn);
+                modelBuilder.Entity<HistoryRow>().Ignore(h => h.CreatedOn);
 #pragma warning restore 612,618
             }
         }
@@ -570,7 +581,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_sql()
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_sql
+            ()
         {
             Database.Delete(SimpleConnection<SchemaContextCreateDatabaseIfNotExists>());
 
@@ -592,10 +604,12 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce()
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce(
+            )
         {
             var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
-            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", AppDomain.CurrentDomain.BaseDirectory, "");
+            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0", AppDomain.CurrentDomain.BaseDirectory, "");
 
             try
             {
@@ -651,7 +665,7 @@ namespace ProductivityApiTests
             using (var context = new SimpleContextForDropCreateDatabaseIfModelChanges())
             {
                 context.Database.Initialize(force: true);
-                using (TransactionScope tx = new TransactionScope())
+                using (var tx = new TransactionScope())
                 {
                     Assert.Equal(1, GetTransactionCount(context.Database.Connection));
 
@@ -730,7 +744,7 @@ namespace ProductivityApiTests
             }
 
             // Ensure all migrations were applied
-            var appliedMigrations = new System.Data.Entity.Migrations.DbMigrator(new MigrateInitializerConfiguration()).GetDatabaseMigrations();
+            var appliedMigrations = new DbMigrator(new MigrateInitializerConfiguration()).GetDatabaseMigrations();
             Assert.Equal(2, appliedMigrations.Count());
             Assert.True(appliedMigrations.Contains("201112202056275_InitialCreate"));
             Assert.True(appliedMigrations.Contains("201112202056573_AddUrlToBlog"));
@@ -1084,7 +1098,9 @@ namespace ProductivityApiTests
 
         // See Dev11 bug 136276
         [Fact]
-        public void Using_model_with_bad_mapping_but_no_EdmMetadata_table_and_initializer_that_throws_before_SaveChanges_should_result_in_DataException_containing_a_MappingException()
+        public void
+            Using_model_with_bad_mapping_but_no_EdmMetadata_table_and_initializer_that_throws_before_SaveChanges_should_result_in_DataException_containing_a_MappingException
+            ()
         {
             Database.SetInitializer(new InitializerForBadMappingCaseWithQuery());
             using (var context = new BizContextWithNoEdmMetadata2())
@@ -1116,7 +1132,12 @@ namespace ProductivityApiTests
         {
             protected override void Seed(SimpleModelWithBadInitializer context)
             {
-                context.Entry(new Product { Id = 999, CategoryId = "FOO" }).State = EntityState.Modified;
+                context.Entry(
+                    new Product
+                        {
+                            Id = 999,
+                            CategoryId = "FOO"
+                        }).State = EntityState.Modified;
             }
         }
 
@@ -1276,7 +1297,11 @@ namespace ProductivityApiTests
             protected override void Seed(TContext context)
             {
                 HasRun = true;
-                context.Products.Add(new Product { Name = "Dev11" });
+                context.Products.Add(
+                    new Product
+                        {
+                            Name = "Dev11"
+                        });
             }
 
             public bool HasRun { get; set; }

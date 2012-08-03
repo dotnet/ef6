@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
@@ -9,37 +10,32 @@ namespace System.Data.Entity.Internal.ConfigFile
     /// </summary>
     internal class ContextElement : ConfigurationElement
     {
-        private const string _typeKey = "type";
-        private const string _disableDatabaseInitializationKey = "disableDatabaseInitialization";
-        private const string _databaseInitializerKey = "databaseInitializer";
+        private const string TypeKey = "type";
+        private const string DisableDatabaseInitializationKey = "disableDatabaseInitialization";
+        private const string DatabaseInitializerKey = "databaseInitializer";
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ConfigurationProperty(_typeKey, IsRequired = true)]
-        public string ContextTypeName
+        [ConfigurationProperty(TypeKey, IsRequired = true)]
+        public virtual string ContextTypeName
         {
-            get { return (string)this[_typeKey]; }
-            set { this[_typeKey] = value; }
+            get { return (string)this[TypeKey]; }
+            set { this[TypeKey] = value; }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ConfigurationProperty(_disableDatabaseInitializationKey, DefaultValue = false)]
-        public bool IsDatabaseInitializationDisabled
+        [ConfigurationProperty(DisableDatabaseInitializationKey, DefaultValue = false)]
+        public virtual bool IsDatabaseInitializationDisabled
         {
-            get { return (bool)this[_disableDatabaseInitializationKey]; }
-            set { this[_disableDatabaseInitializationKey] = value; }
+            get { return (bool)this[DisableDatabaseInitializationKey]; }
+            set { this[DisableDatabaseInitializationKey] = value; }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ConfigurationProperty(_databaseInitializerKey)]
-        public DatabaseInitializerElement DatabaseInitializer
+        [ConfigurationProperty(DatabaseInitializerKey)]
+        public virtual DatabaseInitializerElement DatabaseInitializer
         {
-            get { return (DatabaseInitializerElement)this[_databaseInitializerKey]; }
-            set { this[_databaseInitializerKey] = value; }
-        }
-
-        public Type GetContextType()
-        {
-            return Type.GetType(ContextTypeName, throwOnError: true);
+            get { return (DatabaseInitializerElement)this[DatabaseInitializerKey]; }
+            set { this[DatabaseInitializerKey] = value; }
         }
     }
 }

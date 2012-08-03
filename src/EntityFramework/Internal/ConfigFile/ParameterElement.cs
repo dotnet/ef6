@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
@@ -10,8 +11,8 @@ namespace System.Data.Entity.Internal.ConfigFile
     /// </summary>
     internal class ParameterElement : ConfigurationElement
     {
-        private const string _valueKey = "value";
-        private const string _typeKey = "type";
+        private const string ValueKey = "value";
+        private const string TypeKey = "type";
 
         public ParameterElement(int key)
         {
@@ -21,19 +22,19 @@ namespace System.Data.Entity.Internal.ConfigFile
         internal int Key { get; private set; }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ConfigurationProperty(_valueKey, IsRequired = true)]
+        [ConfigurationProperty(ValueKey, IsRequired = true)]
         public string ValueString
         {
-            get { return (string)this[_valueKey]; }
-            set { this[_valueKey] = value; }
+            get { return (string)this[ValueKey]; }
+            set { this[ValueKey] = value; }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ConfigurationProperty(_typeKey, DefaultValue = "System.String")]
+        [ConfigurationProperty(TypeKey, DefaultValue = "System.String")]
         public string TypeName
         {
-            get { return (string)this[_typeKey]; }
-            set { this[_typeKey] = value; }
+            get { return (string)this[TypeKey]; }
+            set { this[TypeKey] = value; }
         }
 
         public object GetTypedParameterValue()

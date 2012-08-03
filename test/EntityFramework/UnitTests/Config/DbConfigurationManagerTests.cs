@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
@@ -8,13 +9,14 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Resources;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
+    using FunctionalTests.TestHelpers;
     using Moq;
     using SimpleModel;
     using Xunit;
 
     public class DbConfigurationManagerTests : TestBase
     {
-        public class Instance
+        public class Instance : TestBase
         {
             [Fact]
             public void Instance_returns_the_Singleton_instance()
@@ -30,7 +32,10 @@ namespace System.Data.Entity.Config
             public void GetConfiguration_returns_the_configuration_at_the_top_of_the_stack_if_overriding_configurations_have_been_pushed()
             {
                 var manager = CreateManager();
-                var configuration = new Mock<DbConfiguration>().Object;
+                var configuration = new Mock<DbConfiguration>
+                    {
+                        CallBase = true
+                    }.Object;
 
                 manager.SetConfiguration(configuration);
                 manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
@@ -401,7 +406,7 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class PushConfiguration
+        public class PushConfiguration : TestBase
         {
             [Fact]
             public void PushConfugiration_pushes_and_locks_configuration_from_config_if_found()
@@ -468,6 +473,21 @@ namespace System.Data.Entity.Config
                 mockConfiguration.Verify(m => m.AddAppConfigResolver(It.IsAny<AppConfigDependencyResolver>()));
             }
 
+            [Fact]
+            public void PushConfugiration_switches_in_original_root_resolver()
+            {
+                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockLoader = new Mock<DbConfigurationLoader>();
+                mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
+
+                var manager = CreateManager(mockLoader);
+                var defaultConfiguration = manager.GetConfiguration();
+
+                manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
+
+                mockConfiguration.Verify(m => m.SwitchInRootResolver(defaultConfiguration.RootResolver));
+            }
+
             /// <summary>
             /// This test makes calls from multiple threads such that we have at least some chance of finding threading
             /// issues. As with any test of this type just because the test passes does not mean that the code is
@@ -495,13 +515,17 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class PopConfiguration
+        public class PopConfiguration : TestBase
         {
             [Fact]
             public void PopConfiguration_removes_the_first_configuration_associated_with_the_given_AppConfig()
             {
                 var manager = CreateManager();
-                var configuration = new Mock<DbConfiguration>().Object;
+                var configuration = new Mock<DbConfiguration>
+                    {
+                        CallBase = true
+                    }.Object;
+
                 var appConfig1 = AppConfig.DefaultInstance;
                 var appConfig2 = new AppConfig(ConfigurationManager.ConnectionStrings);
 
@@ -554,6 +578,7 @@ namespace System.Data.Entity.Config
             {
                 var configurationBag = new ConcurrentBag<DbConfiguration>();
                 var manager = new DbConfigurationManager(new DbConfigurationLoader(), new DbConfigurationFinder());
+                manager.SetConfiguration(new FunctionalTestsConfiguration());
                 beforeThreads(manager);
 
                 ExecuteInParallel(

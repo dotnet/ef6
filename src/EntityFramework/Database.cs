@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
-    using System.Collections.Concurrent;
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Config;
@@ -25,10 +25,6 @@ namespace System.Data.Entity
     {
         #region Fields and constructors
 
-        // Maps derived DbContext type to strategy that acts on that type.
-        private static readonly ConcurrentDictionary<Type, InitializerLockPair> _initializationStrategies =
-            new ConcurrentDictionary<Type, InitializerLockPair>();
-
         // The default factory object used to create a DbConnection from a database name.
         private static readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
             new Lazy<IDbConnectionFactory>(
@@ -43,7 +39,6 @@ namespace System.Data.Entity
         ///     Creates a Database backed by the given context.  This object can be used to create a database,
         ///     check for database existence, and delete a database.
         /// </summary>
-        /// <param name = "context">The context that defines the database connection and model.</param>
         internal Database(InternalContext internalContext)
         {
             Contract.Requires(internalContext != null);
@@ -82,26 +77,8 @@ namespace System.Data.Entity
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
 
-            SetInitializerInternal(strategy, lockStrategy: false);
-        }
-
-        /// <summary>
-        ///     Internal version of SetInitializer that allows the strategy to be locked such that it cannot be replaced
-        ///     by another call to SetInitializer.  This allows strategies set in the app.config to win over strategies set
-        ///     in code.
-        /// </summary>
-        /// <typeparam name = "TContext">The type of the context.</typeparam>
-        /// <param name = "strategy">The strategy.</param>
-        /// <param name = "lockStrategy">If set to <c>true</c> then the strategy is locked.</param>
-        internal static void SetInitializerInternal<TContext>(
-            IDatabaseInitializer<TContext> strategy, bool lockStrategy)
-            where TContext : DbContext
-        {
-            var executor = strategy == null ? (Action<DbContext>)null : c => strategy.InitializeDatabase((TContext)c);
-            _initializationStrategies.AddOrUpdate(
-                typeof(TContext),
-                new InitializerLockPair(executor, lockStrategy),
-                (t, e) => e.IsLocked && !lockStrategy ? e : new InitializerLockPair(executor, lockStrategy));
+            DbConfiguration.Instance.RootResolver.DatabaseInitializerResolver.SetInitializer(
+                typeof(TContext), strategy ?? new NullDatabaseInitializer<TContext>());
         }
 
         /// <summary>
@@ -128,27 +105,6 @@ namespace System.Data.Entity
             else
             {
                 _internalContext.Initialize();
-            }
-        }
-
-        /// <summary>
-        ///     Returns the <see cref = "IDatabaseInitializer{TContext}" /> as a delegate that can be called with
-        ///     an instance of the <see cref = "DbContext" /> that owns this Database object, or returns null if
-        ///     there is no initializer set for this context type.
-        /// </summary>
-        /// <value>The initializer delegate or null.</value>
-        internal Action<DbContext> InitializerDelegate
-        {
-            get
-            {
-                return _initializationStrategies.GetOrAdd(
-                    _internalContext.Owner.GetType(),
-                    t =>
-                    new InitializerLockPair(
-                        _internalContext.DefaultInitializer != null
-                            ? _internalContext.DefaultInitializer.InitializeDatabase
-                            : (Action<DbContext>)null,
-                        false)).InitializerDelegate;
             }
         }
 

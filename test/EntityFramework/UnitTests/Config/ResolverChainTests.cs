@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -110,6 +112,22 @@ namespace System.Data.Entity.Config
                 Assert.Equal(20, bag.Count);
                 Assert.True(bag.All(c => karl == c));
             }
+        }
+
+        [Fact]
+        public void Resolvers_property_returns_resolvers_in_same_order_that_they_were_added()
+        {
+            var resolvers = new[]
+                {
+                    new Mock<IDbDependencyResolver>().Object,
+                    new Mock<IDbDependencyResolver>().Object,
+                    new Mock<IDbDependencyResolver>().Object,
+                };
+
+            var chain = new ResolverChain();
+            resolvers.Each(chain.Add);
+
+            Assert.Equal(resolvers, chain.Resolvers);
         }
     }
 }

@@ -10,20 +10,20 @@ namespace System.Data.Entity.Internal.ConfigFile
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class DefaultConnectionFactoryElement : ConfigurationElement
     {
-        private const string _typeKey = "type";
-        private const string _parametersKey = "parameters";
+        private const string TypeKey = "type";
+        private const string ParametersKey = "parameters";
 
-        [ConfigurationProperty(_typeKey, IsRequired = true)]
+        [ConfigurationProperty(TypeKey, IsRequired = true)]
         public string FactoryTypeName
         {
-            get { return (string)this[_typeKey]; }
-            set { this[_typeKey] = value; }
+            get { return (string)this[TypeKey]; }
+            set { this[TypeKey] = value; }
         }
 
-        [ConfigurationProperty(_parametersKey)]
+        [ConfigurationProperty(ParametersKey)]
         public ParameterCollection Parameters
         {
-            get { return (ParameterCollection)base[_parametersKey]; }
+            get { return (ParameterCollection)base[ParametersKey]; }
         }
 
         public Type GetFactoryType()

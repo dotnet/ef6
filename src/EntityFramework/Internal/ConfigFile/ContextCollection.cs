@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class ContextCollection : ConfigurationElementCollection
     {
-        private const string _contextKey = "context";
+        private const string ContextKey = "context";
 
         protected override ConfigurationElement CreateNewElement()
         {
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Internal.ConfigFile
 
         protected override string ElementName
         {
-            get { return _contextKey; }
+            get { return ContextKey; }
         }
 
         protected override void BaseAdd(ConfigurationElement element)
@@ -53,18 +54,6 @@ namespace System.Data.Entity.Internal.ConfigFile
             }
 
             base.BaseAdd(index, element);
-        }
-
-        /// <summary>
-        ///     Adds a new context to the collection
-        ///     Used for unit testing
-        /// </summary>
-        internal ContextElement NewElement(string contextTypeName)
-        {
-            var element = (ContextElement)CreateNewElement();
-            base.BaseAdd(element);
-            element.ContextTypeName = contextTypeName;
-            return element;
         }
     }
 }

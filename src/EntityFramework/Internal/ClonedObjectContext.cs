@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Internal
             ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
         {
             Contract.Requires(objectContext != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(connectionString));
+            // connectionString may be null when connection has been created from DbContextInfo using just a provider
 
             var clonedConnection =
                 DbProviderServices.GetProviderFactory(objectContext.Connection.StoreConnection).CreateConnection();

@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
@@ -125,40 +125,45 @@ namespace ProductivityApiTests
             // This is intentional since there are lots of threads and lots of connections working at the same
             // time here. The test is written in such a way that even if cleanup fails it should not impact
             // the test running again.
-            ExecuteInParallel(() =>
-                              {
-                                  int id;
-                                  var name = Thread.CurrentThread.ManagedThreadId.ToString();
+            ExecuteInParallel(
+                () =>
+                    {
+                        int id;
+                        var name = Thread.CurrentThread.ManagedThreadId.ToString();
 
-                                  using (var context = new MultiInitContextForCrud())
-                                  {
-                                      var product = context.Products.Add(new Product { Name = name });
-                                      context.SaveChanges();
-                                      id = product.Id;
-                                      Assert.NotEqual(0, id);
-                                  }
+                        using (var context = new MultiInitContextForCrud())
+                        {
+                            var product = context.Products.Add(
+                                new Product
+                                    {
+                                        Name = name
+                                    });
+                            context.SaveChanges();
+                            id = product.Id;
+                            Assert.NotEqual(0, id);
+                        }
 
-                                  using (var context = new MultiInitContextForCrud())
-                                  {
-                                      var product = context.Products.Find(id);
-                                      Assert.Equal(name, product.Name);
-                                      product.Name += "_Updated!";
-                                      context.SaveChanges();
-                                  }
+                        using (var context = new MultiInitContextForCrud())
+                        {
+                            var product = context.Products.Find(id);
+                            Assert.Equal(name, product.Name);
+                            product.Name += "_Updated!";
+                            context.SaveChanges();
+                        }
 
-                                  using (var context = new MultiInitContextForCrud())
-                                  {
-                                      var product = context.Products.Where(p => p.Id == id).Single();
-                                      Assert.Equal(name + "_Updated!", product.Name);
-                                      context.Entry(product).State = EntityState.Deleted;
-                                      context.SaveChanges();
-                                  }
+                        using (var context = new MultiInitContextForCrud())
+                        {
+                            var product = context.Products.Where(p => p.Id == id).Single();
+                            Assert.Equal(name + "_Updated!", product.Name);
+                            context.Entry(product).State = EntityState.Deleted;
+                            context.SaveChanges();
+                        }
 
-                                  using (var context = new MultiInitContextForCrud())
-                                  {
-                                      Assert.Null(context.Products.Find(id));
-                                  }
-                              });
+                        using (var context = new MultiInitContextForCrud())
+                        {
+                            Assert.Null(context.Products.Find(id));
+                        }
+                    });
         }
 
         #endregion
@@ -169,22 +174,23 @@ namespace ProductivityApiTests
         public void EDMX_can_be_written_from_multiple_threads_using_a_single_DbCompiledModel()
         {
             var edmxs = new ConcurrentBag<string>();
-            ExecuteInParallel(() =>
-                              {
-                                  var edmxBuilder = new StringBuilder();
-                                  using (var context = new SimpleModelContext())
-                                  {
-                                      // Cached DbCompiledModel will be used each time
-                                      EdmxWriter.WriteEdmx(context, XmlWriter.Create(edmxBuilder));
-                                  }
+            ExecuteInParallel(
+                () =>
+                    {
+                        var edmxBuilder = new StringBuilder();
+                        using (var context = new SimpleModelContext())
+                        {
+                            // Cached DbCompiledModel will be used each time
+                            EdmxWriter.WriteEdmx(context, XmlWriter.Create(edmxBuilder));
+                        }
 
-                                  var edmx = edmxBuilder.ToString();
+                        var edmx = edmxBuilder.ToString();
 
-                                  Assert.True(edmx.Contains("EntitySet Name=\"Products\""));
-                                  Assert.True(edmx.Contains("EntitySet Name=\"Categories\""));
+                        Assert.True(edmx.Contains("EntitySet Name=\"Products\""));
+                        Assert.True(edmx.Contains("EntitySet Name=\"Categories\""));
 
-                                  edmxs.Add(edmx);
-                              });
+                        edmxs.Add(edmx);
+                    });
 
             Assert.True(edmxs.All(m => edmxs.First() == m));
         }
@@ -197,18 +203,19 @@ namespace ProductivityApiTests
         public void Model_hash_can_be_calculated_from_multiple_threads_using_a_single_DbCompiledModel()
         {
             var hashes = new ConcurrentBag<string>();
-            ExecuteInParallel(() =>
-                              {
-                                  using (var context = new SimpleModelContext())
-                                  {
+            ExecuteInParallel(
+                () =>
+                    {
+                        using (var context = new SimpleModelContext())
+                        {
 #pragma warning disable 612,618
-                                      var hash = EdmMetadata.TryGetModelHash(context);
+                            var hash = EdmMetadata.TryGetModelHash(context);
 #pragma warning restore 612,618
 
-                                      Assert.NotNull(hash);
-                                      hashes.Add(hash);
-                                  }
-                              });
+                            Assert.NotNull(hash);
+                            hashes.Add(hash);
+                        }
+                    });
 
             Assert.True(hashes.All(h => hashes.First() == h));
         }

@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -26,6 +28,11 @@ namespace System.Data.Entity.Config
             // collections.
             _resolvers.Push(resolver);
             _resolversSnapshot = _resolvers.ToArray();
+        }
+
+        public virtual IEnumerable<IDbDependencyResolver> Resolvers
+        {
+            get { return _resolversSnapshot.Reverse(); }
         }
 
         public virtual object GetService(Type type, string name)

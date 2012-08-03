@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Specialized;
@@ -7,7 +8,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
-    using System.Reflection;
 
     /// <summary>
     /// A simple representation of an app.config or web.config file.
@@ -25,12 +25,6 @@ namespace System.Data.Entity.Internal
 
         private readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
             new Lazy<IDbConnectionFactory>(() => null, isThreadSafe: true);
-
-        private static bool _initializersApplied;
-        private static readonly object _lock = new object();
-
-        private static readonly MethodInfo Database_SetInitializerInternal =
-            typeof(Database).GetMethod("SetInitializerInternal", BindingFlags.Static | BindingFlags.NonPublic);
 
         /// <summary>
         /// Initializes a new instance of AppConfig based on supplied configuration
@@ -78,7 +72,7 @@ namespace System.Data.Entity.Internal
             Contract.Requires(connectionStrings != null);
 
             _connectionStrings = connectionStrings;
-            _appSettings = appSettings;
+            _appSettings = appSettings ?? new KeyValueConfigurationCollection();
             _entityFrameworkSettings = entityFrameworkSettings ?? new EntityFrameworkSection();
 
             if (_entityFrameworkSettings.DefaultConnectionFactory.ElementInformation.IsPresent)
@@ -116,79 +110,6 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Appies any database intializers specified in the configuration
-        /// </summary>
-        public void ApplyInitializers()
-        {
-            InternalApplyInitializers(force: false);
-        }
-
-        /// <summary>
-        /// Appies any database intializers specified in the configuration
-        /// </summary>
-        /// <param name="force">
-        /// Value indicating if initializers should be re-applied if they have already been applied in this AppDomain
-        /// </param>
-        internal void InternalApplyInitializers(bool force)
-        {
-            if (!_initializersApplied || force)
-            {
-                lock (_lock)
-                {
-                    if (!_initializersApplied || force)
-                    {
-                        _initializersApplied = true; // Don't repeatedly try if an exception is thrown.
-
-                        if (_appSettings != null)
-                        {
-                            LegacyDatabaseInitializerConfig.ApplyInitializersFromConfig(_appSettings);
-                        }
-
-                        if (_entityFrameworkSettings != null)
-                        {
-                            foreach (ContextElement init in _entityFrameworkSettings.Contexts)
-                            {
-                                if (init.IsDatabaseInitializationDisabled
-                                    || init.DatabaseInitializer.ElementInformation.IsPresent)
-                                {
-                                    try
-                                    {
-                                        var contextType = init.GetContextType();
-                                        object initializer = null;
-
-                                        if (!init.IsDatabaseInitializationDisabled)
-                                        {
-                                            var initializerType = init.DatabaseInitializer.GetInitializerType();
-                                            var args = init.DatabaseInitializer.Parameters.GetTypedParameterValues();
-                                            initializer = Activator.CreateInstance(initializerType, args);
-                                        }
-
-                                        var setInitializerMethod =
-                                            Database_SetInitializerInternal.MakeGenericMethod(contextType);
-                                        setInitializerMethod.Invoke(
-                                            null, BindingFlags.Static | BindingFlags.NonPublic, null,
-                                            new[] { initializer, true }, null);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        var initializerName = init.IsDatabaseInitializationDisabled
-                                                                  ? "Disabled"
-                                                                  : init.DatabaseInitializer.InitializerTypeName;
-
-                                        throw new InvalidOperationException(
-                                            Strings.Database_InitializeFromConfigFailed(
-                                                initializerName, init.ContextTypeName),
-                                            ex);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets the specified connection string from the configuration
         /// </summary>
         /// <param name="name">Name of the connection string to get</param>
@@ -221,6 +142,11 @@ namespace System.Data.Entity.Internal
         public virtual ProviderConfig Providers
         {
             get { return new ProviderConfig(_entityFrameworkSettings); }
+        }
+
+        public virtual InitializerConfig Initializers
+        {
+            get { return new InitializerConfig(_entityFrameworkSettings, _appSettings); }
         }
     }
 }

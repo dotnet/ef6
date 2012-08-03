@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
@@ -6,6 +7,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -14,6 +16,7 @@ namespace System.Data.Entity.Config
     internal class AppConfigDependencyResolver : IDbDependencyResolver
     {
         private readonly AppConfig _appConfig;
+
         private readonly ConcurrentDictionary<Tuple<Type, string>, Func<object>> _serviceFactories
             = new ConcurrentDictionary<Tuple<Type, string>, Func<object>>();
 
@@ -27,7 +30,7 @@ namespace System.Data.Entity.Config
         public virtual object GetService(Type type, string name)
         {
             return _serviceFactories.GetOrAdd(
-                Tuple.Create(type, name), 
+                Tuple.Create(type, name),
                 t => GetServiceFactory(type, name))();
         }
 
@@ -53,7 +56,12 @@ namespace System.Data.Entity.Config
                 return () => connectionFactory;
             }
 
-            // TODO: Implement for IDatabaseInitializer
+            var contextType = type.TryGetElementType(typeof(IDatabaseInitializer<>));
+            if (contextType != null)
+            {
+                var initializer = _appConfig.Initializers.TryGetInitializer(contextType);
+                return () => initializer;
+            }
 
             return () => null;
         }

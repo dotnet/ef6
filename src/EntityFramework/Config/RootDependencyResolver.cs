@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// This resolver is always the last resolver in the internal resolver chain and is
@@ -11,31 +13,40 @@ namespace System.Data.Entity.Config
     /// </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
-        private readonly MigrationsConfigurationResolver _migrationsConfigurationResolver;
         private readonly ResolverChain _resolvers = new ResolverChain();
+        private readonly DatabaseInitializerResolver _databaseInitializerResolver;
+
+        public RootDependencyResolver()
+            : this(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
+        {
+        }
 
         public RootDependencyResolver(
             MigrationsConfigurationResolver migrationsConfigurationResolver,
-            DefaultProviderServicesResolver defaultProviderServicesResolver)
+            DefaultProviderServicesResolver defaultProviderServicesResolver,
+            DatabaseInitializerResolver databaseInitializerResolver)
         {
-            _migrationsConfigurationResolver = migrationsConfigurationResolver;
+            Contract.Requires(migrationsConfigurationResolver != null);
+            Contract.Requires(defaultProviderServicesResolver != null);
+            Contract.Requires(databaseInitializerResolver != null);
 
-            _resolvers.Add(_migrationsConfigurationResolver);
+            _databaseInitializerResolver = databaseInitializerResolver;
+
+            _resolvers.Add(_databaseInitializerResolver);
+            _resolvers.Add(migrationsConfigurationResolver);
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
             _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));
         }
 
-        public MigrationsConfigurationResolver MigrationsConfigurationResolver
+        public DatabaseInitializerResolver DatabaseInitializerResolver
         {
-            get { return _migrationsConfigurationResolver; }
+            get { return _databaseInitializerResolver; }
         }
 
         /// <inheritdoc/>
         public virtual object GetService(Type type, string name)
         {
-            // TODO: Handle Database initializer
-
             return _resolvers.GetService(type, name);
         }
 

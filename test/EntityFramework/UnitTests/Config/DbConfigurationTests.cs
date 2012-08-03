@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
@@ -59,7 +60,7 @@ namespace System.Data.Entity.Config
 
                 new DbConfiguration(
                     mockAppConfigChain.Object, new Mock<ResolverChain>().Object,
-                    new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver())).
+                    new RootDependencyResolver()).
                     AddAppConfigResolver(resolver);
 
                 mockAppConfigChain.Verify(m => m.Add(resolver));
@@ -96,8 +97,7 @@ namespace System.Data.Entity.Config
 
                 new DbConfiguration(
                     new Mock<ResolverChain>().Object, mockNormalChain.Object,
-                    new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver())).
-                    AddDependencyResolver(resolver);
+                    new RootDependencyResolver()).AddDependencyResolver(resolver);
 
                 mockNormalChain.Verify(m => m.Add(resolver));
             }
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Config
                     configService,
                     new DbConfiguration(
                         mockAppConfigChain.Object, mockNormalChain.Object,
-                        new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver())).
+                        new RootDependencyResolver()).
                         DefaultConnectionFactory);
 
                 mockAppConfigChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Once());
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Config
 
                 var config = new DbConfiguration(
                     mockAppConfigChain.Object, mockNormalChain.Object,
-                    new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver()));
+                    new RootDependencyResolver());
                 var resolver = (CompositeResolver<ResolverChain, ResolverChain>)config.DependencyResolver;
 
                 Assert.Same(mockAppConfigChain.Object, resolver.First);
@@ -269,7 +269,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void RootResolver_returns_the_root_resolver()
             {
-                var rootResolver = new RootDependencyResolver(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver());
+                var rootResolver = new RootDependencyResolver();
 
                 var config = new DbConfiguration(new Mock<ResolverChain>().Object, new Mock<ResolverChain>().Object, rootResolver);
 
@@ -280,14 +280,42 @@ namespace System.Data.Entity.Config
             public void RootResolver_is_added_to_the_non_app_config_resolver_chain()
             {
                 var normalChain = new ResolverChain();
-                var mockRootResolver = new Mock<RootDependencyResolver>(
-                    new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver());
+                var mockRootResolver = new Mock<RootDependencyResolver>();
 
                 new DbConfiguration(new Mock<ResolverChain>().Object, normalChain, mockRootResolver.Object);
 
                 normalChain.GetService<object>("Foo");
 
                 mockRootResolver.Verify(m => m.GetService(typeof(object), "Foo"));
+            }
+        }
+
+        public class SwitchInRootResolver
+        {
+            [Fact]
+            public void SwitchInRootResolver_swicthes_in_given_root_resolver()
+            {
+                var configuration = new DbConfiguration();
+                var mockRootResolver = new Mock<RootDependencyResolver>();
+                configuration.SwitchInRootResolver(mockRootResolver.Object);
+
+                Assert.Same(mockRootResolver.Object, configuration.RootResolver);
+
+                configuration.DependencyResolver.GetService<object>("Foo");
+                mockRootResolver.Verify(m => m.GetService(typeof(object), "Foo"));
+            }
+
+            [Fact]
+            public void SwitchInRootResolver_leaves_other_resolvers_intact()
+            {
+                var configuration = new DbConfiguration();
+                var mockResolver = new Mock<IDbDependencyResolver>();
+                configuration.AddDependencyResolver(mockResolver.Object);
+
+                configuration.SwitchInRootResolver(new Mock<RootDependencyResolver>().Object);
+
+                configuration.DependencyResolver.GetService<object>("Foo");
+                mockResolver.Verify(m => m.GetService(typeof(object), "Foo"));
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections;
@@ -6,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -71,6 +73,9 @@ namespace System.Data.Entity.Internal
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>
             _setFactories =
                 new ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>();
+
+        private static readonly MethodInfo _createInitializationAction =
+            typeof(InternalContext).GetMethod("CreateInitializationAction", BindingFlags.Instance | BindingFlags.NonPublic);
 
         // The configuration to use for initializers, connection strings and default connection factory
         private AppConfig _appConfig = AppConfig.DefaultInstance;
@@ -451,22 +456,30 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public void PerformDatabaseInitialization()
         {
-            AppConfig.ApplyInitializers();
+            var dbConfiguration = DbConfiguration.Instance;
+            var initializer = dbConfiguration.DependencyResolver
+                                  .GetService(typeof(IDatabaseInitializer<>).MakeGenericType(Owner.GetType()))
+                              ?? DefaultInitializer
+                              ?? new NullDatabaseInitializer<DbContext>();
 
-            var executor = Owner.Database.InitializerDelegate;
+            var initializerAction =
+                (Action)_createInitializationAction.MakeGenericMethod(Owner.GetType()).Invoke(this, new[] { initializer });
 
-            if (executor != null)
+            try
             {
-                try
-                {
-                    UseTempObjectContext();
-                    PerformInitializationAction(() => executor(Owner));
-                }
-                finally
-                {
-                    DisposeTempObjectContext();
-                }
+                UseTempObjectContext();
+                PerformInitializationAction(initializerAction);
             }
+            finally
+            {
+                DisposeTempObjectContext();
+            }
+        }
+
+        private Action CreateInitializationAction<TContext>(IDatabaseInitializer<TContext> initializer)
+            where TContext : DbContext
+        {
+            return () => initializer.InitializeDatabase((TContext)Owner);
         }
 
         /// <summary>
@@ -727,26 +740,26 @@ namespace System.Data.Entity.Internal
             Contract.Requires(parameters != null);
             Contract.Ensures(Contract.Result<IEnumerator<TElement>>() != null);
 
-            return new LazyEnumerator<TElement>(() =>
-            {
-                Initialize();
+            return new LazyEnumerator<TElement>(
+                () =>
+                    {
+                        Initialize();
 
-                var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
-                try
-                {
-                    var result = disposableEnumerable.GetEnumerator();
-                    return result;
-                }
-                catch
-                {
-                    // if there is a problem creating the enumerator, we should dispose
-                    // the enumerable (if there is no problem, the enumerator will take 
-                    // care of the dispose)
-                    disposableEnumerable.Dispose();
-                    throw;
-                }
-
-            });
+                        var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
+                        try
+                        {
+                            var result = disposableEnumerable.GetEnumerator();
+                            return result;
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
         /// <summary>
@@ -763,27 +776,28 @@ namespace System.Data.Entity.Internal
             Contract.Requires(parameters != null);
             Contract.Ensures(Contract.Result<IDbAsyncEnumerator<TElement>>() != null);
 
-            return new LazyAsyncEnumerator<TElement>(async () =>
-            {
-                //Not initializing asynchronously as it's not expected to be done frequently
-                Initialize();
+            return new LazyAsyncEnumerator<TElement>(
+                async () =>
+                    {
+                        //Not initializing asynchronously as it's not expected to be done frequently
+                        Initialize();
 
-                var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                    sql, CancellationToken.None, parameters);
+                        var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                            sql, CancellationToken.None, parameters);
 
-                try
-                {
-                    return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
-                }
-                catch
-                {
-                    // if there is a problem creating the enumerator, we should dispose
-                    // the enumerable (if there is no problem, the enumerator will take 
-                    // care of the dispose)
-                    disposableEnumerable.Dispose();
-                    throw;
-                }
-            });
+                        try
+                        {
+                            return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
         /// <summary>

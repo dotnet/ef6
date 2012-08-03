@@ -1,7 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
+    using System.Collections;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
@@ -10,12 +13,12 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
-    using ProductivityApiUnitTests;
     using Xunit;
 
-    public class AppConfigDependencyResolverTests : TestBase
+    public class AppConfigDependencyResolverTests : AppConfigTestBase
     {
         public interface IPilkington
         {
@@ -95,10 +98,10 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_returns_registered_Migrations_SQL_generator()
         {
-            Assert.IsType<AppConfigTests.TryGetMigrationSqlGeneratorFactory.MySqlGenerator>(
+            Assert.IsType<ProviderConfigTests.TryGetMigrationSqlGeneratorFactory.MySqlGenerator>(
                 new AppConfigDependencyResolver(
                     CreateAppConfigWithProvider(
-                        typeof(AppConfigTests.TryGetMigrationSqlGeneratorFactory.MySqlGenerator).AssemblyQualifiedName))
+                        typeof(ProviderConfigTests.TryGetMigrationSqlGeneratorFactory.MySqlGenerator).AssemblyQualifiedName))
                     .GetService<MigrationSqlGenerator>("Is.Ee.Avin.A.Larf"));
         }
 
@@ -130,7 +133,7 @@ namespace System.Data.Entity.Config
             var mockProviders = new Mock<ProviderConfig>();
             mockProviders.Setup(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"))
                 .Returns(() => new Mock<MigrationSqlGenerator>().Object);
-            
+
             var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
             mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
 
@@ -152,7 +155,7 @@ namespace System.Data.Entity.Config
             var mockProviders = new Mock<ProviderConfig>();
             mockProviders.Setup(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"))
                 .Returns((Func<MigrationSqlGenerator>)(() => null));
-            
+
             var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
             mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
 
@@ -209,6 +212,104 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
+        public void GetService_returns_registered_database_initializer()
+        {
+            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+            mockConfig.Setup(m => m.Initializers).Returns(
+                new InitializerConfig(
+                    CreateEfSection(initializerDisabled: false),
+                    new KeyValueConfigurationCollection()));
+
+            Assert.IsType<FakeInitializer<FakeContext>>(
+                new AppConfigDependencyResolver(mockConfig.Object).GetService<IDatabaseInitializer<FakeContext>>());
+        }
+
+        [Fact]
+        public void GetService_returns_null_for_unregistered_database_initializer()
+        {
+            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+            mockConfig.Setup(m => m.Initializers).Returns(
+                new InitializerConfig(
+                    CreateEfSection(initializerDisabled: false),
+                    new KeyValueConfigurationCollection()));
+
+            Assert.Null(new AppConfigDependencyResolver(mockConfig.Object).GetService<IDatabaseInitializer<DbContext>>());
+        }
+
+        [Fact]
+        public void GetService_caches_database_initializer()
+        {
+            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+            mockConfig.Setup(m => m.Initializers).Returns(
+                new InitializerConfig(
+                    CreateEfSection(initializerDisabled: false),
+                    new KeyValueConfigurationCollection()));
+
+            var resolver = new AppConfigDependencyResolver(mockConfig.Object);
+            var initializer = resolver.GetService<IDatabaseInitializer<FakeContext>>();
+
+            Assert.NotNull(initializer);
+            mockConfig.Verify(m => m.Initializers, Times.Once());
+            Assert.Same(initializer, resolver.GetService<IDatabaseInitializer<FakeContext>>());
+            mockConfig.Verify(m => m.Initializers, Times.Once());
+        }
+
+        [Fact]
+        public void GetService_caches_the_fact_that_no_database_initializer_is_registered()
+        {
+            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+            mockConfig.Setup(m => m.Initializers).Returns(
+                new InitializerConfig(
+                    CreateEfSection(initializerDisabled: false),
+                    new KeyValueConfigurationCollection()));
+
+            var resolver = new AppConfigDependencyResolver(mockConfig.Object);
+
+            Assert.Null(resolver.GetService<IDatabaseInitializer<DbContext>>());
+            mockConfig.Verify(m => m.Initializers, Times.Once());
+            Assert.Null(resolver.GetService<IDatabaseInitializer<DbContext>>());
+            mockConfig.Verify(m => m.Initializers, Times.Once());
+        }
+
+        private static EntityFrameworkSection CreateEfSection(bool initializerDisabled)
+        {
+            var mockDatabaseInitializerElement = new Mock<DatabaseInitializerElement>();
+            mockDatabaseInitializerElement
+                .Setup(m => m.InitializerTypeName)
+                .Returns(typeof(FakeInitializer<FakeContext>).AssemblyQualifiedName);
+            mockDatabaseInitializerElement.Setup(m => m.Parameters).Returns(new ParameterCollection());
+
+            var mockContextElement = new Mock<ContextElement>();
+            mockContextElement.Setup(m => m.IsDatabaseInitializationDisabled).Returns(initializerDisabled);
+            mockContextElement.Setup(m => m.ContextTypeName).Returns(typeof(FakeContext).AssemblyQualifiedName);
+            mockContextElement.Setup(m => m.DatabaseInitializer).Returns(mockDatabaseInitializerElement.Object);
+
+            var mockContextCollection = new Mock<ContextCollection>();
+            mockContextCollection.As<IEnumerable>().Setup(m => m.GetEnumerator()).Returns(
+                new List<ContextElement>
+                    {
+                        mockContextElement.Object
+                    }.GetEnumerator());
+
+            var mockEfSection = new Mock<EntityFrameworkSection>();
+            mockEfSection.Setup(m => m.Contexts).Returns(mockContextCollection.Object);
+
+            return mockEfSection.Object;
+        }
+
+        public class FakeContext : DbContext
+        {
+        }
+
+        public class FakeInitializer<TContext> : IDatabaseInitializer<TContext>
+            where TContext : DbContext
+        {
+            public void InitializeDatabase(TContext context)
+            {
+            }
+        }
+
+        [Fact]
         public void Release_does_not_throw()
         {
             new AppConfigDependencyResolver(CreateAppConfig()).Release(new object());
@@ -237,28 +338,6 @@ namespace System.Data.Entity.Config
                 sqlGeneratorName);
         }
 
-        private static AppConfig CreateAppConfig(string invariantName = null, string typeName = null, string sqlGeneratorName = null)
-        {
-            var mockEFSection = new Mock<EntityFrameworkSection>();
-            mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new Mock<DefaultConnectionFactoryElement>().Object);
-
-            var providers = new ProviderCollection();
-            if (!string.IsNullOrEmpty(invariantName))
-            {
-                var providerElement = providers.AddProvider(invariantName, typeName);
-                if (sqlGeneratorName != null)
-                {
-                    providerElement.SqlGeneratorElement = new MigrationSqlGeneratorElement
-                        {
-                            SqlGeneratorTypeName = sqlGeneratorName
-                        };
-                }
-            }
-            mockEFSection.Setup(m => m.Providers).Returns(providers);
-
-            return new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object);
-        }
-
         /// <summary>
         /// This test makes calls from multiple threads such that we have at least some chance of finding threading
         /// issues. As with any test of this type just because the test passes does not mean that the code is
@@ -277,7 +356,7 @@ namespace System.Data.Entity.Config
                 var resolver = new AppConfigDependencyResolver(appConfig);
 
                 ExecuteInParallel(() => bag.Add(resolver.GetService<IDbConnectionFactory>()));
-                
+
                 Assert.Equal(20, bag.Count);
                 Assert.True(bag.All(c => resolver.GetService<IDbConnectionFactory>() == c));
             }

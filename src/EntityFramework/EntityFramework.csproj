@@ -136,6 +136,7 @@
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
     <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
+    <Compile Include="Config\DatabaseInitializerResolver.cs" />
     <Compile Include="Config\DbConfiguration.cs" />
     <Compile Include="Config\DbConfigurationFinder.cs" />
     <Compile Include="Config\DbConfigurationLoader.cs" />
@@ -359,8 +360,10 @@
     <Compile Include="Internal\DefaultModelCacheKeyFactory.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKey.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKeyFactory.cs" />
+    <Compile Include="Internal\InitializerConfig.cs" />
     <Compile Include="Internal\LazyAsyncEnumerator.cs" />
     <Compile Include="Internal\LazyEnumerator`.cs" />
+    <Compile Include="NullDatabaseInitializer.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
@@ -1244,7 +1247,6 @@
     <Compile Include="Internal\EdmMetadataRepository.cs" />
     <Compile Include="Internal\AppConfig.cs" />
     <Compile Include="Internal\MockingProxies\EntityConnectionProxy.cs" />
-    <Compile Include="Internal\LegacyDatabaseInitializerConfig.cs" />
     <Compile Include="Internal\ModelCompatibilityChecker.cs" />
     <Compile Include="Internal\ModelHashCalculator.cs" />
     <Compile Include="Internal\MockingProxies\ObjectContextProxy.cs" />

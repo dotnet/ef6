@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
@@ -23,14 +24,15 @@ namespace System.Data.Entity.Config
 
         private readonly DbConfigurationLoader _loader;
         private readonly DbConfigurationFinder _finder;
-        
+
         private readonly Lazy<DbConfiguration> _configuration;
         private DbConfiguration _newConfiguration = new DbConfiguration();
-        
+
         private readonly object _lock = new object();
 
         // We don't need a dictionary here, just a set, but there is no ConcurrentSet in the BCL.
         private readonly ConcurrentDictionary<Assembly, object> _knownAssemblies = new ConcurrentDictionary<Assembly, object>();
+
         private readonly Lazy<List<Tuple<AppConfig, DbConfiguration>>> _configurationOverrides
             = new Lazy<List<Tuple<AppConfig, DbConfiguration>>>(
                 () => new List<Tuple<AppConfig, DbConfiguration>>());
@@ -78,6 +80,16 @@ namespace System.Data.Entity.Config
             Contract.Requires(configuration != null);
 
             configuration = _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? configuration;
+
+            var asProxy = configuration as DbConfigurationProxy;
+            if (asProxy != null)
+            {
+                var configType = asProxy.ConfigurationToUse();
+                configuration = configType == null || typeof(DbNullConfiguration).IsAssignableFrom(configType)
+                                    ? configuration
+                                    : configType.CreateInstance<DbConfiguration>();
+            }
+
             _newConfiguration = configuration;
 
             if (_configuration.Value.GetType() != configuration.GetType())
@@ -161,8 +173,8 @@ namespace System.Data.Entity.Config
                                 ?? _finder.TryCreateConfiguration(contextType.Assembly.GetAccessibleTypes())
                                 ?? new DbConfiguration();
 
+            configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
             configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config));
-
             configuration.Lock();
 
             lock (_lock)

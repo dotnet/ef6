@@ -330,7 +330,7 @@ namespace ProductivityApiUnitTests
 
             tracker.Context.Database.Initialize(force: true);
 
-            Assert.Equal("", tracker.Result);
+            Assert.Equal("UseTempObjectContext DisposeTempObjectContext", tracker.Result);
         }
 
         public class FakeForIscbrbcsin : DbContextUsingMockInternalContext

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class ParameterCollection : ConfigurationElementCollection
     {
-        private const string _parameterKey = "parameter";
+        private const string ParameterKey = "parameter";
         private int _nextKey;
 
         protected override ConfigurationElement CreateNewElement()
@@ -33,10 +34,10 @@ namespace System.Data.Entity.Internal.ConfigFile
 
         protected override string ElementName
         {
-            get { return _parameterKey; }
+            get { return ParameterKey; }
         }
 
-        public object[] GetTypedParameterValues()
+        public virtual object[] GetTypedParameterValues()
         {
             return this.Cast<ParameterElement>()
                 .Select(e => e.GetTypedParameterValue())

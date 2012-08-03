@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
@@ -43,24 +44,38 @@ namespace System.Data.Entity.Utilities
             Contract.Requires(type != null);
             Contract.Assert(!type.IsGenericTypeDefinition);
 
-            elementType = type;
+            elementType = TryGetElementType(type, typeof(ICollection<>));
 
-            var collectionInterface
-                = type.GetInterfaces()
+            if (elementType == null
+                || type.IsArray)
+            {
+                elementType = type;
+                return false;
+            }
+
+            return true;
+        }
+
+        public static Type TryGetElementType(this Type type, Type interfaceType)
+        {
+            Contract.Requires(type != null);
+            Contract.Requires(interfaceType != null);
+
+            if (!type.IsGenericTypeDefinition)
+            {
+                var interfaceImpl = type.GetInterfaces()
                     .Union(new[] { type })
                     .FirstOrDefault(
                         t => t.IsGenericType
-                             && t.GetGenericTypeDefinition() == typeof(ICollection<>));
+                             && t.GetGenericTypeDefinition() == interfaceType);
 
-            if (!type.IsArray
-                && collectionInterface != null)
-            {
-                elementType = collectionInterface.GetGenericArguments().Single();
-
-                return true;
+                if (interfaceImpl != null)
+                {
+                    return interfaceImpl.GetGenericArguments().Single();
+                }
             }
 
-            return false;
+            return null;
         }
 
         public static Type GetTargetType(this Type type)
@@ -135,7 +150,7 @@ namespace System.Data.Entity.Utilities
         }
 
         public static T CreateInstance<T>(
-            this Type type, 
+            this Type type,
             Func<string, string, string> typeMessageFactory,
             Func<string, Exception> exceptionFactory = null)
         {
