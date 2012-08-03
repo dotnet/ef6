@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Objects
                     return String.Empty;
                 }
 
-                Debug.Assert(commandText != null && commandText.Length != 0, "Invalid Command Text returned");
+                Debug.Assert(!string.IsNullOrEmpty(commandText), "Invalid Command Text returned");
                 return commandText;
             }
         }

@@ -589,7 +589,7 @@ namespace System.Data.Entity.Core.Objects
             return new LazyAsyncEnumerator<T>(
                 async () =>
                 {
-                    var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None);
+                    var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None).ConfigureAwait(continueOnCapturedContext: false);
                     try
                     {
                         return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
@@ -636,7 +636,7 @@ namespace System.Data.Entity.Core.Objects
         /// <inheritdoc />
         internal override async Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
-            return await GetResultsAsync(mergeOption, cancellationToken);
+            return await GetResultsAsync(mergeOption, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         /// <summary>
@@ -715,12 +715,12 @@ namespace System.Data.Entity.Core.Objects
 
         private async Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
         {
-            await QueryState.ObjectContext.EnsureConnectionAsync(cancellationToken);
+            await QueryState.ObjectContext.EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             try
             {
                 var execPlan = QueryState.GetExecutionPlan(forMergeOption);
-                return await execPlan.ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken);
+                return await execPlan.ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             catch
             {

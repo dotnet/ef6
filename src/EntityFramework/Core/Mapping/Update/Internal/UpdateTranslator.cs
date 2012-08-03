@@ -471,19 +471,26 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // Remember the data sources so that we can throw meaningful exception
                     source = command;
-                    var rowsAffected = await command.ExecuteAsync(identifierValues, generatedValues, cancellationToken);
+                    var rowsAffected = await command.ExecuteAsync(identifierValues, generatedValues, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }
-            catch (Exception e)
+            catch (AggregateException ae)
             {
-                // we should not be wrapping all exceptions
-                if (e.RequiresContext())
-                {
-                    throw new UpdateException(
-                        Strings.Update_GeneralExecutionException, e,
-                        DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
-                }
+                ae.Flatten().Handle(
+                    e =>
+                        {
+                            // we should not be wrapping all exceptions
+                            if (e.RequiresContext())
+                            {
+                                throw new UpdateException(
+                                    Strings.Update_GeneralExecutionException, e,
+                                    DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
+                            }
+
+                            return false;
+                        });
+
                 throw;
             }
 

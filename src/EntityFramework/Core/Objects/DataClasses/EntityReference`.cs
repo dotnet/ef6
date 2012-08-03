@@ -216,8 +216,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     // Only issue a query if we know it can produce results (in the case of FK, there may not be any 
                     // results).
-                    var objectResult = await sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken);
-                    refreshedValue = await objectResult.ToListAsync(cancellationToken);
+                    var objectResult = await sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    refreshedValue = await objectResult.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
 
                 HandleRefreshedValue(mergeOption, refreshedValue);

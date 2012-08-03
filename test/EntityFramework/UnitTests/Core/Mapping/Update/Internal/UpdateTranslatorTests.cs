@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         public class UpdateAsync
         {
             [Fact]
-            private void Propagates_server_gen_values_and_returns_entities_affected()
+            public void Propagates_server_gen_values_and_returns_entities_affected()
             {
                 var updateTranslatorMock = new Mock<UpdateTranslator>
                                                {
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         (Dictionary<int, object> identifierValues,
                             List<KeyValuePair<PropagatorResult, object>> generatedValues,
                             CancellationToken cancellationToken) =>
-                            { throw dbException; });
+                            { throw new AggregateException(dbException); });
 
                 var objectStateManager = new Mock<ObjectStateManager>
                                              {

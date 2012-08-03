@@ -17,7 +17,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private readonly CoordinatorFactory<T> _rootCoordinatorFactory;
         private readonly Action _checkPermissions;
 
-        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields",
+            Justification = "Used in the debug build")]
         private readonly MergeOption _mergeOption;
 
         internal ShaperFactory(

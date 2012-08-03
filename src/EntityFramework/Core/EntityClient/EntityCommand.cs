@@ -517,7 +517,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             // prepare the query first
             Prepare();
-            var dbDataReader = await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken);
+            var dbDataReader = await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             var reader = _entityDataReaderFactory.CreateEntityDataReader(this, dbDataReader, behavior);
             _dataReader = reader;
 
@@ -543,7 +543,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> A task representing the asynchronous operation </returns>
         protected override async Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            return await ExecuteReaderAsync(behavior, cancellationToken);
+            return await ExecuteReaderAsync(behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         /// <summary>
@@ -567,9 +567,9 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> A task representing the asynchronous operation. </returns>
         public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
-            using (var reader = await ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+            using (var reader = await ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
             {
-                await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 return reader.RecordsAffected;
             }
         }
@@ -701,8 +701,6 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 throw new InvalidOperationException(Strings.EntityClient_FunctionImportEmptyCommandText);
             }
-
-            var workspace = _connection.GetMetadataWorkspace();
 
             // parse the command text
             string containerName;

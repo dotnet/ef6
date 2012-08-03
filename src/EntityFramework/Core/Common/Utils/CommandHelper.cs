@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.Utils
             if (null != reader
                 && !reader.IsClosed)
             {
-                while (await reader.NextResultAsync(cancellationToken))
+                while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     // Note that we only walk through the result sets. We don't need
                     // to walk through individual rows (though underlying provider

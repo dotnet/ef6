@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq;
     using System.Linq.Expressions;
     using Moq;
-    using Moq.Protected;
 
     public class ObjectContextForMock : ObjectContext
     {

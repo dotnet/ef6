@@ -6,19 +6,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     Same as a ValRef in SqlServer. I just like changing names :-)
+    ///     Same as a ValRef in SqlServer.
     /// </summary>
     internal abstract class Var
     {
-        private readonly int m_id;
-        private readonly VarType m_varType;
-        private readonly TypeUsage m_type;
+        private readonly int _id;
+        private readonly VarType _varType;
+        private readonly TypeUsage _type;
 
         internal Var(int id, VarType varType, TypeUsage type)
         {
-            m_id = id;
-            m_varType = varType;
-            m_type = type;
+            _id = id;
+            _varType = varType;
+            _type = type;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         internal int Id
         {
-            get { return m_id; }
+            get { return _id; }
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         internal VarType VarType
         {
-            get { return m_varType; }
+            get { return _varType; }
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         internal TypeUsage Type
         {
-            get { return m_type; }
+            get { return _type; }
         }
 
         /// <summary>

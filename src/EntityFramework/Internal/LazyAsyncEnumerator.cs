@@ -41,8 +41,8 @@ namespace System.Data.Entity.Internal
 
         public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
         {
-            var enumerator = await _lazyAsyncEnumerator.Value;
-            return await enumerator.MoveNextAsync(cancellationToken);
+            var enumerator = await _lazyAsyncEnumerator.Value.ConfigureAwait(continueOnCapturedContext: false);
+            return await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

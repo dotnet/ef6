@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -50,6 +51,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             CoordinatorFactory<T> rootCoordinatorFactory, Action checkPermissions, bool readerOwned)
             : base(reader, context, workspace, mergeOption, stateCount)
         {
+            Contract.Requires(rootCoordinatorFactory != null);
+
             RootCoordinator = (Coordinator<T>)rootCoordinatorFactory.CreateCoordinator(parent: null, next: null);
             if (null != checkPermissions)
             {
@@ -207,18 +210,18 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             bool readSucceeded;
             try
             {
-                readSucceeded = await Reader.ReadAsync(cancellationToken);
+                readSucceeded = await Reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception e)
+            catch (AggregateException ae)
             {
-                HandleReaderException(e);
+                ae.Flatten().Handle(HandleReaderException);
 
                 throw;
             }
             return readSucceeded;
         }
 
-        private void HandleReaderException(Exception e)
+        private bool HandleReaderException(Exception e)
         {
             // check if the reader is closed; if so, throw friendlier exception
             if (Reader.IsClosed)
@@ -232,6 +235,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -330,7 +335,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     return false;
                 }
-                if (await _shaper.StoreReadAsync(cancellationToken))
+                if (await _shaper.StoreReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     try
                     {
@@ -427,7 +432,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     _shaper.StartMaterializingElement();
 
-                    if (!await _shaper.StoreReadAsync(cancellationToken))
+                    if (!await _shaper.StoreReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                     {
                         // Reset all collections
                         RootCoordinator.ResetCollection(_shaper);
@@ -599,10 +604,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 switch (_state)
                 {
                     case State.Start:
-                        if (await TryReadToNextElementAsync(cancellationToken))
+                        if (await TryReadToNextElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                         {
                             // if there's an element in the reader...
-                            await ReadElementAsync(cancellationToken);
+                            await ReadElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                         }
                         else
                         {
@@ -611,7 +616,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         }
                         break;
                     case State.Reading:
-                        await ReadElementAsync(cancellationToken);
+                        await ReadElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                         break;
                     case State.NoRowsLastElementPending:
                         // nothing to do but move to the next state...
@@ -665,7 +670,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 // now we need to read to the next element (or the end of the
                 // reader) so that we can return the first element
-                if (await TryReadToNextElementAsync(cancellationToken))
+                if (await TryReadToNextElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     // we're positioned at the start of the next element (which
                     // corresponds to the 'reading' state)
@@ -697,7 +702,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             private async Task<bool> TryReadToNextElementAsync(CancellationToken cancellationToken)
             {
-                while (await _rowEnumerator.MoveNextAsync(cancellationToken))
+                while (await _rowEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     // if we hit a new element, return true
                     if (_rowEnumerator.Current[0] != null)
@@ -844,7 +849,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                             || _rowEnumerator.Current.Length == _depth)
                         {
                             // time to move to the next row...
-                            if (!await _rowEnumerator.MoveNextAsync(cancellationToken))
+                            if (!await _rowEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                             {
                                 // no more rows...
                                 _current = null;

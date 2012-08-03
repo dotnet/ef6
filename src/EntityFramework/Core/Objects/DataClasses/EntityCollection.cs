@@ -328,8 +328,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     IEnumerable<TEntity> refreshedValues;
                     if (hasResults)
                     {
-                        var queryResult = await sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken);
-                        refreshedValues = await queryResult.ToListAsync(cancellationToken);
+                        var queryResult = await sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                        refreshedValues = await queryResult.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     }
                     else
                     {

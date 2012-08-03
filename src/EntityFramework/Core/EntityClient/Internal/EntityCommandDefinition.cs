@@ -454,7 +454,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
 
-            var storeDataReader = await ExecuteStoreCommandsAsync(entityCommand, behavior, cancellationToken);
+            var storeDataReader = await ExecuteStoreCommandsAsync(entityCommand, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             DbDataReader result = null;
 
             // If we actually executed something, then go ahead and construct a bridge
@@ -468,7 +468,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     {
                         // For a query with no result type (and therefore no column map), consume the reader.
                         // When the user requests Metadata for this reader, we return nothing.
-                        await CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken);
+                        await CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                         result = storeDataReader;
                     }
                     else
@@ -538,18 +538,25 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             DbDataReader reader = null;
             try
             {
-                reader = await storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken);
+                reader = await storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception e)
+            catch (AggregateException ae)
             {
-                // we should not be wrapping all exceptions
-                if (e.IsCatchableExceptionType())
-                {
-                    // we don't wan't folks to have to know all the various types of exceptions that can 
-                    // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
-                    // the inner exception of it.
-                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
-                }
+                ae.Flatten().Handle(
+                    e =>
+                        {
+                            // we should not be wrapping all exceptions
+                            if (e.IsCatchableExceptionType())
+                            {
+                                // we don't wan't folks to have to know all the various types of exceptions that can 
+                                // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
+                                // the inner exception of it.
+                                throw new EntityCommandExecutionException(
+                                    Strings.EntityClient_CommandDefinitionExecutionFailed, e);
+                            }
+
+                            return false;
+                        });
 
                 throw;
             }

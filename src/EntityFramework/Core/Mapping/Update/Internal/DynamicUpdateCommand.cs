@@ -217,9 +217,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // retrieve server gen results
                     rowsAffected = 0;
-                    using (var reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+                    using (var reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                     {
-                        if (await reader.ReadAsync(cancellationToken))
+                        if (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                         {
                             rowsAffected++;
 
@@ -232,16 +232,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                 var member = members[columnName];
                                 object value;
                                 if (Helper.IsSpatialType(member.TypeUsage)
-                                    && !await reader.IsDBNullAsync(ordinal, cancellationToken))
+                                    && !await reader.IsDBNullAsync(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                                 {
                                     value =
                                         await
                                         SpatialHelpers.GetSpatialValueAsync(
-                                            Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken);
+                                            Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                                 }
                                 else
                                 {
-                                    value = await reader.GetFieldValueAsync<object>(ordinal, cancellationToken);
+                                    value = await reader.GetFieldValueAsync<object>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                                 }
 
                                 // retrieve result which includes the context for back-propagation
@@ -262,12 +262,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                         // Consume the current reader (and subsequent result sets) so that any errors
                         // executing the command can be intercepted
-                        await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                        await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     }
                 }
                 else
                 {
-                    rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken);
+                    rowsAffected = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
 
                 return rowsAffected;

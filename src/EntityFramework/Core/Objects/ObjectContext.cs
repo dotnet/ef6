@@ -1557,7 +1557,7 @@ namespace System.Data.Entity.Core.Objects
             if (ConnectionState.Closed
                 == Connection.State)
             {
-                await Connection.OpenAsync(cancellationToken);
+                await Connection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 _openedConnection = true;
             }
 
@@ -1665,7 +1665,7 @@ namespace System.Data.Entity.Core.Objects
                             // by the first active query. As a result when trying to continue reading results from the first query the user will get an exception
                             // saying that calling "Read" on a closed data reader is not a valid operation.
                             Connection.Close();
-                            await Connection.OpenAsync(cancellationToken);
+                            await Connection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                             _openedConnection = true;
                             _connectionRequestCount++;
                         }
@@ -2723,7 +2723,7 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                await EnsureConnectionAsync(cancellationToken);
+                await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 mustReleaseConnection = true;
 
                 // determine what transaction to enlist in
@@ -2748,7 +2748,7 @@ namespace System.Data.Entity.Core.Objects
                         localTransaction = connection.BeginTransaction();
                     }
 
-                    entriesAffected = await _adapter.UpdateAsync(ObjectStateManager, cancellationToken);
+                    entriesAffected = await _adapter.UpdateAsync(ObjectStateManager, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
                     if (null != localTransaction)
                     {
@@ -3399,12 +3399,12 @@ namespace System.Data.Entity.Core.Objects
         public virtual async Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            await EnsureConnectionAsync(cancellationToken);
+            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             try
             {
                 var command = CreateStoreCommand(commandText, parameters);
-                return await command.ExecuteNonQueryAsync(cancellationToken);
+                return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             finally
             {
@@ -3574,13 +3574,13 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            await EnsureConnectionAsync(cancellationToken);
+            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             DbDataReader reader = null;
 
             try
             {
                 var command = CreateStoreCommand(commandText, parameters);
-                reader = await command.ExecuteReaderAsync(cancellationToken);
+                reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             catch
             {

@@ -275,7 +275,7 @@ namespace System.Data.Entity
     {
         #region Infrastructure/setup
 
-        static ValidationTests()
+        public ValidationTests()
         {
             Database.SetInitializer((IDatabaseInitializer<SelfPopulatingContext>)null);
             Database.SetInitializer((IDatabaseInitializer<ConfigurationOverridesContext>)null);

@@ -13,23 +13,8 @@ namespace System.Data.Entity.Infrastructure
     ///      cref="T:System.Linq.IQueryable" /> object.
     /// </summary>
     [ContractClass(typeof(IDbAsyncQueryProviderContracts))]
-    public interface IDbAsyncQueryProvider
+    public interface IDbAsyncQueryProvider : IQueryProvider
     {
-        /// <summary>
-        ///     Constructs an <see cref="T:System.Linq.IQueryable" /> object that can evaluate the query represented by a specified expression tree.
-        /// </summary>
-        /// <returns> An <see cref="T:System.Linq.IQueryable" /> that can evaluate the query represented by the specified expression tree. </returns>
-        /// <param name="expression"> An expression tree that represents a LINQ query. </param>
-        IQueryable CreateQuery(Expression expression);
-
-        /// <summary>
-        ///     Constructs an <see cref="T:System.Linq.IQueryable`1" /> object that can evaluate the query represented by a specified expression tree.
-        /// </summary>
-        /// <returns> An <see cref="T:System.Linq.IQueryable`1" /> that can evaluate the query represented by the specified expression tree. </returns>
-        /// <param name="expression"> An expression tree that represents a LINQ query. </param>
-        /// <typeparam name="TElement"> The type of the elements of the <see cref="T:System.Linq.IQueryable`1" /> that is returned. </typeparam>
-        IQueryable<TElement> CreateQuery<TElement>(Expression expression);
-
         /// <summary>
         ///     Asynchronously executes the query represented by a specified expression tree.
         /// </summary>
@@ -74,6 +59,16 @@ namespace System.Data.Entity.Infrastructure
         {
             Contract.Requires(expression != null);
 
+            throw new NotImplementedException();
+        }
+
+        public TResult Execute<TResult>(Expression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Execute(Expression expression)
+        {
             throw new NotImplementedException();
         }
     }

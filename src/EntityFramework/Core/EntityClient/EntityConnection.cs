@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.EntityClient
             [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
             [ResourceConsumption(ResourceScope.Machine)]
             // For ChangeConnectionString method call. But the paths are not created in this method.
-                set
+            set
             {
                 ValidateChangesPermitted();
                 ChangeConnectionString(value);
@@ -580,7 +580,7 @@ namespace System.Data.Entity.Core.EntityClient
                 if (_storeConnection.State
                     != ConnectionState.Open)
                 {
-                    await _storeConnection.OpenAsync(cancellationToken);
+                    await _storeConnection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     closeStoreConnectionOnFailure = true;
                 }
 
@@ -589,15 +589,19 @@ namespace System.Data.Entity.Core.EntityClient
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
             }
-            catch (Exception e)
+            catch (AggregateException ae)
             {
-                if (e.IsCatchableExceptionType())
-                {
-                    var exceptionMessage = EntityRes.GetString(EntityRes.EntityClient_ProviderSpecificError, @"Open");
-                    throw new EntityException(exceptionMessage, e);
-                }
+                ae.Flatten().Handle(
+                    e =>
+                        {
+                            if (e.IsCatchableExceptionType())
+                            {
+                                var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
+                                throw new EntityException(exceptionMessage, e);
+                            }
 
-                throw;
+                            return false;
+                        });
             }
 
             // the following guards against the case when the user closes the underlying store connection

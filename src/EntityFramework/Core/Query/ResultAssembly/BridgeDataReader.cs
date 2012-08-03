@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             if (!_shaper.DataWaiting)
             {
-                _shaper.DataWaiting = await _shaper.RootEnumerator.MoveNextAsync(cancellationToken);
+                _shaper.DataWaiting = await _shaper.RootEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             InitializeHasRows();
@@ -204,9 +204,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// </summary>
         internal async Task CloseImplicitlyAsync(CancellationToken cancellationToken)
         {
-            await EnsureInitializedAsync(cancellationToken);
-            await ConsumeAsync(cancellationToken);
-            await _dataRecord.CloseImplicitlyAsync(cancellationToken);
+            await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await ConsumeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await _dataRecord.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// </summary>
         private async Task ConsumeAsync(CancellationToken cancellationToken)
         {
-            while (await ReadInternalAsync(cancellationToken))
+            while (await ReadInternalAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
             {
             }
         }
@@ -431,17 +431,17 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <inheritdoc/>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
-            await EnsureInitializedAsync(cancellationToken);
+            await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             AssertReaderIsOpen("NextResult");
 
             // If there is a next result set available, serve it.
             if (_nextResultShaperInfoEnumerator != null
-                && await _shaper.Reader.NextResultAsync(cancellationToken)
+                && await _shaper.Reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false)
                 && _nextResultShaperInfoEnumerator.MoveNext())
             {
                 Debug.Assert(_dataRecord.Depth == 0, "Nested data readers should not have multiple result sets.");
                 var nextResultShaperInfo = _nextResultShaperInfoEnumerator.Current;
-                await _dataRecord.CloseImplicitlyAsync(cancellationToken);
+                await _dataRecord.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 SetShaper(nextResultShaperInfo.Key, nextResultShaperInfo.Value, depth: 0);
                 return true;
             }
@@ -451,19 +451,19 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 // This is required to ensure that output parameter values 
                 // are set in SQL Server, and other providers where they come after
                 // the results.
-                await CommandHelper.ConsumeReaderAsync(_shaper.Reader, cancellationToken);
+                await CommandHelper.ConsumeReaderAsync(_shaper.Reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             else
             {
                 // For nested readers, make sure we're positioned properly for 
                 // the following columns...
-                await ConsumeAsync(cancellationToken);
+                await ConsumeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             // Ensure we close the records that may be outstanding.
             // Do this after we consume the underlying reader 
             // so we don't run result assembly through it.
-            await CloseImplicitlyAsync(cancellationToken);
+            await CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             // Reset any state on our attached data record, since we've now
             // gone past the end of the reader.
@@ -494,18 +494,18 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <inheritdoc/>
         public override async Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
-            await EnsureInitializedAsync(cancellationToken);
+            await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             AssertReaderIsOpen("Read");
 
             // First of all we need to inform each of the nested records that
             // have been returned that they're "implicitly" closed -- that is 
             // we've moved on.  This will also ensure that any records remaining
             // in any active nested readers are consumed
-            await _dataRecord.CloseImplicitlyAsync(cancellationToken);
+            await _dataRecord.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             // OK, now go ahead and advance the source enumerator and set the 
             // record source up 
-            var result = await ReadInternalAsync(cancellationToken);
+            var result = await ReadInternalAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             _dataRecord.SetRecordSource(_shaper.RootEnumerator.Current, result);
             return result;
         }
@@ -562,7 +562,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             // to advance it. 
             if (!_shaper.DataWaiting)
             {
-                _shaper.DataWaiting = await _shaper.RootEnumerator.MoveNextAsync(cancellationToken);
+                _shaper.DataWaiting = await _shaper.RootEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             // If we have some data (we may have just read it above) then figure
@@ -573,7 +573,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                    && _shaper.RootEnumerator.Current.CoordinatorFactory != _coordinatorFactory
                    && _shaper.RootEnumerator.Current.CoordinatorFactory.Depth > _coordinatorFactory.Depth)
             {
-                _shaper.DataWaiting = await _shaper.RootEnumerator.MoveNextAsync(cancellationToken);
+                _shaper.DataWaiting = await _shaper.RootEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             if (_shaper.DataWaiting)
@@ -736,8 +736,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <inheritdoc/>
         public override async Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
         {
-            await EnsureInitializedAsync(cancellationToken);
-            return await base.GetFieldValueAsync<T>(ordinal, cancellationToken);
+            await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            return await base.GetFieldValueAsync<T>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         /// <inheritdoc/>

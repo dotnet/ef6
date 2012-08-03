@@ -360,7 +360,6 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var entityCommand = InitializeEntityCommand();
 
-                var dbDataReader = new Mock<DbDataReader>().Object;
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Throws
                     <InvalidOperationException>();
@@ -486,11 +485,10 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var entityCommand = InitializeEntityCommand();
 
-                var dbDataReader = new Mock<DbDataReader>().Object;
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()).Throws
-                    <InvalidOperationException>();
+                    (new AggregateException(new InvalidOperationException()));
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>

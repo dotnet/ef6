@@ -96,16 +96,6 @@ namespace System.Data.Entity.Internal.Linq
 
         #region IDbAsyncQueryProvider Members
 
-        IQueryable<TElement> IDbAsyncQueryProvider.CreateQuery<TElement>(Expression expression)
-        {
-            return CreateQuery<TElement>(expression);
-        }
-
-        IQueryable IDbAsyncQueryProvider.CreateQuery(Expression expression)
-        {
-            return CreateQuery(expression);
-        }
-
         /// <summary>
         ///     By default, calls the same method on the wrapped provider.
         /// </summary>

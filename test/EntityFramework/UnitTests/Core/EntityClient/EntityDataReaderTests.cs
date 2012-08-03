@@ -130,7 +130,8 @@ namespace System.Data.Entity.Core.EntityClient
         public void NextResultAsync_wraps_exception_into_EntityCommandExecutionException_if_one_was_thrown()
         {
             var dbDataReaderMock = new Mock<DbDataReader>();
-            dbDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Throws<InvalidOperationException>();
+            dbDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Throws(
+                new AggregateException(new InvalidOperationException()));
             var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
 
             AssertThrowsInAsyncMethod<EntityCommandExecutionException>(

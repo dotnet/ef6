@@ -130,7 +130,7 @@ namespace System.Data.Entity.Internal.Linq
             // because it would go to the store before checking for Added objects, and also
             // because if the object found was of the wrong type then it would still get into
             // the state manager.
-            var entity = FindInStateManager(key) ?? await FindInStoreAsync(key, "keyValues", cancellationToken);
+            var entity = FindInStateManager(key) ?? await FindInStoreAsync(key, "keyValues", cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             if (entity != null
                 && !(entity is TEntity))
@@ -247,7 +247,7 @@ namespace System.Data.Entity.Internal.Linq
 
             try
             {
-                return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken);
+                return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (AggregateException ae)
             {
@@ -261,10 +261,9 @@ namespace System.Data.Entity.Internal.Linq
                             }
                             return false;
                         });
-            }
 
-            Contract.Assert(false, "This code is unreachable, but the compiler can't prove it.");
-            return null;
+                throw;
+            }
         }
 
         private ObjectQuery<TEntity> BuildFindQuery(WrappedEntityKey key)
@@ -702,7 +701,7 @@ namespace System.Data.Entity.Internal.Linq
                 async () =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, mergeOption, CancellationToken.None, parameters);
+                                  sql, EntitySetName, mergeOption, CancellationToken.None, parameters).ConfigureAwait(continueOnCapturedContext: false);
 
                               try
                               {

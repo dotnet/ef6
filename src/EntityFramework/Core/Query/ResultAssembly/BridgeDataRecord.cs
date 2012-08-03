@@ -180,14 +180,14 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             if (null != currentNestedRecord)
             {
                 _currentNestedRecord = null;
-                await currentNestedRecord.CloseImplicitlyAsync(cancellationToken);
+                await currentNestedRecord.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             var currentNestedReader = _currentNestedReader;
             if (null != currentNestedReader)
             {
                 _currentNestedReader = null;
-                await currentNestedReader.CloseImplicitlyAsync(cancellationToken);
+                await currentNestedReader.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 

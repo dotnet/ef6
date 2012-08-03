@@ -473,11 +473,17 @@ namespace System.Data.Entity.Core.EntityClient
         {
             try
             {
-                return await _storeDataReader.NextResultAsync(cancellationToken);
+                return await _storeDataReader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception e)
+            catch (AggregateException ae)
             {
-                throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
+                ae.Flatten().Handle(
+                    e =>
+                        {
+                            throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
+                        });
+
+                throw;
             }
         }
 

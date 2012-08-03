@@ -347,10 +347,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // If there are result columns, read the server gen results
                 rowsAffected = 0;
                 var members = TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType);
-                using (var reader = await _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken))
+                using (var reader = await _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     // Retrieve only the first row from the first result set
-                    if (await reader.ReadAsync(cancellationToken))
+                    if (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                     {
                         rowsAffected++;
 
@@ -363,16 +363,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             object value;
 
                             if (Helper.IsSpatialType(columnType)
-                                && !await reader.IsDBNullAsync(columnOrdinal, cancellationToken))
+                                && !await reader.IsDBNullAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                             {
                                 value =
                                     await
                                     SpatialHelpers.GetSpatialValueAsync(
-                                        Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken);
+                                        Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                             }
                             else
                             {
-                                value = await reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken);
+                                value = await reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                             }
 
                             // register for back-propagation
@@ -390,12 +390,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     // Consume the current reader (and subsequent result sets) so that any errors
                     // executing the function can be intercepted
-                    await CommandHelper.ConsumeReaderAsync(reader, cancellationToken);
+                    await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
             {
-                rowsAffected = await _dbCommand.ExecuteNonQueryAsync(cancellationToken);
+                rowsAffected = await _dbCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             return GetRowsAffected(rowsAffected, Translator);

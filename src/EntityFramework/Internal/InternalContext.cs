@@ -405,11 +405,22 @@ namespace System.Data.Entity.Internal
                 var shouldDetectChanges = AutoDetectChangesEnabled && !ValidateOnSaveEnabled;
                 var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
                                   (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
-                return await ObjectContext.SaveChangesAsync(saveOptions, cancellationToken);
+                return await ObjectContext.SaveChangesAsync(saveOptions, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (UpdateException ex)
+            catch (AggregateException ae)
             {
-                throw WrapUpdateException(ex);
+                ae.Flatten().Handle(
+                    e =>
+                    {
+                        var ex = e as UpdateException;
+                        if (ex != null)
+                        {
+                            throw WrapUpdateException(ex);
+                        }
+                        return false;
+                    });
+
+                throw;
             }
         }
 
@@ -741,24 +752,24 @@ namespace System.Data.Entity.Internal
 
             return new LazyEnumerator<TElement>(
                 () =>
-                    {
-                        Initialize();
+                {
+                    Initialize();
 
-                        var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
-                        try
-                        {
-                            var result = disposableEnumerable.GetEnumerator();
-                            return result;
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+                    var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
+                    try
+                    {
+                        var result = disposableEnumerable.GetEnumerator();
+                        return result;
+                    }
+                    catch
+                    {
+                        // if there is a problem creating the enumerator, we should dispose
+                        // the enumerable (if there is no problem, the enumerator will take 
+                        // care of the dispose)
+                        disposableEnumerable.Dispose();
+                        throw;
+                    }
+                });
         }
 
         /// <summary>
@@ -777,26 +788,26 @@ namespace System.Data.Entity.Internal
 
             return new LazyAsyncEnumerator<TElement>(
                 async () =>
-                          {
-                              //Not initializing asynchronously as it's not expected to be done frequently
-                              Initialize();
+                {
+                    //Not initializing asynchronously as it's not expected to be done frequently
+                    Initialize();
 
-                              var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                                  sql, CancellationToken.None, parameters);
+                    var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                        sql, CancellationToken.None, parameters).ConfigureAwait(continueOnCapturedContext: false);
 
-                              try
-                              {
-                                  return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
-                              }
-                              catch
-                              {
-                                  // if there is a problem creating the enumerator, we should dispose
-                                  // the enumerable (if there is no problem, the enumerator will take 
-                                  // care of the dispose)
-                                  disposableEnumerable.Dispose();
-                                  throw;
-                              }
-                          });
+                    try
+                    {
+                        return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
+                    }
+                    catch
+                    {
+                        // if there is a problem creating the enumerator, we should dispose
+                        // the enumerable (if there is no problem, the enumerator will take 
+                        // care of the dispose)
+                        disposableEnumerable.Dispose();
+                        throw;
+                    }
+                });
         }
 
         /// <summary>

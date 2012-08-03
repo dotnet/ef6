@@ -165,21 +165,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #region IDbAsyncQueryProvider
 
-        IQueryable<TElement> IDbAsyncQueryProvider.CreateQuery<TElement>(Expression expression)
-        {
-            return ((IQueryProvider)this).CreateQuery<TElement>(expression);
-        }
-
         Task<TResult> IDbAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             var query = CreateQuery<TResult>(expression);
 
             return ExecuteSingleAsync(query, expression, cancellationToken);
-        }
-
-        IQueryable IDbAsyncQueryProvider.CreateQuery(Expression expression)
-        {
-            return ((IQueryProvider)this).CreateQuery(expression);
         }
 
         Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)

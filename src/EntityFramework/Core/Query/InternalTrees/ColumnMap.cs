@@ -1,8 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using md = System.Data.Entity.Core.Metadata.Edm;
-using mp = System.Data.Entity.Core.Mapping;
-
 // A ColumnMap is a data structure that maps columns from the C space to
 // the corresponding columns from one or more underlying readers.
 //
@@ -54,6 +51,7 @@ using mp = System.Data.Entity.Core.Mapping;
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
     /// <summary>
@@ -61,8 +59,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// </summary>
     internal abstract class ColumnMap
     {
-        private readonly md.TypeUsage m_type; // column datatype
-        private string m_name; // name of the column
+        private readonly TypeUsage _type; // column datatype
+        private string _name; // name of the column
 
         /// <summary>
         ///     Default Column Name; should not be set until CodeGen once we're done 
@@ -76,19 +74,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="type"> column type </param>
         /// <param name="name"> column name </param>
-        internal ColumnMap(md.TypeUsage type, string name)
+        internal ColumnMap(TypeUsage type, string name)
         {
             Debug.Assert(type != null, "Unspecified type");
-            m_type = type;
-            m_name = name;
+            _type = type;
+            _name = name;
         }
 
         /// <summary>
         ///     Get the column's datatype
         /// </summary>
-        internal md.TypeUsage Type
+        internal TypeUsage Type
         {
-            get { return m_type; }
+            get { return _type; }
         }
 
         /// <summary>
@@ -96,11 +94,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         internal string Name
         {
-            get { return m_name; }
+            get { return _name; }
             set
             {
                 Debug.Assert(!String.IsNullOrEmpty(value), "invalid name?");
-                m_name = value;
+                _name = value;
             }
         }
 
@@ -109,7 +107,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         internal bool IsNamed
         {
-            get { return m_name != null; }
+            get { return _name != null; }
         }
 
         /// <summary>
