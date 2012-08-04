@@ -138,7 +138,8 @@ namespace System.Data.Entity.Config
                     SetConfiguration(foundConfiguration);
                 }
             }
-            else if (!contextAssembly.IsDynamic) // Don't throw for proxy contexts created in dynamic assemblies
+            else if (!contextAssembly.IsDynamic && // Don't throw for proxy contexts created in dynamic assemblies
+                     !_loader.AppConfigContainsDbConfigurationType(AppConfig.DefaultInstance))
             {
                 var foundType = _finder.TryFindConfigurationType(contextType.Assembly.GetAccessibleTypes());
                 if (!typeof(DbNullConfiguration).IsAssignableFrom(foundType))

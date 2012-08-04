@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Resources;
-    using System.Data.Entity.TestHelpers;
     using FunctionalTests.TestHelpers;
     using Moq;
     using Xunit;
@@ -41,7 +40,13 @@ namespace System.Data.Entity.Config
                 Assert.Same(
                     typeof(FunctionalTestsConfiguration),
                     new DbConfigurationFinder().TryFindConfigurationType(
-                        new[] { typeof(object), _normalConfigType, _normalConfigType, typeof(UnitTestsConfiguration) }));
+                        new[]
+                            {
+                                typeof(object),
+                                _normalConfigType,
+                                _normalConfigType,
+                                new Mock<FakeDbConfigurationProxy>().Object.GetType()
+                            }));
             }
 
             [Fact]
@@ -117,7 +122,15 @@ namespace System.Data.Entity.Config
             public void TryCreateConfiguration_creates_instance_of_type_returned_by_TryFindConfigurationType_when_proxied()
             {
                 Assert.IsType<FunctionalTestsConfiguration>(
-                    new DbConfigurationFinder().TryCreateConfiguration(new[] { typeof(UnitTestsConfiguration) }));
+                    new DbConfigurationFinder().TryCreateConfiguration(new[] { new Mock<FakeDbConfigurationProxy>().Object.GetType() }));
+            }
+        }
+
+        public abstract class FakeDbConfigurationProxy : DbConfigurationProxy
+        {
+            public override sealed Type ConfigurationToUse()
+            {
+                return typeof(FunctionalTestsConfiguration);
             }
         }
 

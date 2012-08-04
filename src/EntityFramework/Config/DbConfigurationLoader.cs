@@ -3,13 +3,40 @@
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics.Contracts;
 
     internal class DbConfigurationLoader
     {
         public virtual DbConfiguration TryLoadFromConfig(AppConfig config)
         {
-            // TODO: Implement loading from app.config
-            return null;
+            Contract.Requires(config != null);
+
+            var typeName = config.ConfigurationTypeName;
+            if (string.IsNullOrWhiteSpace(typeName))
+            {
+                return null;
+            }
+
+            Type configType;
+            try
+            {
+                configType = Type.GetType(typeName, throwOnError: true);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(Strings.DbConfigurationTypeNotFound(typeName), ex);
+            }
+
+            return configType.CreateInstance<DbConfiguration>(Strings.CreateInstance_BadDbConfigurationType);
+        }
+
+        public virtual bool AppConfigContainsDbConfigurationType(AppConfig config)
+        {
+            Contract.Requires(config != null);
+
+            return !string.IsNullOrWhiteSpace(config.ConfigurationTypeName);
         }
     }
 }

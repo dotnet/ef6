@@ -148,5 +148,10 @@ namespace System.Data.Entity.Internal
         {
             get { return new InitializerConfig(_entityFrameworkSettings, _appSettings); }
         }
+
+        public virtual string ConfigurationTypeName
+        {
+            get { return _entityFrameworkSettings.DbConfiguration.ConfigurationTypeName; }
+        }
     }
 }

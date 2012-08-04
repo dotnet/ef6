@@ -7,7 +7,6 @@ namespace System.Data.Entity.Config
     using System.Configuration;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using FunctionalTests.TestHelpers;
     using Moq;
@@ -148,6 +147,7 @@ namespace System.Data.Entity.Config
             {
                 var mockLoadedConfig = new Mock<DbConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
+                mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
                 mockLoader.Setup(m => m.TryLoadFromConfig(It.IsAny<AppConfig>())).Returns(mockLoadedConfig.Object);
 
                 var manager = CreateManager(mockLoader);
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Config
             {
                 ConfigurationThreadTest(
                     m => { },
-                    m => m.SetConfiguration(new UnitTestsConfiguration()));
+                    m => m.SetConfiguration(new FunctionalTestsConfiguration()));
             }
         }
 
@@ -373,6 +373,24 @@ namespace System.Data.Entity.Config
                         () => manager.EnsureLoadedForContext(typeof(FakeContext))).Message);
             }
 
+            [Fact]
+            public void EnsureLoadedForContext_does_not_throw_if_configuration_is_specified_in_config_file()
+            {
+                var mockLoadedConfig = new Mock<DbConfiguration>();
+                var mockLoader = new Mock<DbConfigurationLoader>();
+                mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
+                mockLoader.Setup(m => m.TryLoadFromConfig(It.IsAny<AppConfig>())).Returns(mockLoadedConfig.Object);
+
+                var configuration = new Mock<DbConfiguration>().Object;
+                var mockFinder = new Mock<DbConfigurationFinder>();
+                var manager = CreateManager(mockLoader, mockFinder);
+
+                manager.SetConfiguration(configuration);
+
+                manager.EnsureLoadedForContext(typeof(FakeContext));
+                Assert.Same(mockLoadedConfig.Object, manager.GetConfiguration());
+            }
+
             /// <summary>
             ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
             ///     issues. As with any test of this type just because the test passes does not mean that the code is
@@ -414,6 +432,7 @@ namespace System.Data.Entity.Config
                 var mockConfiguration = new Mock<DbConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
+                mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
                 var mockFinder = new Mock<DbConfigurationFinder>();
 
                 var manager = CreateManager(mockLoader, mockFinder);
@@ -467,6 +486,7 @@ namespace System.Data.Entity.Config
                 var mockConfiguration = new Mock<DbConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
+                mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
 
                 CreateManager(mockLoader).PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
@@ -479,6 +499,7 @@ namespace System.Data.Entity.Config
                 var mockConfiguration = new Mock<DbConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
+                mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
 
                 var manager = CreateManager(mockLoader);
                 var defaultConfiguration = manager.GetConfiguration();

@@ -9,7 +9,9 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
+    using Moq;
     using Xunit;
 
     public class AppConfigTests : TestBase
@@ -241,6 +243,35 @@ namespace ProductivityApiUnitTests
                 Assert.Equal("Provider Invariant Name", ((SqlCeConnectionFactory)factory).ProviderInvariantName);
                 Assert.Equal("Database Directory", ((SqlCeConnectionFactory)factory).DatabaseDirectory);
                 Assert.Equal("Base Connection String", ((SqlCeConnectionFactory)factory).BaseConnectionString);
+            }
+        }
+
+        public class ConfigurationTypeName : TestBase
+        {
+            [Fact]
+            public void ConfigurationTypeName_returns_the_type_name_if_set()
+            {
+                var mockEFSection = new Mock<EntityFrameworkSection>();
+                mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
+                mockEFSection.Setup(m => m.DbConfiguration).Returns(
+                    new DbConfigurationElement
+                        {
+                            ConfigurationTypeName = "Eat.Horn.White.Spoonbill"
+                        });
+
+                Assert.Equal(
+                    "Eat.Horn.White.Spoonbill",
+                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigurationTypeName);
+            }
+
+            [Fact]
+            public void ConfigurationTypeName_returns_the_empty_string_if_no_type_name_is_set()
+            {
+                var mockEFSection = new Mock<EntityFrameworkSection>();
+                mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
+                mockEFSection.Setup(m => m.DbConfiguration).Returns(new DbConfigurationElement());
+
+                Assert.Equal("", new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigurationTypeName);
             }
         }
     }

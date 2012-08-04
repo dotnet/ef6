@@ -8,6 +8,7 @@ namespace EntityFramework.PowerShell.UnitTests
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Globalization;
     using System.IO;
@@ -16,6 +17,7 @@ namespace EntityFramework.PowerShell.UnitTests
     using System.ServiceProcess;
     using System.Xml.Linq;
     using EnvDTE;
+    using FunctionalTests.TestHelpers;
     using Microsoft.Win32;
     using Moq;
     using powershell::System.Data.Entity.ConnectionFactoryConfig;
@@ -26,11 +28,6 @@ namespace EntityFramework.PowerShell.UnitTests
     {
         #region Well-known values
 
-        private const string SqlExpressBaseConnectionString =
-            @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True";
-
-        private const string LocalDBBaseConnectionString =
-            @"Data Source=(localdb)\v11.0; Integrated Security=True; MultipleActiveResultSets=True";
 
         // Hard-coding this rather than getting it dynamically because the product code gets it dynamically
         // and the tests need to make sure it gets the correct thing. This will need to be updated when the
@@ -493,6 +490,13 @@ namespace EntityFramework.PowerShell.UnitTests
         private void AddOrUpdateConfigSection_result_can_load_in_partial_trust(XDocument config)
         {
             new ConfigFileManipulator().AddOrUpdateConfigSection(config, _net45EntityFrameworkVersion);
+
+            config.Element(ConfigFileManipulator.ConfigurationElementName).Add(
+                new XElement(
+                    ConfigFileManipulator.EntityFrameworkElementName,
+                    new XElement(
+                        ConfigFileManipulator.DbConfigurationElementName,
+                        new XAttribute("type", typeof(FunctionalTestsConfiguration).AssemblyQualifiedName))));
 
             var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
             config.Save(configurationFile);
