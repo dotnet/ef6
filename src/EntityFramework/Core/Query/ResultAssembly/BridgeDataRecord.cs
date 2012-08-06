@@ -11,6 +11,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     DbDataRecord functionality for the bridge.
@@ -100,9 +102,18 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// </summary>
         internal void CloseExplicitly()
         {
-            _status = Status.ClosedExplicitly;
-            _source = null; // can't have data any longer once we're closed.
-            CloseNestedObjectImplicitly();
+            Close(Status.ClosedExplicitly, CloseNestedObjectImplicitly);
+        }
+
+        /// <summary>
+        /// An asynchronous version of <see cref="CloseExplicitly"/>, which
+        /// is called by our owning datareader when it is explicitly closed; will
+        /// not be called for nested structures, they go through the ClosedImplicitly.
+        /// path instead.
+        /// </summary>
+        internal Task CloseExplicitlyAsync(CancellationToken cancellationToken)
+        {
+            return Close(Status.ClosedExplicitly, () => CloseNestedObjectImplicitlyAsync(cancellationToken));
         }
 
         /// <summary>
@@ -111,15 +122,30 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// </summary>
         internal void CloseImplicitly()
         {
-            _status = Status.ClosedImplicitly;
+            Close(Status.ClosedImplicitly, CloseNestedObjectImplicitly);
+        }
+
+        /// <summary>
+        /// An asynchronous version of <see cref="CloseImplicitly"/>, which
+        /// is called by our parent object to ensure that we're marked as implicitly 
+        /// closed;  will not be called for root level data readers.
+        /// </summary>
+        internal Task CloseImplicitlyAsync(CancellationToken cancellationToken)
+        {
+            return Close(Status.ClosedImplicitly, () => CloseNestedObjectImplicitlyAsync(cancellationToken));
+        }
+
+        private T Close<T>(Status status, Func<T> close)
+        {
+            _status = status;
             _source = null; // can't have data any longer once we're closed.
-            CloseNestedObjectImplicitly();
+            return close();
         }
 
         /// <summary>
         ///     Ensure that whatever column we're currently processing is implicitly closed;
         /// </summary>
-        private void CloseNestedObjectImplicitly()
+        private object CloseNestedObjectImplicitly()
         {
             // it would be nice to use Interlocked.Exchange to avoid multi-thread `race condition risk
             // when the the bridge is being misused by the user accessing it with multiple threads.
@@ -130,11 +156,38 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 _currentNestedRecord = null;
                 currentNestedRecord.CloseImplicitly();
             }
+
             var currentNestedReader = _currentNestedReader;
             if (null != currentNestedReader)
             {
                 _currentNestedReader = null;
                 currentNestedReader.CloseImplicitly();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// An asynchronous version of <see cref="CloseNestedObjectImplicitly"/>, which
+        /// Ensure that whatever column we're currently processing is implicitly closed;
+        /// </summary>
+        private async Task CloseNestedObjectImplicitlyAsync(CancellationToken cancellationToken)
+        {
+            // it would be nice to use Interlocked.Exchange to avoid multi-thread `race condition risk
+            // when the the bridge is being misused by the user accessing it with multiple threads.
+            // but this is called frequently enough to have a performance impact
+            var currentNestedRecord = _currentNestedRecord;
+            if (null != currentNestedRecord)
+            {
+                _currentNestedRecord = null;
+                await currentNestedRecord.CloseImplicitlyAsync(cancellationToken);
+            }
+
+            var currentNestedReader = _currentNestedReader;
+            if (null != currentNestedReader)
+            {
+                _currentNestedReader = null;
+                await currentNestedReader.CloseImplicitlyAsync(cancellationToken);
             }
         }
 

@@ -16,30 +16,34 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         [Fact]
         public void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory_sync()
         {
-            GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(SetupReadSync, e => e.ToList());
+            GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(e => e.ToList());
         }
 
         [Fact]
         public void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory_async()
         {
-            GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(SetupReadAsync, e => e.ToListAsync().Result);
+            GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(e => e.ToListAsync().Result);
         }
 
-        private void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(Action<Mock<DbDataReader>, IEnumerator<object>> setupRead,
+        private void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(
             Func<IDbEnumerator<object>, List<object>> toList)
         {
             var sourceEnumerable = new[] { new object[] { 1 }, new object[] { 2 } };
-            var underlyingEnumerator = ((IEnumerable<object[]>)sourceEnumerable).GetEnumerator();
-
-            var dbDataReaderMock = new Mock<DbDataReader>();
-            setupRead(dbDataReaderMock, underlyingEnumerator);
-            dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal]);
 
             var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<object>(shaper => shaper.Reader.GetValue(0));
 
-            var shaperMock = new Mock<Shaper<object>>(dbDataReaderMock.Object, /*context*/ null, /*workspace*/ null,
-                MergeOption.AppendOnly, /*stateCount*/ 1, coordinatorFactory, /*checkPermissions*/ null,
-                /*readerOwned*/ false) { CallBase = true };
+            var shaperMock = new Mock<Shaper<object>>(
+                MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                /*context*/ null,
+                /*workspace*/ null,
+                MergeOption.AppendOnly,
+                /*stateCount*/ 1,
+                coordinatorFactory,
+                /*checkPermissions*/ null,
+                /*readerOwned*/ false)
+                                 {
+                                     CallBase = true
+                                 };
 
             var actualEnumerator = shaperMock.Object.GetEnumerator();
 
@@ -49,16 +53,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         [Fact]
         public void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories_sync()
         {
-            GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(SetupReadSync, e => e.ToList());
+            GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(e => e.ToList());
         }
 
         [Fact]
         public void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories_async()
         {
-            GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(SetupReadAsync, e => e.ToListAsync().Result);
+            GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(e => e.ToListAsync().Result);
         }
 
-        private void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(Action<Mock<DbDataReader>, IEnumerator<object>> setupRead,
+        private void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(
             Func<IDbEnumerator<object>, List<object>> toList)
         {
             var sourceEnumerable = new[]
@@ -69,12 +73,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                            new object[] { 4, "C", null },
                                            new object[] { 4, "D", null } // 4 shouldn't be added as it's repeated
                                        };
-
-            var underlyingEnumerator = ((IEnumerable<object[]>)sourceEnumerable).GetEnumerator();
-
-            var dbDataReaderMock = new Mock<DbDataReader>();
-            setupRead(dbDataReaderMock, underlyingEnumerator);
-            dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal]);
 
             var actualValuesFromNestedCoordinatorOne = new List<string>();
             var nestedCoordinatorFactoryOne = Objects.MockHelper.CreateCoordinatorFactory<string, string>(
@@ -100,9 +98,18 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 nestedCoordinators: new[] { nestedCoordinatorFactoryOne, nestedCoordinatorFactoryTwo },
                 producedValues: actualValuesFromRootCoordinator);
 
-            var shaperMock = new Mock<Shaper<object>>(dbDataReaderMock.Object, /*context*/ null, /*workspace*/ null,
-                MergeOption.AppendOnly, /*stateCount*/ 3, rootCoordinatorFactory, /*checkPermissions*/ null,
-                /*readerOwned*/ false) { CallBase = true };
+            var shaperMock = new Mock<Shaper<object>>(
+                MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                /*context*/ null,
+                /*workspace*/ null,
+                MergeOption.AppendOnly,
+                /*stateCount*/ 3,
+                rootCoordinatorFactory,
+                /*checkPermissions*/ null,
+                /*readerOwned*/ false)
+                                 {
+                                     CallBase = true
+                                 };
 
             var actualEnumerator = shaperMock.Object.GetEnumerator();
 
@@ -115,7 +122,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         [Fact]
         public void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState_sync()
         {
-            GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(SetupReadSync,
+            GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
                 e =>
                 {
                     var actualValues = new List<object>();
@@ -130,7 +137,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         [Fact]
         public void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState_async()
         {
-            GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(SetupReadAsync,
+            GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
                 e =>
                 {
                     var actualValues = new List<object>();
@@ -142,7 +149,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 });
         }
 
-        private void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(Action<Mock<DbDataReader>, IEnumerator<object>> setupRead,
+        private void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
             Func<IDbEnumerator<RecordState>, List<object>> toList)
         {
             var sourceEnumerable = new[]
@@ -153,13 +160,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                            new object[] { 4, "C", null },
                                            new object[] { 4, "D", null } // 4 shouldn't be added as it's repeated
                                        };
-
-            var underlyingEnumerator = ((IEnumerable<object[]>)sourceEnumerable).GetEnumerator();
-
-            var dbDataReaderMock = new Mock<DbDataReader>();
-            setupRead(dbDataReaderMock, underlyingEnumerator);
-            dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal]);
-            dbDataReaderMock.Setup(m => m.IsDBNull(It.IsAny<int>())).Returns((int ordinal) => underlyingEnumerator.Current[ordinal] == null);
 
             var nestedCoordinatorFactoryOne = Objects.MockHelper.CreateCoordinatorFactory<string, RecordState>(
                 depth: 1,
@@ -182,22 +182,20 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 nestedCoordinators: new[] { nestedCoordinatorFactoryOne, nestedCoordinatorFactoryTwo },
                 producedValues: null);
 
-            var shaperMock = new Mock<Shaper<RecordState>>(dbDataReaderMock.Object, /*context*/ null, /*workspace*/ null,
-                MergeOption.AppendOnly, /*stateCount*/ 6, rootCoordinatorFactory, /*checkPermissions*/ null,
-                /*readerOwned*/ false) { CallBase = true };
+            var shaperMock = new Mock<Shaper<RecordState>>(
+                MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                /*context*/ null,
+                /*workspace*/ null,
+                MergeOption.AppendOnly,
+                /*stateCount*/ 6,
+                rootCoordinatorFactory,
+                /*checkPermissions*/ null,
+                /*readerOwned*/ false)
+                                 {
+                                     CallBase = true
+                                 };
 
             Assert.Equal(new object[] { 1, "A", 2, "X", 3, "B", 4, "C", "D" }.ToList(), toList(shaperMock.Object.RootEnumerator));
         }
-
-        private void SetupReadSync(Mock<DbDataReader> dbDataReaderMock, IEnumerator<object> underlyingEnumerator)
-        {
-            dbDataReaderMock.Setup(m => m.Read()).Returns(underlyingEnumerator.MoveNext);
-        }
-
-        private void SetupReadAsync(Mock<DbDataReader> dbDataReaderMock, IEnumerator<object> underlyingEnumerator)
-        {
-            dbDataReaderMock.Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Returns((CancellationToken ct) => Task.FromResult(underlyingEnumerator.MoveNext()));
-        }
-
     }
 }

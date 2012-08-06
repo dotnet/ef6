@@ -2,11 +2,14 @@
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Moq;
 
     internal static class MockHelper
@@ -39,6 +42,45 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(shaperFactory);
 
             return translatorMock.Object;
+        }
+
+        public static DbDataReader CreateMockDbDataReader(params IEnumerable<object[]>[] sourceEnumerables)
+        {
+            var underlyingEnumerators = new IEnumerator<object[]>[sourceEnumerables.Length];
+            for (int i = 0; i < sourceEnumerables.Length; i++)
+            {
+                underlyingEnumerators[i] = sourceEnumerables[i].GetEnumerator();
+            }
+
+            int currentResultSet = 0;
+
+            var dbDataReaderMock = new Mock<DbDataReader>();
+            dbDataReaderMock
+                .Setup(m => m.Read())
+                .Returns(() =>
+                    underlyingEnumerators[currentResultSet].MoveNext());
+            dbDataReaderMock
+                .Setup(m => m.ReadAsync(It.IsAny<CancellationToken>()))
+                .Returns((CancellationToken ct) =>
+                    Task.FromResult(underlyingEnumerators[currentResultSet].MoveNext()));
+
+            dbDataReaderMock
+                .Setup(m => m.NextResult())
+                .Returns(() =>
+                    ++currentResultSet < underlyingEnumerators.Length);
+            dbDataReaderMock
+                .Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>()))
+                .Returns((CancellationToken ct) =>
+                    Task.FromResult(++currentResultSet < underlyingEnumerators.Length));
+
+            dbDataReaderMock
+                .Setup(m => m.GetValue(It.IsAny<int>()))
+                .Returns((int ordinal) => underlyingEnumerators[currentResultSet].Current[ordinal]);
+            dbDataReaderMock
+                .Setup(m => m.IsDBNull(It.IsAny<int>()))
+                .Returns((int ordinal) => underlyingEnumerators[currentResultSet].Current[ordinal] == null);
+
+            return dbDataReaderMock.Object;
         }
     }
 }
