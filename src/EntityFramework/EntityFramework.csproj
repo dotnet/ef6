@@ -1744,7 +1744,7 @@
     <Compile Include="ModelConfiguration\Mappers\TypeMapper.cs" />
     <Compile Include="ModelConfiguration\ModelValidationException.cs" />
     <Compile Include="ModelConfiguration\Utilities\AttributeProvider.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DatabaseName.cs" />
+    <Compile Include="Utilities\DatabaseName.cs" />
     <Compile Include="Utilities\DbConnectionExtensions.cs" />
     <Compile Include="Utilities\DbProviderInfoExtensions.cs" />
     <Compile Include="Utilities\DbProviderManifestExtensions.cs" />

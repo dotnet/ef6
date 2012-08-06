@@ -1,48 +1,26 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Migrations;
-    using System.Linq;
     using Xunit;
 
     public class StringExtensionsTests
     {
         [Fact]
-        public void Break_should_break_long_strings()
-        {
-            var s = new string('a', 3000);
-            var lines = StringExtensions.Break(s);
-
-            Assert.Equal(3, lines.Count());
-            Assert.Equal(s, string.Join(string.Empty, lines));
-
-            s = new string('a', 3001);
-
-            lines = StringExtensions.Break(s);
-
-            Assert.Equal(4, lines.Count());
-            Assert.Equal(s, string.Join(string.Empty, lines));
-
-            s = new string('a', 2999);
-
-            lines = StringExtensions.Break(s);
-
-            Assert.Equal(3, lines.Count());
-            Assert.Equal(s, string.Join(string.Empty, lines));
-
-            s = new string('a', 30);
-
-            lines = StringExtensions.Break(s, width: 1);
-
-            Assert.Equal(30, lines.Count());
-            Assert.Equal(s, string.Join(string.Empty, lines));
-        }
-
-        [Fact]
         public void EqualsIgnoreCase_should_ignore_case()
         {
             Assert.True(StringExtensions.EqualsIgnoreCase("foo", "Foo"));
             Assert.False(StringExtensions.EqualsIgnoreCase("Bar", "Foo"));
+        }
+
+        [Fact]
+        public void ToDatabaseName_returns_database_name()
+        {
+            var databaseName = StringExtensions.ToDatabaseName("dbo.Customers");
+
+            Assert.Equal("dbo", databaseName.Schema);
+            Assert.Equal("Customers", databaseName.Name);
         }
 
         [Fact]

@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq;
 
     /// <summary>
     ///     Represents moving a table from one schema to another.
@@ -55,18 +56,9 @@ namespace System.Data.Entity.Migrations.Model
         {
             get
             {
-                string oldSchema = null;
+                var databaseName = _name.ToDatabaseName();
 
-                var parts = _name.Split(new[] { '.' }, 2);
-
-                if (parts.Length > 1)
-                {
-                    oldSchema = parts[0];
-                }
-
-                var table = parts.Last();
-
-                return new MoveTableOperation(NewSchema + '.' + table, oldSchema);
+                return new MoveTableOperation(NewSchema + '.' + databaseName.Name, databaseName.Schema);
             }
         }
 

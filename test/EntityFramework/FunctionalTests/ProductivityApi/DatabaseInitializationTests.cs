@@ -1354,5 +1354,24 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        private class SimpleContextWithDefaultSchema : SimpleModelContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.HasDefaultSchema("foo");
+            }
+        }
+
+        [Fact]
+        public void Initializer_when_default_schema_should_not_throw()
+        {
+            using (var context = new SimpleContextWithDefaultSchema())
+            {
+                context.Database.Initialize(force: true);
+
+                Assert.Equal(0, context.Products.Count());
+            }
+        }
     }
 }

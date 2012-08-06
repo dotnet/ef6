@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Common;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
 
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Migrations.Sql
             using (var writer = Writer())
             {
                 writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameTableOperation.Name.Split(new[] { '.' }, 2).Last());
+                writer.Write(renameTableOperation.Name.ToDatabaseName().Name);
                 writer.Write("', @newname = N'");
                 writer.Write(renameTableOperation.NewName);
                 writer.Write("', @objtype = N'OBJECT'");
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <inheritdoc />
-        protected override void GenerateMakeSystemTable(CreateTableOperation createTableOperation)
+        protected override void GenerateMakeSystemTable(string table)
         {
         }
 
@@ -136,7 +137,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <inheritdoc />
         protected override string Name(string name)
         {
-            return Quote(name.Split(new[] { '.' }, 2).Last());
+            return Quote(name.ToDatabaseName().Name);
         }
     }
 }

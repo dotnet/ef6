@@ -51,7 +51,7 @@ namespace System.Data.Entity.Migrations.Extensions
 
             selector = selector ?? (t => t.ToString());
 
-            return string.Join(separator, ts.Select(selector));
+            return string.Join(separator, ts.Where(t => !ReferenceEquals(t, null)).Select(selector));
         }
     }
 }

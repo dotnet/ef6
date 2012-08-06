@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration
 {
     using System.Collections.Generic;
@@ -51,9 +52,9 @@ namespace System.Data.Entity.ModelConfiguration
             return Configuration.Property(
                 lambdaExpression.GetComplexPropertyAccess(),
                 () => new TPrimitivePropertyConfiguration
-                    {
-                        OverridableConfigurationParts = OverridableConfigurationParts.None
-                    });
+                          {
+                              OverridableConfigurationParts = OverridableConfigurationParts.None
+                          });
         }
 
         /// <summary>
@@ -106,10 +107,9 @@ namespace System.Data.Entity.ModelConfiguration
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
 
-            var qualifiedName = tableName;
-            string schemaName;
-            DatabaseName.ParseQualifiedTableName(qualifiedName, out schemaName, out tableName);
-            _entityTypeConfiguration.ToTable(tableName, schemaName);
+            var databaseName = DatabaseName.Parse(tableName);
+
+            _entityTypeConfiguration.ToTable(databaseName.Name, databaseName.Schema);
         }
 
         /// <summary>

@@ -381,7 +381,7 @@ namespace System.Data.Entity.Migrations
                     ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
                     ProviderFactory);
 
-            Assert.False(historyRepository.Exists);
+            Assert.False(historyRepository.Exists());
         }
 
         [MigrationsTheory]
@@ -391,7 +391,7 @@ namespace System.Data.Entity.Migrations
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
 
-            Assert.False(historyRepository.Exists);
+            Assert.False(historyRepository.Exists());
         }
 
         [MigrationsTheory]
@@ -403,7 +403,7 @@ namespace System.Data.Entity.Migrations
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
-            Assert.True(historyRepository.Exists);
+            Assert.True(historyRepository.Exists());
         }
 
         [MigrationsTheory]

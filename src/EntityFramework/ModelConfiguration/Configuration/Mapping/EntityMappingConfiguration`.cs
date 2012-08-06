@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
@@ -78,11 +79,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
 
-            var qualifiedName = tableName;
-            string schemaName;
-            DatabaseName.ParseQualifiedTableName(qualifiedName, out schemaName, out tableName);
+            var databaseName = DatabaseName.Parse(tableName);
 
-            ToTable(tableName, schemaName);
+            ToTable(databaseName.Name, databaseName.Schema);
         }
 
         /// <summary>

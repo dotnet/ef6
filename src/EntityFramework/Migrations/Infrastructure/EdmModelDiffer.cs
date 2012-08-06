@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private bool _consistentProviders;
 
-        public IEnumerable<MigrationOperation> Diff(XDocument sourceModel, XDocument targetModel, bool includeSystemOperations = false)
+        public IEnumerable<MigrationOperation> Diff(XDocument sourceModel, XDocument targetModel, bool? includeSystemOperations = null)
         {
             DbProviderInfo providerInfo;
 
@@ -86,6 +87,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var removedForeignKeys = FindRemovedForeignKeys(columnNormalizedSourceModel).ToList();
             var changedPrimaryKeys = FindChangedPrimaryKeys(columnNormalizedSourceModel).ToList();
 
+            if (includeSystemOperations == null)
+            {
+                includeSystemOperations
+                    = sourceModel.HasSystemOperations() && targetModel.HasSystemOperations();
+            }
+
             return renamedTables
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(removedForeignKeys)
@@ -99,7 +106,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(addedForeignKeys.Select(fko => fko.CreateCreateIndexOperation()))
                 .Concat(removedColumns)
                 .Concat(removedTables)
-                .Where(o => includeSystemOperations || !o.IsSystem)
+                .Where(o => (includeSystemOperations == true) || !o.IsSystem)
                 .ToList();
         }
 
@@ -176,7 +183,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    select
                        new MoveTableOperation(
                        GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
-                       es2.SchemaAttribute());
+                       es2.SchemaAttribute())
+                       {
+                           IsSystem = es2.IsSystemAttribute().EqualsIgnoreCase("true")
+                       };
         }
 
         private IEnumerable<DropTableOperation> FindRemovedTables(IEnumerable<RenameTableOperation> renamedTables)

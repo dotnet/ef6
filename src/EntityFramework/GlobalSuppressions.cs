@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using System.Diagnostics.CodeAnalysis;
 
 [assembly:
@@ -181,9 +182,15 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member",
         Target = "System.Data.Entity.Core.Common.EntitySql.CqlParser.#yyparse()")]
-[assembly: 
+[assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Scope = "member",
         Target = "System.Data.Entity.IQueryableExtensions.#.cctor()")]
-[assembly: 
+[assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member",
         Target = "System.Data.Entity.IQueryableExtensions.#.cctor()")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "schemaname", Scope = "resource",
+        Target = "System.Data.Entity.Properties.Resources.resources")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "objectname", Scope = "resource",
+        Target = "System.Data.Entity.Properties.Resources.resources")]

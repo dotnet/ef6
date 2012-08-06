@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq;
 
     /// <summary>
     ///     Represents renaming an existing table.
@@ -56,13 +57,10 @@ namespace System.Data.Entity.Migrations.Model
         {
             get
             {
-                var parts = _name.Split(new[] { '.' }, 2);
+                var originalName = DatabaseName.Parse(_name);
+                var newTable = DatabaseName.Parse(_newName).Name;
 
-                return new RenameTableOperation(
-                    parts.Length > 1
-                        ? parts[0] + '.' + _newName
-                        : _newName,
-                    parts.Last());
+                return new RenameTableOperation(new DatabaseName(newTable, originalName.Schema).ToString(), originalName.Name);
             }
         }
 

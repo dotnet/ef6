@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
@@ -15,19 +15,11 @@ namespace System.Data.Entity.Utilities
     {
         private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");
 
-        public static IEnumerable<string> Break(this string s, int width = 1000)
+        public static DatabaseName ToDatabaseName(this string s)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(s));
-            Contract.Requires(width > 0);
 
-            var processed = 0;
-
-            while (processed < s.Length)
-            {
-                yield return s.Substring(processed, Math.Min(width, s.Length - processed));
-
-                processed += width;
-            }
+            return DatabaseName.Parse(s);
         }
 
         public static bool EqualsIgnoreCase(this string s1, string s2)

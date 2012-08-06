@@ -25,11 +25,11 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Inverse_should_produce_move_table_operation()
         {
-            var moveTableOperation = new MoveTableOperation("dbo.My.Customers", "crm");
+            var moveTableOperation = new MoveTableOperation("dbo.MyCustomers", "crm");
 
             var inverse = (MoveTableOperation)moveTableOperation.Inverse;
 
-            Assert.Equal("crm.My.Customers", inverse.Name);
+            Assert.Equal("crm.MyCustomers", inverse.Name);
             Assert.Equal("dbo", inverse.NewSchema);
         }
     }

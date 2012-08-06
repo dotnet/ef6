@@ -181,12 +181,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             _this.UpgradeHistory(upgradeOperations);
         }
 
-        internal virtual DbMigration GetMigration(string migrationId)
-        {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-
-            return _this.GetMigration(migrationId);
-        }
 
         internal virtual string TargetDatabase
         {

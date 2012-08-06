@@ -142,6 +142,9 @@
     <Compile Include="..\EntityFramework\Migrations\Extensions\IEnumerableExtensions.cs">
       <Link>Migrations\Extensions\IEnumerableExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\EntityFramework\Utilities\DatabaseName.cs">
+      <Link>Utilities\DatabaseName.cs</Link>
+    </Compile>
     <Compile Include="..\EntityFramework\Utilities\RuntimeFailureMethods.cs">
       <Link>Properties\RuntimeFailureMethods.cs</Link>
     </Compile>

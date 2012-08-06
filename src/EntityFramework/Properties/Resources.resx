@@ -429,12 +429,8 @@
     <value>Unable to determine the provider name for connection of type '{0}'.</value>
     <comment>## ExceptionType=NotSupportedException</comment>
   </data>
-  <data name="ToTable_InvalidSchemaName" xml:space="preserve">
-    <value>The qualified table name '{0}' contains an invalid schema name. Schema names must have a non-zero length.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
-  </data>
-  <data name="ToTable_InvalidTableName" xml:space="preserve">
-    <value>The qualified table name '{0}' contains an invalid table name. Table names must have a non-zero length.</value>
+  <data name="InvalidDatabaseName" xml:space="preserve">
+    <value>The database name '{0}' is invalid. Database names must be of the form [&lt;schema_name&gt;.]&lt;object_name&gt;.</value>
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="EntityMappingConfiguration_DuplicateMapInheritedProperties" xml:space="preserve">
@@ -5334,5 +5330,9 @@
   <data name="EmptySequence" xml:space="preserve">
     <value>Sequence contains no elements.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="UnableToAutoMigrateDefaultSchema" xml:space="preserve">
+    <value>Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
 </root>

@@ -686,19 +686,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The qualified table name '{0}' contains an invalid schema name. Schema names must have a non-zero length."
+        /// A string like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
         /// </summary>
-        internal static string ToTable_InvalidSchemaName(object p0)
+        internal static string InvalidDatabaseName(object p0)
         {
-            return EntityRes.GetString(EntityRes.ToTable_InvalidSchemaName, p0);
-        }
-
-        /// <summary>
-        /// A string like "The qualified table name '{0}' contains an invalid table name. Table names must have a non-zero length."
-        /// </summary>
-        internal static string ToTable_InvalidTableName(object p0)
-        {
-            return EntityRes.GetString(EntityRes.ToTable_InvalidTableName, p0);
+            return EntityRes.GetString(EntityRes.InvalidDatabaseName, p0);
         }
 
         /// <summary>
@@ -13404,6 +13396,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.EmptySequence); }
         }
+
+        /// <summary>
+        /// A string like "Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes."
+        /// </summary>
+        internal static string UnableToAutoMigrateDefaultSchema
+        {
+            get { return EntityRes.GetString(EntityRes.UnableToAutoMigrateDefaultSchema); }
+        }
     } 
 
     /// <summary>
@@ -13893,19 +13893,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// ArgumentException with message like "The qualified table name '{0}' contains an invalid schema name. Schema names must have a non-zero length."
+        /// ArgumentException with message like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
         /// </summary>
-        internal static Exception ToTable_InvalidSchemaName(object p0)
+        internal static Exception InvalidDatabaseName(object p0)
         {
-            return new ArgumentException(Strings.ToTable_InvalidSchemaName(p0));
-        }
-
-        /// <summary>
-        /// ArgumentException with message like "The qualified table name '{0}' contains an invalid table name. Table names must have a non-zero length."
-        /// </summary>
-        internal static Exception ToTable_InvalidTableName(object p0)
-        {
-            return new ArgumentException(Strings.ToTable_InvalidTableName(p0));
+            return new ArgumentException(Strings.InvalidDatabaseName(p0));
         }
 
         /// <summary>
@@ -14979,6 +14971,14 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.EmptySequence);
         }
+
+        /// <summary>
+        /// Migrations.Infrastructure.MigrationsException with message like "Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes."
+        /// </summary>
+        internal static Exception UnableToAutoMigrateDefaultSchema()
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.UnableToAutoMigrateDefaultSchema);
+        }
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
         /// </summary>
@@ -15104,8 +15104,7 @@ namespace System.Data.Entity.Resources
         internal const string ConventionNotFound = "ConventionNotFound";
         internal const string InvalidEntitySplittingProperties = "InvalidEntitySplittingProperties";
         internal const string ModelBuilder_ProviderNameNotFound = "ModelBuilder_ProviderNameNotFound";
-        internal const string ToTable_InvalidSchemaName = "ToTable_InvalidSchemaName";
-        internal const string ToTable_InvalidTableName = "ToTable_InvalidTableName";
+        internal const string InvalidDatabaseName = "InvalidDatabaseName";
         internal const string EntityMappingConfiguration_DuplicateMapInheritedProperties = "EntityMappingConfiguration_DuplicateMapInheritedProperties";
         internal const string EntityMappingConfiguration_DuplicateMappedProperties = "EntityMappingConfiguration_DuplicateMappedProperties";
         internal const string EntityMappingConfiguration_DuplicateMappedProperty = "EntityMappingConfiguration_DuplicateMappedProperty";
@@ -16694,6 +16693,7 @@ namespace System.Data.Entity.Resources
         internal const string IQueryable_Not_Async = "IQueryable_Not_Async";
         internal const string IQueryable_Provider_Not_Async = "IQueryable_Provider_Not_Async";
         internal const string EmptySequence = "EmptySequence";
+        internal const string UnableToAutoMigrateDefaultSchema = "UnableToAutoMigrateDefaultSchema";
         
         static EntityRes loader = null;
         ResourceManager resources;

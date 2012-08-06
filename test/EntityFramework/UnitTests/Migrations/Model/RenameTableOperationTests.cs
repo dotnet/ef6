@@ -10,9 +10,13 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal(new ArgumentException(Strings.ArgumentIsNullOrWhitespace("name")).Message, Assert.Throws<ArgumentException>(() => new RenameTableOperation(null, null)).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.ArgumentIsNullOrWhitespace("name")).Message, 
+                Assert.Throws<ArgumentException>(() => new RenameTableOperation(null, null)).Message);
 
-            Assert.Equal(new ArgumentException(Strings.ArgumentIsNullOrWhitespace("newName")).Message, Assert.Throws<ArgumentException>(() => new RenameTableOperation("N", null)).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.ArgumentIsNullOrWhitespace("newName")).Message, 
+                Assert.Throws<ArgumentException>(() => new RenameTableOperation("N", null)).Message);
         }
 
         [Fact]
@@ -27,12 +31,26 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Inverse_should_produce_rename_column_operation()
         {
-            var renameTableOperation = new RenameTableOperation("N", "N'");
+            var renameTableOperation = new RenameTableOperation("dbo.Foo", "dbo.Bar");
 
             var inverse = (RenameTableOperation)renameTableOperation.Inverse;
 
-            Assert.Equal("N'", inverse.Name);
-            Assert.Equal("N", inverse.NewName);
+            Assert.Equal("dbo.Bar", inverse.Name);
+            Assert.Equal("Foo", inverse.NewName);
+
+            renameTableOperation = new RenameTableOperation("dbo.Foo", "Bar");
+
+            inverse = (RenameTableOperation)renameTableOperation.Inverse;
+
+            Assert.Equal("dbo.Bar", inverse.Name);
+            Assert.Equal("Foo", inverse.NewName);
+
+            renameTableOperation = new RenameTableOperation("Foo", "Bar");
+
+            inverse = (RenameTableOperation)renameTableOperation.Inverse;
+
+            Assert.Equal("Bar", inverse.Name);
+            Assert.Equal("Foo", inverse.NewName);
         }
     }
 }

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Sql
 {
     using System.Collections.Generic;
@@ -81,18 +82,16 @@ namespace System.Data.Entity.Migrations.Sql
         {
             Contract.Requires(createTableOperation != null);
 
-            var parts = createTableOperation.Name.Split(new[] { '.' }, 2);
+            var databaseName = createTableOperation.Name.ToDatabaseName();
 
-            if (parts.Length > 1)
+            if (!string.IsNullOrWhiteSpace(databaseName.Schema))
             {
-                var schema = parts[0];
-
-                if (!schema.EqualsIgnoreCase("dbo")
-                    && !_generatedSchemas.Contains(schema))
+                if (!databaseName.Schema.EqualsIgnoreCase("dbo")
+                    && !_generatedSchemas.Contains(databaseName.Schema))
                 {
-                    GenerateCreateSchema(schema);
+                    GenerateCreateSchema(databaseName.Schema);
 
-                    _generatedSchemas.Add(schema);
+                    _generatedSchemas.Add(databaseName.Schema);
                 }
             }
 
@@ -134,34 +133,34 @@ namespace System.Data.Entity.Migrations.Sql
                 Statement(writer);
             }
 
-            GenerateMakeSystemTable(createTableOperation);
+            if (createTableOperation.IsSystem)
+            {
+                GenerateMakeSystemTable(createTableOperation.Name);
+            }
         }
 
         /// <summary>
         ///     Generates SQL to mark a table as a system table.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "createTableOperation">The table to mark as a system table.</param>
-        protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation)
+        /// <param name = "table">The table to mark as a system table.</param>
+        protected virtual void GenerateMakeSystemTable(string table)
         {
-            Contract.Requires(createTableOperation != null);
+            Contract.Requires(!string.IsNullOrWhiteSpace(table));
 
-            if (createTableOperation.IsSystem)
+            using (var writer = Writer())
             {
-                using (var writer = Writer())
-                {
-                    writer.WriteLine("BEGIN TRY");
+                writer.WriteLine("BEGIN TRY");
 
-                    writer.Indent++;
-                    writer.WriteLine("EXEC sp_MS_marksystemobject '" + createTableOperation.Name + "'");
-                    writer.Indent--;
+                writer.Indent++;
+                writer.WriteLine("EXEC sp_MS_marksystemobject '" + table + "'");
+                writer.Indent--;
 
-                    writer.WriteLine("END TRY");
-                    writer.WriteLine("BEGIN CATCH");
-                    writer.Write("END CATCH");
+                writer.WriteLine("END TRY");
+                writer.WriteLine("BEGIN CATCH");
+                writer.Write("END CATCH");
 
-                    Statement(writer);
-                }
+                Statement(writer);
             }
         }
 
@@ -571,12 +570,31 @@ namespace System.Data.Entity.Migrations.Sql
                     _generatedSchemas.Add(newSchema);
                 }
 
-                writer.Write("ALTER SCHEMA ");
-                writer.Write(Quote(newSchema));
-                writer.Write(" TRANSFER ");
-                writer.Write(Name(moveTableOperation.Name));
+                if (!moveTableOperation.IsSystem)
+                {
+                    writer.Write("ALTER SCHEMA ");
+                    writer.Write(Quote(newSchema));
+                    writer.Write(" TRANSFER ");
+                    writer.Write(Name(moveTableOperation.Name));
 
-                Statement(writer);
+                    Statement(writer);
+                }
+                else
+                {
+                    var tableName = moveTableOperation.Name.ToDatabaseName().Name;
+                    var newName = moveTableOperation.NewSchema + "." + tableName;
+
+                    writer.Write("SELECT * INTO ");
+                    writer.Write(Name(newName));
+                    writer.Write(" FROM ");
+                    writer.Write(Name(moveTableOperation.Name));
+
+                    Statement(writer);
+
+                    GenerateMakeSystemTable(newName);
+
+                    Generate(new DropTableOperation(moveTableOperation.Name));
+                }
             }
         }
 
@@ -854,9 +872,9 @@ namespace System.Data.Entity.Migrations.Sql
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
-            var parts = name.Split(new[] { '.' }, 2);
+            var databaseName = name.ToDatabaseName();
 
-            return parts.Join(Quote, ".");
+            return new[] { databaseName.Schema, databaseName.Name }.Join(Quote, ".");
         }
 
         /// <summary>

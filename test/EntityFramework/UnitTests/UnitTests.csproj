@@ -364,7 +364,7 @@
     <Compile Include="ModelConfiguration\Mappers\TypeMapperTests.cs" />
     <Compile Include="ModelConfiguration\ModelValidationExceptionTests.cs" />
     <Compile Include="ModelConfiguration\Utilities\AttributeProviderTests.cs" />
-    <Compile Include="ModelConfiguration\Utilities\DatabaseNameTests.cs" />
+    <Compile Include="Utilities\DatabaseNameTests.cs" />
     <Compile Include="Utilities\DbConnectionExtensionsTests.cs" />
     <Compile Include="Utilities\DbProviderInfoExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Utilities\IEnumerableExtensionsTests.cs" />

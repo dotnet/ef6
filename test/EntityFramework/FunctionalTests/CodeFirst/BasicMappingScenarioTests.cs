@@ -1707,7 +1707,7 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<SalesPerson>().ToTable("sales.A.B.tbl_sp");
+            modelBuilder.Entity<SalesPerson>().ToTable("tbl_sp", "sales.A.B");
             modelBuilder.Entity<Customer>();
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
