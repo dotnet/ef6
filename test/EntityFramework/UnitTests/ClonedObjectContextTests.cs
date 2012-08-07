@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -15,12 +16,13 @@ namespace ProductivityApiUnitTests
     public class ClonedObjectContextTests : TestBase
     {
         [Fact]
-        public void Creating_a_cloned_ObjectContext_causes_the_store_and_entity_connection_to_be_cloned_and_given_connection_string_applied()
+        public void Creating_a_cloned_ObjectContext_causes_the_store_and_entity_connection_to_be_cloned_and_given_connection_string_applied(
+            )
         {
             var storeConnection = new SqlConnection();
             var mockConnection = CreateMockConnection(storeConnection);
             var mockContext = CreateMockObjectContext(mockConnection);
-            
+
             new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
 
             mockConnection.Verify(
@@ -101,15 +103,17 @@ namespace ProductivityApiUnitTests
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
-            new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo",
-                                                        transferLoadedAssemblies: false);
+            new ClonedObjectContext(
+                mockContext.Object, "Database=PinkyDinkyDo",
+                transferLoadedAssemblies: false);
 
             mockContext.Verify(m => m.GetObjectItemCollection(), Times.Never());
             mockClonedContext.Verify(m => m.LoadFromAssembly(It.IsAny<Assembly>()), Times.Never());
         }
 
         [Fact]
-        public void When_cloning_an_ObjectContext_with_assemblies_enum_complex_and_entity_type_assemblies_are_transfered_but_others_are_ignored()
+        public void
+            When_cloning_an_ObjectContext_with_assemblies_enum_complex_and_entity_type_assemblies_are_transfered_but_others_are_ignored()
         {
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
@@ -162,22 +166,23 @@ namespace ProductivityApiUnitTests
         private Mock<EntityConnectionProxy> CreateMockConnection(SqlConnection storeConnection = null)
         {
             storeConnection = storeConnection ?? new SqlConnection();
-            
+
             var mockConnection = new Mock<EntityConnectionProxy>();
             mockConnection.Setup(m => m.StoreConnection).Returns(storeConnection);
-            
+
             mockConnection.Setup(m => m.CreateNew(It.IsAny<SqlConnection>())).Returns<SqlConnection>(
                 c =>
-                {
-                    var mockClonedConnection = new Mock<EntityConnectionProxy>();
-                    mockClonedConnection.Setup(cc => cc.StoreConnection).Returns(c);
-                    return mockClonedConnection.Object;
-                });
-            
+                    {
+                        var mockClonedConnection = new Mock<EntityConnectionProxy>();
+                        mockClonedConnection.Setup(cc => cc.StoreConnection).Returns(c);
+                        return mockClonedConnection.Object;
+                    });
+
             return mockConnection;
         }
 
-        private Mock<ObjectContextProxy> CreateMockObjectContext(Mock<EntityConnectionProxy> mockConnection = null, Mock<ObjectContextProxy> mockClonedContext = null)
+        private Mock<ObjectContextProxy> CreateMockObjectContext(
+            Mock<EntityConnectionProxy> mockConnection = null, Mock<ObjectContextProxy> mockClonedContext = null)
         {
             mockConnection = mockConnection ?? CreateMockConnection();
 
@@ -186,15 +191,15 @@ namespace ProductivityApiUnitTests
 
             var mockContext = new Mock<ObjectContextProxy>();
             mockContext.Setup(m => m.Connection).Returns(mockConnection.Object);
-            
+
             mockContext.Setup(m => m.GetObjectItemCollection()).Returns(
                 new List<GlobalItem>
-                {
-                    CreateFakeComplexType(),
-                    CreateFakeEntityType(),
-                    CreateFakeEnumType(),
-                    CreateFakePrimitiveType(),
-                });
+                    {
+                        CreateFakeComplexType(),
+                        CreateFakeEntityType(),
+                        CreateFakeEnumType(),
+                        CreateFakePrimitiveType(),
+                    });
 
             // Ensure fake EDM types have fake CLR types and assemblies
             SetupMockStructuralType<ComplexType>(mockContext);
@@ -203,18 +208,18 @@ namespace ProductivityApiUnitTests
 
             mockContext.Setup(m => m.CreateNew(It.IsAny<EntityConnectionProxy>())).Returns<EntityConnectionProxy>(
                 c =>
-                {
-                    mockClonedContext.Setup(cc => cc.Connection).Returns(c);
-                    return mockClonedContext.Object;
-                });
-            
+                    {
+                        mockClonedContext.Setup(cc => cc.Connection).Returns(c);
+                        return mockClonedContext.Object;
+                    });
+
             return mockContext;
         }
 
         private void SetupMockStructuralType<TEdmType>(Mock<ObjectContextProxy> mockContext) where TEdmType : StructuralType
         {
             var mockClrType = new Mock<Type>();
-            mockClrType.Setup(m => m.Assembly).Returns(new FakeAssembly(typeof(TEdmType).Name +  " Assembly"));
+            mockClrType.Setup(m => m.Assembly).Returns(new FakeAssembly(typeof(TEdmType).Name + " Assembly"));
 
             mockContext.Setup(m => m.GetClrType(It.IsAny<TEdmType>())).Returns(mockClrType.Object);
         }
@@ -254,7 +259,7 @@ namespace ProductivityApiUnitTests
         }
 
         /// <summary>
-        /// Used because Moq cannot mock Assembly.
+        ///     Used because Moq cannot mock Assembly.
         /// </summary>
         public class FakeAssembly : Assembly
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm.Db;
@@ -9,7 +10,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_put_key_columns_first()
         {
-            var tableColumn = new DbTableColumnMetadata { TypeName = "Foo" };
+            var tableColumn = new DbTableColumnMetadata
+                                  {
+                                      TypeName = "Foo"
+                                  };
 
             ((IDbConvention<DbTableColumnMetadata>)new ColumnTypeCasingConvention()).Apply(tableColumn, new DbDatabaseMetadata());
 

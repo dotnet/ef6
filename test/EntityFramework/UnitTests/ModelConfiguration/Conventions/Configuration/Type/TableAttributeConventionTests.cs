@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -36,7 +37,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
             new TableAttributeConvention.TableAttributeConventionImpl()
-                .Apply(new MockType(), entityTypeConfiguration, new TableAttribute("Foo") { Schema = "Bar" });
+                .Apply(
+                    new MockType(), entityTypeConfiguration, new TableAttribute("Foo")
+                                                                 {
+                                                                     Schema = "Bar"
+                                                                 });
 
             Assert.Equal("Bar", entityTypeConfiguration.GetTableName().Schema);
         }

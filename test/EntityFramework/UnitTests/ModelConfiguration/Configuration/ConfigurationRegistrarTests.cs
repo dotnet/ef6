@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Resources;
@@ -10,13 +11,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Add_entity_configuration_should_validate_preconditions()
         {
-            Assert.Equal(Error.ArgumentNull("entityTypeConfiguration").Message, Assert.Throws<ArgumentNullException>(() => new ConfigurationRegistrar(new ModelConfiguration()).Add(null as EntityTypeConfiguration<object>)).Message);
+            Assert.Equal(
+                Error.ArgumentNull("entityTypeConfiguration").Message,
+                Assert.Throws<ArgumentNullException>(
+                    () => new ConfigurationRegistrar(new ModelConfiguration()).Add(null as EntityTypeConfiguration<object>)).Message);
         }
 
         [Fact]
         public void Add_complex_type_should_validate_preconditions()
         {
-            Assert.Equal(Error.ArgumentNull("complexTypeConfiguration").Message, Assert.Throws<ArgumentNullException>(() => new ConfigurationRegistrar(new ModelConfiguration()).Add(null as ComplexTypeConfiguration<object>)).Message);
+            Assert.Equal(
+                Error.ArgumentNull("complexTypeConfiguration").Message,
+                Assert.Throws<ArgumentNullException>(
+                    () => new ConfigurationRegistrar(new ModelConfiguration()).Add(null as ComplexTypeConfiguration<object>)).Message);
         }
 
         [Fact]

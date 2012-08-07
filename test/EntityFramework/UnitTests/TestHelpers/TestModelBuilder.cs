@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Edm;
@@ -86,7 +87,8 @@ namespace System.Data.Entity
             return this;
         }
 
-        public TestModelBuilder Association(string name,
+        public TestModelBuilder Association(
+            string name,
             string sourceEntity, EdmAssociationEndKind sourceEndKind, string sourceNavigationProperty,
             string targetEntity, EdmAssociationEndKind targetEndKind, string targetNavigationProperty)
         {

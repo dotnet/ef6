@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Core.Objects;
@@ -9,9 +10,9 @@ namespace System.Data.Entity
     using Moq.Protected;
 
     /// <summary>
-    /// Helper class that uses Moq to create mocks for the InternalContext and related classes such
-    /// that different database initialization strategies can be tested and the operations that these
-    /// strategies perform can be recorded and validated.
+    ///     Helper class that uses Moq to create mocks for the InternalContext and related classes such
+    ///     that different database initialization strategies can be tested and the operations that these
+    ///     strategies perform can be recorded and validated.
     /// </summary>
     public class DatabaseInitializerTracker<TContext, TInitializer>
         where TInitializer : class, IDatabaseInitializer<TContext>
@@ -28,7 +29,10 @@ namespace System.Data.Entity
         public DatabaseInitializerTracker(bool databaseExists, bool modelCompatible = true, bool hasMetadata = true)
         {
             _databaseExists = databaseExists;
-            _mockInternalContext = new Mock<InternalContextForMock<TContext>> { CallBase = true };
+            _mockInternalContext = new Mock<InternalContextForMock<TContext>>
+                                       {
+                                           CallBase = true
+                                       };
             _mockDatabaseOps = new Mock<DatabaseOperations>();
             _mockDbContext = Mock.Get((TContext)_mockInternalContext.Object.Owner);
 
@@ -36,42 +40,49 @@ namespace System.Data.Entity
             _mockInternalContext.Setup(c => c.DefaultInitializer).Returns(new CreateDatabaseIfNotExists<DbContext>());
             _mockInternalContext.Setup(c => c.CreateDatabase(It.IsAny<ObjectContext>())).Callback(
                 () =>
-                {
-                    _databaseExists = true;
-                    _operations.Append("CreateDatabase ");
-                });
+                    {
+                        _databaseExists = true;
+                        _operations.Append("CreateDatabase ");
+                    });
 
-            _mockDatabaseOps.Setup(d => d.Create(It.IsAny<ObjectContext>())).Callback(() =>
-            {
-                _databaseExists = true;
-                _operations.Append("Create ");
-            });
+            _mockDatabaseOps.Setup(d => d.Create(It.IsAny<ObjectContext>())).Callback(
+                () =>
+                    {
+                        _databaseExists = true;
+                        _operations.Append("Create ");
+                    });
 
-            _mockDatabaseOps.Setup(d => d.Exists(It.IsAny<ObjectContext>())).Callback(() => _operations.Append("Exists ")).Returns(DatabaseExists);
-            _mockDatabaseOps.Setup(d => d.DeleteIfExists(It.IsAny<ObjectContext>())).Callback(() => _operations.Append("DeleteIfExists ")).Returns(DeleteIfExists);
+            _mockDatabaseOps.Setup(d => d.Exists(It.IsAny<ObjectContext>())).Callback(() => _operations.Append("Exists ")).Returns(
+                DatabaseExists);
+            _mockDatabaseOps.Setup(d => d.DeleteIfExists(It.IsAny<ObjectContext>())).Callback(() => _operations.Append("DeleteIfExists ")).
+                Returns(DeleteIfExists);
 
             _mockInternalContext.Setup(c => c.UseTempObjectContext()).Callback(() => _operations.Append("UseTempObjectContext "));
             _mockInternalContext.Setup(c => c.DisposeTempObjectContext()).Callback(() => _operations.Append("DisposeTempObjectContext "));
             _mockInternalContext.Setup(c => c.SaveMetadataToDatabase()).Callback(() => _operations.Append("SaveMetadataToDatabase "));
 
-            _mockInternalContext.Setup(c => c.CompatibleWithModel(It.IsAny<bool>())).Callback((bool throwIfNoMetadata) =>
-            {
-                if (!hasMetadata && throwIfNoMetadata)
-                {
-                    throw Error.Database_NoDatabaseMetadata();
-                }
-            }).Returns(modelCompatible);
+            _mockInternalContext.Setup(c => c.CompatibleWithModel(It.IsAny<bool>())).Callback(
+                (bool throwIfNoMetadata) =>
+                    {
+                        if (!hasMetadata && throwIfNoMetadata)
+                        {
+                            throw Error.Database_NoDatabaseMetadata();
+                        }
+                    }).Returns(modelCompatible);
 
             _mockInternalContext.Setup(c => c.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
             _mockInternalContext.SetupGet(c => c.ProviderName).Returns("Dummy.Data.Provider");
 
-            _mockStrategy = new Mock<TInitializer> { CallBase = true };
+            _mockStrategy = new Mock<TInitializer>
+                                {
+                                    CallBase = true
+                                };
             _mockStrategy.Protected().Setup("Seed", ItExpr.IsAny<TContext>()).Callback(() => _operations.Append("Seed "));
         }
 
         private bool DeleteIfExists()
         {
-            bool exists = _databaseExists;
+            var exists = _databaseExists;
             _databaseExists = false;
             return exists;
         }
@@ -95,18 +106,12 @@ namespace System.Data.Entity
 
         public string Result
         {
-            get
-            {
-                return _operations.ToString().Trim();
-            }
+            get { return _operations.ToString().Trim(); }
         }
 
         public TContext Context
         {
-            get
-            {
-                return _mockDbContext.Object;
-            }
+            get { return _mockDbContext.Object; }
         }
 
         internal Mock<InternalContextForMock<TContext>> MockInternalContext

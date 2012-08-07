@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
@@ -152,7 +153,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             mockModelConfiguration.SetupGet(m => m.ConfiguredTypes).Returns(new[] { mockType2.Object });
 
-            new TypeMapper(new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), model)).MapEntityType(mockType1);
+            new TypeMapper(new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), model)).MapEntityType(
+                mockType1);
 
             Assert.Equal(2, model.Namespaces.Single().EntityTypes.Count);
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
@@ -405,7 +407,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             modelConfiguration.Entity(typeof(TypeMapper_EntityWithStoreInline));
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            Assert.Equal(Strings.ComplexTypeConfigurationMismatch(type), Assert.Throws<InvalidOperationException>(() => typeMapper.MapEntityType(type)).Message);
+            Assert.Equal(
+                Strings.ComplexTypeConfigurationMismatch(type),
+                Assert.Throws<InvalidOperationException>(() => typeMapper.MapEntityType(type)).Message);
         }
 
         [Fact]
@@ -480,6 +484,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         // Positive navigation props
         public MapEntityType_related_entity_fixture ReferenceProp { get; set; }
         public ICollection<MapEntityType_related_entity_fixture> ReadWriteCollectionProp { get; set; }
+
         public ICollection<MapEntityType_related_entity_fixture> ReadOnlyCollectionProp
         {
             get { return new List<MapEntityType_related_entity_fixture>(); }
@@ -490,10 +495,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public static MapEntityType_related_entity_fixture StaticReferenceProp { get; set; }
         private ICollection<MapEntityType_related_entity_fixture> PrivateReadWriteCollectionProp { get; set; }
         public static ICollection<MapEntityType_related_entity_fixture> StaticReadWriteCollectionProp { get; set; }
+
         private ICollection<MapEntityType_related_entity_fixture> PrivateReadOnlyCollectionProp
         {
             get { return new List<MapEntityType_related_entity_fixture>(); }
         }
+
         public static ICollection<MapEntityType_related_entity_fixture> StaticReadOnlyCollectionProp
         {
             get { return new List<MapEntityType_related_entity_fixture>(); }

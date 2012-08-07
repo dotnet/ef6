@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
     public sealed class ModelConfigurationTests
     {
-         [Fact]
+        [Fact]
         public void Configure_should_configure_default_schema()
         {
             var modelConfiguration
@@ -30,9 +31,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                           DefaultSchema = "foo"
                       };
 
-            var databaseMapping 
+            var databaseMapping
                 = new DbDatabaseMapping().Initialize(
-                    new EdmModel().Initialize(), 
+                    new EdmModel().Initialize(),
                     new DbDatabaseMetadata().Initialize());
 
             Assert.Equal("dbo", databaseMapping.Database.Schemas.Single().Name);
@@ -143,7 +144,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(object)).Object;
             modelConfiguration.Add(entityTypeConfiguration);
 
-            Assert.Equal(Strings.DuplicateStructuralTypeConfiguration(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelConfiguration.Add(entityTypeConfiguration)).Message);
+            Assert.Equal(
+                Strings.DuplicateStructuralTypeConfiguration(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelConfiguration.Add(entityTypeConfiguration)).Message);
         }
 
         [Fact]
@@ -153,7 +156,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var complexTypeConfiguration = new Mock<ComplexTypeConfiguration>(typeof(object)).Object;
             modelConfiguration.Add(complexTypeConfiguration);
 
-            Assert.Equal(Strings.DuplicateStructuralTypeConfiguration(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelConfiguration.Add(complexTypeConfiguration)).Message);
+            Assert.Equal(
+                Strings.DuplicateStructuralTypeConfiguration(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelConfiguration.Add(complexTypeConfiguration)).Message);
         }
 
         [Fact]
@@ -164,7 +169,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(object)).Object;
             modelConfiguration.Add(complexTypeConfiguration);
 
-            Assert.Equal(Strings.DuplicateStructuralTypeConfiguration(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelConfiguration.Add(entityTypeConfiguration)).Message);
+            Assert.Equal(
+                Strings.DuplicateStructuralTypeConfiguration(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelConfiguration.Add(entityTypeConfiguration)).Message);
         }
 
         [Fact]
@@ -201,7 +208,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Add(new Mock<ComplexTypeConfiguration>(typeof(object)).Object);
 
-            Assert.Equal(Strings.EntityTypeConfigurationMismatch(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelConfiguration.Entity(typeof(object))).Message);
+            Assert.Equal(
+                Strings.EntityTypeConfigurationMismatch(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelConfiguration.Entity(typeof(object))).Message);
         }
 
         [Fact]
@@ -218,7 +227,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Add(new Mock<EntityTypeConfiguration>(typeof(object)).Object);
 
-            Assert.Equal(Strings.ComplexTypeConfigurationMismatch(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelConfiguration.ComplexType(typeof(object))).Message);
+            Assert.Equal(
+                Strings.ComplexTypeConfigurationMismatch(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelConfiguration.ComplexType(typeof(object))).Message);
         }
 
         [Fact]
@@ -454,8 +465,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal("P3", table2.Columns[2].Name);
             Assert.NotSame(table1.Columns[0], table2.Columns[0]);
             Assert.NotSame(table1.Columns[1], table2.Columns[1]);
-            Assert.NotSame(entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column);
-            Assert.NotSame(entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column);
+            Assert.NotSame(
+                entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column,
+                entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column);
+            Assert.NotSame(
+                entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column,
+                entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column);
         }
 
         //             E
@@ -653,7 +668,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity1MappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1MappingConfiguration, "disc") { Value = "foo" });
+                    new ValueConditionConfiguration(entity1MappingConfiguration, "disc")
+                        {
+                            Value = "foo"
+                        });
             entity1Configuration.AddMappingConfiguration(entity1MappingConfiguration);
             var entity1SubTypeMappingConfiguration =
                 new EntityMappingConfiguration
@@ -662,7 +680,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity1SubTypeMappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1SubTypeMappingConfiguration, "disc") { Value = "bar" });
+                    new ValueConditionConfiguration(entity1SubTypeMappingConfiguration, "disc")
+                        {
+                            Value = "bar"
+                        });
             entity1Configuration.AddSubTypeMappingConfiguration(entityType2.GetClrType(), entity1SubTypeMappingConfiguration);
             modelConfiguration.NormalizeConfigurations();
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -690,7 +711,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Same(table1.Columns[3], entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column);
             Assert.Equal("foo", entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Value);
             Assert.Equal("nvarchar", entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column.TypeName);
-            Assert.Equal(DatabaseMappingGenerator.DiscriminatorLength, entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column.Facets.MaxLength);
+            Assert.Equal(
+                DatabaseMappingGenerator.DiscriminatorLength,
+                entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column.Facets.MaxLength);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
             Assert.Same(table1, table2);
@@ -729,7 +752,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity1MappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1MappingConfiguration, "disc") { Value = 1 });
+                    new ValueConditionConfiguration(entity1MappingConfiguration, "disc")
+                        {
+                            Value = 1
+                        });
             entity1Configuration.AddMappingConfiguration(entity1MappingConfiguration);
             var entity1SubTypeMappingConfiguration =
                 new EntityMappingConfiguration
@@ -738,11 +764,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity1SubTypeMappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1SubTypeMappingConfiguration, "disc") { Value = 3 });
+                    new ValueConditionConfiguration(entity1SubTypeMappingConfiguration, "disc")
+                        {
+                            Value = 3
+                        });
             entity1SubTypeMappingConfiguration
                 .AddNullabilityCondition(
                     new NotNullConditionConfiguration(
-                        entity1SubTypeMappingConfiguration, new PropertyPath(entityType3.GetDeclaredPrimitiveProperty("P4").GetClrPropertyInfo())));
+                        entity1SubTypeMappingConfiguration,
+                        new PropertyPath(entityType3.GetDeclaredPrimitiveProperty("P4").GetClrPropertyInfo())));
             entity1Configuration.AddSubTypeMappingConfiguration(entityType3.GetClrType(), entity1SubTypeMappingConfiguration);
             var entity2Configuration = modelConfiguration.Entity(entityType2.GetClrType());
             var entity2MappingConfiguration =
@@ -752,7 +782,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity2MappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity2MappingConfiguration, "disc") { Value = 2 });
+                    new ValueConditionConfiguration(entity2MappingConfiguration, "disc")
+                        {
+                            Value = 2
+                        });
             entity2Configuration.AddMappingConfiguration(entity2MappingConfiguration);
             modelConfiguration.NormalizeConfigurations();
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -834,10 +867,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity1MappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1MappingConfiguration, "P3") { Value = null });
+                    new ValueConditionConfiguration(entity1MappingConfiguration, "P3")
+                        {
+                            Value = null
+                        });
             entity1MappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1MappingConfiguration, "P4") { Value = null });
+                    new ValueConditionConfiguration(entity1MappingConfiguration, "P4")
+                        {
+                            Value = null
+                        });
             entity1Configuration.AddMappingConfiguration(entity1MappingConfiguration);
             var entity1SubTypeMappingConfiguration =
                 new EntityMappingConfiguration
@@ -846,10 +885,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity1SubTypeMappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity1SubTypeMappingConfiguration, "P3") { Value = null });
+                    new ValueConditionConfiguration(entity1SubTypeMappingConfiguration, "P3")
+                        {
+                            Value = null
+                        });
             entity1SubTypeMappingConfiguration
                 .AddNullabilityCondition(
-                    new NotNullConditionConfiguration(entity1SubTypeMappingConfiguration,
+                    new NotNullConditionConfiguration(
+                        entity1SubTypeMappingConfiguration,
                         new PropertyPath(entityType3.GetDeclaredPrimitiveProperty("P4").GetClrPropertyInfo())));
             entity1Configuration.AddSubTypeMappingConfiguration(entityType3.GetClrType(), entity1SubTypeMappingConfiguration);
             var entity2Configuration = modelConfiguration.Entity(entityType2.GetClrType());
@@ -860,10 +903,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     };
             entity2MappingConfiguration
                 .AddNullabilityCondition(
-                    new NotNullConditionConfiguration(entity2MappingConfiguration, new PropertyPath(entityType2.GetDeclaredPrimitiveProperty("P3").GetClrPropertyInfo())));
+                    new NotNullConditionConfiguration(
+                        entity2MappingConfiguration, new PropertyPath(entityType2.GetDeclaredPrimitiveProperty("P3").GetClrPropertyInfo())));
             entity2MappingConfiguration
                 .AddValueCondition(
-                    new ValueConditionConfiguration(entity2MappingConfiguration, "P4") { Value = null });
+                    new ValueConditionConfiguration(entity2MappingConfiguration, "P4")
+                        {
+                            Value = null
+                        });
             entity2Configuration.AddMappingConfiguration(entity2MappingConfiguration);
             modelConfiguration.NormalizeConfigurations();
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -1003,15 +1050,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 new EntityMappingConfiguration
                     {
                         Properties = new List<PropertyPath>
-                            {
-                                new PropertyPath(p1PropertyInfo),
-                                new PropertyPath(new MockPropertyInfo(typeof(int), "P2"))
-                            },
+                                         {
+                                             new PropertyPath(p1PropertyInfo),
+                                             new PropertyPath(new MockPropertyInfo(typeof(int), "P2"))
+                                         },
                         TableName = new DatabaseName("E")
                     };
             entityConfiguration.AddMappingConfiguration(entityMappingConfiguration1);
 
-            Assert.Equal(Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("E", "P2"), Assert.Throws<InvalidOperationException>(() => modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest)).Message);
+            Assert.Equal(
+                Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("E", "P2"),
+                Assert.Throws<InvalidOperationException>(
+                    () => modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest)).Message);
         }
     }
 

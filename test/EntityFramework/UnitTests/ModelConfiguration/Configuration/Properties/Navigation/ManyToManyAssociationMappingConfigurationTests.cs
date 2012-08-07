@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Edm.Db;
@@ -35,7 +36,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var database = new DbDatabaseMetadata().Initialize();
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             var column = new DbTableColumnMetadata();
-            associationSetMapping.SourceEndMapping.PropertyMappings.Add(new DbEdmPropertyMapping { Column = column });
+            associationSetMapping.SourceEndMapping.PropertyMappings.Add(
+                new DbEdmPropertyMapping
+                    {
+                        Column = column
+                    });
 
             var manyToManyAssociationMappingConfiguration
                 = new ManyToManyAssociationMappingConfiguration();
@@ -53,7 +58,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var database = new DbDatabaseMetadata().Initialize();
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             var column = new DbTableColumnMetadata();
-            associationSetMapping.TargetEndMapping.PropertyMappings.Add(new DbEdmPropertyMapping { Column = column });
+            associationSetMapping.TargetEndMapping.PropertyMappings.Add(
+                new DbEdmPropertyMapping
+                    {
+                        Column = column
+                    });
 
             var manyToManyAssociationMappingConfiguration
                 = new ManyToManyAssociationMappingConfiguration();
@@ -76,7 +85,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             manyToManyAssociationMappingConfiguration.MapLeftKey("Id1", "Id2");
 
-            Assert.Equal(Strings.IncorrectColumnCount("Id1, Id2"), Assert.Throws<InvalidOperationException>(() => manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database)).Message);
+            Assert.Equal(
+                Strings.IncorrectColumnCount("Id1, Id2"),
+                Assert.Throws<InvalidOperationException>(
+                    () => manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database)).Message);
         }
 
         [Fact]

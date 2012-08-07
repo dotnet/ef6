@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -33,7 +34,6 @@ namespace System.Data.Entity.Migrations
                 }
             }
         }
-
 
         [Fact]
         public void Generate_can_output_drop_primary_key_with_explicit_name()
@@ -348,7 +348,11 @@ End Namespace
             var codeGenerator = new VisualBasicMigrationCodeGenerator();
 
             var createTableOperation = new CreateTableOperation("Customers");
-            var column = new ColumnModel(PrimitiveTypeKind.Binary) { Name = "Version", IsTimestamp = true };
+            var column = new ColumnModel(PrimitiveTypeKind.Binary)
+                             {
+                                 Name = "Version",
+                                 IsTimestamp = true
+                             };
             createTableOperation.Columns.Add(column);
 
             var generatedMigration
@@ -391,10 +395,23 @@ End Namespace
         public void Generate_can_output_create_table_statement()
         {
             var createTableOperation = new CreateTableOperation("Customers");
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
+                               {
+                                   Name = "Id",
+                                   IsNullable = true,
+                                   IsIdentity = true
+                               };
             createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });
-            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation { Name = "MyPK" };
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation
+                                                  {
+                                                      Name = "MyPK"
+                                                  };
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
             var codeGenerator = new VisualBasicMigrationCodeGenerator();

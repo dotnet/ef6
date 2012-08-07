@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
@@ -11,12 +12,12 @@ namespace System.Data.Entity.Migrations
         public void Can_get_and_set_properties()
         {
             var addForeignKeyOperation = new AddForeignKeyOperation
-                {
-                    PrincipalTable = "P",
-                    DependentTable = "D",
-                    CascadeDelete = true,
-                    Name = "Foo"
-                };
+                                             {
+                                                 PrincipalTable = "P",
+                                                 DependentTable = "D",
+                                                 CascadeDelete = true,
+                                                 Name = "Foo"
+                                             };
 
             addForeignKeyOperation.PrincipalColumns.Add("pk");
             addForeignKeyOperation.DependentColumns.Add("fk");
@@ -35,10 +36,10 @@ namespace System.Data.Entity.Migrations
         public void DefaultName_is_restricted_to_128_chars()
         {
             var addForeignKeyOperation = new AddForeignKeyOperation
-            {
-                PrincipalTable = "P",
-                DependentTable = "D"
-            };
+                                             {
+                                                 PrincipalTable = "P",
+                                                 DependentTable = "D"
+                                             };
 
             addForeignKeyOperation.DependentColumns.Add(new string('c', 150));
 
@@ -49,11 +50,11 @@ namespace System.Data.Entity.Migrations
         public void Inverse_should_produce_drop_foreign_key_operation()
         {
             var addForeignKeyOperation = new AddForeignKeyOperation
-                {
-                    PrincipalTable = "P",
-                    DependentTable = "D",
-                    Name = "Foo"
-                };
+                                             {
+                                                 PrincipalTable = "P",
+                                                 DependentTable = "D",
+                                                 Name = "Foo"
+                                             };
 
             addForeignKeyOperation.PrincipalColumns.Add("pk");
             addForeignKeyOperation.DependentColumns.Add("fk");
@@ -71,11 +72,11 @@ namespace System.Data.Entity.Migrations
         public void CreateCreateIndexOperation_should_return_corresponding_create_index_operation()
         {
             var addForeignKeyOperation = new AddForeignKeyOperation
-                {
-                    PrincipalTable = "P",
-                    DependentTable = "D",
-                    Name = "Foo"
-                };
+                                             {
+                                                 PrincipalTable = "P",
+                                                 DependentTable = "D",
+                                                 Name = "Foo"
+                                             };
             addForeignKeyOperation.DependentColumns.Add("fk");
 
             var createIndexOperation = addForeignKeyOperation.CreateCreateIndexOperation();

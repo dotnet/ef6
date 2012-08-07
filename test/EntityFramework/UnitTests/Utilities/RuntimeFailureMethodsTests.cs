@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -11,13 +12,16 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void Requires_non_null_object_is_detected_and_correct_exception_is_generated()
         {
-            Assert.Equal(Error.ArgumentNull("keyExpression").Message, Assert.Throws<ArgumentNullException>(() => new EntityTypeConfiguration<object>().HasKey<int>(null)).Message);
+            Assert.Equal(
+                Error.ArgumentNull("keyExpression").Message,
+                Assert.Throws<ArgumentNullException>(() => new EntityTypeConfiguration<object>().HasKey<int>(null)).Message);
         }
 
         [Fact]
         public void Requires_non_empty_string_is_detected_and_correct_exception_is_generated()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("name"), Assert.Throws<ArgumentException>(() => new ColumnAttribute(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"), Assert.Throws<ArgumentException>(() => new ColumnAttribute(null)).Message);
         }
 
         [Fact]

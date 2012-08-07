@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
@@ -16,13 +17,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     {
         public static Translator CreateRecordStateTranslator()
         {
-            var shaperFactory = new ShaperFactory<RecordState>(2,
-                Objects.MockHelper.CreateCoordinatorFactory<object, RecordState>(0, 0, 0, new CoordinatorFactory[0], new List<RecordState>()),
+            var shaperFactory = new ShaperFactory<RecordState>(
+                2,
+                Objects.MockHelper.CreateCoordinatorFactory<object, RecordState>(
+                    0, 0, 0, new CoordinatorFactory[0], new List<RecordState>()),
                 null,
                 MergeOption.NoTracking);
 
             var translatorMock = new Mock<Translator>();
-            translatorMock.Setup(m => m.TranslateColumnMap<RecordState>(
+            translatorMock.Setup(
+                m => m.TranslateColumnMap<RecordState>(
                     It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(shaperFactory);
 
@@ -31,13 +35,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public static Translator CreateTranslator<T>() where T : class
         {
-            var shaperFactory = new ShaperFactory<T>(1,
+            var shaperFactory = new ShaperFactory<T>(
+                1,
                 Objects.MockHelper.CreateCoordinatorFactory<object, T>(0, 0, 0, new CoordinatorFactory[0], new List<T>()),
                 null,
                 MergeOption.NoTracking);
 
             var translatorMock = new Mock<Translator>();
-            translatorMock.Setup(m => m.TranslateColumnMap<T>(
+            translatorMock.Setup(
+                m => m.TranslateColumnMap<T>(
                     It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(shaperFactory);
 
@@ -47,30 +53,34 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         public static DbDataReader CreateMockDbDataReader(params IEnumerable<object[]>[] sourceEnumerables)
         {
             var underlyingEnumerators = new IEnumerator<object[]>[sourceEnumerables.Length];
-            for (int i = 0; i < sourceEnumerables.Length; i++)
+            for (var i = 0; i < sourceEnumerables.Length; i++)
             {
                 underlyingEnumerators[i] = sourceEnumerables[i].GetEnumerator();
             }
 
-            int currentResultSet = 0;
+            var currentResultSet = 0;
 
             var dbDataReaderMock = new Mock<DbDataReader>();
             dbDataReaderMock
                 .Setup(m => m.Read())
-                .Returns(() =>
+                .Returns(
+                    () =>
                     underlyingEnumerators[currentResultSet].MoveNext());
             dbDataReaderMock
                 .Setup(m => m.ReadAsync(It.IsAny<CancellationToken>()))
-                .Returns((CancellationToken ct) =>
+                .Returns(
+                    (CancellationToken ct) =>
                     Task.FromResult(underlyingEnumerators[currentResultSet].MoveNext()));
 
             dbDataReaderMock
                 .Setup(m => m.NextResult())
-                .Returns(() =>
+                .Returns(
+                    () =>
                     ++currentResultSet < underlyingEnumerators.Length);
             dbDataReaderMock
                 .Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>()))
-                .Returns((CancellationToken ct) =>
+                .Returns(
+                    (CancellationToken ct) =>
                     Task.FromResult(++currentResultSet < underlyingEnumerators.Length));
 
             dbDataReaderMock

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -15,8 +16,8 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// General unit tests for DbEntityEntry and related classes/methods.
-    /// Some specific features, such as concurrency, are tested elsewhere.
+    ///     General unit tests for DbEntityEntry and related classes/methods.
+    ///     Some specific features, such as concurrency, are tested elsewhere.
     /// </summary>
     public class DbEntityEntryTests : TestBase
     {
@@ -30,19 +31,22 @@ namespace ProductivityApiUnitTests
             return mockStateEntry;
         }
 
-        private Mock<InternalContextForMock> CreateMockInternalContextForEntry(Mock<System.Data.Entity.Internal.IEntityStateEntry> mockStateEntry)
+        private Mock<InternalContextForMock> CreateMockInternalContextForEntry(
+            Mock<System.Data.Entity.Internal.IEntityStateEntry> mockStateEntry)
         {
             return CreateMockInternalContextForEntries(new[] { mockStateEntry });
         }
 
-        private Mock<InternalContextForMock> CreateMockInternalContextForEntries(Mock<System.Data.Entity.Internal.IEntityStateEntry>[] mockStateEntries)
+        private Mock<InternalContextForMock> CreateMockInternalContextForEntries(
+            Mock<System.Data.Entity.Internal.IEntityStateEntry>[] mockStateEntries)
         {
             var fakeEntity = mockStateEntries[0].Object.Entity;
 
             var mockInternalContext = new Mock<InternalContextForMock>();
             mockInternalContext.Setup(c => c.GetStateEntry(fakeEntity)).Returns(mockStateEntries[0].Object);
             mockInternalContext.Setup(c => c.GetStateEntries()).Returns(mockStateEntries.Select(e => e.Object));
-            mockInternalContext.Setup(c => c.GetStateEntries<FakeDerivedEntity>()).Returns(mockStateEntries.Where(e => e.Object.Entity is FakeDerivedEntity).Select(e => e.Object));
+            mockInternalContext.Setup(c => c.GetStateEntries<FakeDerivedEntity>()).Returns(
+                mockStateEntries.Where(e => e.Object.Entity is FakeDerivedEntity).Select(e => e.Object));
 
             var mockContext = Mock.Get(mockInternalContext.Object.Owner);
             mockContext.Setup(c => c.InternalContext).Returns(mockInternalContext.Object);
@@ -60,7 +64,8 @@ namespace ProductivityApiUnitTests
             var mockStateEntry = CreateMockStateEntry<FakeEntity>();
             var fakeEntity = mockStateEntry.Object.Entity;
 
-            var entityEntry = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
+            var entityEntry =
+                new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
 
             Assert.Same(fakeEntity, entityEntry.Entity);
         }
@@ -70,7 +75,8 @@ namespace ProductivityApiUnitTests
         {
             var mockStateEntry = CreateMockStateEntry<FakeEntity>();
             mockStateEntry.Setup(e => e.State).Returns(EntityState.Detached);
-            var entityEntry = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
+            var entityEntry =
+                new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
 
             Assert.Equal(EntityState.Detached, entityEntry.State);
         }
@@ -79,7 +85,8 @@ namespace ProductivityApiUnitTests
         public void DbEntityEntry_State_sets_the_entity_state()
         {
             var mockStateEntry = CreateMockStateEntry<FakeEntity>();
-            var entityEntry = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
+            var entityEntry =
+                new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
 
             entityEntry.State = EntityState.Detached;
 
@@ -184,14 +191,17 @@ namespace ProductivityApiUnitTests
             var mockStateEntry = CreateMockStateEntry<FakeEntity>();
             var entityEntry = new DbEntityEntry(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
 
-            Assert.Equal(Strings.DbEntity_BadTypeForCast(typeof(DbEntityEntry).Name, typeof(FakeDerivedEntity).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => entityEntry.Cast<FakeDerivedEntity>()).Message);
+            Assert.Equal(
+                Strings.DbEntity_BadTypeForCast(typeof(DbEntityEntry).Name, typeof(FakeDerivedEntity).Name, typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => entityEntry.Cast<FakeDerivedEntity>()).Message);
         }
 
         [Fact]
         public void Generic_DbEntityEntry_can_be_implicitly_converted_to_non_generic_version()
         {
             var mockStateEntry = CreateMockStateEntry<FakeEntity>();
-            DbEntityEntry<FakeEntity> entityEntry = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
+            var entityEntry =
+                new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, mockStateEntry.Object));
 
             NonGenericTestMethod(entityEntry, entityEntry.Entity);
         }
@@ -224,7 +234,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new InternalEntityEntry(CreateMockedInternalContextForDetachedEntity().Object, new FakeEntity());
 
-            Assert.Equal(Strings.DbEntityEntry_NotSupportedForDetached("CurrentValues", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = entityEntry.CurrentValues; }).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotSupportedForDetached("CurrentValues", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => { var _ = entityEntry.CurrentValues; }).Message);
         }
 
         [Fact]
@@ -232,7 +244,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new InternalEntityEntry(CreateMockedInternalContextForDetachedEntity().Object, new FakeEntity());
 
-            Assert.Equal(Strings.DbEntityEntry_NotSupportedForDetached("OriginalValues", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = entityEntry.OriginalValues; }).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotSupportedForDetached("OriginalValues", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => { var _ = entityEntry.OriginalValues; }).Message);
         }
 
         [Fact]
@@ -240,7 +254,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new InternalEntityEntry(CreateMockedInternalContextForDetachedEntity().Object, new FakeEntity());
 
-            Assert.Equal(Strings.DbEntityEntry_NotSupportedForDetached("GetDatabaseValues", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => entityEntry.GetDatabaseValues()).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotSupportedForDetached("GetDatabaseValues", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => entityEntry.GetDatabaseValues()).Message);
         }
 
         [Fact]
@@ -248,7 +264,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new InternalEntityEntry(CreateMockedInternalContextForDetachedEntity().Object, new FakeEntity());
 
-            Assert.Equal(Strings.DbEntityEntry_NotSupportedForDetached("Reload", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => entityEntry.Reload()).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotSupportedForDetached("Reload", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => entityEntry.Reload()).Message);
         }
 
         #endregion
@@ -296,7 +314,7 @@ namespace ProductivityApiUnitTests
             var fakeEntity = mockStateEntry.Object.Entity;
             var context = mockInternalContext.Object.Owner;
 
-            var entry = context.Entry<FakeEntity>((FakeEntity)fakeEntity);
+            var entry = context.Entry((FakeEntity)fakeEntity);
 
             Assert.Same(mockStateEntry.Object.Entity, entry.Entity);
         }
@@ -307,7 +325,7 @@ namespace ProductivityApiUnitTests
             var context = CreateMockedInternalContextForDetachedEntity().Object.Owner;
             var fakeEntity = new FakeEntity();
 
-            var entry = context.Entry<FakeEntity>(fakeEntity);
+            var entry = context.Entry(fakeEntity);
 
             Assert.NotNull(entry);
             Assert.Same(fakeEntity, entry.Entity);
@@ -324,7 +342,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DbContext_Entries_returns_entries_for_all_types_of_tracked_entity()
         {
-            var mockStateEntries = new[] { CreateMockStateEntry<FakeEntity>(), CreateMockStateEntry<FakeDerivedEntity>(), CreateMockStateEntry<FakeDerivedEntity>() };
+            var mockStateEntries = new[]
+                                       {
+                                           CreateMockStateEntry<FakeEntity>(), CreateMockStateEntry<FakeDerivedEntity>(),
+                                           CreateMockStateEntry<FakeDerivedEntity>()
+                                       };
             var mockInternalContext = CreateMockInternalContextForEntries(mockStateEntries);
             var context = mockInternalContext.Object.Owner;
 
@@ -339,7 +361,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbContext_Entries_returns_entries_for_tracked_entities_of_the_given_type()
         {
-            var mockStateEntries = new[] { CreateMockStateEntry<FakeEntity>(), CreateMockStateEntry<FakeDerivedEntity>(), CreateMockStateEntry<FakeDerivedEntity>() };
+            var mockStateEntries = new[]
+                                       {
+                                           CreateMockStateEntry<FakeEntity>(), CreateMockStateEntry<FakeDerivedEntity>(),
+                                           CreateMockStateEntry<FakeDerivedEntity>()
+                                       };
             var mockInternalContext = CreateMockInternalContextForEntries(mockStateEntries);
             var context = mockInternalContext.Object.Owner;
 
@@ -372,8 +398,10 @@ namespace ProductivityApiUnitTests
         {
             var internalContext = new Mock<InternalContextForMock>().Object;
 
-            var entityEntry1 = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(internalContext, CreateMockStateEntry<FakeEntity>().Object));
-            var entityEntry2 = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(internalContext, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry1 =
+                new DbEntityEntry<FakeEntity>(new InternalEntityEntry(internalContext, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry2 =
+                new DbEntityEntry<FakeEntity>(new InternalEntityEntry(internalContext, CreateMockStateEntry<FakeEntity>().Object));
 
             Assert.NotEqual(entityEntry1, entityEntry2);
         }
@@ -392,8 +420,12 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbEntityEntries_for_different_entities_in_different_contexts_test_not_equal()
         {
-            var entityEntry1 = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
-            var entityEntry2 = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry1 =
+                new DbEntityEntry<FakeEntity>(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry2 =
+                new DbEntityEntry<FakeEntity>(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
 
             Assert.NotEqual(entityEntry1, entityEntry2);
         }
@@ -401,7 +433,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbEntityEntry_tests_not_equal_to_null()
         {
-            var entityEntry = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry =
+                new DbEntityEntry<FakeEntity>(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
 
             Assert.False(entityEntry.Equals((object)null));
         }
@@ -409,9 +443,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbEntityEntry_tests_not_equal_to_null_using_strongly_typed_method()
         {
-            var entityEntry = new DbEntityEntry<FakeEntity>(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry =
+                new DbEntityEntry<FakeEntity>(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
 
-            Assert.False(entityEntry.Equals((DbEntityEntry<FakeEntity>)null));
+            Assert.False(entityEntry.Equals(null));
         }
 
         [Fact]
@@ -464,8 +500,12 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Non_generic_DbEntityEntries_for_different_entities_in_different_contexts_test_not_equal()
         {
-            var entityEntry1 = new DbEntityEntry(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
-            var entityEntry2 = new DbEntityEntry(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry1 =
+                new DbEntityEntry(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry2 =
+                new DbEntityEntry(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
 
             Assert.NotEqual(entityEntry1, entityEntry2);
         }
@@ -473,7 +513,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Non_generic_DbEntityEntry_tests_not_equal_to_null()
         {
-            var entityEntry = new DbEntityEntry(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry =
+                new DbEntityEntry(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
 
             Assert.False(entityEntry.Equals((object)null));
         }
@@ -481,9 +523,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Non_generic_DbEntityEntry_tests_not_equal_to_null_using_strongly_typed_method()
         {
-            var entityEntry = new DbEntityEntry(new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
+            var entityEntry =
+                new DbEntityEntry(
+                    new InternalEntityEntry(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<FakeEntity>().Object));
 
-            Assert.False(entityEntry.Equals((DbEntityEntry)null));
+            Assert.False(entityEntry.Equals(null));
         }
 
         [Fact]

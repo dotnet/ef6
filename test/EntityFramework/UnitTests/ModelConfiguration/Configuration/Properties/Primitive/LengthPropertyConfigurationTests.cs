@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -295,8 +296,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.MaxLength = 2;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "MaxLength", 1, "MaxLength", 2);
+                                  Strings.ConflictingConfigurationValue(
+                                      "MaxLength", 1, "MaxLength", 2);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -342,8 +343,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.IsFixedLength = true;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsFixedLength", false, "IsFixedLength", true);
+                                  Strings.ConflictingConfigurationValue(
+                                      "IsFixedLength", false, "IsFixedLength", true);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -389,8 +390,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.IsMaxLength = true;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsMaxLength", false, "IsMaxLength", true);
+                                  Strings.ConflictingConfigurationValue(
+                                      "IsMaxLength", false, "IsMaxLength", true);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));

@@ -12,10 +12,10 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for <see cref="DbSet"/> and <see cref="DbSet{T}"/>.
-    /// Note that some tests that would normally be unit tests are in the functional tests project because they
-    /// were created before the functional/unit division.
-    /// </summary> 
+    ///     Unit tests for <see cref="DbSet" /> and <see cref="DbSet{T}" />.
+    ///     Note that some tests that would normally be unit tests are in the functional tests project because they
+    ///     were created before the functional/unit division.
+    /// </summary>
     public class DbSetTests : TestBase
     {
         public class Add_Generic
@@ -38,9 +38,9 @@ namespace ProductivityApiUnitTests
             public void With_wrong_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                {
-                    CallBase = true
-                }
+                              {
+                                  CallBase = true
+                              }
                     .Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbSet_BadTypeForAddAttachRemove("Add", "String", "FakeEntity"),
@@ -145,9 +145,9 @@ namespace ProductivityApiUnitTests
             public void With_same_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                {
-                    CallBase = true
-                };
+                                              {
+                                                  CallBase = true
+                                              };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeEntity>()).Returns(new FakeEntity());
 
@@ -162,9 +162,9 @@ namespace ProductivityApiUnitTests
             public void With_derived_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                {
-                    CallBase = true
-                };
+                                              {
+                                                  CallBase = true
+                                              };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeDerivedEntity>()).Returns(new FakeDerivedEntity());
 
@@ -204,9 +204,9 @@ namespace ProductivityApiUnitTests
             public void With_same_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                {
-                    CallBase = true
-                };
+                                              {
+                                                  CallBase = true
+                                              };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeEntity>()).Returns(new FakeEntity());
 
@@ -222,12 +222,12 @@ namespace ProductivityApiUnitTests
             public void With_derived_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                {
-                    CallBase = true
-                };
+                                              {
+                                                  CallBase = true
+                                              };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeDerivedEntity>()).Returns(new FakeDerivedEntity());
-                
+
                 var internalSetMock = new Mock<InternalSet<FakeEntity>>(internalContextMock.Object);
                 internalSetMock.Setup(m => m.InternalContext).Returns(internalContextMock.Object);
 

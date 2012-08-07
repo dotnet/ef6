@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections.Generic;
@@ -26,21 +27,19 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 var entityCollectionMock = MockHelper.CreateMockEntityCollection<object>(null);
 
-                int timesLoadCalled = 0;
+                var timesLoadCalled = 0;
                 entityCollectionMock.Setup(m => m.Load(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>()))
-                    .Callback((IEnumerable<object> actualCollection, MergeOption actualMergeOption) =>
-                    {
-                        timesLoadCalled++;
-                        Assert.Equal(null, actualCollection);
-                        Assert.Equal(mergeOption, actualMergeOption);
-                    });
+                    .Callback(
+                        (IEnumerable<object> actualCollection, MergeOption actualMergeOption) =>
+                            {
+                                timesLoadCalled++;
+                                Assert.Equal(null, actualCollection);
+                                Assert.Equal(mergeOption, actualMergeOption);
+                            });
 
-                int timesCheckOwnerNullCalled = 0;
+                var timesCheckOwnerNullCalled = 0;
                 entityCollectionMock.Setup(m => m.CheckOwnerNull())
-                    .Callback(() =>
-                    {
-                        timesCheckOwnerNullCalled++;
-                    });
+                    .Callback(() => { timesCheckOwnerNullCalled++; });
 
                 entityCollectionMock.Object.Load(mergeOption);
 
@@ -61,41 +60,47 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
             }
 
-            private void Calls_merge_passing_in_expected_values(List<IEntityWrapper> collection, MergeOption mergeOption, object refreshedValue)
+            private void Calls_merge_passing_in_expected_values(
+                List<IEntityWrapper> collection, MergeOption mergeOption, object refreshedValue)
             {
-                var entityCollectionMock = MockHelper.CreateMockEntityCollection<object>(refreshedValue);
+                var entityCollectionMock = MockHelper.CreateMockEntityCollection(refreshedValue);
 
-                int timesMergeCalled = 0;
+                var timesMergeCalled = 0;
                 if (collection == null)
                 {
                     entityCollectionMock.Setup(m => m.Merge(It.IsAny<IEnumerable<object>>(), It.IsAny<MergeOption>(), true))
-                        .Callback((IEnumerable<object> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                        {
-                            timesMergeCalled++;
+                        .Callback(
+                            (IEnumerable<object> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
+                                {
+                                    timesMergeCalled++;
 
-                            Assert.Equal(refreshedValue == null ? Enumerable.Empty<object>() : new[] { refreshedValue }, actualCollection);
-                            Assert.Equal(mergeOption, actualMergeOption);
-                        });
+                                    Assert.Equal(
+                                        refreshedValue == null ? Enumerable.Empty<object>() : new[] { refreshedValue }, actualCollection);
+                                    Assert.Equal(mergeOption, actualMergeOption);
+                                });
                 }
                 else
                 {
                     entityCollectionMock.Setup(m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), true))
-                        .Callback((List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                        {
-                            timesMergeCalled++;
+                        .Callback(
+                            (List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
+                                {
+                                    timesMergeCalled++;
 
-                            Assert.Equal(collection, actualCollection);
-                            Assert.Equal(mergeOption, actualMergeOption);
-                        });
+                                    Assert.Equal(collection, actualCollection);
+                                    Assert.Equal(mergeOption, actualMergeOption);
+                                });
                 }
 
                 entityCollectionMock.Object.Load(collection, mergeOption);
 
-                Assert.True(1 == timesMergeCalled,
-                    string.Format("Expected Merge to be called once for MergeOption.{0}, {1} collection and {2} refreshed value.",
-                    mergeOption,
-                    collection == null ? "null" : "not null",
-                    refreshedValue == null ? "null" : "not null"));
+                Assert.True(
+                    1 == timesMergeCalled,
+                    string.Format(
+                        "Expected Merge to be called once for MergeOption.{0}, {1} collection and {2} refreshed value.",
+                        mergeOption,
+                        collection == null ? "null" : "not null",
+                        refreshedValue == null ? "null" : "not null"));
             }
 
             [Fact]
@@ -116,7 +121,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             public void Add_IEntityWithRelationships_throws_for_null_argument()
             {
                 Assert.Throws<ArgumentNullException>(
-                    () => ((IRelatedEnd)MockHelper.CreateMockEntityCollection<string>(null).Object).Add((IEntityWithRelationships)null));
+                    () => ((IRelatedEnd)MockHelper.CreateMockEntityCollection<string>(null).Object).Add(null));
             }
 
             [Fact]

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -10,8 +11,8 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for the AsNoTracking extension methods on IQueryable.
-    /// </summary> 
+    ///     Unit tests for the AsNoTracking extension methods on IQueryable.
+    /// </summary>
     public class AsNoTrackingTests : TestBase
     {
         #region AsNoTracking negative contract tests
@@ -19,7 +20,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void AsNoTracking_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.AsNoTracking<FakeEntity>(null)).ParamName);
+            Assert.Equal(
+                "source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.AsNoTracking<FakeEntity>(null)).ParamName);
         }
 
         [Fact]
@@ -35,7 +37,12 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void AsNoTracking_on_IEnumerable_does_nothing()
         {
-            var enumerable = new List<FakeEntity> { new FakeEntity(), new FakeEntity(), new FakeEntity() }.AsQueryable();
+            var enumerable = new List<FakeEntity>
+                                 {
+                                     new FakeEntity(),
+                                     new FakeEntity(),
+                                     new FakeEntity()
+                                 }.AsQueryable();
             var afterNoTracking = enumerable.AsNoTracking();
 
             Assert.Same(enumerable, afterNoTracking);
@@ -117,7 +124,12 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Non_generic_AsNoTracking_on_IEnumerable_does_nothing()
         {
-            var enumerable = (IQueryable)new List<FakeEntity> { new FakeEntity(), new FakeEntity(), new FakeEntity() }.AsQueryable();
+            var enumerable = (IQueryable)new List<FakeEntity>
+                                             {
+                                                 new FakeEntity(),
+                                                 new FakeEntity(),
+                                                 new FakeEntity()
+                                             }.AsQueryable();
             var afterAsNoTracking = enumerable.AsNoTracking();
 
             Assert.Same(enumerable, afterAsNoTracking);

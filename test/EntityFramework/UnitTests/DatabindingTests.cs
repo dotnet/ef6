@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -18,7 +19,7 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for data binding and DbSet.Local.
+    ///     Unit tests for data binding and DbSet.Local.
     /// </summary>
     public class DatabindingTests : TestBase
     {
@@ -37,7 +38,7 @@ namespace ProductivityApiUnitTests
                 String = i.ToString();
                 XNode = new XText(i.ToString());
                 Random = new Random();
-                ByteArray = new byte[] { (byte)i, (byte)i, (byte)i, (byte)i };
+                ByteArray = new[] { (byte)i, (byte)i, (byte)i, (byte)i };
             }
 
             public static implicit operator ListElement(int i)
@@ -89,10 +90,34 @@ namespace ProductivityApiUnitTests
 
         private void SortTest(string property, ListSortDirection direction)
         {
-            var list = new List<ListElement> { 3, 1, 4, 1, 5, 9 };
+            var list = new List<ListElement>
+                           {
+                               3,
+                               1,
+                               4,
+                               1,
+                               5,
+                               9
+                           };
             var sortedList = direction == ListSortDirection.Ascending
-                                 ? new List<ListElement> {1, 1, 3, 4, 5, 9}
-                                 : new List<ListElement> {9, 5, 4, 3, 1, 1};
+                                 ? new List<ListElement>
+                                       {
+                                           1,
+                                           1,
+                                           3,
+                                           4,
+                                           5,
+                                           9
+                                       }
+                                 : new List<ListElement>
+                                       {
+                                           9,
+                                           5,
+                                           4,
+                                           3,
+                                           1,
+                                           1
+                                       };
 
             var bindingList = new SortableBindingList<ListElement>(list);
 
@@ -152,8 +177,24 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SortableBindingList_does_not_sort_for_non_XNode_that_does_not_implement_IComparable()
         {
-            var list = new List<ListElement> { 3, 1, 4, 1, 5, 9 };
-            var unsortedList = new List<ListElement> { 3, 1, 4, 1, 5, 9 };
+            var list = new List<ListElement>
+                           {
+                               3,
+                               1,
+                               4,
+                               1,
+                               5,
+                               9
+                           };
+            var unsortedList = new List<ListElement>
+                                   {
+                                       3,
+                                       1,
+                                       4,
+                                       1,
+                                       5,
+                                       9
+                                   };
             var bindingList = new SortableBindingList<ListElement>(list);
 
             ((IBindingList)bindingList).ApplySort(ListElement.Property("Random"), ListSortDirection.Ascending);
@@ -164,8 +205,24 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SortableBindingList_does_not_sort_for_byte_arrays()
         {
-            var list = new List<ListElement> { 3, 1, 4, 1, 5, 9 };
-            var unsortedList = new List<ListElement> { 3, 1, 4, 1, 5, 9 };
+            var list = new List<ListElement>
+                           {
+                               3,
+                               1,
+                               4,
+                               1,
+                               5,
+                               9
+                           };
+            var unsortedList = new List<ListElement>
+                                   {
+                                       3,
+                                       1,
+                                       4,
+                                       1,
+                                       5,
+                                       9
+                                   };
             var bindingList = new SortableBindingList<ListElement>(list);
 
             ((IBindingList)bindingList).ApplySort(ListElement.Property("ByteArray"), ListSortDirection.Descending);
@@ -176,8 +233,18 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SortableBindingList_can_sort_when_list_contains_derived_objects()
         {
-            var list = new List<ListElement> { new DerivedListElement(3), new DerivedListElement(1), new DerivedListElement(4) };
-            var sortedList = new List<ListElement> { new DerivedListElement(1), new DerivedListElement(3), new DerivedListElement(4) };
+            var list = new List<ListElement>
+                           {
+                               new DerivedListElement(3),
+                               new DerivedListElement(1),
+                               new DerivedListElement(4)
+                           };
+            var sortedList = new List<ListElement>
+                                 {
+                                     new DerivedListElement(1),
+                                     new DerivedListElement(3),
+                                     new DerivedListElement(4)
+                                 };
 
             var bindingList = new SortableBindingList<ListElement>(list);
 
@@ -189,8 +256,18 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SortableBindingList_can_sort_when_list_is_of_derived_type()
         {
-            var list = new List<DerivedListElement> { new DerivedListElement(3), new DerivedListElement(1), new DerivedListElement(4) };
-            var sortedList = new List<DerivedListElement> { new DerivedListElement(1), new DerivedListElement(3), new DerivedListElement(4) };
+            var list = new List<DerivedListElement>
+                           {
+                               new DerivedListElement(3),
+                               new DerivedListElement(1),
+                               new DerivedListElement(4)
+                           };
+            var sortedList = new List<DerivedListElement>
+                                 {
+                                     new DerivedListElement(1),
+                                     new DerivedListElement(3),
+                                     new DerivedListElement(4)
+                                 };
 
             var bindingList = new SortableBindingList<DerivedListElement>(list);
 
@@ -219,7 +296,15 @@ namespace ProductivityApiUnitTests
         public void Items_removed_from_ObservableCollection_are_removed_from_binding_list()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             oc.Remove(item);
@@ -232,7 +317,15 @@ namespace ProductivityApiUnitTests
         public void Items_replaced_in_the_ObservableCollection_are_replaced_in_the_binding_list()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             var newItem = new ListElement(-4);
@@ -246,7 +339,15 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Items_cleared_in_the_ObservableCollection_are_cleared_in_the_binding_list()
         {
-            var oc = new ObservableCollection<ListElement> { 3, 1, 4, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             4,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             oc.Clear();
@@ -258,7 +359,15 @@ namespace ProductivityApiUnitTests
         public void Adding_duplicate_item_to_the_ObservableCollection_adds_duplicate_to_the_binding_list()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             oc.Add(item);
@@ -319,7 +428,15 @@ namespace ProductivityApiUnitTests
         public void Items_set_in_the_binding_list_are_replaced_in_the_ObservableCollection()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             var newItem = new ListElement(7);
@@ -333,7 +450,15 @@ namespace ProductivityApiUnitTests
         public void Items_removed_from_the_binding_list_are_removed_from_the_ObservableCollection()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             obbl.Remove(item);
@@ -345,7 +470,15 @@ namespace ProductivityApiUnitTests
         public void Items_removed_by_index_from_the_binding_list_are_removed_from_the_ObservableCollection()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             obbl.RemoveAt(2);
@@ -356,7 +489,15 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Items_cleared_from_the_binding_list_are_cleared_from_the_ObservableCollection()
         {
-            var oc = new ObservableCollection<ListElement> { 3, 1, 4, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             4,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             obbl.Clear();
@@ -368,7 +509,15 @@ namespace ProductivityApiUnitTests
         public void Adding_duplicate_item_to_the_binding_list_adds_duplicate_to_the_ObservableCollection()
         {
             var item = new ListElement(4);
-            var oc = new ObservableCollection<ListElement> { 3, 1, item, 1, 5, 9 };
+            var oc = new ObservableCollection<ListElement>
+                         {
+                             3,
+                             1,
+                             item,
+                             1,
+                             5,
+                             9
+                         };
             var obbl = new ObservableBackedBindingList<ListElement>(oc);
 
             obbl.Add(item);
@@ -382,7 +531,7 @@ namespace ProductivityApiUnitTests
         {
             var obbl = new ObservableBackedBindingList<XNode>(new ObservableCollection<XNode>());
             var item = new XText("Some Value");
-            
+
             obbl.AddingNew += (s, e) => e.NewObject = item;
             obbl.AddNew();
             obbl.EndNew(0);
@@ -394,9 +543,11 @@ namespace ProductivityApiUnitTests
         public void Attempt_to_AddNew_for_abstract_type_throws_if_AddingNew_event_is_not_used()
         {
             var obbl = new ObservableBackedBindingList<XNode>(new ObservableCollection<XNode>());
-            
+
             const BindingFlags bindingAttr = BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.Instance;
-            Assert.Equal(GenerateException(() => Activator.CreateInstance(typeof(XNode), bindingAttr, null, null, null)).Message, Assert.Throws<MissingMethodException>(() => obbl.AddNew()).Message);
+            Assert.Equal(
+                GenerateException(() => Activator.CreateInstance(typeof(XNode), bindingAttr, null, null, null)).Message,
+                Assert.Throws<MissingMethodException>(() => obbl.AddNew()).Message);
         }
 
         [Fact]
@@ -418,14 +569,17 @@ namespace ProductivityApiUnitTests
             var obbl = new ObservableBackedBindingList<XText>(new ObservableCollection<XText>());
 
             const BindingFlags bindingAttr = BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.Instance;
-            Assert.Equal(GenerateException(() => Activator.CreateInstance(typeof(XText), bindingAttr, null, null, null)).Message, Assert.Throws<MissingMethodException>(() => obbl.AddNew()).Message);
+            Assert.Equal(
+                GenerateException(() => Activator.CreateInstance(typeof(XText), bindingAttr, null, null, null)).Message,
+                Assert.Throws<MissingMethodException>(() => obbl.AddNew()).Message);
         }
 
         #endregion
 
         #region DbLocalView tests
 
-        private Mock<InternalContextForMock> CreateMockedInternalContext(Mock<IDbSet<FakeEntity>> mockDbSet, IList<FakeEntity> entities = null)
+        private Mock<InternalContextForMock> CreateMockedInternalContext(
+            Mock<IDbSet<FakeEntity>> mockDbSet, IList<FakeEntity> entities = null)
         {
             entities = entities ?? new List<FakeEntity>();
             var mockInternalContext = new Mock<InternalContextForMock>();
@@ -443,7 +597,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DbLocalView_is_initialized_with_entities_from_the_context()
         {
-            var entities = new List<FakeEntity> { new FakeEntity(), new FakeEntity() };
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity(),
+                                   new FakeEntity()
+                               };
             var localView = CreateLocalView(new Mock<IDbSet<FakeEntity>>(), entities);
 
             Assert.Equal(2, localView.Count);
@@ -468,7 +626,11 @@ namespace ProductivityApiUnitTests
         {
             var entity = new FakeEntity();
             var mockDbSet = new Mock<IDbSet<FakeEntity>>();
-            var localView = CreateLocalView(mockDbSet, new List<FakeEntity> {entity});
+            var localView = CreateLocalView(
+                mockDbSet, new List<FakeEntity>
+                               {
+                                   entity
+                               });
 
             localView.Remove(entity);
 
@@ -480,7 +642,11 @@ namespace ProductivityApiUnitTests
         {
             var entity = new FakeEntity();
             var mockDbSet = new Mock<IDbSet<FakeEntity>>();
-            var localView = CreateLocalView(mockDbSet, new List<FakeEntity> { entity });
+            var localView = CreateLocalView(
+                mockDbSet, new List<FakeEntity>
+                               {
+                                   entity
+                               });
 
             var newEntity = new FakeEntity();
             localView[0] = newEntity;
@@ -492,7 +658,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Moving_an_entity_in_DbLocalView_is_ignored()
         {
-            var entities = new List<FakeEntity> {new FakeEntity(), new FakeEntity()};
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity(),
+                                   new FakeEntity()
+                               };
             var mockDbSet = new Mock<IDbSet<FakeEntity>>();
             var localView = CreateLocalView(mockDbSet, entities);
 
@@ -507,7 +677,11 @@ namespace ProductivityApiUnitTests
         {
             var entity = new FakeEntity();
             var mockDbSet = new Mock<IDbSet<FakeEntity>>();
-            var localView = CreateLocalView(mockDbSet, new List<FakeEntity> { entity });
+            var localView = CreateLocalView(
+                mockDbSet, new List<FakeEntity>
+                               {
+                                   entity
+                               });
 
             localView.Add(entity);
 
@@ -529,7 +703,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void BindingList_obtaibed_from_DbLocalView_stays_in_sync_with_the_local_view()
         {
-            var entities = new List<FakeEntity> { new FakeEntity(), new FakeEntity() };
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity(),
+                                   new FakeEntity()
+                               };
             var localView = CreateLocalView(new Mock<IDbSet<FakeEntity>>(), entities);
 
             var bindingList = localView.BindingList;
@@ -545,7 +723,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DbLocalView_stays_in_sync_with_BindingList_obtaibed_from_it()
         {
-            var entities = new List<FakeEntity> { new FakeEntity(), new FakeEntity() };
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity(),
+                                   new FakeEntity()
+                               };
             var localView = CreateLocalView(new Mock<IDbSet<FakeEntity>>(), entities);
 
             var bindingList = localView.BindingList;
@@ -561,7 +743,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Clear_on_DbLocalView_removes_all_items_from_DbSet()
         {
-            var entities = new List<FakeEntity> { new FakeEntity(), new FakeEntity() };
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity(),
+                                   new FakeEntity()
+                               };
             var mockDbSet = new Mock<IDbSet<FakeEntity>>();
             var localView = CreateLocalView(mockDbSet, entities);
 
@@ -574,7 +760,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Attempted_adds_of_duplicates_to_DbLocalView_are_ignored()
         {
-            var entities = new List<FakeEntity> { new FakeEntity() };
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity()
+                               };
             var mockDbSet = new Mock<IDbSet<FakeEntity>>();
             var localView = CreateLocalView(mockDbSet, entities);
 
@@ -588,14 +777,18 @@ namespace ProductivityApiUnitTests
         public void State_manager_Remove_event_causes_entity_to_be_removed_from_DbLocalView()
         {
             var entity = new FakeEntity();
-            var mockInternalContext = CreateMockedInternalContext(new Mock<IDbSet<FakeEntity>>(), new List<FakeEntity> { entity });
+            var mockInternalContext = CreateMockedInternalContext(
+                new Mock<IDbSet<FakeEntity>>(), new List<FakeEntity>
+                                                    {
+                                                        entity
+                                                    });
 
             CollectionChangeEventHandler stateManagerChanged = null;
             mockInternalContext.Setup(i => i.RegisterObjectStateManagerChangedEvent(It.IsAny<CollectionChangeEventHandler>())).
                 Callback<CollectionChangeEventHandler>(h => stateManagerChanged = h);
 
             var localView = new DbLocalView<FakeEntity>(mockInternalContext.Object);
-            
+
             stateManagerChanged.Invoke(null, new CollectionChangeEventArgs(CollectionChangeAction.Remove, entity));
 
             Assert.False(localView.Contains(entity));
@@ -650,7 +843,11 @@ namespace ProductivityApiUnitTests
         public void State_manager_Add_event_for_entity_already_in_DbLocalView_is_ignored()
         {
             var entity = new FakeEntity();
-            var mockInternalContext = CreateMockedInternalContext(new Mock<IDbSet<FakeEntity>>(), new List<FakeEntity> { entity });
+            var mockInternalContext = CreateMockedInternalContext(
+                new Mock<IDbSet<FakeEntity>>(), new List<FakeEntity>
+                                                    {
+                                                        entity
+                                                    });
 
             CollectionChangeEventHandler stateManagerChanged = null;
             mockInternalContext.Setup(i => i.RegisterObjectStateManagerChangedEvent(It.IsAny<CollectionChangeEventHandler>())).
@@ -686,7 +883,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void ToBindingList_throws_when_given_null_ObservableCollection()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => ObservableCollectionExtensions.ToBindingList<FakeEntity>(null)).ParamName);
+            Assert.Equal(
+                "source",
+                Assert.Throws<ArgumentNullException>(() => ObservableCollectionExtensions.ToBindingList<FakeEntity>(null)).ParamName);
         }
 
         [Fact]
@@ -728,7 +927,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void ObservableListSource_exposes_ObervableCollection_IEnumerable_constructor()
         {
-            IEnumerable<FakeEntity> entities = new[] {new FakeEntity(), new FakeEntity()};
+            IEnumerable<FakeEntity> entities = new[] { new FakeEntity(), new FakeEntity() };
             var ols = new ObservableListSource<FakeEntity>(entities);
             Assert.Equal(2, ols.Count);
         }
@@ -736,7 +935,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void ObservableListSource_exposes_ObervableCollection_List_constructor()
         {
-            var entities = new List<FakeEntity> { new FakeEntity(), new FakeEntity() };
+            var entities = new List<FakeEntity>
+                               {
+                                   new FakeEntity(),
+                                   new FakeEntity()
+                               };
             var ols = new ObservableListSource<FakeEntity>(entities);
             Assert.Equal(2, ols.Count);
         }
@@ -750,8 +953,12 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void ObservableListSource_GetList_returns_BindingList_attached_to_the_ObservableCollection()
         {
-            var ols = new ObservableListSource<FakeEntity> { new FakeEntity(), new FakeEntity() };
-            var bindingList = ((IListSource) ols).GetList();
+            var ols = new ObservableListSource<FakeEntity>
+                          {
+                              new FakeEntity(),
+                              new FakeEntity()
+                          };
+            var bindingList = ((IListSource)ols).GetList();
 
             Assert.Equal(2, bindingList.Count);
 
@@ -802,7 +1009,9 @@ namespace ProductivityApiUnitTests
         {
             var fakeQuery = new DbQuery<FakeEntity>(new Mock<IInternalQuery<FakeEntity>>().Object);
 
-            Assert.Equal(Strings.DbQuery_BindingToDbQueryNotSupported, Assert.Throws<NotSupportedException>(() => ((IListSource)fakeQuery).GetList()).Message);
+            Assert.Equal(
+                Strings.DbQuery_BindingToDbQueryNotSupported,
+                Assert.Throws<NotSupportedException>(() => ((IListSource)fakeQuery).GetList()).Message);
         }
 
         [Fact]
@@ -810,7 +1019,9 @@ namespace ProductivityApiUnitTests
         {
             var fakeQuery = new InternalDbQuery<FakeEntity>(new Mock<IInternalQuery<FakeEntity>>().Object);
 
-            Assert.Equal(Strings.DbQuery_BindingToDbQueryNotSupported, Assert.Throws<NotSupportedException>(() => ((IListSource)fakeQuery).GetList()).Message);
+            Assert.Equal(
+                Strings.DbQuery_BindingToDbQueryNotSupported,
+                Assert.Throws<NotSupportedException>(() => ((IListSource)fakeQuery).GetList()).Message);
         }
 
         #endregion
@@ -826,7 +1037,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Load_enumerates_the_query()
         {
-            int count = 0;
+            var count = 0;
             var mockEnumerator = new Mock<IEnumerator<FakeEntity>>();
             var mockQuery = new Mock<IList<FakeEntity>>();
             mockQuery.Setup(q => q.GetEnumerator()).Returns(mockEnumerator.Object);

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
@@ -20,11 +21,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var mockAttributeProvider = new Mock<AttributeProvider>();
             mockAttributeProvider
                 .Setup(a => a.GetAttributes(mockType.Object))
-                .Returns(new Attribute[]
-                    {
-                        new DataContractAttribute(),
-                        new TableAttribute("MyTable")
-                    });
+                .Returns(
+                    new Attribute[]
+                        {
+                            new DataContractAttribute(),
+                            new TableAttribute("MyTable")
+                        });
 
             var annotations = new List<DataModelAnnotation>();
 
@@ -41,11 +43,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var mockAttributeProvider = new Mock<AttributeProvider>();
             mockAttributeProvider
                 .Setup(a => a.GetAttributes(mockPropertyInfo.Object))
-                .Returns(new Attribute[]
-                    {
-                        new DataContractAttribute(),
-                        new TableAttribute("MyTable")
-                    });
+                .Returns(
+                    new Attribute[]
+                        {
+                            new DataContractAttribute(),
+                            new TableAttribute("MyTable")
+                        });
 
             var annotations = new List<DataModelAnnotation>();
 

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -19,7 +20,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = new Configuration.PrimitivePropertyConfiguration(new PrimitivePropertyConfiguration());
 
-            Assert.Equal(new ArgumentOutOfRangeException("columnOrder").Message, Assert.Throws<ArgumentOutOfRangeException>(() => configuration.HasColumnOrder(-1)).Message);
+            Assert.Equal(
+                new ArgumentOutOfRangeException("columnOrder").Message,
+                Assert.Throws<ArgumentOutOfRangeException>(() => configuration.HasColumnOrder(-1)).Message);
         }
 
         [Fact]
@@ -27,7 +30,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = new Configuration.PrimitivePropertyConfiguration(new PrimitivePropertyConfiguration());
 
-            Assert.Equal(new ArgumentOutOfRangeException("databaseGeneratedOption").Message, Assert.Throws<ArgumentOutOfRangeException>(() => configuration.HasDatabaseGeneratedOption((DatabaseGeneratedOption?)(-1))).Message);
+            Assert.Equal(
+                new ArgumentOutOfRangeException("databaseGeneratedOption").Message,
+                Assert.Throws<ArgumentOutOfRangeException>(() => configuration.HasDatabaseGeneratedOption((DatabaseGeneratedOption?)(-1))).
+                    Message);
         }
 
         [Fact]
@@ -35,7 +41,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configurationA = CreateConfiguration();
 
-            Assert.Equal(OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace, configurationA.OverridableConfigurationParts);
+            Assert.Equal(
+                OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace,
+                configurationA.OverridableConfigurationParts);
         }
 
         [Fact]
@@ -140,11 +148,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = CreateConfiguration();
 
-            var edmPropertyMapping = new DbEdmPropertyMapping { Column = new DbTableColumnMetadata() };
+            var edmPropertyMapping = new DbEdmPropertyMapping
+                                         {
+                                             Column = new DbTableColumnMetadata()
+                                         };
 
             Assert.Null(edmPropertyMapping.Column.GetConfiguration());
 
-            configuration.Configure(new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Same(configuration, edmPropertyMapping.Column.GetConfiguration());
         }
@@ -157,13 +169,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configurationB = CreateConfiguration();
             configurationB.ColumnType = "nvarchar";
 
-            var edmPropertyMapping = new DbEdmPropertyMapping { Column = new DbTableColumnMetadata { Facets = new DbPrimitiveTypeFacets() } };
+            var edmPropertyMapping = new DbEdmPropertyMapping
+                                         {
+                                             Column = new DbTableColumnMetadata
+                                                          {
+                                                              Facets = new DbPrimitiveTypeFacets()
+                                                          }
+                                         };
 
-            configurationA.Configure(new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+            configurationA.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("foo", ((PrimitivePropertyConfiguration)edmPropertyMapping.Column.GetConfiguration()).ColumnName);
 
-            configurationB.Configure(new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+            configurationB.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("foo", ((PrimitivePropertyConfiguration)edmPropertyMapping.Column.GetConfiguration()).ColumnName);
             Assert.Equal("nvarchar", ((PrimitivePropertyConfiguration)edmPropertyMapping.Column.GetConfiguration()).ColumnType);
@@ -175,9 +195,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configuration = CreateConfiguration();
             configuration.ColumnName = "Foo";
 
-            var edmPropertyMapping = new DbEdmPropertyMapping { Column = new DbTableColumnMetadata() };
+            var edmPropertyMapping = new DbEdmPropertyMapping
+                                         {
+                                             Column = new DbTableColumnMetadata()
+                                         };
 
-            configuration.Configure(new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", edmPropertyMapping.Column.Name);
         }
@@ -189,9 +213,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configuration.ColumnOrder = 2;
             configuration.ColumnType = "nvarchar";
 
-            var edmPropertyMapping = new DbEdmPropertyMapping { Column = new DbTableColumnMetadata { Facets = new DbPrimitiveTypeFacets() } };
+            var edmPropertyMapping = new DbEdmPropertyMapping
+                                         {
+                                             Column = new DbTableColumnMetadata
+                                                          {
+                                                              Facets = new DbPrimitiveTypeFacets()
+                                                          }
+                                         };
 
-            configuration.Configure(new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal(2, edmPropertyMapping.Column.GetOrder());
         }
@@ -202,9 +233,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configuration = CreateConfiguration();
             configuration.ColumnType = "Foo";
 
-            var edmPropertyMapping = new DbEdmPropertyMapping { Column = new DbTableColumnMetadata() };
+            var edmPropertyMapping = new DbEdmPropertyMapping
+                                         {
+                                             Column = new DbTableColumnMetadata()
+                                         };
 
-            configuration.Configure(new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", edmPropertyMapping.Column.TypeName);
         }
@@ -222,8 +257,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var property = new EdmProperty().AsPrimitive();
 
             configurationNullable.Configure(property);
-            Assert.Equal(Strings.ConflictingPropertyConfiguration(string.Empty, string.Empty, Environment.NewLine + "\tIsNullable = True conflicts with IsNullable = False"), Assert.Throws<InvalidOperationException>(() =>
-                                                                                                                                                                                                                             configurationRequired.Configure(property)).Message);
+            Assert.Equal(
+                Strings.ConflictingPropertyConfiguration(
+                    string.Empty, string.Empty, Environment.NewLine + "\tIsNullable = True conflicts with IsNullable = False"),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    configurationRequired.Configure(property)).Message);
         }
 
         [Fact]
@@ -394,11 +433,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configurationA = CreateConfiguration();
             configurationA.OverridableConfigurationParts = OverridableConfigurationParts.None;
             var configurationB = CreateConfiguration();
-            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace;
+            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
+                                                           | OverridableConfigurationParts.OverridableInSSpace;
 
             configurationA.CopyFrom(configurationB);
 
-            Assert.Equal(OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace, configurationA.OverridableConfigurationParts);
+            Assert.Equal(
+                OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace,
+                configurationA.OverridableConfigurationParts);
         }
 
         [Fact]
@@ -693,7 +735,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void FillFrom_overwrites_OverridableConfigurationParts_set_to_both()
         {
             var configurationA = CreateConfiguration();
-            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace;
+            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
+                                                           | OverridableConfigurationParts.OverridableInSSpace;
             var configurationB = CreateConfiguration();
             configurationB.OverridableConfigurationParts = OverridableConfigurationParts.None;
 
@@ -708,7 +751,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configurationA = CreateConfiguration();
             configurationA.OverridableConfigurationParts = OverridableConfigurationParts.None;
             var configurationB = CreateConfiguration();
-            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace;
+            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
+                                                           | OverridableConfigurationParts.OverridableInSSpace;
 
             configurationA.FillFrom(configurationB, inCSpace: false);
 
@@ -719,7 +763,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void FillFrom_overwrites_OverridableConfigurationParts_set_to_both_in_CSpace()
         {
             var configurationA = CreateConfiguration();
-            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace;
+            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
+                                                           | OverridableConfigurationParts.OverridableInSSpace;
             var configurationB = CreateConfiguration();
             configurationB.OverridableConfigurationParts = OverridableConfigurationParts.None;
 
@@ -734,7 +779,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configurationA = CreateConfiguration();
             configurationA.OverridableConfigurationParts = OverridableConfigurationParts.None;
             var configurationB = CreateConfiguration();
-            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace;
+            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
+                                                           | OverridableConfigurationParts.OverridableInSSpace;
 
             configurationA.FillFrom(configurationB, inCSpace: true);
 
@@ -771,28 +817,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
 
             var expectedMessageCSpace = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsNullable", true, "IsNullable", false);
+                                        Strings.ConflictingConfigurationValue(
+                                            "IsNullable", true, "IsNullable", false);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                     Strings.ConflictingConfigurationValue(
+                                         "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption", DatabaseGeneratedOption.Identity);
+                                     Strings.ConflictingConfigurationValue(
+                                         "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption",
+                                         DatabaseGeneratedOption.Identity);
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnName", "bar", "ColumnName", "foo");
+                                  Strings.ConflictingConfigurationValue(
+                                      "ColumnName", "bar", "ColumnName", "foo");
 
             expectedMessage += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnOrder", 1, "ColumnOrder", 2);
+                               Strings.ConflictingConfigurationValue(
+                                   "ColumnOrder", 1, "ColumnOrder", 2);
 
             expectedMessage += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnType", "bar", "ColumnType", "foo");
+                               Strings.ConflictingConfigurationValue(
+                                   "ColumnType", "bar", "ColumnType", "foo");
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -823,8 +870,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ColumnName = "foo";
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnName", "bar", "ColumnName", "foo");
+                                  Strings.ConflictingConfigurationValue(
+                                      "ColumnName", "bar", "ColumnName", "foo");
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -871,8 +918,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ColumnType = "foo";
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnType", "bar", "ColumnType", "foo");
+                                  Strings.ConflictingConfigurationValue(
+                                      "ColumnType", "bar", "ColumnType", "foo");
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -919,8 +966,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ColumnOrder = 2;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnOrder", 1, "ColumnOrder", 2);
+                                  Strings.ConflictingConfigurationValue(
+                                      "ColumnOrder", 1, "ColumnOrder", 2);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -967,8 +1014,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.IsNullable = false;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsNullable", true, "IsNullable", false);
+                                  Strings.ConflictingConfigurationValue(
+                                      "IsNullable", true, "IsNullable", false);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, true, out errorMessage));
@@ -1015,8 +1062,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                  Strings.ConflictingConfigurationValue(
+                                      "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, true, out errorMessage));
@@ -1063,8 +1110,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption", DatabaseGeneratedOption.Identity);
+                                  Strings.ConflictingConfigurationValue(
+                                      "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption",
+                                      DatabaseGeneratedOption.Identity);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, true, out errorMessage));

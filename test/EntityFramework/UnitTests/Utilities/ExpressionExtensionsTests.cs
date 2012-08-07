@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Resources;
@@ -37,7 +38,8 @@ namespace System.Data.Entity.Utilities
         {
             Expression<Func<DateTime, int>> expression = d => 123;
 
-            Assert.Equal(new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
+            Assert.Equal(
+                new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
                 Assert.Throws<InvalidOperationException>(() => expression.GetPropertyAccessList()).Message);
         }
 
@@ -47,7 +49,8 @@ namespace System.Data.Entity.Utilities
             var closure = DateTime.Now;
             Expression<Func<DateTime, int>> expression = d => closure.Hour;
 
-            Assert.Equal(new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
+            Assert.Equal(
+                new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
                 Assert.Throws<InvalidOperationException>(() => expression.GetPropertyAccessList()).Message);
         }
 
@@ -65,7 +68,11 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void GetPropertyAccessListList_should_return_property_path_collection()
         {
-            Expression<Func<DateTime, object>> expression = d => new { d.Date, d.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date,
+                                                                         d.Day
+                                                                     };
 
             var propertyInfos = expression.GetPropertyAccessList();
 
@@ -78,9 +85,13 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void GetPropertyAccessListList_should_throw_when_invalid_expression()
         {
-            Expression<Func<DateTime, object>> expression = d => new { P = d.AddTicks(23) };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         P = d.AddTicks(23)
+                                                                     };
 
-            Assert.Equal(new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
+            Assert.Equal(
+                new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
                 Assert.Throws<InvalidOperationException>(() => expression.GetPropertyAccessList()).Message);
         }
 
@@ -89,9 +100,14 @@ namespace System.Data.Entity.Utilities
         {
             var closure = DateTime.Now;
 
-            Expression<Func<DateTime, object>> expression = d => new { d.Date, closure.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date,
+                                                                         closure.Day
+                                                                     };
 
-            Assert.Equal(new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
+            Assert.Equal(
+                new InvalidOperationException(Strings.InvalidPropertiesExpression(expression)).Message,
                 Assert.Throws<InvalidOperationException>(() => expression.GetPropertyAccessList()).Message);
         }
 
@@ -124,7 +140,9 @@ namespace System.Data.Entity.Utilities
         {
             Expression<Func<DateTime, int>> expression = d => 123;
 
-            Assert.Equal(Strings.InvalidPropertyExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccess()).Message);
+            Assert.Equal(
+                Strings.InvalidPropertyExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccess()).Message);
         }
 
         [Fact]
@@ -132,7 +150,9 @@ namespace System.Data.Entity.Utilities
         {
             Expression<Func<DateTime, int>> expression = d => "".Length;
 
-            Assert.Equal(Strings.InvalidComplexPropertyExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccess()).Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertyExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccess()).Message);
         }
 
         [Fact]
@@ -141,7 +161,9 @@ namespace System.Data.Entity.Utilities
             var closure = DateTime.Now;
             Expression<Func<DateTime, int>> expression = d => closure.Hour;
 
-            Assert.Equal(Strings.InvalidPropertyExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccess()).Message);
+            Assert.Equal(
+                Strings.InvalidPropertyExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccess()).Message);
         }
 
         [Fact]
@@ -150,7 +172,9 @@ namespace System.Data.Entity.Utilities
             var closure = DateTime.Now;
             Expression<Func<DateTime, int>> expression = d => closure.Date.Hour;
 
-            Assert.Equal(Strings.InvalidComplexPropertyExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccess()).Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertyExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccess()).Message);
         }
 
         [Fact]
@@ -178,7 +202,11 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void GetSimplePropertyAccessList_should_return_property_path_collection()
         {
-            Expression<Func<DateTime, object>> expression = d => new { d.Date, d.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date,
+                                                                         d.Day
+                                                                     };
 
             var propertyInfos = expression.GetSimplePropertyAccessList();
 
@@ -191,7 +219,11 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void GetComplexPropertyAccessList_should_return_property_path_collection()
         {
-            Expression<Func<DateTime, object>> expression = d => new { d.Date.Month, d.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date.Month,
+                                                                         d.Day
+                                                                     };
 
             var propertyInfos = expression.GetComplexPropertyAccessList();
 
@@ -204,33 +236,55 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void GetComplexPropertyAccessList_throws_when_member_name_specified_for_complex_member()
         {
-            Expression<Func<DateTime, object>> expression = d => new { month = d.Date.Month, d.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         month = d.Date.Month,
+                                                                         d.Day
+                                                                     };
 
-            Assert.Equal(Strings.InvalidComplexPropertiesExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertiesExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
         }
 
         [Fact]
         public void GetComplexPropertyAccessList_throws_when_member_name_specified_for_simple_member()
         {
-            Expression<Func<DateTime, object>> expression = d => new { d.Date.Month, _d = d.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date.Month,
+                                                                         _d = d.Day
+                                                                     };
 
-            Assert.Equal(Strings.InvalidComplexPropertiesExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertiesExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
         }
 
         [Fact]
         public void GetSimplePropertyAccessList_should_throw_when_invalid_expression()
         {
-            Expression<Func<DateTime, object>> expression = d => new { P = d.AddTicks(23) };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         P = d.AddTicks(23)
+                                                                     };
 
-            Assert.Equal(Strings.InvalidPropertiesExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccessList()).Message);
+            Assert.Equal(
+                Strings.InvalidPropertiesExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccessList()).Message);
         }
 
         [Fact]
         public void GetComplexPropertyAccessList_should_throw_when_invalid_expression()
         {
-            Expression<Func<DateTime, object>> expression = d => new { P = d.Date.AddTicks(23) };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         P = d.Date.AddTicks(23)
+                                                                     };
 
-            Assert.Equal(Strings.InvalidComplexPropertiesExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertiesExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
         }
 
         [Fact]
@@ -238,9 +292,15 @@ namespace System.Data.Entity.Utilities
         {
             var closure = DateTime.Now;
 
-            Expression<Func<DateTime, object>> expression = d => new { d.Date, closure.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date,
+                                                                         closure.Day
+                                                                     };
 
-            Assert.Equal(Strings.InvalidPropertiesExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccessList()).Message);
+            Assert.Equal(
+                Strings.InvalidPropertiesExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetSimplePropertyAccessList()).Message);
         }
 
         [Fact]
@@ -248,9 +308,15 @@ namespace System.Data.Entity.Utilities
         {
             var closure = DateTime.Now;
 
-            Expression<Func<DateTime, object>> expression = d => new { d.Date, closure.Date.Day };
+            Expression<Func<DateTime, object>> expression = d => new
+                                                                     {
+                                                                         d.Date,
+                                                                         closure.Date.Day
+                                                                     };
 
-            Assert.Equal(Strings.InvalidComplexPropertiesExpression(expression), Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertiesExpression(expression),
+                Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
         }
     }
 }

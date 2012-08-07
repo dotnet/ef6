@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Common;
@@ -16,17 +17,17 @@ namespace System.Data.Entity.Migrations
         public void Can_get_and_set_column_properties()
         {
             var column = new ColumnModel(PrimitiveTypeKind.Guid)
-                {
-                    Name = "C",
-                    IsNullable = true,
-                    IsIdentity = true,
-                    IsFixedLength = true,
-                    IsUnicode = true,
-                    MaxLength = 42,
-                    Precision = 23,
-                    Scale = 1,
-                    StoreType = "foobar"
-                };
+                             {
+                                 Name = "C",
+                                 IsNullable = true,
+                                 IsIdentity = true,
+                                 IsFixedLength = true,
+                                 IsUnicode = true,
+                                 MaxLength = 42,
+                                 Precision = 23,
+                                 Scale = 1,
+                                 StoreType = "foobar"
+                             };
 
             Assert.Equal("C", column.Name);
             Assert.Equal(PrimitiveTypeKind.Guid, column.Type);
@@ -43,18 +44,30 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void IsNarrowerThan_should_return_true_when_max_length_narrower()
         {
-            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { MaxLength = 1 };
-            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { MaxLength = 2 };
+            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       MaxLength = 1
+                                   };
+            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       MaxLength = 2
+                                   };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
-            columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { MaxLength = 1 };
+            columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   MaxLength = 1
+                               };
             columnModel2 = new ColumnModel(PrimitiveTypeKind.String);
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
             columnModel1 = new ColumnModel(PrimitiveTypeKind.String);
-            columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { MaxLength = 1 };
+            columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   MaxLength = 1
+                               };
 
             Assert.False(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
         }
@@ -62,18 +75,30 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void IsNarrowerThan_should_return_true_when_nullable_narrower()
         {
-            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { IsNullable = false };
-            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { IsNullable = true };
+            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       IsNullable = false
+                                   };
+            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       IsNullable = true
+                                   };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
-            columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { IsNullable = false };
+            columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   IsNullable = false
+                               };
             columnModel2 = new ColumnModel(PrimitiveTypeKind.String);
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
             columnModel1 = new ColumnModel(PrimitiveTypeKind.String);
-            columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { IsNullable = false };
+            columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   IsNullable = false
+                               };
 
             Assert.False(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
         }
@@ -81,18 +106,30 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void IsNarrowerThan_should_return_true_when_unicode_narrower()
         {
-            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { IsUnicode = false };
-            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { IsUnicode = true };
+            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       IsUnicode = false
+                                   };
+            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       IsUnicode = true
+                                   };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
-            columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { IsUnicode = false };
+            columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   IsUnicode = false
+                               };
             columnModel2 = new ColumnModel(PrimitiveTypeKind.String);
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
             columnModel1 = new ColumnModel(PrimitiveTypeKind.String);
-            columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { IsUnicode = false };
+            columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   IsUnicode = false
+                               };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
         }
@@ -100,18 +137,30 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void IsNarrowerThan_should_return_true_when_fixed_length_narrower()
         {
-            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { IsFixedLength = true };
-            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { IsFixedLength = false };
+            var columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       IsFixedLength = true
+                                   };
+            var columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                                   {
+                                       IsFixedLength = false
+                                   };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
-            columnModel1 = new ColumnModel(PrimitiveTypeKind.String) { IsFixedLength = true };
+            columnModel1 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   IsFixedLength = true
+                               };
             columnModel2 = new ColumnModel(PrimitiveTypeKind.String);
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
             columnModel1 = new ColumnModel(PrimitiveTypeKind.String);
-            columnModel2 = new ColumnModel(PrimitiveTypeKind.String) { IsFixedLength = false };
+            columnModel2 = new ColumnModel(PrimitiveTypeKind.String)
+                               {
+                                   IsFixedLength = false
+                               };
 
             Assert.False(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
         }
@@ -119,18 +168,30 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void IsNarrowerThan_should_return_true_when_precision_narrower()
         {
-            var columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal) { Precision = 1 };
-            var columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal) { Precision = 2 };
+            var columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                                   {
+                                       Precision = 1
+                                   };
+            var columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                                   {
+                                       Precision = 2
+                                   };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
-            columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal) { Precision = 1 };
+            columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                               {
+                                   Precision = 1
+                               };
             columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal);
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
             columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal);
-            columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal) { Precision = 1 };
+            columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                               {
+                                   Precision = 1
+                               };
 
             Assert.False(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
         }
@@ -138,18 +199,30 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void IsNarrowerThan_should_return_true_when_scale_narrower()
         {
-            var columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal) { Scale = 1 };
-            var columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal) { Scale = 2 };
+            var columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                                   {
+                                       Scale = 1
+                                   };
+            var columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                                   {
+                                       Scale = 2
+                                   };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
-            columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal) { Scale = 1 };
+            columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                               {
+                                   Scale = 1
+                               };
             columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal);
 
             Assert.False(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
 
             columnModel1 = new ColumnModel(PrimitiveTypeKind.Decimal);
-            columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal) { Scale = 1 };
+            columnModel2 = new ColumnModel(PrimitiveTypeKind.Decimal)
+                               {
+                                   Scale = 1
+                               };
 
             Assert.True(columnModel1.IsNarrowerThan(columnModel2, _providerManifest));
         }

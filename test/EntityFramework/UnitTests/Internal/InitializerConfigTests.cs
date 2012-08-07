@@ -24,9 +24,9 @@ namespace System.Data.Entity.Internal
         public void TryGetInitializer_returns_null_when_context_section_exists_but_no_initializer_is_registered()
         {
             var contextElements = new List<ContextElement>
-                {
-                    new ContextElement()
-                };
+                                      {
+                                          new ContextElement()
+                                      };
             var mockContextCollection = new Mock<ContextCollection>();
             mockContextCollection.As<IEnumerable>().Setup(m => m.GetEnumerator()).Returns(contextElements.GetEnumerator());
 
@@ -82,9 +82,12 @@ namespace System.Data.Entity.Internal
             Assert.IsType<NullDatabaseInitializer<FakeContext>>(
                 new InitializerConfig(
                     new EntityFrameworkSection(), new KeyValueConfigurationCollection
-                        {
-                            { "DatabaseInitializerForType " + typeof(FakeContext).AssemblyQualifiedName, "Disabled" }
-                        })
+                                                      {
+                                                          {
+                                                              "DatabaseInitializerForType " + typeof(FakeContext).AssemblyQualifiedName,
+                                                              "Disabled"
+                                                          }
+                                                      })
                     .TryGetInitializer(typeof(FakeContext)));
         }
 
@@ -94,9 +97,9 @@ namespace System.Data.Entity.Internal
             Assert.IsType<NullDatabaseInitializer<FakeContext>>(
                 new InitializerConfig(
                     new EntityFrameworkSection(), new KeyValueConfigurationCollection
-                        {
-                            { "DatabaseInitializerForType " + typeof(FakeContext).AssemblyQualifiedName, "" }
-                        })
+                                                      {
+                                                          { "DatabaseInitializerForType " + typeof(FakeContext).AssemblyQualifiedName, "" }
+                                                      })
                     .TryGetInitializer(typeof(FakeContext)));
         }
 
@@ -106,12 +109,12 @@ namespace System.Data.Entity.Internal
             Assert.IsType<FakeInitializer<FakeContext>>(
                 new InitializerConfig(
                     new EntityFrameworkSection(), new KeyValueConfigurationCollection
-                        {
-                            {
-                                "DatabaseInitializerForType " + typeof(FakeContext).AssemblyQualifiedName,
-                                typeof(FakeInitializer<FakeContext>).AssemblyQualifiedName
-                            }
-                        })
+                                                      {
+                                                          {
+                                                              "DatabaseInitializerForType " + typeof(FakeContext).AssemblyQualifiedName,
+                                                              typeof(FakeInitializer<FakeContext>).AssemblyQualifiedName
+                                                          }
+                                                      })
                     .TryGetInitializer(typeof(FakeContext)));
         }
 
@@ -195,9 +198,9 @@ namespace System.Data.Entity.Internal
         private static void TestBadTypeLegacy(string contextTypeName, string configValue, bool initializerDisabled)
         {
             var configurationCollection = new KeyValueConfigurationCollection
-                {
-                    { "DatabaseInitializerForType " + contextTypeName, configValue }
-                };
+                                              {
+                                                  { "DatabaseInitializerForType " + contextTypeName, configValue }
+                                              };
 
             var initializerConfig = new InitializerConfig(new EntityFrameworkSection(), configurationCollection);
 
@@ -215,9 +218,9 @@ namespace System.Data.Entity.Internal
         public void TryGetInitializer_throws_if_null_or_empty_context_type_is_registered_in_app_settings_section()
         {
             var configurationCollection = new KeyValueConfigurationCollection
-                {
-                    { "DatabaseInitializerForType ", "Disabled" }
-                };
+                                              {
+                                                  { "DatabaseInitializerForType ", "Disabled" }
+                                              };
 
             var initializerConfig = new InitializerConfig(new EntityFrameworkSection(), configurationCollection);
 

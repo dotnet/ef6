@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -49,7 +50,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var mockConvention = new Mock<IConvention>();
             var conventionsConfiguration = new ConventionsConfiguration();
 
-            Assert.Equal(Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ConventionFixture)), Assert.Throws<InvalidOperationException>(() => conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention.Object)).Message);
+            Assert.Equal(
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ConventionFixture)),
+                Assert.Throws<InvalidOperationException>(() => conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention.Object)).
+                    Message);
         }
 
         private class ConventionFixture : IConvention
@@ -86,10 +90,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
             var mockConvention = new Mock<IEdmConvention<EdmEntityType>>();
-            var conventionsConfiguration = new ConventionsConfiguration(new IConvention[]
-                {
-                    mockConvention.Object
-                });
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[]
+                    {
+                        mockConvention.Object
+                    });
 
             conventionsConfiguration.ApplyModel(model);
 
@@ -102,10 +107,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var database = new DbDatabaseMetadata().Initialize();
             var table = database.AddTable("T");
             var mockConvention = new Mock<IDbConvention<DbTableMetadata>>();
-            var conventionsConfiguration = new ConventionsConfiguration(new IConvention[]
-                {
-                    mockConvention.Object
-                });
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[]
+                    {
+                        mockConvention.Object
+                    });
 
             conventionsConfiguration.ApplyDatabase(database);
 
@@ -141,7 +147,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var mockConvention1 = new Mock<IConfigurationConvention<Type, EntityTypeConfiguration>>();
             var mockConvention2 = new Mock<IConfigurationConvention<Type, StructuralTypeConfiguration>>();
-            var conventionsConfiguration = new ConventionsConfiguration(new IConvention[] { mockConvention1.Object, mockConvention2.Object });
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[] { mockConvention1.Object, mockConvention2.Object });
             var entityTypeConfiguration = new Func<EntityTypeConfiguration>(() => new EntityTypeConfiguration(typeof(object)));
 
             conventionsConfiguration.ApplyTypeConfiguration(typeof(object), entityTypeConfiguration);
@@ -171,7 +178,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 new IConvention[] { mockConvention1.Object, mockConvention2.Object });
             var mockPropertyInfo = new MockPropertyInfo(typeof(object), "N");
 
-            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo,
+            conventionsConfiguration.ApplyPropertyConfiguration(
+                mockPropertyInfo,
                 () => new NavigationPropertyConfiguration(mockPropertyInfo));
 
             mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.AtMostOnce());
@@ -214,7 +222,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var mockConvention1 = new Mock<IConfigurationConvention<PropertyInfo, ComplexTypeConfiguration>>();
             var mockConvention2 = new Mock<IConfigurationConvention<PropertyInfo, StructuralTypeConfiguration>>();
-            var conventionsConfiguration = new ConventionsConfiguration(new IConvention[] { mockConvention1.Object, mockConvention2.Object });
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[] { mockConvention1.Object, mockConvention2.Object });
             var complexTypeConfiguration = new Func<ComplexTypeConfiguration>(() => new ComplexTypeConfiguration(typeof(object)));
             var mockPropertyInfo = new MockPropertyInfo();
 

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -11,9 +12,9 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// General unit tests for concurrency exceptions.  Note that most of
-    /// the actual functionality is contained in core EF and is tested through
-    /// functional tests.
+    ///     General unit tests for concurrency exceptions.  Note that most of
+    ///     the actual functionality is contained in core EF and is tested through
+    ///     functional tests.
     /// </summary>
     public class ConcurrencyTests : TestBase
     {

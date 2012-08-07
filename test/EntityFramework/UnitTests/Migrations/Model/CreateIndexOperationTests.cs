@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
@@ -13,11 +14,11 @@ namespace System.Data.Entity.Migrations
         {
             var createIndexOperation
                 = new CreateIndexOperation
-                    {
-                        Table = "T",
-                        IsUnique = true,
-                        Name = "Custom"
-                    };
+                      {
+                          Table = "T",
+                          IsUnique = true,
+                          Name = "Custom"
+                      };
 
             createIndexOperation.Columns.Add("C");
 
@@ -32,7 +33,10 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void DefaultName_is_restricted_to_128_chars()
         {
-            var createIndexOperation = new CreateIndexOperation { Table = "T" };
+            var createIndexOperation = new CreateIndexOperation
+                                           {
+                                               Table = "T"
+                                           };
 
             createIndexOperation.Columns.Add(new string('C', 150));
 
@@ -44,11 +48,11 @@ namespace System.Data.Entity.Migrations
         {
             var createIndexOperation
                 = new CreateIndexOperation
-                    {
-                        Table = "T",
-                        IsUnique = true,
-                        Name = "Custom"
-                    };
+                      {
+                          Table = "T",
+                          IsUnique = true,
+                          Name = "Custom"
+                      };
 
             createIndexOperation.Columns.Add("C");
 
@@ -63,7 +67,13 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal(new ArgumentException(Strings.ArgumentIsNullOrWhitespace("value")).Message, Assert.Throws<ArgumentException>(() => new CreateIndexOperation { Table = null }).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.ArgumentIsNullOrWhitespace("value")).Message,
+                Assert.Throws<ArgumentException>(
+                    () => new CreateIndexOperation
+                              {
+                                  Table = null
+                              }).Message);
         }
     }
 }

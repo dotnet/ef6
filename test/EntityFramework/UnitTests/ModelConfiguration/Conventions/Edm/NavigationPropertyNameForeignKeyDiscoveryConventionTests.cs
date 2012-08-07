@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -158,8 +159,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.Id == Bar.NavId
             pkProperty.Name = "Id";
             fkProperty.Name = "NavId";
-            pkProperty.PropertyType = new EdmTypeReference() { EdmType = EdmPrimitiveType.Binary };
-            fkProperty.PropertyType = new EdmTypeReference() { EdmType = EdmPrimitiveType.String };
+            pkProperty.PropertyType = new EdmTypeReference
+                                          {
+                                              EdmType = EdmPrimitiveType.Binary
+                                          };
+            fkProperty.PropertyType = new EdmTypeReference
+                                          {
+                                              EdmType = EdmPrimitiveType.String
+                                          };
 
             ((IEdmConvention<EdmAssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel().Initialize());

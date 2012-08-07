@@ -339,10 +339,10 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
-        /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-        /// issues. As with any test of this type just because the test passes does not mean that the code is
-        /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-        /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+        ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+        ///     issues. As with any test of this type just because the test passes does not mean that the code is
+        ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+        ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
         /// </summary>
         [Fact]
         public void GetService_can_be_accessed_from_multiple_threads_concurrently()

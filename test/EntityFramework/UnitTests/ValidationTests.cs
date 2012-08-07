@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests.Validation
 {
     using System;
@@ -43,9 +44,9 @@ namespace ProductivityApiUnitTests.Validation
 
         public static ValidationResult ValidateCountry(AirportDetails airportDetails, ValidationContext validationContex)
         {
-            return airportDetails.CountryCode == "ZZ" && airportDetails.CityCode != "XXX" ?
-                new ValidationResult(string.Format("City '{0}' is not located in country 'ZZ'.", airportDetails.CityCode)) :
-                ValidationResult.Success;
+            return airportDetails.CountryCode == "ZZ" && airportDetails.CityCode != "XXX"
+                       ? new ValidationResult(string.Format("City '{0}' is not located in country 'ZZ'.", airportDetails.CityCode))
+                       : ValidationResult.Success;
         }
     }
 
@@ -72,10 +73,9 @@ namespace ProductivityApiUnitTests.Validation
 
         public IEnumerable<ValidationResult> Validate(ValidationContext context)
         {
-
-            return ValidationResults ?? (this.Time <= DateTime.Now ?
-                new ValidationResult[] { new ValidationResult("Date cannot be in the past.") } :
-                Enumerable.Empty<ValidationResult>());
+            return ValidationResults ?? (Time <= DateTime.Now
+                                             ? new[] { new ValidationResult("Date cannot be in the past.") }
+                                             : Enumerable.Empty<ValidationResult>());
         }
     }
 
@@ -108,10 +108,12 @@ namespace ProductivityApiUnitTests.Validation
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return Aircraft != null && Aircraft.Code == "A380" && FlightNumber == "QF0006" ?
-                new ValidationResult[] { 
-                    new ValidationResult("Your trip may end in Singapore.", new string[] { "Aircraft.Code", "FlightNumber" }) } :
-                Enumerable.Empty<ValidationResult>();
+            return Aircraft != null && Aircraft.Code == "A380" && FlightNumber == "QF0006"
+                       ? new[]
+                             {
+                                 new ValidationResult("Your trip may end in Singapore.", new[] { "Aircraft.Code", "FlightNumber" })
+                             }
+                       : Enumerable.Empty<ValidationResult>();
         }
 
         public static ValidationResult FailOnRequest(object entity, ValidationContext validationContex)
@@ -120,7 +122,8 @@ namespace ProductivityApiUnitTests.Validation
         }
     }
 
-    public class MostDerivedFlightSegmentWithNestedComplexTypes : FlightSegmentWithNestedComplexTypesWithTypeLevelValidation, IValidatableObject
+    public class MostDerivedFlightSegmentWithNestedComplexTypes : FlightSegmentWithNestedComplexTypesWithTypeLevelValidation,
+                                                                  IValidatableObject
     {
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
@@ -134,7 +137,10 @@ namespace ProductivityApiUnitTests.Validation
 
     public class SelfPopulatingContext : DbContext
     {
-        public SelfPopulatingContext() : this(new object[0]) { }
+        public SelfPopulatingContext()
+            : this(new object[0])
+        {
+        }
 
         public SelfPopulatingContext(params object[] entities)
         {
@@ -158,16 +164,16 @@ namespace ProductivityApiUnitTests.Validation
 
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry dbEntityEntry, IDictionary<object, object> items)
         {
-            return ValidateEntityFunc != null ?
-                ValidateEntityFunc(dbEntityEntry) :
-                base.ValidateEntity(dbEntityEntry, items);
+            return ValidateEntityFunc != null
+                       ? ValidateEntityFunc(dbEntityEntry)
+                       : base.ValidateEntity(dbEntityEntry, items);
         }
 
         protected override bool ShouldValidateEntity(DbEntityEntry dbEntityEntry)
         {
-            return ShouldValidateEntityFunc != null ?
-                ShouldValidateEntityFunc(dbEntityEntry) :
-                base.ShouldValidateEntity(dbEntityEntry);
+            return ShouldValidateEntityFunc != null
+                       ? ShouldValidateEntityFunc(dbEntityEntry)
+                       : base.ShouldValidateEntity(dbEntityEntry);
         }
 
         public Action<DbModelBuilder> CustomOnModelCreating { private get; set; }
@@ -175,7 +181,10 @@ namespace ProductivityApiUnitTests.Validation
 
     public class ConfigurationOverridesContext : DbContext
     {
-        public ConfigurationOverridesContext() : this(new object[0]) { }
+        public ConfigurationOverridesContext()
+            : this(new object[0])
+        {
+        }
 
         public ConfigurationOverridesContext(params object[] entities)
         {
@@ -218,11 +227,17 @@ namespace ProductivityApiUnitTests.Validation
 
         private int PrivateProperty { get; set; }
 
-        public int SetterProperty { set { } }
+        public int SetterProperty
+        {
+            set { }
+        }
 
-        public int GetterProperty { get { return 0; } }
+        public int GetterProperty
+        {
+            get { return 0; }
+        }
 
-        static int StaticProperty { get; set; }
+        private static int StaticProperty { get; set; }
 
         public string this[int index]
         {
@@ -256,7 +271,7 @@ namespace ProductivityApiUnitTests.Validation
     #endregion
 
     /// <summary>
-    /// Tests for validation.
+    ///     Tests for validation.
     /// </summary>
     public class ValidationTests : TestBase
     {
@@ -283,16 +298,19 @@ namespace ProductivityApiUnitTests.Validation
                 return propertyEntry.Object;
             }
 
-            public InternalNestedPropertyEntryForMock() :
-                base(CreateFakePropertyEntry(),
-                    new PropertyEntryMetadata(typeof(object), typeof(object), "fake Name, mock Name property", true, true))
-            { }
+            public InternalNestedPropertyEntryForMock()
+                :
+                    base(CreateFakePropertyEntry(),
+                        new PropertyEntryMetadata(typeof(object), typeof(object), "fake Name, mock Name property", true, true))
+            {
+            }
         }
 
-        private static Mock<PropertyApiTests.InternalEntityEntryForMock<object>> CreateMockInternalEntityEntry(Dictionary<string, object> values)
+        private static Mock<PropertyApiTests.InternalEntityEntryForMock<object>> CreateMockInternalEntityEntry(
+            Dictionary<string, object> values)
         {
             var mockInternalEntityEntry = new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>();
-            foreach (string propertyName in values.Keys)
+            foreach (var propertyName in values.Keys)
             {
                 var mockEntityProperty = new Mock<PropertyApiTests.InternalEntityPropertyEntryForMock>();
                 mockEntityProperty.CallBase = true;
@@ -301,7 +319,7 @@ namespace ProductivityApiUnitTests.Validation
                 mockEntityProperty.SetupGet(p => p.InternalEntityEntry).Returns(mockInternalEntityEntry.Object);
 
                 mockInternalEntityEntry.Setup(e => e.Property(propertyName, It.IsAny<Type>(), It.IsAny<bool>()))
-                     .Returns(mockEntityProperty.Object);
+                    .Returns(mockEntityProperty.Object);
                 mockInternalEntityEntry.Setup(e => e.Member(propertyName, It.IsAny<Type>()))
                     .Returns(mockEntityProperty.Object);
             }
@@ -327,7 +345,8 @@ namespace ProductivityApiUnitTests.Validation
             return mockInternalEntityEntry;
         }
 
-        private static Dictionary<string, InternalPropertyEntry> GetMockPropertiesForEntityOrComplexType(InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, object parent)
+        private static Dictionary<string, InternalPropertyEntry> GetMockPropertiesForEntityOrComplexType(
+            InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, object parent)
         {
             var mockChildProperties = new Dictionary<string, InternalPropertyEntry>();
 
@@ -336,7 +355,8 @@ namespace ProductivityApiUnitTests.Validation
             {
                 foreach (var childPropInfo in parent.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
-                    if (childPropInfo.GetGetMethod() != null && childPropInfo.GetSetMethod() != null)
+                    if (childPropInfo.GetGetMethod() != null
+                        && childPropInfo.GetSetMethod() != null)
                     {
                         var mockInternalPropertyEntry = CreateMockInternalPropertyEntry(owner, parentPropertyEntry, childPropInfo, parent);
                         mockChildProperties.Add(childPropInfo.Name, mockInternalPropertyEntry);
@@ -347,9 +367,10 @@ namespace ProductivityApiUnitTests.Validation
             return mockChildProperties;
         }
 
-        private static InternalPropertyEntry CreateMockInternalPropertyEntry(InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, PropertyInfo propInfo, object parent)
+        private static InternalPropertyEntry CreateMockInternalPropertyEntry(
+            InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, PropertyInfo propInfo, object parent)
         {
-            object propertyValue = propInfo.GetGetMethod().Invoke(parent, new object[0]);
+            var propertyValue = propInfo.GetGetMethod().Invoke(parent, new object[0]);
 
             InternalPropertyEntry childPropertyEntry;
             if (parentPropertyEntry == null)
@@ -363,10 +384,11 @@ namespace ProductivityApiUnitTests.Validation
                 var mockChildProperties = GetMockPropertiesForEntityOrComplexType(owner, mockEntityProperty.Object, propertyValue);
 
                 mockEntityProperty.Setup(p => p.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>()))
-                    .Returns((string propertyName, Type requestedType, bool requiresComplex) =>
-                        mockChildProperties.ContainsKey(propertyName) ?
-                            mockChildProperties[propertyName] :
-                            CreateInternalPropertyEntryForNullParent(propertyName));
+                    .Returns(
+                        (string propertyName, Type requestedType, bool requiresComplex) =>
+                        mockChildProperties.ContainsKey(propertyName)
+                            ? mockChildProperties[propertyName]
+                            : CreateInternalPropertyEntryForNullParent(propertyName));
 
                 childPropertyEntry = mockEntityProperty.Object;
             }
@@ -382,10 +404,11 @@ namespace ProductivityApiUnitTests.Validation
                 var mockChildProperties = GetMockPropertiesForEntityOrComplexType(owner, mockComplexProperty.Object, propertyValue);
 
                 mockComplexProperty.Setup(p => p.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>()))
-                    .Returns((string propertyName, Type requestedType, bool requiresComplex) =>
-                        mockChildProperties.ContainsKey(propertyName) ?
-                            mockChildProperties[propertyName] :
-                            CreateInternalPropertyEntryForNullParent(propertyName));
+                    .Returns(
+                        (string propertyName, Type requestedType, bool requiresComplex) =>
+                        mockChildProperties.ContainsKey(propertyName)
+                            ? mockChildProperties[propertyName]
+                            : CreateInternalPropertyEntryForNullParent(propertyName));
 
                 childPropertyEntry = mockComplexProperty.Object;
             }
@@ -397,9 +420,10 @@ namespace ProductivityApiUnitTests.Validation
         {
             var validetableObjectValidator = new Mock<ValidatableObjectValidator>(null);
             validetableObjectValidator
-                .Setup<IEnumerable<DbValidationError>>(
+                .Setup(
                     v => v.Validate(It.IsAny<EntityValidationContext>(), It.IsAny<InternalMemberEntry>()))
-                .Returns<EntityValidationContext, InternalMemberEntry>((c, e) =>
+                .Returns<EntityValidationContext, InternalMemberEntry>(
+                    (c, e) =>
                     new[] { new DbValidationError(propertyName, errorMessage) });
             return validetableObjectValidator.Object;
         }
@@ -408,9 +432,9 @@ namespace ProductivityApiUnitTests.Validation
         {
             var validationAttribute = new Mock<ValidationAttribute>();
             validationAttribute.CallBase = true;
-            validationAttribute.Setup<bool>(a => a.IsValid(It.IsAny<object>()))
+            validationAttribute.Setup(a => a.IsValid(It.IsAny<object>()))
                 .Returns<object>(o => false);
-            validationAttribute.Setup<string>(a => a.FormatErrorMessage(It.IsAny<string>()))
+            validationAttribute.Setup(a => a.FormatErrorMessage(It.IsAny<string>()))
                 .Returns<string>(n => errorMessage);
             return validationAttribute.Object;
         }
@@ -428,7 +452,8 @@ namespace ProductivityApiUnitTests.Validation
         {
             public ValidationProviderForMock(EntityValidatorBuilder builder)
                 : base(builder)
-            { }
+            {
+            }
 
             public EntityValidator GetEntityValidatorBase(InternalEntityEntry entityEntry)
             {
@@ -445,7 +470,8 @@ namespace ProductivityApiUnitTests.Validation
                 return base.GetValidatorForProperty(entityValidator, memberEntry);
             }
 
-            public EntityValidationContext GetEntityValidationContextBase(InternalEntityEntry entityEntry, IDictionary<object, object> items)
+            public EntityValidationContext GetEntityValidationContextBase(
+                InternalEntityEntry entityEntry, IDictionary<object, object> items)
             {
                 return base.GetEntityValidationContext(entityEntry, items);
             }
@@ -457,17 +483,19 @@ namespace ProductivityApiUnitTests.Validation
             attributeProvider = attributeProvider ?? new Mock<AttributeProvider>();
             var builder = new Mock<EntityValidatorBuilderForMock>(attributeProvider.Object);
             builder.Protected()
-                .Setup<IList<PropertyValidator>>("BuildValidatorsForProperties", ItExpr.IsAny<IEnumerable<PropertyInfo>>(),
-                ItExpr.IsAny<IEnumerable<EdmProperty>>(), ItExpr.IsAny<IEnumerable<NavigationProperty>>())
+                .Setup<IList<PropertyValidator>>(
+                    "BuildValidatorsForProperties", ItExpr.IsAny<IEnumerable<PropertyInfo>>(),
+                    ItExpr.IsAny<IEnumerable<EdmProperty>>(), ItExpr.IsAny<IEnumerable<NavigationProperty>>())
                 .Returns<IEnumerable<PropertyInfo>, IEnumerable<EdmProperty>, IEnumerable<NavigationProperty>>(
-                (pi, e, n) => new List<PropertyValidator>());
+                    (pi, e, n) => new List<PropertyValidator>());
 
             builder.Protected()
                 .Setup<IList<IValidator>>("BuildValidationAttributeValidators", ItExpr.IsAny<IEnumerable<Attribute>>())
                 .Returns<IEnumerable<Attribute>>(a => new List<IValidator>());
 
             builder.Protected()
-                .Setup<IEnumerable<IValidator>>("BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
+                .Setup<IEnumerable<IValidator>>(
+                    "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
                 .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>((pi, e, a) => Enumerable.Empty<IValidator>());
 
             return builder;
@@ -477,19 +505,23 @@ namespace ProductivityApiUnitTests.Validation
         {
             public EntityValidatorBuilderForMock(AttributeProvider attributeProvider)
                 : base(attributeProvider)
-            { }
+            {
+            }
 
             public EntityValidator BuildEntityValidatorBase(InternalEntityEntry entityEntry)
             {
                 return base.BuildEntityValidator(entityEntry);
             }
 
-            public IList<PropertyValidator> BuildValidatorsForPropertiesBase(IEnumerable<PropertyInfo> clrProperties, IEnumerable<EdmProperty> edmProperties, IEnumerable<NavigationProperty> navigationProperties)
+            public IList<PropertyValidator> BuildValidatorsForPropertiesBase(
+                IEnumerable<PropertyInfo> clrProperties, IEnumerable<EdmProperty> edmProperties,
+                IEnumerable<NavigationProperty> navigationProperties)
             {
                 return base.BuildValidatorsForProperties(clrProperties, edmProperties, navigationProperties);
             }
 
-            public PropertyValidator BuildPropertyValidatorBase(PropertyInfo clrProperty, EdmProperty edmProperty, bool buildFacetValidators)
+            public PropertyValidator BuildPropertyValidatorBase(
+                PropertyInfo clrProperty, EdmProperty edmProperty, bool buildFacetValidators)
             {
                 return base.BuildPropertyValidator(clrProperty, edmProperty, buildFacetValidators);
             }
@@ -514,7 +546,8 @@ namespace ProductivityApiUnitTests.Validation
                 return base.GetPublicInstanceProperties(type);
             }
 
-            public IEnumerable<IValidator> BuildFacetValidatorsBase(PropertyInfo clrProperty, EdmMember edmProperty, IEnumerable<Attribute> existingAttributes)
+            public IEnumerable<IValidator> BuildFacetValidatorsBase(
+                PropertyInfo clrProperty, EdmMember edmProperty, IEnumerable<Attribute> existingAttributes)
             {
                 return base.BuildFacetValidators(clrProperty, edmProperty, existingAttributes);
             }
@@ -524,20 +557,28 @@ namespace ProductivityApiUnitTests.Validation
 
         #region String resource helpers
 
-        readonly string DbEntityValidationException_ValidationFailed = LookupString
+        private readonly string DbEntityValidationException_ValidationFailed = LookupString
             (EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "DbEntityValidationException_ValidationFailed");
 
-        readonly string RangeAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources", "RangeAttribute_ValidationError");
+        private readonly string RangeAttribute_ValidationError = LookupString
+            (
+                SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "RangeAttribute_ValidationError");
 
-        readonly string RegexAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources", "RegexAttribute_ValidationError");
+        private readonly string RegexAttribute_ValidationError = LookupString
+            (
+                SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "RegexAttribute_ValidationError");
 
-        readonly string RequiredAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources", "RequiredAttribute_ValidationError");
+        private readonly string RequiredAttribute_ValidationError = LookupString
+            (
+                SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "RequiredAttribute_ValidationError");
 
-        readonly string StringLengthAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources", "StringLengthAttribute_ValidationError");
+        private readonly string StringLengthAttribute_ValidationError = LookupString
+            (
+                SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "StringLengthAttribute_ValidationError");
 
         #endregion
 
@@ -564,9 +605,12 @@ namespace ProductivityApiUnitTests.Validation
 
             foreach (var validationError in actualResults)
             {
-                Assert.True(expectedResults.SingleOrDefault(
-                    r => r.Item1 == validationError.PropertyName && r.Item2 == validationError.ErrorMessage) != null,
-                    string.Format("Unexpected error message '{0}' for property '{1}' not found", validationError.ErrorMessage, validationError.PropertyName));
+                Assert.True(
+                    expectedResults.SingleOrDefault(
+                        r => r.Item1 == validationError.PropertyName && r.Item2 == validationError.ErrorMessage) != null,
+                    string.Format(
+                        "Unexpected error message '{0}' for property '{1}' not found", validationError.ErrorMessage,
+                        validationError.PropertyName));
             }
         }
 
@@ -586,7 +630,11 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidationAttributeValidator_does_not_return_errors_if_property_value_is_valid()
         {
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "Name", "abc" } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "Name", "abc" }
+                    });
 
             var ValidationAttributeValidator = new ValidationAttributeValidator(new StringLengthAttribute(10), null);
 
@@ -600,7 +648,11 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidationAttributeValidator_returns_validation_errors_if_property_value_is_not_valid()
         {
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "Name", "abcdefghijklmnopq" } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "Name", "abcdefghijklmnopq" }
+                    });
 
             var ValidationAttributeValidator = new ValidationAttributeValidator(new StringLengthAttribute(10), null);
 
@@ -609,7 +661,7 @@ namespace ProductivityApiUnitTests.Validation
                 mockInternalEntityEntry.Object.Property("Name"));
 
             Assert.Equal(1, results.Count());
-            DbValidationError error = results.Single();
+            var error = results.Single();
             Assert.Equal("Name", error.PropertyName);
             Assert.Equal(string.Format(StringLengthAttribute_ValidationError, "Name", 10), error.ErrorMessage);
         }
@@ -617,72 +669,84 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidationAttributeValidator_returns_errors_for_invalid_complex_property_child_property_values()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Airport = new AirportDetails()
-                    {
-                        AirportCode = "???",
-                    }
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Airport = new AirportDetails
+                                                                   {
+                                                                       AirportCode = "???",
+                                                                   }
+                                                 }
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
-            ValidationAttributeValidator validator = new ValidationAttributeValidator(new RegularExpressionAttribute("^[A-Z]{3}$"), null);
+            var validator = new ValidationAttributeValidator(new RegularExpressionAttribute("^[A-Z]{3}$"), null);
 
             var results = validator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
                 mockInternalEntityEntry.Object.Property("Departure").Property("Airport").Property("AirportCode"));
 
             VerifyResults(
-                new Tuple<string, string>[] {
-                    new Tuple<string, string>("Departure.Airport.AirportCode", string.Format(RegexAttribute_ValidationError, "Departure.Airport.AirportCode", "^[A-Z]{3}$"))}, results);
+                new[]
+                    {
+                        new Tuple<string, string>(
+                            "Departure.Airport.AirportCode",
+                            string.Format(RegexAttribute_ValidationError, "Departure.Airport.AirportCode", "^[A-Z]{3}$"))
+                    }, results);
         }
 
         [Fact]
         public void ValidationAttributeValidator_returns_errors_if_complex_property_type_level_validation_fails()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Airport = new AirportDetails()
-                    {
-                        AirportCode = "YVR",
-                        CityCode = "YVR",
-                        CountryCode = "ZZ"
-                    }
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Airport = new AirportDetails
+                                                                   {
+                                                                       AirportCode = "YVR",
+                                                                       CityCode = "YVR",
+                                                                       CountryCode = "ZZ"
+                                                                   }
+                                                 }
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
-            ValidationAttributeValidator validator = new ValidationAttributeValidator(new CustomValidationAttribute(typeof(AirportDetails), "ValidateCountry"), null);
+            var validator = new ValidationAttributeValidator(new CustomValidationAttribute(typeof(AirportDetails), "ValidateCountry"), null);
 
             var results = validator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
                 mockInternalEntityEntry.Object.Property("Departure").Property("Airport"));
 
             VerifyResults(
-                new Tuple<string, string>[] {
-                    new Tuple<string, string>("Departure.Airport", "City 'YVR' is not located in country 'ZZ'.")}, results);
+                new[]
+                    {
+                        new Tuple<string, string>("Departure.Airport", "City 'YVR' is not located in country 'ZZ'.")
+                    }, results);
         }
 
         [Fact]
-        public void ValidationAttributeValidator_returns_validation_errors_if_entity_validation_with_type_level_annotation_attributes_fails()
+        public void ValidationAttributeValidator_returns_validation_errors_if_entity_validation_with_type_level_annotation_attributes_fails(
+            )
         {
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "Name", "abcdefghijklmnopq" } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "Name", "abcdefghijklmnopq" }
+                    });
             mockInternalEntityEntry.Setup(e => e.Entity).Returns(new object());
 
-            var ValidationAttributeValidator = new ValidationAttributeValidator(new CustomValidationAttribute(this.GetType(), "FailMiserably"), null);
+            var ValidationAttributeValidator = new ValidationAttributeValidator(
+                new CustomValidationAttribute(GetType(), "FailMiserably"), null);
 
             var results = ValidationAttributeValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object), null);
 
             Assert.Equal(1, results.Count());
-            DbValidationError error = results.Single();
+            var error = results.Single();
             Assert.Equal(null, error.PropertyName);
             Assert.Equal("The entity is not valid", error.ErrorMessage);
         }
@@ -690,13 +754,22 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidationAttributeValidator_wraps_exceptions()
         {
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "ID", 1 } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "ID", 1 }
+                    });
 
             var ValidationAttributeValidator = new ValidationAttributeValidator(new StringLengthAttribute(10), null);
 
-            Assert.Equal(new DbUnexpectedValidationException(Strings.DbUnexpectedValidationException_ValidationAttribute("ID", "System.ComponentModel.DataAnnotations.StringLengthAttribute")).Message, Assert.Throws<DbUnexpectedValidationException>(() => ValidationAttributeValidator.Validate(
-                CreateEntityValidationContext(mockInternalEntityEntry.Object),
-                mockInternalEntityEntry.Object.Property("ID"))).Message);
+            Assert.Equal(
+                new DbUnexpectedValidationException(
+                    Strings.DbUnexpectedValidationException_ValidationAttribute(
+                        "ID", "System.ComponentModel.DataAnnotations.StringLengthAttribute")).Message,
+                Assert.Throws<DbUnexpectedValidationException>(
+                    () => ValidationAttributeValidator.Validate(
+                        CreateEntityValidationContext(mockInternalEntityEntry.Object),
+                        mockInternalEntityEntry.Object.Property("ID"))).Message);
         }
 
         #endregion
@@ -706,38 +779,43 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidatableObjectValidator_returns_errors_if_entity_IValidatableObject_validation_fails()
         {
-            var entity = new FlightSegmentWithNestedComplexTypesWithTypeLevelValidation()
-            {
-                Aircraft = new AircraftInfo() { Code = "A380" },
-                FlightNumber = "QF0006"
-            };
+            var entity = new FlightSegmentWithNestedComplexTypesWithTypeLevelValidation
+                             {
+                                 Aircraft = new AircraftInfo
+                                                {
+                                                    Code = "A380"
+                                                },
+                                 FlightNumber = "QF0006"
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
-            ValidatableObjectValidator validator = new ValidatableObjectValidator(null);
+            var validator = new ValidatableObjectValidator(null);
 
             var results = validator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object), null);
 
             VerifyResults(
-                new[] {
-                    new Tuple<string, string>("Aircraft.Code", "Your trip may end in Singapore."),
-                    new Tuple<string, string>("FlightNumber", "Your trip may end in Singapore.")}, results);
+                new[]
+                    {
+                        new Tuple<string, string>("Aircraft.Code", "Your trip may end in Singapore."),
+                        new Tuple<string, string>("FlightNumber", "Your trip may end in Singapore.")
+                    }, results);
         }
 
         [Fact]
         public void ValidatableObjectValidator_returns_errors_if_complex_property_IValidatableObject_validation_fails()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Time = DateTime.MinValue
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Time = DateTime.MinValue
+                                                 }
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
-            ValidatableObjectValidator validator = new ValidatableObjectValidator(null);
+            var validator = new ValidatableObjectValidator(null);
 
             var results = validator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -750,17 +828,17 @@ namespace ProductivityApiUnitTests.Validation
         // Regression test for Dev 11 #165071
         public void ValidatableObjectValidator_returns_empty_enumerator_if_complex_property_IValidatableObject_validation_returns_null()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    ValidationResults = new ValidationResult[] { ValidationResult.Success, null }
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     ValidationResults = new[] { ValidationResult.Success, null }
+                                                 }
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
-            ValidatableObjectValidator validator = new ValidatableObjectValidator(null);
+            var validator = new ValidatableObjectValidator(null);
 
             var results = validator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -772,7 +850,9 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidatableObjectValidator_does_not_return_errors_for_null_complex_property_with_IValidatableObject_validation()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes() { };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
@@ -788,17 +868,26 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ValidatableObjectValidator_wraps_exceptions()
         {
-            var entity = new DepartureArrivalInfoWithNestedComplexType()
-            {
-                Airport = new AirportDetails(),
-            };
+            var entity = new DepartureArrivalInfoWithNestedComplexType
+                             {
+                                 Airport = new AirportDetails(),
+                             };
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
-            var validator = new ValidatableObjectValidator(new DisplayAttribute() { Name = "Airport information" });
+            var validator = new ValidatableObjectValidator(
+                new DisplayAttribute
+                    {
+                        Name = "Airport information"
+                    });
 
-            Assert.Equal(new DbUnexpectedValidationException(Strings.DbUnexpectedValidationException_IValidatableObject("Airport information", "ProductivityApiUnitTests.Validation.AirportDetails")).Message, Assert.Throws<DbUnexpectedValidationException>(() => validator.Validate(
-                CreateEntityValidationContext(mockInternalEntityEntry.Object),
-                mockInternalEntityEntry.Object.Property("Airport"))).Message);
+            Assert.Equal(
+                new DbUnexpectedValidationException(
+                    Strings.DbUnexpectedValidationException_IValidatableObject(
+                        "Airport information", "ProductivityApiUnitTests.Validation.AirportDetails")).Message,
+                Assert.Throws<DbUnexpectedValidationException>(
+                    () => validator.Validate(
+                        CreateEntityValidationContext(mockInternalEntityEntry.Object),
+                        mockInternalEntityEntry.Object.Property("Airport"))).Message);
         }
 
         #endregion
@@ -812,10 +901,15 @@ namespace ProductivityApiUnitTests.Validation
             mockValidator
                 .Setup(v => v.Validate(It.IsAny<EntityValidationContext>(), It.IsAny<InternalMemberEntry>()))
                 .Returns(() => Enumerable.Empty<DbValidationError>());
-            var propertyValidator = new PropertyValidator("Name",
-                    new[] { mockValidator.Object });
+            var propertyValidator = new PropertyValidator(
+                "Name",
+                new[] { mockValidator.Object });
 
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "Name", "abc" } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "Name", "abc" }
+                    });
 
             var results = propertyValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -832,16 +926,22 @@ namespace ProductivityApiUnitTests.Validation
                 .Setup(v => v.Validate(It.IsAny<EntityValidationContext>(), It.IsAny<InternalMemberEntry>()))
                 .Returns(() => new[] { new DbValidationError("Name", "error") });
 
-            var propertyValidator = new PropertyValidator("Name",
-                    new[] { mockValidator.Object });
+            var propertyValidator = new PropertyValidator(
+                "Name",
+                new[] { mockValidator.Object });
 
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "Name", "" } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "Name", "" }
+                    });
 
             var results = propertyValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
                 mockInternalEntityEntry.Object.Member("Name"));
 
-            VerifyResults(new[] { new Tuple<string, string>("Name", "error") },
+            VerifyResults(
+                new[] { new Tuple<string, string>("Name", "error") },
                 results);
         }
 
@@ -852,19 +952,20 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ComplexPropertyValidator_does_not_return_errors_if_complex_property_value_is_valid()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Airport = new AirportDetails()
-                    {
-                    },
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Airport = new AirportDetails
+                                                                   {
+                                                                   },
+                                                 }
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
-            var propertyValidator = new ComplexPropertyValidator("Departure", new ValidationAttributeValidator[0],
-                    new ComplexTypeValidator(new PropertyValidator[0], new ValidationAttributeValidator[0]));
+            var propertyValidator = new ComplexPropertyValidator(
+                "Departure", new ValidationAttributeValidator[0],
+                new ComplexTypeValidator(new PropertyValidator[0], new ValidationAttributeValidator[0]));
 
             var results = propertyValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -876,19 +977,20 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ComplexPropertyValidator_does_not_return_errors_if_complex_type_validator_is_null()
         {
-            var entity = new FlightSegmentWithNestedComplexTypesWithTypeLevelValidation()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Airport = new AirportDetails()
-                    {
-                    },
-                },
-            };
+            var entity = new FlightSegmentWithNestedComplexTypesWithTypeLevelValidation
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Airport = new AirportDetails
+                                                                   {
+                                                                   },
+                                                 },
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
-            var propertyValidator = new ComplexPropertyValidator("Departure", new ValidationAttributeValidator[0],
-                    null);
+            var propertyValidator = new ComplexPropertyValidator(
+                "Departure", new ValidationAttributeValidator[0],
+                null);
 
             var results = propertyValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -900,16 +1002,16 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ComplexPropertyValidator_does_not_run_complex_type_validation_if_property_validation_failed()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Airport = new AirportDetails()
-                    {
-                        AirportCode = null,
-                    },
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Airport = new AirportDetails
+                                                                   {
+                                                                       AirportCode = null,
+                                                                   },
+                                                 }
+                             };
 
             var mockValidator = new Mock<IValidator>();
             mockValidator
@@ -919,12 +1021,19 @@ namespace ProductivityApiUnitTests.Validation
             var mockComplexValidator = new Mock<IValidator>(MockBehavior.Strict);
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
-            var propertyValidator = new ComplexPropertyValidator("Airport",
-                new[] { mockValidator.Object 
-                },
-                new ComplexTypeValidator(new[] { new PropertyValidator("AirportCode",
-                        new[] { mockComplexValidator.Object })
-                    }, new ValidationAttributeValidator[0]));
+            var propertyValidator = new ComplexPropertyValidator(
+                "Airport",
+                new[]
+                    {
+                        mockValidator.Object
+                    },
+                new ComplexTypeValidator(
+                    new[]
+                        {
+                            new PropertyValidator(
+                                "AirportCode",
+                                new[] { mockComplexValidator.Object })
+                        }, new ValidationAttributeValidator[0]));
 
             var results = propertyValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -933,20 +1042,30 @@ namespace ProductivityApiUnitTests.Validation
             Assert.Equal(1, results.Count());
 
             VerifyResults(
-                new[] {
-                    new Tuple<string, string>("Airport", "error")}, results);
+                new[]
+                    {
+                        new Tuple<string, string>("Airport", "error")
+                    }, results);
         }
 
         [Fact]
         public void ComplexPropertyValidator_does_not_run_complex_type_validation_if_property_is_null()
         {
-            var entity = new EntityWithOptionalNestedComplexType() { ID = 1 };
+            var entity = new EntityWithOptionalNestedComplexType
+                             {
+                                 ID = 1
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
-            var propertyValidator = new ComplexPropertyValidator("AirportDetails", new ValidationAttributeValidator[0],
-                 new ComplexTypeValidator(new[] { new PropertyValidator("AirportCode",
-                        new[] { new ValidationAttributeValidator(new RequiredAttribute(), null) })
-                    }, new ValidationAttributeValidator[0]));
+            var propertyValidator = new ComplexPropertyValidator(
+                "AirportDetails", new ValidationAttributeValidator[0],
+                new ComplexTypeValidator(
+                    new[]
+                        {
+                            new PropertyValidator(
+                                "AirportCode",
+                                new[] { new ValidationAttributeValidator(new RequiredAttribute(), null) })
+                        }, new ValidationAttributeValidator[0]));
 
             var results = propertyValidator.Validate(
                 CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -967,13 +1086,21 @@ namespace ProductivityApiUnitTests.Validation
                 .Setup(v => v.Validate(It.IsAny<EntityValidationContext>(), It.IsAny<InternalMemberEntry>()))
                 .Returns(() => Enumerable.Empty<DbValidationError>());
 
-            var entityValidator = new EntityValidator(new[] { 
-                new PropertyValidator("Name",
-                    new [] { mockValidator.Object }) }, new ValidationAttributeValidator[0]);
+            var entityValidator = new EntityValidator(
+                new[]
+                    {
+                        new PropertyValidator(
+                            "Name",
+                            new[] { mockValidator.Object })
+                    }, new ValidationAttributeValidator[0]);
 
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "Name", "abc" } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "Name", "abc" }
+                    });
 
-            DbEntityValidationResult validationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object));
+            var validationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object));
             Assert.NotNull(validationResult);
             Assert.True(validationResult.IsValid);
         }
@@ -989,13 +1116,21 @@ namespace ProductivityApiUnitTests.Validation
             var mockUncalledValidator = new Mock<IValidator>(MockBehavior.Strict);
 
             var entityValidator = new EntityValidator(
-                new[] { new PropertyValidator("ID", 
-                        new [] { mockValidator.Object }) },
-                new IValidator[] { mockUncalledValidator.Object });
+                new[]
+                    {
+                        new PropertyValidator(
+                            "ID",
+                            new[] { mockValidator.Object })
+                    },
+                new[] { mockUncalledValidator.Object });
 
-            var mockInternalEntityEntry = CreateMockInternalEntityEntry(new Dictionary<string, object> { { "ID", -1 } });
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry(
+                new Dictionary<string, object>
+                    {
+                        { "ID", -1 }
+                    });
 
-            DbEntityValidationResult entityValidationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object));
+            var entityValidationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object));
 
             Assert.NotNull(entityValidationResult);
 
@@ -1006,7 +1141,9 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void EntityValidator_returns_an_error_if_IValidatableObject_validation_failed()
         {
-            var entity = new FlightSegmentWithNestedComplexTypes() { };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
@@ -1014,7 +1151,7 @@ namespace ProductivityApiUnitTests.Validation
                 new PropertyValidator[0],
                 new[] { CreateValidatableObjectValidator("object", "IValidatableObject is invalid") });
 
-            DbEntityValidationResult entityValidationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object));
+            var entityValidationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object));
 
             Assert.NotNull(entityValidationResult);
 
@@ -1029,17 +1166,16 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void ComplexTypeValidator_returns_an_error_if_IValidatableObject_validation_failed()
         {
-
-            var entity = new FlightSegmentWithNestedComplexTypes()
-            {
-                Departure = new DepartureArrivalInfoWithNestedComplexType()
-                {
-                    Airport = new AirportDetails()
-                    {
-                        AirportCode = "???",
-                    }
-                }
-            };
+            var entity = new FlightSegmentWithNestedComplexTypes
+                             {
+                                 Departure = new DepartureArrivalInfoWithNestedComplexType
+                                                 {
+                                                     Airport = new AirportDetails
+                                                                   {
+                                                                       AirportCode = "???",
+                                                                   }
+                                                 }
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
 
@@ -1047,7 +1183,8 @@ namespace ProductivityApiUnitTests.Validation
                 new PropertyValidator[0],
                 new[] { CreateValidatableObjectValidator("object", "IValidatableObject is invalid") });
 
-            var entityValidationResult = entityValidator.Validate(CreateEntityValidationContext(mockInternalEntityEntry.Object),
+            var entityValidationResult = entityValidator.Validate(
+                CreateEntityValidationContext(mockInternalEntityEntry.Object),
                 mockInternalEntityEntry.Object.Property("Departure").Property("Airport").Property("AirportCode"));
 
             Assert.NotNull(entityValidationResult);
@@ -1068,7 +1205,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 Assert.Null(builder.Object.BuildEntityValidatorBase(ctx.Entry(entity).InternalEntry));
             }
@@ -1080,7 +1217,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new ValidatableEntity();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildEntityValidatorBase(ctx.Entry(entity).InternalEntry);
 
@@ -1095,13 +1232,17 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
-                .Setup<IList<PropertyValidator>>("BuildValidatorsForProperties", ItExpr.IsAny<IEnumerable<PropertyInfo>>(), ItExpr.IsAny<IEnumerable<EdmProperty>>(), ItExpr.IsAny<IEnumerable<NavigationProperty>>())
+                .Setup<IList<PropertyValidator>>(
+                    "BuildValidatorsForProperties", ItExpr.IsAny<IEnumerable<PropertyInfo>>(), ItExpr.IsAny<IEnumerable<EdmProperty>>(),
+                    ItExpr.IsAny<IEnumerable<NavigationProperty>>())
                 .Returns<IEnumerable<PropertyInfo>, IEnumerable<EdmProperty>, IEnumerable<NavigationProperty>>(
-                    (pi, e, n) => new List<PropertyValidator>() { 
-                        new PropertyValidator("foo", Enumerable.Empty<ValidationAttributeValidator>())});
+                    (pi, e, n) => new List<PropertyValidator>
+                                      {
+                                          new PropertyValidator("foo", Enumerable.Empty<ValidationAttributeValidator>())
+                                      });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildEntityValidatorBase(ctx.Entry(entity).InternalEntry);
 
@@ -1118,11 +1259,14 @@ namespace ProductivityApiUnitTests.Validation
 
             builder.Protected()
                 .Setup<IList<IValidator>>("BuildValidationAttributeValidators", ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<IEnumerable<Attribute>>(a => new List<IValidator>(){
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Returns<IEnumerable<Attribute>>(
+                    a => new List<IValidator>
+                             {
+                                 new ValidationAttributeValidator(new RequiredAttribute(), null)
+                             });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildEntityValidatorBase(ctx.Entry(entity).InternalEntry);
 
@@ -1138,7 +1282,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildValidatorsForPropertiesBase(
                     entity.GetType().GetProperties(),
@@ -1155,10 +1299,10 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 Assert.Null(builder.Object.BuildComplexTypeValidatorBase(typeof(ComplexTypeWithNoValidation), complexType));
             }
         }
@@ -1169,10 +1313,10 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new ValidatableEntity();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validator = builder.Object.BuildComplexTypeValidatorBase(typeof(ValidatableComplexType), complexType);
 
                 Assert.NotNull(validator);
@@ -1186,16 +1330,20 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
-                .Setup<IList<PropertyValidator>>("BuildValidatorsForProperties", ItExpr.IsAny<IEnumerable<PropertyInfo>>(), ItExpr.IsAny<IEnumerable<EdmProperty>>(), ItExpr.IsAny<IEnumerable<NavigationProperty>>())
+                .Setup<IList<PropertyValidator>>(
+                    "BuildValidatorsForProperties", ItExpr.IsAny<IEnumerable<PropertyInfo>>(), ItExpr.IsAny<IEnumerable<EdmProperty>>(),
+                    ItExpr.IsAny<IEnumerable<NavigationProperty>>())
                 .Returns<IEnumerable<PropertyInfo>, IEnumerable<EdmProperty>, IEnumerable<NavigationProperty>>(
-                    (pi, e, n) => new List<PropertyValidator>() { 
-                        new PropertyValidator("foo", Enumerable.Empty<IValidator>())});
+                    (pi, e, n) => new List<PropertyValidator>
+                                      {
+                                          new PropertyValidator("foo", Enumerable.Empty<IValidator>())
+                                      });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validator = builder.Object.BuildComplexTypeValidatorBase(typeof(ComplexTypeWithNoValidation), complexType);
 
                 Assert.NotNull(validator);
@@ -1211,14 +1359,17 @@ namespace ProductivityApiUnitTests.Validation
 
             builder.Protected()
                 .Setup<IList<IValidator>>("BuildValidationAttributeValidators", ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<IEnumerable<Attribute>>(a => new List<IValidator>(){
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Returns<IEnumerable<Attribute>>(
+                    a => new List<IValidator>
+                             {
+                                 new ValidationAttributeValidator(new RequiredAttribute(), null)
+                             });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validator = builder.Object.BuildComplexTypeValidatorBase(typeof(ComplexTypeWithNoValidation), complexType);
 
                 Assert.NotNull(validator);
@@ -1233,15 +1384,20 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
                 .Setup<PropertyValidator>("BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>())
-                .Returns<PropertyInfo>(pi => new PropertyValidator("ID", new[] {
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)}));
+                .Returns<PropertyInfo>(
+                    pi => new PropertyValidator(
+                              "ID", new[]
+                                        {
+                                            new ValidationAttributeValidator(new RequiredAttribute(), null)
+                                        }));
 
             builder.Protected()
-                .Setup<PropertyValidator>("BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmProperty>(), ItExpr.IsAny<bool>())
+                .Setup<PropertyValidator>(
+                    "BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmProperty>(), ItExpr.IsAny<bool>())
                 .Throws<AssertException>();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildValidatorsForPropertiesBase(
                     new[] { entity.GetType().GetProperty("ID") },
@@ -1261,12 +1417,17 @@ namespace ProductivityApiUnitTests.Validation
                 .Throws<AssertException>();
 
             builder.Protected()
-                .Setup<PropertyValidator>("BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmProperty>(), ItExpr.IsAny<bool>())
-                .Returns<PropertyInfo, EdmProperty, bool>((pi, e, f) => new PropertyValidator("ID", new[] {
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)}));
+                .Setup<PropertyValidator>(
+                    "BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmProperty>(), ItExpr.IsAny<bool>())
+                .Returns<PropertyInfo, EdmProperty, bool>(
+                    (pi, e, f) => new PropertyValidator(
+                                      "ID", new[]
+                                                {
+                                                    new ValidationAttributeValidator(new RequiredAttribute(), null)
+                                                }));
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildValidatorsForPropertiesBase(
                     new[] { entity.GetType().GetProperty("ID") },
@@ -1283,12 +1444,13 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
-                Assert.Null(builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ID"),
-                    ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
-                    true));
+                Assert.Null(
+                    builder.Object.BuildPropertyValidatorBase(
+                        entity.GetType().GetProperty("ID"),
+                        ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
+                        true));
             }
         }
 
@@ -1297,12 +1459,16 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
-                .Setup<IEnumerable<IValidator>>("BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>((pi, e, a) => new[] {
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Setup<IEnumerable<IValidator>>(
+                    "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
+                .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>(
+                    (pi, e, a) => new[]
+                                      {
+                                          new ValidationAttributeValidator(new RequiredAttribute(), null)
+                                      });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
                     entity.GetType().GetProperty("ID"),
@@ -1321,13 +1487,17 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
-                .Setup<IEnumerable<IValidator>>("BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), 
-                ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>((pi, e, a) => new[] {
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Setup<IEnumerable<IValidator>>(
+                    "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(),
+                    ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
+                .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>(
+                    (pi, e, a) => new[]
+                                      {
+                                          new ValidationAttributeValidator(new RequiredAttribute(), null)
+                                      });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
                     entity.GetType().GetProperty("ID"),
@@ -1345,11 +1515,14 @@ namespace ProductivityApiUnitTests.Validation
 
             builder.Protected()
                 .Setup<IList<IValidator>>("BuildValidationAttributeValidators", ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<IEnumerable<Attribute>>(a => new List<IValidator>(){
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Returns<IEnumerable<Attribute>>(
+                    a => new List<IValidator>
+                             {
+                                 new ValidationAttributeValidator(new RequiredAttribute(), null)
+                             });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
                     entity.GetType().GetProperty("ID"),
@@ -1369,12 +1542,13 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
-                Assert.Null(builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ComplexProperty"),
-                    ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
-                    true));
+                Assert.Null(
+                    builder.Object.BuildPropertyValidatorBase(
+                        entity.GetType().GetProperty("ComplexProperty"),
+                        ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
+                        true));
             }
         }
 
@@ -1383,17 +1557,22 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
-                .Setup<IEnumerable<IValidator>>("BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>((pi, e, a) => new[] {
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Setup<IEnumerable<IValidator>>(
+                    "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
+                .Returns<PropertyInfo, EdmMember, IEnumerable<Attribute>>(
+                    (pi, e, a) => new[]
+                                      {
+                                          new ValidationAttributeValidator(new RequiredAttribute(), null)
+                                      });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
-                Assert.Null(builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ComplexProperty"),
-                    ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
-                    true));
+                Assert.Null(
+                    builder.Object.BuildPropertyValidatorBase(
+                        entity.GetType().GetProperty("ComplexProperty"),
+                        ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
+                        true));
             }
         }
 
@@ -1404,11 +1583,14 @@ namespace ProductivityApiUnitTests.Validation
 
             builder.Protected()
                 .Setup<IList<IValidator>>("BuildValidationAttributeValidators", ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<IEnumerable<Attribute>>(a => new List<IValidator>(){
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Returns<IEnumerable<Attribute>>(
+                    a => new List<IValidator>
+                             {
+                                 new ValidationAttributeValidator(new RequiredAttribute(), null)
+                             });
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
                     entity.GetType().GetProperty("ComplexProperty"),
@@ -1430,10 +1612,11 @@ namespace ProductivityApiUnitTests.Validation
 
             builder.Protected()
                 .Setup<ComplexTypeValidator>("BuildComplexTypeValidator", ItExpr.IsAny<Type>(), ItExpr.IsAny<ComplexType>())
-                .Returns<Type, ComplexType>((t, c) => new ComplexTypeValidator(new PropertyValidator[0], new ValidationAttributeValidator[0]));
+                .Returns<Type, ComplexType>(
+                    (t, c) => new ComplexTypeValidator(new PropertyValidator[0], new ValidationAttributeValidator[0]));
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
                     entity.GetType().GetProperty("ComplexProperty"),
@@ -1453,7 +1636,8 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
             builder.Protected()
-                .Setup<IEnumerable<IValidator>>("BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
+                .Setup<IEnumerable<IValidator>>(
+                    "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
                 .Throws<AssertException>();
 
             Assert.Null(builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetProperty("ID")));
@@ -1466,8 +1650,9 @@ namespace ProductivityApiUnitTests.Validation
 
             var properties = builder.Object.GetPublicInstancePropertiesBase(typeof(EntityWithComplexType));
 
-            Assert.True(properties.Select(pi => pi.Name).OrderBy(s => s).SequenceEqual(
-                 new[] { "ComplexProperty", "GetterProperty", "ID", "NonNullableProperty", "Self" }));
+            Assert.True(
+                properties.Select(pi => pi.Name).OrderBy(s => s).SequenceEqual(
+                    new[] { "ComplexProperty", "GetterProperty", "ID", "NonNullableProperty", "Self" }));
         }
 
         [Fact]
@@ -1477,11 +1662,15 @@ namespace ProductivityApiUnitTests.Validation
 
             builder.Protected()
                 .Setup<IList<IValidator>>("BuildValidationAttributeValidators", ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Returns<IEnumerable<Attribute>>(a => new List<IValidator>(){
-                    new ValidationAttributeValidator(new RequiredAttribute(), null)});
+                .Returns<IEnumerable<Attribute>>(
+                    a => new List<IValidator>
+                             {
+                                 new ValidationAttributeValidator(new RequiredAttribute(), null)
+                             });
 
             builder.Protected()
-                .Setup<IEnumerable<IValidator>>("BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
+                .Setup<IEnumerable<IValidator>>(
+                    "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
                 .Throws<AssertException>();
 
             var validator = builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetProperty("ID"));
@@ -1497,8 +1686,11 @@ namespace ProductivityApiUnitTests.Validation
         {
             var builder = CreateMockEntityValidatorBuilder();
 
-            var validators = builder.Object.BuildValidationAttributeValidatorsBase(new Attribute[] {
-                new RequiredAttribute(), new CLSCompliantAttribute(true)});
+            var validators = builder.Object.BuildValidationAttributeValidatorsBase(
+                new Attribute[]
+                    {
+                        new RequiredAttribute(), new CLSCompliantAttribute(true)
+                    });
 
             Assert.IsType<ValidationAttributeValidator>(validators.Single());
         }
@@ -1509,7 +1701,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entity))
+            using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     entity.GetType().GetProperty("Self"),
@@ -1526,7 +1718,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     entity.GetType().GetProperty("Self"),
@@ -1543,7 +1735,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     entity.GetType().GetProperty("NonNullableProperty"),
@@ -1560,7 +1752,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     entity.GetType().GetProperty("ID"),
@@ -1577,7 +1769,7 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     entity.GetType().GetProperty("Self"),
@@ -1594,10 +1786,10 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     typeof(ComplexTypeWithNoValidation).GetProperty("AnotherStringProperty"),
                     complexType.Properties.Where(p => p.Name == "AnotherStringProperty").Single(),
@@ -1613,10 +1805,10 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     typeof(ComplexTypeWithNoValidation).GetProperty("AnotherStringProperty"),
                     complexType.Properties.Where(p => p.Name == "AnotherStringProperty").Single(),
@@ -1632,10 +1824,10 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     typeof(ComplexTypeWithNoValidation).GetProperty("AnotherStringProperty"),
                     complexType.Properties.Where(p => p.Name == "AnotherStringProperty").Single(),
@@ -1651,10 +1843,10 @@ namespace ProductivityApiUnitTests.Validation
             var builder = CreateMockEntityValidatorBuilder();
 
             object entity = new EntityWithComplexType();
-            using (ConfigurationOverridesContext ctx = new ConfigurationOverridesContext(entity))
+            using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
-                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
+                                                   .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
                     typeof(ComplexTypeWithNoValidation).GetProperty("StringProperty"),
                     complexType.Properties.Where(p => p.Name == "StringProperty").Single(),
@@ -1675,7 +1867,7 @@ namespace ProductivityApiUnitTests.Validation
                 new DbEntityValidationResult(
                     new DbEntityEntry(new PropertyApiTests.InternalEntityEntryForMock<object>()),
                     new List<DbValidationError>())
-                .IsValid);
+                    .IsValid);
         }
 
         [Fact]
@@ -1685,8 +1877,8 @@ namespace ProductivityApiUnitTests.Validation
                 new DbEntityValidationResult(
                     new DbEntityEntry(new PropertyApiTests.InternalEntityEntryForMock<object>()),
                     new List<DbValidationError>(
-                        new DbValidationError[] { new DbValidationError("property", "errormessage") }))
-                .IsValid);
+                        new[] { new DbValidationError("property", "errormessage") }))
+                    .IsValid);
         }
 
         #endregion
@@ -1705,12 +1897,17 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void DbEntityValidationException_exceptionmessage_validationresult_constructor()
         {
-            var validationExceptionCtorParamTypes = new Type[][] {
-                new Type[] { typeof(string) },
-                new Type[] { typeof(string), typeof(IEnumerable<DbEntityValidationResult>) },
-                new Type[] { typeof(string), typeof(Exception) },
-                new Type[] { typeof(string), typeof(IEnumerable<DbEntityValidationResult>), typeof(Exception) },
-            };
+            var validationExceptionCtorParamTypes = new[]
+                                                        {
+                                                            new[] { typeof(string) },
+                                                            new[] { typeof(string), typeof(IEnumerable<DbEntityValidationResult>) },
+                                                            new[] { typeof(string), typeof(Exception) },
+                                                            new[]
+                                                                {
+                                                                    typeof(string), typeof(IEnumerable<DbEntityValidationResult>),
+                                                                    typeof(Exception)
+                                                                },
+                                                        };
 
             foreach (var ctorParamTypes in validationExceptionCtorParamTypes)
             {
@@ -1722,28 +1919,46 @@ namespace ProductivityApiUnitTests.Validation
         {
             Debug.Assert(types.Length > 0 && types.Length <= 3);
 
-            ConstructorInfo ctor = typeof(DbEntityValidationException).GetConstructor(types);
+            var ctor = typeof(DbEntityValidationException).GetConstructor(types);
             Debug.Assert(ctor != null);
 
-            var maxCtorParams = new object[] {
-                "error",
-                new DbEntityValidationResult[] {
-                    new DbEntityValidationResult(new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new DbValidationError[] { 
-                        new DbValidationError("propA", "propA is Invalid"),
-                        new DbValidationError("propB", "propB is Invalid"),
-                    }),
-                    new DbEntityValidationResult(new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new DbValidationError[] {
-                        new DbValidationError(null, "The entity is invalid")
-                    })
-                },
-                new Exception("dummy exception")
-            };
+            var maxCtorParams = new object[]
+                                    {
+                                        "error",
+                                        new[]
+                                            {
+                                                new DbEntityValidationResult(
+                                                    new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                                                                {
+                                                                                                                                    new DbValidationError
+                                                                                                                                        (
+                                                                                                                                        "propA",
+                                                                                                                                        "propA is Invalid")
+                                                                                                                                    ,
+                                                                                                                                    new DbValidationError
+                                                                                                                                        (
+                                                                                                                                        "propB",
+                                                                                                                                        "propB is Invalid")
+                                                                                                                                    ,
+                                                                                                                                }),
+                                                new DbEntityValidationResult(
+                                                    new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                                                                {
+                                                                                                                                    new DbValidationError
+                                                                                                                                        (
+                                                                                                                                        null,
+                                                                                                                                        "The entity is invalid")
+                                                                                                                                })
+                                            },
+                                        new Exception("dummy exception")
+                                    };
 
             var ctorParams = maxCtorParams.Take(types.Length).ToArray();
             // 1st param is always a string, 3rd param is always an Exception, 
             // 2nd param can be either exception or IEnumerable<DbValidationResult> 
             // so it may need to be fixed up.
-            if (types.Length == 2 && types[1] == typeof(Exception))
+            if (types.Length == 2
+                && types[1] == typeof(Exception))
             {
                 ctorParams[1] = maxCtorParams[2];
             }
@@ -1790,21 +2005,32 @@ namespace ProductivityApiUnitTests.Validation
         {
             var validationException = new DbEntityValidationException(
                 "error",
-                new DbEntityValidationResult[] {
-                    new DbEntityValidationResult(new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new DbValidationError[] { 
-                        new DbValidationError("propA", "propA is Invalid"),
-                        new DbValidationError("propB", "propB is Invalid"),
-                    }),
-                    new DbEntityValidationResult(new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new DbValidationError[] {
-                        new DbValidationError(null, "The entity is invalid")
-                    })
-                },
+                new[]
+                    {
+                        new DbEntityValidationResult(
+                            new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                                        {
+                                                                                                            new DbValidationError(
+                                                                                                                "propA", "propA is Invalid")
+                                                                                                            ,
+                                                                                                            new DbValidationError(
+                                                                                                                "propB", "propB is Invalid")
+                                                                                                            ,
+                                                                                                        }),
+                        new DbEntityValidationResult(
+                            new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                                        {
+                                                                                                            new DbValidationError(
+                                                                                                                null,
+                                                                                                                "The entity is invalid")
+                                                                                                        })
+                    },
                 new Exception("dummy exception")
-            );
+                );
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                BinaryFormatter formatter = new BinaryFormatter();
+                var formatter = new BinaryFormatter();
                 formatter.Serialize(ms, validationException);
                 ms.Position = 0;
 
@@ -1818,7 +2044,7 @@ namespace ProductivityApiUnitTests.Validation
 
                 Assert.Equal(expected.Count(), actual.Count());
 
-                for (int idx = 0; idx < expected.Length; idx++)
+                for (var idx = 0; idx < expected.Length; idx++)
                 {
                     var expectedValidationResult = expected[idx];
                     var actualValidationResult = actual[idx];
@@ -1826,8 +2052,10 @@ namespace ProductivityApiUnitTests.Validation
                     // entities are not serialized
                     Assert.Null(actualValidationResult.Entry);
                     Assert.Equal(expectedValidationResult.ValidationErrors.Count, actualValidationResult.ValidationErrors.Count);
-                    Assert.False(expectedValidationResult.ValidationErrors.Zip(actualValidationResult.ValidationErrors,
-                        (actualValidationError, expectedValidationError) =>
+                    Assert.False(
+                        expectedValidationResult.ValidationErrors.Zip(
+                            actualValidationResult.ValidationErrors,
+                            (actualValidationError, expectedValidationError) =>
                             actualValidationError.ErrorMessage == expectedValidationError.ErrorMessage &&
                             actualValidationError.PropertyName == expectedValidationError.PropertyName).Any(r => !r));
                 }
@@ -1873,28 +2101,32 @@ namespace ProductivityApiUnitTests.Validation
         {
             var mockIValidator = new Mock<IValidator>();
             mockIValidator.Setup(v => v.Validate(It.IsAny<EntityValidationContext>(), It.IsAny<InternalPropertyEntry>()))
-                .Returns((EntityValidationContext ctx, InternalPropertyEntry property) =>
-                {
-                    var validationContext = ctx.ExternalValidationContext;
-                    Assert.NotNull(validationContext);
-                    Assert.NotNull(validationContext.Items);
-                    Assert.Equal(1, validationContext.Items.Count);
-                    Assert.Equal(1, validationContext.Items["test"]);
+                .Returns(
+                    (EntityValidationContext ctx, InternalPropertyEntry property) =>
+                        {
+                            var validationContext = ctx.ExternalValidationContext;
+                            Assert.NotNull(validationContext);
+                            Assert.NotNull(validationContext.Items);
+                            Assert.Equal(1, validationContext.Items.Count);
+                            Assert.Equal(1, validationContext.Items["test"]);
 
-                    return Enumerable.Empty<DbValidationError>();
-                });
+                            return Enumerable.Empty<DbValidationError>();
+                        });
 
             var mockValidationProvider = CreateMockValidationProvider();
             mockValidationProvider.Setup(
                 p => p.GetEntityValidator(It.IsAny<InternalEntityEntry>()))
-                    .Returns(new EntityValidator(Enumerable.Empty<PropertyValidator>(), new[] { mockIValidator.Object }));
+                .Returns(new EntityValidator(Enumerable.Empty<PropertyValidator>(), new[] { mockIValidator.Object }));
             mockValidationProvider.CallBase = true;
 
             var mockInternalEntity = new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>();
             var mockInternalContext = Mock.Get((InternalContextForMock)mockInternalEntity.Object.InternalContext);
             mockInternalContext.SetupGet(c => c.ValidationProvider).Returns(mockValidationProvider.Object);
 
-            var items = new Dictionary<object, object> { { "test", 1 } };
+            var items = new Dictionary<object, object>
+                            {
+                                { "test", 1 }
+                            };
 
             // GetValidationResult on entity
             mockInternalEntity.Object.GetValidationResult(items);
@@ -1923,22 +2155,22 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void GetEntityValidator_returns_cached_validator()
         {
-            var mockInternalEntity = CreateMockInternalEntityEntry<object>(new object());
+            var mockInternalEntity = CreateMockInternalEntityEntry(new object());
             var mockBuilder = CreateMockEntityValidatorBuilder();
             var provider = CreateMockValidationProvider(mockBuilder.Object);
 
             var expectedValidator = new EntityValidator(new PropertyValidator[0], new IValidator[0]);
-            mockBuilder.Setup<EntityValidator>(b => b.BuildEntityValidator(It.IsAny<InternalEntityEntry>()))
+            mockBuilder.Setup(b => b.BuildEntityValidator(It.IsAny<InternalEntityEntry>()))
                 .Returns<InternalEntityEntry>(e => expectedValidator);
 
             var entityValidator = provider.Object.GetEntityValidatorBase(mockInternalEntity.Object);
             Assert.Same(expectedValidator, entityValidator);
-            mockBuilder.Verify<EntityValidator>(b => b.BuildEntityValidator(It.IsAny<InternalEntityEntry>()), Times.Once());
+            mockBuilder.Verify(b => b.BuildEntityValidator(It.IsAny<InternalEntityEntry>()), Times.Once());
 
             // Now it should get the cached one
             entityValidator = provider.Object.GetEntityValidatorBase(mockInternalEntity.Object);
             Assert.Same(expectedValidator, entityValidator);
-            mockBuilder.Verify<EntityValidator>(b => b.BuildEntityValidator(It.IsAny<InternalEntityEntry>()), Times.Once());
+            mockBuilder.Verify(b => b.BuildEntityValidator(It.IsAny<InternalEntityEntry>()), Times.Once());
         }
 
         [Fact]
@@ -1952,13 +2184,14 @@ namespace ProductivityApiUnitTests.Validation
             var entityValidator = new EntityValidator(new[] { propertyValidator }, new IValidator[0]);
 
             var mockValidationProvider = CreateMockValidationProvider();
-            mockValidationProvider.Setup<EntityValidator>(p => p.GetEntityValidator(It.IsAny<InternalEntityEntry>()))
+            mockValidationProvider.Setup(p => p.GetEntityValidator(It.IsAny<InternalEntityEntry>()))
                 .Returns<InternalEntityEntry>(e => entityValidator);
             mockValidationProvider.Protected()
                 .Setup<PropertyValidator>("GetValidatorForProperty", ItExpr.IsAny<EntityValidator>(), ItExpr.IsAny<InternalMemberEntry>())
                 .Returns<EntityValidator, InternalMemberEntry>((ev, e) => propertyValidator);
 
-            var actualPropertyValidator = mockValidationProvider.Object.GetPropertyValidatorBase(mockInternalEntityEntry.Object, propertyEntry);
+            var actualPropertyValidator = mockValidationProvider.Object.GetPropertyValidatorBase(
+                mockInternalEntityEntry.Object, propertyEntry);
 
             Assert.Same(propertyValidator, actualPropertyValidator);
         }
@@ -1970,7 +2203,8 @@ namespace ProductivityApiUnitTests.Validation
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
             var propertyEntry = mockInternalEntityEntry.Object.Property("Departure");
 
-            var propertyValidator = CreateMockValidationProvider().Object.GetPropertyValidatorBase(mockInternalEntityEntry.Object, propertyEntry);
+            var propertyValidator = CreateMockValidationProvider().Object.GetPropertyValidatorBase(
+                mockInternalEntityEntry.Object, propertyEntry);
 
             Assert.Null(propertyValidator);
         }
@@ -1979,13 +2213,17 @@ namespace ProductivityApiUnitTests.Validation
         public void GetEntityValidationContext_returns_correct_context()
         {
             var mockInternalEntity = CreateMockInternalEntityEntry(new object());
-            var items = new Dictionary<object, object> { { "test", 1 } };
+            var items = new Dictionary<object, object>
+                            {
+                                { "test", 1 }
+                            };
 
-            var entityValidationContext = CreateMockValidationProvider().Object.GetEntityValidationContextBase(mockInternalEntity.Object, items);
+            var entityValidationContext = CreateMockValidationProvider().Object.GetEntityValidationContextBase(
+                mockInternalEntity.Object, items);
 
             Assert.Equal(entityValidationContext.InternalEntity, mockInternalEntity.Object);
 
-            ValidationContext validationContext = entityValidationContext.ExternalValidationContext;
+            var validationContext = entityValidationContext.ExternalValidationContext;
             Assert.NotNull(validationContext);
             Assert.Same(mockInternalEntity.Object.Entity, validationContext.ObjectInstance);
             Assert.Equal(1, validationContext.Items.Count);
@@ -1995,16 +2233,17 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void GetValidatorForProperty_returns_correct_validator_for_child_complex_property()
         {
-            var entity = new DepartureArrivalInfoWithNestedComplexType()
-            {
-                Airport = new AirportDetails(),
-            };
+            var entity = new DepartureArrivalInfoWithNestedComplexType
+                             {
+                                 Airport = new AirportDetails(),
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
             var childPropertyEntry = mockInternalEntityEntry.Object.Property("Airport").Property("AirportCode");
 
             var childPropertyValidator = new PropertyValidator("AirportCode", new IValidator[0]);
-            var complexPropertyValidator = new ComplexPropertyValidator("Airport", new IValidator[0],
+            var complexPropertyValidator = new ComplexPropertyValidator(
+                "Airport", new IValidator[0],
                 new ComplexTypeValidator(new[] { childPropertyValidator }, new IValidator[0]));
             var entityValidator = new EntityValidator(new[] { complexPropertyValidator }, new IValidator[0]);
 
@@ -2022,15 +2261,16 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void GetValidatorForProperty_returns_null_for_child_complex_property_if_no_child_property_validation()
         {
-            var entity = new DepartureArrivalInfoWithNestedComplexType()
-            {
-                Airport = new AirportDetails(),
-            };
+            var entity = new DepartureArrivalInfoWithNestedComplexType
+                             {
+                                 Airport = new AirportDetails(),
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
             var childPropertyEntry = mockInternalEntityEntry.Object.Property("Airport").Property("AirportCode");
 
-            var complexPropertyValidator = new ComplexPropertyValidator("Airport", new IValidator[0],
+            var complexPropertyValidator = new ComplexPropertyValidator(
+                "Airport", new IValidator[0],
                 null);
             var entityValidator = new EntityValidator(new[] { complexPropertyValidator }, new IValidator[0]);
 
@@ -2048,17 +2288,18 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void GetValidatorForProperty_returns_null_for_child_complex_property_if_no_property_validation()
         {
-            var entity = new DepartureArrivalInfoWithNestedComplexType()
-            {
-                Airport = new AirportDetails(),
-            };
+            var entity = new DepartureArrivalInfoWithNestedComplexType
+                             {
+                                 Airport = new AirportDetails(),
+                             };
 
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(entity);
             var childPropertyEntry = mockInternalEntityEntry.Object.Property("Airport").Property("AirportCode");
 
             var entityValidator = new EntityValidator(new PropertyValidator[0], new IValidator[0]);
 
-            var actualPropertyValidator = CreateMockValidationProvider().Object.GetValidatorForPropertyBase(entityValidator, childPropertyEntry);
+            var actualPropertyValidator = CreateMockValidationProvider().Object.GetValidatorForPropertyBase(
+                entityValidator, childPropertyEntry);
 
             Assert.Null(actualPropertyValidator);
         }

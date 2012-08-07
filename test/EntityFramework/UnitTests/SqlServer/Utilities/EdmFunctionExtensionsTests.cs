@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.Utilities
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -26,7 +27,6 @@ namespace System.Data.Entity.SqlServer.Utilities
         public void IsCSpace_returns_true_if_MetadataProperties_contains_c_space_data_space_property()
         {
             Assert.True(CreateMockEdmFunction(DataSpace.CSpace, null).Object.IsCSpace());
-
         }
 
         [Fact]

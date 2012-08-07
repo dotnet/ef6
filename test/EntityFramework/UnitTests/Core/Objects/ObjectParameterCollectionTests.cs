@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System;
@@ -11,7 +12,8 @@ namespace System.Data.Entity.Core.Objects
         public void Add_throws_for_null_argument()
         {
             var objectParameterCollection = new ObjectParameterCollection(new ClrPerspective(new MetadataWorkspace()));
-            Assert.Equal("item",
+            Assert.Equal(
+                "item",
                 Assert.Throws<ArgumentNullException>(
                     () => objectParameterCollection.Add(null)).ParamName);
         }
@@ -20,7 +22,8 @@ namespace System.Data.Entity.Core.Objects
         public void Contains_throws_for_null_argument()
         {
             var objectParameterCollection = new ObjectParameterCollection(new ClrPerspective(new MetadataWorkspace()));
-            Assert.Equal("item",
+            Assert.Equal(
+                "item",
                 Assert.Throws<ArgumentNullException>(
                     () => objectParameterCollection.Contains((ObjectParameter)null)).ParamName);
         }
@@ -29,7 +32,8 @@ namespace System.Data.Entity.Core.Objects
         public void Remove_throws_for_null_argument()
         {
             var objectParameterCollection = new ObjectParameterCollection(new ClrPerspective(new MetadataWorkspace()));
-            Assert.Equal("item",
+            Assert.Equal(
+                "item",
                 Assert.Throws<ArgumentNullException>(
                     () => objectParameterCollection.Remove(null)).ParamName);
         }

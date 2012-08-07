@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Common;
@@ -41,12 +42,14 @@ namespace System.Data.Entity.Utilities
         public void GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider()
         {
             Assert.Equal(
-                "Weak.Provider.Factory", 
+                "Weak.Provider.Factory",
                 CreateMockConnection(_weakProviderType.AssemblyQualifiedName).Object.GetProviderInvariantName());
         }
 
         [Fact]
-        public void GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider_without_version_or_key_information_in_registered_name()
+        public void
+            GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider_without_version_or_key_information_in_registered_name(
+            )
         {
             Assert.Equal(
                 "Weak.Provider.Factory",
@@ -54,7 +57,8 @@ namespace System.Data.Entity.Utilities
         }
 
         [Fact]
-        public void GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider_with_non_standard_spacing_in_the_registered_name()
+        public void
+            GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider_with_non_standard_spacing_in_the_registered_name()
         {
             Assert.Equal(
                 "Weak.Provider.Factory",
@@ -74,6 +78,7 @@ namespace System.Data.Entity.Utilities
         }
 
         private static readonly Type _weakProviderType = CreateWeakProviderType();
+
         private static Type CreateWeakProviderType()
         {
             var assembly = new DynamicAssembly();
@@ -111,6 +116,5 @@ namespace System.Data.Entity.Utilities
             row["AssemblyQualifiedName"] = assemblyQualifiedName;
             providerTable.Rows.Add(row);
         }
-
     }
 }

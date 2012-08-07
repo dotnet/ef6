@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Common;
@@ -7,7 +8,8 @@ namespace System.Data.Entity.Core.Objects
 
     public class DbProviderFactoryForMock : DbProviderFactory, IServiceProvider
     {
-        private Mock<IEntityAdapter> entityAdapterMock;
+        private readonly Mock<IEntityAdapter> entityAdapterMock;
+
         public DbProviderFactoryForMock()
         {
             entityAdapterMock = new Mock<IEntityAdapter>();

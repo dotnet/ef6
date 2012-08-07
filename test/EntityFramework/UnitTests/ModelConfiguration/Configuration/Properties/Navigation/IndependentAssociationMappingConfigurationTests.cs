@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Edm.Db;
@@ -22,7 +23,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var targetTable = database.AddTable("Split");
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             associationSetMapping.Table = sourceTable;
-            associationSetMapping.SourceEndMapping.PropertyMappings.Add(new DbEdmPropertyMapping { Column = fkColumn });
+            associationSetMapping.SourceEndMapping.PropertyMappings.Add(
+                new DbEdmPropertyMapping
+                    {
+                        Column = fkColumn
+                    });
 
             var independentAssociationMappingConfiguration
                 = new ForeignKeyAssociationMappingConfiguration();
@@ -49,7 +54,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             var database = new DbDatabaseMetadata().Initialize();
 
-            Assert.Equal(Strings.TableNotFound("Split"), Assert.Throws<InvalidOperationException>(() => independentAssociationMappingConfiguration.Configure(associationSetMapping, database)).Message);
+            Assert.Equal(
+                Strings.TableNotFound("Split"),
+                Assert.Throws<InvalidOperationException>(
+                    () => independentAssociationMappingConfiguration.Configure(associationSetMapping, database)).Message);
         }
 
         [Fact]

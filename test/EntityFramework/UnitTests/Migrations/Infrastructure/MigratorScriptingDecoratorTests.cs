@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Infrastructure;
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Migrations
         {
             var migrator
                 = new MigratorScriptingDecorator(
-                CreateMigrator<ShopContext_v1>(targetDatabase: "NoSuchDatabase"));
+                    CreateMigrator<ShopContext_v1>(targetDatabase: "NoSuchDatabase"));
 
             DropDatabase();
 
@@ -48,7 +49,10 @@ namespace System.Data.Entity.Migrations
             var migrator = CreateMigrator<ShopContext_v1>();
             var scriptingDecorator = new MigratorScriptingDecorator(migrator);
 
-            Assert.Equal(Strings.DownScriptWindowsNotSupported, Assert.Throws<MigrationsException>(() => scriptingDecorator.ScriptUpdate("000000000000001_Second", "000000000000000_First")).Message);
+            Assert.Equal(
+                Strings.DownScriptWindowsNotSupported,
+                Assert.Throws<MigrationsException>(() => scriptingDecorator.ScriptUpdate("000000000000001_Second", "000000000000000_First"))
+                    .Message);
         }
 
         [MigrationsTheory]
@@ -62,7 +66,9 @@ namespace System.Data.Entity.Migrations
             var automaticMigration = migrator.GetDatabaseMigrations().Single();
             var scriptingDecorator = new MigratorScriptingDecorator(migrator);
 
-            Assert.Equal(Strings.AutoNotValidForScriptWindows(automaticMigration), Assert.Throws<MigrationsException>(() => scriptingDecorator.ScriptUpdate(automaticMigration, null)).Message);
+            Assert.Equal(
+                Strings.AutoNotValidForScriptWindows(automaticMigration),
+                Assert.Throws<MigrationsException>(() => scriptingDecorator.ScriptUpdate(automaticMigration, null)).Message);
         }
 
         [MigrationsTheory]
@@ -76,7 +82,10 @@ namespace System.Data.Entity.Migrations
             var automaticMigration = migrator.GetDatabaseMigrations().Single();
             var scriptingDecorator = new MigratorScriptingDecorator(migrator);
 
-            Assert.Equal(Strings.AutoNotValidForScriptWindows(automaticMigration), Assert.Throws<MigrationsException>(() => scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, automaticMigration)).Message);
+            Assert.Equal(
+                Strings.AutoNotValidForScriptWindows(automaticMigration),
+                Assert.Throws<MigrationsException>(() => scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, automaticMigration)).
+                    Message);
         }
     }
 }

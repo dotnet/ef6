@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
-
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
-
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
-
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
@@ -77,19 +75,27 @@ namespace System.Data.Entity.Core.Common
 
                 TestWithDataDirectory(
                     @"C:\MelancholyBlues",
-                    () => Assert.Equal(@"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|SheerHeartAttack")));
+                    () =>
+                    Assert.Equal(
+                        @"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|SheerHeartAttack")));
 
                 TestWithDataDirectory(
                     @"C:\MelancholyBlues",
-                    () => Assert.Equal(@"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|\SheerHeartAttack")));
+                    () =>
+                    Assert.Equal(
+                        @"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|\SheerHeartAttack")));
 
                 TestWithDataDirectory(
                     @"C:\MelancholyBlues\",
-                    () => Assert.Equal(@"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|SheerHeartAttack")));
+                    () =>
+                    Assert.Equal(
+                        @"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|SheerHeartAttack")));
 
                 TestWithDataDirectory(
                     @"C:\MelancholyBlues\",
-                    () => Assert.Equal(@"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|\SheerHeartAttack")));
+                    () =>
+                    Assert.Equal(
+                        @"C:\MelancholyBlues\SheerHeartAttack", DbProviderServices.ExpandDataDirectory(@"|DataDirectory|\SheerHeartAttack")));
             }
 
             [Fact]
@@ -151,7 +157,7 @@ namespace System.Data.Entity.Core.Common
                     .Returns(mockSpatialServices.Object);
 
                 Assert.Same(
-                    mockSpatialServices.Object, 
+                    mockSpatialServices.Object,
                     new Mock<DbProviderServices>(mockResolver.Object).Object.GetSpatialServices("X"));
             }
 

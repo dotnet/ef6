@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System.Data.Entity.Core;
@@ -63,15 +64,23 @@ namespace ProductivityApiUnitTests
 
         private Mock<EdmMetadataContext> CreateMockContext(params string[] hashValues)
         {
-            var mockContext = new Mock<EdmMetadataContext>(new Mock<DbConnection>().Object, true) { CallBase = true };
+            var mockContext = new Mock<EdmMetadataContext>(new Mock<DbConnection>().Object, true)
+                                  {
+                                      CallBase = true
+                                  };
             mockContext.Setup(m => m.Metadata).Returns(CreateMockEdmMetadataSet(hashValues).Object);
             return mockContext;
         }
 
-        #pragma warning disable 612,618
+#pragma warning disable 612,618
         private Mock<IDbSet<EdmMetadata>> CreateMockEdmMetadataSet(params string[] hashValues)
         {
-            var edmMetadata = hashValues.Select((h, i) => new EdmMetadata { Id = i, ModelHash = h }).AsQueryable();
+            var edmMetadata = hashValues.Select(
+                (h, i) => new EdmMetadata
+                              {
+                                  Id = i,
+                                  ModelHash = h
+                              }).AsQueryable();
             var mockSet = new Mock<IDbSet<EdmMetadata>>();
             mockSet.Setup(m => m.ElementType).Returns(edmMetadata.ElementType);
             mockSet.Setup(m => m.Expression).Returns(edmMetadata.Expression);
@@ -79,6 +88,6 @@ namespace ProductivityApiUnitTests
             mockSet.Setup(m => m.GetEnumerator()).Returns(edmMetadata.GetEnumerator());
             return mockSet;
         }
-        #pragma warning restore 612,618
+#pragma warning restore 612,618
     }
 }

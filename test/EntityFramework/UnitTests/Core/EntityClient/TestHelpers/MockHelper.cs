@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
@@ -15,7 +16,10 @@ namespace System.Data.Entity.Core.EntityClient
             var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
             var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
 
-            var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Loose, metadataWorkspace, dbConnection, true) { CallBase = true };
+            var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Loose, metadataWorkspace, dbConnection, true)
+                                           {
+                                               CallBase = true
+                                           };
             entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
             entityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
             entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("foo");

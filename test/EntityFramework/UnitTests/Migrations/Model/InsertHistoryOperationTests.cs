@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
@@ -23,11 +24,16 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal(new ArgumentException(Strings.ArgumentIsNullOrWhitespace("table")).Message, Assert.Throws<ArgumentException>(() => new InsertHistoryOperation(null, "Migration1", new byte[0])).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.ArgumentIsNullOrWhitespace("table")).Message,
+                Assert.Throws<ArgumentException>(() => new InsertHistoryOperation(null, "Migration1", new byte[0])).Message);
 
-            Assert.Equal(new ArgumentException(Strings.ArgumentIsNullOrWhitespace("migrationId")).Message, Assert.Throws<ArgumentException>(() => new InsertHistoryOperation("Foo", null, new byte[0])).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.ArgumentIsNullOrWhitespace("migrationId")).Message,
+                Assert.Throws<ArgumentException>(() => new InsertHistoryOperation("Foo", null, new byte[0])).Message);
 
-            Assert.Equal("model", Assert.Throws<ArgumentNullException>(() => new InsertHistoryOperation("Foo", "Migration1", null)).ParamName);
+            Assert.Equal(
+                "model", Assert.Throws<ArgumentNullException>(() => new InsertHistoryOperation("Foo", "Migration1", null)).ParamName);
         }
     }
 }

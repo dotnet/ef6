@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using System.Linq;
 
 namespace ProductivityApiUnitTests
@@ -14,7 +15,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void ModelHashCalculator_clones_the_model_builder()
         {
-            var mockBuilder = new Mock<DbModelBuilder> {CallBase = true};
+            var mockBuilder = new Mock<DbModelBuilder>
+                                  {
+                                      CallBase = true
+                                  };
             var mockModel = CreateMockCompiledModel(mockBuilder, new DbModelBuilder());
 
             new ModelHashCalculator().Calculate(mockModel.Object);
@@ -26,21 +30,24 @@ namespace ProductivityApiUnitTests
         public void ModelHashCalculator_includes_EdmMetadata_in_the_hash()
         {
             var clone = new DbModelBuilder();
-            var mockBuilder = new Mock<DbModelBuilder> { CallBase = true };
+            var mockBuilder = new Mock<DbModelBuilder>
+                                  {
+                                      CallBase = true
+                                  };
             var mockModel = CreateMockCompiledModel(mockBuilder, clone);
 
             new ModelHashCalculator().Calculate(mockModel.Object);
 
-            #pragma warning disable 612,618
+#pragma warning disable 612,618
             Assert.True(clone.ModelConfiguration.Entities.Contains(typeof(EdmMetadata)));
             Assert.False(mockBuilder.Object.ModelConfiguration.Entities.Contains(typeof(EdmMetadata)));
-            #pragma warning restore 612,618
+#pragma warning restore 612,618
         }
 
         private Mock<DbCompiledModel> CreateMockCompiledModel(Mock<DbModelBuilder> mockBuilder, DbModelBuilder clone)
         {
             mockBuilder.Setup(m => m.Clone()).Returns(clone);
-            
+
             var mockModel = new Mock<DbCompiledModel>();
             mockModel.Setup(m => m.ProviderInfo).Returns(ProviderRegistry.Sql2008_ProviderInfo);
             mockModel.Setup(m => m.CachedModelBuilder).Returns(mockBuilder.Object);

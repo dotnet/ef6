@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine.Tests
 {
     extern alias migrate;
@@ -6,7 +7,7 @@ namespace CmdLine.Tests
 
     public class ThreeRequiredPositionArgs
     {
-        [CommandLineParameter(Name="String 1", ParameterIndex = 1, Required = true)]
+        [CommandLineParameter(Name = "String 1", ParameterIndex = 1, Required = true)]
         public string S1 { get; set; }
 
         [CommandLineParameter(Name = "String 2", ParameterIndex = 2, Required = true)]

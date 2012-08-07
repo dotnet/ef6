@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine.Tests
 {
     extern alias migrate;
@@ -12,46 +13,53 @@ namespace CmdLine.Tests
         [Fact]
         public void SettingNameAndNameResourceIdThrows()
         {
-            var attribute = new CommandLineParameterAttribute()
-            {
-                Name = "foo"
-            };
+            var attribute = new CommandLineParameterAttribute
+                                {
+                                    Name = "foo"
+                                };
 
-            Assert.Equal(Strings.AmbiguousAttributeValues("Name", "NameResourceId"), Assert.Throws<InvalidOperationException>(() => attribute.NameResourceId = "bar").Message);
+            Assert.Equal(
+                Strings.AmbiguousAttributeValues("Name", "NameResourceId"),
+                Assert.Throws<InvalidOperationException>(() => attribute.NameResourceId = "bar").Message);
         }
 
         [Fact]
         public void SettingNameResourceIdAndNameThrows()
         {
-            var attribute = new CommandLineParameterAttribute()
-            {
-                NameResourceId = "foo"
-            };
+            var attribute = new CommandLineParameterAttribute
+                                {
+                                    NameResourceId = "foo"
+                                };
 
-            Assert.Equal(Strings.AmbiguousAttributeValues("Name", "NameResourceId"), Assert.Throws<InvalidOperationException>(() => attribute.Name = "bar").Message);
+            Assert.Equal(
+                Strings.AmbiguousAttributeValues("Name", "NameResourceId"),
+                Assert.Throws<InvalidOperationException>(() => attribute.Name = "bar").Message);
         }
-
 
         [Fact]
         public void SettingDescriptionAndDescriptionResourceIdThrows()
         {
-            var attribute = new CommandLineParameterAttribute()
-            {
-                Description = "foo"
-            };
+            var attribute = new CommandLineParameterAttribute
+                                {
+                                    Description = "foo"
+                                };
 
-            Assert.Equal(Strings.AmbiguousAttributeValues("Description", "DescriptionResourceId"), Assert.Throws<InvalidOperationException>(() => attribute.DescriptionResourceId = "bar").Message);
+            Assert.Equal(
+                Strings.AmbiguousAttributeValues("Description", "DescriptionResourceId"),
+                Assert.Throws<InvalidOperationException>(() => attribute.DescriptionResourceId = "bar").Message);
         }
 
         [Fact]
         public void SettingDescriptionResourceIdAndDescriptionThrows()
         {
-            var attribute = new CommandLineParameterAttribute()
-            {
-                DescriptionResourceId = "foo"
-            };
+            var attribute = new CommandLineParameterAttribute
+                                {
+                                    DescriptionResourceId = "foo"
+                                };
 
-            Assert.Equal(Strings.AmbiguousAttributeValues("Description", "DescriptionResourceId"), Assert.Throws<InvalidOperationException>(() => attribute.Description = "bar").Message);
+            Assert.Equal(
+                Strings.AmbiguousAttributeValues("Description", "DescriptionResourceId"),
+                Assert.Throws<InvalidOperationException>(() => attribute.Description = "bar").Message);
         }
     }
 }

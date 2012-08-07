@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -241,9 +242,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.DeclaredKeyProperties.Add(principalProperty);
             associationType.TargetEnd.EntityType = entityType;
             associationType.Constraint = new EdmAssociationConstraint
-                {
-                    DependentEnd = associationType.SourceEnd
-                };
+                                             {
+                                                 DependentEnd = associationType.SourceEnd
+                                             };
             var dependentProperty = new EdmProperty().AsPrimitive();
             dependentProperty.PropertyType.EdmType = EdmPrimitiveType.String;
             associationType.Constraint.DependentProperties.Add(dependentProperty);

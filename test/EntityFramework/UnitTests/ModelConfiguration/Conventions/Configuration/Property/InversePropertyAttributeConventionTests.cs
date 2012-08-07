@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -106,8 +107,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockPropertyInfo = mockTypeA.GetProperty("A");
             var modelConfiguration = new ModelConfiguration();
 
-            Assert.Equal(Strings.InversePropertyAttributeConvention_SelfInverseDetected("A", mockTypeA.Object), Assert.Throws<InvalidOperationException>(() => new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
-                                                                                                                                                                         .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A"))).Message);
+            Assert.Equal(
+                Strings.InversePropertyAttributeConvention_SelfInverseDetected("A", mockTypeA.Object),
+                Assert.Throws<InvalidOperationException>(
+                    () => new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+                              .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A"))).Message);
         }
 
         [Fact]
@@ -119,8 +123,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockPropertyInfo = mockTypeA.GetProperty("B");
             var modelConfiguration = new ModelConfiguration();
 
-            Assert.Equal(Strings.InversePropertyAttributeConvention_PropertyNotFound("Foo", mockTypeB.Object, "B", mockTypeA.Object), Assert.Throws<InvalidOperationException>(() => new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
-                                                                                                                                                                                               .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Foo"))).Message);
+            Assert.Equal(
+                Strings.InversePropertyAttributeConvention_PropertyNotFound("Foo", mockTypeB.Object, "B", mockTypeA.Object),
+                Assert.Throws<InvalidOperationException>(
+                    () => new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+                              .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Foo"))).Message);
         }
     }
 }

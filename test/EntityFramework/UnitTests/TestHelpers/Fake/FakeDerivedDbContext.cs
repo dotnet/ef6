@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System.Data.Entity.Core.Common;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
 
-    public class FakeDerivedDbContext : DbContext 
+    public class FakeDerivedDbContext : DbContext
     {
         public FakeDerivedDbContext()
         {

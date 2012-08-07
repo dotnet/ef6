@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
@@ -84,7 +85,6 @@ namespace System.Data.Entity.Utilities
 
             Assert.True(mockProperty.Object.IsValidEdmScalarProperty());
         }
-
 
         [Fact]
         public void IsValidEdmScalarProperty_should_return_true_for_geography()

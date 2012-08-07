@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Common;
@@ -38,7 +39,6 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(1, model.Descendants(EdmXNames.Msl.EntitySetMappingNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
             Assert.Equal(1, model.Descendants(EdmXNames.Ssdl.EntityTypeNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
             Assert.Equal(1, model.Descendants(EdmXNames.Ssdl.EntitySetNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
-
         }
 
         [MigrationsTheory]

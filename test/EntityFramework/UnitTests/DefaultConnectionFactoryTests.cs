@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -9,7 +10,7 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Tests for Database.DefaultConnectionFactory and related infrastructure classes.
+    ///     Tests for Database.DefaultConnectionFactory and related infrastructure classes.
     /// </summary>
     public class DefaultConnectionFactoryTests : TestBase
     {

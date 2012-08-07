@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine.Tests
 {
     extern alias migrate;
@@ -31,10 +32,11 @@ namespace CmdLine.Tests
         public void CommandLineTokenizesSwitchesAndParameters()
         {
             var args = new[]
-                {
-                    "C:\\Foo And Bar\\Some Long File.txt", "/1:Test", "-2:Some Quoted Arg", "/3=Arg with in it", "/Y-", "And another",
-                    "Another", "One", "Word", "Args"
-                };
+                           {
+                               "C:\\Foo And Bar\\Some Long File.txt", "/1:Test", "-2:Some Quoted Arg", "/3=Arg with in it", "/Y-",
+                               "And another",
+                               "Another", "One", "Word", "Args"
+                           };
 
             CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
@@ -71,7 +73,9 @@ namespace CmdLine.Tests
         public void MissingRequiredSwitchArgShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CommandLineRequiredArgumentMissingException(typeof(string), "N", -1).Message, Assert.Throws<CommandLineRequiredArgumentMissingException>(() => CommandLine.Parse<TestArgs>()).Message);
+            Assert.Equal(
+                new CommandLineRequiredArgumentMissingException(typeof(string), "N", -1).Message,
+                Assert.Throws<CommandLineRequiredArgumentMissingException>(() => CommandLine.Parse<TestArgs>()).Message);
         }
 
         [Fact]
@@ -86,7 +90,9 @@ namespace CmdLine.Tests
         public void MissingRequiredPositionArgShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CommandLineRequiredArgumentMissingException(typeof(string), "String 1", 1).Message, Assert.Throws<CommandLineRequiredArgumentMissingException>(() => CommandLine.Parse<ThreeRequiredPositionArgs>()).Message);
+            Assert.Equal(
+                new CommandLineRequiredArgumentMissingException(typeof(string), "String 1", 1).Message,
+                Assert.Throws<CommandLineRequiredArgumentMissingException>(() => CommandLine.Parse<ThreeRequiredPositionArgs>()).Message);
         }
 
         [Fact]
@@ -96,7 +102,9 @@ namespace CmdLine.Tests
 
             var commandArg = new CommandArgument("/N:345", 7);
             commandArg.Command = "N";
-            Assert.Equal(new CommandLineArgumentInvalidException(typeof(string), commandArg).Message, Assert.Throws<CommandLineArgumentInvalidException>(() => CommandLine.Parse<TestArgs>()).Message);
+            Assert.Equal(
+                new CommandLineArgumentInvalidException(typeof(string), commandArg).Message,
+                Assert.Throws<CommandLineArgumentInvalidException>(() => CommandLine.Parse<TestArgs>()).Message);
         }
 
         [Fact]
@@ -127,10 +135,11 @@ namespace CmdLine.Tests
         public void CommandLineTokenizesWithAlternateSwitchChars()
         {
             var args = new[]
-                {
-                    "C:\\Foo And Bar\\Some Long File.txt", "~1|Test", "~2|Some Quoted Arg", "~3|Arg with in it", "_Y-", "And another",
-                    "Another", "One", "Word", "Args"
-                };
+                           {
+                               "C:\\Foo And Bar\\Some Long File.txt", "~1|Test", "~2|Some Quoted Arg", "~3|Arg with in it", "_Y-",
+                               "And another",
+                               "Another", "One", "Word", "Args"
+                           };
 
             CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
@@ -138,8 +147,15 @@ namespace CmdLine.Tests
             var oldSep = CommandLine.CommandSeparators;
             var oldValueSep = CommandLine.ValueSeparators;
 
-            CommandLine.CommandSeparators = new List<string> { "~", "_" };
-            CommandLine.ValueSeparators = new List<string> { "|" };
+            CommandLine.CommandSeparators = new List<string>
+                                                {
+                                                    "~",
+                                                    "_"
+                                                };
+            CommandLine.ValueSeparators = new List<string>
+                                              {
+                                                  "|"
+                                              };
 
             var tokens = CommandLine.Tokenize();
 
@@ -174,10 +190,11 @@ namespace CmdLine.Tests
         public void PositionalArgsAreApplied()
         {
             var args = new[]
-                {
-                    @"D:\Documents and Settings\MY.USERNAME\My Documents\*", @"E:\MYBACKUP\My Documents\", "/A", @"/EXCLUDE:SomeQuoted String"
-                    , "/I", "/D:7-8-2011"
-                };
+                           {
+                               @"D:\Documents and Settings\MY.USERNAME\My Documents\*", @"E:\MYBACKUP\My Documents\", "/A",
+                               @"/EXCLUDE:SomeQuoted String"
+                               , "/I", "/D:7-8-2011"
+                           };
 
             CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
             var xcopyCommand = CommandLine.Parse<XCopyCommandArgs>();
@@ -188,7 +205,7 @@ namespace CmdLine.Tests
             Assert.Equal("SomeQuoted String", xcopyCommand.ExcludeFiles);
             Assert.True(xcopyCommand.ArchivedBit);
             Assert.True(xcopyCommand.InferDirectory);
-            Assert.Equal(DateTime.Parse("7-8-2011"), xcopyCommand.ChangedAfterDate);            
+            Assert.Equal(DateTime.Parse("7-8-2011"), xcopyCommand.ChangedAfterDate);
         }
 
         [Fact]
@@ -250,14 +267,18 @@ namespace CmdLine.Tests
 
             var commandArg = new CommandArgument("/NoMatch", 0);
             commandArg.Command = "NoMatch";
-            Assert.Equal(new CommandLineArgumentInvalidException(typeof(string), commandArg).Message, Assert.Throws<CommandLineArgumentInvalidException>(() => CommandLine.Parse<InferredTestArgs>()).Message);
+            Assert.Equal(
+                new CommandLineArgumentInvalidException(typeof(string), commandArg).Message,
+                Assert.Throws<CommandLineArgumentInvalidException>(() => CommandLine.Parse<InferredTestArgs>()).Message);
         }
 
         [Fact]
         public void TwoPropsWithSameSwitchShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CommandLineException("Duplicate Command \"B\"").Message, Assert.Throws<CommandLineException>(() => CommandLine.Parse<TwoPropsWithSameSwitch>()).Message);
+            Assert.Equal(
+                new CommandLineException("Duplicate Command \"B\"").Message,
+                Assert.Throws<CommandLineException>(() => CommandLine.Parse<TwoPropsWithSameSwitch>()).Message);
         }
 
         [Fact]
@@ -280,28 +301,36 @@ namespace CmdLine.Tests
         public void WhenNoPositionOneShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CommandLineException("Out of order parameter \"source\" should have be at parameter index 1 but was found at 2").Message, Assert.Throws<CommandLineException>(() => CommandLine.Parse<BadPositionArgNoOne>()).Message);
+            Assert.Equal(
+                new CommandLineException("Out of order parameter \"source\" should have be at parameter index 1 but was found at 2").Message,
+                Assert.Throws<CommandLineException>(() => CommandLine.Parse<BadPositionArgNoOne>()).Message);
         }
 
         [Fact]
         public void WhenNoPositionTwoShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CommandLineException("Out of order parameter \"destination\" should have be at parameter index 2 but was found at 3").Message, Assert.Throws<CommandLineException>(() => CommandLine.Parse<BadPositionArgMissingTwo>()).Message);
+            Assert.Equal(
+                new CommandLineException("Out of order parameter \"destination\" should have be at parameter index 2 but was found at 3").
+                    Message, Assert.Throws<CommandLineException>(() => CommandLine.Parse<BadPositionArgMissingTwo>()).Message);
         }
 
         [Fact]
         public void WhenDuplicatePositionShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CommandLineException("Duplicate Parameter Index [1] on Property \"S2\"").Message, Assert.Throws<CommandLineException>(() => CommandLine.Parse<TypeWithDuplicateParamIndex>()).Message);
+            Assert.Equal(
+                new CommandLineException("Duplicate Parameter Index [1] on Property \"S2\"").Message,
+                Assert.Throws<CommandLineException>(() => CommandLine.Parse<TypeWithDuplicateParamIndex>()).Message);
         }
 
         [Fact]
         public void WhenBadParameterIndexShouldThrow()
         {
             CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(new CustomAttributeFormatException("'ParameterIndex' property specified was not found.").Message, Assert.Throws<CustomAttributeFormatException>(() => CommandLine.Parse<TypeWithBadParamIndex>()).Message);
+            Assert.Equal(
+                new CustomAttributeFormatException("'ParameterIndex' property specified was not found.").Message,
+                Assert.Throws<CustomAttributeFormatException>(() => CommandLine.Parse<TypeWithBadParamIndex>()).Message);
         }
     }
 

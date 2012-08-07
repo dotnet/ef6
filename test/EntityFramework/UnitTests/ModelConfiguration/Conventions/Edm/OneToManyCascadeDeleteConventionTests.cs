@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var associationType = new EdmAssociationType().Initialize();
             associationType.SourceEnd.EntityType
                 = associationType.TargetEnd.EntityType
-                    = new EdmEntityType();
+                  = new EdmEntityType();
 
             ((IEdmConvention<EdmAssociationType>)new OneToManyCascadeDeleteConvention())
                 .Apply(associationType, new EdmModel().Initialize());

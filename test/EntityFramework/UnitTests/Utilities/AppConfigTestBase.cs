@@ -21,9 +21,9 @@ namespace System.Data.Entity.Utilities
                 if (sqlGeneratorName != null)
                 {
                     providerElement.SqlGeneratorElement = new MigrationSqlGeneratorElement
-                        {
-                            SqlGeneratorTypeName = sqlGeneratorName
-                        };
+                                                              {
+                                                                  SqlGeneratorTypeName = sqlGeneratorName
+                                                              };
                 }
             }
             mockEFSection.Setup(m => m.Providers).Returns(providers);

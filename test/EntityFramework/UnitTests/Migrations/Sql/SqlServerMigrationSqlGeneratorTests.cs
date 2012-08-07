@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Extensions;
@@ -20,11 +21,11 @@ namespace System.Data.Entity.Migrations
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Binary)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        IsTimestamp = true
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            IsTimestamp = true
+                        });
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -40,11 +41,11 @@ namespace System.Data.Entity.Migrations
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Binary)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        StoreType = "RowVersion"
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            StoreType = "RowVersion"
+                        });
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -60,11 +61,11 @@ namespace System.Data.Entity.Migrations
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Binary)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        StoreType = "timestamp"
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            StoreType = "timestamp"
+                        });
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -76,7 +77,10 @@ namespace System.Data.Entity.Migrations
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var dropPrimaryKeyOperation = new DropPrimaryKeyOperation { Table = "T" };
+            var dropPrimaryKeyOperation = new DropPrimaryKeyOperation
+                                              {
+                                                  Table = "T"
+                                              };
 
             var sql = migrationProvider.Generate(new[] { dropPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -88,7 +92,10 @@ namespace System.Data.Entity.Migrations
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var addPrimaryKeyOperation = new AddPrimaryKeyOperation { Table = "T" };
+            var addPrimaryKeyOperation = new AddPrimaryKeyOperation
+                                             {
+                                                 Table = "T"
+                                             };
 
             addPrimaryKeyOperation.Columns.Add("c1");
             addPrimaryKeyOperation.Columns.Add("c2");
@@ -116,7 +123,11 @@ namespace System.Data.Entity.Migrations
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
             var createTableOperation = new CreateTableOperation("Customers");
-            var column = new ColumnModel(PrimitiveTypeKind.Binary) { Name = "Version", IsTimestamp = true };
+            var column = new ColumnModel(PrimitiveTypeKind.Binary)
+                             {
+                                 Name = "Version",
+                                 IsTimestamp = true
+                             };
             createTableOperation.Columns.Add(column);
 
             var sql = migrationProvider.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -139,9 +150,19 @@ namespace System.Data.Entity.Migrations
         public void Generate_can_output_create_table_statement()
         {
             var createTableOperation = new CreateTableOperation("foo.Customers");
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
+                               {
+                                   Name = "Id",
+                                   IsNullable = true,
+                                   IsIdentity = true
+                               };
             createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
             createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
@@ -163,10 +184,23 @@ CREATE TABLE [foo].[Customers] (
         [Fact]
         public void Generate_can_output_create_table_as_system_object_statement()
         {
-            var createTableOperation = new CreateTableOperation("Customers") { IsSystem = true };
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
+            var createTableOperation = new CreateTableOperation("Customers")
+                                           {
+                                               IsSystem = true
+                                           };
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
+                               {
+                                   Name = "Id",
+                                   IsNullable = true,
+                                   IsIdentity = true
+                               };
             createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
 
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
@@ -189,28 +223,38 @@ END CATCH"));
         public void Generate_can_output_create_index_statement()
         {
             var createTableOperation = new CreateTableOperation("Customers");
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Id", IsNullable = true, IsIdentity = true };
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
+                               {
+                                   Name = "Id",
+                                   IsNullable = true,
+                                   IsIdentity = true
+                               };
             createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Name", IsNullable = false });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
             createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
             var createIndexOperation = new CreateIndexOperation
-                {
-                    Table = createTableOperation.Name,
-                    IsUnique = true
-                };
+                                           {
+                                               Table = createTableOperation.Name,
+                                               IsUnique = true
+                                           };
 
             createIndexOperation.Columns.Add(idColumn.Name);
 
             var sql
                 = migrationProvider.Generate(
                     new[]
-                            {
-                                createIndexOperation
-                            },
+                        {
+                            createIndexOperation
+                        },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(
@@ -222,11 +266,11 @@ END CATCH"));
         public void Generate_can_output_add_fk_statement()
         {
             var addForeignKeyOperation = new AddForeignKeyOperation
-                {
-                    PrincipalTable = "Customers",
-                    DependentTable = "Orders",
-                    CascadeDelete = true
-                };
+                                             {
+                                                 PrincipalTable = "Customers",
+                                                 DependentTable = "Orders",
+                                                 CascadeDelete = true
+                                             };
             addForeignKeyOperation.PrincipalColumns.Add("CustomerId");
             addForeignKeyOperation.DependentColumns.Add("CustomerId");
 
@@ -279,7 +323,11 @@ END CATCH"));
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var column = new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Bar", IsIdentity = true };
+            var column = new ColumnModel(PrimitiveTypeKind.Guid)
+                             {
+                                 Name = "Bar",
+                                 IsIdentity = true
+                             };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -292,7 +340,12 @@ END CATCH"));
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var column = new ColumnModel(PrimitiveTypeKind.String) { Name = "Bar", StoreType = "varchar", MaxLength = 15 };
+            var column = new ColumnModel(PrimitiveTypeKind.String)
+                             {
+                                 Name = "Bar",
+                                 StoreType = "varchar",
+                                 MaxLength = 15
+                             };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -307,11 +360,11 @@ END CATCH"));
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geography)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValue = DbGeography.FromText("POINT (6 7)")
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValue = DbGeography.FromText("POINT (6 7)")
+                        });
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -325,11 +378,11 @@ END CATCH"));
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geometry)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValue = DbGeometry.FromText("POINT (8 9)")
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValue = DbGeometry.FromText("POINT (8 9)")
+                        });
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -343,10 +396,10 @@ END CATCH"));
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geography)
-                    {
-                        IsNullable = false,
-                        Name = "C"
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C"
+                        });
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -360,10 +413,10 @@ END CATCH"));
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geometry)
-                    {
-                        IsNullable = false,
-                        Name = "C"
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C"
+                        });
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -377,11 +430,11 @@ END CATCH"));
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geography)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValueSql = "'POINT (6 7)'"
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValueSql = "'POINT (6 7)'"
+                        });
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -395,11 +448,11 @@ END CATCH"));
                 = new AddColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geometry)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValueSql = "'POINT (8 9)'"
-                    });
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValueSql = "'POINT (8 9)'"
+                        });
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -413,11 +466,11 @@ END CATCH"));
                 = new AlterColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geography)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValue = DbGeography.FromText("POINT (6 7)")
-                    },
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValue = DbGeography.FromText("POINT (6 7)")
+                        },
                     isDestructiveChange: false);
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -434,18 +487,18 @@ ALTER TABLE [T] ALTER COLUMN [C] [geography] NOT NULL", sql);
                 = new AlterColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geometry)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValue = DbGeometry.FromText("POINT (8 9)")
-                    },
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValue = DbGeometry.FromText("POINT (8 9)")
+                        },
                     isDestructiveChange: false);
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Equal(
                 @"ALTER TABLE [T] ADD CONSTRAINT DF_C DEFAULT 'SRID=0;POINT (8 9)' FOR [C]
-ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL",sql);
+ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         }
 
         [Fact]
@@ -455,11 +508,11 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL",sql);
                 = new AlterColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geography)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValueSql = "'POINT (6 7)'"
-                    },
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValueSql = "'POINT (6 7)'"
+                        },
                     isDestructiveChange: false);
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -476,11 +529,11 @@ ALTER TABLE [T] ALTER COLUMN [C] [geography] NOT NULL", sql);
                 = new AlterColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geometry)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                        DefaultValueSql = "'POINT (8 9)'"
-                    },
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValueSql = "'POINT (8 9)'"
+                        },
                     isDestructiveChange: false);
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -497,10 +550,10 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                 = new AlterColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geography)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                    },
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                        },
                     isDestructiveChange: false);
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -516,10 +569,10 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                 = new AlterColumnOperation(
                     "T",
                     new ColumnModel(PrimitiveTypeKind.Geometry)
-                    {
-                        IsNullable = false,
-                        Name = "C",
-                    },
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                        },
                     isDestructiveChange: false);
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -534,45 +587,45 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
             var operation = new CreateTableOperation("T");
 
             new[]
-            {
-                new ColumnModel(PrimitiveTypeKind.Geography)
                 {
-                    IsNullable = false,
-                    Name = "A",
-                    DefaultValue = DbGeography.FromText("POINT (6 7)")
-                },
-                new ColumnModel(PrimitiveTypeKind.Geometry)
-                {
-                    IsNullable = false,
-                    Name = "B",
-                    DefaultValue = DbGeometry.FromText("POINT (8 9)")
-                },
-                new ColumnModel(PrimitiveTypeKind.Geography)
-                {
-                    IsNullable = false,
-                    Name = "C",
-                    DefaultValueSql = "'POINT (6 7)'"
-                },
-                new ColumnModel(PrimitiveTypeKind.Geometry)
-                {
-                    IsNullable = false,
-                    Name = "D",
-                    DefaultValueSql = "'POINT (8 9)'"
-                },
-                new ColumnModel(PrimitiveTypeKind.Geography)
-                {
-                    IsNullable = false,
-                    Name = "E",
-                },
-                new ColumnModel(PrimitiveTypeKind.Geometry)
-                {
-                    IsNullable = false,
-                    Name = "F",
-                }
-            }.Each(c => operation.Columns.Add(c));
+                    new ColumnModel(PrimitiveTypeKind.Geography)
+                        {
+                            IsNullable = false,
+                            Name = "A",
+                            DefaultValue = DbGeography.FromText("POINT (6 7)")
+                        },
+                    new ColumnModel(PrimitiveTypeKind.Geometry)
+                        {
+                            IsNullable = false,
+                            Name = "B",
+                            DefaultValue = DbGeometry.FromText("POINT (8 9)")
+                        },
+                    new ColumnModel(PrimitiveTypeKind.Geography)
+                        {
+                            IsNullable = false,
+                            Name = "C",
+                            DefaultValueSql = "'POINT (6 7)'"
+                        },
+                    new ColumnModel(PrimitiveTypeKind.Geometry)
+                        {
+                            IsNullable = false,
+                            Name = "D",
+                            DefaultValueSql = "'POINT (8 9)'"
+                        },
+                    new ColumnModel(PrimitiveTypeKind.Geography)
+                        {
+                            IsNullable = false,
+                            Name = "E",
+                        },
+                    new ColumnModel(PrimitiveTypeKind.Geometry)
+                        {
+                            IsNullable = false,
+                            Name = "F",
+                        }
+                }.Each(c => operation.Columns.Add(c));
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008")
-                .Join(s => s.Sql,Environment.NewLine);
+                .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Equal(@"CREATE TABLE [T] (
     [A] [geography] NOT NULL DEFAULT 'SRID=4326;POINT (6 7)',
@@ -589,7 +642,12 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var column = new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Bar", IsNullable = false, DefaultValue = 42 };
+            var column = new ColumnModel(PrimitiveTypeKind.Guid)
+                             {
+                                 Name = "Bar",
+                                 IsNullable = false,
+                                 DefaultValue = 42
+                             };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -602,7 +660,12 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var column = new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Bar", IsNullable = false, DefaultValueSql = "42" };
+            var column = new ColumnModel(PrimitiveTypeKind.Guid)
+                             {
+                                 Name = "Bar",
+                                 IsNullable = false,
+                                 DefaultValueSql = "42"
+                             };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
@@ -615,7 +678,11 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
-            var column = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Bar", IsNullable = false };
+            var column = new ColumnModel(PrimitiveTypeKind.Int32)
+                             {
+                                 Name = "Bar",
+                                 IsNullable = false
+                             };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);

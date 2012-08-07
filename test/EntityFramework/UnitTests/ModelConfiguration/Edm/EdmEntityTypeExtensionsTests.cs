@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
@@ -19,7 +20,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetRootType_should_return_base_type_when_has_base_type()
         {
-            var entityType = new EdmEntityType { BaseType = new EdmEntityType() };
+            var entityType = new EdmEntityType
+                                 {
+                                     BaseType = new EdmEntityType()
+                                 };
 
             Assert.Same(entityType.BaseType, entityType.GetRootType());
         }
@@ -144,19 +148,38 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                 typesVisited.Add(derivedType);
             }
 
-            var oracle = new List<EdmEntityType> { entityTypeRoot, derivedType1, derivedType1_1, derivedType1_2, derivedType2 };
+            var oracle = new List<EdmEntityType>
+                             {
+                                 entityTypeRoot,
+                                 derivedType1,
+                                 derivedType1_1,
+                                 derivedType1_2,
+                                 derivedType2
+                             };
             Assert.Equal(true, oracle.SequenceEqual(typesVisited));
         }
 
         [Fact]
         public void IsAncestorOf_should_return_correct_answer()
         {
-            var entityType1 = new EdmEntityType { Name = "E1" };
-            var entityType2 = new EdmEntityType { Name = "E2" };
+            var entityType1 = new EdmEntityType
+                                  {
+                                      Name = "E1"
+                                  };
+            var entityType2 = new EdmEntityType
+                                  {
+                                      Name = "E2"
+                                  };
             entityType2.BaseType = entityType1;
-            var entityType3 = new EdmEntityType { Name = "E3" };
+            var entityType3 = new EdmEntityType
+                                  {
+                                      Name = "E3"
+                                  };
             entityType3.BaseType = entityType1;
-            var entityType4 = new EdmEntityType { Name = "E4" };
+            var entityType4 = new EdmEntityType
+                                  {
+                                      Name = "E4"
+                                  };
             entityType4.BaseType = entityType2;
 
             Assert.True(entityType1.IsAncestorOf(entityType4));

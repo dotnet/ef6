@@ -33,9 +33,9 @@ namespace System.Data.Entity.Config
             {
                 var manager = CreateManager();
                 var configuration = new Mock<DbConfiguration>
-                    {
-                        CallBase = true
-                    }.Object;
+                                        {
+                                            CallBase = true
+                                        }.Object;
 
                 manager.SetConfiguration(configuration);
                 manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
@@ -73,10 +73,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void GetConfiguration_for_default_value_can_be_called_from_multiple_threads_concurrently()
@@ -85,10 +85,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void GetConfiguration_for_pushed_config_can_be_called_from_multiple_threads_concurrently()
@@ -97,10 +97,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void GetConfiguration_for_pushed_and_popped_config_can_be_called_from_multiple_threads_concurrently()
@@ -189,10 +189,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void SetConfiguration_can_be_called_from_multiple_threads_concurrently_and_only_one_will_win()
@@ -374,10 +374,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void EnsureLoadedForContext_can_be_called_from_multiple_threads_concurrently_before_configuration_has_been_used()
@@ -388,10 +388,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void EnsureLoadedForContext_can_be_called_from_multiple_threads_concurrently_after_push_and_pop()
@@ -489,10 +489,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            /// This test makes calls from multiple threads such that we have at least some chance of finding threading
-            /// issues. As with any test of this type just because the test passes does not mean that the code is
-            /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void Configurations_can_be_pushed_and_popped_from_multiple_threads_concurrently()
@@ -522,9 +522,9 @@ namespace System.Data.Entity.Config
             {
                 var manager = CreateManager();
                 var configuration = new Mock<DbConfiguration>
-                    {
-                        CallBase = true
-                    }.Object;
+                                        {
+                                            CallBase = true
+                                        }.Object;
 
                 var appConfig1 = AppConfig.DefaultInstance;
                 var appConfig2 = new AppConfig(ConfigurationManager.ConnectionStrings);

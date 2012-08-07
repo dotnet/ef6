@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -13,12 +14,24 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("connectionName"), Assert.Throws<ArgumentException>(() => new DbConnectionInfo(null)).Message);
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("connectionName"), Assert.Throws<ArgumentException>(() => new DbConnectionInfo("")).Message);
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("connectionString"), Assert.Throws<ArgumentException>(() => new DbConnectionInfo(null, "invariant")).Message);
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("connectionString"), Assert.Throws<ArgumentException>(() => new DbConnectionInfo("", "invariant")).Message);
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new DbConnectionInfo("connection", null)).Message);
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new DbConnectionInfo("connection", "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("connectionName"),
+                Assert.Throws<ArgumentException>(() => new DbConnectionInfo(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("connectionName"),
+                Assert.Throws<ArgumentException>(() => new DbConnectionInfo("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("connectionString"),
+                Assert.Throws<ArgumentException>(() => new DbConnectionInfo(null, "invariant")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("connectionString"),
+                Assert.Throws<ArgumentException>(() => new DbConnectionInfo("", "invariant")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new DbConnectionInfo("connection", null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new DbConnectionInfo("connection", "")).Message);
         }
 
         [Fact]
@@ -38,8 +51,9 @@ namespace ProductivityApiUnitTests
         {
             var config = new AppConfig(CreateEmptyConfig());
             var info = new DbConnectionInfo("FindMe");
-            Assert.Equal(Strings.DbConnectionInfo_ConnectionStringNotFound("FindMe"),
-                         Assert.Throws<InvalidOperationException>(() => info.GetConnectionString(config)).Message);
+            Assert.Equal(
+                Strings.DbConnectionInfo_ConnectionStringNotFound("FindMe"),
+                Assert.Throws<InvalidOperationException>(() => info.GetConnectionString(config)).Message);
         }
 
         [Fact]

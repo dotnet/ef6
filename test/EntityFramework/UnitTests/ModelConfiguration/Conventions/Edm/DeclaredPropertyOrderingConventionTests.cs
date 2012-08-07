@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -8,13 +9,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
     public sealed class DeclaredPropertyOrderingConventionTests
     {
-        class SimpleEntityBase
+        private class SimpleEntityBase
         {
             public string InheritedPropertyA { get; set; }
             public string InheritedPropertyB { get; set; }
         }
 
-        class SimpleEntity : SimpleEntityBase
+        private class SimpleEntity : SimpleEntityBase
         {
             private string PrivateProperty { get; set; }
 
@@ -24,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             public string Key { get; set; }
 
-            static public string StaticProperty { get; set; }
+            public static string StaticProperty { get; set; }
         }
 
         [Fact]
@@ -44,8 +45,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             ((IEdmConvention<EdmEntityType>)new DeclaredPropertyOrderingConvention())
                 .Apply(entityType, new EdmModel());
 
-            Assert.True(entityType.DeclaredProperties.Select(e => e.Name)
-                .SequenceEqual(new[] { "Key", "PrivateProperty", "PropertyA", "PropertyB", "InheritedPropertyA", "InheritedPropertyB", "StaticProperty" }));
+            Assert.True(
+                entityType.DeclaredProperties.Select(e => e.Name)
+                    .SequenceEqual(
+                        new[]
+                            {
+                                "Key", "PrivateProperty", "PropertyA", "PropertyB", "InheritedPropertyA", "InheritedPropertyB",
+                                "StaticProperty"
+                            }));
         }
     }
 }

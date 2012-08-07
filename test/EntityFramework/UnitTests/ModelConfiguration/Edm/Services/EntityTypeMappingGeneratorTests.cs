@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
     using System.Data.Entity;
@@ -16,7 +17,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_should_add_set_mapping_and_table_and_set_clr_type()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
             entityType.SetClrType(typeof(object));
 
@@ -32,7 +36,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_should_map_scalar_properties_to_columns()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             entityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
             entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
@@ -51,8 +58,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_should_flatten_complex_properties_to_columns()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EdmEntityType { Name = "E" };
-            var complexType = new EdmComplexType { Name = "C" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
+            var complexType = new EdmComplexType
+                                  {
+                                      Name = "C"
+                                  };
             complexType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
             entityType.AddComplexProperty("C1", complexType);
             entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;

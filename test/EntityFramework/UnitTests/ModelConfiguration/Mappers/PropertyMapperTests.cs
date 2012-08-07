@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -88,7 +89,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(typeof(int?), "Foo"),
+                .Map(
+                    new MockPropertyInfo(typeof(int?), "Foo"),
                     entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             var property = entityType.GetDeclaredPrimitiveProperty("Foo");
@@ -97,7 +99,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             Assert.Equal(true, property.PropertyType.IsNullable);
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(typeof(int), "Bar"),
+                .Map(
+                    new MockPropertyInfo(typeof(int), "Bar"),
                     entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             property = entityType.GetDeclaredPrimitiveProperty("Bar");

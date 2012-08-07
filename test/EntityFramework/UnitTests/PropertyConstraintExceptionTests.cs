@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -65,13 +66,17 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void PropertyConstraintException_string_and_property_name_constructor_throws_if_passed_null_property_name()
         {
-            Assert.Equal("propertyName", Assert.Throws<ArgumentNullException>(() => new PropertyConstraintException("Message", (string)null)).ParamName);
+            Assert.Equal(
+                "propertyName",
+                Assert.Throws<ArgumentNullException>(() => new PropertyConstraintException("Message", (string)null)).ParamName);
         }
 
         [Fact]
         public void PropertyConstraintException_string_property_name_and_inner_exception_constructor_throws_if_passed_null_property_name()
         {
-            Assert.Equal("propertyName", Assert.Throws<ArgumentNullException>(() => new PropertyConstraintException("Message", (string)null, new Exception())).ParamName);
+            Assert.Equal(
+                "propertyName",
+                Assert.Throws<ArgumentNullException>(() => new PropertyConstraintException("Message", null, new Exception())).ParamName);
         }
 
         #endregion
@@ -87,7 +92,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void PropertyConstraintException_with_non_null_property_name_can_be_serialized_and_deserialized()
         {
-            var ex = ExceptionHelpers.SerializeAndDeserialize(new PropertyConstraintException("Message", "Property", new InvalidOperationException("Inner")));
+            var ex =
+                ExceptionHelpers.SerializeAndDeserialize(
+                    new PropertyConstraintException("Message", "Property", new InvalidOperationException("Inner")));
 
             Assert.Equal("Message", ex.Message);
             Assert.Equal("Property", ex.PropertyName);

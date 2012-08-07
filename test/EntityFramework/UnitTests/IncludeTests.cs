@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -14,15 +15,19 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for the Include extension methods on IQueryable.
-    /// </summary> 
+    ///     Unit tests for the Include extension methods on IQueryable.
+    /// </summary>
     public class IncludeTests : TestBase
     {
         #region Some fake entities with pseudo-relationships
 
         private static readonly DbQuery<RootEntity> _fakeDbQuery = new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object);
-        private static readonly DbQuery _fakeNonGenericDbQuery = new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object);
-        private static readonly ArgumentException _badLambdaException = new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path");
+
+        private static readonly DbQuery _fakeNonGenericDbQuery =
+            new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object);
+
+        private static readonly ArgumentException _badLambdaException =
+            new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path");
 
         public class RootEntity
         {
@@ -62,85 +67,109 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void String_Include_with_null_string_called_on_actual_DbQuery_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(null)).Message);
         }
 
         [Fact]
         public void String_Include_with_empty_string_called_on_actual_DbQuery_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include("")).Message);
         }
 
         [Fact]
         public void String_Include_with_whitespace_string_called_on_actual_DbQuery_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(" ")).Message);
         }
 
         [Fact]
         public void String_Include_with_null_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeDbQuery, (string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeDbQuery, null)).Message);
         }
 
         [Fact]
         public void String_Include_with_empty_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeDbQuery, "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeDbQuery, "")).Message);
         }
 
         [Fact]
         public void String_Include_with_whitespace_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeDbQuery, " ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeDbQuery, " ")).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_null_string_called_on_actual_DbQuery_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeNonGenericDbQuery.Include(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => _fakeNonGenericDbQuery.Include(null)).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_empty_string_called_on_actual_DbQuery_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeNonGenericDbQuery.Include("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => _fakeNonGenericDbQuery.Include("")).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_whitespace_string_called_on_actual_DbQuery_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => _fakeNonGenericDbQuery.Include(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => _fakeNonGenericDbQuery.Include(" ")).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_null_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeNonGenericDbQuery, (string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeNonGenericDbQuery, null)).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_empty_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeNonGenericDbQuery, "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeNonGenericDbQuery, "")).Message);
         }
 
         [Fact]
         public void Non_generic_String_Include_with_whitespace_string_called_on_extension_method_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("path"), Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeNonGenericDbQuery, " ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() => IQueryableExtensions.Include(_fakeNonGenericDbQuery, " ")).Message);
         }
 
         [Fact]
         public void Lambda_Include_with_null_expression_called_on_extension_method_throws()
         {
-            Assert.Equal("path", Assert.Throws<ArgumentNullException>(() => _fakeDbQuery.Include((Expression<Func<RootEntity, object>>)null)).ParamName);
+            Assert.Equal(
+                "path",
+                Assert.Throws<ArgumentNullException>(() => _fakeDbQuery.Include((Expression<Func<RootEntity, object>>)null)).ParamName);
         }
 
         [Fact]
         public void String_Include_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
+            Assert.Equal(
+                "source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
         }
 
         [Fact]
@@ -152,7 +181,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Lambda_Include_with_null_source_called_on_extension_method_throws()
         {
-            Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include<FakeEntity, int>(null, e => e.Id)).ParamName);
+            Assert.Equal(
+                "source",
+                Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include<FakeEntity, int>(null, e => e.Id)).ParamName);
         }
 
         #endregion
@@ -162,9 +193,14 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void String_Include_on_IEnumerable_does_nothing()
         {
-            var enumerable = new List<FakeEntity> {new FakeEntity(), new FakeEntity(), new FakeEntity()}.AsQueryable();
+            var enumerable = new List<FakeEntity>
+                                 {
+                                     new FakeEntity(),
+                                     new FakeEntity(),
+                                     new FakeEntity()
+                                 }.AsQueryable();
             var afterInclude = enumerable.Include("FakeRelationship");
-            
+
             Assert.Same(enumerable, afterInclude);
             Assert.Equal(3, afterInclude.Count());
         }
@@ -244,7 +280,12 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Non_generic_String_Include_on_IEnumerable_does_nothing()
         {
-            var enumerable = (IQueryable)new List<FakeEntity> { new FakeEntity(), new FakeEntity(), new FakeEntity() }.AsQueryable();
+            var enumerable = (IQueryable)new List<FakeEntity>
+                                             {
+                                                 new FakeEntity(),
+                                                 new FakeEntity(),
+                                                 new FakeEntity()
+                                             }.AsQueryable();
             var afterInclude = enumerable.Include("FakeRelationship");
 
             Assert.Same(enumerable, afterInclude);
@@ -303,7 +344,7 @@ namespace ProductivityApiUnitTests
         {
             var mockQueryable = new Mock<IIncludableReturningVoid>(MockBehavior.Strict);
 
-            var afterInclude = ((IQueryable) mockQueryable.Object).Include("FakeRelationship");
+            var afterInclude = ((IQueryable)mockQueryable.Object).Include("FakeRelationship");
 
             Assert.Same(mockQueryable.Object, afterInclude);
         }
@@ -324,7 +365,7 @@ namespace ProductivityApiUnitTests
         }
 
         #endregion
-        
+
         #region Positive Include(Lambda) expression parsing tests
 
         [Fact]
@@ -472,9 +513,19 @@ namespace ProductivityApiUnitTests
         {
             var mockQueryable = new Mock<IIncludable<RootEntity>>();
 
-            mockQueryable.Object.Include(e => e.RootReference.RootCollection.Select(r => r.Level1Reference.RootReference.Level1Collection.Select(l1 => l1.Level2Collection.Select(l2 => l2.Level3Collection.Select(l3 => l3.Level2Reference.Level1Collection.Select(l1b => l1b.RootReference))))));
+            mockQueryable.Object.Include(
+                e =>
+                e.RootReference.RootCollection.Select(
+                    r =>
+                    r.Level1Reference.RootReference.Level1Collection.Select(
+                        l1 =>
+                        l1.Level2Collection.Select(
+                            l2 => l2.Level3Collection.Select(l3 => l3.Level2Reference.Level1Collection.Select(l1b => l1b.RootReference))))));
 
-            mockQueryable.Verify(i => i.Include("RootReference.RootCollection.Level1Reference.RootReference.Level1Collection.Level2Collection.Level3Collection.Level2Reference.Level1Collection.RootReference"));
+            mockQueryable.Verify(
+                i =>
+                i.Include(
+                    "RootReference.RootCollection.Level1Reference.RootReference.Level1Collection.Level2Collection.Level3Collection.Level2Reference.Level1Collection.RootReference"));
         }
 
         #endregion
@@ -484,43 +535,56 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Lambda_Include_throws_when_given_fundamentaly_wrong_expression()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => new object())).Message);
+            Assert.Equal(
+                _badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => new object())).Message);
         }
 
         [Fact]
         public void Lambda_Include_throws_when_given_method_call_expression()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.GetType())).Message);
+            Assert.Equal(
+                _badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.GetType())).Message);
         }
 
         [Fact]
         public void Lambda_Include_throws_when_given_second_level_method_call_expression()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Reference.GetType())).Message);
+            Assert.Equal(
+                _badLambdaException.Message,
+                Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Reference.GetType())).Message);
         }
 
         [Fact]
         public void Lambda_Include_throws_when_given_first_level_method_call_with_second_level_property()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Reference.GetType().Assembly)).Message);
+            Assert.Equal(
+                _badLambdaException.Message,
+                Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Reference.GetType().Assembly)).Message);
         }
 
         [Fact]
         public void Lambda_Include_throws_when_given_call_to_something_other_than_Select()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Collection.First())).Message);
+            Assert.Equal(
+                _badLambdaException.Message,
+                Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Collection.First())).Message);
         }
 
         [Fact]
         public void Lambda_Include_throws_when_given_second_level_call_to_something_other_than_Select()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Collection.Select(l1 => l1.Level2Collection.Distinct()))).Message);
+            Assert.Equal(
+                _badLambdaException.Message,
+                Assert.Throws<ArgumentException>(
+                    () => _fakeDbQuery.Include(e => e.Level1Collection.Select(l1 => l1.Level2Collection.Distinct()))).Message);
         }
 
         [Fact]
         public void Lambda_Include_throws_when_given_first_level_call_to_something_other_than_Select_containing_expression()
         {
-            Assert.Equal(_badLambdaException.Message, Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Collection.Any(l1 => l1.BoolProperty))).Message);
+            Assert.Equal(
+                _badLambdaException.Message,
+                Assert.Throws<ArgumentException>(() => _fakeDbQuery.Include(e => e.Level1Collection.Any(l1 => l1.BoolProperty))).Message);
         }
 
         #endregion

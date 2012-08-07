@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
@@ -262,13 +263,13 @@ namespace System.Data.Entity.Internal.ConfigFile
                 Assert.Equal(
                     "MyProvider1",
                     ef.Providers.OfType<ProviderElement>().Single(p => p.InvariantName == "My.Invariant1").ProviderTypeName);
-                
+
                 Assert.Equal(
-                    "MyProvider2", 
+                    "MyProvider2",
                     ef.Providers.OfType<ProviderElement>().Single(p => p.InvariantName == "My.Invariant2").ProviderTypeName);
-                
+
                 Assert.Equal(
-                    "MyProvider1", 
+                    "MyProvider1",
                     ef.Providers.OfType<ProviderElement>().Single(p => p.InvariantName == "My.Invariant3").ProviderTypeName);
             }
 
@@ -304,7 +305,7 @@ namespace System.Data.Entity.Internal.ConfigFile
                 </configuration>");
 
             return ConfigurationManager.OpenMappedExeConfiguration(
-                new ExeConfigurationFileMap()
+                new ExeConfigurationFileMap
                     {
                         ExeConfigFilename = file
                     },

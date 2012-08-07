@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
@@ -27,7 +28,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
 
             new DependentNavigationPropertyConfiguration<D>(navigationPropertyConfiguration)
-                .HasForeignKey(d => new { d.Fk1, d.Fk2 });
+                .HasForeignKey(
+                    d => new
+                             {
+                                 d.Fk1,
+                                 d.Fk2
+                             });
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
 
@@ -41,8 +47,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
 
-            Assert.Equal(Strings.InvalidPropertiesExpression("d => d.ToString()"), Assert.Throws<InvalidOperationException>(() => new DependentNavigationPropertyConfiguration<D>(navigationPropertyConfiguration)
-                                                                                                                                            .HasForeignKey(d => d.ToString())).Message);
+            Assert.Equal(
+                Strings.InvalidPropertiesExpression("d => d.ToString()"),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DependentNavigationPropertyConfiguration<D>(navigationPropertyConfiguration)
+                              .HasForeignKey(d => d.ToString())).Message);
         }
 
         #region Test Fixtures

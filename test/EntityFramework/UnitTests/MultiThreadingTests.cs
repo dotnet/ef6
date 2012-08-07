@@ -16,10 +16,10 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests that execute the various places where we have thread-safe code with multiple threads
-    /// such that we have at least some chance of finding issues in this code. As with any test of this
-    /// type just because these tests pass does not mean that the code is correct. On the other hand,
-    /// if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
+    ///     Unit tests that execute the various places where we have thread-safe code with multiple threads
+    ///     such that we have at least some chance of finding issues in this code. As with any test of this
+    ///     type just because these tests pass does not mean that the code is correct. On the other hand,
+    ///     if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
     /// </summary>
     public class MultiThreadingTests : TestBase
     {
@@ -95,6 +95,7 @@ namespace ProductivityApiUnitTests
 
         [Fact]
         public void DbCompiledModel_GetConstructorDelegate_for_non_derived_ObjectContext_can_be_accessed_from_multiple_threads_concurrently(
+            
             )
         {
             DbCompiledModel_GetConstructorDelegate_can_be_accessed_from_multiple_threads_concurrently_implementation<ObjectContext>();
@@ -174,9 +175,9 @@ namespace ProductivityApiUnitTests
         private Database GetDatabaseForInitialization<TContext>() where TContext : DbContextUsingMockInternalContext, new()
         {
             var mock = new Mock<InternalContextForMockWithRealContext<TContext>>
-                {
-                    CallBase = true
-                };
+                           {
+                               CallBase = true
+                           };
             mock.Setup(c => c.UseTempObjectContext()).Callback(() => { });
             return new Database(mock.Object);
         }
@@ -354,9 +355,9 @@ namespace ProductivityApiUnitTests
                 () =>
                     {
                         var internalContext = new Mock<InternalContextForMock>
-                            {
-                                CallBase = true
-                            }.Object;
+                                                  {
+                                                      CallBase = true
+                                                  }.Object;
                         var set = internalContext.Set(typeof(FakeEntity));
                         Assert.IsType<InternalDbSet<FakeEntity>>(set);
                     });
@@ -459,10 +460,10 @@ namespace ProductivityApiUnitTests
                                 throw new Exception("Fail!");
                             }
                             return new InitializerOutput
-                                {
-                                    Input = i,
-                                    Count = count
-                                };
+                                       {
+                                           Input = i,
+                                           Count = count
+                                       };
                         }
                     });
 

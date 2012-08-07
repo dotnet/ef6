@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -13,7 +14,7 @@ namespace System.Data.Entity
         {
             return mockPropertyInfo.Object;
         }
-        
+
         public MockPropertyInfo()
             : this(typeof(object), "P")
         {

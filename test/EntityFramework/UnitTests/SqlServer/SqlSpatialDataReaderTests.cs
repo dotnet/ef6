@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
@@ -69,7 +70,8 @@ namespace System.Data.Entity.SqlServer
             {
                 var writer = new BinaryWriter(memoryStream);
 
-                MethodInfo writeMethod = spatialProviderValueToReturn.GetType().GetMethod("Write", BindingFlags.Public | BindingFlags.Instance,
+                var writeMethod = spatialProviderValueToReturn.GetType().GetMethod(
+                    "Write", BindingFlags.Public | BindingFlags.Instance,
                     binder: null, types: new[] { typeof(BinaryWriter) }, modifiers: null);
                 writeMethod.Invoke(spatialProviderValueToReturn, new[] { writer });
                 var sqlBytes = new SqlBytes(memoryStream.ToArray());

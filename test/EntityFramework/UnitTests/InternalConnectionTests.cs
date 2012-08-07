@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -14,7 +15,7 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Tests for creating and managing connections using IInternalConnection.
+    ///     Tests for creating and managing connections using IInternalConnection.
     /// </summary>
     public class InternalConnectionTests : TestBase
     {
@@ -24,9 +25,11 @@ namespace ProductivityApiUnitTests
         public void Existing_connection_provided_is_returned()
         {
             using (var connection = new SqlConnection())
-            using (var internalConnection = new EagerInternalConnection(connection, connectionOwned: false))
             {
-                Assert.Same(connection, internalConnection.Connection);
+                using (var internalConnection = new EagerInternalConnection(connection, connectionOwned: false))
+                {
+                    Assert.Same(connection, internalConnection.Connection);
+                }
             }
         }
 
@@ -124,7 +127,9 @@ namespace ProductivityApiUnitTests
         {
             using (var internalConnection = new LazyInternalConnection("ConnectionWithoutProviderName"))
             {
-                Assert.Equal(Strings.DbContext_ProviderNameMissing("ConnectionWithoutProviderName"), Assert.Throws<InvalidOperationException>(() => { var _ = internalConnection.Connection; }).Message);
+                Assert.Equal(
+                    Strings.DbContext_ProviderNameMissing("ConnectionWithoutProviderName"),
+                    Assert.Throws<InvalidOperationException>(() => { var _ = internalConnection.Connection; }).Message);
             }
         }
 
@@ -188,7 +193,8 @@ namespace ProductivityApiUnitTests
 
             using (var internalConnection = new LazyInternalConnection("Step1=YouNeedToAsk?"))
             {
-                Assert.Equal(expectedException.Message, Assert.Throws<ArgumentException>(() => { var _ = internalConnection.Connection; }).Message);
+                Assert.Equal(
+                    expectedException.Message, Assert.Throws<ArgumentException>(() => { var _ = internalConnection.Connection; }).Message);
             }
         }
 
@@ -304,7 +310,9 @@ namespace ProductivityApiUnitTests
                 DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new Mock<IDbConnectionFactory>().Object;
                 using (var internalConnection = new LazyInternalConnection("NameNotInAppConfig"))
                 {
-                    Assert.Equal(Strings.DbContext_ConnectionFactoryReturnedNullConnection, Assert.Throws<InvalidOperationException>(() => { var _ = internalConnection.Connection; }).Message);
+                    Assert.Equal(
+                        Strings.DbContext_ConnectionFactoryReturnedNullConnection,
+                        Assert.Throws<InvalidOperationException>(() => { var _ = internalConnection.Connection; }).Message);
                 }
             }
             finally
@@ -320,7 +328,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Existing_connection_is_not_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var connection = new SqlConnection())
             {
                 connection.Disposed += (_, __) => disposed = true;
@@ -338,7 +346,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Existing_connection_is_disposed_after_use_if_it_is_owned_by_the_connection_object()
         {
-            bool disposed = false;
+            var disposed = false;
             var connection = new SqlConnection();
 
             connection.Disposed += (_, __) => disposed = true;
@@ -354,7 +362,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Connection_created_from_app_config_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var internalConnection = new LazyInternalConnection("Couger35.Hubcap.FullNameDbContext"))
             {
                 var connection = internalConnection.Connection;
@@ -366,7 +374,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Connection_created_from_hard_coded_connection_string_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var internalConnection = new LazyInternalConnection("Database=HardCodedConnectionString"))
             {
                 var connection = internalConnection.Connection;
@@ -378,7 +386,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Connection_created_from_factory_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var internalConnection = new LazyInternalConnection("NameForFactory"))
             {
                 var connection = internalConnection.Connection;
@@ -393,8 +401,8 @@ namespace ProductivityApiUnitTests
             var internalConnection = new LazyInternalConnection("NameForFactory");
             try
             {
-                int disposed1 = 0;
-                int disposed2 = 0;
+                var disposed1 = 0;
+                var disposed2 = 0;
 
                 var connection1 = internalConnection.Connection;
                 connection1.Disposed += (_, __) => disposed1++;
@@ -419,7 +427,7 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Disposed_EagerInternalConnection_created_with_existing_connection_can_be_reused()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var connection = new SqlConnection())
             {
                 connection.Disposed += (_, __) => disposed = true;
@@ -450,7 +458,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void LazyInternalConnection_can_create_connection_from_DbConnectionInfo_with_connection_string()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("Database=DatabaseFromDbConnectionInfo", "System.Data.SqlClient")))
+            using (
+                var connection =
+                    new LazyInternalConnection(new DbConnectionInfo("Database=DatabaseFromDbConnectionInfo", "System.Data.SqlClient")))
             {
                 Assert.IsType<SqlConnection>(connection.Connection);
                 Assert.Equal("DatabaseFromDbConnectionInfo", connection.Connection.Database);
@@ -476,7 +486,9 @@ namespace ProductivityApiUnitTests
         {
             using (var connection = new LazyInternalConnection(new DbConnectionInfo("YouWontFindMe")))
             {
-                Assert.Equal(Strings.DbConnectionInfo_ConnectionStringNotFound("YouWontFindMe"), Assert.Throws<InvalidOperationException>(() => { var temp = connection.Connection; }).Message);
+                Assert.Equal(
+                    Strings.DbConnectionInfo_ConnectionStringNotFound("YouWontFindMe"),
+                    Assert.Throws<InvalidOperationException>(() => { var temp = connection.Connection; }).Message);
             }
         }
 
@@ -485,7 +497,10 @@ namespace ProductivityApiUnitTests
         {
             using (var connection = new LazyInternalConnection(new DbConnectionInfo("LazyConnectionTest")))
             {
-                connection.AppConfig = new AppConfig(CreateEmptyConfig().AddConnectionString("LazyConnectionTest", "Database=FromOverridenConfig", "System.Data.SqlClient"));
+                connection.AppConfig =
+                    new AppConfig(
+                        CreateEmptyConfig().AddConnectionString(
+                            "LazyConnectionTest", "Database=FromOverridenConfig", "System.Data.SqlClient"));
 
                 Assert.IsType<SqlConnection>(connection.Connection);
                 Assert.Equal("FromOverridenConfig", connection.Connection.Database);
@@ -597,7 +612,9 @@ namespace ProductivityApiUnitTests
         {
             using (var connection = new LazyInternalConnection("name=WontFindMe"))
             {
-                Assert.Equal(Strings.DbContext_ConnectionStringNotFound("WontFindMe"), Assert.Throws<InvalidOperationException>(() => { var temp = connection.ConnectionHasModel; }).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionStringNotFound("WontFindMe"),
+                    Assert.Throws<InvalidOperationException>(() => { var temp = connection.ConnectionHasModel; }).Message);
             }
         }
 
@@ -606,7 +623,9 @@ namespace ProductivityApiUnitTests
         {
             using (var connection = new LazyInternalConnection(new DbConnectionInfo("WontFindMe")))
             {
-                Assert.Equal(Strings.DbConnectionInfo_ConnectionStringNotFound("WontFindMe"), Assert.Throws<InvalidOperationException>(() => { var temp = connection.ConnectionHasModel; }).Message);
+                Assert.Equal(
+                    Strings.DbConnectionInfo_ConnectionStringNotFound("WontFindMe"),
+                    Assert.Throws<InvalidOperationException>(() => { var temp = connection.ConnectionHasModel; }).Message);
             }
         }
 
@@ -631,7 +650,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void LazyInternalConnection_provider_name_calculated_when_connection_from_DbConnectionInfo()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("Data Source=ConnectionFromDbConnectionInfo.sdf", "System.Data.SqlServerCe.4.0")))
+            using (
+                var connection =
+                    new LazyInternalConnection(
+                        new DbConnectionInfo("Data Source=ConnectionFromDbConnectionInfo.sdf", "System.Data.SqlServerCe.4.0")))
             {
                 Assert.Equal("System.Data.SqlServerCe.4.0", connection.ProviderName);
             }

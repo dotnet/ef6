@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.UnitTests
 {
     using System.Collections.Generic;
@@ -18,13 +19,20 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
     using System.Reflection;
     using Moq;
     using Xunit;
-    using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration;
-    using DateTimePropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
-    using DecimalPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
-    using LengthPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration;
-    using NavigationPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation.NavigationPropertyConfiguration;
-    using PrimitivePropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
-    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration;
+    using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration
+        ;
+    using DateTimePropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
+    using DecimalPropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
+    using LengthPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration
+        ;
+    using NavigationPropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation.NavigationPropertyConfiguration;
+    using PrimitivePropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
+    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration
+        ;
 
     public sealed class DbModelBuilderTests
     {
@@ -84,7 +92,9 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             modelBuilder.Entity<object>();
 
-            Assert.Equal(Strings.InvalidEntityType(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -94,7 +104,9 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             modelBuilder.ComplexType<object>();
 
-            Assert.Equal(Strings.CodeFirstInvalidComplexType(typeof(object)), Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.CodeFirstInvalidComplexType(typeof(object)),
+                Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -187,12 +199,14 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
         private void VerifyFieldCount<T>(int expectedCount)
         {
-            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            const BindingFlags bindingFlags =
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
 
             var actualCount = typeof(T).GetFields(bindingFlags).Count();
             if (expectedCount != actualCount)
             {
-                Assert.True(false,
+                Assert.True(
+                    false,
                     String.Format(
                         "The number of fields on {0} was expected to be {1} but is {2}. If a field has been added then make sure it is being properly copied by Clone and then update this test.",
                         typeof(T).Name, expectedCount, actualCount));
@@ -203,7 +217,11 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         public void Cloning_the_conventions_configuration_clones_the_list_of_conventions_but_not_the_conventions_themselves()
         {
             var convention1 = new Mock<IConvention>().Object;
-            var conventions = new ConventionsConfiguration(new List<IConvention> { convention1 });
+            var conventions = new ConventionsConfiguration(
+                new List<IConvention>
+                    {
+                        convention1
+                    });
 
             Assert.Same(conventions.Conventions, conventions.Conventions);
 
@@ -297,7 +315,11 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.Property(new PropertyPath(mockPropertyInfo2)).ColumnOrder = 1;
 
             // This will set _isKeyConfigured to true
-            configuration.Key(new List<PropertyInfo> { mockPropertyInfo1 });
+            configuration.Key(
+                new List<PropertyInfo>
+                    {
+                        mockPropertyInfo1
+                    });
 
             var clone = configuration.Clone();
 
@@ -309,7 +331,11 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             VerifyKeyProperty(clone, "P1", mockPropertyInfo1, mockPropertyInfo2);
 
             // This should change the key on the original, but not on the clone.
-            configuration.Key(new List<PropertyInfo> { mockPropertyInfo2 });
+            configuration.Key(
+                new List<PropertyInfo>
+                    {
+                        mockPropertyInfo2
+                    });
 
             VerifyKeyProperty(configuration, "P2", mockPropertyInfo1, mockPropertyInfo2);
             VerifyKeyProperty(clone, "P1", mockPropertyInfo1, mockPropertyInfo2);
@@ -326,7 +352,10 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
         private EdmEntityType CreateEntityTypeWithProperties(params PropertyInfo[] props)
         {
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             foreach (var prop in props)
             {
                 entityType.AddPrimitiveProperty(prop.Name).PropertyType.EdmType = EdmPrimitiveType.Int32;
@@ -504,7 +533,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.IsRowVersion = true;
 
             var clone = (BinaryPropertyConfiguration)
-                Cloning_a_length_property_configuration_clones_its_property_information(configuration);
+                        Cloning_a_length_property_configuration_clones_its_property_information(configuration);
 
             Assert.True(clone.IsRowVersion.Value);
         }
@@ -523,7 +552,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.Scale = 101;
 
             var clone = (DecimalPropertyConfiguration)
-                Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(configuration);
+                        Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(configuration);
 
             Assert.Equal(100, clone.Precision.Value);
             Assert.Equal(101, clone.Scale.Value);
@@ -542,7 +571,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.Precision = 100;
 
             var clone = (DateTimePropertyConfiguration)
-                Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(configuration);
+                        Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(configuration);
 
             Assert.Equal(100, clone.Precision.Value);
         }
@@ -560,7 +589,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.IsUnicode = true;
 
             var clone = (StringPropertyConfiguration)
-                Cloning_a_length_property_configuration_clones_its_property_information(configuration);
+                        Cloning_a_length_property_configuration_clones_its_property_information(configuration);
 
             Assert.True(clone.IsUnicode.Value);
         }
@@ -577,14 +606,15 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             VerifyFieldCount<LengthPropertyConfiguration>(3);
         }
 
-        private LengthPropertyConfiguration Cloning_a_length_property_configuration_clones_its_property_information(LengthPropertyConfiguration configuration)
+        private LengthPropertyConfiguration Cloning_a_length_property_configuration_clones_its_property_information(
+            LengthPropertyConfiguration configuration)
         {
             configuration.IsFixedLength = true;
             configuration.IsMaxLength = true;
             configuration.MaxLength = 77;
 
             var clone = (LengthPropertyConfiguration)
-                Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(configuration);
+                        Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(configuration);
 
             Assert.True(clone.IsFixedLength.Value);
             Assert.True(clone.IsMaxLength.Value);
@@ -593,7 +623,8 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             return clone;
         }
 
-        private PrimitivePropertyConfiguration Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(PrimitivePropertyConfiguration configuration)
+        private PrimitivePropertyConfiguration Cloning_a_primitive_property_configuration_clones_its_property_information_implementation(
+            PrimitivePropertyConfiguration configuration)
         {
             configuration.IsNullable = true;
             configuration.ConcurrencyMode = EdmConcurrencyMode.Fixed;
@@ -655,7 +686,11 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             configuration.Constraint =
-                new ForeignKeyConstraintConfiguration(new List<PropertyInfo> { new MockPropertyInfo(typeof(int), "P1") });
+                new ForeignKeyConstraintConfiguration(
+                    new List<PropertyInfo>
+                        {
+                            new MockPropertyInfo(typeof(int), "P1")
+                        });
 
             var clone = configuration.Clone();
 
@@ -683,7 +718,11 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         public void Cloning_a_foreign_key_constraint_clones_its_property_information()
         {
             var configuration =
-                new ForeignKeyConstraintConfiguration(new List<PropertyInfo> { new MockPropertyInfo(typeof(int), "P1") });
+                new ForeignKeyConstraintConfiguration(
+                    new List<PropertyInfo>
+                        {
+                            new MockPropertyInfo(typeof(int), "P1")
+                        });
 
             var clone = (ForeignKeyConstraintConfiguration)configuration.Clone();
 
@@ -776,7 +815,10 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var configuration = new EntityMappingConfiguration();
 
             var propertyInfo1 = new MockPropertyInfo(typeof(int), "P1");
-            configuration.Properties = new List<PropertyPath> { new PropertyPath(propertyInfo1) };
+            configuration.Properties = new List<PropertyPath>
+                                           {
+                                               new PropertyPath(propertyInfo1)
+                                           };
 
             configuration.TableName = new DatabaseName("T", "S");
 
@@ -797,8 +839,9 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             configuration.AddValueCondition(new ValueConditionConfiguration(configuration, "D2"));
             configuration.AddNullabilityCondition(
-                new NotNullConditionConfiguration(configuration,
-                                                  new PropertyPath(new MockPropertyInfo(typeof(int), "P2"))));
+                new NotNullConditionConfiguration(
+                    configuration,
+                    new PropertyPath(new MockPropertyInfo(typeof(int), "P2"))));
 
             Assert.False(clone.ValueConditions.Any(c => c.Discriminator == "D2"));
             Assert.False(clone.NullabilityConditions.Any(c => c.PropertyPath[0].Name == "P2"));
@@ -845,8 +888,9 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         public void Cloning_a_null_condition_clones_its_property_info()
         {
             var entityConfiguration = new EntityMappingConfiguration();
-            var configuration = new NotNullConditionConfiguration(entityConfiguration,
-                                                                  new PropertyPath(new MockPropertyInfo(typeof(int), "P")));
+            var configuration = new NotNullConditionConfiguration(
+                entityConfiguration,
+                new PropertyPath(new MockPropertyInfo(typeof(int), "P")));
 
             var clone = configuration.Clone(entityConfiguration);
 

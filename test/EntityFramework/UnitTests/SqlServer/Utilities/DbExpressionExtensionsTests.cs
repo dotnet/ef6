@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.Utilities
 {
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -49,7 +50,7 @@ namespace System.Data.Entity.SqlServer.Utilities
         {
             var mockRoot = new Mock<DbExpression>();
             mockRoot.Setup(m => m.ExpressionKind).Returns(kind);
-            
+
             return mockRoot;
         }
     }

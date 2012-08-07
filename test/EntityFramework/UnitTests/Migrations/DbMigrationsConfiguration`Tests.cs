@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Config;
@@ -13,11 +14,11 @@ namespace System.Data.Entity.Migrations
         public void Can_get_and_set_migration_context_properties()
         {
             var migrationsConfiguration = new DbMigrationsConfiguration
-                {
-                    AutomaticMigrationsEnabled = false,
-                    ContextType = typeof(ShopContext_v1),
-                    CodeGenerator = new Mock<MigrationCodeGenerator>().Object
-                };
+                                              {
+                                                  AutomaticMigrationsEnabled = false,
+                                                  ContextType = typeof(ShopContext_v1),
+                                                  CodeGenerator = new Mock<MigrationCodeGenerator>().Object
+                                              };
 
             Assert.False(migrationsConfiguration.AutomaticMigrationsEnabled);
             Assert.NotNull(migrationsConfiguration.CodeGenerator);

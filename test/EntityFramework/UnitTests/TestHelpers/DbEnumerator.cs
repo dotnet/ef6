@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.TestHelpers
 {
     using System.Collections;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.TestHelpers
 
     public class DbEnumeratorShim<TElement> : IDbEnumerator<TElement>
     {
-        private IEnumerator<TElement> _enumerator;
+        private readonly IEnumerator<TElement> _enumerator;
 
         public DbEnumeratorShim(IEnumerator<TElement> enumerator)
         {

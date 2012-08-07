@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
     using System.Data.Entity;
@@ -185,7 +186,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             model.AddEntitySet("PSet", principalEntityType);
             model.AddEntitySet("DSet", dependentEntityType);
             var associationType
-                = model.AddAssociationType("P_D",
+                = model.AddAssociationType(
+                    "P_D",
                     principalEntityType, EdmAssociationEndKind.Required,
                     dependentEntityType, EdmAssociationEndKind.Many);
             model.AddAssociationSet("P_DSet", associationType);
@@ -194,7 +196,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var foreignKeyConstraint
-                = databaseMapping.GetEntityTypeMapping(dependentEntityType).TypeMappingFragments.Single().Table.ForeignKeyConstraints.Single();
+                =
+                databaseMapping.GetEntityTypeMapping(dependentEntityType).TypeMappingFragments.Single().Table.ForeignKeyConstraints.Single();
 
             Assert.Equal(2, foreignKeyConstraint.DependentColumns.Count);
             Assert.Equal(associationType.Name, foreignKeyConstraint.Name);
@@ -222,15 +225,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             model.AddEntitySet("PSet", principalEntityType);
             model.AddEntitySet("DSet", dependentEntityType);
             var associationType
-                = model.AddAssociationType("P_D",
+                = model.AddAssociationType(
+                    "P_D",
                     principalEntityType, EdmAssociationEndKind.Required,
                     dependentEntityType, EdmAssociationEndKind.Many);
             associationType.Constraint
                 = new EdmAssociationConstraint
-                    {
-                        DependentEnd = associationType.TargetEnd,
-                        DependentProperties = new[] { dependentProperty1, dependentProperty2 },
-                    };
+                      {
+                          DependentEnd = associationType.TargetEnd,
+                          DependentProperties = new[] { dependentProperty1, dependentProperty2 },
+                      };
             associationType.SourceEnd.DeleteAction = EdmOperationAction.Cascade;
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);

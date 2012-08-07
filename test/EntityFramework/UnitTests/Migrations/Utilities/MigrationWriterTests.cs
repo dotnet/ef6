@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Utilities
 {
     extern alias powershell;
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Migrations.Utilities
         {
             TestWrite(
                 (writer, scaffoldedMigration) =>
-                    writer.Write(scaffoldedMigration));
+                writer.Write(scaffoldedMigration));
         }
 
         [Fact]
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Migrations.Utilities
 
             TestWrite(
                 (writer, scaffoldedMigration) =>
-                    writer.Write(scaffoldedMigration, rescaffolding: true));
+                writer.Write(scaffoldedMigration, rescaffolding: true));
         }
 
         [Fact]
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Migrations.Utilities
 
             TestWrite(
                 (writer, scaffoldedMigration) =>
-                    writer.Write(scaffoldedMigration, rescaffolding: true, name: MigrationName),
+                writer.Write(scaffoldedMigration, rescaffolding: true, name: MigrationName),
                 skipUserCodeVerification: true);
 
             var userCodePath = Path.Combine(_projectDir, UserCodePath);
@@ -78,7 +79,7 @@ namespace System.Data.Entity.Migrations.Utilities
 
             TestWrite(
                 (writer, scaffoldedMigration) =>
-                    writer.Write(scaffoldedMigration, rescaffolding: true, force: true));
+                writer.Write(scaffoldedMigration, rescaffolding: true, force: true));
         }
 
         public void Dispose()
@@ -109,17 +110,17 @@ namespace System.Data.Entity.Migrations.Utilities
             var command = CreateCommand(_projectDir);
             var writer = new MigrationWriter(command);
             var scaffoldedMigration = new ScaffoldedMigration
-                {
-                    MigrationId = MigrationId,
-                    Language = Language,
-                    Directory = MigrationsDirectory,
-                    UserCode = "The user code.",
-                    DesignerCode = "The designer code.",
-                    Resources =
-                        {
-                            { ResourceName, "The resource." }
-                        }
-                };
+                                          {
+                                              MigrationId = MigrationId,
+                                              Language = Language,
+                                              Directory = MigrationsDirectory,
+                                              UserCode = "The user code.",
+                                              DesignerCode = "The designer code.",
+                                              Resources =
+                                                  {
+                                                      { ResourceName, "The resource." }
+                                                  }
+                                          };
 
             var relativeUserCodePath = action(writer, scaffoldedMigration);
 
@@ -159,14 +160,14 @@ namespace System.Data.Entity.Migrations.Utilities
             projectItems.SetupGet(pi => pi.Kind).Returns(ProjectExtensions.VsProjectItemKindPhysicalFolder);
             projectItems.Setup(pi => pi.AddFromDirectory(It.IsAny<string>())).Returns(
                 () =>
-                {
-                    var dirProjectItems = new Mock<ProjectItems>();
+                    {
+                        var dirProjectItems = new Mock<ProjectItems>();
 
-                    var dirProjectItem = new Mock<ProjectItem>();
-                    dirProjectItem.SetupGet(pi => pi.ProjectItems).Returns(dirProjectItems.Object);
+                        var dirProjectItem = new Mock<ProjectItem>();
+                        dirProjectItem.SetupGet(pi => pi.ProjectItems).Returns(dirProjectItems.Object);
 
-                    return dirProjectItem.Object;
-                });
+                        return dirProjectItem.Object;
+                    });
 
             var project = new Mock<Project>();
             projectItems.SetupGet(pi => pi.Parent).Returns(() => project.Object);

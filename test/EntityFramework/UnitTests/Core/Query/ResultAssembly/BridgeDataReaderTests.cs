@@ -40,11 +40,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                                      CallBase = true
                                  };
 
-            shaperMock.Setup(m => m.GetEnumerator()).Returns(() =>
-                {
-                    Assert.True(false);
-                    return null;
-                });
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(
+                () =>
+                    {
+                        Assert.True(false);
+                        return null;
+                    });
 
             // Verify these methods don't cause initialization
             var bridgeDataReader = new BridgeDataReader(shaperMock.Object, rootCoordinatorFactory, 0, null);
@@ -133,9 +134,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 rootCoordinatorFactory,
                 /*checkPermissions*/ null,
                 /*readerOwned*/ false)
-            {
-                CallBase = true
-            };
+                                 {
+                                     CallBase = true
+                                 };
 
             var bridgeDataReaderMock = new Mock<BridgeDataReader>(shaperMock.Object, rootCoordinatorFactory, 0, null)
                                            {
@@ -155,7 +156,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             if (async)
             {
-                bridgeDataReaderMock.Protected().Verify<Task>("EnsureInitializedAsync", Times.AtLeastOnce(), ItExpr.IsAny<CancellationToken>());
+                bridgeDataReaderMock.Protected().Verify<Task>(
+                    "EnsureInitializedAsync", Times.AtLeastOnce(), ItExpr.IsAny<CancellationToken>());
             }
             else
             {
@@ -177,7 +179,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 }
             }
             while (bridgeDataReader.NextResult());
-
 
             Assert.Equal(new[] { 1, 2, 1, 3 }.ToList(), actualValues);
         }
@@ -202,19 +203,22 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         private BridgeDataReader CreateNestedBridgeDataReader(DbDataReader dataReader = null)
         {
-            var sourceEnumerable1 = new[] {
-                                           new object[] { 1 },
-                                           new object[] { null },
-                                           new object[] { 2 },
-                                           new object[] { 2 }
-                                       };
+            var sourceEnumerable1 = new[]
+                                        {
+                                            new object[] { 1 },
+                                            new object[] { null },
+                                            new object[] { 2 },
+                                            new object[] { 2 }
+                                        };
 
-            var sourceEnumerable2 = new[] {
-                                           new object[] { 1 },
-                                           new object[] { 3 },
-                                       };
+            var sourceEnumerable2 = new[]
+                                        {
+                                            new object[] { 1 },
+                                            new object[] { 3 },
+                                        };
 
-            dataReader = dataReader ?? Common.Internal.Materialization.MockHelper.CreateMockDbDataReader(sourceEnumerable1, sourceEnumerable2);
+            dataReader = dataReader
+                         ?? Common.Internal.Materialization.MockHelper.CreateMockDbDataReader(sourceEnumerable1, sourceEnumerable2);
 
             var rootCoordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,
@@ -232,9 +236,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 rootCoordinatorFactory,
                 /*checkPermissions*/ null,
                 /*readerOwned*/ false)
-            {
-                CallBase = true
-            };
+                                 {
+                                     CallBase = true
+                                 };
 
             var rootCoordinatorFactory2 = Objects.MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,
@@ -252,13 +256,14 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 rootCoordinatorFactory2,
                 /*checkPermissions*/ null,
                 /*readerOwned*/ false)
-            {
-                CallBase = true
-            };
+                                  {
+                                      CallBase = true
+                                  };
 
             var nextResultInfo = new[]
                                      {
-                                         new KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>(shaperMock2.Object, rootCoordinatorFactory2)
+                                         new KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>(
+                                             shaperMock2.Object, rootCoordinatorFactory2)
                                      }.ToList();
 
             return new BridgeDataReader(shaperMock.Object, rootCoordinatorFactory, 0, nextResultInfo.GetEnumerator());
@@ -267,39 +272,41 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         [Fact]
         public void CloseImplicitly_consumes_reader()
         {
-            bool readCalled = false;
-            bool nextResultCalled = false;
+            var readCalled = false;
+            var nextResultCalled = false;
 
             var dbDataReaderMock = new Mock<DbDataReader>();
             dbDataReaderMock
                 .Setup(m => m.Read())
-                .Returns(() =>
-                {
-                    if (readCalled)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        readCalled = true;
-                        return true;
-                    }
-                });
+                .Returns(
+                    () =>
+                        {
+                            if (readCalled)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                readCalled = true;
+                                return true;
+                            }
+                        });
 
             dbDataReaderMock
                 .Setup(m => m.NextResult())
-                .Returns(() =>
-                    {
-                        if (nextResultCalled)
+                .Returns(
+                    () =>
                         {
-                            return false;
-                        }
-                        else
-                        {
-                            nextResultCalled = true;
-                            return true;
-                        }
-                    });
+                            if (nextResultCalled)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                nextResultCalled = true;
+                                return true;
+                            }
+                        });
 
             var bridgeDataReader = CreateNestedBridgeDataReader(dbDataReaderMock.Object);
 
@@ -313,40 +320,42 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         [Fact]
         public void CloseImplicitlyAsync_consumes_reader()
         {
-            bool readCalled = false;
-            bool nextResultCalled = false;
+            var readCalled = false;
+            var nextResultCalled = false;
 
             var dbDataReaderMock = new Mock<DbDataReader>();
 
             dbDataReaderMock
                 .Setup(m => m.ReadAsync(It.IsAny<CancellationToken>()))
-                .Returns((CancellationToken ct) =>
-                {
-                    if (readCalled)
-                    {
-                        return Task.FromResult(false);
-                    }
-                    else
-                    {
-                        readCalled = true;
-                        return Task.FromResult(true);
-                    }
-                });
+                .Returns(
+                    (CancellationToken ct) =>
+                        {
+                            if (readCalled)
+                            {
+                                return Task.FromResult(false);
+                            }
+                            else
+                            {
+                                readCalled = true;
+                                return Task.FromResult(true);
+                            }
+                        });
 
             dbDataReaderMock
                 .Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>()))
-                .Returns((CancellationToken ct) =>
-                {
-                    if (nextResultCalled)
-                    {
-                        return Task.FromResult(false);
-                    }
-                    else
-                    {
-                        nextResultCalled = true;
-                        return Task.FromResult(true);
-                    }
-                });
+                .Returns(
+                    (CancellationToken ct) =>
+                        {
+                            if (nextResultCalled)
+                            {
+                                return Task.FromResult(false);
+                            }
+                            else
+                            {
+                                nextResultCalled = true;
+                                return Task.FromResult(true);
+                            }
+                        });
 
             var bridgeDataReader = CreateNestedBridgeDataReader(dbDataReaderMock.Object);
 

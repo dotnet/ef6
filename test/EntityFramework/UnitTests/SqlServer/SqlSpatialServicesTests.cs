@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
@@ -124,7 +125,7 @@ namespace System.Data.Entity.SqlServer
             Assert.Equal(dbGeography.ProviderValue, convertedDbGeography.ProviderValue);
             Assert.Equal(dbGeography.CoordinateSystemId, convertedDbGeography.CoordinateSystemId);
         }
-        
+
         [Fact]
         public void GeometryFromProviderValue_returns_null_for_null_value()
         {
@@ -171,7 +172,8 @@ namespace System.Data.Entity.SqlServer
         {
             Assert.Equal(
                 "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                new SqlSpatialServices(null, new StreamingContext()).GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName);
+                new SqlSpatialServices(null, new StreamingContext()).GeometryFromText("POINT (90 50)").ProviderValue.GetType().
+                    AssemblyQualifiedName);
         }
 
         [Fact]

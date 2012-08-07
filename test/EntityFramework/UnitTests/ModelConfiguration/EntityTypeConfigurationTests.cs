@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.UnitTests
 {
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -49,24 +50,30 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         {
             var entityConfiguration = new EntityTypeConfiguration<object>();
 
-            Assert.Equal(Strings.InvalidPropertiesExpression("o => o.ToString()"), Assert.Throws<InvalidOperationException>(() => entityConfiguration.HasKey(o => o.ToString())).Message);
+            Assert.Equal(
+                Strings.InvalidPropertiesExpression("o => o.ToString()"),
+                Assert.Throws<InvalidOperationException>(() => entityConfiguration.HasKey(o => o.ToString())).Message);
         }
 
         [Fact]
         public void HasKey_should_throw_with_null_expression()
         {
-            Assert.Equal(Error.ArgumentNull("keyExpression").Message, Assert.Throws<ArgumentNullException>(() => new EntityTypeConfiguration<object>().HasKey<int>(null)).Message);
+            Assert.Equal(
+                Error.ArgumentNull("keyExpression").Message,
+                Assert.Throws<ArgumentNullException>(() => new EntityTypeConfiguration<object>().HasKey<int>(null)).Message);
         }
 
         [Fact]
         public void Map_TDerived_should_throw_for_repeat_configuration_of_derived_type()
         {
             var entityConfiguration = new EntityTypeConfiguration<A>();
-            Assert.Equal(Strings.InvalidChainedMappingSyntax("B"), Assert.Throws<InvalidOperationException>(() => entityConfiguration
-                                                                                                                            .Map<A>(m => m.ToTable("A"))
-                                                                                                                            .Map<B>(mb => mb.ToTable("B"))
-                                                                                                                            .Map<C>(mc => mc.ToTable("C"))
-                                                                                                                            .Map<B>(mb2 => mb2.ToTable("B"))).Message);
+            Assert.Equal(
+                Strings.InvalidChainedMappingSyntax("B"), Assert.Throws<InvalidOperationException>(
+                    () => entityConfiguration
+                              .Map<A>(m => m.ToTable("A"))
+                              .Map<B>(mb => mb.ToTable("B"))
+                              .Map<C>(mc => mc.ToTable("C"))
+                              .Map<B>(mb2 => mb2.ToTable("B"))).Message);
         }
 
         [Fact]

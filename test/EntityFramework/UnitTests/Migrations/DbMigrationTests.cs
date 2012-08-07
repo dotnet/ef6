@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
@@ -160,7 +161,14 @@ namespace System.Data.Entity.Migrations
         {
             var migration = new TestMigration();
 
-            migration.CreateTable("Foo", cs => new { Id = cs.Int() }, new { Foo = 123 });
+            migration.CreateTable(
+                "Foo", cs => new
+                                 {
+                                     Id = cs.Int()
+                                 }, new
+                                        {
+                                            Foo = 123
+                                        });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -190,10 +198,10 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                    {
-                        Id = cs.Int(),
-                        Name = cs.String()
-                    });
+                          {
+                              Id = cs.Int(),
+                              Name = cs.String()
+                          });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -219,9 +227,9 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                    {
-                        Id = cs.Int(name: "Customer Id")
-                    });
+                          {
+                              Id = cs.Int(name: "Customer Id")
+                          });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -239,11 +247,16 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                    {
-                        Id = cs.Int(),
-                        Name = cs.String()
-                    })
-                .Index(t => new { t.Id, t.Name }, unique: true);
+                          {
+                              Id = cs.Int(),
+                              Name = cs.String()
+                          })
+                .Index(
+                    t => new
+                             {
+                                 t.Id,
+                                 t.Name
+                             }, unique: true);
 
             var createIndexOperation = migration.Operations.OfType<CreateIndexOperation>().Single();
 

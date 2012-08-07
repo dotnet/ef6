@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Builders;
@@ -19,7 +20,9 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal("createTableOperation", Assert.Throws<ArgumentNullException>(() => new TableBuilder<object>(null, new TestMigration())).ParamName);
+            Assert.Equal(
+                "createTableOperation",
+                Assert.Throws<ArgumentNullException>(() => new TableBuilder<object>(null, new TestMigration())).ParamName);
         }
 
         public class Columns
@@ -32,13 +35,30 @@ namespace System.Data.Entity.Migrations
         public void PrimaryKey_should_set_key_columns_and_name()
         {
             var createTableOperation = new CreateTableOperation("T");
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Foo" });
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Bar" });
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Baz" });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Foo"
+                    });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Bar"
+                    });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Baz"
+                    });
 
             var tableBuilder = new TableBuilder<Columns>(createTableOperation, new TestMigration());
 
-            tableBuilder.PrimaryKey(c => new { c.Bar, c.Foo }, name: "PK_Custom");
+            tableBuilder.PrimaryKey(
+                c => new
+                         {
+                             c.Bar,
+                             c.Foo
+                         }, name: "PK_Custom");
 
             Assert.Equal(2, createTableOperation.PrimaryKey.Columns.Count());
             Assert.Equal("Bar", createTableOperation.PrimaryKey.Columns.First());
@@ -50,13 +70,26 @@ namespace System.Data.Entity.Migrations
         public void ForeignKey_should_create_and_add_fk_model()
         {
             var createTableOperation = new CreateTableOperation("T");
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Foo" });
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Bar" });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Foo"
+                    });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Bar"
+                    });
 
             var migration = new TestMigration();
             var tableBuilder = new TableBuilder<Columns>(createTableOperation, migration);
 
-            tableBuilder.ForeignKey("P", c => new { c.Foo, c.Bar }, true, "my_fk");
+            tableBuilder.ForeignKey(
+                "P", c => new
+                              {
+                                  c.Foo,
+                                  c.Bar
+                              }, true, "my_fk");
 
             Assert.Equal(1, migration.Operations.Count());
 
@@ -73,13 +106,26 @@ namespace System.Data.Entity.Migrations
         public void Index_should_add_create_index_operation_to_model()
         {
             var createTableOperation = new CreateTableOperation("T");
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Foo" });
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.Guid) { Name = "Bar" });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Foo"
+                    });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Bar"
+                    });
 
             var migration = new TestMigration();
             var tableBuilder = new TableBuilder<Columns>(createTableOperation, migration);
 
-            tableBuilder.Index(c => new { c.Foo, c.Bar }, unique: true);
+            tableBuilder.Index(
+                c => new
+                         {
+                             c.Foo,
+                             c.Bar
+                         }, unique: true);
 
             Assert.Equal(1, migration.Operations.Count());
 

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -22,10 +23,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Returns_rows_affected_when_there_are_no_result_columns()
             {
                 var stateEntries = new ReadOnlyCollection<IEntityStateEntry>(new List<IEntityStateEntry>());
-                var stateEntry = new ExtractedStateEntry(EntityState.Unchanged, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0), new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
+                var stateEntry = new ExtractedStateEntry(
+                    EntityState.Unchanged, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
+                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
+                    new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
 
-                int timeout = 43;
+                var timeout = 43;
                 var updateTranslatorMock = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 updateTranslatorMock.Setup(m => m.CommandTimeout).Returns(timeout);
                 var entityConnection = new Mock<EntityConnection>().Object;
@@ -33,29 +36,32 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var dbCommandMock = new Mock<DbCommand>();
 
-                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
-                {
-                    CallBase = true
-                };
+                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(
+                    updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
+                                                    {
+                                                        CallBase = true
+                                                    };
 
-                int timesCommandTimeoutCalled = 0;
-                dbCommandMock.SetupSet(m => m.CommandTimeout = It.IsAny<int>()).Callback((int value) =>
-                {
-                    timesCommandTimeoutCalled++;
-                    Assert.Equal(timeout, value);
-                });
+                var timesCommandTimeoutCalled = 0;
+                dbCommandMock.SetupSet(m => m.CommandTimeout = It.IsAny<int>()).Callback(
+                    (int value) =>
+                        {
+                            timesCommandTimeoutCalled++;
+                            Assert.Equal(timeout, value);
+                        });
 
-                int rowsAffected = 36;
+                var rowsAffected = 36;
                 dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(rowsAffected);
 
-                int timesSetInputIdentifiers = 0;
+                var timesSetInputIdentifiers = 0;
                 var identifierValues = new Dictionary<int, object>();
                 mockFunctionUpdateCommand.Setup(m => m.SetInputIdentifiers(It.IsAny<Dictionary<int, object>>()))
-                    .Callback<Dictionary<int, object>>(identifierValuesPassed =>
-                    {
-                        timesSetInputIdentifiers++;
-                        Assert.Same(identifierValues, identifierValuesPassed);
-                    });
+                    .Callback<Dictionary<int, object>>(
+                        identifierValuesPassed =>
+                            {
+                                timesSetInputIdentifiers++;
+                                Assert.Same(identifierValues, identifierValuesPassed);
+                            });
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
 
@@ -80,9 +86,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 entityType.SetReadOnly();
 
                 var stateEntry = new ExtractedStateEntry(
-                        EntityState.Unchanged,
-                        PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                        PropagatorResult.CreateStructuralValue(new[] { PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0) },
+                    EntityState.Unchanged,
+                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
+                    PropagatorResult.CreateStructuralValue(
+                        new[] { PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0) },
                         entityType,
                         isModified: false),
                     new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
@@ -95,38 +102,44 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var dbCommandMock = new Mock<DbCommand>();
                 var stateEntries = new ReadOnlyCollection<IEntityStateEntry>(new List<IEntityStateEntry>());
 
-                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
-                {
-                    CallBase = true
-                };
+                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(
+                    updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
+                                                    {
+                                                        CallBase = true
+                                                    };
 
-                int dbValue = 66;
+                var dbValue = 66;
                 var dbDataReaderMock = new Mock<DbDataReader>();
                 dbDataReaderMock.Setup(m => m.GetValue(It.IsAny<int>())).Returns(dbValue);
-                int rowsToRead = 2;
-                dbDataReaderMock.Setup(m => m.Read()).Returns(() =>
-                    {
-                        rowsToRead--;
-                        return rowsToRead > 0;
-                    });
-                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", CommandBehavior.SequentialAccess).Returns(dbDataReaderMock.Object);
+                var rowsToRead = 2;
+                dbDataReaderMock.Setup(m => m.Read()).Returns(
+                    () =>
+                        {
+                            rowsToRead--;
+                            return rowsToRead > 0;
+                        });
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", CommandBehavior.SequentialAccess).Returns(
+                    dbDataReaderMock.Object);
 
-                int timesSetInputIdentifiers = 0;
+                var timesSetInputIdentifiers = 0;
                 var identifierValues = new Dictionary<int, object>();
                 mockFunctionUpdateCommand.Setup(m => m.SetInputIdentifiers(It.IsAny<Dictionary<int, object>>()))
-                    .Callback<Dictionary<int, object>>(identifierValuesPassed =>
-                    {
-                        timesSetInputIdentifiers++;
-                        Assert.Same(identifierValues, identifierValuesPassed);
-                    });
+                    .Callback<Dictionary<int, object>>(
+                        identifierValuesPassed =>
+                            {
+                                timesSetInputIdentifiers++;
+                                Assert.Same(identifierValues, identifierValuesPassed);
+                            });
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
                 var mockObjectStateManager = new Mock<ObjectStateManager>();
                 var objectStateEntryMock = new Mock<ObjectStateEntry>(mockObjectStateManager.Object, null, EntityState.Unchanged);
                 var currentValueRecordMock = new Mock<CurrentValueRecord>(objectStateEntryMock.Object);
 
-                var idColumn = new KeyValuePair<string, PropagatorResult>("ID",
-                    PropagatorResult.CreateServerGenSimpleValue(PropagatorFlags.NoFlags, /*value:*/ 0, currentValueRecordMock.Object, recordOrdinal: 0));
+                var idColumn = new KeyValuePair<string, PropagatorResult>(
+                    "ID",
+                    PropagatorResult.CreateServerGenSimpleValue(
+                        PropagatorFlags.NoFlags, /*value:*/ 0, currentValueRecordMock.Object, recordOrdinal: 0));
                 mockFunctionUpdateCommand.Protected().Setup<List<KeyValuePair<string, PropagatorResult>>>("ResultColumns")
                     .Returns((new[] { idColumn }).ToList());
 
@@ -146,10 +159,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Returns_rows_affected_when_there_are_no_result_columns()
             {
                 var stateEntries = new ReadOnlyCollection<IEntityStateEntry>(new List<IEntityStateEntry>());
-                var stateEntry = new ExtractedStateEntry(EntityState.Unchanged, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0), new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
+                var stateEntry = new ExtractedStateEntry(
+                    EntityState.Unchanged, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
+                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
+                    new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
 
-                int timeout = 43;
+                var timeout = 43;
                 var updateTranslatorMock = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 updateTranslatorMock.Setup(m => m.CommandTimeout).Returns(timeout);
                 var entityConnection = new Mock<EntityConnection>().Object;
@@ -157,33 +172,37 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var dbCommandMock = new Mock<DbCommand>();
 
-                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
-                {
-                    CallBase = true
-                };
+                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(
+                    updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
+                                                    {
+                                                        CallBase = true
+                                                    };
 
-                int timesCommandTimeoutCalled = 0;
-                dbCommandMock.SetupSet(m => m.CommandTimeout = It.IsAny<int>()).Callback((int value) =>
-                {
-                    timesCommandTimeoutCalled++;
-                    Assert.Equal(timeout, value);
-                });
+                var timesCommandTimeoutCalled = 0;
+                dbCommandMock.SetupSet(m => m.CommandTimeout = It.IsAny<int>()).Callback(
+                    (int value) =>
+                        {
+                            timesCommandTimeoutCalled++;
+                            Assert.Equal(timeout, value);
+                        });
 
-                int rowsAffected = 36;
+                var rowsAffected = 36;
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(rowsAffected));
 
-                int timesSetInputIdentifiers = 0;
+                var timesSetInputIdentifiers = 0;
                 var identifierValues = new Dictionary<int, object>();
                 mockFunctionUpdateCommand.Setup(m => m.SetInputIdentifiers(It.IsAny<Dictionary<int, object>>()))
-                    .Callback<Dictionary<int, object>>(identifierValuesPassed =>
-                    {
-                        timesSetInputIdentifiers++;
-                        Assert.Same(identifierValues, identifierValuesPassed);
-                    });
+                    .Callback<Dictionary<int, object>>(
+                        identifierValuesPassed =>
+                            {
+                                timesSetInputIdentifiers++;
+                                Assert.Same(identifierValues, identifierValuesPassed);
+                            });
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
 
-                var rowsAffectedResult = mockFunctionUpdateCommand.Object.ExecuteAsync(identifierValues, generatedValues, CancellationToken.None).Result;
+                var rowsAffectedResult =
+                    mockFunctionUpdateCommand.Object.ExecuteAsync(identifierValues, generatedValues, CancellationToken.None).Result;
 
                 Assert.Equal(rowsAffected, rowsAffectedResult);
                 Assert.Equal(1, timesCommandTimeoutCalled);
@@ -204,9 +223,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 entityType.SetReadOnly();
 
                 var stateEntry = new ExtractedStateEntry(
-                        EntityState.Unchanged,
-                        PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                        PropagatorResult.CreateStructuralValue(new[] { PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0) },
+                    EntityState.Unchanged,
+                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
+                    PropagatorResult.CreateStructuralValue(
+                        new[] { PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0) },
                         entityType,
                         isModified: false),
                     new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
@@ -219,47 +239,53 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var dbCommandMock = new Mock<DbCommand>();
                 var stateEntries = new ReadOnlyCollection<IEntityStateEntry>(new List<IEntityStateEntry>());
 
-                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
-                {
-                    CallBase = true
-                };
+                var mockFunctionUpdateCommand = new Mock<FunctionUpdateCommand>(
+                    updateTranslatorMock.Object, stateEntries, stateEntry, dbCommandMock.Object)
+                                                    {
+                                                        CallBase = true
+                                                    };
 
-                int dbValue = 66;
+                var dbValue = 66;
                 var dbDataReaderMock = new Mock<DbDataReader>();
                 dbDataReaderMock.Setup(m => m.GetFieldValueAsync<object>(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult<object>(dbValue));
-                int rowsToRead = 2;
-                dbDataReaderMock.Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Returns(() =>
-                {
-                    rowsToRead--;
-                    return Task.FromResult(rowsToRead > 0);
-                });
+                var rowsToRead = 2;
+                dbDataReaderMock.Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                        {
+                            rowsToRead--;
+                            return Task.FromResult(rowsToRead > 0);
+                        });
                 dbDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
 
                 dbCommandMock.Protected()
                     .Setup<Task<DbDataReader>>("ExecuteDbDataReaderAsync", CommandBehavior.SequentialAccess, It.IsAny<CancellationToken>())
                     .Returns(Task.FromResult(dbDataReaderMock.Object));
 
-                int timesSetInputIdentifiers = 0;
+                var timesSetInputIdentifiers = 0;
                 var identifierValues = new Dictionary<int, object>();
                 mockFunctionUpdateCommand.Setup(m => m.SetInputIdentifiers(It.IsAny<Dictionary<int, object>>()))
-                    .Callback<Dictionary<int, object>>(identifierValuesPassed =>
-                    {
-                        timesSetInputIdentifiers++;
-                        Assert.Same(identifierValues, identifierValuesPassed);
-                    });
+                    .Callback<Dictionary<int, object>>(
+                        identifierValuesPassed =>
+                            {
+                                timesSetInputIdentifiers++;
+                                Assert.Same(identifierValues, identifierValuesPassed);
+                            });
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
                 var objectStateEntryMock = new Mock<ObjectStateEntry>(objectStateManagerMock.Object, null, EntityState.Unchanged);
                 var currentValueRecordMock = new Mock<CurrentValueRecord>(objectStateEntryMock.Object);
 
-                var idColumn = new KeyValuePair<string, PropagatorResult>("ID",
-                    PropagatorResult.CreateServerGenSimpleValue(PropagatorFlags.NoFlags, /*value:*/ 0, currentValueRecordMock.Object, recordOrdinal: 0));
+                var idColumn = new KeyValuePair<string, PropagatorResult>(
+                    "ID",
+                    PropagatorResult.CreateServerGenSimpleValue(
+                        PropagatorFlags.NoFlags, /*value:*/ 0, currentValueRecordMock.Object, recordOrdinal: 0));
                 mockFunctionUpdateCommand.Protected().Setup<List<KeyValuePair<string, PropagatorResult>>>("ResultColumns")
                     .Returns((new[] { idColumn }).ToList());
 
-                var rowsAffectedResult = mockFunctionUpdateCommand.Object.ExecuteAsync(identifierValues, generatedValues, CancellationToken.None).Result;
+                var rowsAffectedResult =
+                    mockFunctionUpdateCommand.Object.ExecuteAsync(identifierValues, generatedValues, CancellationToken.None).Result;
 
                 Assert.Equal(1, rowsAffectedResult);
                 Assert.Equal(1, timesSetInputIdentifiers);

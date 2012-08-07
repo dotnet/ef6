@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
@@ -12,7 +13,9 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal(new ArgumentException(Strings.ArgumentIsNullOrWhitespace("name")).Message, Assert.Throws<ArgumentException>(() => new CreateTableOperation(null)).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.ArgumentIsNullOrWhitespace("name")).Message,
+                Assert.Throws<ArgumentException>(() => new CreateTableOperation(null)).Message);
         }
 
         [Fact]
@@ -49,7 +52,10 @@ namespace System.Data.Entity.Migrations
         public void Can_set_and_get_primary_key()
         {
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation();
-            var table = new CreateTableOperation("T") { PrimaryKey = addPrimaryKeyOperation };
+            var table = new CreateTableOperation("T")
+                            {
+                                PrimaryKey = addPrimaryKeyOperation
+                            };
 
             Assert.Same(addPrimaryKeyOperation, table.PrimaryKey);
             Assert.Equal("T", addPrimaryKeyOperation.Table);

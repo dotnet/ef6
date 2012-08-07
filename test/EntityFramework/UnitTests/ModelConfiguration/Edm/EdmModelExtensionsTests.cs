@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Data.Entity;
@@ -69,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var associationType = new EdmAssociationType().Initialize();
             associationType.SourceEnd.EntityType
                 = associationType.TargetEnd.EntityType
-                    = entityType;
+                  = entityType;
             associationType.SourceEnd.DeleteAction = EdmOperationAction.Cascade;
             model.AddAssociationType(associationType);
 
@@ -200,11 +201,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.Equal(0, model.GetAssociationTypesBetween(entityTypeA, entityTypeB).Count());
 
-            model.AddAssociationType("Foo_Bar",
+            model.AddAssociationType(
+                "Foo_Bar",
                 entityTypeA, EdmAssociationEndKind.Optional,
                 entityTypeB, EdmAssociationEndKind.Many);
 
-            model.AddAssociationType("Bar_Foo",
+            model.AddAssociationType(
+                "Bar_Foo",
                 entityTypeB, EdmAssociationEndKind.Optional,
                 entityTypeA, EdmAssociationEndKind.Many);
 

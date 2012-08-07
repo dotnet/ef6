@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Collections;
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityDataReader = new EntityDataReader(new EntityCommand(), dbDataReaderMock.Object, CommandBehavior.Default);
 
                 Assert.Throws<ArgumentNullException>(
-                    () => entityDataReader[(string)null]);
+                    () => entityDataReader[null]);
             }
         }
 

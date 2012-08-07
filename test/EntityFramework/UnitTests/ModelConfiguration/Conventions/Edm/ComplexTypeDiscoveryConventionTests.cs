@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -64,7 +65,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmEntityType declaringEntityType;
             EdmEntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
-            complexEntityType.SetConfiguration(new EntityTypeConfiguration(typeof(object)) { IsExplicitEntity = true });
+            complexEntityType.SetConfiguration(
+                new EntityTypeConfiguration(typeof(object))
+                    {
+                        IsExplicitEntity = true
+                    });
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 

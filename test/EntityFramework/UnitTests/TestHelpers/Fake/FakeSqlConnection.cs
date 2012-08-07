@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System;
@@ -8,8 +9,8 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     using System.Data.Common;
 
     /// <summary>
-    /// A DbConnection that doesn't work but providers just enough information that Code First can generate
-    /// an SSDL without having to hit a real database.
+    ///     A DbConnection that doesn't work but providers just enough information that Code First can generate
+    ///     an SSDL without having to hit a real database.
     /// </summary>
     public class FakeSqlConnection : DbConnection
     {
@@ -22,10 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 
         protected override DbProviderFactory DbProviderFactory
         {
-            get
-            {
-                return FakeSqlProviderFactory.Instance;
-            }
+            get { return FakeSqlProviderFactory.Instance; }
         }
 
         public override string ConnectionString { get; set; }

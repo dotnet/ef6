@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations;
@@ -24,7 +25,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_set_timestamp_when_length_set()
         {
-            var propertyConfiguration = new BinaryPropertyConfiguration { MaxLength = 8 };
+            var propertyConfiguration = new BinaryPropertyConfiguration
+                                            {
+                                                MaxLength = 8
+                                            };
 
             new TimestampAttributeConvention.TimestampAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
@@ -35,7 +39,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_set_timestamp_when_required_set()
         {
-            var propertyConfiguration = new BinaryPropertyConfiguration { IsNullable = false };
+            var propertyConfiguration = new BinaryPropertyConfiguration
+                                            {
+                                                IsNullable = false
+                                            };
 
             new TimestampAttributeConvention.TimestampAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
@@ -46,7 +53,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_set_timestamp_when_concurrency_token_set()
         {
-            var propertyConfiguration = new BinaryPropertyConfiguration { ConcurrencyMode = EdmConcurrencyMode.Fixed };
+            var propertyConfiguration = new BinaryPropertyConfiguration
+                                            {
+                                                ConcurrencyMode = EdmConcurrencyMode.Fixed
+                                            };
 
             new TimestampAttributeConvention.TimestampAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
@@ -57,7 +67,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_set_timestamp_when_rowversion_set()
         {
-            var propertyConfiguration = new BinaryPropertyConfiguration { ColumnType = "rowversion" };
+            var propertyConfiguration = new BinaryPropertyConfiguration
+                                            {
+                                                ColumnType = "rowversion"
+                                            };
 
             new TimestampAttributeConvention.TimestampAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
@@ -68,7 +81,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_not_set_timestamp_when_identity()
         {
-            var propertyConfiguration = new BinaryPropertyConfiguration { DatabaseGeneratedOption = DatabaseGeneratedOption.Identity };
+            var propertyConfiguration = new BinaryPropertyConfiguration
+                                            {
+                                                DatabaseGeneratedOption = DatabaseGeneratedOption.Identity
+                                            };
 
             new TimestampAttributeConvention.TimestampAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
@@ -79,7 +95,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_not_set_timestamp_when_maxLength()
         {
-            var propertyConfiguration = new BinaryPropertyConfiguration { MaxLength = 100 };
+            var propertyConfiguration = new BinaryPropertyConfiguration
+                                            {
+                                                MaxLength = 100
+                                            };
 
             new TimestampAttributeConvention.TimestampAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());

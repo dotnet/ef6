@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm.Db;
@@ -13,7 +14,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         public void Apply_should_set_pluralized_table_name_as_identitier()
         {
             var database = new DbDatabaseMetadata().Initialize();
-            var table = new DbTableMetadata { DatabaseIdentifier = "Customer" };
+            var table = new DbTableMetadata
+                            {
+                                DatabaseIdentifier = "Customer"
+                            };
             database.Schemas.Single().Tables.Add(table);
 
             ((IDbConvention<DbTableMetadata>)new PluralizingTableNameConvention()).Apply(table, database);
@@ -25,7 +29,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         public void Apply_should_ignored_configured_tables()
         {
             var database = new DbDatabaseMetadata().Initialize();
-            var table = new DbTableMetadata { DatabaseIdentifier = "Customer" };
+            var table = new DbTableMetadata
+                            {
+                                DatabaseIdentifier = "Customer"
+                            };
             table.SetTableName(new DatabaseName("Foo"));
             database.Schemas.Single().Tables.Add(table);
 
@@ -39,7 +46,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         public void Apply_should_ignore_current_table()
         {
             var database = new DbDatabaseMetadata().Initialize();
-            var table = new DbTableMetadata { DatabaseIdentifier = "Customers" };
+            var table = new DbTableMetadata
+                            {
+                                DatabaseIdentifier = "Customers"
+                            };
             database.Schemas.Single().Tables.Add(table);
 
             ((IDbConvention<DbTableMetadata>)new PluralizingTableNameConvention()).Apply(table, database);
@@ -51,8 +61,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         public void Apply_should_uniquify_names()
         {
             var database = new DbDatabaseMetadata().Initialize();
-            var tableA = new DbTableMetadata { DatabaseIdentifier = "Customers" };
-            var tableB = new DbTableMetadata { DatabaseIdentifier = "Customer" };
+            var tableA = new DbTableMetadata
+                             {
+                                 DatabaseIdentifier = "Customers"
+                             };
+            var tableB = new DbTableMetadata
+                             {
+                                 DatabaseIdentifier = "Customer"
+                             };
             database.Schemas.Single().Tables.Add(tableA);
             database.Schemas.Single().Tables.Add(tableB);
 

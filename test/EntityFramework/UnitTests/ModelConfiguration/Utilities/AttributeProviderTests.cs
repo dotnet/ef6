@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Utilities
 {
     using System.ComponentModel.DataAnnotations;
@@ -89,8 +90,9 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         public void GetAttributes_returns_correct_set_of_non_public_property_attributes()
         {
             var attributes = new AttributeProvider()
-                .GetAttributes(typeof(NonPublicAttributeProviderTestClass)
-                    .GetProperty("MyProp", BindingFlags.NonPublic | BindingFlags.Instance));
+                .GetAttributes(
+                    typeof(NonPublicAttributeProviderTestClass)
+                        .GetProperty("MyProp", BindingFlags.NonPublic | BindingFlags.Instance));
 
             Assert.Equal(1, attributes.OfType<KeyAttribute>().Count());
             Assert.Equal(1, attributes.OfType<RequiredAttribute>().Count());
@@ -102,8 +104,9 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         public void GetAttributes_does_not_return_attributes_from_non_public_buddy_class()
         {
             var attributes = new AttributeProvider()
-                .GetAttributes(typeof(NonPublicAttributeProviderTestClass)
-                .GetProperty("BuddyProp", BindingFlags.NonPublic | BindingFlags.Instance));
+                .GetAttributes(
+                    typeof(NonPublicAttributeProviderTestClass)
+                        .GetProperty("BuddyProp", BindingFlags.NonPublic | BindingFlags.Instance));
 
             Assert.Equal(0, attributes.OfType<KeyAttribute>().Count());
         }

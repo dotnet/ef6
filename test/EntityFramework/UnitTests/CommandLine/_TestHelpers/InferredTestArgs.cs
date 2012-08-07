@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine.Tests
 {
     using System;
 
     /// <summary>
-    /// An argument class that uses inferred attributes
+    ///     An argument class that uses inferred attributes
     /// </summary>
     public class InferredTestArgs
     {
@@ -17,6 +18,5 @@ namespace CmdLine.Tests
         public DateTime Date { get; set; }
 
         public int Number { get; set; }
-
     }
 }

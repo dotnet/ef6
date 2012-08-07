@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -41,10 +42,10 @@ namespace System.Data.Entity.Migrations
                     migrator.TargetDatabase));
 
             WhenSqlCe(
-                    () =>
-                    Assert.Equal(
-                        @"'MigrationsTest.sdf' (DataSource: MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
-                        migrator.TargetDatabase));
+                () =>
+                Assert.Equal(
+                    @"'MigrationsTest.sdf' (DataSource: MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
+                    migrator.TargetDatabase));
         }
 
         [MigrationsTheory]
@@ -55,7 +56,11 @@ namespace System.Data.Entity.Migrations
             var createTableOperation = GetLegacyHistoryCreateTableOperation();
 
             createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Hash" });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Hash"
+                    });
 
             ExecuteOperations(
                 createTableOperation,
@@ -89,7 +94,11 @@ namespace System.Data.Entity.Migrations
             var createTableOperation = GetLegacyHistoryCreateTableOperation();
 
             createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
-            createTableOperation.Columns.Add(new ColumnModel(PrimitiveTypeKind.String) { Name = "Hash" });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Hash"
+                    });
 
             ExecuteOperations(
                 createTableOperation,
@@ -128,7 +137,9 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            Assert.Equal(Strings.ContextNotConstructible(typeof(ContextWithNonDefaultCtor)), Assert.Throws<MigrationsException>(() => CreateMigrator<ContextWithNonDefaultCtor>()).Message);
+            Assert.Equal(
+                Strings.ContextNotConstructible(typeof(ContextWithNonDefaultCtor)),
+                Assert.Throws<MigrationsException>(() => CreateMigrator<ContextWithNonDefaultCtor>()).Message);
         }
 
         [MigrationsTheory]
@@ -434,7 +445,11 @@ namespace System.Data.Entity.Migrations
                     ((IObjectContextAdapter)poker).ObjectContext.CreateDatabaseScript());
 
 #pragma warning disable 612,618
-                poker.Metadata.Add(new EdmMetadata { ModelHash = hash });
+                poker.Metadata.Add(
+                    new EdmMetadata
+                        {
+                            ModelHash = hash
+                        });
 #pragma warning restore 612,618
 
                 poker.SaveChanges();
@@ -457,7 +472,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -491,7 +506,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -537,7 +552,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -571,14 +586,16 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
 
                     var migrator = CreateMigrator<ShopContext_v1b>();
 
-                    Assert.Equal(Strings.MetadataOutOfDate, Assert.Throws<MigrationsException>(() => migrator.Scaffold("GrowUp", null, ignoreChanges: false)).Message);
+                    Assert.Equal(
+                        Strings.MetadataOutOfDate,
+                        Assert.Throws<MigrationsException>(() => migrator.Scaffold("GrowUp", null, ignoreChanges: false)).Message);
                 }
             }
             finally
@@ -793,7 +810,9 @@ namespace System.Data.Entity.Migrations
 
             var migrator = CreateMigrator<ShopContext_v1>(automaticMigrationsEnabled: false);
 
-            Assert.Equal(new AutomaticMigrationsDisabledException(Strings.AutomaticDisabledException).Message, Assert.Throws<AutomaticMigrationsDisabledException>(() => migrator.Update()).Message);
+            Assert.Equal(
+                new AutomaticMigrationsDisabledException(Strings.AutomaticDisabledException).Message,
+                Assert.Throws<AutomaticMigrationsDisabledException>(() => migrator.Update()).Message);
         }
 
         [MigrationsTheory]
@@ -829,7 +848,9 @@ namespace System.Data.Entity.Migrations
                     automaticDataLossEnabled: false,
                     scaffoldedMigrations: generatedMigration);
 
-            Assert.Equal(new AutomaticDataLossException(Strings.AutomaticDataLoss).Message, Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
+            Assert.Equal(
+                new AutomaticDataLossException(Strings.AutomaticDataLoss).Message,
+                Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
         }
 
         [MigrationsTheory]
@@ -884,9 +905,12 @@ namespace System.Data.Entity.Migrations
             var migrator = CreateMigrator<ShopContext_v1>();
             migrator.Configuration.CommandTimeout = 1;
             var migrationStatements = new[]
-                {
-                    new MigrationStatement { Sql = "WAITFOR DELAY '00:00:02'" }
-                };
+                                          {
+                                              new MigrationStatement
+                                                  {
+                                                      Sql = "WAITFOR DELAY '00:00:02'"
+                                                  }
+                                          };
 
             var ex = Assert.Throws<SqlException>(
                 () => migrator.ExecuteStatements(migrationStatements));
@@ -900,13 +924,13 @@ namespace System.Data.Entity.Migrations
             var migrator = CreateMigrator<ShopContext_v1>();
             migrator.Configuration.CommandTimeout = 1;
             var migrationStatements = new[]
-                {
-                    new MigrationStatement
-                    {
-                        Sql = "WAITFOR DELAY '00:00:02'",
-                        SuppressTransaction = true
-                    }
-                };
+                                          {
+                                              new MigrationStatement
+                                                  {
+                                                      Sql = "WAITFOR DELAY '00:00:02'",
+                                                      SuppressTransaction = true
+                                                  }
+                                          };
 
             var ex = Assert.Throws<SqlException>(
                 () => migrator.ExecuteStatements(migrationStatements));

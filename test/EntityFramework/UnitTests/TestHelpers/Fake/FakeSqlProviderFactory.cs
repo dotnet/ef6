@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System;
     using System.Data.Common;
 
     /// <summary>
-    /// Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
-    /// without having to hit a real store.
+    ///     Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
+    ///     without having to hit a real store.
     /// </summary>
     public class FakeSqlProviderFactory : DbProviderFactory, IServiceProvider
     {

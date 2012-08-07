@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -17,7 +18,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_set_configuration()
         {
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
             entityTypeConfiguration.Configure(entityType, new EdmModel());
@@ -29,10 +33,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         public void Configure_should_configure_entity_set_name()
         {
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             var entitySet = model.AddEntitySet("ESet", entityType);
 
-            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object)) { EntitySetName = "MySet" };
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object))
+                                              {
+                                                  EntitySetName = "MySet"
+                                              };
 
             entityTypeConfiguration.Configure(entityType, model);
 
@@ -43,7 +53,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_configure_properties()
         {
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             var property = entityType.AddPrimitiveProperty("P");
             property.PropertyType.EdmType = EdmPrimitiveType.Int32;
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
@@ -60,12 +73,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_throw_when_property_not_found()
         {
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             var mockPropertyConfiguration = new Mock<PrimitivePropertyConfiguration>();
             entityTypeConfiguration.Property(new PropertyPath(new MockPropertyInfo()), () => mockPropertyConfiguration.Object);
 
-            Assert.Equal(Strings.PropertyNotFound(("P"), "E"), Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
+            Assert.Equal(
+                Strings.PropertyNotFound(("P"), "E"),
+                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
         }
 
         [Fact]
@@ -102,7 +120,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_configure_and_order_keys_when_keys_and_order_specified()
         {
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.Int32;
             entityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
 
@@ -125,23 +146,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_throw_when_key_properties_and_not_root_type()
         {
-            var entityType = new EdmEntityType { Name = "E", BaseType = new EdmEntityType() };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E",
+                                     BaseType = new EdmEntityType()
+                                 };
             entityType.BaseType.SetClrType(typeof(string));
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             entityTypeConfiguration.Key(new MockPropertyInfo(typeof(int), "Id"));
 
-            Assert.Equal(Strings.KeyRegisteredOnDerivedType(typeof(object), typeof(string)), Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
+            Assert.Equal(
+                Strings.KeyRegisteredOnDerivedType(typeof(object), typeof(string)),
+                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
         }
 
         [Fact]
         public void Configure_should_throw_when_key_property_not_found()
         {
-            var entityType = new EdmEntityType { Name = "E" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "E"
+                                 };
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "Id");
             entityTypeConfiguration.Key(mockPropertyInfo);
 
-            Assert.Equal(Strings.KeyPropertyNotFound(("Id"), "E"), Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
+            Assert.Equal(
+                Strings.KeyPropertyNotFound(("Id"), "E"),
+                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
         }
 
         [Fact]
@@ -149,12 +181,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(new MockType("E1"));
             var entityMappingConfiguration1 =
-                new EntityMappingConfiguration { TableName = new DatabaseName("E1Table") };
+                new EntityMappingConfiguration
+                    {
+                        TableName = new DatabaseName("E1Table")
+                    };
             entityTypeConfiguration.AddMappingConfiguration(entityMappingConfiguration1);
 
-            Assert.Equal(Strings.InvalidTableMapping("E1", "E1Table"), Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration
-                                                                                                                                .AddMappingConfiguration(
-                                                                                                                                    new EntityMappingConfiguration { TableName = new DatabaseName("E1Table") })).Message);
+            Assert.Equal(
+                Strings.InvalidTableMapping("E1", "E1Table"), Assert.Throws<InvalidOperationException>(
+                    () => entityTypeConfiguration
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          TableName = new DatabaseName("E1Table")
+                                      })).Message);
         }
 
         [Fact]
@@ -165,9 +205,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
                 new EntityMappingConfiguration();
             entityTypeConfiguration.AddMappingConfiguration(entityMappingConfiguration1);
 
-            Assert.Equal(Strings.InvalidTableMapping_NoTableName("E1"), Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration
-                                                                                                                                 .AddMappingConfiguration(
-                                                                                                                                     new EntityMappingConfiguration { TableName = new DatabaseName("E1Table") })).Message);
+            Assert.Equal(
+                Strings.InvalidTableMapping_NoTableName("E1"), Assert.Throws<InvalidOperationException>(
+                    () => entityTypeConfiguration
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          TableName = new DatabaseName("E1Table")
+                                      })).Message);
         }
 
         [Fact]
@@ -175,11 +220,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(new MockType("E1"));
             var entityMappingConfiguration1 =
-                new EntityMappingConfiguration { TableName = new DatabaseName("E1Table") };
+                new EntityMappingConfiguration
+                    {
+                        TableName = new DatabaseName("E1Table")
+                    };
             entityTypeConfiguration.AddMappingConfiguration(entityMappingConfiguration1);
 
             entityTypeConfiguration.AddMappingConfiguration(
-                new EntityMappingConfiguration { TableName = new DatabaseName("E1TableExtended") });
+                new EntityMappingConfiguration
+                    {
+                        TableName = new DatabaseName("E1TableExtended")
+                    });
         }
     }
 }

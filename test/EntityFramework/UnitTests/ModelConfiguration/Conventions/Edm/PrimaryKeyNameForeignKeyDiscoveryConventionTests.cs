@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -122,8 +123,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.PId == Bar.PId
             pkProperty.Name = "PId";
             fkProperty.Name = "PId";
-            pkProperty.PropertyType = new EdmTypeReference() { EdmType = EdmPrimitiveType.Binary };
-            fkProperty.PropertyType = new EdmTypeReference() { EdmType = EdmPrimitiveType.String };
+            pkProperty.PropertyType = new EdmTypeReference
+                                          {
+                                              EdmType = EdmPrimitiveType.Binary
+                                          };
+            fkProperty.PropertyType = new EdmTypeReference
+                                          {
+                                              EdmType = EdmPrimitiveType.String
+                                          };
 
             ((IEdmConvention<EdmAssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel().Initialize());

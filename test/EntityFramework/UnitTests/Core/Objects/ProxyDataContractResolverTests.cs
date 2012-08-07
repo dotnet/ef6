@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System;
@@ -15,7 +16,8 @@ namespace System.Data.Entity.Core.Objects
         {
             var mockDataContractResolver = new Mock<DataContractResolver>().Object;
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("typeName"),
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("typeName"),
                 Assert.Throws<ArgumentException>(
                     () => new ProxyDataContractResolver().ResolveName(null, "foo", typeof(object), mockDataContractResolver)).Message);
         }
@@ -25,7 +27,8 @@ namespace System.Data.Entity.Core.Objects
         {
             var mockDataContractResolver = new Mock<DataContractResolver>().Object;
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("typeNamespace"),
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("typeNamespace"),
                 Assert.Throws<ArgumentException>(
                     () => new ProxyDataContractResolver().ResolveName("foo", null, typeof(object), mockDataContractResolver)).Message);
         }
@@ -35,7 +38,8 @@ namespace System.Data.Entity.Core.Objects
         {
             var mockDataContractResolver = new Mock<DataContractResolver>().Object;
 
-            Assert.Equal("declaredType",
+            Assert.Equal(
+                "declaredType",
                 Assert.Throws<ArgumentNullException>(
                     () => new ProxyDataContractResolver().ResolveName("foo", "foo", null, mockDataContractResolver)).ParamName);
         }
@@ -43,7 +47,8 @@ namespace System.Data.Entity.Core.Objects
         [Fact]
         public void ResolveName_throws_for_null_knownTypeResolver_argument()
         {
-            Assert.Equal("knownTypeResolver",
+            Assert.Equal(
+                "knownTypeResolver",
                 Assert.Throws<ArgumentNullException>(
                     () => new ProxyDataContractResolver().ResolveName("foo", "foo", typeof(object), null)).ParamName);
         }
@@ -54,9 +59,11 @@ namespace System.Data.Entity.Core.Objects
             XmlDictionaryString _;
             var mockDataContractResolver = new Mock<DataContractResolver>().Object;
 
-            Assert.Equal("type",
+            Assert.Equal(
+                "type",
                 Assert.Throws<ArgumentNullException>(
-                    () => new ProxyDataContractResolver().TryResolveType(null, typeof(object), mockDataContractResolver, out _, out _)).ParamName);
+                    () => new ProxyDataContractResolver().TryResolveType(null, typeof(object), mockDataContractResolver, out _, out _)).
+                    ParamName);
         }
 
         [Fact]
@@ -65,9 +72,11 @@ namespace System.Data.Entity.Core.Objects
             XmlDictionaryString _;
             var mockDataContractResolver = new Mock<DataContractResolver>().Object;
 
-            Assert.Equal("declaredType",
+            Assert.Equal(
+                "declaredType",
                 Assert.Throws<ArgumentNullException>(
-                    () => new ProxyDataContractResolver().TryResolveType(typeof(object), null, mockDataContractResolver, out _, out _)).ParamName);
+                    () => new ProxyDataContractResolver().TryResolveType(typeof(object), null, mockDataContractResolver, out _, out _)).
+                    ParamName);
         }
 
         [Fact]
@@ -75,7 +84,8 @@ namespace System.Data.Entity.Core.Objects
         {
             XmlDictionaryString _;
 
-            Assert.Equal("knownTypeResolver",
+            Assert.Equal(
+                "knownTypeResolver",
                 Assert.Throws<ArgumentNullException>(
                     () => new ProxyDataContractResolver().TryResolveType(typeof(object), typeof(object), null, out _, out _)).ParamName);
         }

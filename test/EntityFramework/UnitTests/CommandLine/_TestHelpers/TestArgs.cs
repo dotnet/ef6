@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine.Tests
 {
     extern alias migrate;
@@ -23,8 +24,7 @@ namespace CmdLine.Tests
 
         public const bool BoolTDefault = true;
 
-        [CommandLineParameter(Command = "Y", Name="The Y Value", Description = YArgDescription)]
-
+        [CommandLineParameter(Command = "Y", Name = "The Y Value", Description = YArgDescription)]
         public bool BoolY { get; set; }
 
         [CommandLineParameter(Command = "T", Default = true, Description = TArgDescription)]
@@ -35,6 +35,5 @@ namespace CmdLine.Tests
 
         [CommandLineParameter(Command = "N", Description = "An Int32 Number", Required = true, ValueExample = "13")]
         public int Number { get; set; }
-
     }
 }

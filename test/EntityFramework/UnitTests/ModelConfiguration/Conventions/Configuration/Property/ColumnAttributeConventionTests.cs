@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -21,7 +22,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_not_set_column_name_when_already_set()
         {
-            var propertyConfiguration = new PrimitivePropertyConfiguration { ColumnName = "Bar" };
+            var propertyConfiguration = new PrimitivePropertyConfiguration
+                                            {
+                                                ColumnName = "Bar"
+                                            };
 
             new ColumnAttributeConvention.ColumnAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new ColumnAttribute("Foo"));

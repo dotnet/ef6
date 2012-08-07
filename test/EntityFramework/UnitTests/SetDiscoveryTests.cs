@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -16,61 +17,136 @@ namespace ProductivityApiUnitTests
     using Moq;
     using Xunit;
 
-    public class FakeEntity1 { }
-    public class FakeEntity2 { }
-    public class FakeEntity3 { }
-    public class FakeEntity4 { }
-    public class FakeEntity5 { }
-    public class FakeEntity6 { }
-    public class FakeEntity7 { }
-    public class FakeEntity8 { }
-    public class FakeEntity9 { }
-    public class FakeEntity10 { }
-    public class FakeEntity11 { }
-    public class FakeEntity12 { }
-    public class FakeEntity13 { }
-    public class FakeEntity14 { }
-    public class FakeEntity15 { }
-    public class FakeEntity16 { }
-    public class FakeEntity17 { }
-    public class FakeEntity18 { }
+    public class FakeEntity1
+    {
+    }
+
+    public class FakeEntity2
+    {
+    }
+
+    public class FakeEntity3
+    {
+    }
+
+    public class FakeEntity4
+    {
+    }
+
+    public class FakeEntity5
+    {
+    }
+
+    public class FakeEntity6
+    {
+    }
+
+    public class FakeEntity7
+    {
+    }
+
+    public class FakeEntity8
+    {
+    }
+
+    public class FakeEntity9
+    {
+    }
+
+    public class FakeEntity10
+    {
+    }
+
+    public class FakeEntity11
+    {
+    }
+
+    public class FakeEntity12
+    {
+    }
+
+    public class FakeEntity13
+    {
+    }
+
+    public class FakeEntity14
+    {
+    }
+
+    public class FakeEntity15
+    {
+    }
+
+    public class FakeEntity16
+    {
+    }
+
+    public class FakeEntity17
+    {
+    }
+
+    public class FakeEntity18
+    {
+    }
 
     /// <summary>
-    /// Unit tests for the DbSet/ObjectSet discovery service.
-    /// </summary> 
+    ///     Unit tests for the DbSet/ObjectSet discovery service.
+    /// </summary>
     public class SetDiscoveryTests : TestBase
     {
         #region Positive DbContext discovery and initialization tests
 
         private class FakeDbContextWithDbSets : DbContext
         {
-            public FakeDbContextWithDbSets() : base("this=is=not=valid") { }
+            public FakeDbContextWithDbSets()
+                : base("this=is=not=valid")
+            {
+            }
 
             // Should be detected: DbSets with no modifiers
             public DbSet<FakeEntity1> PublicGetSet { get; set; }
             protected IDbSet<FakeEntity2> ProtectedGetSet { get; set; }
             internal DbSet<FakeEntity3> InternalGetSet { get; set; }
-            internal protected IDbSet<FakeEntity4> InternalProtectedGetSet { get; set; }
+            protected internal IDbSet<FakeEntity4> InternalProtectedGetSet { get; set; }
             private DbSet<FakeEntity5> PrivateGetSet { get; set; }
 
             // Should be detected: Public DbSets setter modifiers
             public IDbSet<FakeEntity6> PrivateSet { get; private set; }
             public DbSet<FakeEntity7> ProtectedSet { get; protected set; }
             public IDbSet<FakeEntity8> InternalSet { get; internal set; }
-            public DbSet<FakeEntity9> InternalProtectedSet { get; internal protected set; }
+            public DbSet<FakeEntity9> InternalProtectedSet { get; protected internal set; }
 
             // Should be detected: Public DbSets getter modifiers
             public DbSet<FakeEntity10> PrivateGet { private get; set; }
             public IDbSet<FakeEntity11> ProtectedGet { protected get; set; }
             public DbSet<FakeEntity12> InternalGet { internal get; set; }
-            public IDbSet<FakeEntity13> InternalProtectedGet { internal protected get; set; }
+            public IDbSet<FakeEntity13> InternalProtectedGet { protected internal get; set; }
 
             // Should be detected: DbSets with no setters
-            public DbSet<FakeEntity14> PublicGetNoSet { get { return null; } }
-            protected IDbSet<FakeEntity15> ProtectedGetNoSet { get { return null; } }
-            internal IDbSet<FakeEntity16> InternalGetNoSet { get { return null; } }
-            internal protected DbSet<FakeEntity17> InternalProtectedGetNoSet { get { return null; } }
-            private IDbSet<FakeEntity18> PrivateGetNoSet { get { return null; } }
+            public DbSet<FakeEntity14> PublicGetNoSet
+            {
+                get { return null; }
+            }
+
+            protected IDbSet<FakeEntity15> ProtectedGetNoSet
+            {
+                get { return null; }
+            }
+
+            internal IDbSet<FakeEntity16> InternalGetNoSet
+            {
+                get { return null; }
+            }
+
+            protected internal DbSet<FakeEntity17> InternalProtectedGetNoSet
+            {
+                get { return null; }
+            }
+
+            private IDbSet<FakeEntity18> PrivateGetNoSet
+            {
+                get { return null; }
+            }
         }
 
         [Fact]
@@ -81,7 +157,8 @@ namespace ProductivityApiUnitTests
                                    "PublicGetSet", "ProtectedGetSet", "InternalGetSet", "InternalProtectedGetSet", "PrivateGetSet",
                                    "PrivateSet", "ProtectedSet", "InternalSet", "InternalProtectedSet",
                                    "PrivateGet", "ProtectedGet", "InternalGet", "InternalProtectedGet",
-                                   "PublicGetNoSet", "ProtectedGetNoSet", "InternalGetNoSet", "InternalProtectedGetNoSet", "PrivateGetNoSet",
+                                   "PublicGetNoSet", "ProtectedGetNoSet", "InternalGetNoSet", "InternalProtectedGetNoSet", "PrivateGetNoSet"
+                                   ,
                                };
 
             AssertExpectedSetsDiscovered(new FakeDbContextWithDbSets(), expected);
@@ -89,7 +166,10 @@ namespace ProductivityApiUnitTests
 
         private class FakeDbContextWithNonSets : DbContext
         {
-            public FakeDbContextWithNonSets() : base("this=is=not=valid") { }
+            public FakeDbContextWithNonSets()
+                : base("this=is=not=valid")
+            {
+            }
 
             public DbSet<FakeEntity> Control { get; set; }
 
@@ -111,7 +191,7 @@ namespace ProductivityApiUnitTests
         {
             using (var context = new FakeDbContextWithDbSets())
             {
-                var contextType = typeof (FakeDbContextWithDbSets);
+                var contextType = typeof(FakeDbContextWithDbSets);
                 const BindingFlags binding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
                 Assert.NotNull(contextType.GetProperty("PublicGetSet", binding).GetValue(context, null));
@@ -161,7 +241,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_interface_type_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(IList)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithInterfaceDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(IList)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithInterfaceDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithGenericDbSet : DbContext
@@ -172,7 +255,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_generic_type_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(List<FakeEntity>)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithGenericDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(List<FakeEntity>)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithGenericDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithNestedDbSet : DbContext
@@ -183,7 +269,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_nested_type_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(FakeDbContextWithDbSets)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithNestedDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(FakeDbContextWithDbSets)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithNestedDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithObjectDbSet : DbContext
@@ -194,7 +283,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_object_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(Object)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithObjectDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(Object)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithObjectDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithEntityObjectDbSet : DbContext
@@ -205,7 +297,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_EntityObject_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(EntityObject)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithEntityObjectDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(EntityObject)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithEntityObjectDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithStructuralObjectDbSet : DbContext
@@ -216,7 +311,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_StructuralObject_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(StructuralObject)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithStructuralObjectDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(StructuralObject)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithStructuralObjectDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithComplexObjectDbSet : DbContext
@@ -227,7 +325,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_ComplexObject_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(ComplexObject)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithComplexObjectDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(ComplexObject)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithComplexObjectDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithStringDbSet : DbContext
@@ -238,7 +339,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Discovery_of_DbSet_of_string_throws()
         {
-            Assert.Equal(Strings.InvalidEntityType(typeof(String)), Assert.Throws<InvalidOperationException>(() => new DbSetDiscoveryService(new FakeDbContextWithStringDbSet()).InitializeSets()).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(String)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbSetDiscoveryService(new FakeDbContextWithStringDbSet()).InitializeSets()).Message);
         }
 
         #endregion
@@ -394,8 +498,10 @@ namespace ProductivityApiUnitTests
 
         private static AttributeUsageAttribute GetDbSetDiscoveryAttributeUsage()
         {
-            return (AttributeUsageAttribute)typeof (SuppressDbSetInitializationAttribute).GetCustomAttributes(typeof (AttributeUsageAttribute),
-                                                                                                 inherit: false).Single();
+            return
+                (AttributeUsageAttribute)typeof(SuppressDbSetInitializationAttribute).GetCustomAttributes(
+                    typeof(AttributeUsageAttribute),
+                    inherit: false).Single();
         }
 
         #endregion

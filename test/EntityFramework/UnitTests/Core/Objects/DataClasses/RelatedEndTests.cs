@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
@@ -18,43 +19,51 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 var entity = new object();
                 var collection = new[] { entity };
-                foreach (bool isLoadedValue in new[] { true, false })
+                foreach (var isLoadedValue in new[] { true, false })
                 {
                     foreach (MergeOption mergeOption in Enum.GetValues(typeof(MergeOption)))
                     {
                         var relatedEndMock = CreateMockRelatedEnd();
                         relatedEndMock.Setup(m => m.ObjectContext).Returns(() => null);
 
-                        int timesMergeCalled = 0;
-                        relatedEndMock.Setup(m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<bool>()))
-                            .Callback((List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                            {
-                                timesMergeCalled++;
-                                Assert.Equal(collection, actualCollection.Select(w => w.Entity));
-                                Assert.Equal(mergeOption, actualMergeOption);
-                                Assert.Equal(isLoadedValue, setIsLoaded);
-                            });
+                        var timesMergeCalled = 0;
+                        relatedEndMock.Setup(
+                            m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<bool>()))
+                            .Callback(
+                                (List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
+                                    {
+                                        timesMergeCalled++;
+                                        Assert.Equal(collection, actualCollection.Select(w => w.Entity));
+                                        Assert.Equal(mergeOption, actualMergeOption);
+                                        Assert.Equal(isLoadedValue, setIsLoaded);
+                                    });
 
                         var mockEntityWrapperFactory = Mock.Get(relatedEndMock.Object.EntityWrapperFactory);
-                        int timesUpdateNoTrackingWrapperCalled = 0;
+                        var timesUpdateNoTrackingWrapperCalled = 0;
                         mockEntityWrapperFactory
-                            .Setup(m => m.UpdateNoTrackingWrapper(It.IsAny<IEntityWrapper>(), It.IsAny<ObjectContext>(), It.IsAny<EntitySet>()))
-                            .Callback((IEntityWrapper wrapper, ObjectContext context, EntitySet entitySet) =>
-                                {
-                                    timesUpdateNoTrackingWrapperCalled++;
-                                    Assert.Same(entity, wrapper.Entity);
-                                });
+                            .Setup(
+                                m => m.UpdateNoTrackingWrapper(It.IsAny<IEntityWrapper>(), It.IsAny<ObjectContext>(), It.IsAny<EntitySet>()))
+                            .Callback(
+                                (IEntityWrapper wrapper, ObjectContext context, EntitySet entitySet) =>
+                                    {
+                                        timesUpdateNoTrackingWrapperCalled++;
+                                        Assert.Same(entity, wrapper.Entity);
+                                    });
 
-                        relatedEndMock.Object.Merge((IEnumerable<object>)collection, mergeOption, isLoadedValue);
+                        relatedEndMock.Object.Merge(collection, mergeOption, isLoadedValue);
 
                         Assert.True(1 == timesMergeCalled, "Expected Merge to be called once for MergeOption." + mergeOption);
                         if (mergeOption == MergeOption.NoTracking)
                         {
-                            Assert.True(1 == timesUpdateNoTrackingWrapperCalled, "Expected UpdateNoTrackingWrapper to be called once for MergeOption." + mergeOption);
+                            Assert.True(
+                                1 == timesUpdateNoTrackingWrapperCalled,
+                                "Expected UpdateNoTrackingWrapper to be called once for MergeOption." + mergeOption);
                         }
                         else
                         {
-                            Assert.True(0 == timesUpdateNoTrackingWrapperCalled, "Expected UpdateNoTrackingWrapper not to be called for MergeOption." + mergeOption);
+                            Assert.True(
+                                0 == timesUpdateNoTrackingWrapperCalled,
+                                "Expected UpdateNoTrackingWrapper not to be called for MergeOption." + mergeOption);
                         }
                     }
                 }
@@ -64,21 +73,23 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             public void IEnumerable_overload_calls_List_of_IEntityWrapper_overload_when_collection_is_a_List_of_IEntityWrapper()
             {
                 var collection = new List<IEntityWrapper>();
-                foreach (bool isLoadedValue in new[] { true, false })
+                foreach (var isLoadedValue in new[] { true, false })
                 {
                     foreach (MergeOption mergeOption in Enum.GetValues(typeof(MergeOption)))
                     {
                         var relatedEndMock = CreateMockRelatedEnd();
 
-                        int timesMergeCalled = 0;
-                        relatedEndMock.Setup(m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<bool>()))
-                            .Callback((List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                            {
-                                timesMergeCalled++;
-                                Assert.Same(collection, actualCollection);
-                                Assert.Equal(mergeOption, actualMergeOption);
-                                Assert.Equal(isLoadedValue, setIsLoaded);
-                            });
+                        var timesMergeCalled = 0;
+                        relatedEndMock.Setup(
+                            m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<bool>()))
+                            .Callback(
+                                (List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
+                                    {
+                                        timesMergeCalled++;
+                                        Assert.Same(collection, actualCollection);
+                                        Assert.Equal(mergeOption, actualMergeOption);
+                                        Assert.Equal(isLoadedValue, setIsLoaded);
+                                    });
 
                         relatedEndMock.Object.Merge((IEnumerable<object>)collection, mergeOption, isLoadedValue);
 
@@ -91,7 +102,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             public void List_of_IEntityWrapper_overload_calls_UpdateRelationships()
             {
                 var collection = new List<IEntityWrapper>();
-                foreach (bool isLoadedValue in new[] { true, false })
+                foreach (var isLoadedValue in new[] { true, false })
                 {
                     foreach (MergeOption mergeOption in Enum.GetValues(typeof(MergeOption)))
                     {
@@ -110,8 +121,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                         var objectStateManagerMock = Mock.Get(objectContext.ObjectStateManager);
 
-                        int timesUpdateRelationshipsCalled = 0;
-                        objectStateManagerMock.Setup(m => m.UpdateRelationships(
+                        var timesUpdateRelationshipsCalled = 0;
+                        objectStateManagerMock.Setup(
+                            m => m.UpdateRelationships(
                                 It.IsAny<ObjectContext>(),
                                 It.IsAny<MergeOption>(),
                                 It.IsAny<AssociationSet>(),
@@ -120,14 +132,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 It.IsAny<AssociationEndMember>(),
                                 It.IsAny<IList>(),
                                 It.IsAny<bool>()))
-                            .Returns<ObjectContext,
-                                MergeOption,
-                                AssociationSet,
-                                AssociationEndMember,
-                                IEntityWrapper,
-                                AssociationEndMember,
-                                IList,
-                                bool>((ObjectContext actualContext,
+                            .Returns(
+                                (ObjectContext actualContext,
                                     MergeOption actualMergeOption,
                                     AssociationSet actualAssociationSet,
                                     AssociationEndMember actualSourceMember,
@@ -135,19 +141,19 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                     AssociationEndMember actualTargetMember,
                                     IList actualTargets,
                                     bool actualSetIsLoaded) =>
-                                {
-                                    timesUpdateRelationshipsCalled++;
-                                    Assert.Same(objectContext, actualContext);
-                                    Assert.Equal(mergeOption, actualMergeOption);
-                                    Assert.Null(actualAssociationSet);
-                                    Assert.Null(actualSourceMember);
-                                    Assert.Same(entityWrapper, actualWrappedSource);
-                                    Assert.Null(actualTargetMember);
-                                    Assert.Same(collection, actualTargets);
-                                    Assert.Equal(isLoadedValue, actualSetIsLoaded);
+                                    {
+                                        timesUpdateRelationshipsCalled++;
+                                        Assert.Same(objectContext, actualContext);
+                                        Assert.Equal(mergeOption, actualMergeOption);
+                                        Assert.Null(actualAssociationSet);
+                                        Assert.Null(actualSourceMember);
+                                        Assert.Same(entityWrapper, actualWrappedSource);
+                                        Assert.Null(actualTargetMember);
+                                        Assert.Same(collection, actualTargets);
+                                        Assert.Equal(isLoadedValue, actualSetIsLoaded);
 
-                                    return 0;
-                                });
+                                        return 0;
+                                    });
 
                         var relatedEnd = relatedEndMock.Object;
 
@@ -155,7 +161,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         relatedEndMock.Object.Merge<object>(collection, mergeOption, isLoadedValue);
                         Assert.Equal(isLoadedValue, relatedEnd.IsLoaded);
 
-                        Assert.True(1 == timesUpdateRelationshipsCalled, "Expected UpdateRelationships to be called once for MergeOption." + mergeOption);
+                        Assert.True(
+                            1 == timesUpdateRelationshipsCalled,
+                            "Expected UpdateRelationships to be called once for MergeOption." + mergeOption);
                     }
                 }
             }
@@ -176,27 +184,31 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var mockEntityWrapperFactory = new Mock<EntityWrapperFactory>(MockBehavior.Strict);
                 EntityEntry existingEntry = null;
                 mockEntityWrapperFactory
-                    .Setup(m => m.WrapEntityUsingStateManagerGettingEntry(It.IsAny<object>(), It.IsAny<ObjectStateManager>(), out existingEntry))
-                    .Returns<object, ObjectStateManager, EntityEntry>((object entity, ObjectStateManager stateManager, EntityEntry actualExistingEntry) =>
-                    {
-                        return CreateMockEntityWrapper(entity).Object;
-                    });
+                    .Setup(
+                        m =>
+                        m.WrapEntityUsingStateManagerGettingEntry(It.IsAny<object>(), It.IsAny<ObjectStateManager>(), out existingEntry))
+                    .Returns(
+                        (object entity, ObjectStateManager stateManager, EntityEntry actualExistingEntry) => { return CreateMockEntityWrapper(entity).Object; });
 
                 return mockEntityWrapperFactory;
             }
 
             private static Mock<RelatedEnd> CreateMockRelatedEnd()
             {
-                var relatedEndMock = new Mock<RelatedEnd>() { CallBase = true };
+                var relatedEndMock = new Mock<RelatedEnd>
+                                         {
+                                             CallBase = true
+                                         };
 
                 var associationType = new AssociationType(
-                                    name: "associationName",
-                                    namespaceName: "associationNamespace",
-                                    foreignKey: true,
-                                    dataSpace: DataSpace.CSpace);
+                    name: "associationName",
+                    namespaceName: "associationNamespace",
+                    foreignKey: true,
+                    dataSpace: DataSpace.CSpace);
                 var associationSet = new AssociationSet(name: "associationSetName", associationType: associationType);
 
-                var refType = new RefType(new EntityType(name: "entityTypeName", namespaceName: "entityTypeNamespace", dataSpace: DataSpace.CSpace));
+                var refType =
+                    new RefType(new EntityType(name: "entityTypeName", namespaceName: "entityTypeNamespace", dataSpace: DataSpace.CSpace));
                 var toEndMember = new AssociationEndMember(
                     name: "toEndMember",
                     endRefType: refType,

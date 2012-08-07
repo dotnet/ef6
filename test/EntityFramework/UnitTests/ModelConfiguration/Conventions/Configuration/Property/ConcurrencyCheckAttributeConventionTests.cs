@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_attribute_if_already_set()
         {
-            var propertyConfiguration = new PrimitivePropertyConfiguration { ConcurrencyMode = EdmConcurrencyMode.None };
+            var propertyConfiguration = new PrimitivePropertyConfiguration
+                                            {
+                                                ConcurrencyMode = EdmConcurrencyMode.None
+                                            };
 
             new ConcurrencyCheckAttributeConvention.ConcurrencyCheckAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new ConcurrencyCheckAttribute());

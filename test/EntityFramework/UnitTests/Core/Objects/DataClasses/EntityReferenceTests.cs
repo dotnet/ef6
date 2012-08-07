@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections.Generic;
@@ -67,11 +68,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var objectContext = entityReference.ObjectContext;
                 var objectStateManagerMock = Mock.Get(objectContext.ObjectStateManager);
 
-                objectStateManagerMock.Verify(m =>
-                    m.RemoveRelationships(MergeOption.OverwriteChanges,
-                    (AssociationSet)entityReference.RelationshipSet,
-                    entityReference.WrappedOwner.EntityKey,
-                    (AssociationEndMember)entityReference.FromEndMember));
+                objectStateManagerMock.Verify(
+                    m =>
+                    m.RemoveRelationships(
+                        MergeOption.OverwriteChanges,
+                        (AssociationSet)entityReference.RelationshipSet,
+                        entityReference.WrappedOwner.EntityKey,
+                        (AssociationEndMember)entityReference.FromEndMember));
             }
 
             [Fact]
@@ -86,11 +89,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var objectContext = entityReference.ObjectContext;
                 var objectStateManagerMock = Mock.Get(objectContext.ObjectStateManager);
 
-                objectStateManagerMock.Verify(m =>
-                    m.RemoveRelationships(MergeOption.PreserveChanges,
-                    (AssociationSet)entityReference.RelationshipSet,
-                    entityReference.WrappedOwner.EntityKey,
-                    (AssociationEndMember)entityReference.FromEndMember));
+                objectStateManagerMock.Verify(
+                    m =>
+                    m.RemoveRelationships(
+                        MergeOption.PreserveChanges,
+                        (AssociationSet)entityReference.RelationshipSet,
+                        entityReference.WrappedOwner.EntityKey,
+                        (AssociationEndMember)entityReference.FromEndMember));
             }
 
             [Fact]
@@ -104,14 +109,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             private void Calls_merge_if_an_entity_is_available(MergeOption mergeOption)
             {
-                var entityReferenceMock = MockHelper.CreateMockEntityReference<object>(refreshedValue: new object());
-                int timesMergeCalled = 0;
+                var entityReferenceMock = MockHelper.CreateMockEntityReference(refreshedValue: new object());
+                var timesMergeCalled = 0;
                 entityReferenceMock.Setup(m => m.Merge(It.IsAny<IEnumerable<object>>(), It.IsAny<MergeOption>(), true))
-                    .Callback((IEnumerable<object> collection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                    {
-                        timesMergeCalled++;
-                        Assert.Equal(mergeOption, actualMergeOption);
-                    });
+                    .Callback(
+                        (IEnumerable<object> collection, MergeOption actualMergeOption, bool setIsLoaded) =>
+                            {
+                                timesMergeCalled++;
+                                Assert.Equal(mergeOption, actualMergeOption);
+                            });
 
                 var entityReference = entityReferenceMock.Object;
                 entityReference.Load(mergeOption);

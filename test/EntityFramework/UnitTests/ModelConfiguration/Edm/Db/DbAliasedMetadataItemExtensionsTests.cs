@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
 {
     using System.Collections.Generic;
@@ -14,11 +15,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
 
             Assert.Equal("Foo", namedItems.UniquifyIdentifier("Foo"));
 
-            namedItems.Add(new DbTableMetadata { DatabaseIdentifier = "Foo" });
+            namedItems.Add(
+                new DbTableMetadata
+                    {
+                        DatabaseIdentifier = "Foo"
+                    });
 
             Assert.Equal("Foo1", namedItems.UniquifyIdentifier("Foo"));
 
-            namedItems.Add(new DbTableMetadata { DatabaseIdentifier = "Foo1" });
+            namedItems.Add(
+                new DbTableMetadata
+                    {
+                        DatabaseIdentifier = "Foo1"
+                    });
 
             Assert.Equal("Foo2", namedItems.UniquifyIdentifier("Foo"));
         }

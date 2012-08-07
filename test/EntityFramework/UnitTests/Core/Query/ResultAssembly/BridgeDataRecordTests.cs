@@ -18,7 +18,8 @@ namespace System.Data.Entity.Core.Query
         {
             var bridgeDataRecord = CreateBridgeDataRecord();
 
-            Assert.Equal("values",
+            Assert.Equal(
+                "values",
                 Assert.Throws<ArgumentNullException>(
                     () => bridgeDataRecord.GetValues(null)).ParamName);
         }
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Query
             bridgeDataRecord.CloseExplicitlyAsync(CancellationToken.None).Wait();
             Assert.True(bridgeDataRecord.IsExplicitlyClosed);
         }
-        
+
         [Fact]
         public void CloseImplicitly_doesnt_throw()
         {
@@ -78,9 +79,9 @@ namespace System.Data.Entity.Core.Query
                 coordinatorFactory,
                 /*checkPermissions*/ null,
                 /*readerOwned*/ false)
-            {
-                CallBase = true
-            };
+                                 {
+                                     CallBase = true
+                                 };
 
             return new BridgeDataRecord(shaperMock.Object, 0);
         }

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                .Map(
+                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Namespaces.Single().AssociationTypes.Count);
@@ -36,11 +38,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType { Name = "Source" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "Source"
+                                 };
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                .Map(
+                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count);
@@ -61,7 +67,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(typeof(List<NavigationPropertyMapperTests>), "Nav"), entityType,
+                .Map(
+                    new MockPropertyInfo(typeof(List<NavigationPropertyMapperTests>), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Namespaces.Single().AssociationTypes.Count);
@@ -81,7 +88,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(typeof(NavigationPropertyMapperTests[]), "Nav"), entityType,
+                .Map(
+                    new MockPropertyInfo(typeof(NavigationPropertyMapperTests[]), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(0, model.Namespaces.Single().AssociationTypes.Count);
@@ -96,7 +104,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                .Map(
+                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, entityType.DeclaredNavigationProperties.Count);

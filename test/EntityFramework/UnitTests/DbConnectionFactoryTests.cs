@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -19,8 +20,8 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for implementations of IDbConnectionFactory.
-    /// </summary> 
+    ///     Unit tests for implementations of IDbConnectionFactory.
+    /// </summary>
     public class DbConnectionFactoryTests : TestBase
     {
         #region Test setup
@@ -125,7 +126,9 @@ namespace ProductivityApiUnitTests
         {
             var factory = new SqlCeConnectionFactory("System.Data.FakeSqlClient", @"|SpikeLovesDrusila", "");
 
-            Assert.Equal(GenerateException(() => Path.Combine("|", "Willow")).Message, Assert.Throws<ArgumentException>(() => factory.CreateConnection("FakeDatabaseName")).Message);
+            Assert.Equal(
+                GenerateException(() => Path.Combine("|", "Willow")).Message,
+                Assert.Throws<ArgumentException>(() => factory.CreateConnection("FakeDatabaseName")).Message);
         }
 
         [Fact]
@@ -133,73 +136,99 @@ namespace ProductivityApiUnitTests
         {
             var factory = new SqlCeConnectionFactory("System.Data.FakeSqlClient", @"AnyaLovesXander|", "");
 
-            Assert.Equal(GenerateException(() => Path.Combine("|", "Willow")).Message, Assert.Throws<ArgumentException>(() => factory.CreateConnection("FakeDatabaseName")).Message);
+            Assert.Equal(
+                GenerateException(() => Path.Combine("|", "Willow")).Message,
+                Assert.Throws<ArgumentException>(() => factory.CreateConnection("FakeDatabaseName")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_null_database_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient").CreateConnection(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient").CreateConnection(null)).
+                    Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_empty_database_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient").CreateConnection("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient").CreateConnection("")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_whitespace_database_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient").CreateConnection(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient").CreateConnection(" ")).
+                    Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_null_provider_invariant_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(null)).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_empty_provider_invariant_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_whitespace_provider_invariant_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(" ")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_null_provider_invariant_name_to_long_constructor()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(null, "", "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(null, "", "")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_empty_provider_invariant_name_to_long_constructor()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("", "", "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory("", "", "")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_whitespace_provider_invariant_name_to_long_constructor()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("providerInvariantName"), Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(" ", "", "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                Assert.Throws<ArgumentException>(() => new SqlCeConnectionFactory(" ", "", "")).Message);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_null_base_connection_string()
         {
-            Assert.Equal("baseConnectionString", Assert.Throws<ArgumentNullException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient", "", null)).ParamName);
+            Assert.Equal(
+                "baseConnectionString",
+                Assert.Throws<ArgumentNullException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient", "", null)).ParamName);
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_given_null_database_path()
         {
-            Assert.Equal("databaseDirectory", Assert.Throws<ArgumentNullException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient", null, "")).ParamName);
+            Assert.Equal(
+                "databaseDirectory",
+                Assert.Throws<ArgumentNullException>(() => new SqlCeConnectionFactory("System.Data.FakeSqlClient", null, "")).ParamName);
         }
 
         [Fact]
@@ -210,7 +239,9 @@ namespace ProductivityApiUnitTests
                 FakeSqlProviderFactory.Instance.ForceNullConnection = true;
                 var factory = new SqlCeConnectionFactory("System.Data.FakeSqlClient");
 
-                Assert.Equal(Strings.DbContext_ProviderReturnedNullConnection, Assert.Throws<InvalidOperationException>(() => factory.CreateConnection("FakeDatabaseName")).Message);
+                Assert.Equal(
+                    Strings.DbContext_ProviderReturnedNullConnection,
+                    Assert.Throws<InvalidOperationException>(() => factory.CreateConnection("FakeDatabaseName")).Message);
             }
             finally
             {
@@ -255,7 +286,9 @@ namespace ProductivityApiUnitTests
         {
             var factory = new SqlConnectionFactory();
 
-            Assert.Equal(Strings.SqlConnectionFactory_MdfNotSupported("FakeDatabaseName.mdf"), Assert.Throws<NotSupportedException>(() => factory.CreateConnection("FakeDatabaseName.mdf")).Message);
+            Assert.Equal(
+                Strings.SqlConnectionFactory_MdfNotSupported("FakeDatabaseName.mdf"),
+                Assert.Throws<NotSupportedException>(() => factory.CreateConnection("FakeDatabaseName.mdf")).Message);
         }
 
         [Fact]
@@ -280,7 +313,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SqlConnectionFactory_replaces_any_initial_catalog_set_in_the_base_connection()
         {
-            var factory = new SqlConnectionFactory(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Initial Catalog=TheManWithTheStick");
+            var factory = new SqlConnectionFactory(
+                @"Data Source=.\SQLEXPRESS; Integrated Security=True; Initial Catalog=TheManWithTheStick");
 
             var connection = factory.CreateConnection("FakeDatabaseName");
 
@@ -306,7 +340,10 @@ namespace ProductivityApiUnitTests
             mockConnection.SetupProperty(c => c.ConnectionString);
             mockProviderFactory.Setup(m => m.CreateConnection()).Returns(mockConnection.Object);
 
-            var factory = new SqlConnectionFactory { ProviderFactory = name => mockProviderFactory.Object };
+            var factory = new SqlConnectionFactory
+                              {
+                                  ProviderFactory = name => mockProviderFactory.Object
+                              };
 
             var connection = factory.CreateConnection("FakeDatabaseName");
 
@@ -317,7 +354,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SqlConnectionFactory_handles_no_provider_factory_found()
         {
-            var factory = new SqlConnectionFactory { ProviderFactory = name => null };
+            var factory = new SqlConnectionFactory
+                              {
+                                  ProviderFactory = name => null
+                              };
 
             var connection = factory.CreateConnection("FakeDatabaseName");
 
@@ -331,7 +371,10 @@ namespace ProductivityApiUnitTests
             var mockProviderFactory = new Mock<DbProviderFactory>();
             mockProviderFactory.Setup(m => m.CreateConnection()).Returns<DbConnection>(null);
 
-            var factory = new SqlConnectionFactory { ProviderFactory = name => mockProviderFactory.Object };
+            var factory = new SqlConnectionFactory
+                              {
+                                  ProviderFactory = name => mockProviderFactory.Object
+                              };
 
             var connection = factory.CreateConnection("FakeDatabaseName");
 
@@ -346,19 +389,25 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void SqlConnectionFactory_throws_when_given_null_database_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new SqlConnectionFactory().CreateConnection(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new SqlConnectionFactory().CreateConnection(null)).Message);
         }
 
         [Fact]
         public void SqlConnectionFactory_throws_when_given_empty_database_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new SqlConnectionFactory().CreateConnection("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new SqlConnectionFactory().CreateConnection("")).Message);
         }
 
         [Fact]
         public void SqlConnectionFactory_throws_when_given_whitespace_database_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new SqlConnectionFactory().CreateConnection(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new SqlConnectionFactory().CreateConnection(" ")).Message);
         }
 
         [Fact]
@@ -392,7 +441,8 @@ namespace ProductivityApiUnitTests
                 "Data Source=(localdb)\\v11.0", Strings.FailedToGetProviderInformation);
         }
 
-        private void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_connection_string_is_used(string connectionString, string expectedMessage)
+        private void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_connection_string_is_used(
+            string connectionString, string expectedMessage)
         {
             var fakeConnection = new SqlConnection(connectionString);
             var innerException = new ProviderIncompatibleException();
@@ -403,7 +453,9 @@ namespace ProductivityApiUnitTests
                 .Setup("GetDbProviderManifestToken", fakeConnection)
                 .Throws(innerException);
 
-            var ex = Assert.Throws<ProviderIncompatibleException>(() => mockProviderServices.Object.GetProviderManifestTokenChecked(fakeConnection));
+            var ex =
+                Assert.Throws<ProviderIncompatibleException>(
+                    () => mockProviderServices.Object.GetProviderManifestTokenChecked(fakeConnection));
             Assert.Equal(expectedMessage, ex.Message);
             Assert.Same(innerException, ex.InnerException);
         }
@@ -470,61 +522,69 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void LocalDbConnectionFactory_uses_database_name_as_mdf_filename_if_DataDirectory_is_set()
         {
-            WithDataDirectory(@"C:\Some\Data\Directory",
+            WithDataDirectory(
+                @"C:\Some\Data\Directory",
                 () =>
-                {
-                    using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
                     {
-                        Assert.Equal(
-                            @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
-                            connection.ConnectionString);
-                    }
-                });
+                        using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
+                        {
+                            Assert.Equal(
+                                @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
+                                connection.ConnectionString);
+                        }
+                    });
         }
 
         [Fact]
         public void LocalDbConnectionFactory_does_not_set_AttachDbFileName_if_DataDirectory_is_not_set()
         {
-            WithDataDirectory(null,
+            WithDataDirectory(
+                null,
                 () =>
-                {
-                    using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
                     {
-                        Assert.Equal(
-                            @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
-                            connection.ConnectionString);
-                    }
-                });
+                        using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
+                        {
+                            Assert.Equal(
+                                @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
+                                connection.ConnectionString);
+                        }
+                    });
         }
 
         [Fact]
         public void LocalDbConnectionFactory_creates_a_LocalDb_connection_from_a_database_name_using_given_base_connection_string()
         {
-            WithDataDirectory(null,
+            WithDataDirectory(
+                null,
                 () =>
-                {
-                    using (var connection = new LocalDbConnectionFactory("v99", "Integrated Security=True").CreateConnection("MyDatabase"))
                     {
-                        Assert.Equal(
-                            @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True",
-                            connection.ConnectionString);
-                    }
-                });
+                        using (
+                            var connection = new LocalDbConnectionFactory("v99", "Integrated Security=True").CreateConnection("MyDatabase"))
+                        {
+                            Assert.Equal(
+                                @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True",
+                                connection.ConnectionString);
+                        }
+                    });
         }
 
         [Fact]
-        public void LocalDbConnectionFactory_creates_a_LocalDb_connection_with_AttachDbFileName_from_a_database_name_using_given_base_connection_string_if_DataDirectory_is_set()
+        public void
+            LocalDbConnectionFactory_creates_a_LocalDb_connection_with_AttachDbFileName_from_a_database_name_using_given_base_connection_string_if_DataDirectory_is_set
+            ()
         {
-            WithDataDirectory(@"C:\Some\Data\Directory",
+            WithDataDirectory(
+                @"C:\Some\Data\Directory",
                 () =>
-                {
-                    using (var connection = new LocalDbConnectionFactory("v99", "Integrated Security=True").CreateConnection("MyDatabase"))
                     {
-                        Assert.Equal(
-                            @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True",
-                            connection.ConnectionString);
-                    }
-                });
+                        using (
+                            var connection = new LocalDbConnectionFactory("v99", "Integrated Security=True").CreateConnection("MyDatabase"))
+                        {
+                            Assert.Equal(
+                                @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True",
+                                connection.ConnectionString);
+                        }
+                    });
         }
 
         [Fact]
@@ -539,17 +599,21 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void LocalDbConnectionFactory_uses_AttachDbFilename_set_by_factory_even_if_set_in_base_connection_string()
         {
-            WithDataDirectory(@"C:\Some\Data\Directory",
+            WithDataDirectory(
+                @"C:\Some\Data\Directory",
                 () =>
-                {
-                    using (var connection = new LocalDbConnectionFactory("v99", "AttachDbFilename=|DataDirectory|ADifferent.mdf;")
-                                .CreateConnection("MyDatabase"))
                     {
-                        Assert.Equal(
-                            "|DataDirectory|MyDatabase.mdf",
-                            new DbConnectionStringBuilder { ConnectionString = connection.ConnectionString }["AttachDbFilename"]);
-                    }
-                });
+                        using (var connection = new LocalDbConnectionFactory("v99", "AttachDbFilename=|DataDirectory|ADifferent.mdf;")
+                            .CreateConnection("MyDatabase"))
+                        {
+                            Assert.Equal(
+                                "|DataDirectory|MyDatabase.mdf",
+                                new DbConnectionStringBuilder
+                                    {
+                                        ConnectionString = connection.ConnectionString
+                                    }["AttachDbFilename"]);
+                        }
+                    });
         }
 
         [Fact]

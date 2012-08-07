@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             var sourceEnumerable = new[] { new object[] { 1 }, new object[] { 2 } };
 
-            var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<object>(shaper => shaper.Reader.GetValue(0));
+            var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory(shaper => shaper.Reader.GetValue(0));
 
             var shaperMock = new Mock<Shaper<object>>(
                 MockHelper.CreateMockDbDataReader(sourceEnumerable),
@@ -69,7 +70,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                        {
                                            new object[] { 1, "A", null },
                                            new object[] { 2, null, "X" },
-                                           new object[] { 3, "B", "Z" }, // Should stop reading at "B", since the coordinators are at the same depth
+                                           new object[] { 3, "B", "Z" },
+                                           // Should stop reading at "B", since the coordinators are at the same depth
                                            new object[] { 4, "C", null },
                                            new object[] { 4, "D", null } // 4 shouldn't be added as it's repeated
                                        };
@@ -124,14 +126,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
                 e =>
-                {
-                    var actualValues = new List<object>();
-                    while (e.MoveNext())
                     {
-                        actualValues.Add(e.Current.PendingColumnValues[0]);
-                    }
-                    return actualValues;
-                });
+                        var actualValues = new List<object>();
+                        while (e.MoveNext())
+                        {
+                            actualValues.Add(e.Current.PendingColumnValues[0]);
+                        }
+                        return actualValues;
+                    });
         }
 
         [Fact]
@@ -139,14 +141,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
                 e =>
-                {
-                    var actualValues = new List<object>();
-                    while (e.MoveNextAsync(CancellationToken.None).Result)
                     {
-                        actualValues.Add(e.Current.PendingColumnValues[0]);
-                    }
-                    return actualValues;
-                });
+                        var actualValues = new List<object>();
+                        while (e.MoveNextAsync(CancellationToken.None).Result)
+                        {
+                            actualValues.Add(e.Current.PendingColumnValues[0]);
+                        }
+                        return actualValues;
+                    });
         }
 
         private void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
@@ -156,7 +158,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                        {
                                            new object[] { 1, "A", null },
                                            new object[] { 2, null, "X" },
-                                           new object[] { 3, "B", "Z" }, // Should stop reading at "B", since the coordinators are at the same depth
+                                           new object[] { 3, "B", "Z" },
+                                           // Should stop reading at "B", since the coordinators are at the same depth
                                            new object[] { 4, "C", null },
                                            new object[] { 4, "D", null } // 4 shouldn't be added as it's repeated
                                        };

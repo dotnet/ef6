@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -15,21 +16,35 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for the Property, Reference, and Collection methods on DbEntityEntry.
+    ///     Unit tests for the Property, Reference, and Collection methods on DbEntityEntry.
     /// </summary>
     public class PropertyApiTests : TestBase
     {
         #region Helpers
 
-        private static readonly PropertyEntryMetadata _valueTypePropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(int), "ValueTypeProp", isMapped: true, isComplex: false);
-        private static readonly PropertyEntryMetadata _refTypePropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(string), "RefTypeProp", isMapped: true, isComplex: false);
-        private static readonly PropertyEntryMetadata _complexPropertyMetadata = new PropertyEntryMetadata(typeof(FakeWithProps), typeof(FakeWithProps), "ComplexProp", isMapped: true, isComplex: true);
-        private static readonly PropertyEntryMetadata _fakeNamedFooPropertyMetadata = new PropertyEntryMetadata(typeof(FakeEntity), typeof(string), "Foo", isMapped: false, isComplex: false);
+        private static readonly PropertyEntryMetadata _valueTypePropertyMetadata = new PropertyEntryMetadata(
+            typeof(FakeWithProps), typeof(int), "ValueTypeProp", isMapped: true, isComplex: false);
 
-        private static readonly NavigationEntryMetadata _referenceMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "Reference", isCollection: false);
-        private static readonly NavigationEntryMetadata _collectionMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
-        private static readonly NavigationEntryMetadata _hiddenReferenceMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "HiddenReference", isCollection: false);
-        private static readonly NavigationEntryMetadata _hiddenCollectionMetadata = new NavigationEntryMetadata(typeof(FakeWithProps), typeof(FakeEntity), "HiddenCollection", isCollection: true);
+        private static readonly PropertyEntryMetadata _refTypePropertyMetadata = new PropertyEntryMetadata(
+            typeof(FakeWithProps), typeof(string), "RefTypeProp", isMapped: true, isComplex: false);
+
+        private static readonly PropertyEntryMetadata _complexPropertyMetadata = new PropertyEntryMetadata(
+            typeof(FakeWithProps), typeof(FakeWithProps), "ComplexProp", isMapped: true, isComplex: true);
+
+        private static readonly PropertyEntryMetadata _fakeNamedFooPropertyMetadata = new PropertyEntryMetadata(
+            typeof(FakeEntity), typeof(string), "Foo", isMapped: false, isComplex: false);
+
+        private static readonly NavigationEntryMetadata _referenceMetadata = new NavigationEntryMetadata(
+            typeof(FakeWithProps), typeof(FakeEntity), "Reference", isCollection: false);
+
+        private static readonly NavigationEntryMetadata _collectionMetadata = new NavigationEntryMetadata(
+            typeof(FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
+
+        private static readonly NavigationEntryMetadata _hiddenReferenceMetadata = new NavigationEntryMetadata(
+            typeof(FakeWithProps), typeof(FakeEntity), "HiddenReference", isCollection: false);
+
+        private static readonly NavigationEntryMetadata _hiddenCollectionMetadata = new NavigationEntryMetadata(
+            typeof(FakeWithProps), typeof(FakeEntity), "HiddenCollection", isCollection: true);
 
         private static Mock<IEntityStateEntry> CreateMockStateEntry<TEntity>() where TEntity : class, new()
         {
@@ -37,22 +52,31 @@ namespace ProductivityApiUnitTests
             var fakeEntity = new TEntity();
             mockStateEntry.Setup(e => e.Entity).Returns(fakeEntity);
 
-            var modifiedProps = new List<string> { "Foo", "ValueTypeProp", "Bar" };
+            var modifiedProps = new List<string>
+                                    {
+                                        "Foo",
+                                        "ValueTypeProp",
+                                        "Bar"
+                                    };
             mockStateEntry.Setup(e => e.GetModifiedProperties()).Returns(modifiedProps);
             mockStateEntry.Setup(e => e.SetModifiedProperty(It.IsAny<string>())).Callback<string>(modifiedProps.Add);
-            
+
             return mockStateEntry;
         }
 
-        private static Mock<InternalEntityEntryForMock<FakeWithProps>> CreateMockInternalEntry(InternalPropertyValues currentValues = null,
-                                                                                               InternalPropertyValues originalValues = null)
+        private static Mock<InternalEntityEntryForMock<FakeWithProps>> CreateMockInternalEntry(
+            InternalPropertyValues currentValues = null,
+            InternalPropertyValues originalValues = null)
         {
             currentValues = currentValues ?? CreateSimpleValues(10);
             var entity = currentValues.ToObject();
             var mockInternalEntry = new Mock<InternalEntityEntryForMock<FakeWithProps>>();
-            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(_valueTypePropertyMetadata);
-            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(_refTypePropertyMetadata);
-            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ComplexProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(_complexPropertyMetadata);
+            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(
+                _valueTypePropertyMetadata);
+            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(
+                _refTypePropertyMetadata);
+            mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("ComplexProp", It.IsAny<Type>(), It.IsAny<Type>())).Returns(
+                _complexPropertyMetadata);
             mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("Reference", It.IsAny<Type>(), It.IsAny<Type>()));
             mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("Collection", It.IsAny<Type>(), It.IsAny<Type>()));
             mockInternalEntry.Setup(e => e.ValidateAndGetPropertyMetadata("Missing", It.IsAny<Type>(), It.IsAny<Type>()));
@@ -74,7 +98,8 @@ namespace ProductivityApiUnitTests
             return mockInternalEntry;
         }
 
-        private static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntryForNavs<TEntity>(TEntity entity, IRelatedEnd relatedEnd, bool isDetached) where TEntity : class, new() 
+        private static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntryForNavs<TEntity>(
+            TEntity entity, IRelatedEnd relatedEnd, bool isDetached) where TEntity : class, new()
         {
             var mockInternalEntry = new Mock<InternalEntityEntryForMock<TEntity>>();
             mockInternalEntry.SetupGet(e => e.Entity).Returns(entity);
@@ -84,7 +109,8 @@ namespace ProductivityApiUnitTests
             return mockInternalEntry;
         }
 
-        internal class InternalEntityEntryForMock<TEntity> : InternalEntityEntry where TEntity : class, new()
+        internal class InternalEntityEntryForMock<TEntity> : InternalEntityEntry
+            where TEntity : class, new()
         {
             public InternalEntityEntryForMock()
                 : base(new Mock<InternalContextForMock>().Object, CreateMockStateEntry<TEntity>().Object)
@@ -108,26 +134,26 @@ namespace ProductivityApiUnitTests
         private static TestInternalPropertyValues<FakeWithProps> CreateSimpleValues(int tag)
         {
             var level3Properties = new Dictionary<string, object>
-            {
-                {"ValueTypeProp", 3 + tag},
-                {"RefTypeProp", "3" + tag},
-            };
+                                       {
+                                           { "ValueTypeProp", 3 + tag },
+                                           { "RefTypeProp", "3" + tag },
+                                       };
             var level3Values = new TestInternalPropertyValues<FakeWithProps>(level3Properties);
 
             var level2Properties = new Dictionary<string, object>
-            {
-                {"ValueTypeProp", 2 + tag},
-                {"RefTypeProp", "2" + tag},
-                {"ComplexProp", level3Values},
-            };
+                                       {
+                                           { "ValueTypeProp", 2 + tag },
+                                           { "RefTypeProp", "2" + tag },
+                                           { "ComplexProp", level3Values },
+                                       };
             var level2Values = new TestInternalPropertyValues<FakeWithProps>(level2Properties, new[] { "ComplexProp" });
 
             var level1Properties = new Dictionary<string, object>
-            {
-                {"ValueTypeProp", 1 + tag},
-                {"RefTypeProp", "1" + tag},
-                {"ComplexProp", level2Values},
-            };
+                                       {
+                                           { "ValueTypeProp", 1 + tag },
+                                           { "RefTypeProp", "1" + tag },
+                                           { "ComplexProp", level2Values },
+                                       };
             return new TestInternalPropertyValues<FakeWithProps>(level1Properties, new[] { "ComplexProp" });
         }
 
@@ -141,7 +167,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbReferenceEntry<FakeWithProps, FakeEntity> propEntry = entityEntry.Reference(e => e.Reference);
+            var propEntry = entityEntry.Reference(e => e.Reference);
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Reference"));
@@ -153,7 +179,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbReferenceEntry propEntry = entityEntry.Reference("Reference");
+            var propEntry = entityEntry.Reference("Reference");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Reference"));
@@ -165,7 +191,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbReferenceEntry<FakeWithProps, FakeEntity> propEntry = entityEntry.Reference<FakeEntity>("Reference");
+            var propEntry = entityEntry.Reference<FakeEntity>("Reference");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Reference"));
@@ -177,7 +203,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry(mockInternalEntry.Object);
 
-            DbReferenceEntry propEntry = entityEntry.Reference("Reference");
+            var propEntry = entityEntry.Reference("Reference");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Reference"));
@@ -189,7 +215,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbCollectionEntry<FakeWithProps, FakeEntity> propEntry = entityEntry.Collection(e => e.Collection);
+            var propEntry = entityEntry.Collection(e => e.Collection);
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Collection"));
@@ -201,7 +227,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbCollectionEntry propEntry = entityEntry.Collection("Collection");
+            var propEntry = entityEntry.Collection("Collection");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Collection"));
@@ -213,7 +239,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbCollectionEntry<FakeWithProps, FakeEntity> propEntry = entityEntry.Collection<FakeEntity>("Collection");
+            var propEntry = entityEntry.Collection<FakeEntity>("Collection");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Collection"));
@@ -225,7 +251,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry(mockInternalEntry.Object);
 
-            DbCollectionEntry propEntry = entityEntry.Collection("Collection");
+            var propEntry = entityEntry.Collection("Collection");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.GetNavigationMetadata("Collection"));
@@ -237,7 +263,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry<FakeWithProps, int> propEntry = entityEntry.Property(e => e.ValueTypeProp);
+            var propEntry = entityEntry.Property(e => e.ValueTypeProp);
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)));
@@ -249,7 +275,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry propEntry = entityEntry.Property("ValueTypeProp");
+            var propEntry = entityEntry.Property("ValueTypeProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)));
@@ -261,7 +287,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry<FakeWithProps, int> propEntry = entityEntry.Property<int>("ValueTypeProp");
+            var propEntry = entityEntry.Property<int>("ValueTypeProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)));
@@ -273,7 +299,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry(mockInternalEntry.Object);
 
-            DbPropertyEntry propEntry = entityEntry.Property("ValueTypeProp");
+            var propEntry = entityEntry.Property("ValueTypeProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)));
@@ -285,7 +311,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry<FakeWithProps, string> propEntry = entityEntry.Property(e => e.RefTypeProp);
+            var propEntry = entityEntry.Property(e => e.RefTypeProp);
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", typeof(FakeWithProps), typeof(string)));
@@ -297,7 +323,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry propEntry = entityEntry.Property("RefTypeProp");
+            var propEntry = entityEntry.Property("RefTypeProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", typeof(FakeWithProps), typeof(object)));
@@ -309,7 +335,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry<FakeWithProps, string> propEntry = entityEntry.Property<string>("RefTypeProp");
+            var propEntry = entityEntry.Property<string>("RefTypeProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", typeof(FakeWithProps), typeof(string)));
@@ -321,7 +347,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry(mockInternalEntry.Object);
 
-            DbPropertyEntry propEntry = entityEntry.Property("RefTypeProp");
+            var propEntry = entityEntry.Property("RefTypeProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("RefTypeProp", typeof(FakeWithProps), typeof(object)));
@@ -333,7 +359,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry<FakeWithProps, FakeWithProps> propEntry = entityEntry.Property(e => e.ComplexProp);
+            var propEntry = entityEntry.Property(e => e.ComplexProp);
             Assert.NotNull(propEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(propEntry);
 
@@ -346,7 +372,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry propEntry = entityEntry.Property("ComplexProp");
+            var propEntry = entityEntry.Property("ComplexProp");
             Assert.NotNull(propEntry);
             Assert.IsType<DbComplexPropertyEntry>(propEntry);
 
@@ -359,7 +385,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbPropertyEntry<FakeWithProps, FakeWithProps> propEntry = entityEntry.Property<FakeWithProps>("ComplexProp");
+            var propEntry = entityEntry.Property<FakeWithProps>("ComplexProp");
             Assert.NotNull(propEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(propEntry);
 
@@ -372,7 +398,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry(mockInternalEntry.Object);
 
-            DbPropertyEntry propEntry = entityEntry.Property("ComplexProp");
+            var propEntry = entityEntry.Property("ComplexProp");
             Assert.NotNull(propEntry);
             Assert.IsType<DbComplexPropertyEntry>(propEntry);
 
@@ -385,7 +411,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbComplexPropertyEntry<FakeWithProps, FakeWithProps> propEntry = entityEntry.ComplexProperty(e => e.ComplexProp);
+            var propEntry = entityEntry.ComplexProperty(e => e.ComplexProp);
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)));
@@ -397,7 +423,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbComplexPropertyEntry propEntry = entityEntry.ComplexProperty("ComplexProp");
+            var propEntry = entityEntry.ComplexProperty("ComplexProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)));
@@ -409,7 +435,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry<FakeWithProps>(mockInternalEntry.Object);
 
-            DbComplexPropertyEntry<FakeWithProps, FakeWithProps> propEntry = entityEntry.ComplexProperty<FakeWithProps>("ComplexProp");
+            var propEntry = entityEntry.ComplexProperty<FakeWithProps>("ComplexProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)));
@@ -421,7 +447,7 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntry();
             var entityEntry = new DbEntityEntry(mockInternalEntry.Object);
 
-            DbComplexPropertyEntry propEntry = entityEntry.ComplexProperty("ComplexProp");
+            var propEntry = entityEntry.ComplexProperty("ComplexProp");
             Assert.NotNull(propEntry);
 
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)));
@@ -627,7 +653,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal("navigationProperty", Assert.Throws<ArgumentNullException>(() => entityEntry.Reference((Expression<Func<FakeWithProps, string>>)null)).ParamName);
+            Assert.Equal(
+                "navigationProperty",
+                Assert.Throws<ArgumentNullException>(() => entityEntry.Reference((Expression<Func<FakeWithProps, string>>)null)).ParamName);
         }
 
         [Fact]
@@ -635,7 +663,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference(null)).Message);
         }
 
         [Fact]
@@ -643,7 +673,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference("")).Message);
         }
 
         [Fact]
@@ -651,7 +683,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference(" ")).Message);
         }
 
         [Fact]
@@ -659,7 +693,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference<object>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference<object>((string)null)).Message);
         }
 
         [Fact]
@@ -667,7 +703,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference<string>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference<string>("")).Message);
         }
 
         [Fact]
@@ -675,7 +713,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference<Random>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference<Random>(" ")).Message);
         }
 
         [Fact]
@@ -683,7 +723,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference(null)).Message);
         }
 
         [Fact]
@@ -691,7 +733,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference("")).Message);
         }
 
         [Fact]
@@ -699,7 +743,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Reference(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference(" ")).Message);
         }
 
         [Fact]
@@ -707,7 +753,10 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal("navigationProperty", Assert.Throws<ArgumentNullException>(() => entityEntry.Collection((Expression<Func<FakeWithProps, ICollection<string>>>)null)).ParamName);
+            Assert.Equal(
+                "navigationProperty",
+                Assert.Throws<ArgumentNullException>(
+                    () => entityEntry.Collection((Expression<Func<FakeWithProps, ICollection<string>>>)null)).ParamName);
         }
 
         [Fact]
@@ -715,7 +764,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection(null)).Message);
         }
 
         [Fact]
@@ -723,7 +774,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection("")).Message);
         }
 
         [Fact]
@@ -731,7 +784,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection(" ")).Message);
         }
 
         [Fact]
@@ -739,7 +794,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection<string>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection<string>((string)null)).Message);
         }
 
         [Fact]
@@ -747,7 +804,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection<object>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection<object>("")).Message);
         }
 
         [Fact]
@@ -755,7 +814,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection<Random>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection<Random>(" ")).Message);
         }
 
         [Fact]
@@ -763,7 +824,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection(null)).Message);
         }
 
         [Fact]
@@ -771,7 +834,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection("")).Message);
         }
 
         [Fact]
@@ -779,7 +844,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("navigationProperty"), Assert.Throws<ArgumentException>(() => entityEntry.Collection(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("navigationProperty"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection(" ")).Message);
         }
 
         [Fact]
@@ -787,7 +854,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal("property", Assert.Throws<ArgumentNullException>(() => entityEntry.Property((Expression<Func<FakeWithProps, string>>)null)).ParamName);
+            Assert.Equal(
+                "property",
+                Assert.Throws<ArgumentNullException>(() => entityEntry.Property((Expression<Func<FakeWithProps, string>>)null)).ParamName);
         }
 
         [Fact]
@@ -795,7 +864,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(null)).Message);
         }
 
         [Fact]
@@ -803,7 +874,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property("")).Message);
         }
 
         [Fact]
@@ -811,7 +883,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(" ")).Message);
         }
 
         [Fact]
@@ -819,7 +893,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property<int>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<int>((string)null)).Message);
         }
 
         [Fact]
@@ -827,7 +903,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("")).Message);
         }
 
         [Fact]
@@ -835,7 +913,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property<Random>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<Random>(" ")).Message);
         }
 
         [Fact]
@@ -843,7 +923,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(null)).Message);
         }
 
         [Fact]
@@ -851,7 +933,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property("")).Message);
         }
 
         [Fact]
@@ -859,7 +942,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Property(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(" ")).Message);
         }
 
         [Fact]
@@ -867,7 +952,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(null)).Message);
         }
 
         [Fact]
@@ -875,7 +962,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("")).Message);
         }
 
         [Fact]
@@ -883,7 +972,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(" ")).Message);
         }
 
         [Fact]
@@ -891,7 +982,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<int>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<int>((string)null)).Message);
         }
 
         [Fact]
@@ -899,7 +992,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("")).Message);
         }
 
         [Fact]
@@ -907,7 +1002,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<Random>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<Random>(" ")).Message);
         }
 
         [Fact]
@@ -915,7 +1012,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(null)).Message);
         }
 
         [Fact]
@@ -923,7 +1022,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("")).Message);
         }
 
         [Fact]
@@ -931,7 +1032,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(" ")).Message);
         }
 
         [Fact]
@@ -939,7 +1042,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member(null)).Message);
         }
 
         [Fact]
@@ -947,7 +1051,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member("")).Message);
         }
 
         [Fact]
@@ -955,7 +1060,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member(" ")).Message);
         }
 
         [Fact]
@@ -963,7 +1069,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member<int>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<int>(null)).Message);
         }
 
         [Fact]
@@ -971,7 +1079,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("")).Message);
         }
 
         [Fact]
@@ -979,7 +1089,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member<Random>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<Random>(" ")).Message);
         }
 
         [Fact]
@@ -987,7 +1099,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member(null)).Message);
         }
 
         [Fact]
@@ -995,7 +1108,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member("")).Message);
         }
 
         [Fact]
@@ -1003,7 +1117,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => entityEntry.Member(" ")).Message);
         }
 
         [Fact]
@@ -1011,7 +1126,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Reference", "FakeWithProps"), "navigationProperty").Message, Assert.Throws<ArgumentException>(() => entityEntry.Reference(e => new FakeEntity())).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Reference", "FakeWithProps"), "navigationProperty").
+                    Message, Assert.Throws<ArgumentException>(() => entityEntry.Reference(e => new FakeEntity())).Message);
         }
 
         [Fact]
@@ -1019,7 +1136,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Collection", "FakeWithProps"), "navigationProperty").Message, Assert.Throws<ArgumentException>(() => entityEntry.Collection(e => new List<FakeEntity>())).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Collection", "FakeWithProps"), "navigationProperty").
+                    Message, Assert.Throws<ArgumentException>(() => entityEntry.Collection(e => new List<FakeEntity>())).Message);
         }
 
         [Fact]
@@ -1027,7 +1146,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message, Assert.Throws<ArgumentException>(() => entityEntry.Property(e => new FakeEntity())).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message,
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(e => new FakeEntity())).Message);
         }
 
         [Fact]
@@ -1035,7 +1156,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message, Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => new FakeEntity())).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message,
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => new FakeEntity())).Message);
         }
 
         #endregion
@@ -1059,7 +1182,8 @@ namespace ProductivityApiUnitTests
         public void Generic_DbPropertyEntry_uses_original_values_on_InternalPropertyEntry()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new DbPropertyEntry<FakeWithProps, int>(new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry<FakeWithProps, int>(
+                new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
 
             var valueBeforeSet = propEntry.OriginalValue;
             propEntry.OriginalValue = -1;
@@ -1085,7 +1209,8 @@ namespace ProductivityApiUnitTests
         public void Generic_DbPropertyEntry_uses_current_values_on_InternalPropertyEntry()
         {
             var entityEntry = CreateMockInternalEntry().Object;
-            var propEntry = new DbPropertyEntry<FakeWithProps, int>(new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
+            var propEntry = new DbPropertyEntry<FakeWithProps, int>(
+                new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata));
 
             var valueBeforeSet = propEntry.CurrentValue;
             propEntry.CurrentValue = -1;
@@ -1114,7 +1239,8 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = CreateMockInternalEntry().Object;
             var mockStateEntry = Mock.Get(entityEntry.ObjectStateEntry);
-            var propEntry = new DbPropertyEntry<FakeWithProps, string>(new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata));
+            var propEntry =
+                new DbPropertyEntry<FakeWithProps, string>(new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata));
 
             Assert.False(propEntry.IsModified);
 
@@ -1311,7 +1437,10 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _refTypePropertyMetadata);
 
-            Assert.Equal(Strings.DbPropertyValues_WrongTypeForAssignment(typeof(Random).Name, "RefTypeProp", typeof(string).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidOperationException>(() => setValue(propEntry)).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_WrongTypeForAssignment(
+                    typeof(Random).Name, "RefTypeProp", typeof(string).Name, typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidOperationException>(() => setValue(propEntry)).Message);
         }
 
         [Fact]
@@ -1343,7 +1472,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Original_value_returned_for_complex_property_can_be_null()
         {
-            var properties = new Dictionary<string, object> { {"ComplexProp", null} };
+            var properties = new Dictionary<string, object>
+                                 {
+                                     { "ComplexProp", null }
+                                 };
             var originalValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(null, originalValues).Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
@@ -1356,7 +1488,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Current_value_returned_for_complex_property_can_be_null()
         {
-            var properties = new Dictionary<string, object> { { "ComplexProp", null } };
+            var properties = new Dictionary<string, object>
+                                 {
+                                     { "ComplexProp", null }
+                                 };
             var currentValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(currentValues).Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
@@ -1372,11 +1507,21 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            propEntry.OriginalValue = new FakeWithProps { ValueTypeProp = -2, ComplexProp = new FakeWithProps { ValueTypeProp = -3 } };
+            propEntry.OriginalValue = new FakeWithProps
+                                          {
+                                              ValueTypeProp = -2,
+                                              ComplexProp = new FakeWithProps
+                                                                {
+                                                                    ValueTypeProp = -3
+                                                                }
+                                          };
 
             Assert.Equal(21, entityEntry.OriginalValues["ValueTypeProp"]);
             Assert.Equal(-2, ((InternalPropertyValues)entityEntry.OriginalValues["ComplexProp"])["ValueTypeProp"]);
-            Assert.Equal(-3, ((InternalPropertyValues)((InternalPropertyValues)entityEntry.OriginalValues["ComplexProp"])["ComplexProp"])["ValueTypeProp"]);
+            Assert.Equal(
+                -3,
+                ((InternalPropertyValues)((InternalPropertyValues)entityEntry.OriginalValues["ComplexProp"])["ComplexProp"])["ValueTypeProp"
+                    ]);
         }
 
         [Fact]
@@ -1386,7 +1531,14 @@ namespace ProductivityApiUnitTests
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
             var entity = (FakeWithProps)entityEntry.Entity;
 
-            var complexObject = new FakeWithProps { ValueTypeProp = -2, ComplexProp = new FakeWithProps { ValueTypeProp = -3 } };
+            var complexObject = new FakeWithProps
+                                    {
+                                        ValueTypeProp = -2,
+                                        ComplexProp = new FakeWithProps
+                                                          {
+                                                              ValueTypeProp = -3
+                                                          }
+                                    };
             propEntry.CurrentValue = complexObject;
 
             Assert.Same(entity.ComplexProp, complexObject);
@@ -1395,7 +1547,9 @@ namespace ProductivityApiUnitTests
 
             Assert.Equal(11, entityEntry.CurrentValues["ValueTypeProp"]);
             Assert.Equal(-2, ((InternalPropertyValues)entityEntry.CurrentValues["ComplexProp"])["ValueTypeProp"]);
-            Assert.Equal(-3, ((InternalPropertyValues)((InternalPropertyValues)entityEntry.CurrentValues["ComplexProp"])["ComplexProp"])["ValueTypeProp"]);
+            Assert.Equal(
+                -3,
+                ((InternalPropertyValues)((InternalPropertyValues)entityEntry.CurrentValues["ComplexProp"])["ComplexProp"])["ValueTypeProp"]);
         }
 
         [Fact]
@@ -1404,18 +1558,25 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = null).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"),
+                Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = null).Message);
         }
 
         [Fact]
         public void Original_value_for_complex_property_cannot_be_set_to_null_even_if_it_is_already_null()
         {
-            var properties = new Dictionary<string, object> { { "ComplexProp", null } };
+            var properties = new Dictionary<string, object>
+                                 {
+                                     { "ComplexProp", null }
+                                 };
             var originalValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(null, originalValues).Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = null).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"),
+                Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = null).Message);
         }
 
         [Fact]
@@ -1424,18 +1585,25 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = null).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"),
+                Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = null).Message);
         }
 
         [Fact]
         public void Current_value_for_complex_property_cannot_be_set_to_null_even_if_it_is_already_null()
         {
-            var properties = new Dictionary<string, object> { { "ComplexProp", null } };
+            var properties = new Dictionary<string, object>
+                                 {
+                                     { "ComplexProp", null }
+                                 };
             var currentValues = new TestInternalPropertyValues<FakeWithProps>(properties, new[] { "ComplexProp" });
             var entityEntry = CreateMockInternalEntry(currentValues).Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"), Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = null).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", "FakeWithProps"),
+                Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = null).Message);
         }
 
         [Fact]
@@ -1444,9 +1612,15 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            var complexObject = new FakeWithProps { ValueTypeProp = -2, ComplexProp = null };
+            var complexObject = new FakeWithProps
+                                    {
+                                        ValueTypeProp = -2,
+                                        ComplexProp = null
+                                    };
 
-            Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", typeof(FakeWithProps).Name), Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = complexObject).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidOperationException>(() => propEntry.OriginalValue = complexObject).Message);
         }
 
         [Fact]
@@ -1455,9 +1629,15 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            var complexObject = new FakeWithProps { ValueTypeProp = -2, ComplexProp = null };
+            var complexObject = new FakeWithProps
+                                    {
+                                        ValueTypeProp = -2,
+                                        ComplexProp = null
+                                    };
 
-            Assert.Equal(Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", typeof(FakeWithProps).Name), Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = complexObject).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_ComplexObjectCannotBeNull("ComplexProp", typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidOperationException>(() => propEntry.CurrentValue = complexObject).Message);
         }
 
         [Fact]
@@ -1477,7 +1657,9 @@ namespace ProductivityApiUnitTests
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _complexPropertyMetadata);
 
-            Assert.Equal(Strings.DbPropertyValues_AttemptToSetValuesFromWrongObject(typeof(Random).Name, typeof(FakeWithProps).Name), Assert.Throws<ArgumentException>(() => setValue(propEntry)).Message);
+            Assert.Equal(
+                Strings.DbPropertyValues_AttemptToSetValuesFromWrongObject(typeof(Random).Name, typeof(FakeWithProps).Name),
+                Assert.Throws<ArgumentException>(() => setValue(propEntry)).Message);
         }
 
         #endregion
@@ -1490,7 +1672,7 @@ namespace ProductivityApiUnitTests
             // Note that CreateMockInternalEntry sets ValueTypeProp as modified
             var entityEntry = CreateMockInternalEntry().Object;
             var propEntry = new InternalEntityPropertyEntry(entityEntry, _valueTypePropertyMetadata);
- 
+
             Assert.True(propEntry.IsModified);
         }
 
@@ -1551,8 +1733,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Non_generic_DbPropertyEntry_Name_returns_name_of_property_from_internal_entry()
         {
-            var internalEntry = new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                _fakeNamedFooPropertyMetadata);
+            var internalEntry = new InternalEntityPropertyEntry(
+                new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
+                _fakeNamedFooPropertyMetadata);
             var propEntry = new DbPropertyEntry(internalEntry);
 
             Assert.Equal("Foo", internalEntry.Name);
@@ -1562,8 +1745,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbPropertyEntry_Name_returns_name_of_property_from_internal_entry()
         {
-            var internalEntry = new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                _fakeNamedFooPropertyMetadata);
+            var internalEntry = new InternalEntityPropertyEntry(
+                new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
+                _fakeNamedFooPropertyMetadata);
             var propEntry = new DbPropertyEntry<FakeWithProps, FakeWithProps>(internalEntry);
 
             Assert.Equal("Foo", internalEntry.Name);
@@ -1617,8 +1801,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbPropertyEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            var propEntry = new DbPropertyEntry<FakeWithProps, FakeEntity>(new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                                            _fakeNamedFooPropertyMetadata));
+            var propEntry =
+                new DbPropertyEntry<FakeWithProps, FakeEntity>(
+                    new InternalEntityPropertyEntry(
+                        new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
+                        _fakeNamedFooPropertyMetadata));
 
             NonGenericTestMethod(propEntry, "Foo");
         }
@@ -1631,7 +1818,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbReferenceEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            var propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
+            var propEntry =
+                new DbReferenceEntry<FakeWithProps, FakeEntity>(
+                    new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
 
             NonGenericTestMethod(propEntry, "Reference");
         }
@@ -1644,7 +1833,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbCollectionEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            var propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
+            var propEntry =
+                new DbCollectionEntry<FakeWithProps, FakeEntity>(
+                    new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
 
             NonGenericTestMethod(propEntry, "Collection");
         }
@@ -1657,8 +1848,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbPropertyEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbPropertyEntry<FakeWithProps, FakeEntity>(new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                                                                  _fakeNamedFooPropertyMetadata));
+            DbMemberEntry<FakeWithProps, FakeEntity> propEntry =
+                new DbPropertyEntry<FakeWithProps, FakeEntity>(
+                    new InternalEntityPropertyEntry(
+                        new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
+                        _fakeNamedFooPropertyMetadata));
 
             NonGenericTestMethodPropAsMember(propEntry, "Foo");
         }
@@ -1672,7 +1866,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbReferenceEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
+            DbMemberEntry<FakeWithProps, FakeEntity> propEntry =
+                new DbReferenceEntry<FakeWithProps, FakeEntity>(
+                    new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
 
             NonGenericTestMethodRefAsMember(propEntry, "Reference");
         }
@@ -1686,7 +1882,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbCollectionEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_version()
         {
-            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
+            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry =
+                new DbCollectionEntry<FakeWithProps, FakeEntity>(
+                    new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
 
             NonGenericTestMethodCollectionAsMember(propEntry, "Collection");
         }
@@ -1700,8 +1898,11 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbPropertyEntry_typed_as_DbMemberEntry_can_be_explicitly_converted_to_non_generic_DbPropertyEntry()
         {
-            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbPropertyEntry<FakeWithProps, FakeEntity>(new InternalEntityPropertyEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
-                                                                                                                  _fakeNamedFooPropertyMetadata));
+            DbMemberEntry<FakeWithProps, FakeEntity> propEntry =
+                new DbPropertyEntry<FakeWithProps, FakeEntity>(
+                    new InternalEntityPropertyEntry(
+                        new Mock<InternalEntityEntryForMock<FakeEntity>>().Object,
+                        _fakeNamedFooPropertyMetadata));
 
             NonGenericTestMethod((DbPropertyEntry)propEntry, "Foo");
         }
@@ -1709,7 +1910,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbReferenceEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_DbReferenceEntry()
         {
-            DbMemberEntry<FakeWithProps, FakeEntity> propEntry = new DbReferenceEntry<FakeWithProps, FakeEntity>(new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
+            DbMemberEntry<FakeWithProps, FakeEntity> propEntry =
+                new DbReferenceEntry<FakeWithProps, FakeEntity>(
+                    new InternalReferenceEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _referenceMetadata));
 
             NonGenericTestMethod((DbReferenceEntry)propEntry, "Reference");
         }
@@ -1717,7 +1920,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbCollectionEntry_typed_as_DbMemberEntry_can_be_implicitly_converted_to_non_generic_DbCollectionEntry()
         {
-            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry = new DbCollectionEntry<FakeWithProps, FakeEntity>(new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
+            DbMemberEntry<FakeWithProps, ICollection<FakeEntity>> propEntry =
+                new DbCollectionEntry<FakeWithProps, FakeEntity>(
+                    new InternalCollectionEntry(new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, _collectionMetadata));
 
             NonGenericTestMethod((DbCollectionEntry)propEntry, "Collection");
         }
@@ -1741,8 +1946,12 @@ namespace ProductivityApiUnitTests
         private void InternalReferenceEntry_gets_current_value_from_entity_if_property_exists_implementation(bool isDetached)
         {
             var relatedEntity = new FakeEntity();
-            var entity = new FakeWithProps { Reference = relatedEntity };
-            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _referenceMetadata);
+            var entity = new FakeWithProps
+                             {
+                                 Reference = relatedEntity
+                             };
+            var internalEntry = new InternalReferenceEntry(
+                CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _referenceMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1763,8 +1972,12 @@ namespace ProductivityApiUnitTests
 
         private void InternalReferenceEntry_sets_current_value_onto_entity_if_property_exists_implementation(bool isDetached)
         {
-            var entity = new FakeWithProps { Reference = new FakeEntity() };
-            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _referenceMetadata);
+            var entity = new FakeWithProps
+                             {
+                                 Reference = new FakeEntity()
+                             };
+            var internalEntry = new InternalReferenceEntry(
+                CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _referenceMetadata);
 
             var relatedEntity = new FakeEntity();
             internalEntry.CurrentValue = relatedEntity;
@@ -1787,8 +2000,12 @@ namespace ProductivityApiUnitTests
         private void InternalCollectionEntry_gets_current_value_from_entity_if_property_exists_implementation(bool isDetached)
         {
             var relatedCollection = new List<FakeEntity>();
-            var entity = new FakeWithProps { Collection = relatedCollection };
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _collectionMetadata);
+            var entity = new FakeWithProps
+                             {
+                                 Collection = relatedCollection
+                             };
+            var internalEntry = new InternalCollectionEntry(
+                CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _collectionMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1809,8 +2026,12 @@ namespace ProductivityApiUnitTests
 
         private void InternalCollectionEntry_sets_current_value_onto_entity_if_property_exists_implementation(bool isDetached)
         {
-            var entity = new FakeWithProps { Collection = new List<FakeEntity>() };
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _collectionMetadata);
+            var entity = new FakeWithProps
+                             {
+                                 Collection = new List<FakeEntity>()
+                             };
+            var internalEntry = new InternalCollectionEntry(
+                CreateMockInternalEntryForNavs(entity, null, isDetached).Object, _collectionMetadata);
 
             var relatedCollection = new List<FakeEntity>();
             internalEntry.CurrentValue = relatedCollection;
@@ -1832,20 +2053,28 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity()
         {
-            InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(new FakeEntity());
+            InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                new FakeEntity());
         }
 
         [Fact]
-        public void InternalReferenceEntry_gets_null_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_and_no_value_is_set()
+        public void InternalReferenceEntry_gets_null_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_and_no_value_is_set
+            ()
         {
-            InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(null);
+            InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                null);
         }
 
-        private void InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(FakeEntity relatedEntity)
+        private void
+            InternalReferenceEntry_gets_current_value_from_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+            FakeEntity relatedEntity)
         {
             var mockRelatedEnd = CreateMockRelatedReference(relatedEntity);
 
-            var internalEntry = new InternalReferenceEntry(CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object, _hiddenReferenceMetadata);
+            var internalEntry =
+                new InternalReferenceEntry(
+                    CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object,
+                    _hiddenReferenceMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1855,38 +2084,49 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity()
         {
-            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(new FakeEntity(), new FakeEntity());
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                new FakeEntity(), new FakeEntity());
         }
 
         [Fact]
         public void InternalReferenceEntry_sets_null_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity()
         {
-            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(new FakeEntity(), null);
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                new FakeEntity(), null);
         }
 
         [Fact]
-        public void InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_when_current_value_is_null()
+        public void
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_when_current_value_is_null
+            ()
         {
-            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(null, new FakeEntity());
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                null, new FakeEntity());
         }
 
         [Fact]
-        public void InternalReferenceEntry_sets_null_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_when_current_value_and_new_value_are_both_null()
+        public void
+            InternalReferenceEntry_sets_null_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_when_current_value_and_new_value_are_both_null
+            ()
         {
-            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(null, null);
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                null, null);
         }
 
         [Fact]
-        public void InternalReferenceEntry_does_not_set_anything_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_when_current_value_and_new_value_are_same()
+        public void
+            InternalReferenceEntry_does_not_set_anything_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_when_current_value_and_new_value_are_same
+            ()
         {
             var relatedEntity = new FakeEntity();
-            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(relatedEntity, relatedEntity);
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+                relatedEntity, relatedEntity);
         }
 
         /// <summary>
-        /// Validates that the call to set a value on an <see cref="EntityReference{T}"/> is made as
-        /// expected without mocking EntityReference (since it is sealed). This could be dones with Moq
-        /// but it turned out easier and clearer this way.
+        ///     Validates that the call to set a value on an <see cref="EntityReference{T}" /> is made as
+        ///     expected without mocking EntityReference (since it is sealed). This could be dones with Moq
+        ///     but it turned out easier and clearer this way.
         /// </summary>
         internal class FakeInternalReferenceEntry : InternalReferenceEntry
         {
@@ -1905,11 +2145,16 @@ namespace ProductivityApiUnitTests
             public int SetCount { get; set; }
         }
 
-        private void InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(FakeEntity currentRelatedEntity, FakeEntity newRelatedEntity)
+        private void
+            InternalReferenceEntry_sets_current_value_onto_RelatedEnd_if_navigation_property_has_been_removed_from_entity_implementation(
+            FakeEntity currentRelatedEntity, FakeEntity newRelatedEntity)
         {
             var mockRelatedEnd = CreateMockRelatedReference(currentRelatedEntity);
 
-            var internalEntry = new FakeInternalReferenceEntry(CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object, _hiddenReferenceMetadata);
+            var internalEntry =
+                new FakeInternalReferenceEntry(
+                    CreateMockInternalEntryForNavs(new FakeEntity(), mockRelatedEnd.Object, isDetached: false).Object,
+                    _hiddenReferenceMetadata);
 
             internalEntry.CurrentValue = newRelatedEntity;
 
@@ -1921,7 +2166,9 @@ namespace ProductivityApiUnitTests
         public void InternalCollectionEntry_gets_current_value_that_is_the_RelatedEnd_if_navigation_property_has_been_removed_from_entity()
         {
             var relatedCollection = new EntityCollection<FakeEntity>();
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, _hiddenCollectionMetadata);
+            var internalEntry =
+                new InternalCollectionEntry(
+                    CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, _hiddenCollectionMetadata);
 
             var propValue = internalEntry.CurrentValue;
 
@@ -1929,20 +2176,30 @@ namespace ProductivityApiUnitTests
         }
 
         [Fact]
-        public void InternalCollectionEntry_does_nothing_if_attempting_to_set_the_actual_EntityCollection_as_a_current_value_when_navigation_property_has_been_removed_from_entity()
+        public void
+            InternalCollectionEntry_does_nothing_if_attempting_to_set_the_actual_EntityCollection_as_a_current_value_when_navigation_property_has_been_removed_from_entity
+            ()
         {
             var relatedCollection = new EntityCollection<FakeEntity>();
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, _hiddenCollectionMetadata);
+            var internalEntry =
+                new InternalCollectionEntry(
+                    CreateMockInternalEntryForNavs(new FakeEntity(), relatedCollection, isDetached: false).Object, _hiddenCollectionMetadata);
 
             internalEntry.CurrentValue = relatedCollection; // Test that it doesn't throw
         }
 
         [Fact]
-        public void InternalCollectionEntry_throws_when_attempting_to_set_a_new_collection_when_navigation_property_has_been_removed_from_entity()
+        public void
+            InternalCollectionEntry_throws_when_attempting_to_set_a_new_collection_when_navigation_property_has_been_removed_from_entity()
         {
-            var internalEntry = new InternalCollectionEntry(CreateMockInternalEntryForNavs(new FakeEntity(), new EntityCollection<FakeEntity>(), isDetached: false).Object, _hiddenCollectionMetadata);
+            var internalEntry =
+                new InternalCollectionEntry(
+                    CreateMockInternalEntryForNavs(new FakeEntity(), new EntityCollection<FakeEntity>(), isDetached: false).Object,
+                    _hiddenCollectionMetadata);
 
-            Assert.Equal(Strings.DbCollectionEntry_CannotSetCollectionProp("HiddenCollection", typeof(FakeEntity).ToString()), Assert.Throws<NotSupportedException>(() => internalEntry.CurrentValue = new List<FakeEntity>()).Message);
+            Assert.Equal(
+                Strings.DbCollectionEntry_CannotSetCollectionProp("HiddenCollection", typeof(FakeEntity).ToString()),
+                Assert.Throws<NotSupportedException>(() => internalEntry.CurrentValue = new List<FakeEntity>()).Message);
         }
 
         [Fact]
@@ -1951,7 +2208,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("CurrentValue", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.CurrentValue; }).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("CurrentValue", "Reference", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.CurrentValue; }).Message);
         }
 
         [Fact]
@@ -1960,7 +2219,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_SettingEntityRefNotSupported("Reference", "FakeEntity", "Detached"), Assert.Throws<NotSupportedException>(() => { internalEntry.CurrentValue = null; }).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_SettingEntityRefNotSupported("Reference", "FakeEntity", "Detached"),
+                Assert.Throws<NotSupportedException>(() => { internalEntry.CurrentValue = null; }).Message);
         }
 
         [Fact]
@@ -1969,7 +2230,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("CurrentValue", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.CurrentValue; }).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("CurrentValue", "Collection", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.CurrentValue; }).Message);
         }
 
         [Fact]
@@ -1978,7 +2241,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
-            Assert.Equal(Strings.DbCollectionEntry_CannotSetCollectionProp("Collection", typeof(FakeEntity).ToString()), Assert.Throws<NotSupportedException>(() => { internalEntry.CurrentValue = null; }).Message);
+            Assert.Equal(
+                Strings.DbCollectionEntry_CannotSetCollectionProp("Collection", typeof(FakeEntity).ToString()),
+                Assert.Throws<NotSupportedException>(() => { internalEntry.CurrentValue = null; }).Message);
         }
 
         #endregion
@@ -1991,7 +2256,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Reference", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
         }
 
         [Fact]
@@ -2000,7 +2267,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Reference", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
         }
 
         [Fact]
@@ -2009,9 +2278,10 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, _referenceMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Query", "Reference", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Query()).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("Query", "Reference", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => internalEntry.Query()).Message);
         }
-
 
         [Fact]
         public void InternalCollectionEntry_Load_throws_if_used_with_Detached_entity()
@@ -2019,7 +2289,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Collection", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
         }
 
         [Fact]
@@ -2028,7 +2300,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Collection", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
         }
 
         [Fact]
@@ -2037,7 +2311,9 @@ namespace ProductivityApiUnitTests
             var mockInternalEntry = CreateMockInternalEntryForNavs(new FakeEntity(), null, isDetached: true);
             var internalEntry = new InternalCollectionEntry(mockInternalEntry.Object, _collectionMetadata);
 
-            Assert.Equal(Strings.DbPropertyEntry_NotSupportedForDetached("Query", "Collection", "FakeEntity"), Assert.Throws<InvalidOperationException>(() => internalEntry.Query()).Message);
+            Assert.Equal(
+                Strings.DbPropertyEntry_NotSupportedForDetached("Query", "Collection", "FakeEntity"),
+                Assert.Throws<InvalidOperationException>(() => internalEntry.Query()).Message);
         }
 
         [Fact]
@@ -2074,7 +2350,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_nested_property_entry_using_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ValueTypeProp);
 
@@ -2086,7 +2364,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_nested_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ValueTypeProp");
 
@@ -2098,7 +2378,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_generic_nested_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<int>("ValueTypeProp");
 
@@ -2122,7 +2404,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_nested_complex_property_entry_using_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ComplexProp);
 
@@ -2135,7 +2419,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_nested_complex_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp");
 
@@ -2148,7 +2434,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_generic_nested_complex_property_entry_using_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<FakeWithProps>("ComplexProp");
 
@@ -2174,7 +2462,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_nested_complex_property_entry_using_ComplexProperty_with_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty(e => e.ComplexProp);
 
@@ -2186,7 +2476,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_nested_complex_property_entry_using_ComplexProperty_with_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty("ComplexProp");
 
@@ -2198,7 +2490,9 @@ namespace ProductivityApiUnitTests
         public void Can_get_generic_nested_complex_property_entry_using_ComplexProperty_with_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty<FakeWithProps>("ComplexProp");
 
@@ -2227,8 +2521,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property(e => e.ComplexProp.ValueTypeProp);
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
         }
 
         [Fact]
@@ -2240,8 +2536,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property("ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2253,8 +2551,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property<int>("ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
         }
 
         [Fact]
@@ -2266,8 +2566,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property("ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2280,8 +2582,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2294,7 +2598,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
         }
 
         [Fact]
@@ -2307,8 +2612,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2321,7 +2628,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
         }
 
         [Fact]
@@ -2334,8 +2642,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2348,8 +2658,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbPropertyEntry<FakeWithProps, int>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
         }
 
         [Fact]
@@ -2362,8 +2674,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2376,7 +2690,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
         }
 
         [Fact]
@@ -2389,8 +2704,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2403,7 +2720,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
         }
 
         [Fact]
@@ -2415,8 +2733,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty(e => e.ComplexProp.ComplexProp);
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2428,7 +2748,8 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty("ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
         }
 
         [Fact]
@@ -2440,8 +2761,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty<FakeWithProps>("ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2453,7 +2776,8 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty("ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
         }
 
         [Fact]
@@ -2465,8 +2789,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property(e => e.ComplexProp.ComplexProp.ValueTypeProp);
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
         }
 
         [Fact]
@@ -2478,8 +2804,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property("ComplexProp.ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2491,8 +2819,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property<int>("ComplexProp.ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
         }
 
         [Fact]
@@ -2504,8 +2834,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.Property("ComplexProp.ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2518,8 +2850,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2532,7 +2866,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
@@ -2545,8 +2880,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2559,7 +2896,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
@@ -2572,8 +2910,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2586,8 +2926,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbPropertyEntry<FakeWithProps, int>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)), Times.Once());
         }
 
         [Fact]
@@ -2600,8 +2942,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)), Times.Once());
         }
 
         [Fact]
@@ -2614,7 +2958,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
@@ -2627,8 +2972,10 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2641,7 +2988,8 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
@@ -2653,8 +3001,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty(e => e.ComplexProp.ComplexProp.ComplexProp);
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2666,7 +3016,8 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
@@ -2678,8 +3029,10 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty<FakeWithProps>("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)), Times.Once());
         }
 
         [Fact]
@@ -2691,19 +3044,23 @@ namespace ProductivityApiUnitTests
             var nestedEntry = entityEntry.ComplexProperty("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
         public void Can_get_double_nested_property_entry_from_DbComplexProperty_using_dotted_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ComplexProp.ComplexProp.ValueTypeProp);
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)));
         }
 
@@ -2711,12 +3068,15 @@ namespace ProductivityApiUnitTests
         public void Can_get_double_nested_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)));
         }
 
@@ -2724,12 +3084,15 @@ namespace ProductivityApiUnitTests
         public void Can_get_generic_double_nested_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<int>("ComplexProp.ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(int)));
         }
 
@@ -2742,7 +3105,8 @@ namespace ProductivityApiUnitTests
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ValueTypeProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ValueTypeProp", typeof(FakeWithProps), typeof(object)));
         }
 
@@ -2750,13 +3114,16 @@ namespace ProductivityApiUnitTests
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property(e => e.ComplexProp.ComplexProp.ComplexProp);
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)));
         }
 
@@ -2764,26 +3131,32 @@ namespace ProductivityApiUnitTests
         public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
         public void Can_get_generic_double_nested_complex_property_entry_from_DbComplexProperty_using_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.Property<FakeWithProps>("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry<FakeWithProps, FakeWithProps>>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)));
         }
 
@@ -2797,49 +3170,65 @@ namespace ProductivityApiUnitTests
 
             Assert.NotNull(nestedEntry);
             Assert.IsType<DbComplexPropertyEntry>(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
-        public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_lambda_on_generic_API()
+        public void
+            Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_lambda_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty(e => e.ComplexProp.ComplexProp.ComplexProp);
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)));
         }
 
         [Fact]
-        public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API()
+        public void
+            Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
-        public void Can_get_generic_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API()
+        public void
+            Can_get_generic_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API
+            ()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var nestedEntry = propEntry.ComplexProperty<FakeWithProps>("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(2));
             mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(FakeWithProps)));
         }
 
         [Fact]
-        public void Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_non_generic_API()
+        public void
+            Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_non_generic_API(
+            )
         {
             var mockInternalEntry = CreateMockInternalEntry();
             var propEntry = new DbComplexPropertyEntry(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
@@ -2847,7 +3236,8 @@ namespace ProductivityApiUnitTests
             var nestedEntry = propEntry.ComplexProperty("ComplexProp.ComplexProp.ComplexProp");
 
             Assert.NotNull(nestedEntry);
-            mockInternalEntry.Verify(e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
+            mockInternalEntry.Verify(
+                e => e.ValidateAndGetPropertyMetadata("ComplexProp", typeof(FakeWithProps), typeof(object)), Times.Exactly(3));
         }
 
         [Fact]
@@ -2855,7 +3245,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"), Assert.Throws<ArgumentException>(() => entityEntry.Reference(e => e.ComplexProp.RefTypeProp)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference(e => e.ComplexProp.RefTypeProp)).Message);
         }
 
         [Fact]
@@ -2863,7 +3255,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"), Assert.Throws<ArgumentException>(() => entityEntry.Reference("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -2871,7 +3265,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"), Assert.Throws<ArgumentException>(() => entityEntry.Reference<string>("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference<string>("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -2879,7 +3275,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"), Assert.Throws<ArgumentException>(() => entityEntry.Reference("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.RefTypeProp"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Reference("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -2887,7 +3285,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"), Assert.Throws<ArgumentException>(() => entityEntry.Collection(e => e.ComplexProp.Collection)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection(e => e.ComplexProp.Collection)).Message);
         }
 
         [Fact]
@@ -2895,7 +3295,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"), Assert.Throws<ArgumentException>(() => entityEntry.Collection("ComplexProp.Collection")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection("ComplexProp.Collection")).Message);
         }
 
         [Fact]
@@ -2903,7 +3305,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"), Assert.Throws<ArgumentException>(() => entityEntry.Collection<FakeWithProps>("ComplexProp.Collection")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection<FakeWithProps>("ComplexProp.Collection")).Message);
         }
 
         [Fact]
@@ -2911,7 +3315,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"), Assert.Throws<ArgumentException>(() => entityEntry.Collection("ComplexProp.Collection")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPathMustBeProperty("ComplexProp.Collection"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Collection("ComplexProp.Collection")).Message);
         }
 
         [Fact]
@@ -2919,7 +3325,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property(e => e.RefTypeProp.Length)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(e => e.RefTypeProp.Length)).Message);
         }
 
         [Fact]
@@ -2927,7 +3335,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -2935,7 +3345,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -2943,7 +3355,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -2951,7 +3365,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property(e => e.Reference.Id)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(e => e.Reference.Id)).Message);
         }
 
         [Fact]
@@ -2959,7 +3375,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("Reference.Id")).Message);
         }
 
         [Fact]
@@ -2967,7 +3385,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("Reference.Id")).Message);
         }
 
         [Fact]
@@ -2975,7 +3395,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("Reference.Id")).Message);
         }
 
         [Fact]
@@ -2983,7 +3405,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property(e => e.Collection.Count)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property(e => e.Collection.Count)).Message);
         }
 
         [Fact]
@@ -2991,7 +3415,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("Collection.Count")).Message);
         }
 
         [Fact]
@@ -2999,7 +3425,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3007,7 +3435,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3015,7 +3445,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3023,7 +3455,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3031,7 +3465,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3039,7 +3475,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3047,7 +3485,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property<string>("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3055,7 +3495,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Property("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Property("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3063,7 +3505,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3071,7 +3515,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3079,7 +3525,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3087,7 +3535,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3095,7 +3545,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3103,7 +3555,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3111,7 +3565,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3119,7 +3575,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3127,7 +3585,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3135,7 +3595,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3143,7 +3605,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3151,7 +3615,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3159,7 +3625,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3167,7 +3635,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member<string>("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3175,7 +3645,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.Member("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.Member("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3183,7 +3655,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.RefTypeProp.Length)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.RefTypeProp.Length)).Message);
         }
 
         [Fact]
@@ -3191,7 +3665,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3199,7 +3675,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3207,7 +3685,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3215,7 +3695,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.Reference.Id)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.Reference.Id)).Message);
         }
 
         [Fact]
@@ -3223,7 +3705,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3231,7 +3715,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3239,7 +3725,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3247,7 +3735,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.Collection.Count)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.Collection.Count)).Message);
         }
 
         [Fact]
@@ -3255,7 +3745,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3263,7 +3755,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3271,7 +3765,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3279,7 +3775,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3287,7 +3785,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3295,7 +3795,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3303,7 +3805,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3311,7 +3815,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3319,7 +3825,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3327,7 +3835,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.ComplexProp.RefTypeProp)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty(e => e.ComplexProp.RefTypeProp)).Message);
         }
 
         [Fact]
@@ -3335,7 +3845,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3343,7 +3855,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty<string>("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3351,7 +3865,9 @@ namespace ProductivityApiUnitTests
         {
             var entityEntry = new DbEntityEntry(CreateMockInternalEntry().Object);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => entityEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3359,7 +3875,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property(e => e.RefTypeProp.Length)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property(e => e.RefTypeProp.Length)).Message);
         }
 
         [Fact]
@@ -3367,7 +3885,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3375,7 +3895,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property<string>("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<string>("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3383,7 +3905,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3391,7 +3915,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property(e => e.Reference.Id)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property(e => e.Reference.Id)).Message);
         }
 
         [Fact]
@@ -3399,7 +3925,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3407,7 +3935,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property<string>("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<string>("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3415,7 +3945,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3423,7 +3955,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property(e => e.Collection.Count)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property(e => e.Collection.Count)).Message);
         }
 
         [Fact]
@@ -3431,7 +3965,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3439,7 +3975,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property<string>("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<string>("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3447,7 +3985,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3455,7 +3995,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3463,7 +4005,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property<string>("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<string>("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3471,7 +4015,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3479,7 +4025,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3487,7 +4035,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property<string>("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<string>("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3495,7 +4045,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.Property("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAScalarProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3503,7 +4055,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.RefTypeProp.Length)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.RefTypeProp.Length)).Message);
         }
 
         [Fact]
@@ -3511,7 +4065,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3519,7 +4075,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3527,7 +4085,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("RefTypeProp.Length")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("RefTypeProp", "RefTypeProp.Length", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("RefTypeProp.Length")).Message);
         }
 
         [Fact]
@@ -3535,7 +4095,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.Reference.Id)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.Reference.Id)).Message);
         }
 
         [Fact]
@@ -3543,7 +4105,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3551,7 +4115,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3559,7 +4125,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Reference.Id")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Reference", "Reference.Id", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Reference.Id")).Message);
         }
 
         [Fact]
@@ -3567,7 +4135,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.Collection.Count)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.Collection.Count)).Message);
         }
 
         [Fact]
@@ -3575,7 +4145,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3583,7 +4155,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3591,7 +4165,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Collection.Count")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Collection", "Collection.Count", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Collection.Count")).Message);
         }
 
         [Fact]
@@ -3599,7 +4175,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3607,7 +4185,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3615,7 +4195,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Missing.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_DottedPartNotComplex("Missing", "Missing.RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("Missing.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3623,7 +4205,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3631,7 +4215,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3639,7 +4225,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.Missing")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("Missing", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.Missing")).Message);
         }
 
         [Fact]
@@ -3647,7 +4235,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.ComplexProp.RefTypeProp)).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => e.ComplexProp.RefTypeProp)).Message);
         }
 
         [Fact]
@@ -3655,7 +4245,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3663,7 +4255,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty(e => e.ComplexProp);
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<string>("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3671,7 +4265,9 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbEntityEntry(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
+            Assert.Equal(
+                Strings.DbEntityEntry_NotAComplexProperty("RefTypeProp", "FakeWithProps"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("ComplexProp.RefTypeProp")).Message);
         }
 
         [Fact]
@@ -3679,87 +4275,143 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>().Object);
 
-            Assert.Equal("property", Assert.Throws<ArgumentNullException>(() => propEntry.Property((Expression<Func<FakeWithProps, string>>)null)).ParamName);
+            Assert.Equal(
+                "property",
+                Assert.Throws<ArgumentNullException>(() => propEntry.Property((Expression<Func<FakeWithProps, string>>)null)).ParamName);
         }
 
         [Fact]
         public void Passing_null_string_to_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property(null)).Message);
         }
 
         [Fact]
         public void Passing_empty_string_to_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property("")).Message);
         }
 
         [Fact]
         public void Passing_whitespace_string_to_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property(" ")).Message);
         }
 
         [Fact]
         public void Passing_null_string_to_generic_method_on_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock> { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property<int>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<int>((string)null)).Message);
         }
 
         [Fact]
         public void Passing_empty_string_to_generic_method_on_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock> { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property<int>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<int>("")).Message);
         }
 
         [Fact]
         public void Passing_whitespace_string_to_generic_method_on_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock> { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property<int>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.Property<int>(" ")).Message);
         }
 
         [Fact]
         public void Passing_null_string_to_non_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property(null)).Message);
         }
 
         [Fact]
         public void Passing_empty_string_to_non_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property("")).Message);
         }
 
         [Fact]
         public void Passing_whitespace_string_to_non_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.Property(" ")).Message);
         }
 
         [Fact]
         public void Passing_bad_expression_to_generic_DbPropertyEntry_Property_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message, Assert.Throws<ArgumentException>(() => propEntry.Property(e => new FakeEntity())).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message,
+                Assert.Throws<ArgumentException>(() => propEntry.Property(e => new FakeEntity())).Message);
         }
 
         [Fact]
@@ -3767,87 +4419,150 @@ namespace ProductivityApiUnitTests
         {
             var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>().Object);
 
-            Assert.Equal("property", Assert.Throws<ArgumentNullException>(() => propEntry.ComplexProperty((Expression<Func<FakeWithProps, string>>)null)).ParamName);
+            Assert.Equal(
+                "property",
+                Assert.Throws<ArgumentNullException>(() => propEntry.ComplexProperty((Expression<Func<FakeWithProps, string>>)null)).
+                    ParamName);
         }
 
         [Fact]
         public void Passing_null_string_to_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(null)).Message);
         }
 
         [Fact]
         public void Passing_empty_string_to_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("")).Message);
         }
 
         [Fact]
         public void Passing_whitespace_string_to_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(" ")).Message);
         }
 
         [Fact]
         public void Passing_null_string_to_generic_method_on_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock> { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<int>((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<int>((string)null)).Message);
         }
 
         [Fact]
         public void Passing_empty_string_to_generic_method_on_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock> { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<int>("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<int>("")).Message);
         }
 
         [Fact]
         public void Passing_whitespace_string_to_generic_method_on_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock> { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<int>(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty<int>(" ")).Message);
         }
 
         [Fact]
         public void Passing_null_string_to_non_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(null)).Message);
         }
 
         [Fact]
         public void Passing_empty_string_to_non_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty("")).Message);
         }
 
         [Fact]
         public void Passing_whitespace_string_to_non_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(" ")).Message);
         }
 
         [Fact]
         public void Passing_bad_expression_to_generic_DbPropertyEntry_ComplexProperty_throws()
         {
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new Mock<InternalEntityPropertyEntryForMock>() { CallBase = true }.Object);
+            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                new Mock<InternalEntityPropertyEntryForMock>
+                    {
+                        CallBase = true
+                    }.Object);
 
-            Assert.Equal(new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message, Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => new FakeEntity())).Message);
+            Assert.Equal(
+                new ArgumentException(Strings.DbEntityEntry_BadPropertyExpression("Property", "FakeWithProps"), "property").Message,
+                Assert.Throws<ArgumentException>(() => propEntry.ComplexProperty(e => new FakeEntity())).Message);
         }
 
         #endregion
@@ -3918,7 +4633,9 @@ namespace ProductivityApiUnitTests
         public void EntityEntity_can_be_obtained_from_nested_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property(e => e.ValueTypeProp).EntityEntry;
 
@@ -3929,7 +4646,9 @@ namespace ProductivityApiUnitTests
         public void EntityEntity_can_be_obtained_from_nested_non_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property("ValueTypeProp").EntityEntry;
 
@@ -3940,7 +4659,9 @@ namespace ProductivityApiUnitTests
         public void Parent_PropertyEntity_can_be_obtained_from_nested_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property(e => e.ValueTypeProp).ParentProperty;
 
@@ -3951,7 +4672,9 @@ namespace ProductivityApiUnitTests
         public void Parent_PropertyEntity_can_be_obtained_from_nested_non_generic_DbPropertyEntry_back_reference()
         {
             var mockInternalEntry = CreateMockInternalEntry();
-            var propEntry = new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
+            var propEntry =
+                new DbComplexPropertyEntry<FakeWithProps, FakeWithProps>(
+                    new InternalEntityPropertyEntry(mockInternalEntry.Object, _complexPropertyMetadata));
 
             var backEntry = propEntry.Property("ValueTypeProp").ParentProperty;
 
@@ -3985,7 +4708,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Generic_DbMemberEntry_for_collection_can_be_converted_to_non_generic_version()
         {
-            var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member<ICollection<FakeEntity>>("Collection");
+            var memberEntry =
+                new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member<ICollection<FakeEntity>>("Collection");
 
             var nonGeneric = ImplicitConvert(memberEntry);
 
@@ -4025,7 +4749,7 @@ namespace ProductivityApiUnitTests
             Assert.IsType<DbComplexPropertyEntry>(nonGeneric);
             Assert.Same(memberEntry.InternalMemberEntry, nonGeneric.InternalMemberEntry);
         }
-        
+
         private static DbMemberEntry ImplicitConvert(DbMemberEntry nonGeneric)
         {
             return nonGeneric;
@@ -4310,7 +5034,11 @@ namespace ProductivityApiUnitTests
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("Collection");
 
             // This cast fails because an ICollection<FakeEntity> is not an IColletion<object>.
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(ICollection<object>).Name, typeof(FakeWithProps).Name, typeof(ICollection<FakeEntity>).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, ICollection<object>>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(ICollection<object>).Name, typeof(FakeWithProps).Name,
+                    typeof(ICollection<FakeEntity>).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, ICollection<object>>()).Message);
         }
 
         [Fact]
@@ -4406,7 +5134,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("Collection");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(ICollection<FakeEntity>).Name, typeof(FakeWithProps).Name, typeof(ICollection<FakeEntity>).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, ICollection<FakeEntity>>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(ICollection<FakeEntity>).Name,
+                    typeof(FakeWithProps).Name, typeof(ICollection<FakeEntity>).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, ICollection<FakeEntity>>()).Message);
         }
 
         [Fact]
@@ -4414,7 +5146,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("Reference");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeEntity).Name, typeof(FakeWithProps).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeEntity>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeEntity).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeEntity>()).Message);
         }
 
         [Fact]
@@ -4422,7 +5158,10 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("ValueTypeProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(int).Name, typeof(FakeWithProps).Name, typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, int>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(int).Name, typeof(FakeWithProps).Name,
+                    typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, int>()).Message);
         }
 
         [Fact]
@@ -4430,7 +5169,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("ComplexProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeWithProps>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeWithProps>()).Message);
         }
 
         [Fact]
@@ -4438,7 +5181,10 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Property("ValueTypeProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbPropertyEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(int).Name, typeof(FakeWithProps).Name, typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, int>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbPropertyEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(int).Name, typeof(FakeWithProps).Name,
+                    typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, int>()).Message);
         }
 
         [Fact]
@@ -4446,7 +5192,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Property("ComplexProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbPropertyEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeWithProps>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbPropertyEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeWithProps>()).Message);
         }
 
         [Fact]
@@ -4454,7 +5204,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbComplexPropertyEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeWithProps>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbComplexPropertyEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeWithProps).Name, typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeWithProps>()).Message);
         }
 
         [Fact]
@@ -4462,7 +5216,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Collection("Collection");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbCollectionEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeEntity).Name, typeof(FakeWithProps).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeEntity>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbCollectionEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeEntity).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeEntity>()).Message);
         }
 
         [Fact]
@@ -4470,7 +5228,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Reference("Reference");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbReferenceEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeEntity).Name, typeof(FakeWithProps).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeEntity>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbReferenceEntry).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeEntity).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<DerivedFakeWithProps, FakeEntity>()).Message);
         }
 
         [Fact]
@@ -4478,7 +5240,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("Collection");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(ICollection<FakeDerivedEntity>).Name, typeof(FakeWithProps).Name, typeof(ICollection<FakeEntity>).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, ICollection<FakeDerivedEntity>>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(ICollection<FakeDerivedEntity>).Name,
+                    typeof(FakeWithProps).Name, typeof(ICollection<FakeEntity>).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, ICollection<FakeDerivedEntity>>()).Message);
         }
 
         [Fact]
@@ -4486,7 +5252,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("Reference");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(FakeDerivedEntity).Name, typeof(FakeWithProps).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, FakeDerivedEntity>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(FakeDerivedEntity).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, FakeDerivedEntity>()).Message);
         }
 
         [Fact]
@@ -4494,7 +5264,10 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("ValueTypeProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(string).Name, typeof(FakeWithProps).Name, typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, string>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(string).Name, typeof(FakeWithProps).Name,
+                    typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, string>()).Message);
         }
 
         [Fact]
@@ -4502,7 +5275,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Member("ComplexProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, DerivedFakeWithProps>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbMemberEntry).Name, typeof(FakeWithProps).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, DerivedFakeWithProps>()).Message);
         }
 
         [Fact]
@@ -4510,7 +5287,10 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Property("ValueTypeProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbPropertyEntry).Name, typeof(FakeWithProps).Name, typeof(short).Name, typeof(FakeWithProps).Name, typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, short>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbPropertyEntry).Name, typeof(FakeWithProps).Name, typeof(short).Name, typeof(FakeWithProps).Name,
+                    typeof(int).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, short>()).Message);
         }
 
         [Fact]
@@ -4518,15 +5298,24 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Property("ComplexProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbPropertyEntry).Name, typeof(FakeWithProps).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, DerivedFakeWithProps>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbPropertyEntry).Name, typeof(FakeWithProps).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, DerivedFakeWithProps>()).Message);
         }
 
         [Fact]
-        public void Non_generic_DbComplexPropertyEntry_for_complex_property_cannot_be_converted_to_generic_version_of_derived_property_type()
+        public void Non_generic_DbComplexPropertyEntry_for_complex_property_cannot_be_converted_to_generic_version_of_derived_property_type(
+            )
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).ComplexProperty("ComplexProp");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbComplexPropertyEntry).Name, typeof(FakeWithProps).Name, typeof(DerivedFakeWithProps).Name, typeof(FakeWithProps).Name, typeof(FakeWithProps).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, DerivedFakeWithProps>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbComplexPropertyEntry).Name, typeof(FakeWithProps).Name, typeof(DerivedFakeWithProps).Name,
+                    typeof(FakeWithProps).Name, typeof(FakeWithProps).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, DerivedFakeWithProps>()).Message);
         }
 
         [Fact]
@@ -4534,7 +5323,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Collection("Collection");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbCollectionEntry).Name, typeof(FakeWithProps).Name, typeof(FakeDerivedEntity).Name, typeof(FakeWithProps).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, FakeDerivedEntity>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbCollectionEntry).Name, typeof(FakeWithProps).Name, typeof(FakeDerivedEntity).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, FakeDerivedEntity>()).Message);
         }
 
         [Fact]
@@ -4542,7 +5335,11 @@ namespace ProductivityApiUnitTests
         {
             var memberEntry = new DbEntityEntry<FakeWithProps>(CreateMockInternalEntry().Object).Reference("Reference");
 
-            Assert.Equal(Strings.DbMember_BadTypeForCast(typeof(DbReferenceEntry).Name, typeof(FakeWithProps).Name, typeof(FakeDerivedEntity).Name, typeof(FakeWithProps).Name, typeof(FakeEntity).Name), Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, FakeDerivedEntity>()).Message);
+            Assert.Equal(
+                Strings.DbMember_BadTypeForCast(
+                    typeof(DbReferenceEntry).Name, typeof(FakeWithProps).Name, typeof(FakeDerivedEntity).Name, typeof(FakeWithProps).Name,
+                    typeof(FakeEntity).Name),
+                Assert.Throws<InvalidCastException>(() => memberEntry.Cast<FakeWithProps, FakeDerivedEntity>()).Message);
         }
 
         #endregion

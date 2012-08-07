@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
 {
     using System.Data.Entity;
@@ -66,15 +67,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
             var assembly = Assembly.GetExecutingAssembly();
 
             foreach (var schema in new[]
-                {
-                    "Microsoft.Data.Entity.Design.Edmx_" + version + ".xsd",
-                    "System.Data.Resources.AnnotationSchema.xsd",
-                    "System.Data.Resources.CodeGenerationSchema.xsd",
-                    "System.Data.Resources.CSDLSchema_" + version + ".xsd",
-                    "System.Data.Resources.CSMSL_" + version + ".xsd",
-                    "System.Data.Resources.EntityStoreSchemaGenerator.xsd",
-                    "System.Data.Resources.SSDLSchema_" + version + ".xsd"
-                })
+                                       {
+                                           "Microsoft.Data.Entity.Design.Edmx_" + version + ".xsd",
+                                           "System.Data.Resources.AnnotationSchema.xsd",
+                                           "System.Data.Resources.CodeGenerationSchema.xsd",
+                                           "System.Data.Resources.CSDLSchema_" + version + ".xsd",
+                                           "System.Data.Resources.CSMSL_" + version + ".xsd",
+                                           "System.Data.Resources.EntityStoreSchemaGenerator.xsd",
+                                           "System.Data.Resources.SSDLSchema_" + version + ".xsd"
+                                       })
             {
                 schemaSet.Add(null, XmlReader.Create(assembly.GetManifestResourceStream(resourcePath + schema)));
             }

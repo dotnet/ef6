@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -41,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             property.SetClrPropertyInfo(mockPropertyInfo);
             var associationType = new EdmAssociationType().Initialize();
             associationType.SourceEnd.EntityType = entityType;
-            
+
             constraintConfiguration.Configure(
                 associationType, associationType.SourceEnd, new EntityTypeConfiguration(typeof(object)));
 
@@ -75,8 +76,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { new MockPropertyInfo(typeof(int), "P").Object });
             var associationType = new EdmAssociationType();
 
-            Assert.Equal(Strings.ForeignKeyPropertyNotFound("P", "T"), Assert.Throws<InvalidOperationException>(() => constraintConfiguration.Configure(associationType,
-                                                                                                                                                              new EdmAssociationEnd { EntityType = new EdmEntityType { Name = "T" } }, new EntityTypeConfiguration(typeof(object)))).Message);
+            Assert.Equal(
+                Strings.ForeignKeyPropertyNotFound("P", "T"),
+                Assert.Throws<InvalidOperationException>(
+                    () => constraintConfiguration.Configure(
+                        associationType,
+                        new EdmAssociationEnd
+                            {
+                                EntityType = new EdmEntityType
+                                                 {
+                                                     Name = "T"
+                                                 }
+                            }, new EntityTypeConfiguration(typeof(object)))).Message);
         }
     }
 }

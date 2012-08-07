@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
@@ -175,7 +176,8 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(() => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
+                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
@@ -192,7 +194,8 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(() => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
+                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
@@ -211,7 +214,8 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(() => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
+                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
@@ -244,7 +248,8 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>();
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(() => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
+                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 

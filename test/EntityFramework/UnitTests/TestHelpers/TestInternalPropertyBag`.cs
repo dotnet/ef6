@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
@@ -7,19 +8,22 @@ namespace System.Data.Entity
     using Moq;
 
     /// <summary>
-    /// This is an implementation of the abstract <see cref="InternalPropertyValues"/> class that
-    /// is based on a simple dictionary of property values.  Instances of this class are used to
-    /// test the functionality of the abstract class in unit tests.
-    /// It was possible to do everything here with Moq, but it was easier and clearer in this case
-    /// to create a simple implementation instead.
+    ///     This is an implementation of the abstract <see cref="InternalPropertyValues" /> class that
+    ///     is based on a simple dictionary of property values.  Instances of this class are used to
+    ///     test the functionality of the abstract class in unit tests.
+    ///     It was possible to do everything here with Moq, but it was easier and clearer in this case
+    ///     to create a simple implementation instead.
     /// </summary>
-    /// <typeparam name="T">The type of object that the dictionary contains.</typeparam>
+    /// <typeparam name="T"> The type of object that the dictionary contains. </typeparam>
     internal class TestInternalPropertyValues<T> : InternalPropertyValues
     {
         private readonly ISet<string> _propertyNames;
-        private readonly IDictionary<string, Mock<IPropertyValuesItem>> _propertyValues = new Dictionary<string, Mock<IPropertyValuesItem>>();
 
-        public TestInternalPropertyValues(IDictionary<string, object> properties = null, IEnumerable<string> complexProperties = null, bool isEntityValues = false)
+        private readonly IDictionary<string, Mock<IPropertyValuesItem>> _propertyValues =
+            new Dictionary<string, Mock<IPropertyValuesItem>>();
+
+        public TestInternalPropertyValues(
+            IDictionary<string, object> properties = null, IEnumerable<string> complexProperties = null, bool isEntityValues = false)
             : base(new Mock<InternalContextForMock>().Object, typeof(T), isEntityValues)
         {
             var names = new HashSet<string>();
@@ -46,10 +50,7 @@ namespace System.Data.Entity
 
         public Mock<InternalContextForMock> MockInternalContext
         {
-            get
-            {
-                return Mock.Get((InternalContextForMock)InternalContext);
-            }
+            get { return Mock.Get((InternalContextForMock)InternalContext); }
         }
 
         public Mock<IPropertyValuesItem> GetMockItem(string propertyName)
@@ -64,10 +65,7 @@ namespace System.Data.Entity
 
         public override ISet<string> PropertyNames
         {
-            get
-            {
-                return _propertyNames;
-            }
+            get { return _propertyNames; }
         }
     }
 }

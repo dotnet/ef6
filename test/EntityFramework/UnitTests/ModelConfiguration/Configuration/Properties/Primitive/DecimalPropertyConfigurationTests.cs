@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -210,36 +211,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.Scale = 255;
 
             var expectedMessageCSpace = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsNullable", true, "IsNullable", false);
+                                        Strings.ConflictingConfigurationValue(
+                                            "IsNullable", true, "IsNullable", false);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                     Strings.ConflictingConfigurationValue(
+                                         "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption", DatabaseGeneratedOption.Identity);
+                                     Strings.ConflictingConfigurationValue(
+                                         "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption",
+                                         DatabaseGeneratedOption.Identity);
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnName", "bar", "ColumnName", "foo");
+                                  Strings.ConflictingConfigurationValue(
+                                      "ColumnName", "bar", "ColumnName", "foo");
 
             expectedMessage += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnOrder", 1, "ColumnOrder", 2);
+                               Strings.ConflictingConfigurationValue(
+                                   "ColumnOrder", 1, "ColumnOrder", 2);
 
             expectedMessage += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnType", "bar", "ColumnType", "foo");
+                               Strings.ConflictingConfigurationValue(
+                                   "ColumnType", "bar", "ColumnType", "foo");
 
             var additionalErrors = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "Precision", 16, "Precision", 255);
+                                   Strings.ConflictingConfigurationValue(
+                                       "Precision", 16, "Precision", 255);
 
             additionalErrors += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "Scale", 16, "Scale", 255);
+                                Strings.ConflictingConfigurationValue(
+                                    "Scale", 16, "Scale", 255);
 
             expectedMessageCSpace += additionalErrors;
             expectedMessage += additionalErrors;
@@ -273,8 +275,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.Precision = 255;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "Precision", 16, "Precision", 255);
+                                  Strings.ConflictingConfigurationValue(
+                                      "Precision", 16, "Precision", 255);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -320,8 +322,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.Scale = 255;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "Scale", 16, "Scale", 255);
+                                  Strings.ConflictingConfigurationValue(
+                                      "Scale", 16, "Scale", 255);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));

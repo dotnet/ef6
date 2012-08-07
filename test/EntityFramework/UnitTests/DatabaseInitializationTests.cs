@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -13,14 +14,14 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    /// Unit tests for database initialization.
+    ///     Unit tests for database initialization.
     /// </summary>
     public class DatabaseInitializationTests : TestBase
     {
         #region Helpers
 
         /// <summary>
-        /// Used as a fake context type for tests that don't actually register a strategy.
+        ///     Used as a fake context type for tests that don't actually register a strategy.
         /// </summary>
         public class FakeNoRegContext : DbContext
         {
@@ -33,31 +34,44 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseAlways_throws_when_given_a_null_context()
         {
-            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new DropCreateDatabaseAlways<DbContext>().InitializeDatabase(null)).ParamName);
+            Assert.Equal(
+                "context",
+                Assert.Throws<ArgumentNullException>(() => new DropCreateDatabaseAlways<DbContext>().InitializeDatabase(null)).ParamName);
         }
 
         [Fact]
         public void CreateDatabaseIfNotExists_throws_when_given_a_null_context()
         {
-            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new CreateDatabaseIfNotExists<DbContext>().InitializeDatabase(null)).ParamName);
+            Assert.Equal(
+                "context",
+                Assert.Throws<ArgumentNullException>(() => new CreateDatabaseIfNotExists<DbContext>().InitializeDatabase(null)).ParamName);
         }
 
         [Fact]
         public void DropCreateDatabaseIfModelChanges_throws_when_given_a_null_context()
         {
-            Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => new DropCreateDatabaseIfModelChanges<DbContext>().InitializeDatabase(null)).ParamName);
+            Assert.Equal(
+                "context",
+                Assert.Throws<ArgumentNullException>(() => new DropCreateDatabaseIfModelChanges<DbContext>().InitializeDatabase(null)).
+                    ParamName);
         }
 
         [Fact]
         public void MigrateDatabaseToLatestVersion_ctor_throws_when_given_null_connection_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("connectionStringName"), Assert.Throws<ArgumentException>(() => new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("connectionStringName"),
+                Assert.Throws<ArgumentException>(() => new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(null)).
+                    Message);
         }
 
         [Fact]
         public void MigrateDatabaseToLatestVersion_ctor_throws_when_given_empty_connection_name()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("connectionStringName"), Assert.Throws<ArgumentException>(() => new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>("  ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("connectionStringName"),
+                Assert.Throws<ArgumentException>(() => new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>("  ")).
+                    Message);
         }
 
         [Fact]
@@ -65,7 +79,9 @@ namespace ProductivityApiUnitTests
         {
             var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>("YouWontFindMe");
 
-            Assert.Equal(Strings.DbContext_ConnectionStringNotFound("YouWontFindMe"), Assert.Throws<InvalidOperationException>(() => init.InitializeDatabase(new EmptyContext())).Message);
+            Assert.Equal(
+                Strings.DbContext_ConnectionStringNotFound("YouWontFindMe"),
+                Assert.Throws<InvalidOperationException>(() => init.InitializeDatabase(new EmptyContext())).Message);
         }
 
         #endregion
@@ -75,7 +91,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseAlways_performs_delete_create_and_seeding()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(databaseExists: false);
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
+                databaseExists: false);
 
             tracker.ExecuteStrategy();
 
@@ -85,7 +102,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseAlways_performs_delete_create_and_seeding_even_if_database_exists_and_model_matches()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(databaseExists: true, modelCompatible: true);
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true);
 
             tracker.ExecuteStrategy();
 
@@ -99,7 +117,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CreateDatabaseIfNotExists_creates_and_seeds_database_if_not_exists()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(databaseExists: false);
+            var tracker =
+                new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(databaseExists: false);
 
             tracker.ExecuteStrategy();
 
@@ -109,7 +128,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_and_model_matches()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(databaseExists: true, modelCompatible: true);
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true);
 
             tracker.ExecuteStrategy();
 
@@ -119,15 +139,19 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CreateDatabaseIfNotExists_throws_if_database_exists_and_model_does_not_match()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(databaseExists: true, modelCompatible: false);
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: false);
 
-            Assert.Equal(Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name), Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
         }
 
         [Fact]
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_but_has_no_metadata()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(databaseExists: true, modelCompatible: true, hasMetadata: false);
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true, hasMetadata: false);
 
             tracker.ExecuteStrategy();
 
@@ -141,7 +165,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseIfModelChanges_creates_and_seeds_database_if_not_exists()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(databaseExists: false);
+            var tracker =
+                new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(databaseExists: false);
 
             tracker.ExecuteStrategy();
 
@@ -151,7 +176,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseIfModelChanges_does_nothing_if_database_exists_and_model_matches()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(databaseExists: true, modelCompatible: true);
+            var tracker =
+                new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                    databaseExists: true, modelCompatible: true);
 
             tracker.ExecuteStrategy();
 
@@ -161,7 +188,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseIfModelChanges_recreates_database_if_database_exists_and_model_does_not_match()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(databaseExists: true, modelCompatible: false);
+            var tracker =
+                new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                    databaseExists: true, modelCompatible: false);
 
             tracker.ExecuteStrategy();
 
@@ -171,7 +200,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void DropCreateDatabaseIfModelChanges_throws_if_database_exists_but_has_no_metadata()
         {
-            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(databaseExists: true, modelCompatible: true, hasMetadata: false);
+            var tracker =
+                new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                    databaseExists: true, modelCompatible: true, hasMetadata: false);
 
             Assert.Equal(Strings.Database_NoDatabaseMetadata, Assert.Throws<NotSupportedException>(() => tracker.ExecuteStrategy()).Message);
         }
@@ -218,7 +249,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void MigrateDatabaseToLatestVersion_use_connection_name_from_config_file()
         {
-            var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>("MigrateDatabaseToLatestVersionNamedConnectionTest");
+            var init =
+                new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(
+                    "MigrateDatabaseToLatestVersionNamedConnectionTest");
 
             TestMigrationsConfiguration.SeedDatabase = null;
 
@@ -308,7 +341,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Default_initialization_strategy_is_CreateDatabaseIfNotExists()
         {
-            var tracker = new DatabaseInitializerTracker<FakeForDisicdoine, DropCreateDatabaseAlways<FakeForDisicdoine>>(databaseExists: false);
+            var tracker =
+                new DatabaseInitializerTracker<FakeForDisicdoine, DropCreateDatabaseAlways<FakeForDisicdoine>>(databaseExists: false);
 
             tracker.Context.Database.Initialize(force: true);
 
@@ -322,7 +356,8 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Default_initialization_strategy_is_removed_by_calling_SetInitializer_with_null()
         {
-            var tracker = new DatabaseInitializerTracker<FakeForDisirbcsiwn, DropCreateDatabaseAlways<FakeForDisirbcsiwn>>(databaseExists: false);
+            var tracker =
+                new DatabaseInitializerTracker<FakeForDisirbcsiwn, DropCreateDatabaseAlways<FakeForDisirbcsiwn>>(databaseExists: false);
 
             var mockContextType = tracker.Context.GetType();
             var initMethod = typeof(Database).GetMethod("SetInitializer").MakeGenericMethod(mockContextType);
@@ -428,7 +463,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CompatibleWithModel_returns_true_if_model_was_not_created_with_Code_First_and_throwing_is_switched_off()
         {
-            var mockInternalContext = new Mock<InternalContextForMock> { CallBase = true };
+            var mockInternalContext = new Mock<InternalContextForMock>
+                                          {
+                                              CallBase = true
+                                          };
             mockInternalContext.Setup(c => c.CodeFirstModel).Returns((DbCompiledModel)null);
 
             Assert.True(new Database(mockInternalContext.Object).CompatibleWithModel(throwIfNoMetadata: false));
@@ -542,7 +580,8 @@ namespace ProductivityApiUnitTests
 
         #region ModelMatches tests
 
-        private static Mock<InternalContextForMock<FakeNoRegContext>> CreateContextForCompatibleTest(bool modelMatches, bool codeFirst = true)
+        private static Mock<InternalContextForMock<FakeNoRegContext>> CreateContextForCompatibleTest(
+            bool modelMatches, bool codeFirst = true)
         {
             var mockInternalContext = new Mock<InternalContextForMock<FakeNoRegContext>>();
             mockInternalContext.Setup(c => c.CodeFirstModel).Returns(codeFirst ? new DbCompiledModel() : null);
@@ -551,7 +590,8 @@ namespace ProductivityApiUnitTests
             return mockInternalContext;
         }
 
-        private static Mock<InternalContextForMock<FakeNoRegContext>> CreateContextForCompatibleTest(string databaseHash, bool codeFirst = true)
+        private static Mock<InternalContextForMock<FakeNoRegContext>> CreateContextForCompatibleTest(
+            string databaseHash, bool codeFirst = true)
         {
             var mockInternalContext = new Mock<InternalContextForMock<FakeNoRegContext>>();
             mockInternalContext.Setup(c => c.CodeFirstModel).Returns(codeFirst ? new DbCompiledModel() : null);
@@ -566,8 +606,9 @@ namespace ProductivityApiUnitTests
             var mockInternalContext = CreateContextForCompatibleTest(modelMatches: true);
             var mockHashFactory = new Mock<ModelHashCalculator>();
 
-            Assert.True(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
+            Assert.True(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
         }
 
         [Fact]
@@ -576,8 +617,9 @@ namespace ProductivityApiUnitTests
             var mockInternalContext = CreateContextForCompatibleTest(modelMatches: true);
             var mockHashFactory = new Mock<ModelHashCalculator>();
 
-            Assert.True(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
+            Assert.True(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
         }
 
         [Fact]
@@ -586,8 +628,9 @@ namespace ProductivityApiUnitTests
             var mockInternalContext = CreateContextForCompatibleTest(modelMatches: false);
             var mockHashFactory = new Mock<ModelHashCalculator>();
 
-            Assert.False(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
+            Assert.False(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
         }
 
         [Fact]
@@ -596,8 +639,9 @@ namespace ProductivityApiUnitTests
             var mockInternalContext = CreateContextForCompatibleTest(modelMatches: false);
             var mockHashFactory = new Mock<ModelHashCalculator>();
 
-            Assert.False(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
+            Assert.False(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
         }
 
         [Fact]
@@ -607,8 +651,9 @@ namespace ProductivityApiUnitTests
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
 
-            Assert.True(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
+            Assert.True(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
         }
 
         [Fact]
@@ -618,8 +663,9 @@ namespace ProductivityApiUnitTests
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
 
-            Assert.True(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
+            Assert.True(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
         }
 
         [Fact]
@@ -629,19 +675,22 @@ namespace ProductivityApiUnitTests
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash2>");
 
-            Assert.False(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
+            Assert.False(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
         }
 
         [Fact]
-        public void CompatibleWithModel_returns_false_if_model_does_not_match_database_using_model_hash_check_and_method_is_asked_not_to_throw()
+        public void
+            CompatibleWithModel_returns_false_if_model_does_not_match_database_using_model_hash_check_and_method_is_asked_not_to_throw()
         {
             var mockInternalContext = CreateContextForCompatibleTest("<Hash1>");
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash2>");
 
-            Assert.False(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
+            Assert.False(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
         }
 
         [Fact]
@@ -650,8 +699,9 @@ namespace ProductivityApiUnitTests
             var mockInternalContext = CreateContextForCompatibleTest("<Hash>", codeFirst: false);
             var mockHashFactory = new Mock<ModelHashCalculator>();
 
-            Assert.True(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
+            Assert.True(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
         }
 
         [Fact]
@@ -661,8 +711,9 @@ namespace ProductivityApiUnitTests
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
 
-            Assert.True(new ModelCompatibilityChecker()
-                .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
+            Assert.True(
+                new ModelCompatibilityChecker()
+                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
         }
 
         [Fact]
@@ -672,10 +723,13 @@ namespace ProductivityApiUnitTests
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns((string)null);
 
-            Assert.Equal(Strings.Database_NonCodeFirstCompatibilityCheck, Assert.Throws<NotSupportedException>(() => new ModelCompatibilityChecker().CompatibleWithModel(
-                mockInternalContext.Object,
-                mockHashFactory.Object,
-                throwIfNoMetadata: true)).Message);
+            Assert.Equal(
+                Strings.Database_NonCodeFirstCompatibilityCheck,
+                Assert.Throws<NotSupportedException>(
+                    () => new ModelCompatibilityChecker().CompatibleWithModel(
+                        mockInternalContext.Object,
+                        mockHashFactory.Object,
+                        throwIfNoMetadata: true)).Message);
         }
 
         [Fact]
@@ -685,10 +739,13 @@ namespace ProductivityApiUnitTests
             var mockHashFactory = new Mock<ModelHashCalculator>();
             mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
 
-            Assert.Equal(Strings.Database_NoDatabaseMetadata, Assert.Throws<NotSupportedException>(() => new ModelCompatibilityChecker().CompatibleWithModel(
-                mockInternalContext.Object,
-                mockHashFactory.Object,
-                throwIfNoMetadata: true)).Message);
+            Assert.Equal(
+                Strings.Database_NoDatabaseMetadata,
+                Assert.Throws<NotSupportedException>(
+                    () => new ModelCompatibilityChecker().CompatibleWithModel(
+                        mockInternalContext.Object,
+                        mockHashFactory.Object,
+                        throwIfNoMetadata: true)).Message);
         }
 
         #endregion
@@ -719,7 +776,6 @@ namespace ProductivityApiUnitTests
             mockContext.Object.Owner.Database.Create();
 
             mockContext.Verify(m => m.CreateDatabase(null), Times.Once());
-
         }
 
         [Fact]
@@ -734,7 +790,6 @@ namespace ProductivityApiUnitTests
             mockContext.Object.Owner.Database.CreateIfNotExists();
 
             mockContext.Verify(m => m.CreateDatabase(null), Times.Once());
-
         }
 
         [Fact]
@@ -747,10 +802,11 @@ namespace ProductivityApiUnitTests
             mockContext.Setup(m => m.Connection).Returns(new SqlConnection("Database=Foo"));
             mockOperations.Setup(m => m.Exists(null)).Returns(true);
 
-            Assert.Equal(Strings.Database_DatabaseAlreadyExists("Foo"), Assert.Throws<InvalidOperationException>(() => mockContext.Object.Owner.Database.Create()).Message);
+            Assert.Equal(
+                Strings.Database_DatabaseAlreadyExists("Foo"),
+                Assert.Throws<InvalidOperationException>(() => mockContext.Object.Owner.Database.Create()).Message);
 
             mockContext.Verify(m => m.CreateDatabase(null), Times.Never());
-
         }
 
         [Fact]
@@ -765,7 +821,6 @@ namespace ProductivityApiUnitTests
             mockContext.Object.Owner.Database.CreateIfNotExists();
 
             mockContext.Verify(m => m.CreateDatabase(null), Times.Never());
-
         }
 
         public class FakeContext : DbContext

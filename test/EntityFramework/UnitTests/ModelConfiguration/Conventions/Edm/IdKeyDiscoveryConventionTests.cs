@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Edm;
@@ -35,7 +36,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_match_type_prefixed_id()
         {
-            var entityType = new EdmEntityType { Name = "Foo" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "Foo"
+                                 };
             var property = entityType.AddPrimitiveProperty("FooId");
             property.PropertyType.EdmType = EdmPrimitiveType.Int32;
 
@@ -47,7 +51,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_match_id_ahead_of_type_and_id()
         {
-            var entityType = new EdmEntityType { Name = "Foo" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "Foo"
+                                 };
             var typeIdProperty = entityType.AddPrimitiveProperty("FooId");
             var idProperty = entityType.AddPrimitiveProperty("Id");
             typeIdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
@@ -62,7 +69,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_case()
         {
-            var entityType = new EdmEntityType { Name = "Foo" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "Foo"
+                                 };
             var property = entityType.AddPrimitiveProperty("foOid");
             property.PropertyType.EdmType = EdmPrimitiveType.Int32;
 
@@ -109,25 +119,37 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact] // Dev11 347225
         public void Apply_should_throw_if_two_Id_properties_are_matched_that_differ_only_by_case()
         {
-            var entityType = new EdmEntityType { Name = "Foo" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "Foo"
+                                 };
             var IDProperty = entityType.AddPrimitiveProperty("ID");
             var IdProperty = entityType.AddPrimitiveProperty("Id");
             IDProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
             IdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
 
-            Assert.Equal(Strings.MultiplePropertiesMatchedAsKeys("ID", "Foo"), Assert.Throws<InvalidOperationException>(() => ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
+            Assert.Equal(
+                Strings.MultiplePropertiesMatchedAsKeys("ID", "Foo"),
+                Assert.Throws<InvalidOperationException>(
+                    () => ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
         }
 
         [Fact] // Dev11 347225
         public void Apply_should_throw_if_two_type_Id_properties_are_matched_that_differ_only_by_case()
         {
-            var entityType = new EdmEntityType { Name = "Foo" };
+            var entityType = new EdmEntityType
+                                 {
+                                     Name = "Foo"
+                                 };
             var FOOIdProperty = entityType.AddPrimitiveProperty("FOOId");
             var FooIdProperty = entityType.AddPrimitiveProperty("FooId");
             FOOIdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
             FooIdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
 
-            Assert.Equal(Strings.MultiplePropertiesMatchedAsKeys("FOOId", "Foo"), Assert.Throws<InvalidOperationException>(() => ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
+            Assert.Equal(
+                Strings.MultiplePropertiesMatchedAsKeys("FOOId", "Foo"),
+                Assert.Throws<InvalidOperationException>(
+                    () => ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
         }
     }
 }

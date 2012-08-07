@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Infrastructure;
@@ -7,8 +8,8 @@ namespace System.Data.Entity
     using Xunit;
 
     /// <summary>
-    /// Unit tests for <see cref="DbSqlQuery"/> and <see cref="DbSqlQuery{TEntity}"/>.
-    /// </summary> 
+    ///     Unit tests for <see cref="DbSqlQuery" /> and <see cref="DbSqlQuery{TEntity}" />.
+    /// </summary>
     public class DbSqlQueryTests : DbRawSqlQueryTests
     {
         [Fact]

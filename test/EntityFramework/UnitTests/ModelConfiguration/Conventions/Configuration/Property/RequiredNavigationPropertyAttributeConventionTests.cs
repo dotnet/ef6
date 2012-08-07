@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Collections.Generic;
@@ -24,7 +25,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         public void Apply_should_ignore_when_end_kind_set()
         {
             var associationConfiguration
-                = new NavigationPropertyConfiguration(new MockPropertyInfo()) { EndKind = EdmAssociationEndKind.Optional };
+                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                      {
+                          EndKind = EdmAssociationEndKind.Optional
+                      };
 
             new RequiredNavigationPropertyAttributeConvention.RequiredNavigationPropertyAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
@@ -37,9 +41,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var associationConfiguration
                 = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(List<string>), "N"))
-                    {
-                        EndKind = EdmAssociationEndKind.Many
-                    };
+                      {
+                          EndKind = EdmAssociationEndKind.Many
+                      };
 
             new RequiredNavigationPropertyAttributeConvention.RequiredNavigationPropertyAttributeConventionImpl()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Data.Entity.Core.Common;
@@ -254,7 +255,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var mockProperty = new Mock<MetadataProperty>();
             mockProperty.Setup(m => m.Name).Returns("DataSpace");
             mockProperty.Setup(m => m.Value).Returns(DataSpace.CSpace);
-            
+
             var mockEdmFunction = new Mock<EdmFunction>();
             mockEdmFunction.Setup(m => m.FullName).Returns(functionName);
             mockEdmFunction.Setup(m => m.NamespaceName).Returns(functionName.Split('.')[0]);

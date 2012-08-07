@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -125,44 +126,45 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.IsUnicode = true;
 
             var expectedMessageCSpace = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsNullable", true, "IsNullable", false);
+                                        Strings.ConflictingConfigurationValue(
+                                            "IsNullable", true, "IsNullable", false);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                     Strings.ConflictingConfigurationValue(
+                                         "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption", DatabaseGeneratedOption.Identity);
+                                     Strings.ConflictingConfigurationValue(
+                                         "DatabaseGeneratedOption", DatabaseGeneratedOption.Computed, "DatabaseGeneratedOption",
+                                         DatabaseGeneratedOption.Identity);
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnName", "bar", "ColumnName", "foo");
+                                  Strings.ConflictingConfigurationValue(
+                                      "ColumnName", "bar", "ColumnName", "foo");
 
             expectedMessage += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnOrder", 1, "ColumnOrder", 2);
+                               Strings.ConflictingConfigurationValue(
+                                   "ColumnOrder", 1, "ColumnOrder", 2);
 
             expectedMessage += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "ColumnType", "bar", "ColumnType", "foo");
+                               Strings.ConflictingConfigurationValue(
+                                   "ColumnType", "bar", "ColumnType", "foo");
 
             var additionalErrors = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsFixedLength", false, "IsFixedLength", true);
+                                   Strings.ConflictingConfigurationValue(
+                                       "IsFixedLength", false, "IsFixedLength", true);
 
             additionalErrors += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsMaxLength", false, "IsMaxLength", true);
+                                Strings.ConflictingConfigurationValue(
+                                    "IsMaxLength", false, "IsMaxLength", true);
 
             additionalErrors += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "MaxLength", 1, "MaxLength", 2);
+                                Strings.ConflictingConfigurationValue(
+                                    "MaxLength", 1, "MaxLength", 2);
 
             additionalErrors += Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsUnicode", false, "IsUnicode", true);
+                                Strings.ConflictingConfigurationValue(
+                                    "IsUnicode", false, "IsUnicode", true);
 
             expectedMessageCSpace += additionalErrors;
             expectedMessage += additionalErrors;
@@ -196,8 +198,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.IsUnicode = true;
 
             var expectedMessage = Environment.NewLine + "\t" +
-                Strings.ConflictingConfigurationValue(
-                    "IsUnicode", false, "IsUnicode", true);
+                                  Strings.ConflictingConfigurationValue(
+                                      "IsUnicode", false, "IsUnicode", true);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));

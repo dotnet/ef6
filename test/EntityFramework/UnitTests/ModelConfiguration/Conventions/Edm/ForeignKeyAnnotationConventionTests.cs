@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -16,12 +17,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var associationConstraint = new EdmAssociationConstraint();
             var navigationProperty = new EdmNavigationProperty
-                {
-                    Association = new EdmAssociationType
-                        {
-                            Constraint = associationConstraint
-                        }
-                };
+                                         {
+                                             Association = new EdmAssociationType
+                                                               {
+                                                                   Constraint = associationConstraint
+                                                               }
+                                         };
 
             ((IEdmConvention<EdmNavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new EdmModel());
@@ -33,9 +34,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         public void Apply_is_noop_when_no_fk_annotation()
         {
             var navigationProperty = new EdmNavigationProperty
-                {
-                    Association = new EdmAssociationType()
-                };
+                                         {
+                                             Association = new EdmAssociationType()
+                                         };
 
             ((IEdmConvention<EdmNavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new EdmModel());
@@ -48,7 +49,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var model = new EdmModel().Initialize();
             var associationType = new EdmAssociationType().Initialize();
-            var navigationProperty = new EdmNavigationProperty { Association = associationType };
+            var navigationProperty = new EdmNavigationProperty
+                                         {
+                                             Association = associationType
+                                         };
             var foreignKeyAnnotation = new ForeignKeyAttribute("AId");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
@@ -63,7 +67,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            var associationType = model.AddAssociationType("A",
+            var associationType = model.AddAssociationType(
+                "A",
                 entityType, EdmAssociationEndKind.Optional,
                 entityType, EdmAssociationEndKind.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
@@ -83,7 +88,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            var associationType = model.AddAssociationType("A",
+            var associationType = model.AddAssociationType(
+                "A",
                 entityType, EdmAssociationEndKind.Optional,
                 entityType, EdmAssociationEndKind.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
@@ -106,15 +112,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var entityType = model.AddEntityType("E");
             var mockType = new MockType();
             entityType.SetClrType(mockType);
-            var associationType = model.AddAssociationType("A",
+            var associationType = model.AddAssociationType(
+                "A",
                 entityType, EdmAssociationEndKind.Optional,
                 entityType, EdmAssociationEndKind.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
             var foreignKeyAnnotation = new ForeignKeyAttribute("_Fk");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            Assert.Equal(Strings.ForeignKeyAttributeConvention_InvalidKey("N", mockType.Object, "_Fk", mockType.Object), Assert.Throws<InvalidOperationException>(() => ((IEdmConvention<EdmNavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                                                                                                                                                                                  .Apply(navigationProperty, model)).Message);
+            Assert.Equal(
+                Strings.ForeignKeyAttributeConvention_InvalidKey("N", mockType.Object, "_Fk", mockType.Object),
+                Assert.Throws<InvalidOperationException>(
+                    () => ((IEdmConvention<EdmNavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+                              .Apply(navigationProperty, model)).Message);
         }
 
         [Fact]
@@ -124,15 +134,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var entityType = model.AddEntityType("E");
             var mockType = new MockType();
             entityType.SetClrType(mockType);
-            var associationType = model.AddAssociationType("A",
+            var associationType = model.AddAssociationType(
+                "A",
                 entityType, EdmAssociationEndKind.Optional,
                 entityType, EdmAssociationEndKind.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
             var foreignKeyAnnotation = new ForeignKeyAttribute(",");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            Assert.Equal(Strings.ForeignKeyAttributeConvention_EmptyKey("N", mockType.Object), Assert.Throws<InvalidOperationException>(() => ((IEdmConvention<EdmNavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                                                                                                                                                        .Apply(navigationProperty, model)).Message);
+            Assert.Equal(
+                Strings.ForeignKeyAttributeConvention_EmptyKey("N", mockType.Object),
+                Assert.Throws<InvalidOperationException>(
+                    () => ((IEdmConvention<EdmNavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+                              .Apply(navigationProperty, model)).Message);
         }
     }
 }

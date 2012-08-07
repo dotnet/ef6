@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -23,28 +24,59 @@ namespace ProductivityApiUnitTests
         {
             Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo((Type)null)).ParamName);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, new DbConnectionInfo("Name"))).ParamName);
-            Assert.Equal("connectionInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (DbConnectionInfo)null)).ParamName);
+            Assert.Equal(
+                "contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, new DbConnectionInfo("Name"))).ParamName);
+            Assert.Equal(
+                "connectionInfo",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (DbConnectionInfo)null)).ParamName);
 
             Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig())).ParamName);
-            Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (Configuration)null)).ParamName);
+            Assert.Equal(
+                "config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (Configuration)null)).ParamName);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig(), new DbConnectionInfo("Name"))).ParamName);
-            Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), null, new DbConnectionInfo("Name"))).ParamName);
-            Assert.Equal("connectionInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), CreateEmptyConfig(), (DbConnectionInfo)null)).ParamName);
+            Assert.Equal(
+                "contextType",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig(), new DbConnectionInfo("Name"))).
+                    ParamName);
+            Assert.Equal(
+                "config",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), null, new DbConnectionInfo("Name"))).
+                    ParamName);
+            Assert.Equal(
+                "connectionInfo",
+                Assert.Throws<ArgumentNullException>(
+                    () => new DbContextInfo(typeof(DbContext), CreateEmptyConfig(), (DbConnectionInfo)null)).ParamName);
 
 #pragma warning disable 618 // Obsolete ctor
-            Assert.Equal("connectionStringSettings", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(SimpleContext), (ConnectionStringSettingsCollection)null)).ParamName);
+            Assert.Equal(
+                "connectionStringSettings",
+                Assert.Throws<ArgumentNullException>(
+                    () => new DbContextInfo(typeof(SimpleContext), (ConnectionStringSettingsCollection)null)).ParamName);
 #pragma warning restore 618
 
-            Assert.Equal(Error.ArgumentOutOfRange("contextType").Message, Assert.Throws<ArgumentOutOfRangeException>(() => new DbContextInfo(typeof(string))).Message);
+            Assert.Equal(
+                Error.ArgumentOutOfRange("contextType").Message,
+                Assert.Throws<ArgumentOutOfRangeException>(() => new DbContextInfo(typeof(string))).Message);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
-            Assert.Equal("modelProviderInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (DbProviderInfo)null)).ParamName);
+            Assert.Equal(
+                "contextType",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
+            Assert.Equal(
+                "modelProviderInfo",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), (DbProviderInfo)null)).ParamName);
 
-            Assert.Equal("contextType", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(null, CreateEmptyConfig(), ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
-            Assert.Equal("config", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), null, ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
-            Assert.Equal("modelProviderInfo", Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), CreateEmptyConfig(), (DbProviderInfo)null)).ParamName);
+            Assert.Equal(
+                "contextType",
+                Assert.Throws<ArgumentNullException>(
+                    () => new DbContextInfo(null, CreateEmptyConfig(), ProviderRegistry.SqlCe4_ProviderInfo)).ParamName);
+            Assert.Equal(
+                "config",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), null, ProviderRegistry.SqlCe4_ProviderInfo))
+                    .ParamName);
+            Assert.Equal(
+                "modelProviderInfo",
+                Assert.Throws<ArgumentNullException>(() => new DbContextInfo(typeof(DbContext), CreateEmptyConfig(), (DbProviderInfo)null)).
+                    ParamName);
         }
 
         [Fact]
@@ -54,7 +86,7 @@ namespace ProductivityApiUnitTests
 
             Assert.Same(typeof(DbContext), contextInfo.ContextType);
         }
-        
+
         [Fact]
         public void ContextType_should_return_tyoe_of_passed_context_instance()
         {
@@ -62,7 +94,7 @@ namespace ProductivityApiUnitTests
 
             Assert.Same(typeof(SimpleContext), contextInfo.ContextType);
         }
-        
+
         public class SimpleContext : DbContext
         {
         }
@@ -278,9 +310,9 @@ namespace ProductivityApiUnitTests
         {
             public ContextWithExistingObjectContext()
                 : base(new ObjectContext(
-                           new EntityConnection(
-                               new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping.ToMetadataWorkspace(),
-                               new SqlConnection())), true)
+                    new EntityConnection(
+                        new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping.ToMetadataWorkspace(),
+                        new SqlConnection())), true)
             {
             }
         }
@@ -317,7 +349,9 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CreateActivator_should_throw_when_context_factory_not_constructible()
         {
-            Assert.Equal(Strings.DbContextServices_MissingDefaultCtor(typeof(ContextWithoutDefaultCtorBadFactory.ContextFactory)), Assert.Throws<InvalidOperationException>(() => new DbContextInfo(typeof(ContextWithoutDefaultCtorBadFactory))).Message);
+            Assert.Equal(
+                Strings.DbContextServices_MissingDefaultCtor(typeof(ContextWithoutDefaultCtorBadFactory.ContextFactory)),
+                Assert.Throws<InvalidOperationException>(() => new DbContextInfo(typeof(ContextWithoutDefaultCtorBadFactory))).Message);
         }
 
         [Fact]
@@ -335,7 +369,7 @@ namespace ProductivityApiUnitTests
             Assert.NotNull(objectContext);
             Assert.Equal("SqlCeConnection", ((EntityConnection)objectContext.Connection).StoreConnection.GetType().Name);
         }
-        
+
         private class ContextWithExternalOnModelCreating1 : DbContext
         {
         }
@@ -394,9 +428,9 @@ namespace ProductivityApiUnitTests
             var contextInfo
                 = new DbContextInfo(
                     typeof(ContextWithExternalOnModelCreating3))
-                {
-                    OnModelCreating = mb => mb.Ignore<FakeEntity>()
-                };
+                      {
+                          OnModelCreating = mb => mb.Ignore<FakeEntity>()
+                      };
 
             contextInfo.OnModelCreating = null;
 
@@ -409,89 +443,116 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void Should_use_DefaultConnectionFactory_from_supplied_config()
         {
-            RunTestWithConnectionFactory(Database.ResetDefaultConnectionFactory, () =>
-            {
-                var config = CreateEmptyConfig().AddDefaultConnectionFactory(
-                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
-                    new string[0]);
+            RunTestWithConnectionFactory(
+                Database.ResetDefaultConnectionFactory, () =>
+                                                            {
+                                                                var config = CreateEmptyConfig().AddDefaultConnectionFactory(
+                                                                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                                                                    new string[0]);
 
-                var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
+                                                                var contextInfo = new DbContextInfo(
+                                                                    typeof(ContextWithoutDefaultCtor), config);
 
-                Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                Assert.Equal("Database=foo", contextInfo.ConnectionString);
-                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-            });
+                                                                Assert.Equal(
+                                                                    DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
+                                                                Assert.Equal("Database=foo", contextInfo.ConnectionString);
+                                                                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
+                                                            });
         }
 
         [Fact]
         public void Should_use_use_default_DefaultConnectionFactory_if_supplied_config_contains_no_DefaultConnectionFactory()
         {
-            RunTestWithConnectionFactory(Database.ResetDefaultConnectionFactory, () =>
-            {
-                var config = CreateEmptyConfig();
+            RunTestWithConnectionFactory(
+                Database.ResetDefaultConnectionFactory, () =>
+                                                            {
+                                                                var config = CreateEmptyConfig();
 
-                var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
+                                                                var contextInfo = new DbContextInfo(
+                                                                    typeof(ContextWithoutDefaultCtor), config);
 
-                Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
-                Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
-                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-            });
+                                                                Assert.Equal(
+                                                                    DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
+                                                                Assert.True(
+                                                                    contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
+                                                                Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
+                                                                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
+                                                            });
         }
 
         [Fact]
         public void Should_use_connectioin_string_from_supplied_config_even_if_DefaultConnectionFactory_is_also_present()
         {
-            RunTestWithConnectionFactory(Database.ResetDefaultConnectionFactory, () =>
-            {
-                var config = AddConnectionStrings(CreateEmptyConfig().AddDefaultConnectionFactory(
-                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
-                    new string[0]));
+            RunTestWithConnectionFactory(
+                Database.ResetDefaultConnectionFactory, () =>
+                                                            {
+                                                                var config =
+                                                                    AddConnectionStrings(
+                                                                        CreateEmptyConfig().AddDefaultConnectionFactory(
+                                                                            "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                                                                            new string[0]));
 
-                var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
+                                                                var contextInfo = new DbContextInfo(
+                                                                    typeof(ContextWithoutDefaultCtor), config);
 
-                Assert.Equal(DbConnectionStringOrigin.Configuration, contextInfo.ConnectionStringOrigin);
-                Assert.Equal("Initial Catalog=foo", contextInfo.ConnectionString);
-                Assert.Equal("foo", contextInfo.ConnectionStringName);
-                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-            });
+                                                                Assert.Equal(
+                                                                    DbConnectionStringOrigin.Configuration,
+                                                                    contextInfo.ConnectionStringOrigin);
+                                                                Assert.Equal("Initial Catalog=foo", contextInfo.ConnectionString);
+                                                                Assert.Equal("foo", contextInfo.ConnectionStringName);
+                                                                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
+                                                            });
         }
 
         [Fact]
         public void Should_use_DefaultConnectionFactory_set_in_code_even_if_one_was_supplied_in_config()
         {
 #pragma warning disable 612,618
-            RunTestWithConnectionFactory(() => Database.DefaultConnectionFactory = new SqlConnectionFactory(), () =>
+            RunTestWithConnectionFactory(
+                () => Database.DefaultConnectionFactory = new SqlConnectionFactory(), () =>
 #pragma warning restore 612,618
-            {
-                var config = CreateEmptyConfig().AddDefaultConnectionFactory(
-                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
-                    new string[0]);
+                                                                                          {
+                                                                                              var config = CreateEmptyConfig().
+                                                                                                  AddDefaultConnectionFactory(
+                                                                                                      "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                                                                                                      new string[0]);
 
-                var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
+                                                                                              var contextInfo =
+                                                                                                  new DbContextInfo(
+                                                                                                      typeof(ContextWithoutDefaultCtor),
+                                                                                                      config);
 
-                Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
-                Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
-                Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-            });
+                                                                                              Assert.Equal(
+                                                                                                  DbConnectionStringOrigin.Convention,
+                                                                                                  contextInfo.ConnectionStringOrigin);
+                                                                                              Assert.True(
+                                                                                                  contextInfo.ConnectionString.Contains(
+                                                                                                      @"Data Source=.\SQLEXPRESS"));
+                                                                                              Assert.True(
+                                                                                                  contextInfo.ConnectionString.Contains(
+                                                                                                      @"Initial Catalog=foo"));
+                                                                                              Assert.Equal(
+                                                                                                  "System.Data.SqlClient",
+                                                                                                  contextInfo.ConnectionProviderName);
+                                                                                          });
         }
 
         [Fact]
         public void Setting_DefaultConnectionFactory_from_code_marks_DefaultConnectionFactory_as_changed_and_this_can_be_reset()
         {
-            RunTestWithConnectionFactory(Database.ResetDefaultConnectionFactory, () =>
-            {
-                Assert.False(Database.DefaultConnectionFactoryChanged);
+            RunTestWithConnectionFactory(
+                Database.ResetDefaultConnectionFactory, () =>
+                                                            {
+                                                                Assert.False(Database.DefaultConnectionFactoryChanged);
 
 #pragma warning disable 612,618
-                Database.DefaultConnectionFactory = new SqlConnectionFactory();
+                                                                Database.DefaultConnectionFactory = new SqlConnectionFactory();
 #pragma warning restore 612,618
-                Assert.True(Database.DefaultConnectionFactoryChanged);
+                                                                Assert.True(Database.DefaultConnectionFactoryChanged);
 
-                Database.ResetDefaultConnectionFactory();
-                Assert.False(Database.DefaultConnectionFactoryChanged);
-            });
+                                                                Database.ResetDefaultConnectionFactory();
+                                                                Assert.False(Database.DefaultConnectionFactoryChanged);
+                                                            });
         }
 
         private void RunTestWithConnectionFactory(Action connectionFactorySetter, Action test)
@@ -558,7 +619,8 @@ namespace ProductivityApiUnitTests
             var connection = new DbConnectionInfo("GetMeFromSuppliedConfig");
             var contextInfo = new DbContextInfo(
                 typeof(SimpleContext),
-                CreateEmptyConfig().AddConnectionString("GetMeFromSuppliedConfig", "Database=ConnectionFromSuppliedConfig", "System.Data.SqlClient"),
+                CreateEmptyConfig().AddConnectionString(
+                    "GetMeFromSuppliedConfig", "Database=ConnectionFromSuppliedConfig", "System.Data.SqlClient"),
                 connection);
 
             Assert.Equal(DbConnectionStringOrigin.DbContextInfo, contextInfo.ConnectionStringOrigin);
@@ -594,7 +656,10 @@ namespace ProductivityApiUnitTests
         {
             var connection = new DbConnectionInfo("GetMeFromSuppliedConfig");
 
-            Assert.Equal(Strings.DbContext_ConnectionStringNotFound("GetMeFromSuppliedConfig"), Assert.Throws<InvalidOperationException>(() => new DbContextInfo(typeof(ContextWithConnectionNameNotInAppConfigFile), CreateEmptyConfig(), connection)).Message);
+            Assert.Equal(
+                Strings.DbContext_ConnectionStringNotFound("GetMeFromSuppliedConfig"),
+                Assert.Throws<InvalidOperationException>(
+                    () => new DbContextInfo(typeof(ContextWithConnectionNameNotInAppConfigFile), CreateEmptyConfig(), connection)).Message);
         }
 
         public class ContextWithConnectionNameNotInAppConfigFile : DbContext
@@ -608,9 +673,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CreateInstance_should_use_passed_provider_info_when_building_model_even_when_config_is_passed_as_well()
         {
-            var config = AddConnectionStrings(CreateEmptyConfig().AddDefaultConnectionFactory(
-                "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
-                new string[0]));
+            var config = AddConnectionStrings(
+                CreateEmptyConfig().AddDefaultConnectionFactory(
+                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                    new string[0]));
 
             var contextInfo = new DbContextInfo(typeof(SimpleContext), config, ProviderRegistry.SqlCe4_ProviderInfo);
 
@@ -628,9 +694,10 @@ namespace ProductivityApiUnitTests
         [Fact]
         public void CreateInstance_should_use_passed_connection_string_even_when_provider_info_is_passed_as_well()
         {
-            var config = AddConnectionStrings(CreateEmptyConfig().AddDefaultConnectionFactory(
-                "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
-                new string[0]));
+            var config = AddConnectionStrings(
+                CreateEmptyConfig().AddDefaultConnectionFactory(
+                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                    new string[0]));
 
             var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config, ProviderRegistry.SqlCe4_ProviderInfo);
 

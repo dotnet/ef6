@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Common;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.Objects
 
     public class ObjectContextForMock : ObjectContext
     {
-        private EntityConnection _connection;
+        private readonly EntityConnection _connection;
 
         internal ObjectContextForMock(EntityConnection connection)
         {
@@ -22,14 +23,20 @@ namespace System.Data.Entity.Core.Objects
 
         public static ObjectContextForMock Create()
         {
-            var providerFactoryMock = new Mock<DbProviderFactoryForMock>() { CallBase = true };
+            var providerFactoryMock = new Mock<DbProviderFactoryForMock>
+                                          {
+                                              CallBase = true
+                                          };
 
             var entityConnectionMock = new Mock<EntityConnection>();
             entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactoryMock.Object);
             entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(default(DbConnection));
             var entityConnection = entityConnectionMock.Object;
 
-            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection) { CallBase = true };
+            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection)
+                                        {
+                                            CallBase = true
+                                        };
 
             var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
             var metadataWorkspace = metadataWorkspaceMock.Object;

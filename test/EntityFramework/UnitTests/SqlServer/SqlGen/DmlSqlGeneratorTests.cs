@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Data.Entity.Core;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var mockMember = new Mock<EdmMember>();
             mockMember.Setup(m => m.Name).Returns(name);
             mockMember.Setup(m => m.DeclaringType).Returns(new Mock<EntityType>().Object);
-            
+
             return mockMember;
         }
 

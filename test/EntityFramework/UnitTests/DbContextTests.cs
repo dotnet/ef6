@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -65,11 +66,11 @@ namespace ProductivityApiUnitTests
     #endregion
 
     /// <summary>
-    /// Unit tests for DbContext.
+    ///     Unit tests for DbContext.
     /// </summary>
     public class DbContextTests : TestBase
     {
-        static DbContextTests() 
+        static DbContextTests()
         {
             // Ensure the basic-auth test user exists
 
@@ -92,15 +93,14 @@ END";
 
         #region Using EF connection string/EntityConnection in combination with DbCompiledModel
 
-        private const string EntityConnectionString = @"metadata=.\Foo.csdl|.\Foo.ssdl|.\Foo.msl;provider=System.Data.SqlClient;provider connection string='Server=.\Foo;Database=Bar'";
+        private const string EntityConnectionString =
+            @"metadata=.\Foo.csdl|.\Foo.ssdl|.\Foo.msl;provider=System.Data.SqlClient;provider connection string='Server=.\Foo;Database=Bar'";
 
         private static DbCompiledModel _emptyModel;
+
         private static DbCompiledModel EmptyModel
         {
-            get
-            {
-                return _emptyModel ?? (_emptyModel = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo).Compile());
-            }
+            get { return _emptyModel ?? (_emptyModel = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo).Compile()); }
         }
 
         [Fact]
@@ -108,7 +108,9 @@ END";
         {
             using (var context = new DbContext(EntityConnectionString, EmptyModel))
             {
-                Assert.Equal(Strings.DbContext_ConnectionHasModel, Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionHasModel,
+                    Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
             }
         }
 
@@ -117,7 +119,9 @@ END";
         {
             using (var context = new DbContext("EntityConnectionString", EmptyModel))
             {
-                Assert.Equal(Strings.DbContext_ConnectionHasModel, Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionHasModel,
+                    Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
             }
         }
 
@@ -126,7 +130,9 @@ END";
         {
             using (var context = new DbContext("name=EntityConnectionString", EmptyModel))
             {
-                Assert.Equal(Strings.DbContext_ConnectionHasModel, Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionHasModel,
+                    Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
             }
         }
 
@@ -135,7 +141,9 @@ END";
         {
             using (var context = new DbContext(new EntityConnection(EntityConnectionString), EmptyModel, contextOwnsConnection: true))
             {
-                Assert.Equal(Strings.DbContext_ConnectionHasModel, Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionHasModel,
+                    Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
             }
         }
 
@@ -148,7 +156,9 @@ END";
         {
             using (var context = new FakeDerivedDbContext("name=MissingConnectionString"))
             {
-                Assert.Equal(Strings.DbContext_ConnectionStringNotFound("MissingConnectionString"), Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionStringNotFound("MissingConnectionString"),
+                    Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
             }
         }
 
@@ -157,7 +167,9 @@ END";
         {
             using (var context = new DbContext("name=MissingConnectionString", EmptyModel))
             {
-                Assert.Equal(Strings.DbContext_ConnectionStringNotFound("MissingConnectionString"), Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
+                Assert.Equal(
+                    Strings.DbContext_ConnectionStringNotFound("MissingConnectionString"),
+                    Assert.Throws<InvalidOperationException>(() => context.Set<FakeEntity>().Load()).Message);
             }
         }
 
@@ -168,31 +180,40 @@ END";
         [Fact]
         public void Constructing_DbContext_with_null_nameOrConnectionString_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new FakeDerivedDbContext((string)null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new FakeDerivedDbContext((string)null)).Message);
         }
 
         [Fact]
         public void Constructing_DbContext_with_empty_nameOrConnectionString_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new FakeDerivedDbContext("")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new FakeDerivedDbContext("")).Message);
         }
 
         [Fact]
         public void Constructing_DbContext_with_whitespace_nameOrConnectionString_throws()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"), Assert.Throws<ArgumentException>(() => new FakeDerivedDbContext(" ")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("nameOrConnectionString"),
+                Assert.Throws<ArgumentException>(() => new FakeDerivedDbContext(" ")).Message);
         }
 
         [Fact]
         public void Constructing_DbContext_with_null_existingConnection_throws()
         {
-            Assert.Equal("existingConnection", Assert.Throws<ArgumentNullException>(() => new FakeDerivedDbContext((DbConnection)null)).ParamName);
+            Assert.Equal(
+                "existingConnection", Assert.Throws<ArgumentNullException>(() => new FakeDerivedDbContext((DbConnection)null)).ParamName);
         }
 
         [Fact]
         public void Constructing_DbContext_with_null_objectContext_throws()
         {
-            Assert.Equal("objectContext", Assert.Throws<ArgumentNullException>(() => new DbContext((ObjectContext)null, dbContextOwnsObjectContext: false)).ParamName);
+            Assert.Equal(
+                "objectContext",
+                Assert.Throws<ArgumentNullException>(() => new DbContext(null, dbContextOwnsObjectContext: false)).ParamName);
         }
 
         [Fact]
@@ -210,7 +231,9 @@ END";
         [Fact]
         public void Constructing_DbContext_with_null_model_using_existingConnection_constructor_throws()
         {
-            Assert.Equal("model", Assert.Throws<ArgumentNullException>(() => new DbContext(new SqlConnection(), null, contextOwnsConnection: false)).ParamName);
+            Assert.Equal(
+                "model",
+                Assert.Throws<ArgumentNullException>(() => new DbContext(new SqlConnection(), null, contextOwnsConnection: false)).ParamName);
         }
 
         #endregion
@@ -235,8 +258,9 @@ END";
         [Fact]
         public void DbModelBuilderVersion_Latest_is_used_if_no_attribute_is_provided()
         {
-            var internalContext = new LazyInternalContext(new Mock<DbContext>().Object,
-                                                          new Mock<IInternalConnection>().Object, null);
+            var internalContext = new LazyInternalContext(
+                new Mock<DbContext>().Object,
+                new Mock<IInternalConnection>().Object, null);
 
             var builder = internalContext.CreateModelBuilder();
 
@@ -302,57 +326,67 @@ END";
         [Fact]
         public void Simple_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.SimpleContextClass",
-                            typeof(SimpleContextClass).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.SimpleContextClass",
+                typeof(SimpleContextClass).DatabaseName());
         }
 
         [Fact]
         public void Nested_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.SimpleContextClass+NestedContextClass",
-                            typeof(SimpleContextClass.NestedContextClass).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.SimpleContextClass+NestedContextClass",
+                typeof(SimpleContextClass.NestedContextClass).DatabaseName());
         }
 
         [Fact]
         public void Double_nested_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.SimpleContextClass+NestedContextClass+DouubleNestedContextClass",
-                            typeof(SimpleContextClass.NestedContextClass.DouubleNestedContextClass).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.SimpleContextClass+NestedContextClass+DouubleNestedContextClass",
+                typeof(SimpleContextClass.NestedContextClass.DouubleNestedContextClass).DatabaseName());
         }
 
         [Fact]
         public void Generic_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.GenericContextClass`1[System.String]",
-                            typeof(GenericContextClass<string>).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.GenericContextClass`1[System.String]",
+                typeof(GenericContextClass<string>).DatabaseName());
         }
 
         [Fact]
         public void Double_generic_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.DoubleGenericContextClass`2[System.String,System.Int32]",
-                            typeof(DoubleGenericContextClass<string, int>).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.DoubleGenericContextClass`2[System.String,System.Int32]",
+                typeof(DoubleGenericContextClass<string, int>).DatabaseName());
         }
 
         [Fact]
         public void Nested_in_generic_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.GenericContextClass`1+NestedContextClass[System.String]",
-                            typeof(GenericContextClass<string>.NestedContextClass).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.GenericContextClass`1+NestedContextClass[System.String]",
+                typeof(GenericContextClass<string>.NestedContextClass).DatabaseName());
         }
 
         [Fact]
         public void Nested_in_double_generic_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.DoubleGenericContextClass`2+NestedContextClass[System.String,System.Int32]",
-                            typeof(DoubleGenericContextClass<string, int>.NestedContextClass).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.DoubleGenericContextClass`2+NestedContextClass[System.String,System.Int32]",
+                typeof(DoubleGenericContextClass<string, int>.NestedContextClass).DatabaseName());
         }
 
         [Fact]
         public void Double_generic_double_nested_in_double_generic_context_class_can_be_used_to_create_database_name()
         {
-            Assert.Equal("ProductivityApiUnitTests.DoubleGenericContextClass`2+DoubleGenericNestedContextClass`2+DoubleGenericDoubleNestedContextClass`2[System.String,System.Int32,System.Collections.Generic.ICollection`1[System.String],System.Random,System.Collections.Generic.Dictionary`2[System.String,System.Int32],System.Nullable`1[System.Int32]]",
-                            typeof(DoubleGenericContextClass<string, int>.DoubleGenericNestedContextClass<ICollection<string>, Random>.DoubleGenericDoubleNestedContextClass<Dictionary<string, int>, int?>).DatabaseName());
+            Assert.Equal(
+                "ProductivityApiUnitTests.DoubleGenericContextClass`2+DoubleGenericNestedContextClass`2+DoubleGenericDoubleNestedContextClass`2[System.String,System.Int32,System.Collections.Generic.ICollection`1[System.String],System.Random,System.Collections.Generic.Dictionary`2[System.String,System.Int32],System.Nullable`1[System.Int32]]",
+                typeof(
+                    DoubleGenericContextClass<string, int>.DoubleGenericNestedContextClass<ICollection<string>, Random>.
+                        DoubleGenericDoubleNestedContextClass<Dictionary<string, int>, int?>).DatabaseName());
         }
 
         #endregion
@@ -476,7 +510,11 @@ END";
         [Fact]
         public void ApplicationName_set_when_existing_connection_ctor()
         {
-            var connectionStringBuilder = new SqlConnectionStringBuilder { DataSource = ".\\sqlexpress", IntegratedSecurity = true };
+            var connectionStringBuilder = new SqlConnectionStringBuilder
+                                              {
+                                                  DataSource = ".\\sqlexpress",
+                                                  IntegratedSecurity = true
+                                              };
             IObjectContextAdapter objectContextAdapter = new AppNameContext(new SqlConnection(connectionStringBuilder.ToString()), true);
             var storeConnection = ((EntityConnection)objectContextAdapter.ObjectContext.Connection).StoreConnection;
 
@@ -487,9 +525,14 @@ END";
         public void ApplicationName_set_when_existing_connection_and_model_ctor()
         {
             var model = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo);
-            var connectionStringBuilder = new SqlConnectionStringBuilder { DataSource = ".\\sqlexpress", IntegratedSecurity = true };
-            IObjectContextAdapter objectContextAdapter = new AppNameContext(new SqlConnection(connectionStringBuilder.ToString()),
-                                                                            new DbCompiledModel(model), true);
+            var connectionStringBuilder = new SqlConnectionStringBuilder
+                                              {
+                                                  DataSource = ".\\sqlexpress",
+                                                  IntegratedSecurity = true
+                                              };
+            IObjectContextAdapter objectContextAdapter = new AppNameContext(
+                new SqlConnection(connectionStringBuilder.ToString()),
+                new DbCompiledModel(model), true);
             var storeConnection = ((EntityConnection)objectContextAdapter.ObjectContext.Connection).StoreConnection;
 
             Assert.True(storeConnection.ConnectionString.Contains("Application Name=EntityFrameworkMUE"));
@@ -499,9 +542,14 @@ END";
         public void ApplicationName_set_when_existing_object_context_ctor()
         {
             var model = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo);
-            var connectionStringBuilder = new SqlConnectionStringBuilder { DataSource = ".\\sqlexpress", IntegratedSecurity = true };
-            var entityConnection = new EntityConnection(model.DatabaseMapping.ToMetadataWorkspace(),
-                                                        new SqlConnection(connectionStringBuilder.ToString()));
+            var connectionStringBuilder = new SqlConnectionStringBuilder
+                                              {
+                                                  DataSource = ".\\sqlexpress",
+                                                  IntegratedSecurity = true
+                                              };
+            var entityConnection = new EntityConnection(
+                model.DatabaseMapping.ToMetadataWorkspace(),
+                new SqlConnection(connectionStringBuilder.ToString()));
             var objectContext = new ObjectContext(entityConnection);
 
             IObjectContextAdapter objectContextAdapter = new AppNameContext(objectContext, true);
@@ -517,12 +565,12 @@ END";
             var model = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo);
             var connectionStringBuilder
                 = new SqlConnectionStringBuilder
-                {
-                    DataSource = ".\\sqlexpress",
-                    UserID = "EFTestUser",
-                    Password = "Password1",
-                    PersistSecurityInfo = false
-                };
+                      {
+                          DataSource = ".\\sqlexpress",
+                          UserID = "EFTestUser",
+                          Password = "Password1",
+                          PersistSecurityInfo = false
+                      };
 
             var connection = new SqlConnection(connectionStringBuilder.ToString());
 
@@ -540,12 +588,12 @@ END";
             var model = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo);
             var connectionStringBuilder
                 = new SqlConnectionStringBuilder
-                {
-                    DataSource = ".\\sqlexpress",
-                    UserID = "EFTestUser",
-                    Password = "Password1",
-                    PersistSecurityInfo = false
-                };
+                      {
+                          DataSource = ".\\sqlexpress",
+                          UserID = "EFTestUser",
+                          Password = "Password1",
+                          PersistSecurityInfo = false
+                      };
 
             var connection = new SqlConnection(connectionStringBuilder.ToString());
 
@@ -598,13 +646,13 @@ END";
         {
             var connectionStringBuilder
                 = new SqlConnectionStringBuilder
-                {
-                    DataSource = ".\\sqlexpress",
-                    UserID = "EFTestUser",
-                    Password = "Password1",
-                    InitialCatalog = "PersistSecurityInfoContext",
-                    PersistSecurityInfo = false
-                };
+                      {
+                          DataSource = ".\\sqlexpress",
+                          UserID = "EFTestUser",
+                          Password = "Password1",
+                          InitialCatalog = "PersistSecurityInfoContext",
+                          PersistSecurityInfo = false
+                      };
 
             var context = new PersistSecurityInfoContext(connectionStringBuilder.ToString());
 
@@ -618,13 +666,13 @@ END";
         {
             var connectionStringBuilder
                 = new SqlConnectionStringBuilder
-                {
-                    DataSource = ".\\sqlexpress",
-                    UserID = "EFTestUser",
-                    Password = "Password1",
-                    InitialCatalog = "PersistSecurityInfoContext",
-                    PersistSecurityInfo = false
-                };
+                      {
+                          DataSource = ".\\sqlexpress",
+                          UserID = "EFTestUser",
+                          Password = "Password1",
+                          InitialCatalog = "PersistSecurityInfoContext",
+                          PersistSecurityInfo = false
+                      };
 
             var context = new PersistSecurityInfoContext(new SqlConnection(connectionStringBuilder.ToString()), true);
 
@@ -640,13 +688,13 @@ END";
         {
             var connectionStringBuilder
                 = new SqlConnectionStringBuilder
-                {
-                    DataSource = ".\\sqlexpress",
-                    UserID = "EFTestUser",
-                    Password = "Password1",
-                    InitialCatalog = "PersistSecurityInfoContext",
-                    PersistSecurityInfo = false
-                };
+                      {
+                          DataSource = ".\\sqlexpress",
+                          UserID = "EFTestUser",
+                          Password = "Password1",
+                          InitialCatalog = "PersistSecurityInfoContext",
+                          PersistSecurityInfo = false
+                      };
 
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<PersistEntity>().ToTable(DateTime.Now.Ticks.ToString());
@@ -694,8 +742,9 @@ END";
                     Assert.Equal("NewReplaceConnectionContextDatabase", context.Database.Connection.Database);
 
                     context.Database.Initialize(force: true);
-                    Assert.Equal("NewReplaceConnectionContextDatabase",
-                                    intializer.DatabaseNameUsedDuringInitialization);
+                    Assert.Equal(
+                        "NewReplaceConnectionContextDatabase",
+                        intializer.DatabaseNameUsedDuringInitialization);
                 }
             }
         }
@@ -717,12 +766,14 @@ END";
                     context.InternalContext.OverrideConnection(newConnection);
 
                     Assert.IsType<SqlCeConnection>(context.Database.Connection);
-                    Assert.Equal("NewReplaceConnectionContextDatabase.sdf",
-                                    context.Database.Connection.Database);
+                    Assert.Equal(
+                        "NewReplaceConnectionContextDatabase.sdf",
+                        context.Database.Connection.Database);
 
                     context.Database.Initialize(force: true);
-                    Assert.Equal("NewReplaceConnectionContextDatabase.sdf",
-                                    intializer.DatabaseNameUsedDuringInitialization);
+                    Assert.Equal(
+                        "NewReplaceConnectionContextDatabase.sdf",
+                        intializer.DatabaseNameUsedDuringInitialization);
                 }
             }
         }
@@ -731,9 +782,13 @@ END";
         public void Exception_replacing_DbConnection_with_EntityConnection()
         {
             using (var context = new ReplaceConnectionContext())
-            using (var newConnection = new EagerInternalConnection(new EntityConnection(), connectionOwned: true))
             {
-                Assert.Equal(Strings.LazyInternalContext_CannotReplaceDbConnectionWithEfConnection, Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).Message);
+                using (var newConnection = new EagerInternalConnection(new EntityConnection(), connectionOwned: true))
+                {
+                    Assert.Equal(
+                        Strings.LazyInternalContext_CannotReplaceDbConnectionWithEfConnection,
+                        Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).Message);
+                }
             }
         }
 
@@ -741,9 +796,13 @@ END";
         public void Exception_replacing_EntityConnection_with_DbConnection()
         {
             using (var context = new ReplaceConnectionContext("name=EntityConnectionString"))
-            using (var newConnection = new LazyInternalConnection("ByConventionName"))
             {
-                Assert.Equal(Strings.LazyInternalContext_CannotReplaceEfConnectionWithDbConnection, Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).Message);
+                using (var newConnection = new LazyInternalConnection("ByConventionName"))
+                {
+                    Assert.Equal(
+                        Strings.LazyInternalContext_CannotReplaceEfConnectionWithDbConnection,
+                        Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).Message);
+                }
             }
         }
 
@@ -758,9 +817,14 @@ END";
                     .CreateObjectContext<ObjectContext>(connection);
 
                 using (var context = new DbContext(ctx, dbContextOwnsObjectContext: true))
-                using (var newConnection = new LazyInternalConnection("ByConventionName"))
                 {
-                    Assert.Equal(Strings.EagerInternalContext_CannotSetConnectionInfo, Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).Message);
+                    using (var newConnection = new LazyInternalConnection("ByConventionName"))
+                    {
+                        Assert.Equal(
+                            Strings.EagerInternalContext_CannotSetConnectionInfo,
+                            Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).
+                                Message);
+                    }
                 }
             }
         }
@@ -769,15 +833,16 @@ END";
         public void Replacing_connection_does_not_initialize_either_connection()
         {
             using (var origConnection = new LazyInternalConnection("OrigName"))
-            using (var newConnection = new LazyInternalConnection("NewName"))
             {
-                var context = new LazyInternalContext(new ReplaceConnectionContext(), origConnection, null);
-                context.OverrideConnection(newConnection);
+                using (var newConnection = new LazyInternalConnection("NewName"))
+                {
+                    var context = new LazyInternalContext(new ReplaceConnectionContext(), origConnection, null);
+                    context.OverrideConnection(newConnection);
 
-                Assert.False(origConnection.IsInitialized);
-                Assert.False(newConnection.IsInitialized);
+                    Assert.False(origConnection.IsInitialized);
+                    Assert.False(newConnection.IsInitialized);
+                }
             }
-
         }
 
         public class ReplaceConnectionContext : DbContext
@@ -789,7 +854,6 @@ END";
             public ReplaceConnectionContext(string nameOrConnectionString)
                 : base(nameOrConnectionString)
             {
-
             }
         }
 
@@ -799,7 +863,7 @@ END";
 
             public void InitializeDatabase(ReplaceConnectionContext context)
             {
-                if (this.DatabaseNameUsedDuringInitialization != null)
+                if (DatabaseNameUsedDuringInitialization != null)
                 {
                     throw new Exception("Initialization already performed!");
                 }
@@ -815,7 +879,10 @@ END";
         [Fact]
         public void ProviderName_gets_name_from_DbConnection_when_eager_context_is_used()
         {
-            var mockContext = new Mock<EagerInternalContext>(new Mock<DbContext>().Object) { CallBase = true };
+            var mockContext = new Mock<EagerInternalContext>(new Mock<DbContext>().Object)
+                                  {
+                                      CallBase = true
+                                  };
             mockContext.Setup(m => m.Connection).Returns(new SqlConnection());
 
             Assert.Equal("System.Data.SqlClient", mockContext.Object.ProviderName);
@@ -826,7 +893,10 @@ END";
         public void ProviderName_gets_name_from_internal_connection_ProviderName_when_lazy_context_is_used()
         {
             var mockConnection = new Mock<IInternalConnection>();
-            var mockContext = new Mock<LazyInternalContext>(new Mock<DbContext>().Object, mockConnection.Object, null, null) { CallBase = true };
+            var mockContext = new Mock<LazyInternalContext>(new Mock<DbContext>().Object, mockConnection.Object, null, null)
+                                  {
+                                      CallBase = true
+                                  };
             mockConnection.Setup(m => m.ProviderName).Returns("SomeLazyProvider");
 
             Assert.Equal("SomeLazyProvider", mockContext.Object.ProviderName);
@@ -839,7 +909,10 @@ END";
             // Required for use with MVC Scaffolding that uses Microsoft.VisualStudio.Web.Mvc.Scaffolding.BuiltIn.ScaffoldingDbConnection
             // which is a very minimal implementation of DbConnection.
 
-            using (var connection = new FakeSqlConnection { ConnectionString = "" })
+            using (var connection = new FakeSqlConnection
+                                        {
+                                            ConnectionString = ""
+                                        })
             {
                 using (var context = new EmptyContext(connection))
                 {
@@ -856,7 +929,10 @@ END";
         [Fact]
         public void Passing_null_type_to_Non_generic_Set_method_throws()
         {
-            var context = new Mock<InternalContextForMock> { CallBase = true }.Object.Owner;
+            var context = new Mock<InternalContextForMock>
+                              {
+                                  CallBase = true
+                              }.Object.Owner;
             Assert.Equal("entityType", Assert.Throws<ArgumentNullException>(() => context.Set(null)).ParamName);
         }
 

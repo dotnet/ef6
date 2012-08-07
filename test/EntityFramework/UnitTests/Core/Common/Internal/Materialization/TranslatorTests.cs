@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Data.Entity.Core.Common.QueryCache;
@@ -16,11 +17,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             var typeUsageMock = new Mock<TypeUsage>();
 
-            var expectedShaperFactory = new ShaperFactory<object>(0, Objects.MockHelper.CreateCoordinatorFactory<object>(), null,
+            var expectedShaperFactory = new ShaperFactory<object>(
+                0, Objects.MockHelper.CreateCoordinatorFactory<object>(), null,
                 MergeOption.AppendOnly);
 
             var translatorMock = new Mock<Translator>();
-            translatorMock.Setup(m => m.TranslateColumnMap<object>(
+            translatorMock.Setup(
+                m => m.TranslateColumnMap<object>(
                     It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(expectedShaperFactory);
 
@@ -29,7 +32,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 new ScalarColumnMap(typeUsageMock.Object, null, 0, 0), new MetadataWorkspace(),
                 new SpanIndex(), MergeOption.AppendOnly, valueLayer: true);
 
-            translatorMock.Verify(m => m.TranslateColumnMap<object>(It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
+            translatorMock.Verify(
+                m => m.TranslateColumnMap<object>(
+                    It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>()), Times.Once());
             Assert.Same(expectedShaperFactory, actualShaperFactory);
         }

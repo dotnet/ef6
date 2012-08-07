@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
@@ -14,9 +15,10 @@ namespace System.Data.Entity.Core.Objects
     {
         internal static Mock<Shaper<T>> CreateShaperMock<T>()
         {
-            return new Mock<Shaper<T>>(/*reader*/ null, /*context*/ null, /*workspace*/ null,
+            return new Mock<Shaper<T>>(
+                /*reader*/ null, /*context*/ null, /*workspace*/ null,
                     MergeOption.AppendOnly, /*stateCount*/ 1, /*rootCoordinatorFactory*/ CreateCoordinatorFactory<T>(),
-                /*checkPermissions*/ null, /*readerOwned*/ false);
+                    /*checkPermissions*/ null, /*readerOwned*/ false);
         }
 
         internal static CoordinatorFactory<T> CreateCoordinatorFactory<T>(Expression<Func<Shaper, T>> element = null)
@@ -45,24 +47,29 @@ namespace System.Data.Entity.Core.Objects
         {
             var recordStateFactories = new RecordStateFactory[0];
             Expression<Func<Shaper, TResult>> element;
-            if (typeof(TResult) == typeof(RecordState))
+            if (typeof(TResult)
+                == typeof(RecordState))
             {
                 element = shaper => (shaper.Reader.IsDBNull(ordinal)
-                                        ? ((RecordState)shaper.State[stateSlot + 1]).SetNullRecord()
-                                        : ((RecordState)shaper.State[stateSlot + 1]).GatherData(shaper)) as TResult;
+                                         ? ((RecordState)shaper.State[stateSlot + 1]).SetNullRecord()
+                                         : ((RecordState)shaper.State[stateSlot + 1]).GatherData(shaper)) as TResult;
 
                 var edmTypeMock = new Mock<EdmType>();
                 edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
 
-                recordStateFactories = new[] { new RecordStateFactory(
-                    stateSlotNumber: stateSlot + 1,
-                    columnCount: 1,
-                    nestedRecordStateFactories: new RecordStateFactory[0],
-                    dataRecordInfo: null,
-                    gatherData: shaper => shaper.SetColumnValue(stateSlot + 1, 0, shaper.Reader.GetValue(ordinal)),
-                    propertyNames: new string[0],
-                    typeUsages: new []{ TypeUsage.Create(edmTypeMock.Object) },
-                    isColumnNested: new[] { false })};
+                recordStateFactories = new[]
+                                           {
+                                               new RecordStateFactory(
+                                                   stateSlotNumber: stateSlot + 1,
+                                                   columnCount: 1,
+                                                   nestedRecordStateFactories: new RecordStateFactory[0],
+                                                   dataRecordInfo: null,
+                                                   gatherData:
+                                                   shaper => shaper.SetColumnValue(stateSlot + 1, 0, shaper.Reader.GetValue(ordinal)),
+                                                   propertyNames: new string[0],
+                                                   typeUsages: new[] { TypeUsage.Create(edmTypeMock.Object) },
+                                                   isColumnNested: new[] { false })
+                                           };
             }
             else
             {
@@ -87,43 +94,49 @@ namespace System.Data.Entity.Core.Objects
         internal static Mock<EntityCollection<TEntity>> CreateMockEntityCollection<TEntity>(TEntity refreshedValue)
             where TEntity : class
         {
-            var entityReferenceMock = new Mock<EntityCollection<TEntity>>() { CallBase = true };
+            var entityReferenceMock = new Mock<EntityCollection<TEntity>>
+                                          {
+                                              CallBase = true
+                                          };
 
-            bool hasResults = refreshedValue != null;
+            var hasResults = refreshedValue != null;
             entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
                 .Returns(() => CreateMockObjectQuery(refreshedValue).Object);
 
             return entityReferenceMock;
         }
 
-        internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(TEntity refreshedValue, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
+        internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(
+            TEntity refreshedValue, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
         {
             var shaperMock = CreateShaperMock<TEntity>();
-            shaperMock.Setup(m => m.GetEnumerator()).Returns(() =>
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(
+                () =>
                 new DbEnumeratorShim<TEntity>(((IEnumerable<TEntity>)new[] { refreshedValue }).GetEnumerator()));
             shaper = shaper ?? shaperMock.Object;
 
             var objectResultMock = new Mock<ObjectResult<TEntity>>(shaper, null, null)
-            {
-                CallBase = true
-            };
+                                       {
+                                           CallBase = true
+                                       };
 
             objectContext = objectContext ?? new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator()).Object;
             var objectQueryStateMock = new Mock<ObjectQueryState>(typeof(TEntity), objectContext, /*parameters:*/ null, /*span:*/ null)
-            {
-                CallBase = true
-            };
+                                           {
+                                               CallBase = true
+                                           };
 
-            var objectQueryExecutionPlanMock = new Mock<ObjectQueryExecutionPlan>(MockBehavior.Loose, null, null, null, MergeOption.NoTracking, null, null);
+            var objectQueryExecutionPlanMock = new Mock<ObjectQueryExecutionPlan>(
+                MockBehavior.Loose, null, null, null, MergeOption.NoTracking, null, null);
             objectQueryExecutionPlanMock.Setup(m => m.Execute<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
                 .Returns(() => objectResultMock.Object);
 
             objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
 
             var objectQueryMock = new Mock<ObjectQuery<TEntity>>(objectQueryStateMock.Object)
-            {
-                CallBase = true
-            };
+                                      {
+                                          CallBase = true
+                                      };
 
             return objectQueryMock;
         }

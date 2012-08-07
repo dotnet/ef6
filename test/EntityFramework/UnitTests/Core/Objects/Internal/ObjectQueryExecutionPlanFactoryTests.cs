@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
@@ -27,7 +28,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             var fakeSqlProviderManifest = new FakeSqlProviderServices().GetProviderManifest("2008");
             var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, fakeSqlProviderManifest, "2008");
             metadataWorkspace.RegisterItemCollection(storeItemCollection);
-            metadataWorkspace.RegisterItemCollection(new StorageMappingItemCollection(edmItemCollection, storeItemCollection, Enumerable.Empty<XmlReader>()));
+            metadataWorkspace.RegisterItemCollection(
+                new StorageMappingItemCollection(edmItemCollection, storeItemCollection, Enumerable.Empty<XmlReader>()));
 
             var fakeSqlConnection = new FakeSqlConnection();
             fakeSqlConnection.ConnectionString = "foo";
@@ -35,11 +37,13 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var objectContext = new ObjectContext(entityConnection);
             var dbExpression = new DbNullExpression(TypeUsage.Create(fakeSqlProviderManifest.GetStoreTypes().First()));
-            var dbQueryCommandTree = new DbQueryCommandTree(metadataWorkspace, DataSpace.CSpace,
-               dbExpression, validate: false);
+            var dbQueryCommandTree = new DbQueryCommandTree(
+                metadataWorkspace, DataSpace.CSpace,
+                dbExpression, validate: false);
             var parameters = new List<Tuple<ObjectParameter, QueryParameterExpression>>();
 
-            var objectQueryExecutionPlan = objectQueryExecutionPlanFactory.Prepare(objectContext, dbQueryCommandTree, typeof(object),
+            var objectQueryExecutionPlan = objectQueryExecutionPlanFactory.Prepare(
+                objectContext, dbQueryCommandTree, typeof(object),
                 MergeOption.NoTracking, new Span(), parameters, aliasGenerator: null);
 
             Assert.NotNull(objectQueryExecutionPlan);

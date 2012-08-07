@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Resources;
@@ -56,7 +57,9 @@ namespace System.Data.Entity.Migrations
         {
             var mock = new Mock<IDbSet<MigrationsCustomer>>();
 
-            Assert.Equal(Strings.UnableToDispatchAddOrUpdate(mock.Object.GetType()), Assert.Throws<InvalidOperationException>(() => mock.Object.AddOrUpdate(new[] { new MigrationsCustomer() })).Message);
+            Assert.Equal(
+                Strings.UnableToDispatchAddOrUpdate(mock.Object.GetType()),
+                Assert.Throws<InvalidOperationException>(() => mock.Object.AddOrUpdate(new[] { new MigrationsCustomer() })).Message);
         }
 
         [MigrationsTheory]
@@ -64,7 +67,10 @@ namespace System.Data.Entity.Migrations
         {
             var mock = new Mock<IDbSet<MigrationsCustomer>>();
 
-            Assert.Equal(Strings.UnableToDispatchAddOrUpdate(mock.Object.GetType()), Assert.Throws<InvalidOperationException>(() => mock.Object.AddOrUpdate(c => c.CustomerNumber, new[] { new MigrationsCustomer() })).Message);
+            Assert.Equal(
+                Strings.UnableToDispatchAddOrUpdate(mock.Object.GetType()),
+                Assert.Throws<InvalidOperationException>(
+                    () => mock.Object.AddOrUpdate(c => c.CustomerNumber, new[] { new MigrationsCustomer() })).Message);
         }
 
         [MigrationsTheory]
@@ -72,9 +78,16 @@ namespace System.Data.Entity.Migrations
         {
             using (var context = CreateContext<ShopContext_v1>())
             {
-                Assert.Equal("identifierExpression", Assert.Throws<ArgumentNullException>(() => context.Customers.AddOrUpdate((Expression<Func<MigrationsCustomer, object>>)null, new MigrationsCustomer())).ParamName);
+                Assert.Equal(
+                    "identifierExpression",
+                    Assert.Throws<ArgumentNullException>(
+                        () => context.Customers.AddOrUpdate((Expression<Func<MigrationsCustomer, object>>)null, new MigrationsCustomer())).
+                        ParamName);
 
-                Assert.Equal("entities", Assert.Throws<ArgumentNullException>(() => context.Customers.AddOrUpdate(c => c.Name, (MigrationsCustomer[])null)).ParamName);
+                Assert.Equal(
+                    "entities",
+                    Assert.Throws<ArgumentNullException>(() => context.Customers.AddOrUpdate(c => c.Name, (MigrationsCustomer[])null)).
+                        ParamName);
             }
         }
 
@@ -88,7 +101,13 @@ namespace System.Data.Entity.Migrations
         {
             using (var context = new AddOrUpdateInitContext())
             {
-                context.Products.AddOrUpdate(new MigrationsProduct { ProductId = 1, Name = "Foo", Sku = "Sku1" });
+                context.Products.AddOrUpdate(
+                    new MigrationsProduct
+                        {
+                            ProductId = 1,
+                            Name = "Foo",
+                            Sku = "Sku1"
+                        });
 
                 context.SaveChanges();
             }
@@ -110,9 +129,21 @@ namespace System.Data.Entity.Migrations
             {
                 context.Customers.AddOrUpdate
                     (
-                        new MigrationsCustomer { FullName = "Andrew Peters", CustomerNumber = 123 },
-                        new MigrationsCustomer { FullName = "Brice Lambson", CustomerNumber = 456 },
-                        new MigrationsCustomer { FullName = "Rowan Miller", CustomerNumber = 789 }
+                        new MigrationsCustomer
+                            {
+                                FullName = "Andrew Peters",
+                                CustomerNumber = 123
+                            },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Brice Lambson",
+                                CustomerNumber = 456
+                            },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Rowan Miller",
+                                CustomerNumber = 789
+                            }
                     );
 
                 context.SaveChanges();
@@ -135,8 +166,18 @@ namespace System.Data.Entity.Migrations
             {
                 context.Products.AddOrUpdate
                     (
-                        new MigrationsProduct { ProductId = 1, Name = "Foo", Sku = "Sku1" },
-                        new MigrationsProduct { ProductId = 2, Name = "Bar", Sku = "Sku2" }
+                        new MigrationsProduct
+                            {
+                                ProductId = 1,
+                                Name = "Foo",
+                                Sku = "Sku1"
+                            },
+                        new MigrationsProduct
+                            {
+                                ProductId = 2,
+                                Name = "Bar",
+                                Sku = "Sku2"
+                            }
                     );
 
                 context.SaveChanges();
@@ -148,8 +189,18 @@ namespace System.Data.Entity.Migrations
 
                 context.Products.AddOrUpdate
                     (
-                        new MigrationsProduct { ProductId = 1, Name = "Foo Updated", Sku = "Sku1" },
-                        new MigrationsProduct { ProductId = 2, Name = "Bar", Sku = "Sku2" }
+                        new MigrationsProduct
+                            {
+                                ProductId = 1,
+                                Name = "Foo Updated",
+                                Sku = "Sku1"
+                            },
+                        new MigrationsProduct
+                            {
+                                ProductId = 2,
+                                Name = "Bar",
+                                Sku = "Sku2"
+                            }
                     );
 
                 context.SaveChanges();
@@ -174,10 +225,26 @@ namespace System.Data.Entity.Migrations
             {
                 context.Customers.AddOrUpdate
                     (
-                        c => new { c.FullName, c.Name },
-                        new MigrationsCustomer { FullName = "Andrew Peters", CustomerNumber = 123 },
-                        new MigrationsCustomer { FullName = "Brice Lambson", CustomerNumber = 456 },
-                        new MigrationsCustomer { FullName = "Rowan Miller", CustomerNumber = 789 }
+                        c => new
+                                 {
+                                     c.FullName,
+                                     c.Name
+                                 },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Andrew Peters",
+                                CustomerNumber = 123
+                            },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Brice Lambson",
+                                CustomerNumber = 456
+                            },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Rowan Miller",
+                                CustomerNumber = 789
+                            }
                     );
 
                 context.SaveChanges();
@@ -200,8 +267,18 @@ namespace System.Data.Entity.Migrations
             {
                 context.Customers.AddOrUpdate
                     (
-                        new MigrationsCustomer { FullName = "Andrew Peters", Name = "Andrew", CustomerNumber = 123 },
-                        new MigrationsCustomer { FullName = "Andrew Peters", Name = "Andrew2", CustomerNumber = 123 }
+                        new MigrationsCustomer
+                            {
+                                FullName = "Andrew Peters",
+                                Name = "Andrew",
+                                CustomerNumber = 123
+                            },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Andrew Peters",
+                                Name = "Andrew2",
+                                CustomerNumber = 123
+                            }
                     );
 
                 context.SaveChanges();
@@ -213,8 +290,17 @@ namespace System.Data.Entity.Migrations
 
                 context.Customers.AddOrUpdate
                     (
-                        c => new { c.FullName, c.Name },
-                        new MigrationsCustomer { FullName = "Andrew Peters", Name = "Andrew", CustomerNumber = 456 }
+                        c => new
+                                 {
+                                     c.FullName,
+                                     c.Name
+                                 },
+                        new MigrationsCustomer
+                            {
+                                FullName = "Andrew Peters",
+                                Name = "Andrew",
+                                CustomerNumber = 456
+                            }
                     );
 
                 context.SaveChanges();

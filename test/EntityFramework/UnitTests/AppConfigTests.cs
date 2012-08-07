@@ -279,19 +279,19 @@ namespace ProductivityApiUnitTests
             string arg10)
         {
             Args = new List<string>
-                {
-                    arg0,
-                    arg1,
-                    arg2,
-                    arg3,
-                    arg4,
-                    arg5,
-                    arg6,
-                    arg7,
-                    arg8,
-                    arg9,
-                    arg10
-                };
+                       {
+                           arg0,
+                           arg1,
+                           arg2,
+                           arg3,
+                           arg4,
+                           arg5,
+                           arg6,
+                           arg7,
+                           arg8,
+                           arg9,
+                           arg10
+                       };
         }
     }
 
@@ -376,7 +376,7 @@ namespace ProductivityApiUnitTests
     }
 
     /// <summary>
-    /// Only use this for LegacyDatabaseInitializerConfig tests.
+    ///     Only use this for LegacyDatabaseInitializerConfig tests.
     /// </summary>
     public class FakeForLegacyAppConfig : DbContextUsingMockInternalContext
     {

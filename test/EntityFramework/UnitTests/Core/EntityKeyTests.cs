@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Collections.Generic;
@@ -161,10 +162,10 @@ namespace System.Data.Entity.Core
                 var key = new EntityKey(
                     "Container.Set",
                     new[]
-                    {
-                        new KeyValuePair<string, object>("Name1", 1),
-                        new KeyValuePair<string, object>("Name2", "Foo"),
-                    });
+                        {
+                            new KeyValuePair<string, object>("Name1", 1),
+                            new KeyValuePair<string, object>("Name2", "Foo"),
+                        });
 
                 Assert.Equal("Set", key.EntitySetName);
                 Assert.Equal("Container", key.EntityContainerName);
@@ -193,10 +194,10 @@ namespace System.Data.Entity.Core
                 var key = new EntityKey(
                     "Container.Set",
                     new[]
-                    {
-                        new EntityKeyMember("Name1", 1),
-                        new EntityKeyMember("Name2", "Foo"),
-                    });
+                        {
+                            new EntityKeyMember("Name1", 1),
+                            new EntityKeyMember("Name2", "Foo"),
+                        });
 
                 Assert.Equal("Set", key.EntitySetName);
                 Assert.Equal("Container", key.EntityContainerName);
@@ -312,11 +313,11 @@ namespace System.Data.Entity.Core
                 var metadataCollection = new ReadOnlyMetadataCollection<EdmMember>(
                     keyNames.Select(
                         k =>
-                        {
-                            var mockEdmMember1 = new Mock<EdmMember>();
-                            mockEdmMember1.Setup(m => m.Name).Returns(k);
-                            return mockEdmMember1.Object;
-                        }).ToList());
+                            {
+                                var mockEdmMember1 = new Mock<EdmMember>();
+                                mockEdmMember1.Setup(m => m.Name).Returns(k);
+                                return mockEdmMember1.Object;
+                            }).ToList());
 
                 var mockEntityType = new Mock<EntityType>();
                 mockEntityType.Setup(m => m.KeyMembers).Returns(metadataCollection);
@@ -338,7 +339,7 @@ namespace System.Data.Entity.Core
 
                 var mockDataRecord = new Mock<IExtendedDataRecord>();
                 mockDataRecord.Setup(m => m.DataRecordInfo).Returns(mockDataRecordInfo.Object);
-                keyValues.Each(k => mockDataRecord.Setup<object>(m => m[(string)k.Item1]).Returns((object)k.Item2));
+                keyValues.Each(k => mockDataRecord.Setup(m => m[k.Item1]).Returns(k.Item2));
 
                 return mockDataRecord;
             }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Internal;
@@ -15,9 +16,9 @@ namespace System.Data.Entity.Core.Objects
             var expectedEnumerator = new Mock<IDbEnumerator<object>>().Object;
             shaperMock.Setup(m => m.GetEnumerator()).Returns(() => expectedEnumerator);
             var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-            {
-                CallBase = true
-            };
+                                       {
+                                           CallBase = true
+                                       };
 
             var actualEnumerator = objectResultMock.Object.GetEnumerator();
 
@@ -32,13 +33,14 @@ namespace System.Data.Entity.Core.Objects
             var expectedEnumerator = new Mock<IDbEnumerator<object>>().Object;
             shaperMock.Setup(m => m.GetEnumerator()).Returns(() => expectedEnumerator);
             var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-            {
-                CallBase = true
-            };
+                                       {
+                                           CallBase = true
+                                       };
 
             objectResultMock.Object.GetEnumerator();
 
-            Assert.Equal(Strings.Materializer_CannotReEnumerateQueryResults,
+            Assert.Equal(
+                Strings.Materializer_CannotReEnumerateQueryResults,
                 Assert.Throws<InvalidOperationException>(() => objectResultMock.Object.GetEnumerator()).Message);
         }
     }

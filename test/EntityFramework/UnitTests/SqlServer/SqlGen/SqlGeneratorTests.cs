@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
@@ -23,9 +24,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 mockType.Setup(m => m.PrimitiveTypeKind).Returns(PrimitiveTypeKind.Int64);
 
                 var mockItemCollection = new Mock<StoreItemCollection>();
-                mockItemCollection.Setup(m => m.GetPrimitiveTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new[] { mockType.Object }));
+                mockItemCollection.Setup(m => m.GetPrimitiveTypes()).Returns(
+                    new ReadOnlyCollection<PrimitiveType>(new[] { mockType.Object }));
 
-                var mockSqlGenerator = new Mock<SqlGenerator> { CallBase = true };
+                var mockSqlGenerator = new Mock<SqlGenerator>
+                                           {
+                                               CallBase = true
+                                           };
                 mockSqlGenerator.Setup(m => m.StoreItemCollection).Returns(mockItemCollection.Object);
 
                 Assert.Same(mockType.Object, mockSqlGenerator.Object.IntegerType.EdmType);
@@ -167,7 +172,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 var mockLeftInstance = new Mock<DbExpression>();
                 mockLeftInstance.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
-                
+
                 var mockRightInstance = new Mock<DbExpression>();
                 mockRightInstance.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
 
@@ -261,13 +266,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
             public void GetHashCode_for_Property_expression_returns_hash_code_of_property()
             {
                 var mockProperty = new Mock<EdmMember>();
-                
+
                 var mockExpression = new Mock<DbPropertyExpression>();
                 mockExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Property);
                 mockExpression.Setup(m => m.Property).Returns(mockProperty.Object);
 
                 Assert.Equal(
-                    mockProperty.Object.GetHashCode(), 
+                    mockProperty.Object.GetHashCode(),
                     new SqlGenerator.KeyFieldExpressionComparer().GetHashCode(mockExpression.Object));
             }
 
@@ -353,8 +358,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 var mockBinaryExpression = CreateMockBinaryExpression(mockLeftExpression, mockRightExpression, DbExpressionKind.Or);
 
                 var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
-                
-                Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map ));
+
+                Assert.True(SqlGenerator.TryAddExpressionForIn(mockBinaryExpression.Object, map));
 
                 Assert.Equal(1, map.Keys.Count());
                 var values = map[mockLeftExpression.Object];
@@ -397,7 +402,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             public void TryAddExpressionForIn_adds_nothing_and_returns_false_if_neither_left_or_right_match()
             {
                 var mockBinaryExpression = CreateMockBinaryExpression(
-                    CreateMockArgumentExpression(DbExpressionKind.Not), 
+                    CreateMockArgumentExpression(DbExpressionKind.Not),
                     CreateMockArgumentExpression(DbExpressionKind.Not), DbExpressionKind.Or);
 
                 var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
@@ -502,14 +507,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var mockBinaryExpression = new Mock<DbBinaryExpression>();
                 mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
-                
+
                 mockBinaryExpression.Setup(m => m.Left).Returns(
-                    CreatNullExpression(CreateArgumentForNullExpression(), 
-                    DbExpressionKind.Not).Object);
-                
+                    CreatNullExpression(
+                        CreateArgumentForNullExpression(),
+                        DbExpressionKind.Not).Object);
+
                 mockBinaryExpression.Setup(m => m.Right).Returns(
-                    CreatNullExpression(CreateArgumentForNullExpression(), 
-                    DbExpressionKind.IsNull).Object);
+                    CreatNullExpression(
+                        CreateArgumentForNullExpression(),
+                        DbExpressionKind.IsNull).Object);
 
                 var map = new Dictionary<DbExpression, IList<DbExpression>>(new SqlGenerator.KeyFieldExpressionComparer());
 
@@ -563,10 +570,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var mockBinaryExpression = new Mock<DbOrExpression>();
                 mockBinaryExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.Or);
-                
+
                 mockBinaryExpression.Setup(m => m.Left).Returns(
                     CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.Not).Object);
-                
+
                 mockBinaryExpression.Setup(m => m.Right).Returns(
                     CreatNullExpression(CreateArgumentForNullExpression(), DbExpressionKind.IsNull).Object);
 
@@ -581,7 +588,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             private static Mock<DbIsNullExpression> CreatNullExpression(
-                Mock<DbPropertyExpression> mockLeftArgumentExpression, 
+                Mock<DbPropertyExpression> mockLeftArgumentExpression,
                 DbExpressionKind kind)
             {
                 var mockLeftExpression = new Mock<DbIsNullExpression>();
@@ -639,7 +646,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return mockBinaryExpression;
         }
 
-        private static void SetupMockArguments(Mock<DbPropertyExpression> mockLeftExpression, Mock<DbPropertyExpression> mockRightExpression = null)
+        private static void SetupMockArguments(
+            Mock<DbPropertyExpression> mockLeftExpression, Mock<DbPropertyExpression> mockRightExpression = null)
         {
             var mockInstanceExpression = new Mock<DbExpression>();
             mockInstanceExpression.Setup(m => m.ExpressionKind).Returns(DbExpressionKind.VariableReference);
@@ -867,7 +875,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             [Fact]
-            public void MatchTargetPatternForForcingNonUnicode_returns_false_for_matching_three_arg_canonical_function_with_non_matching_arg()
+            public void MatchTargetPatternForForcingNonUnicode_returns_false_for_matching_three_arg_canonical_function_with_non_matching_arg
+                ()
             {
                 Assert.False(
                     new SqlGenerator().MatchTargetPatternForForcingNonUnicode(
