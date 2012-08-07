@@ -5,13 +5,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Xml.Linq;
 
     /// <summary>
@@ -19,26 +17,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     /// </summary>
     public class MigratorLoggingDecorator : MigratorBase
     {
-        private static readonly Regex _historyInsertRegex
-            = new Regex(
-                @"^INSERT INTO \[" + HistoryContext.TableName + @"\].*$",
-                RegexOptions.Multiline | RegexOptions.Compiled);
-
-        private static readonly Regex _historyDeleteRegex
-            = new Regex(
-                @"^DELETE.* \[" + HistoryContext.TableName + @"\].*$",
-                RegexOptions.Multiline | RegexOptions.Compiled);
-
-        private static readonly Regex _metadataDeleteRegex
-            = new Regex(
-                @"DELETE.* \[EdmMetadata\].*((\r?\n)?|$)",
-                RegexOptions.Compiled);
-
-        private static readonly Regex _metadataInsertRegex
-            = new Regex(
-                @"INSERT.* \[EdmMetadata\].*((\r?\n)?|$)",
-                RegexOptions.Compiled);
-
         private readonly MigrationsLogger _logger;
 
         /// <summary>
@@ -69,12 +47,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
         {
-            var cleanSql = _historyInsertRegex.Replace(migrationStatement.Sql, Strings.LoggingHistoryInsert);
-            cleanSql = _historyDeleteRegex.Replace(cleanSql, Strings.LoggingHistoryDelete);
-            cleanSql = _metadataDeleteRegex.Replace(cleanSql, Strings.LoggingMetadataUpdate);
-            cleanSql = _metadataInsertRegex.Replace(cleanSql, string.Empty);
-
-            _logger.Verbose(cleanSql.Trim());
+            _logger.Verbose(migrationStatement.Sql);
 
             base.ExecuteSql(transaction, migrationStatement);
         }

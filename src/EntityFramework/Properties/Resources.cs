@@ -78,30 +78,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "[Inserting migration history record]"
-        /// </summary>
-        internal static string LoggingHistoryInsert
-        {
-            get { return EntityRes.GetString(EntityRes.LoggingHistoryInsert); }
-        }
-
-        /// <summary>
-        /// A string like "[Deleting migration history record]"
-        /// </summary>
-        internal static string LoggingHistoryDelete
-        {
-            get { return EntityRes.GetString(EntityRes.LoggingHistoryDelete); }
-        }
-
-        /// <summary>
-        /// A string like "[Updating EdmMetadata model hash]"
-        /// </summary>
-        internal static string LoggingMetadataUpdate
-        {
-            get { return EntityRes.GetString(EntityRes.LoggingMetadataUpdate); }
-        }
-
-        /// <summary>
         /// A string like "Running Seed method."
         /// </summary>
         internal static string LoggingSeedingDatabase
@@ -15044,9 +15020,6 @@ namespace System.Data.Entity.Resources
         internal const string LoggingRevertAutoMigrate = "LoggingRevertAutoMigrate";
         internal const string LoggingApplyMigration = "LoggingApplyMigration";
         internal const string LoggingRevertMigration = "LoggingRevertMigration";
-        internal const string LoggingHistoryInsert = "LoggingHistoryInsert";
-        internal const string LoggingHistoryDelete = "LoggingHistoryDelete";
-        internal const string LoggingMetadataUpdate = "LoggingMetadataUpdate";
         internal const string LoggingSeedingDatabase = "LoggingSeedingDatabase";
         internal const string LoggingPendingMigrations = "LoggingPendingMigrations";
         internal const string LoggingPendingMigrationsDown = "LoggingPendingMigrationsDown";
