@@ -13182,7 +13182,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that extends from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider."
+        /// A string like "The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider."
         /// </summary>
         internal static string EF6Providers_NotDbProviderServices(object p0)
         {
@@ -13246,7 +13246,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The type '{0}' does not extend from '{1}'. Migrations configuration types must extend from '{1}'."
+        /// A string like "The type '{0}' does not inherit from '{1}'. Migrations configuration types must extend from '{1}'."
         /// </summary>
         internal static string CreateInstance_BadMigrationsConfigurationType(object p0, object p1)
         {
@@ -13254,11 +13254,27 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The type '{0}' does not extend from '{1}'. Migrations SQL generator implementations must extend from '{1}'."
+        /// A string like "The type '{0}' does not inherit from '{1}'. Migrations SQL generator implementations must extend from '{1}'."
         /// </summary>
         internal static string CreateInstance_BadSqlGeneratorType(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.CreateInstance_BadSqlGeneratorType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' does not inherit from '{1}'. Entity Framework code-based configuration classes must extend from '{1}'."
+        /// </summary>
+        internal static string CreateInstance_BadDbConfigurationType(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.CreateInstance_BadDbConfigurationType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The DbConfiguration type '{0}' specified in the application config file could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
+        /// </summary>
+        internal static string DbConfigurationTypeNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbConfigurationTypeNotFound, p0);
         }
 
         /// <summary>
@@ -16652,6 +16668,8 @@ namespace System.Data.Entity.Resources
         internal const string MultipleConfigsInAssembly = "MultipleConfigsInAssembly";
         internal const string CreateInstance_BadMigrationsConfigurationType = "CreateInstance_BadMigrationsConfigurationType";
         internal const string CreateInstance_BadSqlGeneratorType = "CreateInstance_BadSqlGeneratorType";
+        internal const string CreateInstance_BadDbConfigurationType = "CreateInstance_BadDbConfigurationType";
+        internal const string DbConfigurationTypeNotFound = "DbConfigurationTypeNotFound";
         internal const string CreateInstance_NoParameterlessConstructor = "CreateInstance_NoParameterlessConstructor";
         internal const string CreateInstance_AbstractType = "CreateInstance_AbstractType";
         internal const string CreateInstance_GenericType = "CreateInstance_GenericType";
