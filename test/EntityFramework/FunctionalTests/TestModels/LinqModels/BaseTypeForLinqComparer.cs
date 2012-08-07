@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace SimpleModel
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// Compares two BaseTypeForLinq objects.
+    ///     Compares two BaseTypeForLinq objects.
     /// </summary>
     public class BaseTypeForLinqComparer : IEqualityComparer<BaseTypeForLinq>
     {

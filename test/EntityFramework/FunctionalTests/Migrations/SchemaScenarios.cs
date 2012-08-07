@@ -119,10 +119,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.False(TableExists("foo.OrderLines"));
-                    Assert.False(TableExists("foo." + HistoryContext.TableName));
-                });
+                    {
+                        Assert.False(TableExists("foo.OrderLines"));
+                        Assert.False(TableExists("foo." + HistoryContext.TableName));
+                    });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));

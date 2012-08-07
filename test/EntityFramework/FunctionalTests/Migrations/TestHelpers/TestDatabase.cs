@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Common;
@@ -188,7 +189,10 @@ namespace System.Data.Entity.Migrations
         {
             if (!File.Exists(_name + ".sdf"))
             {
-                using (var engine = new SqlCeEngine { LocalConnectionString = ConnectionString })
+                using (var engine = new SqlCeEngine
+                                        {
+                                            LocalConnectionString = ConnectionString
+                                        })
                 {
                     engine.CreateDatabase();
                 }
@@ -226,7 +230,7 @@ namespace System.Data.Entity.Migrations
             if (!TableExists("TABLES"))
             {
                 ExecuteNonQuery(
-                   @"CREATE TABLE TABLES (
+                    @"CREATE TABLE TABLES (
     TABLE_SCHEMA nvarchar(128),
     TABLE_NAME nvarchar(128),
     PRIMARY KEY (TABLE_SCHEMA, TABLE_NAME)
@@ -236,7 +240,7 @@ namespace System.Data.Entity.Migrations
             if (!TableExists("COLUMNS"))
             {
                 ExecuteNonQuery(
-                   @"CREATE TABLE COLUMNS (
+                    @"CREATE TABLE COLUMNS (
     TABLE_SCHEMA nvarchar(128),
     TABLE_NAME nvarchar(128),
     COLUMN_NAME nvarchar(128),
@@ -255,7 +259,7 @@ namespace System.Data.Entity.Migrations
             if (!TableExists("TABLE_CONSTRAINTS"))
             {
                 ExecuteNonQuery(
-                   @"CREATE TABLE TABLE_CONSTRAINTS (
+                    @"CREATE TABLE TABLE_CONSTRAINTS (
     CONSTRAINT_SCHEMA nvarchar(128),
     CONSTRAINT_NAME nvarchar(128),
     TABLE_SCHEMA nvarchar(128),
@@ -268,7 +272,7 @@ namespace System.Data.Entity.Migrations
             if (!TableExists("REFERENTIAL_CONSTRAINTS"))
             {
                 ExecuteNonQuery(
-                   @"CREATE TABLE REFERENTIAL_CONSTRAINTS (
+                    @"CREATE TABLE REFERENTIAL_CONSTRAINTS (
     CONSTRAINT_SCHEMA nvarchar(128),
     CONSTRAINT_NAME nvarchar(128),
     UNIQUE_CONSTRAINT_SCHEMA nvarchar(128),
@@ -281,7 +285,7 @@ namespace System.Data.Entity.Migrations
             if (!TableExists("KEY_COLUMN_USAGE"))
             {
                 ExecuteNonQuery(
-                   @"CREATE TABLE KEY_COLUMN_USAGE (
+                    @"CREATE TABLE KEY_COLUMN_USAGE (
     CONSTRAINT_SCHEMA nvarchar(128),
     CONSTRAINT_NAME nvarchar(128),
     TABLE_SCHEMA nvarchar(128),

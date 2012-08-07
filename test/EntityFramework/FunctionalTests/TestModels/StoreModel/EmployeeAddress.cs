@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -22,6 +23,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _employeeID;
 
         [Key]
@@ -32,7 +34,8 @@ namespace FunctionalTests.Model
             {
                 if (_addressID != value)
                 {
-                    if (Address != null && Address.AddressID != value)
+                    if (Address != null
+                        && Address.AddressID != value)
                     {
                         Address = null;
                     }
@@ -40,6 +43,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _addressID;
 
         public virtual Guid rowguid { get; set; }
@@ -59,6 +63,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Employee _employee;
 
         public virtual Address Address
@@ -74,11 +79,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Address _address;
 
         private void FixupEmployee(Employee previousValue)
         {
-            if (previousValue != null && previousValue.EmployeeAddresses.Contains(this))
+            if (previousValue != null
+                && previousValue.EmployeeAddresses.Contains(this))
             {
                 previousValue.EmployeeAddresses.Remove(this);
             }
@@ -98,7 +105,8 @@ namespace FunctionalTests.Model
 
         private void FixupAddress(Address previousValue)
         {
-            if (previousValue != null && previousValue.EmployeeAddresses.Contains(this))
+            if (previousValue != null
+                && previousValue.EmployeeAddresses.Contains(this))
             {
                 previousValue.EmployeeAddresses.Remove(this);
             }

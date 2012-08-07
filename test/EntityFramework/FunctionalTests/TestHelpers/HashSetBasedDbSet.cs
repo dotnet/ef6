@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -9,22 +10,22 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
 
     /// <summary>
-    /// In-memory implementation of IDbSet based on a <see cref="HashSet"/>
+    ///     In-memory implementation of IDbSet based on a <see cref="HashSet" />
     /// </summary>
-    /// <typeparam name="T">Type of elements to be stored in the set</typeparam>
+    /// <typeparam name="T"> Type of elements to be stored in the set </typeparam>
     public class HashSetBasedDbSet<T> : IDbSet<T>
         where T : class, new()
     {
-        HashSet<T> _data;
-        IQueryable _query;
-        Func<IEnumerable<T>, T> _findFunc;
+        private readonly HashSet<T> _data;
+        private readonly IQueryable _query;
+        private readonly Func<IEnumerable<T>, T> _findFunc;
 
         public HashSetBasedDbSet()
             : this(null)
         {
         }
 
-        public HashSetBasedDbSet(Func<IEnumerable<T>, T> findFunc) 
+        public HashSetBasedDbSet(Func<IEnumerable<T>, T> findFunc)
         {
             _data = new HashSet<T>();
             _query = _data.AsQueryable();

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -239,10 +240,12 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            databaseMapping.Assert<EntityWithConfiguredDuplicateColumn>(e => e.Description).DbEqual("Description1",
-                                                                                                    c => c.Name);
-            databaseMapping.Assert<EntityWithConfiguredDuplicateColumn>(e => e.Details).DbEqual("Description",
-                                                                                                c => c.Name);
+            databaseMapping.Assert<EntityWithConfiguredDuplicateColumn>(e => e.Description).DbEqual(
+                "Description1",
+                c => c.Name);
+            databaseMapping.Assert<EntityWithConfiguredDuplicateColumn>(e => e.Details).DbEqual(
+                "Description",
+                c => c.Name);
         }
 
         [Fact]
@@ -373,9 +376,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SingleAbstract>();
 
-            Assert.Equal(Strings.UnmappedAbstractType(typeof(SingleAbstract)),
-                         Assert.Throws<InvalidOperationException>(
-                             () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.UnmappedAbstractType(typeof(SingleAbstract)),
+                Assert.Throws<InvalidOperationException>(
+                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -409,14 +413,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder();
 
-            Expression<Func<StockOrder, object>> propertiesExpression = so => new { Foo = so.LocationId };
+            Expression<Func<StockOrder, object>> propertiesExpression = so => new
+                                                                                  {
+                                                                                      Foo = so.LocationId
+                                                                                  };
 
-            Assert.Equal(Strings.InvalidComplexPropertiesExpression(propertiesExpression),
-                         Assert.Throws<InvalidOperationException>(() =>
-                                                                  modelBuilder
-                                                                      .Entity<StockOrder>()
-                                                                      .Map(emc => emc.Properties(propertiesExpression)))
-                             .Message);
+            Assert.Equal(
+                Strings.InvalidComplexPropertiesExpression(propertiesExpression),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    modelBuilder
+                        .Entity<StockOrder>()
+                        .Map(emc => emc.Properties(propertiesExpression)))
+                    .Message);
         }
 
         [Fact]
@@ -428,13 +437,14 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
-            Assert.Equal(3,
-                         databaseMapping.Model.Namespaces
-                             .Single()
-                             .AssociationTypes
-                             .SelectMany(a => a.Members)
-                             .Cast<EdmAssociationEnd>()
-                             .Count(e => e.DeleteAction == EdmOperationAction.Cascade));
+            Assert.Equal(
+                3,
+                databaseMapping.Model.Namespaces
+                    .Single()
+                    .AssociationTypes
+                    .SelectMany(a => a.Members)
+                    .Cast<EdmAssociationEnd>()
+                    .Count(e => e.DeleteAction == EdmOperationAction.Cascade));
         }
 
         [Fact]
@@ -443,24 +453,33 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Vendor>()
-                .Map(m =>
-                     {
-                         m.Properties(v1 => new
-                                            {
-                                                v1.VendorID,
-                                                v1.Name,
-                                                v1.PreferredVendorStatus,
-                                                v1.AccountNumber,
-                                                v1.ActiveFlag,
-                                                v1.CreditRating
-                                            });
-                         m.ToTable("Vendor", "vendors");
-                     })
-                .Map(m =>
-                     {
-                         m.Properties(v2 => new { v2.VendorID, v2.ModifiedDate, v2.PurchasingWebServiceURL });
-                         m.ToTable("VendorDetails", "details");
-                     });
+                .Map(
+                    m =>
+                        {
+                            m.Properties(
+                                v1 => new
+                                          {
+                                              v1.VendorID,
+                                              v1.Name,
+                                              v1.PreferredVendorStatus,
+                                              v1.AccountNumber,
+                                              v1.ActiveFlag,
+                                              v1.CreditRating
+                                          });
+                            m.ToTable("Vendor", "vendors");
+                        })
+                .Map(
+                    m =>
+                        {
+                            m.Properties(
+                                v2 => new
+                                          {
+                                              v2.VendorID,
+                                              v2.ModifiedDate,
+                                              v2.PurchasingWebServiceURL
+                                          });
+                            m.ToTable("VendorDetails", "details");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 

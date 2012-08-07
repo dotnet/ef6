@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for complex types.
+    ///     Tests for complex types.
     /// </summary>
     public class ComplexTypeTests : FunctionalTestBase
     {

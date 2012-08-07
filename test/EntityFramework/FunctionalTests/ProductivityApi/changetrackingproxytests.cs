@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -33,7 +34,8 @@ namespace ProductivityApiTests
 
         #region DeleteObject throws a collection modified exception with change tracking proxies (Dev11 71937, 209773)
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_71937()
         {
             using (var context = new GranniesContext())
@@ -82,7 +84,8 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_209773()
         {
             using (var context = new HaveToDoContext())
@@ -130,7 +133,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Re_parenting_one_to_zero_or_one_Added_dependent_by_changing_FK_should_cause_existing_Unchanged_dependnent_to_be_Deleted()
+        public void Re_parenting_one_to_zero_or_one_Added_dependent_by_changing_FK_should_cause_existing_Unchanged_dependnent_to_be_Deleted(
+            )
         {
             Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(
                 EntityState.Unchanged, useFK: true);
@@ -182,8 +186,9 @@ namespace ProductivityApiTests
                 Assert.Null(chocolateDetail.Product);
                 Assert.Null(apple.ProductDetail);
 
-                Assert.Equal(dependentState == EntityState.Added ? EntityState.Detached : EntityState.Deleted,
-                             context.Entry(chocolateDetail).State);
+                Assert.Equal(
+                    dependentState == EntityState.Added ? EntityState.Detached : EntityState.Deleted,
+                    context.Entry(chocolateDetail).State);
                 Assert.Equal(EntityState.Added, context.Entry(appleDetail).State);
                 Assert.Equal(EntityState.Unchanged, context.Entry(chocolate).State);
                 Assert.Equal(EntityState.Unchanged, context.Entry(apple).State);
@@ -236,7 +241,6 @@ namespace ProductivityApiTests
         public virtual Granny Granny { get; set; }
     }
 
-
     public class HaveToDoContext : DbContext
     {
         public HaveToDoContext()
@@ -255,7 +259,11 @@ namespace ProductivityApiTests
         {
             var training = context.Training.Add(context.Training.Create());
             training.Code = "training";
-            training.Todos.Add(new ComplexExam() { Code = "group" });
+            training.Todos.Add(
+                new ComplexExam
+                    {
+                        Code = "group"
+                    });
         }
     }
 
@@ -286,7 +294,6 @@ namespace ProductivityApiTests
     {
         public virtual ICollection<Exam> Exams { get; set; }
     }
-
 
     public class YummyContext : DbContext
     {

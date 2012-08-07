@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_customerID != value)
                 {
-                    if (Customer != null && Customer.CustomerID != value)
+                    if (Customer != null
+                        && Customer.CustomerID != value)
                     {
                         Customer = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _customerID;
 
         public virtual int AddressID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_addressID != value)
                 {
-                    if (Address != null && Address.AddressID != value)
+                    if (Address != null
+                        && Address.AddressID != value)
                     {
                         Address = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _addressID;
 
         public virtual int AddressTypeID
@@ -46,7 +51,8 @@ namespace FunctionalTests.Model
             {
                 if (_addressTypeID != value)
                 {
-                    if (AddressType != null && AddressType.AddressTypeID != value)
+                    if (AddressType != null
+                        && AddressType.AddressTypeID != value)
                     {
                         AddressType = null;
                     }
@@ -54,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _addressTypeID;
 
         public virtual Guid rowguid { get; set; }
@@ -73,6 +80,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Address _address;
 
         public virtual AddressType AddressType
@@ -88,6 +96,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private AddressType _addressType;
 
         public virtual Customer Customer
@@ -103,11 +112,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Customer _customer;
 
         private void FixupAddress(Address previousValue)
         {
-            if (previousValue != null && previousValue.CustomerAddresses.Contains(this))
+            if (previousValue != null
+                && previousValue.CustomerAddresses.Contains(this))
             {
                 previousValue.CustomerAddresses.Remove(this);
             }
@@ -127,7 +138,8 @@ namespace FunctionalTests.Model
 
         private void FixupAddressType(AddressType previousValue)
         {
-            if (previousValue != null && previousValue.CustomerAddresses.Contains(this))
+            if (previousValue != null
+                && previousValue.CustomerAddresses.Contains(this))
             {
                 previousValue.CustomerAddresses.Remove(this);
             }
@@ -147,7 +159,8 @@ namespace FunctionalTests.Model
 
         private void FixupCustomer(Customer previousValue)
         {
-            if (previousValue != null && previousValue.CustomerAddresses.Contains(this))
+            if (previousValue != null
+                && previousValue.CustomerAddresses.Contains(this))
             {
                 previousValue.CustomerAddresses.Remove(this);
             }

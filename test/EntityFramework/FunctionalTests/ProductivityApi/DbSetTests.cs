@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -17,7 +18,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for the primary methods on DbContext.
+    ///     Tests for the primary methods on DbContext.
     /// </summary>
     public class DbSetTests : FunctionalTestBase
     {
@@ -88,7 +89,7 @@ namespace ProductivityApiTests
 
                 Assert.IsAssignableFrom<IQueryable>(query);
 
-                int count = 0;
+                var count = 0;
                 foreach (var product in query)
                 {
                     count++;
@@ -131,7 +132,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new Product() { Id = -1, Name = "Daddies Sauce" };
+                var addedProduct = new Product
+                                       {
+                                           Id = -1,
+                                           Name = "Daddies Sauce"
+                                       };
                 context.Products.Add(addedProduct);
 
                 VerifyProduct(context, addedProduct, EntityState.Added);
@@ -143,7 +148,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new Product() { Id = -1, Name = "Daddies Sauce" };
+                var addedProduct = new Product
+                                       {
+                                           Id = -1,
+                                           Name = "Daddies Sauce"
+                                       };
                 context.Set(typeof(Product)).Add(addedProduct);
 
                 VerifyProduct(context, addedProduct, EntityState.Added);
@@ -155,7 +164,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new FeaturedProduct() { Id = -1, Name = "Salad Cream" };
+                var addedProduct = new FeaturedProduct
+                                       {
+                                           Id = -1,
+                                           Name = "Salad Cream"
+                                       };
                 context.Products.Add(addedProduct);
 
                 VerifyProduct(context, addedProduct, EntityState.Added);
@@ -167,7 +180,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new FeaturedProduct() { Id = -1, Name = "Salad Cream" };
+                var addedProduct = new FeaturedProduct
+                                       {
+                                           Id = -1,
+                                           Name = "Salad Cream"
+                                       };
                 context.Set(typeof(Product)).Add(addedProduct);
 
                 VerifyProduct(context, addedProduct, EntityState.Added);
@@ -179,7 +196,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new FeaturedProduct() { Id = -1, Name = "Piccalilli" };
+                var addedProduct = new FeaturedProduct
+                                       {
+                                           Id = -1,
+                                           Name = "Piccalilli"
+                                       };
                 context.Set<FeaturedProduct>().Add(addedProduct);
 
                 VerifyProduct(context, addedProduct, EntityState.Added);
@@ -191,7 +212,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var addedProduct = new FeaturedProduct() { Id = -1, Name = "Piccalilli" };
+                var addedProduct = new FeaturedProduct
+                                       {
+                                           Id = -1,
+                                           Name = "Piccalilli"
+                                       };
                 context.Set(typeof(FeaturedProduct)).Add(addedProduct);
 
                 VerifyProduct(context, addedProduct, EntityState.Added);
@@ -251,9 +276,20 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product { Id = 0, Name = "Red Bull" };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull"
+                                  };
                 context.Products.Attach(product);
-                var category = new Category { Id = "Beverages", Products = new List<Product> { product } };
+                var category = new Category
+                                   {
+                                       Id = "Beverages",
+                                       Products = new List<Product>
+                                                      {
+                                                          product
+                                                      }
+                                   };
 
                 Assert.Equal(null, product.Category);
                 Assert.Equal(null, product.CategoryId);
@@ -292,7 +328,11 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var addedProduct = new Product { Id = -1, Name = "Marmite" };
+                var addedProduct = new Product
+                                       {
+                                           Id = -1,
+                                           Name = "Marmite"
+                                       };
                 context.Products.Add(addedProduct);
                 GetObjectContext(context).Detach(addedProduct);
 
@@ -313,7 +353,10 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Something" };
+                var category = new Category
+                                   {
+                                       Id = "Something"
+                                   };
 
                 // Act- Assert
                 context.Categories.Add(category);
@@ -343,7 +386,11 @@ namespace ProductivityApiTests
             {
                 // Arrange
                 var binaryKey = new byte[] { 20, 21, 22, 23, 24 };
-                var whiteBoard = new Whiteboard { iD = binaryKey, AssetTag = "First Board in my Office" };
+                var whiteBoard = new Whiteboard
+                                     {
+                                         iD = binaryKey,
+                                         AssetTag = "First Board in my Office"
+                                     };
 
                 // Act- Assert
                 context.Whiteboards.Add(whiteBoard);
@@ -373,8 +420,15 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "Red Bull" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull"
+                                  };
                 category.Products.Add(product);
 
                 // Act
@@ -397,113 +451,129 @@ namespace ProductivityApiTests
         [Fact]
         public void Add_is_a_noop_if_FK_graph_is_already_Added_Principal_and_Dependent_Added()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                              EntityState.Added);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Added);
         }
 
         [Fact]
         public void Add_is_a_noop_if_FK_graph_has_Added_Principal_and_Dependent_Unchanged()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                              EntityState.Unchanged);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Add_is_a_noop_if_FK_graph_is_already_Added_Prinicipal_and_Dependent_Modified()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                              EntityState.Modified);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Add_is_a_noop_if_FK_graph_is_already_Added_Prinicipal_and_Dependent_Deleted()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                              EntityState.Deleted);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Unchanged_Principal_and_Dependent_Added()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                              EntityState.Added);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Unchanged_Principal_and_Dependent_Unchanged()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                              EntityState.Unchanged);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Unchanged_Principal_and_Dependent_Modified()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                              EntityState.Modified);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Unchanged_Principal_and_Dependent_Deleted()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                              EntityState.Deleted);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Modified_Principal_and_Dependent_Added()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                              EntityState.Added);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Added);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Modified_Principal_and_Dependent_Unchanged()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                              EntityState.Unchanged);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Modified_Principal_and_Dependent_Modified()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                              EntityState.Modified);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Modified_Principal_and_Dependent_Deleted()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                              EntityState.Deleted);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Deleted_Principal_and_Dependent_Added()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                              EntityState.Added);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Added);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Deleted_Principal_and_Dependent_Unchanged()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                              EntityState.Unchanged);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Deleted_Principal_and_Dependent_Modified()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                              EntityState.Modified);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Add_moves_graph_to_Added_with_Deleted_Principal_and_Dependent_Deleted()
         {
-            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                              EntityState.Deleted);
+            Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Deleted);
         }
 
         private void Add_moves_root_to_Added_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
@@ -512,8 +582,16 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "Red Bull", CategoryId = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull",
+                                      CategoryId = "Beverages"
+                                  };
                 category.Products.Add(product);
 
                 switch (principalState)
@@ -570,7 +648,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup based on principal state
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(product.Category);
                     Assert.Equal(0, category.Products.Count);
@@ -604,7 +683,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(product.Category);
                     Assert.Equal(0, category.Products.Count);
@@ -741,8 +821,16 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange 
-                var office = new Office { BuildingId = Guid.NewGuid(), Number = "18/1111" };
-                var whiteBoard = new Whiteboard { iD = new byte[] { 1, 2, 3, 4 }, AssetTag = "ABCDX0009" };
+                var office = new Office
+                                 {
+                                     BuildingId = Guid.NewGuid(),
+                                     Number = "18/1111"
+                                 };
+                var whiteBoard = new Whiteboard
+                                     {
+                                         iD = new byte[] { 1, 2, 3, 4 },
+                                         AssetTag = "ABCDX0009"
+                                     };
                 office.WhiteBoards.Add(whiteBoard);
 
                 switch (principalState)
@@ -821,7 +909,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(whiteBoard.Office);
                     Assert.Equal(0, office.WhiteBoards.Count);
@@ -852,7 +941,11 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var product = new Product { Id = 0, Name = "Red Bull" };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull"
+                                  };
                 switch (dependentState)
                 {
                     case EntityState.Added:
@@ -875,7 +968,10 @@ namespace ProductivityApiTests
                     Assert.Equal(dependentState, GetStateEntry(context, product).State);
                 }
 
-                var category = new Category { Id = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
                 category.Products.Add(product);
 
                 // Assert fixup
@@ -901,10 +997,17 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product { Id = 0, Name = "Red Bull" };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull"
+                                  };
                 context.Products.Add(product);
 
-                var category = new Category { Id = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
                 category.Products.Add(product);
 
                 Assert.Equal(null, product.Category);
@@ -938,9 +1041,10 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                Assert.Equal("entity",
-                             Assert.Throws<ArgumentNullException>(() => context.Set(typeof(Product)).Add(null)).
-                                 ParamName);
+                Assert.Equal(
+                    "entity",
+                    Assert.Throws<ArgumentNullException>(() => context.Set(typeof(Product)).Add(null)).
+                        ParamName);
             }
         }
 
@@ -950,11 +1054,18 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var product = new Product { Id = 0, Name = "Red Bull" };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull"
+                                  };
                 context.Products.Attach(product);
                 context.Products.Remove(product);
 
-                var category = new Category { Id = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
                 category.Products.Add(product);
 
                 // Act - Assert
@@ -972,7 +1083,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Id = -1, Name = "Daddies Sauce" };
+                var product = new Product
+                                  {
+                                      Id = -1,
+                                      Name = "Daddies Sauce"
+                                  };
                 context.Products.Attach(product);
 
                 VerifyProduct(context, product, EntityState.Unchanged);
@@ -984,7 +1099,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Id = -1, Name = "Daddies Sauce" };
+                var product = new Product
+                                  {
+                                      Id = -1,
+                                      Name = "Daddies Sauce"
+                                  };
                 context.Set(typeof(Product)).Attach(product);
 
                 VerifyProduct(context, product, EntityState.Unchanged);
@@ -996,7 +1115,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct() { Id = -1, Name = "Salad Cream" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Salad Cream"
+                                  };
                 context.Products.Attach(product);
 
                 VerifyProduct(context, product, EntityState.Unchanged);
@@ -1008,7 +1131,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct() { Id = -1, Name = "Salad Cream" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Salad Cream"
+                                  };
                 context.Set(typeof(Product)).Attach(product);
 
                 VerifyProduct(context, product, EntityState.Unchanged);
@@ -1020,7 +1147,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct() { Id = -1, Name = "Piccalilli" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Piccalilli"
+                                  };
                 context.Set<FeaturedProduct>().Attach(product);
 
                 VerifyProduct(context, product, EntityState.Unchanged);
@@ -1032,7 +1163,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct() { Id = -1, Name = "Piccalilli" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Piccalilli"
+                                  };
                 context.Set(typeof(FeaturedProduct)).Attach(product);
 
                 VerifyProduct(context, product, EntityState.Unchanged);
@@ -1093,7 +1228,12 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var insertedProduct = new FeaturedProduct { Id = -1, Name = "Marmite", PromotionalCode = "blah" };
+                var insertedProduct = new FeaturedProduct
+                                          {
+                                              Id = -1,
+                                              Name = "Marmite",
+                                              PromotionalCode = "blah"
+                                          };
                 context.Products.Add(insertedProduct);
                 GetObjectContext(context).Detach(insertedProduct);
                 Assert.Null(context.Products.Find(-1));
@@ -1112,8 +1252,16 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "Red Bull", CategoryId = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull",
+                                      CategoryId = "Beverages"
+                                  };
                 category.Products.Add(product);
 
                 // Act
@@ -1144,113 +1292,129 @@ namespace ProductivityApiTests
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Added_Principal_and_Dependent_Added()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Added_Principal_and_Dependent_Unchanged()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                               EntityState.Unchanged);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Added_Principal_and_Dependent_Modified()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                               EntityState.Modified);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Added_Principal_and_Dependent_Deleted()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                               EntityState.Deleted);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Attach_is_a_noop_if_FK_graph_has_Unchanged_Principal_and_Dependent_Added()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_is_a_noop_if_FK_graph_has_Unchanged_Principal_and_Dependent_Unchanged()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_is_a_noop_if_FK_graph_has_Unchanged_Principal_and_Dependent_Modified()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_is_a_noop_if_FK_graph_has_Unchanged_Principal_and_Dependent_Deleted()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Modified_Principal_and_Dependent_Added()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Modified_Principal_and_Dependent_Unchanged()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                               EntityState.Unchanged);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Modified_Principal_and_Dependent_Modified()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                               EntityState.Modified);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Modified_Principal_and_Dependent_Deleted()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                               EntityState.Deleted);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Deleted_Principal_and_Dependent_Added()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                               EntityState.Added);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Added);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Deleted_Principal_and_Dependent_Unchanged()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                               EntityState.Unchanged);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Deleted_Principal_and_Dependent_Modified()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                               EntityState.Modified);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Attach_moves_root_of_FK_graph_to_Unchanged_when_it_has_Deleted_Principal_and_Dependent_Deleted()
         {
-            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                               EntityState.Deleted);
+            Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Deleted);
         }
 
         private void Attach_moves_root_to_Unchanged_when_FK_graph_root_is_Unchanged_Modified_or_Deleted(
@@ -1259,8 +1423,16 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "Red Bull", CategoryId = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull",
+                                      CategoryId = "Beverages"
+                                  };
                 category.Products.Add(product);
 
                 switch (principalState)
@@ -1317,7 +1489,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup based on principal state
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(product.Category);
                     Assert.Equal(0, category.Products.Count);
@@ -1363,7 +1536,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(product.Category);
                     Assert.Equal(0, category.Products.Count);
@@ -1510,8 +1684,17 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange 
-                var office = new Office { BuildingId = Guid.NewGuid(), Number = "18/1111", Description = DBNull.Value.ToString() };
-                var whiteBoard = new Whiteboard { iD = new byte[] { 1, 2, 3, 4 }, AssetTag = "ABCDX0009" };
+                var office = new Office
+                                 {
+                                     BuildingId = Guid.NewGuid(),
+                                     Number = "18/1111",
+                                     Description = DBNull.Value.ToString()
+                                 };
+                var whiteBoard = new Whiteboard
+                                     {
+                                         iD = new byte[] { 1, 2, 3, 4 },
+                                         AssetTag = "ABCDX0009"
+                                     };
                 office.WhiteBoards.Add(whiteBoard);
 
                 switch (principalState)
@@ -1597,7 +1780,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(whiteBoard.Office);
                     Assert.Equal(0, office.WhiteBoards.Count);
@@ -1639,7 +1823,12 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var product = new Product { Id = 0, Name = "Red Bull", CategoryId = "Beverages" };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull",
+                                      CategoryId = "Beverages"
+                                  };
                 switch (dependentState)
                 {
                     case EntityState.Added:
@@ -1662,7 +1851,10 @@ namespace ProductivityApiTests
                     Assert.Equal(dependentState, GetStateEntry(context, product).State);
                 }
 
-                var category = new Category { Id = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
                 category.Products.Add(product);
 
                 // Assert fixup
@@ -1699,8 +1891,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                Assert.Equal("entity",
-                             Assert.Throws<ArgumentNullException>(() => context.Products.Attach(null)).ParamName);
+                Assert.Equal(
+                    "entity",
+                    Assert.Throws<ArgumentNullException>(() => context.Products.Attach(null)).ParamName);
             }
         }
 
@@ -1709,9 +1902,10 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                Assert.Equal("entity",
-                             Assert.Throws<ArgumentNullException>(() => context.Set(typeof(Product)).Attach(null)).
-                                 ParamName);
+                Assert.Equal(
+                    "entity",
+                    Assert.Throws<ArgumentNullException>(() => context.Set(typeof(Product)).Attach(null)).
+                        ParamName);
             }
         }
 
@@ -1743,10 +1937,17 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var category = new Category { Id = "Spreads" };
+                var category = new Category
+                                   {
+                                       Id = "Spreads"
+                                   };
 
                 // Note that the FK has not been set on the dependent, thereby creating an inconsistency 
-                var product = new Product { Id = 0, Name = "Vegemite" };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Vegemite"
+                                  };
                 category.Products.Add(product);
 
                 Assert.Throws<InvalidOperationException>(() => context.Categories.Attach(category)).ValidateMessage(
@@ -1794,7 +1995,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Id = -1, Name = "Haggis" };
+                var product = new Product
+                                  {
+                                      Id = -1,
+                                      Name = "Haggis"
+                                  };
                 context.Products.Add(product);
 
                 context.Products.Remove(product);
@@ -1814,7 +2019,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct() { Id = -1, Name = "Haggis" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Haggis"
+                                  };
                 context.Products.Attach(product);
 
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
@@ -1828,7 +2037,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct() { Id = -1, Name = "Haggis" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Haggis"
+                                  };
                 context.Set<FeaturedProduct>().Attach(product);
 
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
@@ -1842,7 +2055,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct { Id = -1, Name = "Ginger Cookies" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Ginger Cookies"
+                                  };
 
                 //Insert into base set and delete from derived set
                 context.Products.Attach(product);
@@ -1852,7 +2069,11 @@ namespace ProductivityApiTests
 
             using (var context = new SimpleModelContext())
             {
-                var product = new FeaturedProduct { Id = -1, Name = "Ginger Cookies" };
+                var product = new FeaturedProduct
+                                  {
+                                      Id = -1,
+                                      Name = "Ginger Cookies"
+                                  };
 
                 //Insert into derived set and delete from base set
                 context.Set<FeaturedProduct>().Attach(product);
@@ -1866,8 +2087,16 @@ namespace ProductivityApiTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var building = new Building { BuildingId = Guid.NewGuid(), Name = "Building 35" };
-                var mailroom = new MailRoom { id = 1, BuildingId = building.BuildingId };
+                var building = new Building
+                                   {
+                                       BuildingId = Guid.NewGuid(),
+                                       Name = "Building 35"
+                                   };
+                var mailroom = new MailRoom
+                                   {
+                                       id = 1,
+                                       BuildingId = building.BuildingId
+                                   };
 
                 building.MailRooms.Add(mailroom);
 
@@ -1892,8 +2121,16 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "RedBull", CategoryId = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "RedBull",
+                                      CategoryId = "Beverages"
+                                  };
                 category.Products.Add(product);
 
                 context.Categories.Attach(category);
@@ -1918,113 +2155,129 @@ namespace ProductivityApiTests
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Added_Principal_Added_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                                EntityState.Added);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Added);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Added_Principal_Unchanged_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                                EntityState.Unchanged);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Added_Principal_Modified_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                                EntityState.Modified);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Added_Principal_Deleted_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                                EntityState.Deleted);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Unchanged_Principal_Added_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                                EntityState.Added);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Unchanged_Principal_Unchanged_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                                EntityState.Unchanged);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Unchanged_Principal_Modified_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                                EntityState.Modified);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Unchanged_Principal_Deleted_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                                EntityState.Deleted);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Modified_Principal_Added_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                                EntityState.Added);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Added);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Modified_Principal_Unchanged_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                                EntityState.Unchanged);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Modified_Principal_Modified_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                                EntityState.Modified);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Modified_Principal_Deleted_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Modified,
-                                                                                                EntityState.Deleted);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Modified,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Deleted_Principal_Added_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                                EntityState.Added);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Added);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Deleted_Principal_Unchanged_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                                EntityState.Unchanged);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Deleted_Principal_Modified_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                                EntityState.Modified);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Remove_moves_FK_graph_root_to_Deleted_when_it_has_Deleted_Principal_Deleted_Dependent()
         {
-            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                                EntityState.Deleted);
+            Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Deleted);
         }
 
         private void Remove_moves_root_to_Deleted_when_graph_root_is_Added_Unchanged_Modified_or_Deleted(
@@ -2033,8 +2286,16 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "Red Bull", CategoryId = "Beverages" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull",
+                                      CategoryId = "Beverages"
+                                  };
                 category.Products.Add(product);
 
                 // Arranging principal object in the required state
@@ -2093,7 +2354,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup based on principal state
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(product.Category);
                     Assert.Equal(0, category.Products.Count);
@@ -2154,8 +2416,9 @@ namespace ProductivityApiTests
                         else if (principalState == EntityState.Deleted)
                         {
                             Assert.Equal(GetStateEntry(context, category).CurrentValues["Id"], "Beverages");
-                            Assert.Equal(GetStateEntry(context, category).CurrentValues["DetailedDescription"],
-                                         DBNull.Value);
+                            Assert.Equal(
+                                GetStateEntry(context, category).CurrentValues["DetailedDescription"],
+                                DBNull.Value);
                         }
                     }
                 }
@@ -2176,8 +2439,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                Assert.Equal("entity",
-                             Assert.Throws<ArgumentNullException>(() => context.Products.Remove(null)).ParamName);
+                Assert.Equal(
+                    "entity",
+                    Assert.Throws<ArgumentNullException>(() => context.Products.Remove(null)).ParamName);
             }
         }
 
@@ -2186,9 +2450,10 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                Assert.Equal("entity",
-                             Assert.Throws<ArgumentNullException>(() => context.Set(typeof(Product)).Remove(null)).
-                                 ParamName);
+                Assert.Equal(
+                    "entity",
+                    Assert.Throws<ArgumentNullException>(() => context.Set(typeof(Product)).Remove(null)).
+                        ParamName);
             }
         }
 
@@ -2197,7 +2462,10 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Name = "Digestive Biscuits" };
+                var product = new Product
+                                  {
+                                      Name = "Digestive Biscuits"
+                                  };
                 Assert.Throws<InvalidOperationException>(() => context.Products.Remove(product)).ValidateMessage(
                     "ObjectContext_CannotDeleteEntityNotInObjectStateManager");
             }
@@ -2208,7 +2476,10 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Name = "Digestive Biscuits" };
+                var product = new Product
+                                  {
+                                      Name = "Digestive Biscuits"
+                                  };
                 Assert.Throws<InvalidOperationException>(() => context.Set(typeof(Product)).Remove(product)).
                     ValidateMessage("ObjectContext_CannotDeleteEntityNotInObjectStateManager");
             }
@@ -2295,8 +2566,16 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange 
-                var office = new Office { BuildingId = Guid.NewGuid(), Number = "18/1111" };
-                var whiteBoard = new Whiteboard { iD = new byte[] { 1, 2, 3, 4 }, AssetTag = "ABCDX0009" };
+                var office = new Office
+                                 {
+                                     BuildingId = Guid.NewGuid(),
+                                     Number = "18/1111"
+                                 };
+                var whiteBoard = new Whiteboard
+                                     {
+                                         iD = new byte[] { 1, 2, 3, 4 },
+                                         AssetTag = "ABCDX0009"
+                                     };
                 office.WhiteBoards.Add(whiteBoard);
 
                 switch (principalState)
@@ -2378,71 +2657,81 @@ namespace ProductivityApiTests
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Added_and_Dependent_is_Added()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                           EntityState.Added);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Added);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Added_and_Dependent_is_Unchanged()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                           EntityState.Unchanged);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Added_and_Dependent_is_Modified()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Added,
-                                                                                           EntityState.Modified);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Added,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Unchanged_and_Dependent_is_Added()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                           EntityState.Added);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Added);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Unchanged_and_Dependent_is_Unchanged()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                           EntityState.Unchanged);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Unchanged_and_Dependent_is_Modified()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                           EntityState.Modified);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Unchanged_and_Dependent_is_Deleted()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Unchanged,
-                                                                                           EntityState.Deleted);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Unchanged,
+                EntityState.Deleted);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Deleted_and_Dependent_is_Unchanged()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                           EntityState.Unchanged);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Unchanged);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Deleted_and_Dependent_is_Modified()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                           EntityState.Modified);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Modified);
         }
 
         [Fact]
         public void Detach_FK_Graph_root_when_principal_is_Deleted_and_Dependent_is_Deleted()
         {
-            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(EntityState.Deleted,
-                                                                                           EntityState.Deleted);
+            Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
+                EntityState.Deleted,
+                EntityState.Deleted);
         }
 
         private void Detach_detaches_root_when_FK_graph_root_is_Added_Unchanged_Modified_or_Deleted(
@@ -2451,8 +2740,15 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 // Arrange
-                var category = new Category { Id = "Beverages" };
-                var product = new Product { Id = 0, Name = "Red Bull" };
+                var category = new Category
+                                   {
+                                       Id = "Beverages"
+                                   };
+                var product = new Product
+                                  {
+                                      Id = 0,
+                                      Name = "Red Bull"
+                                  };
                 category.Products.Add(product);
 
                 switch (principalState)
@@ -2512,7 +2808,8 @@ namespace ProductivityApiTests
                 }
 
                 // Assert fixup is as expected after test prep
-                if (principalState == EntityState.Deleted || dependentState == EntityState.Deleted)
+                if (principalState == EntityState.Deleted
+                    || dependentState == EntityState.Deleted)
                 {
                     Assert.Null(product.Category);
                     Assert.Equal(0, category.Products.Count);
@@ -2671,7 +2968,7 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                DbSet<Product> genericSet = context.Products;
+                var genericSet = context.Products;
 
                 DbSet nonGenericSet = genericSet;
 
@@ -2758,7 +3055,12 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Add(new Länder { Id = 3, Näme = "C" });
+                var lander = context.Länder.Add(
+                    new Länder
+                        {
+                            Id = 3,
+                            Näme = "C"
+                        });
 
                 Assert.Equal(EntityState.Added, context.Entry(lander).State);
             }
@@ -2769,7 +3071,12 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var lander = context.Länder.Attach(new Länder { Id = 3, Näme = "C" });
+                var lander = context.Länder.Attach(
+                    new Länder
+                        {
+                            Id = 3,
+                            Näme = "C"
+                        });
 
                 Assert.Equal(EntityState.Unchanged, context.Entry(lander).State);
             }
@@ -2823,18 +3130,19 @@ namespace ProductivityApiTests
                 // This throws because Set always returns the same Set instance every time
                 // it is called and we cannot cast the generic Set for the actual entity type
                 // to the generic Set for the proxy type.
-                Assert.Throws<InvalidOperationException>(() =>
-                                                         {
-                                                             try
-                                                             {
-                                                                 setMethod.Invoke(context, null);
-                                                             }
-                                                             catch (TargetInvocationException ex)
-                                                             {
-                                                                 throw ex.InnerException;
-                                                             }
-                                                             ;
-                                                         }).ValidateMessage("CannotCallGenericSetWithProxyType");
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                        {
+                            try
+                            {
+                                setMethod.Invoke(context, null);
+                            }
+                            catch (TargetInvocationException ex)
+                            {
+                                throw ex.InnerException;
+                            }
+                            ;
+                        }).ValidateMessage("CannotCallGenericSetWithProxyType");
             }
         }
 
@@ -2943,12 +3251,17 @@ namespace ProductivityApiTests
             Operation_moves_entity_from_one_state_to_another((s, p) => s.Remove(p), initialState, EntityState.Deleted);
         }
 
-        private void Operation_moves_entity_from_one_state_to_another(Action<IDbSet<Product>, Product> operation,
-                                                                      EntityState initialState, EntityState finalState)
+        private void Operation_moves_entity_from_one_state_to_another(
+            Action<IDbSet<Product>, Product> operation,
+            EntityState initialState, EntityState finalState)
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Id = -1, Name = "Haggis" };
+                var product = new Product
+                                  {
+                                      Id = -1,
+                                      Name = "Haggis"
+                                  };
                 context.Products.Add(product);
                 GetObjectContext(context).ObjectStateManager.ChangeObjectState(product, initialState);
 
@@ -2960,29 +3273,37 @@ namespace ProductivityApiTests
 
         private void Non_generic_Add_moves_entity_from_other_state_to_Added(EntityState initialState)
         {
-            Non_generic_Operation_moves_entity_from_one_state_to_another((s, p) => s.Add(p), initialState,
-                                                                         EntityState.Added);
+            Non_generic_Operation_moves_entity_from_one_state_to_another(
+                (s, p) => s.Add(p), initialState,
+                EntityState.Added);
         }
 
         private void Non_generic_Attach_moves_entity_from_other_state_to_Unchanged(EntityState initialState)
         {
-            Non_generic_Operation_moves_entity_from_one_state_to_another((s, p) => s.Attach(p), initialState,
-                                                                         EntityState.Unchanged);
+            Non_generic_Operation_moves_entity_from_one_state_to_another(
+                (s, p) => s.Attach(p), initialState,
+                EntityState.Unchanged);
         }
 
         private void Non_generic_Remove_moves_entity_from_other_state_to_Deleted(EntityState initialState)
         {
-            Non_generic_Operation_moves_entity_from_one_state_to_another((s, p) => s.Remove(p), initialState,
-                                                                         EntityState.Deleted);
+            Non_generic_Operation_moves_entity_from_one_state_to_another(
+                (s, p) => s.Remove(p), initialState,
+                EntityState.Deleted);
         }
 
-        private void Non_generic_Operation_moves_entity_from_one_state_to_another(Action<DbSet, Product> operation,
-                                                                                  EntityState initialState,
-                                                                                  EntityState finalState)
+        private void Non_generic_Operation_moves_entity_from_one_state_to_another(
+            Action<DbSet, Product> operation,
+            EntityState initialState,
+            EntityState finalState)
         {
             using (var context = new SimpleModelContext())
             {
-                var product = new Product() { Id = -1, Name = "Haggis" };
+                var product = new Product
+                                  {
+                                      Id = -1,
+                                      Name = "Haggis"
+                                  };
                 context.Set(typeof(Product)).Add(product);
                 GetObjectContext(context).ObjectStateManager.ChangeObjectState(product, initialState);
 
@@ -3029,8 +3350,18 @@ namespace ProductivityApiTests
     {
         protected override void Seed(SpecialCharacters context)
         {
-            context.Länder.Add(new Länder { Id = 1, Näme = "A" });
-            context.Länder.Add(new Länder { Id = 2, Näme = "B" });
+            context.Länder.Add(
+                new Länder
+                    {
+                        Id = 1,
+                        Näme = "A"
+                    });
+            context.Länder.Add(
+                new Länder
+                    {
+                        Id = 2,
+                        Näme = "B"
+                    });
         }
     }
 

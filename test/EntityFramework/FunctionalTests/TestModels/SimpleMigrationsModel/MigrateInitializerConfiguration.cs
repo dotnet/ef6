@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.SimpleMigrationsModel
 {
     using System.Data.Entity.Migrations;
@@ -14,8 +15,14 @@ namespace FunctionalTests.SimpleMigrationsModel
         {
             context.Blogs.AddOrUpdate(
                 b => b.Name,
-                new Blog { Name = "romiller.com" },
-                new Blog { Name = "blogs.msdn.com\adonet" });
+                new Blog
+                    {
+                        Name = "romiller.com"
+                    },
+                new Blog
+                    {
+                        Name = "blogs.msdn.com\adonet"
+                    });
         }
     }
 }

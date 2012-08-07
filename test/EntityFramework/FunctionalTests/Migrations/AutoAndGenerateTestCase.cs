@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -141,10 +142,10 @@ namespace System.Data.Entity.Migrations
         {
             private static readonly IList<Type> _excludedTypes
                 = new List<Type>
-                    {
-                        typeof(InsertHistoryOperation),
-                        typeof(DeleteHistoryOperation)
-                    };
+                      {
+                          typeof(InsertHistoryOperation),
+                          typeof(DeleteHistoryOperation)
+                      };
 
             private readonly Action<IEnumerable<MigrationOperation>> _verifyAction;
 

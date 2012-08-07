@@ -21,7 +21,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Functional tests for database initialization and seeding.  Unit tests also exist in the unit tests project.
+    ///     Functional tests for database initialization and seeding.  Unit tests also exist in the unit tests project.
     /// </summary>
     public class DatabaseInitializationTests : FunctionalTestBase
     {
@@ -605,6 +605,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce(
+            
             )
         {
             var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;

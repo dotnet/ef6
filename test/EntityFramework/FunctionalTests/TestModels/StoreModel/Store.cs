@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -17,7 +18,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_customerID != value)
                     {
-                        if (Customer != null && Customer.CustomerID != value)
+                        if (Customer != null
+                            && Customer.CustomerID != value)
                         {
                             Customer = null;
                         }
@@ -30,6 +32,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _customerID;
 
         public virtual string Name { get; set; }
@@ -44,7 +47,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_salesPersonID != value)
                     {
-                        if (SalesPerson != null && SalesPerson.SalesPersonID != value)
+                        if (SalesPerson != null
+                            && SalesPerson.SalesPersonID != value)
                         {
                             SalesPerson = null;
                         }
@@ -57,6 +61,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _salesPersonID;
 
         public virtual string Demographics { get; set; }
@@ -78,6 +83,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Customer _customer;
 
         public virtual SalesPerson SalesPerson
@@ -93,6 +99,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesPerson _salesPerson;
 
         public virtual ICollection<StoreContact> StoreContacts
@@ -125,13 +132,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<StoreContact> _storeContacts;
 
         private bool _settingFK;
 
         private void FixupCustomer(Customer previousValue)
         {
-            if (previousValue != null && ReferenceEquals(previousValue.Store, this))
+            if (previousValue != null
+                && ReferenceEquals(previousValue.Store, this))
             {
                 previousValue.Store = null;
             }
@@ -148,7 +157,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesPerson(SalesPerson previousValue)
         {
-            if (previousValue != null && previousValue.Stores.Contains(this))
+            if (previousValue != null
+                && previousValue.Stores.Contains(this))
             {
                 previousValue.Stores.Remove(this);
             }

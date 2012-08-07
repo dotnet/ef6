@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -66,8 +67,10 @@ namespace System.Data.Entity.Migrations
         public int OrderId { get; set; }
         public short Quantity { get; set; }
         public decimal Price { get; set; }
+
         [Column(TypeName = "money")]
         public decimal Total { get; set; }
+
         public bool? IsShipped { get; set; }
         public int ProductId { get; set; }
 
@@ -95,7 +98,7 @@ namespace System.Data.Entity.Migrations
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        
+
         public MigrationsAddress Address { get; set; }
         public DbGeography Location { get; set; }
         public DbGeometry FloorPlan { get; set; }
@@ -161,7 +164,12 @@ namespace System.Data.Entity.Migrations
             modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithOptional().WillCascadeOnDelete(false);
 
             modelBuilder.Entity<OrderLine>().Ignore(ol => ol.IsShipped);
-            modelBuilder.Entity<OrderLine>().HasKey(ol => new { ol.Id, ol.OrderId });
+            modelBuilder.Entity<OrderLine>().HasKey(
+                ol => new
+                          {
+                              ol.Id,
+                              ol.OrderId
+                          });
             modelBuilder.Entity<MigrationsProduct>();
         }
     }

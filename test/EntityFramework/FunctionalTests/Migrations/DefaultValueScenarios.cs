@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
@@ -17,22 +18,22 @@ namespace System.Data.Entity.Migrations
                 CreateTable(
                     "DefaultValues",
                     c => new
-                        {
-                            Binary = c.Binary(defaultValue: new byte[] { }),
-                            Boolean = c.Boolean(defaultValue: true),
-                            Byte = c.Byte(defaultValue: 42),
-                            DateTime = c.DateTime(defaultValue: new DateTime()),
-                            DateTimeOffset = c.DateTimeOffset(defaultValue: new DateTimeOffset()),
-                            Decimal = c.Decimal(defaultValue: 42.23m),
-                            Double = c.Double(defaultValue: 123.45),
-                            Guid = c.Guid(defaultValue: new Guid()),
-                            Int = c.Int(defaultValue: 0),
-                            Long = c.Long(defaultValue: 3456789),
-                            Short = c.Short(defaultValue: 256),
-                            Single = c.Single(defaultValue: 234.999f),
-                            String = c.String(defaultValue: string.Empty),
-                            Time = c.Time(defaultValue: TimeSpan.Zero)
-                        });
+                             {
+                                 Binary = c.Binary(defaultValue: new byte[] { }),
+                                 Boolean = c.Boolean(defaultValue: true),
+                                 Byte = c.Byte(defaultValue: 42),
+                                 DateTime = c.DateTime(defaultValue: new DateTime()),
+                                 DateTimeOffset = c.DateTimeOffset(defaultValue: new DateTimeOffset()),
+                                 Decimal = c.Decimal(defaultValue: 42.23m),
+                                 Double = c.Double(defaultValue: 123.45),
+                                 Guid = c.Guid(defaultValue: new Guid()),
+                                 Int = c.Int(defaultValue: 0),
+                                 Long = c.Long(defaultValue: 3456789),
+                                 Short = c.Short(defaultValue: 256),
+                                 Single = c.Single(defaultValue: 234.999f),
+                                 String = c.String(defaultValue: string.Empty),
+                                 Time = c.Time(defaultValue: TimeSpan.Zero)
+                             });
             }
         }
 
@@ -52,10 +53,10 @@ namespace System.Data.Entity.Migrations
 
             WhenSqlCe(
                 () =>
-                {
-                    createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "DateTimeOffset"));
-                    createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "Time"));
-                });
+                    {
+                        createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "DateTimeOffset"));
+                        createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "Time"));
+                    });
 
             migrator = CreateMigrator<ShopContext_v1>(defaultValuesMigration);
 
@@ -77,10 +78,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.True(table.Columns.Any(c => c.Name == "DateTimeOffset" && c.Default == "('0001-01-01T00:00:00.000+00:00')"));
-                    Assert.True(table.Columns.Any(c => c.Name == "Time" && c.Default == "('00:00:00')"));
-                });
+                    {
+                        Assert.True(table.Columns.Any(c => c.Name == "DateTimeOffset" && c.Default == "('0001-01-01T00:00:00.000+00:00')"));
+                        Assert.True(table.Columns.Any(c => c.Name == "Time" && c.Default == "('00:00:00')"));
+                    });
         }
 
         private class DefaultValueSqlMigration : DbMigration
@@ -90,22 +91,22 @@ namespace System.Data.Entity.Migrations
                 CreateTable(
                     "DefaultValueSql",
                     c => new
-                        {
-                            Binary = c.Binary(defaultValueSql: "CONVERT([binary],'123')"),
-                            Boolean = c.Boolean(defaultValueSql: "CONVERT([bit],'1')"),
-                            Byte = c.Byte(defaultValueSql: "CONVERT([tinyint],'123')"),
-                            DateTime = c.DateTime(defaultValueSql: "CONVERT([datetime],'1947/08/15 03:33:20')"),
-                            DateTimeOffset = c.DateTimeOffset(defaultValueSql: "CONVERT([datetimeoffset],'1947/08/15 03:33:20')"),
-                            Decimal = c.Decimal(defaultValueSql: "CONVERT([money],'123')"),
-                            Double = c.Double(defaultValueSql: "CONVERT([float],'123')"),
-                            Guid = c.Guid(defaultValueSql: "CONVERT([uniqueidentifier],'123')"),
-                            Int = c.Int(defaultValueSql: "CONVERT([int],'123')"),
-                            Long = c.Long(defaultValueSql: "CONVERT([bigint],'123')"),
-                            Short = c.Short(defaultValueSql: "CONVERT([smallint],'123')"),
-                            Single = c.Single(defaultValueSql: "CONVERT([real],'123')"),
-                            String = c.String(defaultValueSql: "CONVERT([nvarchar](100),(123))"),
-                            Time = c.Time(defaultValueSql: "CONVERT([time],'03:33:20')")
-                        });
+                             {
+                                 Binary = c.Binary(defaultValueSql: "CONVERT([binary],'123')"),
+                                 Boolean = c.Boolean(defaultValueSql: "CONVERT([bit],'1')"),
+                                 Byte = c.Byte(defaultValueSql: "CONVERT([tinyint],'123')"),
+                                 DateTime = c.DateTime(defaultValueSql: "CONVERT([datetime],'1947/08/15 03:33:20')"),
+                                 DateTimeOffset = c.DateTimeOffset(defaultValueSql: "CONVERT([datetimeoffset],'1947/08/15 03:33:20')"),
+                                 Decimal = c.Decimal(defaultValueSql: "CONVERT([money],'123')"),
+                                 Double = c.Double(defaultValueSql: "CONVERT([float],'123')"),
+                                 Guid = c.Guid(defaultValueSql: "CONVERT([uniqueidentifier],'123')"),
+                                 Int = c.Int(defaultValueSql: "CONVERT([int],'123')"),
+                                 Long = c.Long(defaultValueSql: "CONVERT([bigint],'123')"),
+                                 Short = c.Short(defaultValueSql: "CONVERT([smallint],'123')"),
+                                 Single = c.Single(defaultValueSql: "CONVERT([real],'123')"),
+                                 String = c.String(defaultValueSql: "CONVERT([nvarchar](100),(123))"),
+                                 Time = c.Time(defaultValueSql: "CONVERT([time],'03:33:20')")
+                             });
             }
         }
 
@@ -125,10 +126,10 @@ namespace System.Data.Entity.Migrations
 
             WhenSqlCe(
                 () =>
-                {
-                    createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "DateTimeOffset"));
-                    createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "Time"));
-                });
+                    {
+                        createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "DateTimeOffset"));
+                        createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "Time"));
+                    });
 
             migrator = CreateMigrator<ShopContext_v1>(defaultValuesMigration);
 
@@ -150,10 +151,12 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.True(table.Columns.Any(c => c.Name == "DateTimeOffset" && c.Default.StartsWith("(CONVERT([datetimeoffset],'1947/08/15 03:33:20'")));
-                    Assert.True(table.Columns.Any(c => c.Name == "Time" && c.Default.StartsWith("(CONVERT([time],'03:33:20'")));
-                });
+                    {
+                        Assert.True(
+                            table.Columns.Any(
+                                c => c.Name == "DateTimeOffset" && c.Default.StartsWith("(CONVERT([datetimeoffset],'1947/08/15 03:33:20'")));
+                        Assert.True(table.Columns.Any(c => c.Name == "Time" && c.Default.StartsWith("(CONVERT([time],'03:33:20'")));
+                    });
         }
     }
 }

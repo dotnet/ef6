@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -11,6 +12,7 @@ namespace FunctionalTests.Model
 
         [InverseProperty("Following")]
         public virtual ICollection<User> Followers { get; set; }
+
         public virtual ICollection<User> Following { get; set; }
 
         public virtual Guid rowguid { get; set; }

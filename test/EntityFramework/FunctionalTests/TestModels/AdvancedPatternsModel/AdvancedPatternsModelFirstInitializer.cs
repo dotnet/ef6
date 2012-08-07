@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
 {
     using System;
@@ -30,7 +31,8 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                                                  FROM dbo.Offices
                                                  WHERE BuildingId = @BuildingId");
 
-            context.Database.ExecuteSqlCommand(@"CREATE PROCEDURE dbo.SkimOffLeaveBalance
+            context.Database.ExecuteSqlCommand(
+                @"CREATE PROCEDURE dbo.SkimOffLeaveBalance
                                                  @First nvarchar(4000),
                                                  @Last nvarchar(4000)
                                                  AS 
@@ -39,7 +41,8 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                                                  SET LeaveBalance = 0 
                                                  WHERE FirstName = @First And LastName = @Last");
 
-            context.Database.ExecuteSqlCommand(@"CREATE PROCEDURE dbo.EmployeeIdsInOffice
+            context.Database.ExecuteSqlCommand(
+                @"CREATE PROCEDURE dbo.EmployeeIdsInOffice
                                                  @OfficeNumber nvarchar(128),
                                                  @BuildingId uniqueidentifier
                                                  AS 
@@ -55,36 +58,83 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                                                  FROM dbo.Buildings");
 
             var buildings = new List<BuildingMf>
-            {
-                new BuildingMf(_knownBuildingGuid, "Building One", 1500000m,
-                               new AddressMf("100 Work St", "Redmond", "WA", "98052", 1, "Clean")),
-                new BuildingMf(Guid.NewGuid(), "Building Two", 1000000m,
-                               new AddressMf("200 Work St", "Redmond", "WA", "98052", 2, "Contaminated")),
-            };
+                                {
+                                    new BuildingMf(
+                                        _knownBuildingGuid, "Building One", 1500000m,
+                                        new AddressMf("100 Work St", "Redmond", "WA", "98052", 1, "Clean")),
+                                    new BuildingMf(
+                                        Guid.NewGuid(), "Building Two", 1000000m,
+                                        new AddressMf("200 Work St", "Redmond", "WA", "98052", 2, "Contaminated")),
+                                };
             buildings.ForEach(b => context.Buildings.Add(b));
 
             var offices = new List<OfficeMf>
-            {
-                new OfficeMf { BuildingId = buildings[0].BuildingId, Number = "1/1221" },
-                new OfficeMf { BuildingId = buildings[0].BuildingId, Number = "1/1223" },
-                new OfficeMf { BuildingId = buildings[1].BuildingId, Number = "2/1458" },
-                new OfficeMf { BuildingId = buildings[1].BuildingId, Number = "2/1789" },
-            };
+                              {
+                                  new OfficeMf
+                                      {
+                                          BuildingId = buildings[0].BuildingId,
+                                          Number = "1/1221"
+                                      },
+                                  new OfficeMf
+                                      {
+                                          BuildingId = buildings[0].BuildingId,
+                                          Number = "1/1223"
+                                      },
+                                  new OfficeMf
+                                      {
+                                          BuildingId = buildings[1].BuildingId,
+                                          Number = "2/1458"
+                                      },
+                                  new OfficeMf
+                                      {
+                                          BuildingId = buildings[1].BuildingId,
+                                          Number = "2/1789"
+                                      },
+                              };
             offices.ForEach(o => context.Offices.Add(o));
 
             new List<EmployeeMf>
-            {
-                new CurrentEmployeeMf("Rowan", "Miller") { EmployeeId = 1, LeaveBalance = 45, Office = offices[0] },
-                new CurrentEmployeeMf("Arthur", "Vickers") { EmployeeId = 2, LeaveBalance = 62, Office = offices[1] },
-                new PastEmployeeMf("John", "Doe") { EmployeeId = 3, TerminationDate = new DateTime(2006, 1, 23) },
-            }.ForEach(e => context.Employees.Add(e));
+                {
+                    new CurrentEmployeeMf("Rowan", "Miller")
+                        {
+                            EmployeeId = 1,
+                            LeaveBalance = 45,
+                            Office = offices[0]
+                        },
+                    new CurrentEmployeeMf("Arthur", "Vickers")
+                        {
+                            EmployeeId = 2,
+                            LeaveBalance = 62,
+                            Office = offices[1]
+                        },
+                    new PastEmployeeMf("John", "Doe")
+                        {
+                            EmployeeId = 3,
+                            TerminationDate = new DateTime(2006, 1, 23)
+                        },
+                }.ForEach(e => context.Employees.Add(e));
 
             new List<WhiteboardMf>
-            {
-                new WhiteboardMf { AssetTag = "WB1973", iD = new byte[] { 1, 9, 7, 3 }, Office = offices[0] },
-                new WhiteboardMf { AssetTag = "WB1977", iD = new byte[] { 1, 9, 7, 7 }, Office = offices[0] },
-                new WhiteboardMf { AssetTag = "WB1970", iD = new byte[] { 1, 9, 7, 0 }, Office = offices[2] },
-            }.ForEach(w => context.Whiteboards.Add(w));
+                {
+                    new WhiteboardMf
+                        {
+                            AssetTag = "WB1973",
+                            iD = new byte[] { 1, 9, 7, 3 },
+                            Office = offices[0]
+                        },
+                    new WhiteboardMf
+                        {
+                            AssetTag = "WB1977",
+                            iD = new byte[] { 1, 9, 7, 7 },
+                            Office = offices[0]
+                        },
+                    new WhiteboardMf
+                        {
+                            AssetTag = "WB1970",
+                            iD = new byte[] { 1, 9, 7, 0 },
+                            Office = offices[2]
+                        },
+                }.ForEach(w => context.Whiteboards.Add(w));
         }
     }
 }

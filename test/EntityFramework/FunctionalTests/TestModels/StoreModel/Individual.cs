@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_customerID != value)
                 {
-                    if (Customer != null && Customer.CustomerID != value)
+                    if (Customer != null
+                        && Customer.CustomerID != value)
                     {
                         Customer = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _customerID;
 
         public virtual int ContactID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_contactID != value)
                 {
-                    if (Contact != null && Contact.ContactID != value)
+                    if (Contact != null
+                        && Contact.ContactID != value)
                     {
                         Contact = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactID;
 
         public virtual string Demographics { get; set; }
@@ -56,6 +61,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Contact _contact;
 
         public virtual Customer Customer
@@ -71,11 +77,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Customer _customer;
 
         private void FixupContact(Contact previousValue)
         {
-            if (previousValue != null && previousValue.Individuals.Contains(this))
+            if (previousValue != null
+                && previousValue.Individuals.Contains(this))
             {
                 previousValue.Individuals.Remove(this);
             }
@@ -95,7 +103,8 @@ namespace FunctionalTests.Model
 
         private void FixupCustomer(Customer previousValue)
         {
-            if (previousValue != null && ReferenceEquals(previousValue.Individual, this))
+            if (previousValue != null
+                && ReferenceEquals(previousValue.Individual, this))
             {
                 previousValue.Individual = null;
             }

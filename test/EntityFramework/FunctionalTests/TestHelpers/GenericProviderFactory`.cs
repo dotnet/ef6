@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Common;
@@ -11,7 +12,9 @@ namespace System.Data.Entity
 
         private GenericProviderFactory()
         {
-            var providerTable = (DataTable)typeof(DbProviderFactories).GetMethod("GetProviderTable", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
+            var providerTable =
+                (DataTable)
+                typeof(DbProviderFactories).GetMethod("GetProviderTable", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
 
             var row = providerTable.NewRow();
             row["Name"] = "GenericProviderFactory";

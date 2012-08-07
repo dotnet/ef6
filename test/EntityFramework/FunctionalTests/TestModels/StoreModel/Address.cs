@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -22,7 +23,8 @@ namespace FunctionalTests.Model
             {
                 if (_stateProvinceID != value)
                 {
-                    if (StateProvince != null && StateProvince.StateProvinceID != value)
+                    if (StateProvince != null
+                        && StateProvince.StateProvinceID != value)
                     {
                         StateProvince = null;
                     }
@@ -30,6 +32,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _stateProvinceID;
 
         public virtual string PostalCode { get; set; }
@@ -68,6 +71,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<EmployeeAddress> _employeeAddresses;
 
         public virtual StateProvince StateProvince
@@ -83,6 +87,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private StateProvince _stateProvince;
 
         public virtual ICollection<CustomerAddress> CustomerAddresses
@@ -115,6 +120,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<CustomerAddress> _customerAddresses;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -147,6 +153,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders1
@@ -179,6 +186,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders1;
 
         public virtual ICollection<VendorAddress> VendorAddresses
@@ -211,11 +219,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<VendorAddress> _vendorAddresses;
 
         private void FixupStateProvince(StateProvince previousValue)
         {
-            if (previousValue != null && previousValue.Addresses.Contains(this))
+            if (previousValue != null
+                && previousValue.Addresses.Contains(this))
             {
                 previousValue.Addresses.Remove(this);
             }

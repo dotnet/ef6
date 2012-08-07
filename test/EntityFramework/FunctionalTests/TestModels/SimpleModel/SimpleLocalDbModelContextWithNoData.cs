@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace SimpleModel
 {
     using System.Data.Entity.Core.Common;
@@ -38,7 +39,8 @@ namespace SimpleModel
         {
         }
 
-        public SimpleLocalDbModelContextWithNoData(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection = false)
+        public SimpleLocalDbModelContextWithNoData(
+            DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection = false)
             : base(existingConnection, model, contextOwnsConnection)
         {
         }

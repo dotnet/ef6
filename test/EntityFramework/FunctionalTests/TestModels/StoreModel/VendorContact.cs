@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_vendorID != value)
                 {
-                    if (Vendor != null && Vendor.VendorID != value)
+                    if (Vendor != null
+                        && Vendor.VendorID != value)
                     {
                         Vendor = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _vendorID;
 
         public virtual int ContactID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_contactID != value)
                 {
-                    if (Contact != null && Contact.ContactID != value)
+                    if (Contact != null
+                        && Contact.ContactID != value)
                     {
                         Contact = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactID;
 
         public virtual int ContactTypeID
@@ -46,7 +51,8 @@ namespace FunctionalTests.Model
             {
                 if (_contactTypeID != value)
                 {
-                    if (ContactType != null && ContactType.ContactTypeID != value)
+                    if (ContactType != null
+                        && ContactType.ContactTypeID != value)
                     {
                         ContactType = null;
                     }
@@ -54,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactTypeID;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -71,6 +78,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Contact _contact;
 
         public virtual ContactType ContactType
@@ -86,6 +94,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ContactType _contactType;
 
         public virtual Vendor Vendor
@@ -101,11 +110,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Vendor _vendor;
 
         private void FixupContact(Contact previousValue)
         {
-            if (previousValue != null && previousValue.VendorContacts.Contains(this))
+            if (previousValue != null
+                && previousValue.VendorContacts.Contains(this))
             {
                 previousValue.VendorContacts.Remove(this);
             }
@@ -125,7 +136,8 @@ namespace FunctionalTests.Model
 
         private void FixupContactType(ContactType previousValue)
         {
-            if (previousValue != null && previousValue.VendorContacts.Contains(this))
+            if (previousValue != null
+                && previousValue.VendorContacts.Contains(this))
             {
                 previousValue.VendorContacts.Remove(this);
             }
@@ -145,7 +157,8 @@ namespace FunctionalTests.Model
 
         private void FixupVendor(Vendor previousValue)
         {
-            if (previousValue != null && previousValue.VendorContacts.Contains(this))
+            if (previousValue != null
+                && previousValue.VendorContacts.Contains(this))
             {
                 previousValue.VendorContacts.Remove(this);
             }

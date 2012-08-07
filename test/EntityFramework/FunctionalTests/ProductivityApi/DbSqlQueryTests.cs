@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -15,8 +16,8 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    /// Functional tests for DbSqlQuery and other raw SQL functionality. 
-    /// Unit tests also exist in the unit tests project.
+    ///     Functional tests for DbSqlQuery and other raw SQL functionality. 
+    ///     Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbSqlQueryTests : FunctionalTestBase
     {
@@ -100,11 +101,12 @@ namespace ProductivityApiTests
                 context.Products.Load();
 
                 var query = context.Set<Product>().SqlQuery("select * from Products");
-                Assert.Throws<NotSupportedException>(() => query.ToList()).ValidateMessage("Materializer_RecyclingEntity",
-                                                                                           "SimpleModelContext.Products",
-                                                                                           "SimpleModel.Product",
-                                                                                           "SimpleModel.FeaturedProduct",
-                                                                                           "EntitySet=Products;Id=7");
+                Assert.Throws<NotSupportedException>(() => query.ToList()).ValidateMessage(
+                    "Materializer_RecyclingEntity",
+                    "SimpleModelContext.Products",
+                    "SimpleModel.Product",
+                    "SimpleModel.FeaturedProduct",
+                    "EntitySet=Products;Id=7");
             }
         }
 
@@ -114,8 +116,9 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var products =
-                    context.Products.SqlQuery("select * from Products where Id < {0} and CategoryId = {1}", 4,
-                                              "Beverages").ToList();
+                    context.Products.SqlQuery(
+                        "select * from Products where Id < {0} and CategoryId = {1}", 4,
+                        "Beverages").ToList();
 
                 Assert.Equal(1, context.Products.Local.Count);
                 ValidateBovril(products);
@@ -128,8 +131,9 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var products =
-                    context.Set(typeof(Product)).SqlQuery("select * from Products where Id < {0} and CategoryId = {1}",
-                                                          4, "Beverages").ToList<Product>();
+                    context.Set(typeof(Product)).SqlQuery(
+                        "select * from Products where Id < {0} and CategoryId = {1}",
+                        4, "Beverages").ToList<Product>();
 
                 Assert.Equal(1, context.Products.Local.Count);
                 ValidateBovril(products);
@@ -141,9 +145,18 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var products = context.Products.SqlQuery("select * from Products where Id < @p0 and CategoryId = @p1",
-                                                         new SqlParameter { ParameterName = "p0", Value = 4 },
-                                                         new SqlParameter { ParameterName = "p1", Value = "Beverages" })
+                var products = context.Products.SqlQuery(
+                    "select * from Products where Id < @p0 and CategoryId = @p1",
+                    new SqlParameter
+                        {
+                            ParameterName = "p0",
+                            Value = 4
+                        },
+                    new SqlParameter
+                        {
+                            ParameterName = "p1",
+                            Value = "Beverages"
+                        })
                     .ToList();
 
                 Assert.Equal(1, context.Products.Local.Count);
@@ -157,9 +170,18 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var products =
-                    context.Set(typeof(Product)).SqlQuery("select * from Products where Id < @p0 and CategoryId = @p1",
-                                                          new SqlParameter { ParameterName = "p0", Value = 4 },
-                                                          new SqlParameter { ParameterName = "p1", Value = "Beverages" })
+                    context.Set(typeof(Product)).SqlQuery(
+                        "select * from Products where Id < @p0 and CategoryId = @p1",
+                        new SqlParameter
+                            {
+                                ParameterName = "p0",
+                                Value = 4
+                            },
+                        new SqlParameter
+                            {
+                                ParameterName = "p1",
+                                Value = "Beverages"
+                            })
                         .ToList<Product>();
 
                 Assert.Equal(1, context.Products.Local.Count);
@@ -245,8 +267,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var products = query(context, "select * from Products where Id < {0} and CategoryId = {1}",
-                                     new object[] { 4, "Beverages" });
+                var products = query(
+                    context, "select * from Products where Id < {0} and CategoryId = {1}",
+                    new object[] { 4, "Beverages" });
 
                 Assert.Equal(0, context.Products.Local.Count);
                 ValidateBovril(products);
@@ -411,8 +434,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var products = query(context, "select * from Products where Id < {0} and CategoryId = {1}",
-                                     new object[] { 4, "Beverages" });
+                var products = query(
+                    context, "select * from Products where Id < {0} and CategoryId = {1}",
+                    new object[] { 4, "Beverages" });
 
                 Assert.Equal(1, products.Count);
                 Assert.Equal(0, context.Products.Local.Count);
@@ -438,7 +462,12 @@ namespace ProductivityApiTests
         public void SQL_query_cannot_be_used_to_materialize_anonymous_types()
         {
             SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation(
-                new { Id = 2, Name = "Bovril", CategoryId = "Foods" });
+                new
+                    {
+                        Id = 2,
+                        Name = "Bovril",
+                        CategoryId = "Foods"
+                    });
         }
 
         private void SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation<TElement>(TElement _)
@@ -505,7 +534,8 @@ namespace ProductivityApiTests
 
         #region SQL command tests
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SQL_commands_can_be_executed_against_the_database()
         {
             using (var context = new SimpleModelContext())
@@ -520,13 +550,15 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database()
         {
             using (var context = new SimpleModelContext())
             {
-                var result = context.Database.ExecuteSqlCommand("update Products set Name = {0} where Name = {1}",
-                                                                "Vegemite", "Marmite");
+                var result = context.Database.ExecuteSqlCommand(
+                    "update Products set Name = {0} where Name = {1}",
+                    "Vegemite", "Marmite");
 
                 Assert.Equal(1, result);
 

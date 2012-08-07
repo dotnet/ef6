@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -22,7 +23,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_contactID != value)
                     {
-                        if (Contact != null && Contact.ContactID != value)
+                        if (Contact != null
+                            && Contact.ContactID != value)
                         {
                             Contact = null;
                         }
@@ -35,6 +37,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactID;
 
         public virtual string LoginID { get; set; }
@@ -49,7 +52,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_managerID != value)
                     {
-                        if (Manager != null && Manager.EmployeeID != value)
+                        if (Manager != null
+                            && Manager.EmployeeID != value)
                         {
                             Manager = null;
                         }
@@ -62,6 +66,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _managerID;
 
         public virtual string Title { get; set; }
@@ -99,6 +104,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Contact _contact;
 
         public virtual ICollection<Employee> Employees
@@ -131,6 +137,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Employee> _employees;
 
         [ForeignKey("ManagerID")]
@@ -147,6 +154,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Employee _manager;
 
         public virtual ICollection<EmployeeAddress> EmployeeAddresses
@@ -179,6 +187,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<EmployeeAddress> _employeeAddresses;
 
         public virtual ICollection<EmployeeDepartmentHistory> EmployeeDepartmentHistories
@@ -211,6 +220,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<EmployeeDepartmentHistory> _employeeDepartmentHistories;
 
         public virtual ICollection<EmployeePayHistory> EmployeePayHistories
@@ -243,6 +253,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<EmployeePayHistory> _employeePayHistories;
 
         public virtual ICollection<JobCandidate> JobCandidates
@@ -275,6 +286,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<JobCandidate> _jobCandidates;
 
         public virtual ICollection<PurchaseOrderHeader> PurchaseOrderHeaders
@@ -307,6 +319,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<PurchaseOrderHeader> _purchaseOrderHeaders;
 
         public virtual SalesPerson SalesPerson
@@ -322,13 +335,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesPerson _salesPerson;
 
         private bool _settingFK;
 
         private void FixupContact(Contact previousValue)
         {
-            if (previousValue != null && previousValue.Employees.Contains(this))
+            if (previousValue != null
+                && previousValue.Employees.Contains(this))
             {
                 previousValue.Employees.Remove(this);
             }
@@ -348,7 +363,8 @@ namespace FunctionalTests.Model
 
         private void FixupEmployee2(Employee previousValue)
         {
-            if (previousValue != null && previousValue.Employees.Contains(this))
+            if (previousValue != null
+                && previousValue.Employees.Contains(this))
             {
                 previousValue.Employees.Remove(this);
             }
@@ -372,7 +388,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesPerson(SalesPerson previousValue)
         {
-            if (previousValue != null && ReferenceEquals(previousValue.Employee, this))
+            if (previousValue != null
+                && ReferenceEquals(previousValue.Employee, this))
             {
                 previousValue.Employee = null;
             }

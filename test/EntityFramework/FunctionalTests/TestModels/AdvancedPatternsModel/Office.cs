@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace AdvancedPatternsModel
 {
     using System;
@@ -8,7 +9,7 @@ namespace AdvancedPatternsModel
     {
         public Office()
         {
-            this.WhiteBoards = new List<Whiteboard>();
+            WhiteBoards = new List<Whiteboard>();
         }
 
         public Guid BuildingId { get; set; }

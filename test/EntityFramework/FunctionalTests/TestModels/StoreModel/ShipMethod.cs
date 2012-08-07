@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -49,6 +50,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<PurchaseOrderHeader> _purchaseOrderHeaders;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -81,6 +83,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         private void FixupPurchaseOrderHeaders(object sender, NotifyCollectionChangedEventArgs e)

@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using Xunit.Sdk;
 
-    class MigrationsTheoryCommand : ITestCommand
+    internal class MigrationsTheoryCommand : ITestCommand
     {
-        ITestCommand _innerCommand;
-        DatabaseProvider _provider;
-        ProgrammingLanguage _language;
+        private readonly ITestCommand _innerCommand;
+        private readonly DatabaseProvider _provider;
+        private readonly ProgrammingLanguage _language;
 
         public MigrationsTheoryCommand(ITestCommand innerCommand, DatabaseProvider provider, ProgrammingLanguage language)
         {
@@ -22,8 +23,9 @@ namespace System.Data.Entity.Migrations
 
             if (dbTestClass == null)
             {
-                throw new InvalidOperationException(string.Format(
-                    "Expected {0} to be derived from {1}", testClass.GetType().FullName, typeof(DbTestCase).FullName));
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Expected {0} to be derived from {1}", testClass.GetType().FullName, typeof(DbTestCase).FullName));
             }
 
             dbTestClass.Init(_provider, _language);
@@ -33,7 +35,11 @@ namespace System.Data.Entity.Migrations
 
         public string DisplayName
         {
-            get { return string.Format("{0} - DatabaseProvider: {1}, ProgrammingLanguage: {2}", _innerCommand.DisplayName, _provider, _language); }
+            get
+            {
+                return string.Format(
+                    "{0} - DatabaseProvider: {1}, ProgrammingLanguage: {2}", _innerCommand.DisplayName, _provider, _language);
+            }
         }
 
         public bool ShouldCreateInstance

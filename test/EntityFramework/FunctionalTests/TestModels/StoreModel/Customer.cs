@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -19,7 +20,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_territoryID != value)
                     {
-                        if (SalesTerritory != null && SalesTerritory.TerritoryID != value)
+                        if (SalesTerritory != null
+                            && SalesTerritory.TerritoryID != value)
                         {
                             SalesTerritory = null;
                         }
@@ -32,6 +34,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _territoryID;
 
         public virtual string AccountNumber { get; set; }
@@ -57,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesTerritory _salesTerritory;
 
         public virtual ICollection<CustomerAddress> CustomerAddresses
@@ -89,6 +93,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<CustomerAddress> _customerAddresses;
 
         public virtual Individual Individual
@@ -104,6 +109,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Individual _individual;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -136,6 +142,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         public virtual Store Store
@@ -151,13 +158,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Store _store;
 
         private bool _settingFK;
 
         private void FixupSalesTerritory(SalesTerritory previousValue)
         {
-            if (previousValue != null && previousValue.Customers.Contains(this))
+            if (previousValue != null
+                && previousValue.Customers.Contains(this))
             {
                 previousValue.Customers.Remove(this);
             }
@@ -181,7 +190,8 @@ namespace FunctionalTests.Model
 
         private void FixupIndividual(Individual previousValue)
         {
-            if (previousValue != null && ReferenceEquals(previousValue.Customer, this))
+            if (previousValue != null
+                && ReferenceEquals(previousValue.Customer, this))
             {
                 previousValue.Customer = null;
             }
@@ -194,7 +204,8 @@ namespace FunctionalTests.Model
 
         private void FixupStore(Store previousValue)
         {
-            if (previousValue != null && ReferenceEquals(previousValue.Customer, this))
+            if (previousValue != null
+                && ReferenceEquals(previousValue.Customer, this))
             {
                 previousValue.Customer = null;
             }

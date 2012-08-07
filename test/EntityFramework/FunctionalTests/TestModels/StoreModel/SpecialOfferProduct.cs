@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -14,7 +15,8 @@ namespace FunctionalTests.Model
             {
                 if (_specialOfferID != value)
                 {
-                    if (SpecialOffer != null && SpecialOffer.SpecialOfferID != value)
+                    if (SpecialOffer != null
+                        && SpecialOffer.SpecialOfferID != value)
                     {
                         SpecialOffer = null;
                     }
@@ -22,6 +24,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _specialOfferID;
 
         public virtual int ProductID
@@ -31,7 +34,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -39,6 +43,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual Guid rowguid { get; set; }
@@ -58,6 +63,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         public virtual ICollection<SalesOrderDetail> SalesOrderDetails
@@ -90,6 +96,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderDetail> _salesOrderDetails;
 
         public virtual SpecialOffer SpecialOffer
@@ -105,11 +112,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SpecialOffer _specialOffer;
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.SpecialOfferProducts.Contains(this))
+            if (previousValue != null
+                && previousValue.SpecialOfferProducts.Contains(this))
             {
                 previousValue.SpecialOfferProducts.Remove(this);
             }
@@ -129,7 +138,8 @@ namespace FunctionalTests.Model
 
         private void FixupSpecialOffer(SpecialOffer previousValue)
         {
-            if (previousValue != null && previousValue.SpecialOfferProducts.Contains(this))
+            if (previousValue != null
+                && previousValue.SpecialOfferProducts.Contains(this))
             {
                 previousValue.SpecialOfferProducts.Remove(this);
             }

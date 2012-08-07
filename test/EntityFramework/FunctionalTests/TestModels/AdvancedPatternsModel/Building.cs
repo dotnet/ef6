@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace AdvancedPatternsModel
 {
     using System;
@@ -8,8 +9,8 @@ namespace AdvancedPatternsModel
     {
         public Building()
         {
-            this.Offices = new List<Office>();
-            this.MailRooms = new List<MailRoom>();
+            Offices = new List<Office>();
+            MailRooms = new List<MailRoom>();
         }
 
         public Guid BuildingId { get; set; }
@@ -25,12 +26,10 @@ namespace AdvancedPatternsModel
         public string NotInModel { get; set; }
 
         private string _noGetter = "NoGetter";
+
         public string NoGetter
         {
-            set
-            {
-                _noGetter = value;
-            }
+            set { _noGetter = value; }
         }
 
         public string GetNoGetterValue()
@@ -40,10 +39,7 @@ namespace AdvancedPatternsModel
 
         public string NoSetter
         {
-            get
-            {
-                return "NoSetter";
-            }
+            get { return "NoSetter"; }
         }
     }
 }

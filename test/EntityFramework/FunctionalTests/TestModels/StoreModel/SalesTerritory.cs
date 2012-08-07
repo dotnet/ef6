@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -59,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<StateProvince> _stateProvinces;
 
         public virtual ICollection<Customer> Customers
@@ -91,6 +93,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Customer> _customers;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -123,6 +126,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         public virtual ICollection<SalesPerson> SalesPersons
@@ -155,6 +159,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesPerson> _salesPersons;
 
         public virtual ICollection<SalesTerritoryHistory> SalesTerritoryHistories
@@ -187,6 +192,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesTerritoryHistory> _salesTerritoryHistories;
 
         private void FixupStateProvinces(object sender, NotifyCollectionChangedEventArgs e)

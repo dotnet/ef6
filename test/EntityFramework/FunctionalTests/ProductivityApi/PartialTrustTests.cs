@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -14,7 +15,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests that run various things in a partial trust sandbox.
+    ///     Tests that run various things in a partial trust sandbox.
     /// </summary>
     [PartialTrustFixture]
     public class PartialTrustTests : FunctionalTestBase
@@ -22,8 +23,9 @@ namespace ProductivityApiTests
         // TODO: [Fact(Skip = "SDE Merge - No partial trust yet")]
         public void DbContextInfo_works_under_partial_trust()
         {
-            var contextInfo = new DbContextInfo(typeof(AdvancedPatternsMasterContext),
-                                                ProviderRegistry.Sql2008_ProviderInfo);
+            var contextInfo = new DbContextInfo(
+                typeof(AdvancedPatternsMasterContext),
+                ProviderRegistry.Sql2008_ProviderInfo);
 
             var context = contextInfo.CreateInstance();
 
@@ -103,19 +105,23 @@ namespace ProductivityApiTests
                 var building = context.Buildings.Single(b => b.Name == "Building One");
 
                 var newBuilding = new Building
-                                  {
-                                      BuildingId = new Guid(building.BuildingId.ToString()),
-                                      Name = "Bag End",
-                                      Value = building.Value,
-                                      Address = new Address
-                                                {
-                                                    Street = "The Hill",
-                                                    City = "Hobbiton",
-                                                    State = "WF",
-                                                    ZipCode = "00001",
-                                                    SiteInfo = new SiteInfo { Zone = 3, Environment = "Comfortable" }
-                                                },
-                                  };
+                                      {
+                                          BuildingId = new Guid(building.BuildingId.ToString()),
+                                          Name = "Bag End",
+                                          Value = building.Value,
+                                          Address = new Address
+                                                        {
+                                                            Street = "The Hill",
+                                                            City = "Hobbiton",
+                                                            State = "WF",
+                                                            ZipCode = "00001",
+                                                            SiteInfo = new SiteInfo
+                                                                           {
+                                                                               Zone = 3,
+                                                                               Environment = "Comfortable"
+                                                                           }
+                                                        },
+                                      };
 
                 context.Entry(building).CurrentValues.SetValues(newBuilding);
 
@@ -162,7 +168,11 @@ namespace ProductivityApiTests
                             from p in context.Products
                             where n.Value > p.UnitsInStock && n.Value == parameter
                             select
-                                new LinqTests.NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                                new LinqTests.NumberProductProjectionClass
+                                    {
+                                        Value = n.Value,
+                                        UnitsInStock = p.UnitsInStock
+                                    };
                 Assert.IsType<DbQuery<LinqTests.NumberProductProjectionClass>>(query);
                 query.Load();
             }
@@ -249,8 +259,9 @@ namespace ProductivityApiTests
         public void InvokeIsAspNetEnvironment()
         {
             var aspProxy = Activator.CreateInstance(_aspProxy, nonPublic: true);
-            var isAspNetEnvironment = _aspProxy.GetMethod("IsAspNetEnvironment",
-                                                         BindingFlags.Instance | BindingFlags.NonPublic);
+            var isAspNetEnvironment = _aspProxy.GetMethod(
+                "IsAspNetEnvironment",
+                BindingFlags.Instance | BindingFlags.NonPublic);
 
             // Before fixing Dev11 216491 this would throw a SecurityException
             Assert.False((bool)isAspNetEnvironment.Invoke(aspProxy, new object[0]));

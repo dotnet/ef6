@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.CodeDom.Compiler;
@@ -27,10 +28,10 @@ namespace System.Data.Entity.Migrations
         public Assembly Compile(string @namespace, params ScaffoldedMigration[] scaffoldedMigrations)
         {
             var options = new CompilerParameters
-                {
-                    GenerateExecutable = false,
-                    GenerateInMemory = true
-                };
+                              {
+                                  GenerateExecutable = false,
+                                  GenerateInMemory = true
+                              };
 
             options.ReferencedAssemblies.Add(typeof(string).Assembly.Location);
             options.ReferencedAssemblies.Add(typeof(Expression).Assembly.Location);
@@ -69,7 +70,8 @@ namespace System.Data.Entity.Migrations
             return stringBuilder.ToString();
         }
 
-        private static IEnumerable<string> GenerateEmbeddedResources(IEnumerable<ScaffoldedMigration> scaffoldedMigrations, string @namespace)
+        private static IEnumerable<string> GenerateEmbeddedResources(
+            IEnumerable<ScaffoldedMigration> scaffoldedMigrations, string @namespace)
         {
             foreach (var scaffoldedMigration in scaffoldedMigrations)
             {

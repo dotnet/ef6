@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
@@ -131,7 +132,7 @@ namespace System.Data.Entity.Migrations
             var version2 = new MigrationScaffolder(migrator1.Configuration).Scaffold("Version2");
 
             var migrator2 = CreateMigrator<ShopContext_v2>(scaffoldedMigrations: version2);
-            
+
             migrator2.Update();
 
             if (!whenDatabaseExists)
@@ -139,7 +140,7 @@ namespace System.Data.Entity.Migrations
                 ResetDatabase();
             }
 
-            var scriptingDecorator 
+            var scriptingDecorator
                 = new MigratorScriptingDecorator(CreateMigrator<ShopContext_v2>(scaffoldedMigrations: version2));
 
             // Act

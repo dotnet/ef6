@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -80,9 +81,24 @@ namespace System.Data.Entity.Migrations
             table.ToTable("TABLES", "INFORMATION_SCHEMA");
             table.Property(t => t.Schema).HasColumnName("TABLE_SCHEMA");
             table.Property(t => t.Name).HasColumnName("TABLE_NAME");
-            table.HasKey(t => new { t.Schema, t.Name });
-            table.HasMany(t => t.Columns).WithRequired(c => c.Table).HasForeignKey(c => new { c.TableSchema, c.TableName });
-            table.HasMany(t => t.Constraints).WithRequired(tc => tc.Table).HasForeignKey(c => new { c.TableSchema, c.TableName });
+            table.HasKey(
+                t => new
+                         {
+                             t.Schema,
+                             t.Name
+                         });
+            table.HasMany(t => t.Columns).WithRequired(c => c.Table).HasForeignKey(
+                c => new
+                         {
+                             c.TableSchema,
+                             c.TableName
+                         });
+            table.HasMany(t => t.Constraints).WithRequired(tc => tc.Table).HasForeignKey(
+                c => new
+                         {
+                             c.TableSchema,
+                             c.TableName
+                         });
 
             var column = modelBuilder.Entity<ColumnInfo>();
             column.ToTable("COLUMNS", "INFORMATION_SCHEMA");
@@ -97,7 +113,13 @@ namespace System.Data.Entity.Migrations
             column.Property(c => c.NumericPrecision).HasColumnName("NUMERIC_PRECISION");
             column.Property(c => c.Scale).HasColumnName("NUMERIC_SCALE");
             column.Property(c => c.DateTimePrecision).HasColumnName("DATETIME_PRECISION");
-            column.HasKey(c => new { c.TableSchema, c.TableName, c.Name });
+            column.HasKey(
+                c => new
+                         {
+                             c.TableSchema,
+                             c.TableName,
+                             c.Name
+                         });
 
             var tableConstraint = modelBuilder.Entity<TableConstraintInfo>();
             tableConstraint.ToTable("TABLE_CONSTRAINTS", "INFORMATION_SCHEMA");
@@ -105,7 +127,12 @@ namespace System.Data.Entity.Migrations
             tableConstraint.Property(tc => tc.Name).HasColumnName("CONSTRAINT_NAME");
             tableConstraint.Property(tc => tc.TableSchema).HasColumnName("TABLE_SCHEMA");
             tableConstraint.Property(tc => tc.TableName).HasColumnName("TABLE_NAME");
-            tableConstraint.HasKey(tc => new { tc.Schema, tc.Name });
+            tableConstraint.HasKey(
+                tc => new
+                          {
+                              tc.Schema,
+                              tc.Name
+                          });
 
             var uniqueConstraint = modelBuilder.Entity<UniqueConstraintInfo>();
             uniqueConstraint.Map(m => m.Requires("CONSTRAINT_TYPE").HasValue("UNIQUE"));
@@ -121,7 +148,12 @@ namespace System.Data.Entity.Migrations
             referentialConstraint.Property(rc => rc.UniqueConstraintSchema).HasColumnName("UNIQUE_CONSTRAINT_SCHEMA");
             referentialConstraint.Property(rc => rc.UniqueConstraintName).HasColumnName("UNIQUE_CONSTRAINT_NAME");
             referentialConstraint.Property(rc => rc.DeleteRule).HasColumnName("DELETE_RULE");
-            referentialConstraint.HasRequired(rc => rc.UniqueConstraint).WithMany(uc => uc.ReferentialConstraints).HasForeignKey(rc => new { rc.UniqueConstraintSchema, rc.UniqueConstraintName });
+            referentialConstraint.HasRequired(rc => rc.UniqueConstraint).WithMany(uc => uc.ReferentialConstraints).HasForeignKey(
+                rc => new
+                          {
+                              rc.UniqueConstraintSchema,
+                              rc.UniqueConstraintName
+                          });
 
             var keyColumnUsage = modelBuilder.Entity<KeyColumnUsageInfo>();
             keyColumnUsage.ToTable("KEY_COLUMN_USAGE", "INFORMATION_SCHEMA");
@@ -131,9 +163,28 @@ namespace System.Data.Entity.Migrations
             keyColumnUsage.Property(kcu => kcu.ColumnTableName).HasColumnName("TABLE_NAME");
             keyColumnUsage.Property(kcu => kcu.ColumnName).HasColumnName("COLUMN_NAME");
             keyColumnUsage.Property(kcu => kcu.Position).HasColumnName("ORDINAL_POSITION");
-            keyColumnUsage.HasKey(kcu => new { kcu.ConstraintSchema, kcu.ConstraintName, kcu.ColumnTableSchema, kcu.ColumnTableName, kcu.ColumnName });
-            keyColumnUsage.HasRequired(kcu => kcu.Constraint).WithMany(kc => kc.KeyColumnUsages).HasForeignKey(kcu => new { kcu.ConstraintSchema, kcu.ConstraintName });
-            keyColumnUsage.HasRequired(kcu => kcu.Column).WithMany(c => c.KeyColumnUsages).HasForeignKey(kcu => new { kcu.ColumnTableSchema, kcu.ColumnTableName, kcu.ColumnName });
+            keyColumnUsage.HasKey(
+                kcu => new
+                           {
+                               kcu.ConstraintSchema,
+                               kcu.ConstraintName,
+                               kcu.ColumnTableSchema,
+                               kcu.ColumnTableName,
+                               kcu.ColumnName
+                           });
+            keyColumnUsage.HasRequired(kcu => kcu.Constraint).WithMany(kc => kc.KeyColumnUsages).HasForeignKey(
+                kcu => new
+                           {
+                               kcu.ConstraintSchema,
+                               kcu.ConstraintName
+                           });
+            keyColumnUsage.HasRequired(kcu => kcu.Column).WithMany(c => c.KeyColumnUsages).HasForeignKey(
+                kcu => new
+                           {
+                               kcu.ColumnTableSchema,
+                               kcu.ColumnTableName,
+                               kcu.ColumnName
+                           });
 
             if (Database.Connection is SqlCeConnection)
             {
@@ -162,7 +213,8 @@ namespace System.Data.Entity.Migrations
 
         private bool SchemaEquals(string schema, TableInfo table)
         {
-            if (!_supportsSchema || string.IsNullOrWhiteSpace(schema))
+            if (!_supportsSchema
+                || string.IsNullOrWhiteSpace(schema))
             {
                 return true;
             }

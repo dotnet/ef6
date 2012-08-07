@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace AdvancedPatternsModel
 {
     using System.Data.Entity;
@@ -7,7 +8,8 @@ namespace AdvancedPatternsModel
     {
         public AdvancedPatternsMasterContext()
             : base("AdvancedPatternsDatabase")
-        { }
+        {
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -30,7 +32,12 @@ namespace AdvancedPatternsModel
                 .WithMany(b => b.MailRooms)
                 .HasForeignKey(m => m.BuildingId);
 
-            builder.Entity<Office>().HasKey(o => new { o.Number, o.BuildingId });
+            builder.Entity<Office>().HasKey(
+                o => new
+                         {
+                             o.Number,
+                             o.BuildingId
+                         });
             builder.Ignore<UnMappedOffice>();
             builder.Entity<BuildingDetail>()
                 .HasKey(d => d.BuildingId)

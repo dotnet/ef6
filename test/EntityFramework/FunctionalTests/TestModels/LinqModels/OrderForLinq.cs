@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace SimpleModel
 {
     using System;
@@ -16,16 +17,13 @@ namespace SimpleModel
             Debug.Assert(other is OrderForLinq, "Expected other side to already have been checked to be the correct type.");
 
             var otherOrder = (OrderForLinq)other;
-            bool customersEqual = Customer == null ? otherOrder.Customer == null : Customer.Id == otherOrder.Customer.Id;
+            var customersEqual = Customer == null ? otherOrder.Customer == null : Customer.Id == otherOrder.Customer.Id;
             return base.EntityEquals(other) && customersEqual;
         }
 
         public override int EntityHashCode
         {
-            get
-            {
-                return Customer == null ? Id : (37 * Id + Customer.Id);
-            }
+            get { return Customer == null ? Id : (37 * Id + Customer.Id); }
         }
 
         public override string ToString()

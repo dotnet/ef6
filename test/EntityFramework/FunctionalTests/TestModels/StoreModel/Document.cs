@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -57,6 +58,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductDocument> _productDocuments;
 
         private void FixupProductDocuments(object sender, NotifyCollectionChangedEventArgs e)

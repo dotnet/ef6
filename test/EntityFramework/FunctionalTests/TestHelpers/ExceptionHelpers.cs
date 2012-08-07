@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -11,12 +12,12 @@ namespace System.Data.Entity
     using System.Threading;
 
     /// <summary>
-    /// Common exception utilities. 
+    ///     Common exception utilities.
     /// </summary>
     public static class ExceptionHelpers
     {
         /// <summary>
-        /// Gets the error message thrown for types which implement IEnumerable only for cleaner construction.
+        ///     Gets the error message thrown for types which implement IEnumerable only for cleaner construction.
         /// </summary>
         public static string EnumerableNotImplementedExceptionMessage
         {
@@ -24,10 +25,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Throws ArgumentNullException if specified argument is null.
+        ///     Throws ArgumentNullException if specified argument is null.
         /// </summary>
-        /// <param name="argument">Argument to check for null.</param>
-        /// <param name="argumentName">Argument name.</param>
+        /// <param name="argument"> Argument to check for null. </param>
+        /// <param name="argumentName"> Argument name. </param>
         public static void CheckArgumentNotNull(object argument, string argumentName)
         {
             if (argument == null)
@@ -37,44 +38,47 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Throws ArgumentException if the range is invalid.
+        ///     Throws ArgumentException if the range is invalid.
         /// </summary>
-        /// <typeparam name="TValue">The type of the value. Must be comparable.</typeparam>
-        /// <param name="leftValue">The left value.</param>
-        /// <param name="leftParameterName">Name of the left parameter.</param>
-        /// <param name="rightValue">The right value.</param>
-        /// <param name="rightParameterName">Name of the right parameter.</param>
+        /// <typeparam name="TValue"> The type of the value. Must be comparable. </typeparam>
+        /// <param name="leftValue"> The left value. </param>
+        /// <param name="leftParameterName"> Name of the left parameter. </param>
+        /// <param name="rightValue"> The right value. </param>
+        /// <param name="rightParameterName"> Name of the right parameter. </param>
         public static void CheckValidRange<TValue>(TValue leftValue, string leftParameterName, TValue rightValue, string rightParameterName)
             where TValue : struct, IComparable<TValue>
         {
             if (leftValue.CompareTo(rightValue) > 0)
             {
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Invalid range specified - '{0}' must be greater than or equal to '{1}'.", rightParameterName, leftParameterName));
+                throw new ArgumentException(
+                    String.Format(
+                        CultureInfo.InvariantCulture, "Invalid range specified - '{0}' must be greater than or equal to '{1}'.",
+                        rightParameterName, leftParameterName));
             }
         }
 
         /// <summary>
-        /// Throws ArgumentException if string argument is empty and ArgumentNullException if string argument is null.
+        ///     Throws ArgumentException if string argument is empty and ArgumentNullException if string argument is null.
         /// </summary>
-        /// <param name="argument">String argument for check.</param>
-        /// <param name="argumentName">Argument name.</param>
+        /// <param name="argument"> String argument for check. </param>
+        /// <param name="argumentName"> Argument name. </param>
         public static void CheckStringArgumentIsNotNullOrEmpty(string argument, string argumentName)
         {
             CheckArgumentNotNull(argument, argumentName);
 
             if (String.IsNullOrEmpty(argument))
             {
-                string message = String.Format(CultureInfo.InvariantCulture, "Argument '{0}' cannot be empty.", argumentName);
+                var message = String.Format(CultureInfo.InvariantCulture, "Argument '{0}' cannot be empty.", argumentName);
                 throw new ArgumentException(message);
             }
         }
 
         /// <summary>
-        /// Throws InvalidOperationException if specified string is null or empty
+        ///     Throws InvalidOperationException if specified string is null or empty
         /// </summary>
-        /// <param name="value">The string to check for null/empty</param>
-        /// <param name="exceptionMessageFormatText">The exception message.</param>
-        /// <param name="messageArguments">The format arguments (if any) for the exception message.</param>
+        /// <param name="value"> The string to check for null/empty </param>
+        /// <param name="exceptionMessageFormatText"> The exception message. </param>
+        /// <param name="messageArguments"> The format arguments (if any) for the exception message. </param>
         public static void CheckStringNotNullOrEmpty(string value, string exceptionMessageFormatText, params object[] messageArguments)
         {
             Assert(exceptionMessageFormatText != null, "message cannnot be null");
@@ -82,16 +86,17 @@ namespace System.Data.Entity
 
             if (String.IsNullOrEmpty(value))
             {
-                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, exceptionMessageFormatText, messageArguments));
+                throw new InvalidOperationException(
+                    String.Format(CultureInfo.InvariantCulture, exceptionMessageFormatText, messageArguments));
             }
         }
 
         /// <summary>
-        /// Throws InvalidOperationException if specified object is null.
+        ///     Throws InvalidOperationException if specified object is null.
         /// </summary>
-        /// <param name="value">The object to check for null.</param>
-        /// <param name="exceptionMessageFormatText">The exception message.</param>
-        /// <param name="messageArguments">The format arguments (if any) for the exception message.</param>
+        /// <param name="value"> The object to check for null. </param>
+        /// <param name="exceptionMessageFormatText"> The exception message. </param>
+        /// <param name="messageArguments"> The format arguments (if any) for the exception message. </param>
         public static void CheckObjectNotNull(object value, string exceptionMessageFormatText, params object[] messageArguments)
         {
             Assert(exceptionMessageFormatText != null, "message cannnot be null");
@@ -110,11 +115,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Throws ArgumentException if the given collection is null or empty.
+        ///     Throws ArgumentException if the given collection is null or empty.
         /// </summary>
-        /// <typeparam name="TElement">Type of the element type.</typeparam>
-        /// <param name="argument">The argument.</param>
-        /// <param name="argumentName">Name of the argument.</param>
+        /// <typeparam name="TElement"> Type of the element type. </typeparam>
+        /// <param name="argument"> The argument. </param>
+        /// <param name="argumentName"> Name of the argument. </param>
         public static void CheckCollectionNotEmpty<TElement>(IEnumerable<TElement> argument, string argumentName)
         {
             CheckArgumentNotNull(argument, argumentName);
@@ -127,11 +132,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Throws ArgumentException if the given collection is null or contains null elements.
+        ///     Throws ArgumentException if the given collection is null or contains null elements.
         /// </summary>
-        /// <typeparam name="TElement">Type of the element type.</typeparam>
-        /// <param name="argument">The argument.</param>
-        /// <param name="argumentName">Name of the argument.</param>
+        /// <typeparam name="TElement"> Type of the element type. </typeparam>
+        /// <param name="argument"> The argument. </param>
+        /// <param name="argumentName"> Name of the argument. </param>
         public static void CheckCollectionDoesNotContainNulls<TElement>(IEnumerable<TElement> argument, string argumentName)
         {
             CheckArgumentNotNull(argument, argumentName);
@@ -144,21 +149,19 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Throws NotSupportedException saying that IEnumerable is only implemented for cleaner construction.
+        ///     Throws NotSupportedException saying that IEnumerable is only implemented for cleaner construction.
         /// </summary>
-        /// <returns>NotSupportedException with appropriate message</returns>
+        /// <returns> NotSupportedException with appropriate message </returns>
         public static NotSupportedException CreateIEnumerableNotImplementedException()
         {
             return new NotSupportedException(EnumerableNotImplementedExceptionMessage);
         }
 
         /// <summary>
-        /// Determines whether the specified exception is catchable.
+        ///     Determines whether the specified exception is catchable.
         /// </summary>
-        /// <param name="exception">The exception.</param>
-        /// <returns>
-        /// A value <c>true</c> if the specified exception is catchable; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="exception"> The exception. </param>
+        /// <returns> A value <c>true</c> if the specified exception is catchable; otherwise, <c>false</c> . </returns>
         public static bool IsCatchable(Exception exception)
         {
             if (exception is ThreadAbortException)
@@ -187,7 +190,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Serializes and de-serializes the given exception and returns the de-serialized instance.
+        ///     Serializes and de-serializes the given exception and returns the de-serialized instance.
         /// </summary>
         public static TException SerializeAndDeserialize<TException>(TException exception) where TException : Exception
         {
@@ -202,11 +205,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Asserts the specified condition to be true and throws exception if it is not.
+        ///     Asserts the specified condition to be true and throws exception if it is not.
         /// </summary>
-        /// <param name="condition">If set to <c>true</c>, the exception will not be thrown.</param>
-        /// <param name="errorMessage">The error message.</param>
-        /// <param name="messageArguments">Arguments for the error message.</param>
+        /// <param name="condition"> If set to <c>true</c> , the exception will not be thrown. </param>
+        /// <param name="errorMessage"> The error message. </param>
+        /// <param name="messageArguments"> Arguments for the error message. </param>
         public static void Assert(bool condition, string errorMessage, params object[] messageArguments)
         {
             if (!condition)
@@ -217,8 +220,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Examines the AggregateExceptions thrown by the <paramref name="executor"/>
-        /// and rethrows the inner exception if only one is contained.
+        ///     Examines the AggregateExceptions thrown by the <paramref name="executor" />
+        ///     and rethrows the inner exception if only one is contained.
         /// </summary>
         public static T UnwrapAggregateExceptions<T>(Func<T> executor)
         {

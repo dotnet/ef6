@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ConcurrencyModel
 {
     using System.Collections.Generic;
@@ -33,9 +34,15 @@ namespace ConcurrencyModel
 
         public virtual Chassis Chassis { get; set; }
 
-        public virtual ICollection<Driver> Drivers { get { return _drivers; } }
+        public virtual ICollection<Driver> Drivers
+        {
+            get { return _drivers; }
+        }
 
-        public virtual ICollection<Sponsor> Sponsors { get { return _sponsors; } }
+        public virtual ICollection<Sponsor> Sponsors
+        {
+            get { return _sponsors; }
+        }
 
         public int? GearboxId { get; set; }
         public virtual Gearbox Gearbox { get; set; } // Uni-directional

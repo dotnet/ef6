@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_purchaseOrderID != value)
                 {
-                    if (PurchaseOrderHeader != null && PurchaseOrderHeader.PurchaseOrderID != value)
+                    if (PurchaseOrderHeader != null
+                        && PurchaseOrderHeader.PurchaseOrderID != value)
                     {
                         PurchaseOrderHeader = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _purchaseOrderID;
 
         public virtual int PurchaseOrderDetailID { get; set; }
@@ -35,7 +38,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -43,6 +47,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual decimal UnitPrice { get; set; }
@@ -70,6 +75,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         public virtual PurchaseOrderHeader PurchaseOrderHeader
@@ -85,11 +91,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private PurchaseOrderHeader _purchaseOrderHeader;
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.PurchaseOrderDetails.Contains(this))
+            if (previousValue != null
+                && previousValue.PurchaseOrderDetails.Contains(this))
             {
                 previousValue.PurchaseOrderDetails.Remove(this);
             }
@@ -109,7 +117,8 @@ namespace FunctionalTests.Model
 
         private void FixupPurchaseOrderHeader(PurchaseOrderHeader previousValue)
         {
-            if (previousValue != null && previousValue.PurchaseOrderDetails.Contains(this))
+            if (previousValue != null
+                && previousValue.PurchaseOrderDetails.Contains(this))
             {
                 previousValue.PurchaseOrderDetails.Remove(this);
             }

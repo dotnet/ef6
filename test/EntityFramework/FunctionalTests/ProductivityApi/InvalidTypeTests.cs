@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -21,32 +22,34 @@ namespace ProductivityApiTests
         #region Infrastructure/setup
 
         /// <summary>
-        /// Asserts that an operation on a set throws if the type of the set is not valid for the model.
+        ///     Asserts that an operation on a set throws if the type of the set is not valid for the model.
         /// </summary>
-        /// <typeparam name="TEntity">The type of entity for which a set should be created.</typeparam>
-        /// <param name="test">The test to run on the set.</param>
+        /// <typeparam name="TEntity"> The type of entity for which a set should be created. </typeparam>
+        /// <param name="test"> The test to run on the set. </param>
         private void ThrowsForInvalidType<TEntity>(Action<IDbSet<TEntity>> test) where TEntity : class
         {
             using (var context = new SimpleModelContext())
             {
                 var set = context.Set<TEntity>();
-                Assert.Throws<InvalidOperationException>(() => test(set)).ValidateMessage("DbSet_EntityTypeNotInModel",
-                                                                                          typeof(TEntity).Name);
+                Assert.Throws<InvalidOperationException>(() => test(set)).ValidateMessage(
+                    "DbSet_EntityTypeNotInModel",
+                    typeof(TEntity).Name);
             }
         }
 
         /// <summary>
-        /// Asserts that an operation on a set throws if the type of the set is not valid for the model.
+        ///     Asserts that an operation on a set throws if the type of the set is not valid for the model.
         /// </summary>
-        /// <param name="entityType">The type of entity for which the set is for.</param>
-        /// <param name="test">The test to run on the set.</param>
+        /// <param name="entityType"> The type of entity for which the set is for. </param>
+        /// <param name="test"> The test to run on the set. </param>
         private void ThrowsForInvalidTypeNonGeneric(Type entityType, Action<DbSet> test)
         {
             using (var context = new SimpleModelContext())
             {
                 var set = context.Set(entityType);
-                Assert.Throws<InvalidOperationException>(() => test(set)).ValidateMessage("DbSet_EntityTypeNotInModel",
-                                                                                          entityType.Name);
+                Assert.Throws<InvalidOperationException>(() => test(set)).ValidateMessage(
+                    "DbSet_EntityTypeNotInModel",
+                    entityType.Name);
             }
         }
 
@@ -123,7 +126,7 @@ namespace ProductivityApiTests
             // Create a derived type in a new assembly
             var provider = new CSharpCodeProvider();
             var result = provider.CompileAssemblyFromSource(
-                new CompilerParameters(new string[] { this.GetType().Assembly.Location }),
+                new CompilerParameters(new[] { GetType().Assembly.Location }),
                 "public class DerivedCategory : SimpleModel.Category { }");
 
             var derivedCategoryType = result.CompiledAssembly.GetTypes().Single();
@@ -143,15 +146,18 @@ namespace ProductivityApiTests
                 // Attempt to use the set
                 try
                 {
-                    iQueryableOfDerivedCategoryFirstOrDefault.Invoke(null, new object[] { set });
+                    iQueryableOfDerivedCategoryFirstOrDefault.Invoke(null, new[] { set });
                 }
                 catch (TargetInvocationException ex)
                 {
                     Assert.IsType<InvalidOperationException>(ex.InnerException);
-                    new StringResourceVerifier(new AssemblyResourceLookup(typeof(DbModelBuilder).Assembly,
-                                                                          "System.Data.Entity.Properties.Resources"))
-                        .VerifyMatch("DbSet_EntityTypeNotInModel", ex.InnerException.Message,
-                                     new[] { "DerivedCategory" });
+                    new StringResourceVerifier(
+                        new AssemblyResourceLookup(
+                            typeof(DbModelBuilder).Assembly,
+                            "System.Data.Entity.Properties.Resources"))
+                        .VerifyMatch(
+                            "DbSet_EntityTypeNotInModel", ex.InnerException.Message,
+                            new[] { "DerivedCategory" });
                 }
             }
         }
@@ -205,7 +211,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Set_throws_only_when_used_if_type_not_in_the_model_even_if_type_is_anonymous()
         {
-            var anon = new { Id = 4, Name = "" };
+            var anon = new
+                           {
+                               Id = 4,
+                               Name = ""
+                           };
 
             using (var ctx = new SimpleModelContext())
             {
@@ -224,7 +234,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Non_generic_Set_throws_only_when_used_if_type_not_in_the_model_even_if_type_is_anonymous()
         {
-            var anon = new { Id = 4, Name = "" };
+            var anon = new
+                           {
+                               Id = 4,
+                               Name = ""
+                           };
 
             using (var ctx = new SimpleModelContext())
             {
@@ -252,19 +266,22 @@ namespace ProductivityApiTests
             using (var context = new DbContext("MixedPocoEocoContext", model))
             {
                 var set = setMethod.Invoke(context, null);
-                Assert.Throws<InvalidOperationException>(() =>
-                                                         {
-                                                             try
-                                                             {
-                                                                 findMethod.Invoke(set,
-                                                                                   new object[] { new object[] { 1 } });
-                                                             }
-                                                             catch (TargetInvocationException tie)
-                                                             {
-                                                                 throw tie.InnerException;
-                                                             }
-                                                         }).ValidateMessage("DbSet_PocoAndNonPocoMixedInSameAssembly",
-                                                                            "PocoEntity");
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                        {
+                            try
+                            {
+                                findMethod.Invoke(
+                                    set,
+                                    new object[] { new object[] { 1 } });
+                            }
+                            catch (TargetInvocationException tie)
+                            {
+                                throw tie.InnerException;
+                            }
+                        }).ValidateMessage(
+                            "DbSet_PocoAndNonPocoMixedInSameAssembly",
+                            "PocoEntity");
             }
         }
 
@@ -310,7 +327,12 @@ namespace ProductivityApiTests
             using (var context = new PersonContext())
             {
                 Assert.Throws<ModelValidationException>(
-                    () => context.People.Add(new Person { FirstName = "Joe", LastName = "McKellor" }));
+                    () => context.People.Add(
+                        new Person
+                            {
+                                FirstName = "Joe",
+                                LastName = "McKellor"
+                            }));
             }
         }
 
@@ -320,7 +342,12 @@ namespace ProductivityApiTests
             using (var context = new PersonContext())
             {
                 Assert.Throws<ModelValidationException>(
-                    () => context.People.Attach(new Person { FirstName = "Joe", LastName = "McKellor" }));
+                    () => context.People.Attach(
+                        new Person
+                            {
+                                FirstName = "Joe",
+                                LastName = "McKellor"
+                            }));
             }
         }
 

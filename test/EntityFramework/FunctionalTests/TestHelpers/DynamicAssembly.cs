@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -13,7 +14,9 @@ namespace System.Data.Entity
 
     public class DynamicAssembly
     {
-        private readonly Dictionary<string, Tuple<TypeBuilder, ConstructorBuilder>> _typeBuilders = new Dictionary<string, Tuple<TypeBuilder, ConstructorBuilder>>();
+        private readonly Dictionary<string, Tuple<TypeBuilder, ConstructorBuilder>> _typeBuilders =
+            new Dictionary<string, Tuple<TypeBuilder, ConstructorBuilder>>();
+
         private readonly Dictionary<string, DynamicType> _dynamicTypes = new Dictionary<string, DynamicType>();
         private readonly Dictionary<string, Type> _types = new Dictionary<string, Type>();
         private readonly List<Attribute> _attributes = new List<Attribute>();
@@ -54,21 +57,22 @@ namespace System.Data.Entity
         }
 
         //private static MethodInfo s_RegisterSet = typeof(DbModelBuilder).GetMethod("RegisterSet", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
-        private static MethodInfo s_Entity = typeof(DbModelBuilder).GetMethod("Entity",
-                                                                              BindingFlags.Public |
-                                                                              BindingFlags.Instance, null,
-                                                                              Type.EmptyTypes, null);
+        private static readonly MethodInfo s_Entity = typeof(DbModelBuilder).GetMethod(
+            "Entity",
+            BindingFlags.Public |
+            BindingFlags.Instance, null,
+            Type.EmptyTypes, null);
 
         public DbModelBuilder ToBuilder()
         {
-            if (this.Types.Count() == 0)
+            if (Types.Count() == 0)
             {
-                this.Compile();
+                Compile();
             }
             var builder = new DbModelBuilder();
-            foreach (Type t in this.Types)
+            foreach (var t in Types)
             {
-                MethodInfo entityMethod = s_Entity.MakeGenericMethod(t);
+                var entityMethod = s_Entity.MakeGenericMethod(t);
                 entityMethod.Invoke(builder, null);
             }
             return builder;
@@ -101,7 +105,7 @@ namespace System.Data.Entity
             foreach (var typeInfo in DynamicTypes)
             {
                 var typeBuilder = _typeBuilders[typeInfo.ClassName];
-                
+
                 foreach (var fieldInfo in typeInfo.Fields)
                 {
                     DefineField(typeBuilder.Item1, typeBuilder.Item2, fieldInfo);
@@ -128,7 +132,7 @@ namespace System.Data.Entity
 
         private void DefineType(ModuleBuilder module, DynamicType typeInfo)
         {
-            TypeAttributes typeAttributes = TypeAttributes.Class;
+            var typeAttributes = TypeAttributes.Class;
             switch (typeInfo.ClassAccess)
             {
                 case MemberAccess.Public:
@@ -158,17 +162,17 @@ namespace System.Data.Entity
                 baseClass = _typeBuilders[((DynamicType)typeInfo.BaseClass).ClassName].Item1;
             }
 
-            TypeBuilder typeBuilder = module.DefineType(typeInfo.ClassName, typeAttributes, baseClass);
-            foreach (Attribute a in typeInfo.Attributes)
+            var typeBuilder = module.DefineType(typeInfo.ClassName, typeAttributes, baseClass);
+            foreach (var a in typeInfo.Attributes)
             {
                 typeBuilder.SetCustomAttribute(AnnotationAttributeBuilder.Create(a));
             }
 
             // Define the Ctor
             var constructorBuilder = typeInfo.CtorAccess == MemberAccess.None
-                ? null
-                : typeBuilder.DefineDefaultConstructor(GetMethodAttributes(false, typeInfo.CtorAccess));
-            
+                                         ? null
+                                         : typeBuilder.DefineDefaultConstructor(GetMethodAttributes(false, typeInfo.CtorAccess));
+
             _typeBuilders.Add(typeInfo.ClassName, Tuple.Create(typeBuilder, constructorBuilder));
         }
 
@@ -197,8 +201,8 @@ namespace System.Data.Entity
 
         private void DefineProperty(TypeBuilder typeBuilder, DynamicProperty propertyInfo)
         {
-            MemberAccess getterAccess = propertyInfo.GetterAccess;
-            MemberAccess setterAccess = propertyInfo.SetterAccess;
+            var getterAccess = propertyInfo.GetterAccess;
+            var setterAccess = propertyInfo.SetterAccess;
 
             Type propertyType;
             if (propertyInfo.CollectionType != null)
@@ -227,7 +231,8 @@ namespace System.Data.Entity
                         setterAccess = MemberAccess.Internal;
                         break;
                 }
-                if (propertyInfo.PropertyType != null && propertyInfo.PropertyType.IsGenericTypeDefinition)
+                if (propertyInfo.PropertyType != null
+                    && propertyInfo.PropertyType.IsGenericTypeDefinition)
                 {
                     propertyType = propertyInfo.PropertyType.MakeGenericType(propertyType);
                 }
@@ -237,38 +242,44 @@ namespace System.Data.Entity
                 propertyType = propertyInfo.PropertyType;
             }
 
-            FieldBuilder fieldBuilder = typeBuilder.DefineField("_" + propertyInfo.PropertyName, propertyType,
-                                                                FieldAttributes.Private);
+            var fieldBuilder = typeBuilder.DefineField(
+                "_" + propertyInfo.PropertyName, propertyType,
+                FieldAttributes.Private);
 
-            PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(propertyInfo.PropertyName,
-                                                                         System.Reflection.PropertyAttributes.None,
-                                                                         propertyType, Type.EmptyTypes);
+            var propertyBuilder = typeBuilder.DefineProperty(
+                propertyInfo.PropertyName,
+                System.Reflection.PropertyAttributes.None,
+                propertyType, Type.EmptyTypes);
 
-            foreach (Attribute a in propertyInfo.Attributes)
+            foreach (var a in propertyInfo.Attributes)
             {
                 propertyBuilder.SetCustomAttribute(AnnotationAttributeBuilder.Create(a));
             }
 
-            if (propertyInfo.GetterAccess != MemberAccess.None)
+            if (propertyInfo.GetterAccess
+                != MemberAccess.None)
             {
-                MethodBuilder getter = typeBuilder.DefineMethod("get_" + propertyInfo.PropertyName,
-                                                                GetMethodAttributes(propertyInfo.IsVirtual, getterAccess),
-                                                                propertyType,
-                                                                Type.EmptyTypes);
-                ILGenerator generator = getter.GetILGenerator();
+                var getter = typeBuilder.DefineMethod(
+                    "get_" + propertyInfo.PropertyName,
+                    GetMethodAttributes(propertyInfo.IsVirtual, getterAccess),
+                    propertyType,
+                    Type.EmptyTypes);
+                var generator = getter.GetILGenerator();
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.Emit(OpCodes.Ldfld, fieldBuilder);
                 generator.Emit(OpCodes.Ret);
                 propertyBuilder.SetGetMethod(getter);
             }
 
-            if (propertyInfo.SetterAccess != MemberAccess.None)
+            if (propertyInfo.SetterAccess
+                != MemberAccess.None)
             {
-                MethodBuilder setter = typeBuilder.DefineMethod("set_" + propertyInfo.PropertyName,
-                                                                GetMethodAttributes(propertyInfo.IsVirtual, setterAccess),
-                                                                null,
-                                                                new Type[] { propertyType });
-                ILGenerator generator = setter.GetILGenerator();
+                var setter = typeBuilder.DefineMethod(
+                    "set_" + propertyInfo.PropertyName,
+                    GetMethodAttributes(propertyInfo.IsVirtual, setterAccess),
+                    null,
+                    new[] { propertyType });
+                var generator = setter.GetILGenerator();
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.Emit(OpCodes.Ldarg_1);
                 generator.Emit(OpCodes.Stfld, fieldBuilder);
@@ -279,7 +290,7 @@ namespace System.Data.Entity
 
         private MethodAttributes GetMethodAttributes(bool isVirtual, MemberAccess memberAccess)
         {
-            MethodAttributes attributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName;
+            var attributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName;
             if (isVirtual)
             {
                 attributes |= MethodAttributes.Virtual;
@@ -328,20 +339,23 @@ namespace System.Data.Entity
 
         public static CustomAttributeBuilder CreateCustom(DataMemberAttribute attribute)
         {
-            if (attribute.Order == -1)
+            if (attribute.Order
+                == -1)
             {
-                return new CustomAttributeBuilder(typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
-                                                  new object[] { },
-                                                  new PropertyInfo[] { },
-                                                  new object[] { });
+                return new CustomAttributeBuilder(
+                    typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
+                    new object[] { },
+                    new PropertyInfo[] { },
+                    new object[] { });
             }
             else
             {
-                return new CustomAttributeBuilder(typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
-                                                  new object[] { },
-                                                  new PropertyInfo[]
-                                                  { typeof(DataMemberAttribute).GetProperty("Order") },
-                                                  new object[] { attribute.Order });
+                return new CustomAttributeBuilder(
+                    typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
+                    new object[] { },
+                    new[]
+                        { typeof(DataMemberAttribute).GetProperty("Order") },
+                    new object[] { attribute.Order });
             }
         }
 
@@ -408,19 +422,12 @@ namespace System.Data.Entity
 
     public class DynamicProperty
     {
-        private Type _propertyType;
-        private string _propertyName;
         private MemberAccess _getterAccess = MemberAccess.Public;
         private MemberAccess _setterAccess = MemberAccess.Public;
         private bool _isVirtual = true;
-        private DynamicType _referenceType;
-        private List<Attribute> _attributes = new List<Attribute>();
+        private readonly List<Attribute> _attributes = new List<Attribute>();
 
-        public Type PropertyType
-        {
-            get { return _propertyType; }
-            set { _propertyType = value; }
-        }
+        public Type PropertyType { get; set; }
 
         public DynamicProperty HasType(Type propertyType)
         {
@@ -434,11 +441,7 @@ namespace System.Data.Entity
             return this;
         }
 
-        public DynamicType ReferenceType
-        {
-            get { return _referenceType; }
-            set { _referenceType = value; }
-        }
+        public DynamicType ReferenceType { get; set; }
 
         public DynamicProperty HasReferenceType(DynamicType referenceType)
         {
@@ -466,11 +469,7 @@ namespace System.Data.Entity
             return this;
         }
 
-        public string PropertyName
-        {
-            get { return _propertyName; }
-            set { _propertyName = value; }
-        }
+        public string PropertyName { get; set; }
 
         public DynamicProperty HasName(string propertyName)
         {
@@ -541,7 +540,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Sets the field up to match the Instance singleton pattern required by ADO.NET.
+        ///     Sets the field up to match the Instance singleton pattern required by ADO.NET.
         /// </summary>
         public DynamicField IsInstance()
         {
@@ -552,21 +551,13 @@ namespace System.Data.Entity
 
     public class DynamicType
     {
-        private bool _isSealed = false;
-        private bool _isAbstract = false;
         private MemberAccess _classAccess = MemberAccess.Public;
-        private object _baseClass = null;
-        private string _className;
         private readonly Dictionary<string, DynamicProperty> _properties = new Dictionary<string, DynamicProperty>();
         private readonly Dictionary<string, DynamicField> _fields = new Dictionary<string, DynamicField>();
         private MemberAccess _ctorAccess = MemberAccess.None;
         private readonly List<Attribute> _attributes = new List<Attribute>();
 
-        public string ClassName
-        {
-            get { return _className; }
-            set { _className = value; }
-        }
+        public string ClassName { get; set; }
 
         public DynamicType HasClassName(string className)
         {
@@ -585,11 +576,7 @@ namespace System.Data.Entity
             return this;
         }
 
-        public bool IsSealed
-        {
-            get { return _isSealed; }
-            set { _isSealed = value; }
-        }
+        public bool IsSealed { get; set; }
 
         public DynamicType HasSealed(bool isSealed)
         {
@@ -597,11 +584,7 @@ namespace System.Data.Entity
             return this;
         }
 
-        public bool IsAbstract
-        {
-            get { return _isAbstract; }
-            set { _isAbstract = value; }
-        }
+        public bool IsAbstract { get; set; }
 
         public DynamicType HasAbstract(bool isAbstract)
         {
@@ -644,17 +627,16 @@ namespace System.Data.Entity
             DynamicField field;
             if (!_fields.TryGetValue(fieldName, out field))
             {
-                field = new DynamicField { FieldName = fieldName };
+                field = new DynamicField
+                            {
+                                FieldName = fieldName
+                            };
                 _fields.Add(fieldName, field);
             }
             return field;
         }
 
-        public object BaseClass
-        {
-            get { return _baseClass; }
-            set { _baseClass = value; }
-        }
+        public object BaseClass { get; set; }
 
         public DynamicType HasBaseClass(object baseClass)
         {

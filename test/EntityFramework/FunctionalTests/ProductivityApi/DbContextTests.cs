@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -25,7 +26,7 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    /// Tests for the primary methods on DbContext.
+    ///     Tests for the primary methods on DbContext.
     /// </summary>
     public class DbContextTests : FunctionalTestBase
     {
@@ -144,7 +145,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string_when_using_model_constructor_on_DbContext()
+        public void
+            Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string_when_using_model_constructor_on_DbContext()
         {
             var builder = AllTypeKeysContext.CreateBuilder();
             Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string(
@@ -152,7 +154,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Database_Name_is_from_App_config_if_named_connection_string_matches_convention_name_when_using_empty_constructor_on_DbContext()
+        public void
+            Database_Name_is_from_App_config_if_named_connection_string_matches_convention_name_when_using_empty_constructor_on_DbContext()
         {
             Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string();
         }
@@ -216,7 +219,7 @@ namespace ProductivityApiTests
                 context.Assert<Blog>().IsInModel();
 
                 // Assert that Blog doesnt have Id as the key but rather has Title as the Key
-                EntityType type = GetEntityType(context, typeof(Blog));
+                var type = GetEntityType(context, typeof(Blog));
                 Assert.True(type.KeyMembers.Count == 1);
                 Assert.Equal(type.KeyMembers.First().Name, "Title");
             }
@@ -225,8 +228,9 @@ namespace ProductivityApiTests
         [Fact]
         public void Verify_DbContext_construction_using_connection_string_ctor_when_string_is_database_name()
         {
-            Verify_DbContext_construction_using_connection_string_ctor(nameOrConnectionString: "DefaultDatabaseNameDb",
-                                                                       expectedDatabaseName: "DefaultDatabaseNameDb");
+            Verify_DbContext_construction_using_connection_string_ctor(
+                nameOrConnectionString: "DefaultDatabaseNameDb",
+                expectedDatabaseName: "DefaultDatabaseNameDb");
         }
 
         [Fact]
@@ -253,16 +257,19 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_connection_string_ctor_when_string_is_named_connection_string_and_its_last_token_exists_in_config()
+        public void
+            Verify_DbContext_construction_using_connection_string_ctor_when_string_is_named_connection_string_and_its_last_token_exists_in_config
+            ()
         {
             Verify_DbContext_construction_using_connection_string_ctor(
                 nameOrConnectionString: "X.Y.Z.R.SimpleModelWithNoDataFromAppConfig",
                 expectedDatabaseName: "SimpleModel.SimpleModelWithNoData");
         }
 
-        private void Verify_DbContext_construction_using_connection_string_ctor(string nameOrConnectionString,
-                                                                                string expectedDatabaseName =
-                                                                                    "SimpleModel.SimpleModelContextWithNoData")
+        private void Verify_DbContext_construction_using_connection_string_ctor(
+            string nameOrConnectionString,
+            string expectedDatabaseName =
+                "SimpleModel.SimpleModelContextWithNoData")
         {
             using (var context = new SimpleModelContextWithNoData(nameOrConnectionString))
             {
@@ -278,30 +285,34 @@ namespace ProductivityApiTests
         [Fact]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.IsSubset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.IsSubset);
         }
 
         [Fact]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.IsSuperset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.IsSuperset);
         }
 
         [Fact]
         public void
             Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_matches_the_entities_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.Match);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.Match);
         }
 
         [Fact]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_has_no_entities_matching_those_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.DontMatch);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.DontMatch);
         }
 
         [Fact]
@@ -312,14 +323,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsSubset);
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context
+            ()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsSuperset);
@@ -333,7 +347,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context
+            ()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.DontMatch);
@@ -342,36 +358,44 @@ namespace ProductivityApiTests
         [Fact]
         public void Verify_DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_is_empty()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.IsEmpty);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.IsEmpty);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context()
+        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context(
+            )
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.IsSubset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.IsSubset);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context()
+        public void
+            DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.IsSuperset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.IsSuperset);
         }
 
         [Fact]
         public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.Match);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.Match);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context()
+        public void
+            DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.DontMatch);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.DontMatch);
         }
 
         private void DbContext_construction_using_connection_string_and_model_Ctor(
@@ -429,9 +453,10 @@ namespace ProductivityApiTests
 
             // Act
             using (
-                var context = new SimpleModelContextWithNoData(connectionString,
-                                                               builder.Build(ProviderRegistry.Sql2008_ProviderInfo).
-                                                                   Compile()))
+                var context = new SimpleModelContextWithNoData(
+                    connectionString,
+                    builder.Build(ProviderRegistry.Sql2008_ProviderInfo).
+                        Compile()))
             {
                 // Assert
                 Assert.Equal(context.Database.Connection.Database, dbName);
@@ -470,8 +495,9 @@ namespace ProductivityApiTests
                         context.Assert<FeaturedProduct>().IsInModel();
                         break;
                     default:
-                        throw new ArgumentException("Invalid DbCompiledModelContents Arguments passed in, " +
-                                                    modelContents);
+                        throw new ArgumentException(
+                            "Invalid DbCompiledModelContents Arguments passed in, " +
+                            modelContents);
                 }
             }
         }
@@ -547,8 +573,9 @@ namespace ProductivityApiTests
             }
 
             // Now try to use it with a CE connection; would throw in EF 4.1, will not now throw.
-            var sqlCeConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0",
-                                                                    AppDomain.CurrentDomain.BaseDirectory, "");
+            var sqlCeConnectionFactory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0",
+                AppDomain.CurrentDomain.BaseDirectory, "");
             using (var connection = sqlCeConnectionFactory.CreateConnection(DefaultDbName<SimpleModelContext>()))
             {
                 using (var context = new SimpleModelContext(connection))
@@ -562,13 +589,15 @@ namespace ProductivityApiTests
 
         #region Positive SaveChanges tests
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChanges_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChanges());
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChangesAsync_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChangesAsync().Result);
@@ -587,7 +616,10 @@ namespace ProductivityApiTests
                 context.Products.Remove(product2);
 
                 // Added
-                var product3 = new Product() { Name = "Branston Pickle" };
+                var product3 = new Product
+                                   {
+                                       Name = "Branston Pickle"
+                                   };
                 context.Products.Add(product3);
 
                 // Validate state before Save
@@ -597,7 +629,7 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Added, GetStateEntry(context, product3).State);
 
                 // Save
-                int savedCount = saveChanges(context);
+                var savedCount = saveChanges(context);
                 Assert.Equal(3, savedCount);
 
                 // Validate state after Save
@@ -625,13 +657,15 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChanges_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChanges());
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChangesAsync_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChangesAsync().Result);
@@ -647,7 +681,7 @@ namespace ProductivityApiTests
             {
                 var prod = context.Products.Find(1);
                 prod.Name = "Cascade Draught";
-                int savedCount = saveChanges(context);
+                var savedCount = saveChanges(context);
                 Assert.Equal(1, savedCount);
             }
         }
@@ -775,8 +809,15 @@ namespace ProductivityApiTests
             {
                 using (var context = new AdvancedPatternsMasterContext())
                 {
-                    var emp = new CurrentEmployee { EmployeeId = 4 };
-                    var ord = new WorkOrder { WorkOrderId = 2, EmployeeId = 4 };
+                    var emp = new CurrentEmployee
+                                  {
+                                      EmployeeId = 4
+                                  };
+                    var ord = new WorkOrder
+                                  {
+                                      WorkOrderId = 2,
+                                      EmployeeId = 4
+                                  };
                     context.Employees.Attach(emp);
                     context.WorkOrders.Attach(ord);
 
@@ -789,13 +830,15 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChanges_bubbles_UpdateException()
         {
             SaveChanges_bubbles_UpdateException_implementation((c) => c.SaveChanges());
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChangesAsync_bubbles_UpdateException()
         {
             SaveChanges_bubbles_UpdateException_implementation(
@@ -806,7 +849,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var prod = new Product() { Name = "Wallaby Sausages", CategoryId = "AUSSIE FOODS" };
+                var prod = new Product
+                               {
+                                   Name = "Wallaby Sausages",
+                                   CategoryId = "AUSSIE FOODS"
+                               };
                 context.Products.Add(prod);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges()).ValidateMessage(
@@ -814,13 +861,15 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChanges_bubbles_exception_during_AcceptChanges()
         {
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation((c) => c.SaveChanges());
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void SaveChangesAsync_bubbles_exception_during_AcceptChanges()
         {
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation(
@@ -831,8 +880,14 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var cat1 = new Category { Id = "AUSSIE FOODS" };
-                var cat2 = new Category { Id = "AUSSIE FOODS" };
+                var cat1 = new Category
+                               {
+                                   Id = "AUSSIE FOODS"
+                               };
+                var cat2 = new Category
+                               {
+                                   Id = "AUSSIE FOODS"
+                               };
 
                 context.Categories.Attach(cat1);
                 context.Categories.Add(cat2);
@@ -1387,8 +1442,9 @@ namespace ProductivityApiTests
             }
             catch (InvalidOperationException ex)
             {
-                var resourceLookup = new AssemblyResourceLookup(EntityFrameworkAssembly,
-                                                                "System.Data.Entity.Properties.Resources");
+                var resourceLookup = new AssemblyResourceLookup(
+                    EntityFrameworkAssembly,
+                    "System.Data.Entity.Properties.Resources");
                 var messageTemplate = resourceLookup.LookupString("InvalidEntityType");
 
                 var message = String.Format(CultureInfo.InvariantCulture, messageTemplate, typeof(ICollection));
@@ -1417,8 +1473,9 @@ namespace ProductivityApiTests
             }
             catch (InvalidOperationException ex)
             {
-                var resourceLookup = new AssemblyResourceLookup(EntityFrameworkAssembly,
-                                                                "System.Data.Entity.Properties.Resources");
+                var resourceLookup = new AssemblyResourceLookup(
+                    EntityFrameworkAssembly,
+                    "System.Data.Entity.Properties.Resources");
                 var messageTemplate = resourceLookup.LookupString("InvalidEntityType");
 
                 var message = String.Format(CultureInfo.InvariantCulture, messageTemplate, typeof(List<Product>));
@@ -1616,7 +1673,6 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, entity).State);
             }
         }
-
 
         [Fact]
         public void Can_create_non_generic_DbSet()
@@ -2078,8 +2134,9 @@ namespace ProductivityApiTests
         public void Lazy_loading_is_on_by_default_when_using_EntityConnection_object_in_constructor()
         {
             using (
-                var context = new DbContext(new EntityConnection(SimpleModelEntityConnectionString),
-                                            contextOwnsConnection: true))
+                var context = new DbContext(
+                    new EntityConnection(SimpleModelEntityConnectionString),
+                    contextOwnsConnection: true))
             {
                 Assert.True(context.Configuration.LazyLoadingEnabled);
                 var objectContext = GetObjectContext(context);
@@ -2154,8 +2211,9 @@ namespace ProductivityApiTests
         public void Lazy_loading_can_be_switched_off_in_constructor_which_calls_to_base_DbConnection_constructor()
         {
             using (
-                var context = new F1Context(SimpleConnection<F1Context>(), contextOwnsConnection: true,
-                                            lazyLoadingEnabled: false))
+                var context = new F1Context(
+                    SimpleConnection<F1Context>(), contextOwnsConnection: true,
+                    lazyLoadingEnabled: false))
             {
                 ValidateLazyLoading(context, lazyLoadingEnabled: false);
             }
@@ -2165,8 +2223,9 @@ namespace ProductivityApiTests
         public void Lazy_loading_can_be_switched_off_in_constructor_which_calls_to_base_DbConnection_and_DbCompiledModel_constructor()
         {
             using (
-                var context = new F1Context(SimpleConnection<F1Context>(), CreateF1Model(), contextOwnsConnection: true,
-                                            lazyLoadingEnabled: false))
+                var context = new F1Context(
+                    SimpleConnection<F1Context>(), CreateF1Model(), contextOwnsConnection: true,
+                    lazyLoadingEnabled: false))
             {
                 ValidateLazyLoading(context, lazyLoadingEnabled: false);
             }
@@ -2227,7 +2286,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Lazy_loading_can_be_changed_after_DbContext_is_created_without_causing_ObjectContext_initialization_when_using_code_first()
+        public void
+            Lazy_loading_can_be_changed_after_DbContext_is_created_without_causing_ObjectContext_initialization_when_using_code_first()
         {
             Lazy_loading_can_be_changed_after_DbContext_is_created_but_before_initialization(
                 () => new LazyLoadingFlagTestContext(), expectOnModelCreation: true);
@@ -2255,7 +2315,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Changing_lazy_loading_flag_after_ObjectContext_is_initialized_causes_lazy_loading_flag_in_DbContext_and_ObjectContext_to_change()
+        public void
+            Changing_lazy_loading_flag_after_ObjectContext_is_initialized_causes_lazy_loading_flag_in_DbContext_and_ObjectContext_to_change(
+            )
         {
             using (var context = new F1Context())
             {
@@ -2377,8 +2439,9 @@ namespace ProductivityApiTests
         public void Proxy_creation_is_on_by_default_when_using_EntityConnection_object_in_constructor()
         {
             using (
-                var context = new DbContext(new EntityConnection(SimpleModelEntityConnectionString),
-                                            contextOwnsConnection: true))
+                var context = new DbContext(
+                    new EntityConnection(SimpleModelEntityConnectionString),
+                    contextOwnsConnection: true))
             {
                 Assert.True(context.Configuration.ProxyCreationEnabled);
                 var objectContext = GetObjectContext(context);
@@ -2454,8 +2517,9 @@ namespace ProductivityApiTests
         public void Proxy_creation_can_be_switched_off_in_constructor_which_calls_to_base_DbConnection_constructor()
         {
             using (
-                var context = new F1Context(SimpleConnection<F1Context>(), contextOwnsConnection: true,
-                                            proxyCreationEnabled: false))
+                var context = new F1Context(
+                    SimpleConnection<F1Context>(), contextOwnsConnection: true,
+                    proxyCreationEnabled: false))
             {
                 ValidateProxyCreation(context, proxyCreationEnabled: false);
             }
@@ -2465,8 +2529,9 @@ namespace ProductivityApiTests
         public void Proxy_creation_can_be_switched_off_in_constructor_which_calls_to_base_DbConnection_and_DbCompiledModel_constructor()
         {
             using (
-                var context = new F1Context(SimpleConnection<F1Context>(), CreateF1Model(), contextOwnsConnection: true,
-                                            proxyCreationEnabled: false))
+                var context = new F1Context(
+                    SimpleConnection<F1Context>(), CreateF1Model(), contextOwnsConnection: true,
+                    proxyCreationEnabled: false))
             {
                 ValidateProxyCreation(context, proxyCreationEnabled: false);
             }
@@ -2528,7 +2593,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Proxy_creation_can_be_changed_after_DbContext_is_created_without_causing_ObjectContext_initialization_when_using_code_first()
+        public void
+            Proxy_creation_can_be_changed_after_DbContext_is_created_without_causing_ObjectContext_initialization_when_using_code_first()
         {
             Proxy_creation_can_be_changed_after_DbContext_is_created_but_before_initialization(
                 () => new ProxyCreationFlagTestContext(), expectOnModelCreation: true);
@@ -2556,7 +2622,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Changing_proxy_creation_flag_after_ObjectContext_is_initialized_causes_proxy_creation_flag_in_DbContext_and_ObjectContext_to_change()
+        public void
+            Changing_proxy_creation_flag_after_ObjectContext_is_initialized_causes_proxy_creation_flag_in_DbContext_and_ObjectContext_to_change
+            ()
         {
             using (var context = new F1Context())
             {
@@ -2637,8 +2705,9 @@ namespace ProductivityApiTests
         public void DetectChanges_is_called_by_Remove_on_generic_DbSet_when_AutoDetectChangesEnabled_is_on()
         {
             Driver driver = null;
-            TestDetectChanges(c => { driver = c.Drivers.Add(new Driver()); }, c => c.Drivers.Remove(driver),
-                              autoDetectChanges: true);
+            TestDetectChanges(
+                c => { driver = c.Drivers.Add(new Driver()); }, c => c.Drivers.Remove(driver),
+                autoDetectChanges: true);
         }
 
         [Fact]
@@ -2669,8 +2738,9 @@ namespace ProductivityApiTests
         public void DetectChanges_is_called_by_Remove_on_non_generic_DbSet_when_AutoDetectChangesEnabled_is_on()
         {
             Driver driver = null;
-            TestDetectChanges(c => { driver = c.Drivers.Add(new Driver()); }, c => c.Set(typeof(Driver)).Remove(driver),
-                              autoDetectChanges: true);
+            TestDetectChanges(
+                c => { driver = c.Drivers.Add(new Driver()); }, c => c.Set(typeof(Driver)).Remove(driver),
+                autoDetectChanges: true);
         }
 
         [Fact]
@@ -2725,8 +2795,9 @@ namespace ProductivityApiTests
         public void DetectChanges_is_not_called_by_Remove_on_generic_DbSet_when_AutoDetectChangesEnabled_is_off()
         {
             Driver driver = null;
-            TestDetectChanges(c => { driver = c.Drivers.Add(new Driver()); }, c => c.Drivers.Remove(driver),
-                              autoDetectChanges: false);
+            TestDetectChanges(
+                c => { driver = c.Drivers.Add(new Driver()); }, c => c.Drivers.Remove(driver),
+                autoDetectChanges: false);
         }
 
         [Fact]
@@ -2757,8 +2828,9 @@ namespace ProductivityApiTests
         public void DetectChanges_is_not_called_by_Remove_on_non_generic_DbSet_when_AutoDetectChangesEnabled_is_off()
         {
             Driver driver = null;
-            TestDetectChanges(c => { driver = c.Drivers.Add(new Driver()); }, c => c.Set(typeof(Driver)).Remove(driver),
-                              autoDetectChanges: false);
+            TestDetectChanges(
+                c => { driver = c.Drivers.Add(new Driver()); }, c => c.Set(typeof(Driver)).Remove(driver),
+                autoDetectChanges: false);
         }
 
         [Fact]
@@ -2791,14 +2863,16 @@ namespace ProductivityApiTests
             TestDetectChanges(c => c.ChangeTracker.Entries<Driver>(), autoDetectChanges: false);
         }
 
-        private void TestDetectChanges(Action<F1Context> actOnContext, bool autoDetectChanges,
-                                       bool? expectDetectChanges = null)
+        private void TestDetectChanges(
+            Action<F1Context> actOnContext, bool autoDetectChanges,
+            bool? expectDetectChanges = null)
         {
             TestDetectChanges(c => { }, actOnContext, autoDetectChanges, expectDetectChanges);
         }
 
-        private void TestDetectChanges(Action<F1Context> setupContext, Action<F1Context> actOnContext,
-                                       bool autoDetectChanges, bool? expectDetectChanges = null)
+        private void TestDetectChanges(
+            Action<F1Context> setupContext, Action<F1Context> actOnContext,
+            bool autoDetectChanges, bool? expectDetectChanges = null)
         {
             using (var context = new F1Context())
             {
@@ -2807,13 +2881,18 @@ namespace ProductivityApiTests
                 setupContext(context);
 
                 var mclaren = context.Teams.Find(Team.McLaren);
-                var larryEntry = context.Entry(new Driver { Name = "Larry David" });
+                var larryEntry = context.Entry(
+                    new Driver
+                        {
+                            Name = "Larry David"
+                        });
                 mclaren.Drivers.Add(larryEntry.Entity);
 
                 actOnContext(context);
 
-                Assert.Equal(expectDetectChanges ?? autoDetectChanges ? EntityState.Added : EntityState.Detached,
-                             larryEntry.State);
+                Assert.Equal(
+                    expectDetectChanges ?? autoDetectChanges ? EntityState.Added : EntityState.Detached,
+                    larryEntry.State);
             }
         }
 
@@ -2840,7 +2919,11 @@ namespace ProductivityApiTests
                     context.Configuration.AutoDetectChangesEnabled = autoDetectChanges;
 
                     var mclaren = context.Teams.Find(Team.McLaren);
-                    var larryEntry = context.Entry(new Driver { Name = "Larry David" });
+                    var larryEntry = context.Entry(
+                        new Driver
+                            {
+                                Name = "Larry David"
+                            });
                     mclaren.Drivers.Add(larryEntry.Entity);
 
                     Assert.Equal(autoDetectChanges ? EntityState.Added : EntityState.Detached, larryEntry.State);
@@ -2925,8 +3008,9 @@ namespace ProductivityApiTests
         public void ValidateOnSaveEnabled_is_on_by_default_when_using_EntityConnection_object_in_constructor()
         {
             using (
-                var context = new DbContext(new EntityConnection(SimpleModelEntityConnectionString),
-                                            contextOwnsConnection: true))
+                var context = new DbContext(
+                    new EntityConnection(SimpleModelEntityConnectionString),
+                    contextOwnsConnection: true))
             {
                 Assert.True(context.Configuration.ValidateOnSaveEnabled);
             }
@@ -2966,8 +3050,9 @@ namespace ProductivityApiTests
                 return true;
             }
 
-            protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry,
-                                                                       IDictionary<object, object> items)
+            protected override DbEntityValidationResult ValidateEntity(
+                DbEntityEntry entityEntry,
+                IDictionary<object, object> items)
             {
                 if (ValidateEntityFunc != null)
                 {
@@ -2998,15 +3083,16 @@ namespace ProductivityApiTests
                 using (new TransactionScope())
                 {
                     context.Configuration.ValidateOnSaveEnabled = validateOnSaveEnabled;
-                    bool validateCalled = false;
+                    var validateCalled = false;
 
                     context.ValidateEntityFunc = (entry) =>
-                                                 {
-                                                     validateCalled = true;
-                                                     return new DbEntityValidationResult(entry,
-                                                                                         Enumerable.Empty
-                                                                                             <DbValidationError>());
-                                                 };
+                                                     {
+                                                         validateCalled = true;
+                                                         return new DbEntityValidationResult(
+                                                             entry,
+                                                             Enumerable.Empty
+                                                                 <DbValidationError>());
+                                                     };
                     context.Categories.Add(new Category("FOOD"));
                     context.SaveChanges();
 
@@ -3048,20 +3134,21 @@ namespace ProductivityApiTests
                     Assert.Equal(EntityState.Unchanged, food.State);
 
                     context.ValidateEntityFunc = (entry) =>
-                                                 {
-                                                     Assert.Equal(
-                                                         validateOnSaveEnabled
-                                                             ? EntityState.Modified
-                                                             : EntityState.Unchanged, entry.State);
-                                                     entry.State = EntityState.Unchanged;
+                                                     {
+                                                         Assert.Equal(
+                                                             validateOnSaveEnabled
+                                                                 ? EntityState.Modified
+                                                                 : EntityState.Unchanged, entry.State);
+                                                         entry.State = EntityState.Unchanged;
 
-                                                     food.Entity.DetailedDescription = "bar";
-                                                     Assert.Equal(EntityState.Unchanged, entry.State);
+                                                         food.Entity.DetailedDescription = "bar";
+                                                         Assert.Equal(EntityState.Unchanged, entry.State);
 
-                                                     return new DbEntityValidationResult(entry,
-                                                                                         Enumerable.Empty
-                                                                                             <DbValidationError>());
-                                                 };
+                                                         return new DbEntityValidationResult(
+                                                             entry,
+                                                             Enumerable.Empty
+                                                                 <DbValidationError>());
+                                                     };
 
                     context.SaveChanges();
                     Assert.Equal(validateOnSaveEnabled ? "bar" : "foo", food.Entity.DetailedDescription);
@@ -3080,11 +3167,14 @@ namespace ProductivityApiTests
         public void Can_replace_connection()
         {
             using (var context = new ReplaceConnectionContext())
-            using (var newConnection = new LazyInternalConnection(new DbConnectionInfo(
-                                                                      @"Server=.\SQLEXPRESS;Database=NewReplaceConnectionContextDatabase;Trusted_Connection=True;",
-                                                                      "System.Data.SqlClient")))
             {
-                Can_replace_connection_implementation(context, newConnection);
+                using (var newConnection = new LazyInternalConnection(
+                    new DbConnectionInfo(
+                        @"Server=.\SQLEXPRESS;Database=NewReplaceConnectionContextDatabase;Trusted_Connection=True;",
+                        "System.Data.SqlClient")))
+                {
+                    Can_replace_connection_implementation(context, newConnection);
+                }
             }
         }
 
@@ -3092,23 +3182,31 @@ namespace ProductivityApiTests
         public void Can_replace_connection_with_different_provider()
         {
             using (var context = new ReplaceConnectionContext())
-            using (var newConnection = new LazyInternalConnection(new DbConnectionInfo(
-                                                                      "Data Source=NewReplaceConnectionContextDatabase.sdf",
-                                                                      "System.Data.SqlServerCe.4.0")))
             {
-                Can_replace_connection_implementation(context, newConnection);
+                using (var newConnection = new LazyInternalConnection(
+                    new DbConnectionInfo(
+                        "Data Source=NewReplaceConnectionContextDatabase.sdf",
+                        "System.Data.SqlServerCe.4.0")))
+                {
+                    Can_replace_connection_implementation(context, newConnection);
+                }
             }
         }
 
-        private void Can_replace_connection_implementation(ReplaceConnectionContext context,
-                                                           LazyInternalConnection newConnection)
+        private void Can_replace_connection_implementation(
+            ReplaceConnectionContext context,
+            LazyInternalConnection newConnection)
         {
             Database.Delete(newConnection.Connection);
             Database.Delete(typeof(ReplaceConnectionContext).DatabaseName());
 
             context.InternalContext.OverrideConnection(newConnection);
 
-            context.Entities.Add(new PersistEntity { Name = "Testing" });
+            context.Entities.Add(
+                new PersistEntity
+                    {
+                        Name = "Testing"
+                    });
             context.SaveChanges();
 
             Assert.Same(newConnection.Connection, context.Database.Connection);

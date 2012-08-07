@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Spatial;
@@ -116,8 +117,9 @@ namespace System.Data.Entity.Migrations
         {
             public override void Up()
             {
-                AddColumn("MigrationsCustomers", "we_know_where_you_live",
-                          c => c.Geography(nullable: false, defaultValue: DbGeography.FromText("POINT (6 7)")));
+                AddColumn(
+                    "MigrationsCustomers", "we_know_where_you_live",
+                    c => c.Geography(nullable: false, defaultValue: DbGeography.FromText("POINT (6 7)")));
             }
         }
 
@@ -126,26 +128,26 @@ namespace System.Data.Entity.Migrations
         {
             WhenNotSqlCe(
                 () =>
-                {
-                    ResetDatabase();
+                    {
+                        ResetDatabase();
 
-                    var migrator = CreateMigrator<ShopContext_v1>();
+                        var migrator = CreateMigrator<ShopContext_v1>();
 
-                    migrator.Update();
+                        migrator.Update();
 
-                    migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithGeographyDefault());
+                        migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithGeographyDefault());
 
-                    migrator.Update();
-
-                });
+                        migrator.Update();
+                    });
         }
 
         private class AddColumnWithGeometryDefault : DbMigration
         {
             public override void Up()
             {
-                AddColumn("MigrationsCustomers", "head_shape",
-                          c => c.Geometry(nullable: false, defaultValue: DbGeometry.FromText("POINT (6 7)")));
+                AddColumn(
+                    "MigrationsCustomers", "head_shape",
+                    c => c.Geometry(nullable: false, defaultValue: DbGeometry.FromText("POINT (6 7)")));
             }
         }
 
@@ -154,17 +156,17 @@ namespace System.Data.Entity.Migrations
         {
             WhenNotSqlCe(
                 () =>
-                {
-                    ResetDatabase();
+                    {
+                        ResetDatabase();
 
-                    var migrator = CreateMigrator<ShopContext_v1>();
+                        var migrator = CreateMigrator<ShopContext_v1>();
 
-                    migrator.Update();
+                        migrator.Update();
 
-                    migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithGeometryDefault());
+                        migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithGeometryDefault());
 
-                    migrator.Update();
-                });
+                        migrator.Update();
+                    });
         }
 
         private class AddColumnWithCustomStoreType : DbMigration
@@ -249,11 +251,11 @@ namespace System.Data.Entity.Migrations
             {
                 context.Customers.Add(
                     new MigrationsCustomer
-                    {
-                        HomeAddress = new MigrationsAddress(),
-                        WorkAddress = new MigrationsAddress(),
-                        DateOfBirth = DateTime.Now
-                    });
+                        {
+                            HomeAddress = new MigrationsAddress(),
+                            WorkAddress = new MigrationsAddress(),
+                            DateOfBirth = DateTime.Now
+                        });
 
                 context.SaveChanges();
             }
@@ -261,16 +263,15 @@ namespace System.Data.Entity.Migrations
             var addNonNullableColumnsWithNoDefaults = new AddNonNullableColumnsWithNoDefaults();
 
             WhenSqlCe(
-               () =>
-               {
-                   addNonNullableColumnsWithNoDefaults.GetOperations().RemoveAt(13);
-                   addNonNullableColumnsWithNoDefaults.GetOperations().RemoveAt(4);
-               });
+                () =>
+                    {
+                        addNonNullableColumnsWithNoDefaults.GetOperations().RemoveAt(13);
+                        addNonNullableColumnsWithNoDefaults.GetOperations().RemoveAt(4);
+                    });
 
             migrator = CreateMigrator<ShopContext_v1>(addNonNullableColumnsWithNoDefaults);
 
             migrator.Update();
         }
-
     }
 }

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual int VendorID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_vendorID != value)
                 {
-                    if (Vendor != null && Vendor.VendorID != value)
+                    if (Vendor != null
+                        && Vendor.VendorID != value)
                     {
                         Vendor = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _vendorID;
 
         public virtual int AverageLeadTime { get; set; }
@@ -60,7 +65,8 @@ namespace FunctionalTests.Model
             {
                 if (_unitMeasureCode != value)
                 {
-                    if (UnitMeasure != null && UnitMeasure.UnitMeasureCode != value)
+                    if (UnitMeasure != null
+                        && UnitMeasure.UnitMeasureCode != value)
                     {
                         UnitMeasure = null;
                     }
@@ -68,6 +74,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _unitMeasureCode;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -85,6 +92,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         public virtual UnitMeasure UnitMeasure { get; set; }
@@ -102,11 +110,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Vendor _vendor;
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.ProductVendors.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductVendors.Contains(this))
             {
                 previousValue.ProductVendors.Remove(this);
             }
@@ -126,7 +136,8 @@ namespace FunctionalTests.Model
 
         private void FixupVendor(Vendor previousValue)
         {
-            if (previousValue != null && previousValue.ProductVendors.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductVendors.Contains(this))
             {
                 previousValue.ProductVendors.Remove(this);
             }

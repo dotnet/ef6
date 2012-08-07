@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -17,20 +18,20 @@ namespace ProductivityApiTests
     using Xunit;
     using Xunit.Extensions;
 
-    /// <summary>
-    /// Tests for context/entity classes generated from productivity T4 templates.
+    ///<summary>
+    ///    Tests for context/entity classes generated from productivity T4 templates.
     ///
-    /// The infrastructure for generating code from the T4 templates at build time does not yet work
-    /// in the DataSvc branch/Productivity project.  We will revisit this later, but for now the
-    /// process for making changes to the templates is as follows:
-    /// 1.	Change the templates in “ndp\fx\src\DataEntityDesign\Design\T4Templates”
-    /// 2.	Run ProcessTemplates.bat from the command line while in the
-    ///     “src\qa\devdiv\dptest\DataEntity\CheckinTests\CodeFirst\ProductivityFunctionalTests\ProductivityApi\TemplateModels”
-    ///     directory.  This will copy the source templates into the functional test project with appropriate names
-    ///     and will replace the Model.edmx marker in each template with a path to the schema to use.
-    /// 3.	Use Visual Studio to “Transform All Templates”.  For example, click the icon at the top of the Solution
-    ///     Explorer window while something in the FunctionalTests project is selected.
-    /// </summary>
+    ///    The infrastructure for generating code from the T4 templates at build time does not yet work
+    ///    in the DataSvc branch/Productivity project.  We will revisit this later, but for now the
+    ///    process for making changes to the templates is as follows:
+    ///    1.	Change the templates in “ndp\fx\src\DataEntityDesign\Design\T4Templates”
+    ///    2.	Run ProcessTemplates.bat from the command line while in the
+    ///    “src\qa\devdiv\dptest\DataEntity\CheckinTests\CodeFirst\ProductivityFunctionalTests\ProductivityApi\TemplateModels”
+    ///    directory.  This will copy the source templates into the functional test project with appropriate names
+    ///    and will replace the Model.edmx marker in each template with a path to the schema to use.
+    ///    3.	Use Visual Studio to “Transform All Templates”.  For example, click the icon at the top of the Solution
+    ///    Explorer window while something in the FunctionalTests project is selected.
+    ///</summary>
     public class TemplateTests : FunctionalTestBase
     {
         #region Infrastructure/setup
@@ -80,15 +81,25 @@ namespace ProductivityApiTests
 
         private static BuildingMf CreateBuilding()
         {
-            var building18 = new BuildingMf(new Guid(Building18Id), "Building 18", -1000000m,
-                                            new AddressMf("Across From 25", "Redmond", "WA", "98052", 7, "70's"));
+            var building18 = new BuildingMf(
+                new Guid(Building18Id), "Building 18", -1000000m,
+                new AddressMf("Across From 25", "Redmond", "WA", "98052", 7, "70's"));
 
             foreach (var office in new[]
-                                   {
-                                       new OfficeMf { Number = "1/1125" },
-                                       new OfficeMf { Number = "1/1120" },
-                                       new OfficeMf { Number = "1/1123" },
-                                   })
+                                       {
+                                           new OfficeMf
+                                               {
+                                                   Number = "1/1125"
+                                               },
+                                           new OfficeMf
+                                               {
+                                                   Number = "1/1120"
+                                               },
+                                           new OfficeMf
+                                               {
+                                                   Number = "1/1123"
+                                               },
+                                       })
             {
                 building18.Offices.Add(office);
             }
@@ -96,7 +107,8 @@ namespace ProductivityApiTests
             return building18;
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void Read_and_write_using_MonsterModel_created_from_T4_template()
         {
             int orderId;
@@ -125,50 +137,58 @@ namespace ProductivityApiTests
         private static OrderMm CreateOrder()
         {
             return new OrderMm
-                   {
-                       OrderId = -1,
-                       Customer =
-                           new CustomerMm
-                           {
-                               CustomerId = -1,
-                               Name = "Jim Lathrop",
-                               ContactInfo =
-                                   new ContactDetailsMm
+                       {
+                           OrderId = -1,
+                           Customer =
+                               new CustomerMm
                                    {
-                                       Email = "jil@newmonics.com",
-                                       HomePhone =
-                                           new PhoneMm
-                                           {
-                                               PhoneNumber = "555-5555-551",
-                                               Extension = "x555",
-                                               PhoneType = PhoneTypeMm.Cell
-                                           },
-                                       WorkPhone =
-                                           new PhoneMm
-                                           {
-                                               PhoneNumber = "555-5555-552",
-                                               Extension = "x555",
-                                               PhoneType = PhoneTypeMm.Land
-                                           },
-                                       MobilePhone =
-                                           new PhoneMm
-                                           {
-                                               PhoneNumber = "555-5555-553",
-                                               Extension = "x555",
-                                               PhoneType = PhoneTypeMm.Satellite
-                                           },
+                                       CustomerId = -1,
+                                       Name = "Jim Lathrop",
+                                       ContactInfo =
+                                           new ContactDetailsMm
+                                               {
+                                                   Email = "jil@newmonics.com",
+                                                   HomePhone =
+                                                       new PhoneMm
+                                                           {
+                                                               PhoneNumber = "555-5555-551",
+                                                               Extension = "x555",
+                                                               PhoneType = PhoneTypeMm.Cell
+                                                           },
+                                                   WorkPhone =
+                                                       new PhoneMm
+                                                           {
+                                                               PhoneNumber = "555-5555-552",
+                                                               Extension = "x555",
+                                                               PhoneType = PhoneTypeMm.Land
+                                                           },
+                                                   MobilePhone =
+                                                       new PhoneMm
+                                                           {
+                                                               PhoneNumber = "555-5555-553",
+                                                               Extension = "x555",
+                                                               PhoneType = PhoneTypeMm.Satellite
+                                                           },
+                                               },
+                                       Auditing =
+                                           new AuditInfoMm
+                                               {
+                                                   ModifiedBy = "barney",
+                                                   ModifiedDate = DateTime.Now,
+                                                   Concurrency =
+                                                       new ConcurrencyInfoMm
+                                                           {
+                                                               QueriedDateTime = DateTime.Now,
+                                                               Token = "1"
+                                                           },
+                                               },
                                    },
-                               Auditing =
-                                   new AuditInfoMm
-                                   {
-                                       ModifiedBy = "barney",
-                                       ModifiedDate = DateTime.Now,
-                                       Concurrency =
-                                           new ConcurrencyInfoMm { QueriedDateTime = DateTime.Now, Token = "1" },
-                                   },
-                           },
-                       Concurrency = new ConcurrencyInfoMm { QueriedDateTime = DateTime.Now, Token = "1" },
-                   };
+                           Concurrency = new ConcurrencyInfoMm
+                                             {
+                                                 QueriedDateTime = DateTime.Now,
+                                                 Token = "1"
+                                             },
+                       };
         }
 
         #endregion
@@ -180,8 +200,9 @@ namespace ProductivityApiTests
         {
             using (var context = new AdvancedPatternsModelFirstContext())
             {
-                Assert.Equal("AdvancedPatternsModelFirstContext",
-                             ((IObjectContextAdapter)context).ObjectContext.DefaultContainerName);
+                Assert.Equal(
+                    "AdvancedPatternsModelFirstContext",
+                    ((IObjectContextAdapter)context).ObjectContext.DefaultContainerName);
             }
         }
 
@@ -218,8 +239,14 @@ namespace ProductivityApiTests
 
                 Assert.Equal(4, offices.Count);
                 Assert.Equal(4, context.Offices.Local.Count);
-                new List<string> { "1/1221", "1/1223", "2/1458", "2/1789" }.ForEach(
-                    n => offices.Where(o => o.Number == n).Single());
+                new List<string>
+                    {
+                        "1/1221",
+                        "1/1223",
+                        "2/1458",
+                        "2/1789"
+                    }.ForEach(
+                        n => offices.Where(o => o.Number == n).Single());
             }
         }
 
@@ -232,8 +259,14 @@ namespace ProductivityApiTests
 
                 Assert.Equal(4, offices.Count);
                 Assert.Equal(0, context.Offices.Local.Count);
-                new List<string> { "1/1221", "1/1223", "2/1458", "2/1789" }.ForEach(
-                    n => offices.Where(o => o.Number == n).Single());
+                new List<string>
+                    {
+                        "1/1221",
+                        "1/1223",
+                        "2/1458",
+                        "2/1789"
+                    }.ForEach(
+                        n => offices.Where(o => o.Number == n).Single());
             }
         }
 
@@ -247,7 +280,11 @@ namespace ProductivityApiTests
 
                 Assert.Equal(2, offices.Count);
                 Assert.Equal(2, context.Offices.Local.Count);
-                new List<string> { "1/1221", "1/1223" }.ForEach(n => offices.Where(o => o.Number == n).Single());
+                new List<string>
+                    {
+                        "1/1221",
+                        "1/1223"
+                    }.ForEach(n => offices.Where(o => o.Number == n).Single());
             }
         }
 
@@ -257,12 +294,17 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsModelFirstContext())
             {
                 var offices =
-                    context.OfficesInBuildingStoredProc(AdvancedPatternsModelFirstInitializer.KnownBuildingGuid,
-                                                        MergeOption.NoTracking).ToList();
+                    context.OfficesInBuildingStoredProc(
+                        AdvancedPatternsModelFirstInitializer.KnownBuildingGuid,
+                        MergeOption.NoTracking).ToList();
 
                 Assert.Equal(2, offices.Count);
                 Assert.Equal(0, context.Offices.Local.Count);
-                new List<string> { "1/1221", "1/1223" }.ForEach(n => offices.Where(o => o.Number == n).Single());
+                new List<string>
+                    {
+                        "1/1221",
+                        "1/1223"
+                    }.ForEach(n => offices.Where(o => o.Number == n).Single());
             }
         }
 
@@ -274,8 +316,12 @@ namespace ProductivityApiTests
                 var siteInfo = context.AllSiteInfoStoredProc().ToList();
 
                 Assert.Equal(2, siteInfo.Count);
-                new List<string> { "Clean", "Contaminated" }.ForEach(
-                    n => siteInfo.Where(o => o.Environment == n).Single());
+                new List<string>
+                    {
+                        "Clean",
+                        "Contaminated"
+                    }.ForEach(
+                        n => siteInfo.Where(o => o.Environment == n).Single());
             }
         }
 
@@ -285,8 +331,9 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsModelFirstContext())
             {
                 var employeeIds =
-                    context.EmployeeIdsInOfficeStoredProc("1/1221",
-                                                          AdvancedPatternsModelFirstInitializer.KnownBuildingGuid).
+                    context.EmployeeIdsInOfficeStoredProc(
+                        "1/1221",
+                        AdvancedPatternsModelFirstInitializer.KnownBuildingGuid).
                         ToList();
 
                 Assert.Equal(1, employeeIds.Count);
@@ -302,8 +349,9 @@ namespace ProductivityApiTests
                 var result = context.SkimOffLeaveBalanceStoredProc("Arthur", "Vickers");
 
                 Assert.Equal(-1, result);
-                Assert.Equal(0M,
-                             context.Set<CurrentEmployeeMf>().Where(e => e.FirstName == "Arthur").Single().LeaveBalance);
+                Assert.Equal(
+                    0M,
+                    context.Set<CurrentEmployeeMf>().Where(e => e.FirstName == "Arthur").Single().LeaveBalance);
             }
         }
 
@@ -588,24 +636,24 @@ namespace ProductivityApiTests
         public void CSharp_DbContext_template_creates_sets_for_all_base_types_but_not_derived_types()
         {
             var expectedMonsterSets = new[]
-                                      {
-                                          "Customer", "Barcode", "IncorrectScan", "BarcodeDetail", "Complaint",
-                                          "Resolution",
-                                          "Login", "SuspiciousActivity", "SmartCard", "RSAToken", "PasswordReset",
-                                          "PageView",
-                                          "LastLogin", "Message", "Order", "OrderNote", "OrderQualityCheck", "OrderLine"
-                                          ,
-                                          "Product", "ProductDetail", "ProductReview", "ProductPhoto",
-                                          "ProductWebFeature", "Supplier",
-                                          "SupplierLogo", "SupplierInfo", "CustomerInfo", "Computer", "ComputerDetail",
-                                          "Driver",
-                                          "License",
-                                      };
+                                          {
+                                              "Customer", "Barcode", "IncorrectScan", "BarcodeDetail", "Complaint",
+                                              "Resolution",
+                                              "Login", "SuspiciousActivity", "SmartCard", "RSAToken", "PasswordReset",
+                                              "PageView",
+                                              "LastLogin", "Message", "Order", "OrderNote", "OrderQualityCheck", "OrderLine"
+                                              ,
+                                              "Product", "ProductDetail", "ProductReview", "ProductPhoto",
+                                              "ProductWebFeature", "Supplier",
+                                              "SupplierLogo", "SupplierInfo", "CustomerInfo", "Computer", "ComputerDetail",
+                                              "Driver",
+                                              "License",
+                                          };
 
             var notExpectedMonsterSets = new[]
-                                         {
-                                             "ProductPageView", "BackOrderLine", "DiscontinuedProduct",
-                                         };
+                                             {
+                                                 "ProductPageView", "BackOrderLine", "DiscontinuedProduct",
+                                             };
 
             var properties = new HashSet<string>(typeof(MonsterModel).GetProperties().Select(p => p.Name));
 
@@ -616,8 +664,9 @@ namespace ProductivityApiTests
 
             foreach (var notExpected in notExpectedMonsterSets)
             {
-                Assert.False(properties.Contains(notExpected),
-                             String.Format("Found unexpected DbSet property for {0}", notExpected));
+                Assert.False(
+                    properties.Contains(notExpected),
+                    String.Format("Found unexpected DbSet property for {0}", notExpected));
             }
         }
 
@@ -641,32 +690,36 @@ namespace ProductivityApiTests
                 typeof(MonsterModel).GetMethod("FunctionImport2", MemberBindingFlags, null, new Type[0], null).
                     IsAssembly);
             Assert.True(
-                typeof(MonsterModel).GetMethod("FunctionImport2", MemberBindingFlags, null,
-                                               new Type[] { typeof(MergeOption) }, null).IsAssembly);
+                typeof(MonsterModel).GetMethod(
+                    "FunctionImport2", MemberBindingFlags, null,
+                    new[] { typeof(MergeOption) }, null).IsAssembly);
         }
 
         [Fact]
         public void CSharp_DbContext_template_creates_virtual_function_imports()
         {
             Assert.True(
-                typeof(AdvancedPatternsModelFirstContext).GetMethod("AllOfficesStoredProc", MemberBindingFlags, null,
-                                                                    new Type[0], null).IsVirtual);
+                typeof(AdvancedPatternsModelFirstContext).GetMethod(
+                    "AllOfficesStoredProc", MemberBindingFlags, null,
+                    new Type[0], null).IsVirtual);
             Assert.True(
-                typeof(AdvancedPatternsModelFirstContext).GetMethod("AllOfficesStoredProc", MemberBindingFlags, null,
-                                                                    new Type[] { typeof(MergeOption) }, null).IsVirtual);
+                typeof(AdvancedPatternsModelFirstContext).GetMethod(
+                    "AllOfficesStoredProc", MemberBindingFlags, null,
+                    new[] { typeof(MergeOption) }, null).IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_nullable_prop()
         {
-            Assert.True(typeof(CurrentEmployeeMf).GetProperty("LeaveBalance", MemberBindingFlags).PropertyType ==
-                        typeof(Nullable<decimal>));
+            Assert.True(
+                typeof(CurrentEmployeeMf).GetProperty("LeaveBalance", MemberBindingFlags).PropertyType ==
+                typeof(decimal?));
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_nullable_prop_on_a_complex_type()
         {
-            Assert.True(typeof(SiteInfoMf).GetProperty("Zone", MemberBindingFlags).PropertyType == typeof(Nullable<int>));
+            Assert.True(typeof(SiteInfoMf).GetProperty("Zone", MemberBindingFlags).PropertyType == typeof(int?));
         }
 
         #endregion
@@ -680,9 +733,10 @@ namespace ProductivityApiTests
                 var context =
                     new AdvancedPatternsModelFirstContext(SimpleConnectionString("AdvancedPatternsModelFirstContext")))
             {
-                Assert.Equal(new UnintentionalCodeFirstException().Message,
-                             Assert.Throws<UnintentionalCodeFirstException>(
-                                 () => context.Database.Initialize(force: false)).Message);
+                Assert.Equal(
+                    new UnintentionalCodeFirstException().Message,
+                    Assert.Throws<UnintentionalCodeFirstException>(
+                        () => context.Database.Initialize(force: false)).Message);
             }
         }
 

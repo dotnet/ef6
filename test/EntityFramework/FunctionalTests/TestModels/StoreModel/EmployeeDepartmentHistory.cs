@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_employeeID != value)
                 {
-                    if (Employee != null && Employee.EmployeeID != value)
+                    if (Employee != null
+                        && Employee.EmployeeID != value)
                     {
                         Employee = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _employeeID;
 
         public virtual short DepartmentID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_departmentID != value)
                 {
-                    if (Department != null && Department.DepartmentID != value)
+                    if (Department != null
+                        && Department.DepartmentID != value)
                     {
                         Department = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private short _departmentID;
 
         public virtual byte ShiftID
@@ -46,7 +51,8 @@ namespace FunctionalTests.Model
             {
                 if (_shiftID != value)
                 {
-                    if (Shift != null && Shift.ShiftID != value)
+                    if (Shift != null
+                        && Shift.ShiftID != value)
                     {
                         Shift = null;
                     }
@@ -54,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private byte _shiftID;
 
         public virtual DateTime StartDate { get; set; }
@@ -75,6 +82,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Department _department;
 
         public virtual Employee Employee
@@ -90,6 +98,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Employee _employee;
 
         public virtual Shift Shift
@@ -105,11 +114,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Shift _shift;
 
         private void FixupDepartment(Department previousValue)
         {
-            if (previousValue != null && previousValue.EmployeeDepartmentHistories.Contains(this))
+            if (previousValue != null
+                && previousValue.EmployeeDepartmentHistories.Contains(this))
             {
                 previousValue.EmployeeDepartmentHistories.Remove(this);
             }
@@ -129,7 +140,8 @@ namespace FunctionalTests.Model
 
         private void FixupEmployee(Employee previousValue)
         {
-            if (previousValue != null && previousValue.EmployeeDepartmentHistories.Contains(this))
+            if (previousValue != null
+                && previousValue.EmployeeDepartmentHistories.Contains(this))
             {
                 previousValue.EmployeeDepartmentHistories.Remove(this);
             }
@@ -149,7 +161,8 @@ namespace FunctionalTests.Model
 
         private void FixupShift(Shift previousValue)
         {
-            if (previousValue != null && previousValue.EmployeeDepartmentHistories.Contains(this))
+            if (previousValue != null
+                && previousValue.EmployeeDepartmentHistories.Contains(this))
             {
                 previousValue.EmployeeDepartmentHistories.Remove(this);
             }

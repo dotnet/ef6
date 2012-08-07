@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace SimpleModel
 {
     using System;
@@ -6,8 +7,16 @@ namespace SimpleModel
 
     public class NumberForLinq : BaseTypeForLinq
     {
-        public NumberForLinq() { }
-        public NumberForLinq(int value, string name) { Value = value; Name = name; }
+        public NumberForLinq()
+        {
+        }
+
+        public NumberForLinq(int value, string name)
+        {
+            Value = value;
+            Name = name;
+        }
+
         public int Value { get; set; }
         public string Name { get; set; }
 

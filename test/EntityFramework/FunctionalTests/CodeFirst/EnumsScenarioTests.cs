@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -278,10 +279,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Enum_Product>().Property(e => e.CategoryId);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Enum_Product", "CategoryId"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Enum_Product", "CategoryId"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -291,10 +294,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Enum_Nullable>().Property(e => e.CategoryId);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Enum_Nullable", "CategoryId"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Enum_Nullable", "CategoryId"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -304,10 +309,12 @@ namespace FunctionalTests
 
             modelBuilder.ComplexType<Enum_ComplexType>().Property(c => c.Enum);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Enum_ComplexType", "Enum"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Enum_ComplexType", "Enum"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -317,10 +324,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Enum_Product>().HasKey(e => e.CategoryId);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Enum_Product", "CategoryId"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Enum_Product", "CategoryId"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -328,12 +337,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
 
-            modelBuilder.Entity<Enum_Product>().HasKey(e => new { e.Id, e.CategoryId });
+            modelBuilder.Entity<Enum_Product>().HasKey(
+                e => new
+                         {
+                             e.Id,
+                             e.CategoryId
+                         });
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Enum_Product", "CategoryId"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Enum_Product", "CategoryId"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -341,16 +357,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
 
-            modelBuilder.Entity<Enum_Product>().Map(mapping =>
-                                                    {
-                                                        mapping.ToTable("Table1");
-                                                        mapping.Properties(e => e.CategoryId);
-                                                    });
+            modelBuilder.Entity<Enum_Product>().Map(
+                mapping =>
+                    {
+                        mapping.ToTable("Table1");
+                        mapping.Properties(e => e.CategoryId);
+                    });
 
-            Assert.Equal(Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("Enum_Product", "CategoryId"),
-                         Assert.Throws<InvalidOperationException>(() =>
-                                                                  modelBuilder.Build(
-                                                                      ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("Enum_Product", "CategoryId"),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    modelBuilder.Build(
+                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
     }
 }

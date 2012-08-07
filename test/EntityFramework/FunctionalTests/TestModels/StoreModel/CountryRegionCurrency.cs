@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_countryRegionCode != value)
                 {
-                    if (CountryRegion != null && CountryRegion.CountryRegionCode != value)
+                    if (CountryRegion != null
+                        && CountryRegion.CountryRegionCode != value)
                     {
                         CountryRegion = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _countryRegionCode;
 
         public virtual string CurrencyCode
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_currencyCode != value)
                 {
-                    if (Currency != null && Currency.CurrencyCode != value)
+                    if (Currency != null
+                        && Currency.CurrencyCode != value)
                     {
                         Currency = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _currencyCode;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -54,6 +59,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private CountryRegion _countryRegion;
 
         public virtual Currency Currency
@@ -69,11 +75,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Currency _currency;
 
         private void FixupCountryRegion(CountryRegion previousValue)
         {
-            if (previousValue != null && previousValue.CountryRegionCurrencies.Contains(this))
+            if (previousValue != null
+                && previousValue.CountryRegionCurrencies.Contains(this))
             {
                 previousValue.CountryRegionCurrencies.Remove(this);
             }
@@ -93,7 +101,8 @@ namespace FunctionalTests.Model
 
         private void FixupCurrency(Currency previousValue)
         {
-            if (previousValue != null && previousValue.CountryRegionCurrencies.Contains(this))
+            if (previousValue != null
+                && previousValue.CountryRegionCurrencies.Contains(this))
             {
                 previousValue.CountryRegionCurrencies.Remove(this);
             }

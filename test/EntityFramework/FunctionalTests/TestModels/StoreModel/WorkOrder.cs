@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -19,7 +20,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_productID != value)
                     {
-                        if (Product != null && Product.ProductID != value)
+                        if (Product != null
+                            && Product.ProductID != value)
                         {
                             Product = null;
                         }
@@ -32,6 +34,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual int OrderQty { get; set; }
@@ -56,7 +59,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_scrapReasonID != value)
                     {
-                        if (ScrapReason != null && ScrapReason.ScrapReasonID != value)
+                        if (ScrapReason != null
+                            && ScrapReason.ScrapReasonID != value)
                         {
                             ScrapReason = null;
                         }
@@ -69,6 +73,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private short? _scrapReasonID;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -86,6 +91,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         public virtual ScrapReason ScrapReason
@@ -101,6 +107,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ScrapReason _scrapReason;
 
         public virtual ICollection<WorkOrderRouting> WorkOrderRoutings
@@ -133,13 +140,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<WorkOrderRouting> _workOrderRoutings;
 
         private bool _settingFK;
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.WorkOrders.Contains(this))
+            if (previousValue != null
+                && previousValue.WorkOrders.Contains(this))
             {
                 previousValue.WorkOrders.Remove(this);
             }
@@ -159,7 +168,8 @@ namespace FunctionalTests.Model
 
         private void FixupScrapReason(ScrapReason previousValue)
         {
-            if (previousValue != null && previousValue.WorkOrders.Contains(this))
+            if (previousValue != null
+                && previousValue.WorkOrders.Contains(this))
             {
                 previousValue.WorkOrders.Remove(this);
             }

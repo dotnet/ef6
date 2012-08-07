@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.CodeDom.Compiler;
@@ -277,12 +278,12 @@ namespace System.Data.Entity.Migrations
             const string unknownAssemblyName = "UnknownAssembly";
 
             using (var facade = new ToolingFacade(
-                    unknownAssemblyName,
-                    "ClassLibrary1.Configuration",
-                    _projectDir,
-                    Path.Combine(_projectDir, "App.config"),
-                    null,
-                    null))
+                unknownAssemblyName,
+                "ClassLibrary1.Configuration",
+                _projectDir,
+                Path.Combine(_projectDir, "App.config"),
+                null,
+                null))
             {
                 var ex = Assert.Throws<ToolingException>(() => facade.GetDatabaseMigrations());
                 Assert.Equal(Strings.ToolingFacade_AssemblyNotFound(unknownAssemblyName), ex.Message);
@@ -318,12 +319,12 @@ namespace System.Data.Entity.Migrations
                     = compiler.CompileAssemblyFromSource(
                         new CompilerParameters(
                             new[]
-                                    {
-                                        "System.dll",
-                                        "System.Core.dll",
-                                        "System.Data.Entity.dll",
-                                        entityFrameworkPath
-                                    },
+                                {
+                                    "System.dll",
+                                    "System.Core.dll",
+                                    "System.Data.Entity.dll",
+                                    entityFrameworkPath
+                                },
                             targetPath),
                         @"namespace ClassLibrary1
 {
@@ -369,8 +370,9 @@ namespace System.Data.Entity.Migrations
 <configuration>
   <connectionStrings>
     <add name='ClassLibrary1' connectionString='" +
-        DatabaseProviderFixture.InitializeTestDatabase(DatabaseProvider.SqlClient, DatabaseProviderFixture.DefaultDatabaseName).ConnectionString +
-                                                  @"' providerName='System.Data.SqlClient' />
+                DatabaseProviderFixture.InitializeTestDatabase(DatabaseProvider.SqlClient, DatabaseProviderFixture.DefaultDatabaseName).
+                    ConnectionString +
+                @"' providerName='System.Data.SqlClient' />
   </connectionStrings>
 </configuration>");
 

@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
     using System.Data;
     using System.Data.Common;
-    
+
     #region Test Providers
 
     public class GenericConnection<T> : DbConnection

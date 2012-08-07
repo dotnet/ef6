@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -8,9 +9,13 @@ namespace System.Data.Entity.Migrations
     {
         public const string DefaultDatabaseName = "MigrationsTest";
 
-        private Dictionary<DatabaseProvider, TestDatabase> _testDatabases = new Dictionary<DatabaseProvider, TestDatabase>();
-        private Dictionary<ProgrammingLanguage, MigrationCodeGenerator> _codeGenerators = new Dictionary<ProgrammingLanguage, MigrationCodeGenerator>();
-        private Dictionary<ProgrammingLanguage, MigrationCompiler> _migrationCompilers = new Dictionary<ProgrammingLanguage, MigrationCompiler>();
+        private readonly Dictionary<DatabaseProvider, TestDatabase> _testDatabases = new Dictionary<DatabaseProvider, TestDatabase>();
+
+        private readonly Dictionary<ProgrammingLanguage, MigrationCodeGenerator> _codeGenerators =
+            new Dictionary<ProgrammingLanguage, MigrationCodeGenerator>();
+
+        private readonly Dictionary<ProgrammingLanguage, MigrationCompiler> _migrationCompilers =
+            new Dictionary<ProgrammingLanguage, MigrationCompiler>();
 
         public DatabaseProviderFixture()
         {
@@ -21,7 +26,8 @@ namespace System.Data.Entity.Migrations
             _testDatabases[DatabaseProvider.SqlClient] = InitializeTestDatabase(DatabaseProvider.SqlClient, DefaultDatabaseName);
 
             _codeGenerators[Migrations.ProgrammingLanguage.CSharp] = new CSharpMigrationCodeGenerator();
-            _migrationCompilers[Migrations.ProgrammingLanguage.CSharp] = new MigrationCompiler("cs"); ;
+            _migrationCompilers[Migrations.ProgrammingLanguage.CSharp] = new MigrationCompiler("cs");
+            ;
             _codeGenerators[Migrations.ProgrammingLanguage.VB] = new VisualBasicMigrationCodeGenerator();
             _migrationCompilers[Migrations.ProgrammingLanguage.VB] = new MigrationCompiler("vb");
         }

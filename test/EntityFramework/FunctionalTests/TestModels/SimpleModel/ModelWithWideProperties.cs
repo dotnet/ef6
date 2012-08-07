@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System.ComponentModel.DataAnnotations;
@@ -32,10 +33,13 @@ namespace ProductivityApiTests
 
         [MaxLength(4000)]
         public string Property1 { get; set; }
+
         [MaxLength(4000)]
         public string Property2 { get; set; }
+
         [MaxLength(4000)]
         public string Property3 { get; set; }
+
         [MaxLength(4000)]
         public string Property4 { get; set; }
     }

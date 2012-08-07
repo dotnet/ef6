@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_productModelID != value)
                 {
-                    if (ProductModel != null && ProductModel.ProductModelID != value)
+                    if (ProductModel != null
+                        && ProductModel.ProductModelID != value)
                     {
                         ProductModel = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productModelID;
 
         public virtual int ProductDescriptionID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_productDescriptionID != value)
                 {
-                    if (ProductDescription != null && ProductDescription.ProductDescriptionID != value)
+                    if (ProductDescription != null
+                        && ProductDescription.ProductDescriptionID != value)
                     {
                         ProductDescription = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productDescriptionID;
 
         public virtual string CultureID
@@ -46,7 +51,8 @@ namespace FunctionalTests.Model
             {
                 if (_cultureID != value)
                 {
-                    if (Culture != null && Culture.CultureID != value)
+                    if (Culture != null
+                        && Culture.CultureID != value)
                     {
                         Culture = null;
                     }
@@ -54,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _cultureID;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -71,6 +78,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Culture _culture;
 
         public virtual ProductDescription ProductDescription
@@ -86,6 +94,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductDescription _productDescription;
 
         public virtual ProductModel ProductModel
@@ -101,11 +110,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductModel _productModel;
 
         private void FixupCulture(Culture previousValue)
         {
-            if (previousValue != null && previousValue.ProductModelProductDescriptionCultures.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductModelProductDescriptionCultures.Contains(this))
             {
                 previousValue.ProductModelProductDescriptionCultures.Remove(this);
             }
@@ -125,7 +136,8 @@ namespace FunctionalTests.Model
 
         private void FixupProductDescription(ProductDescription previousValue)
         {
-            if (previousValue != null && previousValue.ProductModelProductDescriptionCultures.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductModelProductDescriptionCultures.Contains(this))
             {
                 previousValue.ProductModelProductDescriptionCultures.Remove(this);
             }
@@ -145,7 +157,8 @@ namespace FunctionalTests.Model
 
         private void FixupProductModel(ProductModel previousValue)
         {
-            if (previousValue != null && previousValue.ProductModelProductDescriptionCultures.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductModelProductDescriptionCultures.Contains(this))
             {
                 previousValue.ProductModelProductDescriptionCultures.Remove(this);
             }

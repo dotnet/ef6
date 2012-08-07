@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -182,9 +183,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Entity_10558>();
 
-            Assert.Equal(Strings.DuplicateConfiguredColumnOrder("Entity_10558"),
-                         Assert.Throws<InvalidOperationException>(
-                             () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.DuplicateConfiguredColumnOrder("Entity_10558"),
+                Assert.Throws<InvalidOperationException>(
+                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -212,9 +214,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<NotMappedDerived>();
 
-            Assert.Equal(Strings.InvalidEntityType(typeof(NotMappedDerived)),
-                         Assert.Throws<InvalidOperationException>(
-                             () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.InvalidEntityType(typeof(NotMappedDerived)),
+                Assert.Throws<InvalidOperationException>(
+                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -240,9 +243,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<MaxLengthWithLengthAnnotationClass>(x => x.PersonFirstName).FacetEqual(30,
-                                                                                                          a =>
-                                                                                                          a.MaxLength);
+            databaseMapping.Assert<MaxLengthWithLengthAnnotationClass>(x => x.PersonFirstName).FacetEqual(
+                30,
+                a =>
+                a.MaxLength);
         }
 
         [Fact]
@@ -396,18 +400,21 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual("rowversion",
-                                                                 t =>
-                                                                 t.Columns.Single(x => x.Name == "MaxTimestamp").
-                                                                     TypeName);
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(null,
-                                                                 t =>
-                                                                 t.Columns.Single(x => x.Name == "MaxTimestamp").Facets.
-                                                                     IsMaxLength);
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(null,
-                                                                 t =>
-                                                                 t.Columns.Single(x => x.Name == "MaxTimestamp").Facets.
-                                                                     MaxLength);
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                "rowversion",
+                t =>
+                t.Columns.Single(x => x.Name == "MaxTimestamp").
+                    TypeName);
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                null,
+                t =>
+                t.Columns.Single(x => x.Name == "MaxTimestamp").Facets.
+                    IsMaxLength);
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                null,
+                t =>
+                t.Columns.Single(x => x.Name == "MaxTimestamp").Facets.
+                    MaxLength);
         }
 
         [Fact]
@@ -419,18 +426,21 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual("rowversion",
-                                                                 t =>
-                                                                 t.Columns.Single(x => x.Name == "NonMaxTimestamp").
-                                                                     TypeName);
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(null,
-                                                                 t =>
-                                                                 t.Columns.Single(x => x.Name == "NonMaxTimestamp").
-                                                                     Facets.IsMaxLength);
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(null,
-                                                                 t =>
-                                                                 t.Columns.Single(x => x.Name == "NonMaxTimestamp").
-                                                                     Facets.MaxLength);
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                "rowversion",
+                t =>
+                t.Columns.Single(x => x.Name == "NonMaxTimestamp").
+                    TypeName);
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                null,
+                t =>
+                t.Columns.Single(x => x.Name == "NonMaxTimestamp").
+                    Facets.IsMaxLength);
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                null,
+                t =>
+                t.Columns.Single(x => x.Name == "NonMaxTimestamp").
+                    Facets.MaxLength);
         }
 
         [Fact]
@@ -453,8 +463,9 @@ namespace FunctionalTests
             {
                 using (var profileConfiguration = new DynamicTypeDescriptionConfiguration<Profile>())
                 {
-                    loginConfiguration.SetPropertyAttributes(l => l.Profile, new RequiredAttribute(),
-                                                             new ForeignKeyAttribute("LoginId"));
+                    loginConfiguration.SetPropertyAttributes(
+                        l => l.Profile, new RequiredAttribute(),
+                        new ForeignKeyAttribute("LoginId"));
                     profileConfiguration.SetPropertyAttributes(p => p.User, new RequiredAttribute());
 
                     var modelBuilder = new DbModelBuilder();
@@ -462,9 +473,10 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -478,17 +490,19 @@ namespace FunctionalTests
                 using (var profileConfiguration = new DynamicTypeDescriptionConfiguration<Profile>())
                 {
                     loginConfiguration.SetPropertyAttributes(l => l.Profile, new RequiredAttribute());
-                    profileConfiguration.SetPropertyAttributes(p => p.User, new RequiredAttribute(),
-                                                               new ForeignKeyAttribute("ProfileId"));
+                    profileConfiguration.SetPropertyAttributes(
+                        p => p.User, new RequiredAttribute(),
+                        new ForeignKeyAttribute("ProfileId"));
 
                     var modelBuilder = new DbModelBuilder();
 
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -500,19 +514,22 @@ namespace FunctionalTests
             {
                 using (var profileConfiguration = new DynamicTypeDescriptionConfiguration<Profile>())
                 {
-                    loginConfiguration.SetPropertyAttributes(l => l.Profile, new RequiredAttribute(),
-                                                             new ForeignKeyAttribute("LoginId"));
-                    profileConfiguration.SetPropertyAttributes(p => p.User, new RequiredAttribute(),
-                                                               new ForeignKeyAttribute("ProfileId"));
+                    loginConfiguration.SetPropertyAttributes(
+                        l => l.Profile, new RequiredAttribute(),
+                        new ForeignKeyAttribute("LoginId"));
+                    profileConfiguration.SetPropertyAttributes(
+                        p => p.User, new RequiredAttribute(),
+                        new ForeignKeyAttribute("ProfileId"));
 
                     var modelBuilder = new DbModelBuilder();
 
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -531,9 +548,10 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -552,9 +570,10 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -574,9 +593,10 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -589,8 +609,9 @@ namespace FunctionalTests
                 using (var profileConfiguration = new DynamicTypeDescriptionConfiguration<Profile>())
                 {
                     loginConfiguration.SetPropertyAttributes(l => l.Profile);
-                    profileConfiguration.SetPropertyAttributes(p => p.User, new RequiredAttribute(),
-                                                               new ForeignKeyAttribute("ProfileId"));
+                    profileConfiguration.SetPropertyAttributes(
+                        p => p.User, new RequiredAttribute(),
+                        new ForeignKeyAttribute("ProfileId"));
 
                     var modelBuilder = new DbModelBuilder();
 
@@ -625,9 +646,10 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                                 Assert.Throws<InvalidOperationException>(
-                                     () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Equal(
+                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
                 }
             }
         }
@@ -705,7 +727,6 @@ namespace FunctionalTests
             public decimal Price { get; set; }
             public decimal Total { get; set; }
             public bool? IsShipped { get; set; }
-
 
             [ForeignKey("Product")]
             [Column(Order = 0)]

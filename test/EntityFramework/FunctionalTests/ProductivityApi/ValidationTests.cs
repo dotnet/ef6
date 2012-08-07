@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 {
     using System;
@@ -20,7 +21,8 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
     public class SelfPopulatingContext : DbContext
     {
-        public SelfPopulatingContext() : this(new object[0])
+        public SelfPopulatingContext()
+            : this(new object[0])
         {
         }
 
@@ -75,8 +77,9 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             return ValidateEntity(dbEntityEntry, null);
         }
 
-        protected override DbEntityValidationResult ValidateEntity(DbEntityEntry dbEntityEntry,
-                                                                   IDictionary<object, object> items)
+        protected override DbEntityValidationResult ValidateEntity(
+            DbEntityEntry dbEntityEntry,
+            IDictionary<object, object> items)
         {
             return ValidateEntityFunc != null
                        ? ValidateEntityFunc(dbEntityEntry)
@@ -227,8 +230,9 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         public static Func<ComplexTypeWithTypeLevelCustomValidationAttributes, ValidationContext, ValidationResult>
             ValidateWithContextFunc;
 
-        public static ValidationResult ValidateWithContext(ComplexTypeWithTypeLevelCustomValidationAttributes value,
-                                                           ValidationContext validationContext)
+        public static ValidationResult ValidateWithContext(
+            ComplexTypeWithTypeLevelCustomValidationAttributes value,
+            ValidationContext validationContext)
         {
             return ValidateWithContextFunc != null
                        ? ValidateWithContextFunc(value, validationContext)
@@ -303,15 +307,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [CustomValidation(typeof(EntityWithCollectionNavigationProperty), "ValidateRelatedEntities")]
         public ICollection<EntityWithBuiltInValidationAttributes> RelatedEntities { get; set; }
 
-        public static ValidationResult ValidateRelatedEntities(ICollection<EntityWithBuiltInValidationAttributes> value,
-                                                               ValidationContext validationContext)
+        public static ValidationResult ValidateRelatedEntities(
+            ICollection<EntityWithBuiltInValidationAttributes> value,
+            ValidationContext validationContext)
         {
             // Required attribute should check for null.
             if (value != null)
             {
                 if (!value.Any())
                 {
-                    return new ValidationResult("Collection cannot be empty.", new string[] { "RelatedEntities" });
+                    return new ValidationResult("Collection cannot be empty.", new[] { "RelatedEntities" });
                 }
             }
 
@@ -395,20 +400,21 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
             using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
-                int callCount = 0;
+                var callCount = 0;
                 ctx.ShouldValidateEntityFunc = (dbEntityEntry) => { return shouldValidateEntityReturnValue; };
                 ctx.ValidateEntityFunc = (dbEntityEntry) =>
-                                         {
-                                             callCount++;
-                                             return new DbEntityValidationResult(dbEntityEntry,
-                                                                                 Enumerable.Empty<DbValidationError>());
-                                         };
+                                             {
+                                                 callCount++;
+                                                 return new DbEntityValidationResult(
+                                                     dbEntityEntry,
+                                                     Enumerable.Empty<DbValidationError>());
+                                             };
 
                 var entityEntry = ctx.Entry(entity);
                 foreach (EntityState state in Enum.GetValues(typeof(EntityState)))
                 {
                     entityEntry.State = state;
-                        // setting state to Detached will make the entity invisible for validation
+                    // setting state to Detached will make the entity invisible for validation
                     ctx.GetValidationErrors();
                 }
 
@@ -449,12 +455,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void GetValidationErrors_does_not_return_errors_for_valid_entities()
         {
-            var results = Invoke_DbContext_GetValidationErrors(new object[]
-                                                               {
-                                                                   new EntityWithNoValidation(),
-                                                                   new EntityWithAllKindsOfValidation()
-                                                                   { ID = 5, Name = "abc" }
-                                                               });
+            var results = Invoke_DbContext_GetValidationErrors(
+                new object[]
+                    {
+                        new EntityWithNoValidation(),
+                        new EntityWithAllKindsOfValidation
+                            {
+                                ID = 5,
+                                Name = "abc"
+                            }
+                    });
             Assert.NotNull(results);
             Assert.False(results.Any());
         }
@@ -463,25 +473,32 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         public void GetValidationErrors_returns_errors_for_invalid_entities_builtin_validation_attributes()
         {
             var results =
-                Invoke_DbContext_GetValidationErrors(new object[]
-                                                     {
-                                                         new EntityWithAllKindsOfValidation()
-                                                         { ID = -1, Name = "!@#$%XXX" }
-                                                     });
+                Invoke_DbContext_GetValidationErrors(
+                    new object[]
+                        {
+                            new EntityWithAllKindsOfValidation
+                                {
+                                    ID = -1,
+                                    Name = "!@#$%XXX"
+                                }
+                        });
             Assert.NotNull(results);
-            DbEntityValidationResult entityValidationResult = results.Single();
+            var entityValidationResult = results.Single();
             Assert.False(entityValidationResult.IsValid);
 
             Assert.Equal(3, entityValidationResult.ValidationErrors.Count);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "ID" &&
-                     e.ErrorMessage == string.Format(RangeAttribute_ValidationError, "ID", 0, 100)) != null);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "Name" &&
-                     e.ErrorMessage == string.Format(StringLengthAttribute_ValidationError, "Name", 5)) != null);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "Name" &&
-                     e.ErrorMessage == string.Format(RegexAttribute_ValidationError, "Name", @"[\w]+")) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "ID" &&
+                         e.ErrorMessage == string.Format(RangeAttribute_ValidationError, "ID", 0, 100)) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "Name" &&
+                         e.ErrorMessage == string.Format(StringLengthAttribute_ValidationError, "Name", 5)) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "Name" &&
+                         e.ErrorMessage == string.Format(RegexAttribute_ValidationError, "Name", @"[\w]+")) != null);
         }
 
         [Fact]
@@ -489,17 +506,22 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         {
             try
             {
-                string validationFailure = "Validation with custom attributes failed.";
+                var validationFailure = "Validation with custom attributes failed.";
                 EntityWithAllKindsOfValidation.CustomValidateFunc =
-                    (value, validationContext) => { return new ValidationResult(validationFailure, new string[] { "ID" }); };
+                    (value, validationContext) => { return new ValidationResult(validationFailure, new[] { "ID" }); };
 
                 var results =
-                    Invoke_DbContext_GetValidationErrors(new object[]
-                                                         {
-                                                             new EntityWithAllKindsOfValidation() { ID = 5, Name = "abc" }
-                                                         });
+                    Invoke_DbContext_GetValidationErrors(
+                        new object[]
+                            {
+                                new EntityWithAllKindsOfValidation
+                                    {
+                                        ID = 5,
+                                        Name = "abc"
+                                    }
+                            });
                 Assert.NotNull(results);
-                DbEntityValidationResult validationResult = results.Single();
+                var validationResult = results.Single();
 
                 Assert.False(validationResult.IsValid);
                 Assert.Equal(1, validationResult.ValidationErrors.Count);
@@ -515,15 +537,19 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void GetValidationErrors_returns_errors_for_invalid_entities_IValidatableObject()
         {
-            string validationFailure = "Invalid entity.";
-            EntityWithAllKindsOfValidation entity = new EntityWithAllKindsOfValidation() { ID = 5, Name = "abc" };
+            var validationFailure = "Invalid entity.";
+            var entity = new EntityWithAllKindsOfValidation
+                             {
+                                 ID = 5,
+                                 Name = "abc"
+                             };
             entity.ValidateFunc =
-                (validationContext) => { return new ValidationResult[] { new ValidationResult(validationFailure) }; };
+                (validationContext) => { return new[] { new ValidationResult(validationFailure) }; };
 
             var results = Invoke_DbContext_GetValidationErrors(new object[] { entity });
 
             Assert.NotNull(results);
-            DbEntityValidationResult validationResult = results.Single();
+            var validationResult = results.Single();
 
             Assert.False(validationResult.IsValid);
             Assert.Equal(1, validationResult.ValidationErrors.Count);
@@ -534,7 +560,10 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void GetValidationErrors_returns_errors_for_invalid_entities_MetadataType()
         {
-            var entity = new EntityWithValidationAttributesOnMetadataType { Name = "AAAAAA" };
+            var entity = new EntityWithValidationAttributesOnMetadataType
+                             {
+                                 Name = "AAAAAA"
+                             };
 
             var results = Invoke_DbContext_GetValidationErrors(new[] { entity });
 
@@ -556,16 +585,18 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
             using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
-                int callCount = 0;
+                var callCount = 0;
 
                 ctx.ValidateEntityFunc = (dbEntityEntry) =>
-                                         {
-                                             Assert.True((dbEntityEntry.State &
-                                                          (EntityState.Added | EntityState.Modified)) != 0);
-                                             callCount++;
-                                             return new DbEntityValidationResult(dbEntityEntry,
-                                                                                 Enumerable.Empty<DbValidationError>());
-                                         };
+                                             {
+                                                 Assert.True(
+                                                     (dbEntityEntry.State &
+                                                      (EntityState.Added | EntityState.Modified)) != 0);
+                                                 callCount++;
+                                                 return new DbEntityValidationResult(
+                                                     dbEntityEntry,
+                                                     Enumerable.Empty<DbValidationError>());
+                                             };
 
                 var entityEntry = ctx.Entry(entity);
 
@@ -601,45 +632,47 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     Assert.Equal(EntityState.Unchanged, food.State);
 
                     context.ValidateEntityFunc = (entry) =>
-                                                 {
-                                                     Assert.Same(food.Entity, entry.Entity);
-                                                     // DetectChanges should have been called before this
-                                                     Assert.Equal(EntityState.Modified, entry.State);
-                                                     entry.State = EntityState.Unchanged;
+                                                     {
+                                                         Assert.Same(food.Entity, entry.Entity);
+                                                         // DetectChanges should have been called before this
+                                                         Assert.Equal(EntityState.Modified, entry.State);
+                                                         entry.State = EntityState.Unchanged;
 
-                                                     Assert.Equal(EntityState.Unchanged, pets.State);
-                                                     pets.Entity.DetailedDescription = "bar";
-                                                     Assert.Equal(EntityState.Unchanged, pets.State);
+                                                         Assert.Equal(EntityState.Unchanged, pets.State);
+                                                         pets.Entity.DetailedDescription = "bar";
+                                                         Assert.Equal(EntityState.Unchanged, pets.State);
 
-                                                     context.ValidateEntityFunc = (e) =>
-                                                                                  {
-                                                                                      Assert.Same(pets.Entity, e.Entity);
-                                                                                      Assert.Equal(
-                                                                                          EntityState.Unchanged, e.State);
-                                                                                      Assert.Equal(
-                                                                                          EntityState.Unchanged,
-                                                                                          food.State);
+                                                         context.ValidateEntityFunc = (e) =>
+                                                                                          {
+                                                                                              Assert.Same(pets.Entity, e.Entity);
+                                                                                              Assert.Equal(
+                                                                                                  EntityState.Unchanged, e.State);
+                                                                                              Assert.Equal(
+                                                                                                  EntityState.Unchanged,
+                                                                                                  food.State);
 
-                                                                                      Assert.Equal("bar",
-                                                                                                   pets.Entity.
-                                                                                                       DetailedDescription);
-                                                                                      pets.Entity.DetailedDescription =
-                                                                                          "foo";
-                                                                                      Assert.Equal(
-                                                                                          EntityState.Unchanged,
-                                                                                          pets.State);
+                                                                                              Assert.Equal(
+                                                                                                  "bar",
+                                                                                                  pets.Entity.
+                                                                                                      DetailedDescription);
+                                                                                              pets.Entity.DetailedDescription =
+                                                                                                  "foo";
+                                                                                              Assert.Equal(
+                                                                                                  EntityState.Unchanged,
+                                                                                                  pets.State);
 
-                                                                                      return
-                                                                                          new DbEntityValidationResult(
-                                                                                              entry,
-                                                                                              Enumerable.Empty
-                                                                                                  <DbValidationError>());
-                                                                                  };
+                                                                                              return
+                                                                                                  new DbEntityValidationResult(
+                                                                                                      entry,
+                                                                                                      Enumerable.Empty
+                                                                                                          <DbValidationError>());
+                                                                                          };
 
-                                                     return new DbEntityValidationResult(entry,
-                                                                                         Enumerable.Empty
-                                                                                             <DbValidationError>());
-                                                 };
+                                                         return new DbEntityValidationResult(
+                                                             entry,
+                                                             Enumerable.Empty
+                                                                 <DbValidationError>());
+                                                     };
 
                     context.GetValidationErrors();
 
@@ -659,9 +692,13 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbEntityEntry_GetValidationResult_returns_no_errors_for_valid_entities()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "abc" };
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = 3,
+                                 Name = "abc"
+                             };
 
-            foreach (bool useGenericDbEntityEntry in new bool[] { false, true })
+            foreach (var useGenericDbEntityEntry in new[] { false, true })
             {
                 var validationResult = Invoke_DbEntityEntry_GetValidationResult(entity, useGenericDbEntityEntry);
 
@@ -673,9 +710,13 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbEntityEntry_GetValidationResult_returns_error_for_invalid_entities()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = -3, Name = "????" };
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = -3,
+                                 Name = "????"
+                             };
 
-            foreach (bool useGenericDbEntityEntry in new bool[] { false, true })
+            foreach (var useGenericDbEntityEntry in new[] { false, true })
             {
                 var validationResult = Invoke_DbEntityEntry_GetValidationResult(entity, useGenericDbEntityEntry);
 
@@ -689,7 +730,10 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbEntityEntry_GetValidationResult_returns_errors_for_invalid_entities_MetadataType()
         {
-            var entity = new EntityWithValidationAttributesOnMetadataType { Name = "AAAAAA" };
+            var entity = new EntityWithValidationAttributesOnMetadataType
+                             {
+                                 Name = "AAAAAA"
+                             };
 
             foreach (var asGeneric in new[] { true, false })
             {
@@ -698,8 +742,9 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                 Assert.False(validationResult.IsValid);
 
                 var validationError = validationResult.ValidationErrors.Single();
-                Assert.Equal(string.Format(StringLengthAttribute_ValidationError, "Name", 5),
-                             validationError.ErrorMessage);
+                Assert.Equal(
+                    string.Format(StringLengthAttribute_ValidationError, "Name", 5),
+                    validationError.ErrorMessage);
                 Assert.Equal("Name", validationError.PropertyName);
             }
         }
@@ -707,24 +752,29 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbContext_ValidateEntity_is_called_when_validating_using_DbEntityEntry_GetValidationResult()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "abc" };
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = 3,
+                                 Name = "abc"
+                             };
 
             using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 // this is to validate that we call it even if the entity is not in added/modified state
                 ctx.Entry(entity).State = EntityState.Unchanged;
 
-                int callCount = 0;
+                var callCount = 0;
 
                 ctx.ValidateEntityFunc = (dbEntityEntry) =>
-                                         {
-                                             Assert.Equal(EntityState.Unchanged, dbEntityEntry.State);
-                                             callCount++;
-                                             return new DbEntityValidationResult(dbEntityEntry,
-                                                                                 Enumerable.Empty<DbValidationError>());
-                                         };
+                                             {
+                                                 Assert.Equal(EntityState.Unchanged, dbEntityEntry.State);
+                                                 callCount++;
+                                                 return new DbEntityValidationResult(
+                                                     dbEntityEntry,
+                                                     Enumerable.Empty<DbValidationError>());
+                                             };
 
-                foreach (bool useGenericDbEntityEntry in new bool[] { false, true })
+                foreach (var useGenericDbEntityEntry in new[] { false, true })
                 {
                     var validationResult = useGenericDbEntityEntry
                                                ? ctx.Entry(entity).GetValidationResult()
@@ -757,14 +807,15 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     Assert.Equal(EntityState.Unchanged, food.State);
 
                     context.ValidateEntityFunc = (entry) =>
-                                                 {
-                                                     Assert.Same(food.Entity, entry.Entity);
-                                                     Assert.Equal(EntityState.Unchanged, entry.State);
+                                                     {
+                                                         Assert.Same(food.Entity, entry.Entity);
+                                                         Assert.Equal(EntityState.Unchanged, entry.State);
 
-                                                     return new DbEntityValidationResult(entry,
-                                                                                         Enumerable.Empty
-                                                                                             <DbValidationError>());
-                                                 };
+                                                         return new DbEntityValidationResult(
+                                                             entry,
+                                                             Enumerable.Empty
+                                                                 <DbValidationError>());
+                                                     };
 
                     var validationResult = food.GetValidationResult();
 
@@ -794,14 +845,15 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     Assert.Equal(EntityState.Unchanged, food.State);
 
                     context.ValidateEntityFunc = (entry) =>
-                                                 {
-                                                     Assert.Same(food.Entity, entry.Entity);
-                                                     Assert.Equal(EntityState.Unchanged, entry.State);
+                                                     {
+                                                         Assert.Same(food.Entity, entry.Entity);
+                                                         Assert.Equal(EntityState.Unchanged, entry.State);
 
-                                                     return new DbEntityValidationResult(entry,
-                                                                                         Enumerable.Empty
-                                                                                             <DbValidationError>());
-                                                 };
+                                                         return new DbEntityValidationResult(
+                                                             entry,
+                                                             Enumerable.Empty
+                                                                 <DbValidationError>());
+                                                     };
 
                     var validationResult = food.GetValidationResult();
 
@@ -819,11 +871,15 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbMemberEntry_GetValidationErrors_returns_no_errors_when_validating_property_of_entity_without_any_validation()
         {
-            var entity = new EntityWithNoValidation() { ID = 3 };
-            foreach (bool useGenericDbPropertyEntry in new bool[] { false, true })
+            var entity = new EntityWithNoValidation
+                             {
+                                 ID = 3
+                             };
+            foreach (var useGenericDbPropertyEntry in new[] { false, true })
             {
-                var errors = Invoke_DbMemberEntry_GetValidationErrors<EntityWithNoValidation, int>(entity, "ID",
-                                                                                                   useGenericDbPropertyEntry);
+                var errors = Invoke_DbMemberEntry_GetValidationErrors<EntityWithNoValidation, int>(
+                    entity, "ID",
+                    useGenericDbPropertyEntry);
                 Assert.NotNull(errors);
                 Assert.False(errors.Any());
             }
@@ -833,11 +889,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         public void DbMemberEntry_GetValidationErrors_returns_no_errors_when_validating_property_not_having_validators()
         {
             // the validated member does not have any validators but the entity does
-            var entity = new EntityWithSomeValidation() { ID = 3, Name = "abc" };
-            foreach (bool useGenericDbMemberEntry in new bool[] { false, true })
+            var entity = new EntityWithSomeValidation
+                             {
+                                 ID = 3,
+                                 Name = "abc"
+                             };
+            foreach (var useGenericDbMemberEntry in new[] { false, true })
             {
-                var errors = Invoke_DbMemberEntry_GetValidationErrors<EntityWithSomeValidation, int>(entity, "ID",
-                                                                                                     useGenericDbMemberEntry);
+                var errors = Invoke_DbMemberEntry_GetValidationErrors<EntityWithSomeValidation, int>(
+                    entity, "ID",
+                    useGenericDbMemberEntry);
                 Assert.NotNull(errors);
                 Assert.False(errors.Any());
             }
@@ -846,13 +907,18 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbMemberEntry_GetValidationErrors_returns_no_errors_for_valid_members()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "abc" };
-            foreach (bool useGenericDbMemberEntry in new bool[] { false, true })
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = 3,
+                                 Name = "abc"
+                             };
+            foreach (var useGenericDbMemberEntry in new[] { false, true })
             {
                 var errors =
-                    Invoke_DbMemberEntry_GetValidationErrors<EntityWithBuiltInValidationAttributes, string>(entity,
-                                                                                                            "Name",
-                                                                                                            useGenericDbMemberEntry);
+                    Invoke_DbMemberEntry_GetValidationErrors<EntityWithBuiltInValidationAttributes, string>(
+                        entity,
+                        "Name",
+                        useGenericDbMemberEntry);
                 Assert.NotNull(errors);
                 Assert.False(errors.Any());
             }
@@ -861,13 +927,18 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbPropertyEntry_GetValidationErrors_returns_errors_for_invalid_members()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "???????" };
-            foreach (bool useGenericDbMemberEntry in new bool[] { false, true })
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = 3,
+                                 Name = "???????"
+                             };
+            foreach (var useGenericDbMemberEntry in new[] { false, true })
             {
                 var errors =
-                    Invoke_DbMemberEntry_GetValidationErrors<EntityWithBuiltInValidationAttributes, string>(entity,
-                                                                                                            "Name",
-                                                                                                            useGenericDbMemberEntry);
+                    Invoke_DbMemberEntry_GetValidationErrors<EntityWithBuiltInValidationAttributes, string>(
+                        entity,
+                        "Name",
+                        useGenericDbMemberEntry);
                 Assert.NotNull(errors);
                 Assert.Equal(2, errors.Count());
             }
@@ -876,7 +947,10 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbPropertyEntry_GetValidationErrors_returns_errors_for_invalid_members_MetadataType()
         {
-            var entity = new EntityWithValidationAttributesOnMetadataType { Name = "AAAAAA" };
+            var entity = new EntityWithValidationAttributesOnMetadataType
+                             {
+                                 Name = "AAAAAA"
+                             };
 
             foreach (var asGeneric in new[] { true, false })
             {
@@ -886,8 +960,9 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                 Assert.NotNull(validationErrors);
 
                 var validationError = validationErrors.Single();
-                Assert.Equal(string.Format(StringLengthAttribute_ValidationError, "Name", 5),
-                             validationError.ErrorMessage);
+                Assert.Equal(
+                    string.Format(StringLengthAttribute_ValidationError, "Name", 5),
+                    validationError.ErrorMessage);
                 Assert.Equal("Name", validationError.PropertyName);
             }
         }
@@ -899,8 +974,12 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbPropertyEntry_GetValidationErrors_returns_no_errors_for_valid_primitive_properties()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "abc" };
-            foreach (bool useGenericDbPropertyEntry in new bool[] { false, true })
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = 3,
+                                 Name = "abc"
+                             };
+            foreach (var useGenericDbPropertyEntry in new[] { false, true })
             {
                 var errors = Invoke_DbPropertyEntry_GetValidationErrors(entity, e => e.Name, useGenericDbPropertyEntry);
                 Assert.NotNull(errors);
@@ -911,8 +990,12 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbPropertyEntry_GetValidationErrors_returns_errors_for_invalid_primitive_properties()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "???????" };
-            foreach (bool useGenericDbPropertyEntry in new bool[] { false, true })
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = 3,
+                                 Name = "???????"
+                             };
+            foreach (var useGenericDbPropertyEntry in new[] { false, true })
             {
                 var errors = Invoke_DbPropertyEntry_GetValidationErrors(entity, e => e.Name, useGenericDbPropertyEntry);
                 Assert.NotNull(errors);
@@ -927,12 +1010,19 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbComplexPropertyEntry_GetValidationErrors_returns_no_errors_for_valid_complex_property()
         {
-            var entity = new EntityWithComplexType()
-                         { ID = 3, ComplexProperty = new ComplexType() { RequiredProperty = "abc" } };
-            foreach (bool useGenericDbPropertyEntry in new bool[] { false, true })
+            var entity = new EntityWithComplexType
+                             {
+                                 ID = 3,
+                                 ComplexProperty = new ComplexType
+                                                       {
+                                                           RequiredProperty = "abc"
+                                                       }
+                             };
+            foreach (var useGenericDbPropertyEntry in new[] { false, true })
             {
-                var errors = Invoke_DbComplexPropertyEntry_GetValidationErrors(entity, e => e.ComplexProperty,
-                                                                               useGenericDbPropertyEntry);
+                var errors = Invoke_DbComplexPropertyEntry_GetValidationErrors(
+                    entity, e => e.ComplexProperty,
+                    useGenericDbPropertyEntry);
                 Assert.NotNull(errors);
                 Assert.False(errors.Any());
             }
@@ -941,12 +1031,19 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbComplexPropertyEntry_GetValidationErrors_returns_errors_for_invalid_complex_property()
         {
-            var entity = new EntityWithComplexType()
-                         { ID = 3, ComplexProperty = new ComplexType() { RequiredProperty = null } };
-            foreach (bool useGenericDbPropertyEntry in new bool[] { false, true })
+            var entity = new EntityWithComplexType
+                             {
+                                 ID = 3,
+                                 ComplexProperty = new ComplexType
+                                                       {
+                                                           RequiredProperty = null
+                                                       }
+                             };
+            foreach (var useGenericDbPropertyEntry in new[] { false, true })
             {
-                var errors = Invoke_DbPropertyEntry_GetValidationErrors(entity, e => e.ComplexProperty,
-                                                                        useGenericDbPropertyEntry);
+                var errors = Invoke_DbPropertyEntry_GetValidationErrors(
+                    entity, e => e.ComplexProperty,
+                    useGenericDbPropertyEntry);
                 Assert.NotNull(errors);
                 Assert.Equal(1, errors.Count());
             }
@@ -959,40 +1056,47 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbPropertyEntry_GetValidationErrors_returns_errors_for_invalid_navigation_properties()
         {
-            var entity = new EntityWithReferenceNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntity = null
-                         };
+            var entity = new EntityWithReferenceNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntity = null
+                             };
 
-            foreach (bool useGenericDbReferenceEntry in new bool[] { false, true })
+            foreach (var useGenericDbReferenceEntry in new[] { false, true })
             {
-                var errors = Invoke_DbReferenceEntry_GetValidationErrors(entity, e => e.RelatedEntity,
-                                                                         useGenericDbReferenceEntry);
+                var errors = Invoke_DbReferenceEntry_GetValidationErrors(
+                    entity, e => e.RelatedEntity,
+                    useGenericDbReferenceEntry);
                 Assert.NotNull(errors);
                 Assert.Equal(1, errors.Count());
                 var validationError = errors.Single();
                 Assert.Equal("RelatedEntity", validationError.PropertyName);
-                Assert.Equal(string.Format(RequiredAttribute_ValidationError, "RelatedEntity"),
-                             validationError.ErrorMessage);
+                Assert.Equal(
+                    string.Format(RequiredAttribute_ValidationError, "RelatedEntity"),
+                    validationError.ErrorMessage);
             }
         }
 
         [Fact]
         public void DbPropertyEntry_GetValidationErrors_does_not_drill_into_navigation_properties()
         {
-            var entity = new EntityWithReferenceNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "<>?<>?" }
-                         };
+            var entity = new EntityWithReferenceNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntity = new EntityWithBuiltInValidationAttributes
+                                                     {
+                                                         ID = 3,
+                                                         Name = "<>?<>?"
+                                                     }
+                             };
 
-            foreach (bool useGenericDbReferenceEntry in new bool[] { false, true })
+            foreach (var useGenericDbReferenceEntry in new[] { false, true })
             {
-                var errors = Invoke_DbReferenceEntry_GetValidationErrors(entity, e => e.RelatedEntity,
-                                                                         useGenericDbReferenceEntry);
+                var errors = Invoke_DbReferenceEntry_GetValidationErrors(
+                    entity, e => e.RelatedEntity,
+                    useGenericDbReferenceEntry);
                 Assert.NotNull(errors);
                 Assert.Equal(0, errors.Count());
             }
@@ -1005,42 +1109,51 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbCollectionEntry_GetValidationErrors_returns_errors_for_invalid_navigation_properties()
         {
-            var entity = new EntityWithCollectionNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntities = null
-                         };
+            var entity = new EntityWithCollectionNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntities = null
+                             };
 
-            foreach (bool useGenericDbCollectionEntry in new bool[] { false, true })
+            foreach (var useGenericDbCollectionEntry in new[] { false, true })
             {
-                var errors = Invoke_DbCollectionEntry_GetValidationErrors(entity, e => e.RelatedEntities,
-                                                                          useGenericDbCollectionEntry);
+                var errors = Invoke_DbCollectionEntry_GetValidationErrors(
+                    entity, e => e.RelatedEntities,
+                    useGenericDbCollectionEntry);
                 Assert.NotNull(errors);
                 Assert.Equal(1, errors.Count());
                 var validationError = errors.Single();
                 Assert.Equal("RelatedEntities", validationError.PropertyName);
-                Assert.Equal(string.Format(RequiredAttribute_ValidationError, "RelatedEntities"),
-                             validationError.ErrorMessage);
+                Assert.Equal(
+                    string.Format(RequiredAttribute_ValidationError, "RelatedEntities"),
+                    validationError.ErrorMessage);
             }
         }
 
         [Fact]
         public void DbCollectionEntry_GetValidationErrors_does_not_drill_into_navigation_properties()
         {
-            var entity = new EntityWithCollectionNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntities = new List<EntityWithBuiltInValidationAttributes>(
-                                 new EntityWithBuiltInValidationAttributes[]
-                                 { new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "<>?<>?" } })
-                         };
+            var entity = new EntityWithCollectionNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntities = new List<EntityWithBuiltInValidationAttributes>(
+                                     new[]
+                                         {
+                                             new EntityWithBuiltInValidationAttributes
+                                                 {
+                                                     ID = 3,
+                                                     Name = "<>?<>?"
+                                                 }
+                                         })
+                             };
 
-            foreach (bool useGenericDbCollectionEntry in new bool[] { false, true })
+            foreach (var useGenericDbCollectionEntry in new[] { false, true })
             {
-                var errors = Invoke_DbCollectionEntry_GetValidationErrors(entity, e => e.RelatedEntities,
-                                                                          useGenericDbCollectionEntry);
+                var errors = Invoke_DbCollectionEntry_GetValidationErrors(
+                    entity, e => e.RelatedEntities,
+                    useGenericDbCollectionEntry);
                 Assert.NotNull(errors);
                 Assert.Equal(0, errors.Count());
             }
@@ -1056,35 +1169,59 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         public void ValidateEntity_does_not_return_errors_for_valid_entities()
         {
             var entityWithEntityLevelCustomValidationAttributes =
-                new EntityWithEntityLevelCustomValidationAttributes() { ID = "5" };
-            object[] entities = new object[]
-                                {
-                                    new EntityWithNoValidation() { ID = 1 },
-                                    new EntityWithSomeValidation() { ID = 5, Name = "123", Required = 42 },
-                                    new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "abc" },
-                                    new EntityWithComplexType
-                                    { ID = 42, ComplexProperty = new ComplexType() { RequiredProperty = "abc" } },
-                                    new EntityWithComplexTypeLevelCustomValidationAttributes
-                                    {
-                                        ID = 43,
-                                        ComplexProperty = new ComplexTypeWithTypeLevelCustomValidationAttributes()
-                                    },
-                                    new EntityWithPropertyLevelCustomValidationAttributes() { ID = 2 },
-                                    entityWithEntityLevelCustomValidationAttributes,
-                                    new EntityWithFKReferenceNavigationPropertyDependant()
-                                    {
-                                        RelatedEntity = entityWithEntityLevelCustomValidationAttributes
-                                    },
-                                    new EntityWithFKReferenceNavigationPropertyWorkaround()
-                                    {
-                                        RelatedEntity = entityWithEntityLevelCustomValidationAttributes
-                                    },
-                                    new ValidatableEntity()
-                                };
+                new EntityWithEntityLevelCustomValidationAttributes
+                    {
+                        ID = "5"
+                    };
+            var entities = new object[]
+                               {
+                                   new EntityWithNoValidation
+                                       {
+                                           ID = 1
+                                       },
+                                   new EntityWithSomeValidation
+                                       {
+                                           ID = 5,
+                                           Name = "123",
+                                           Required = 42
+                                       },
+                                   new EntityWithBuiltInValidationAttributes
+                                       {
+                                           ID = 3,
+                                           Name = "abc"
+                                       },
+                                   new EntityWithComplexType
+                                       {
+                                           ID = 42,
+                                           ComplexProperty = new ComplexType
+                                                                 {
+                                                                     RequiredProperty = "abc"
+                                                                 }
+                                       },
+                                   new EntityWithComplexTypeLevelCustomValidationAttributes
+                                       {
+                                           ID = 43,
+                                           ComplexProperty = new ComplexTypeWithTypeLevelCustomValidationAttributes()
+                                       },
+                                   new EntityWithPropertyLevelCustomValidationAttributes
+                                       {
+                                           ID = 2
+                                       },
+                                   entityWithEntityLevelCustomValidationAttributes,
+                                   new EntityWithFKReferenceNavigationPropertyDependant
+                                       {
+                                           RelatedEntity = entityWithEntityLevelCustomValidationAttributes
+                                       },
+                                   new EntityWithFKReferenceNavigationPropertyWorkaround
+                                       {
+                                           RelatedEntity = entityWithEntityLevelCustomValidationAttributes
+                                       },
+                                   new ValidatableEntity()
+                               };
 
-            foreach (object entity in entities)
+            foreach (var entity in entities)
             {
-                DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 Assert.NotNull(entityValidationResult);
                 Assert.True(entityValidationResult.IsValid);
             }
@@ -1093,41 +1230,55 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_built_in_attributes_defined_on_properties()
         {
-            var entity = new EntityWithBuiltInValidationAttributes() { ID = -1, Name = "1+2=??" };
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entity = new EntityWithBuiltInValidationAttributes
+                             {
+                                 ID = -1,
+                                 Name = "1+2=??"
+                             };
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
 
             Assert.NotNull(entityValidationResult);
             Assert.False(entityValidationResult.IsValid);
             Assert.Same(entity, entityValidationResult.Entry.Entity);
 
             Assert.Equal(3, entityValidationResult.ValidationErrors.Count);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "ID" &&
-                     e.ErrorMessage == string.Format(RangeAttribute_ValidationError, "ID", 0, 100)) != null);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "Name" &&
-                     e.ErrorMessage == string.Format(StringLengthAttribute_ValidationError, "Name", 5)) != null);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "Name" &&
-                     e.ErrorMessage == string.Format(RegexAttribute_ValidationError, "Name", @"[\w]+")) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "ID" &&
+                         e.ErrorMessage == string.Format(RangeAttribute_ValidationError, "ID", 0, 100)) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "Name" &&
+                         e.ErrorMessage == string.Format(StringLengthAttribute_ValidationError, "Name", 5)) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "Name" &&
+                         e.ErrorMessage == string.Format(RegexAttribute_ValidationError, "Name", @"[\w]+")) != null);
         }
 
         [Fact]
         public void ValidateEntity_returns_errors_for_entities_with_invalid_complex_properties()
         {
-            var entity = new EntityWithComplexType()
-                         { ID = -1, ComplexProperty = new ComplexType() { RequiredProperty = null } };
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entity = new EntityWithComplexType
+                             {
+                                 ID = -1,
+                                 ComplexProperty = new ComplexType
+                                                       {
+                                                           RequiredProperty = null
+                                                       }
+                             };
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
 
             Assert.NotNull(entityValidationResult);
             Assert.False(entityValidationResult.IsValid);
             Assert.Same(entity, entityValidationResult.Entry.Entity);
 
             Assert.Equal(1, entityValidationResult.ValidationErrors.Count);
-            Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                e => e.PropertyName == "ComplexProperty.RequiredProperty" &&
-                     e.ErrorMessage ==
-                     string.Format(RequiredAttribute_ValidationError, "ComplexProperty.RequiredProperty")) != null);
+            Assert.True(
+                entityValidationResult.ValidationErrors.SingleOrDefault(
+                    e => e.PropertyName == "ComplexProperty.RequiredProperty" &&
+                         e.ErrorMessage ==
+                         string.Format(RequiredAttribute_ValidationError, "ComplexProperty.RequiredProperty")) != null);
         }
 
         #endregion
@@ -1137,14 +1288,14 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_returns_errors_for_entities_with_invalid_reference_properties()
         {
-            var entity = new EntityWithReferenceNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntity = null
-                         };
+            var entity = new EntityWithReferenceNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntity = null
+                             };
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.False(entityValidationResult.IsValid);
             Assert.Equal(1, entityValidationResult.ValidationErrors.Count());
@@ -1157,12 +1308,15 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_returns_errors_for_principal_entities_in_one_to_one_relationships_with_null_keys()
         {
-            var entity = new EntityWithFKReferenceNavigationPropertyPrincipal()
-                         {
-                             RelatedEntity = new EntityWithEntityLevelCustomValidationAttributes() { ID = "foo" }
-                         };
+            var entity = new EntityWithFKReferenceNavigationPropertyPrincipal
+                             {
+                                 RelatedEntity = new EntityWithEntityLevelCustomValidationAttributes
+                                                     {
+                                                         ID = "foo"
+                                                     }
+                             };
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.False(entityValidationResult.IsValid);
             Assert.Equal(1, entityValidationResult.ValidationErrors.Count());
@@ -1175,14 +1329,18 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_does_not_drill_into_navigation_properties()
         {
-            var entity = new EntityWithReferenceNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "<>?<>?" }
-                         };
+            var entity = new EntityWithReferenceNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntity = new EntityWithBuiltInValidationAttributes
+                                                     {
+                                                         ID = 3,
+                                                         Name = "<>?<>?"
+                                                     }
+                             };
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.True(entityValidationResult.IsValid);
         }
@@ -1190,14 +1348,14 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_returns_errors_for_entities_with_invalid_collection_properties()
         {
-            var entity = new EntityWithCollectionNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntities = new List<EntityWithBuiltInValidationAttributes>()
-                         };
+            var entity = new EntityWithCollectionNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntities = new List<EntityWithBuiltInValidationAttributes>()
+                             };
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.False(entityValidationResult.IsValid);
             Assert.Equal(1, entityValidationResult.ValidationErrors.Count());
@@ -1210,16 +1368,22 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_does_not_drill_into_collection_properties()
         {
-            var entity = new EntityWithCollectionNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntities = new List<EntityWithBuiltInValidationAttributes>(
-                                 new EntityWithBuiltInValidationAttributes[]
-                                 { new EntityWithBuiltInValidationAttributes { ID = 1, Name = "?" } })
-                         };
+            var entity = new EntityWithCollectionNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntities = new List<EntityWithBuiltInValidationAttributes>(
+                                     new[]
+                                         {
+                                             new EntityWithBuiltInValidationAttributes
+                                                 {
+                                                     ID = 1,
+                                                     Name = "?"
+                                                 }
+                                         })
+                             };
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.True(entityValidationResult.IsValid);
         }
@@ -1242,14 +1406,18 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
         private void Test_ValidateEntity_LazyLoading(bool lazyLoadingEnabled)
         {
-            var entity = new EntityWithReferenceNavigationProperty()
-                         {
-                             ID = 1,
-                             Name = "Test",
-                             RelatedEntity = new EntityWithBuiltInValidationAttributes() { ID = 3, Name = "abc" }
-                         };
+            var entity = new EntityWithReferenceNavigationProperty
+                             {
+                                 ID = 1,
+                                 Name = "Test",
+                                 RelatedEntity = new EntityWithBuiltInValidationAttributes
+                                                     {
+                                                         ID = 3,
+                                                         Name = "abc"
+                                                     }
+                             };
 
-            using (SelfPopulatingContext context = new SelfPopulatingContext(entity))
+            using (var context = new SelfPopulatingContext(entity))
             {
                 using (new TransactionScope())
                 {
@@ -1266,8 +1434,9 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     Assert.Equal(1, errors.Count());
                     var validationError = errors.Single();
                     Assert.Equal("RelatedEntity", validationError.PropertyName);
-                    Assert.Equal(string.Format(RequiredAttribute_ValidationError, "RelatedEntity"),
-                                 validationError.ErrorMessage);
+                    Assert.Equal(
+                        string.Format(RequiredAttribute_ValidationError, "RelatedEntity"),
+                        validationError.ErrorMessage);
 
                     if (lazyLoadingEnabled)
                     {
@@ -1293,7 +1462,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         {
             var entity = new EntityWithTransientPropertyValidation();
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.False(entityValidationResult.IsValid);
             Assert.Equal(2, entityValidationResult.ValidationErrors.Count());
@@ -1310,9 +1479,12 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_does_not_return_errors_for_entities_with_valid_transient_properties()
         {
-            var entity = new EntityWithTransientPropertyValidation() { Name = "abc" };
+            var entity = new EntityWithTransientPropertyValidation
+                             {
+                                 Name = "abc"
+                             };
 
-            DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+            var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
             Assert.NotNull(entityValidationResult);
             Assert.True(entityValidationResult.IsValid);
             Assert.Equal(0, entityValidationResult.ValidationErrors.Count());
@@ -1327,53 +1499,59 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         {
             try
             {
-                ValidationResult[] results = new ValidationResult[]
-                                             {
-                                                 null,
-                                                 // this will actually prevent from returning any ValidationResults - equivalent to returning ValidationResult.Success
+                var results = new[]
+                                  {
+                                      null,
+                                      // this will actually prevent from returning any ValidationResults - equivalent to returning ValidationResult.Success
 
-                                                 new ValidationResult("Error", null),
-                                                 new ValidationResult("Error msg", new string[] { }),
-                                                 new ValidationResult("Error msg", new string[] { null }),
-                                                 new ValidationResult("Error msg", new string[] { "property" }),
-                                                 new ValidationResult("Error msg",
-                                                                      new string[] { "Property1", "Property2" }),
-                                                 new ValidationResult("Error msg",
-                                                                      new string[] { "Property1", null, "Property2" }),
-                                                 new ValidationResult(null, null),
-                                                 new ValidationResult(null, new string[] { }),
-                                                 new ValidationResult(null, new string[] { null }),
-                                                 new ValidationResult(null, new string[] { "property" }),
-                                                 new ValidationResult(null, new string[] { "Property1", "Property2" }),
-                                                 new ValidationResult(null,
-                                                                      new string[] { "Property1", null, "Property2" }),
-                                             };
+                                      new ValidationResult("Error", null),
+                                      new ValidationResult("Error msg", new string[] { }),
+                                      new ValidationResult("Error msg", new string[] { null }),
+                                      new ValidationResult("Error msg", new[] { "property" }),
+                                      new ValidationResult(
+                                          "Error msg",
+                                          new[] { "Property1", "Property2" }),
+                                      new ValidationResult(
+                                          "Error msg",
+                                          new[] { "Property1", null, "Property2" }),
+                                      new ValidationResult(null, null),
+                                      new ValidationResult(null, new string[] { }),
+                                      new ValidationResult(null, new string[] { null }),
+                                      new ValidationResult(null, new[] { "property" }),
+                                      new ValidationResult(null, new[] { "Property1", "Property2" }),
+                                      new ValidationResult(
+                                          null,
+                                          new[] { "Property1", null, "Property2" }),
+                                  };
 
-                var entity = new EntityWithPropertyLevelCustomValidationAttributes { ID = -3 };
+                var entity = new EntityWithPropertyLevelCustomValidationAttributes
+                                 {
+                                     ID = -3
+                                 };
 
-                foreach (ValidationResult resultForValidationWithContext in results)
+                foreach (var resultForValidationWithContext in results)
                 {
-                    foreach (ValidationResult resultForValidationWithoutContext in results)
+                    foreach (var resultForValidationWithoutContext in results)
                     {
                         EntityWithPropertyLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                             (propertyValue) =>
-                            {
-                                Assert.Equal(entity.ID, propertyValue);
-                                return resultForValidationWithoutContext;
-                            };
+                                {
+                                    Assert.Equal(entity.ID, propertyValue);
+                                    return resultForValidationWithoutContext;
+                                };
                         EntityWithPropertyLevelCustomValidationAttributes.ValidateWithContextFunc =
                             (propertyValue, ctx) =>
-                            {
-                                Assert.Equal(entity.ID, propertyValue);
-                                Assert.Equal("ID", ctx.DisplayName);
-                                return resultForValidationWithContext;
-                            };
+                                {
+                                    Assert.Equal(entity.ID, propertyValue);
+                                    Assert.Equal("ID", ctx.DisplayName);
+                                    return resultForValidationWithContext;
+                                };
 
-                        DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                        var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                         VerifyValidationResults(
                             entity,
                             "ID",
-                            new ValidationResult[] { resultForValidationWithoutContext, resultForValidationWithContext },
+                            new[] { resultForValidationWithoutContext, resultForValidationWithContext },
                             entityValidationResult);
                     }
                 }
@@ -1390,53 +1568,59 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         {
             try
             {
-                ValidationResult[] results = new ValidationResult[]
-                                             {
-                                                 null,
-                                                 new ValidationResult("Error", null),
-                                                 new ValidationResult("Error msg", new string[] { }),
-                                                 new ValidationResult("Error msg", new string[] { null }),
-                                                 new ValidationResult("Error msg", new string[] { "property" }),
-                                                 new ValidationResult("Error msg",
-                                                                      new string[] { "Property1", "Property2" }),
-                                                 new ValidationResult("Error msg",
-                                                                      new string[] { "Property1", null, "Property2" }),
-                                                 new ValidationResult(null, null),
-                                                 new ValidationResult(null, new string[] { }),
-                                                 new ValidationResult(null, new string[] { null }),
-                                                 new ValidationResult(null, new string[] { "property" }),
-                                                 new ValidationResult(null, new string[] { "Property1", "Property2" }),
-                                                 new ValidationResult(null,
-                                                                      new string[] { "Property1", null, "Property2" }),
-                                             };
+                var results = new[]
+                                  {
+                                      null,
+                                      new ValidationResult("Error", null),
+                                      new ValidationResult("Error msg", new string[] { }),
+                                      new ValidationResult("Error msg", new string[] { null }),
+                                      new ValidationResult("Error msg", new[] { "property" }),
+                                      new ValidationResult(
+                                          "Error msg",
+                                          new[] { "Property1", "Property2" }),
+                                      new ValidationResult(
+                                          "Error msg",
+                                          new[] { "Property1", null, "Property2" }),
+                                      new ValidationResult(null, null),
+                                      new ValidationResult(null, new string[] { }),
+                                      new ValidationResult(null, new string[] { null }),
+                                      new ValidationResult(null, new[] { "property" }),
+                                      new ValidationResult(null, new[] { "Property1", "Property2" }),
+                                      new ValidationResult(
+                                          null,
+                                          new[] { "Property1", null, "Property2" }),
+                                  };
 
-                var entity = new EntityWithEntityLevelCustomValidationAttributes { ID = "-3" };
+                var entity = new EntityWithEntityLevelCustomValidationAttributes
+                                 {
+                                     ID = "-3"
+                                 };
 
-                foreach (ValidationResult resultForValidationWithContext in results)
+                foreach (var resultForValidationWithContext in results)
                 {
-                    foreach (ValidationResult resultForValidationWithoutContext in results)
+                    foreach (var resultForValidationWithoutContext in results)
                     {
                         EntityWithEntityLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                             (validatedEntity) =>
-                            {
-                                Assert.NotNull(validatedEntity);
-                                Assert.Same(entity, validatedEntity);
-                                return resultForValidationWithoutContext;
-                            };
+                                {
+                                    Assert.NotNull(validatedEntity);
+                                    Assert.Same(entity, validatedEntity);
+                                    return resultForValidationWithoutContext;
+                                };
                         EntityWithEntityLevelCustomValidationAttributes.ValidateWithContextFunc =
                             (validatedEntity, ctx) =>
-                            {
-                                Assert.NotNull(validatedEntity);
-                                Assert.Same(entity, validatedEntity);
-                                Assert.Equal(validatedEntity.GetType().Name, ctx.DisplayName);
-                                return resultForValidationWithContext;
-                            };
+                                {
+                                    Assert.NotNull(validatedEntity);
+                                    Assert.Same(entity, validatedEntity);
+                                    Assert.Equal(validatedEntity.GetType().Name, ctx.DisplayName);
+                                    return resultForValidationWithContext;
+                                };
 
-                        DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                        var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                         VerifyValidationResults(
                             entity,
                             null,
-                            new ValidationResult[] { resultForValidationWithoutContext, resultForValidationWithContext },
+                            new[] { resultForValidationWithoutContext, resultForValidationWithContext },
                             entityValidationResult);
                     }
                 }
@@ -1451,18 +1635,21 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_does_not_return_errors_for_valid_validatable_entity()
         {
-            var entity = new ValidatableEntity { ID = 3 };
+            var entity = new ValidatableEntity
+                             {
+                                 ID = 3
+                             };
 
-            var validationResultCombinations = new ValidationResult[][]
-                                               {
-                                                   null,
-                                                   new ValidationResult[0]
-                                               };
+            var validationResultCombinations = new[]
+                                                   {
+                                                       null,
+                                                       new ValidationResult[0]
+                                                   };
 
             foreach (var validationResults in validationResultCombinations)
             {
                 entity.ValidationResults = validationResults;
-                DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
 
                 Assert.True(entityValidationResult.IsValid);
                 Assert.True(!entityValidationResult.ValidationErrors.Any());
@@ -1472,62 +1659,71 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_returns_error_for_invalid_validatable_entity()
         {
-            var entity = new ValidatableEntity { ID = 3 };
+            var entity = new ValidatableEntity
+                             {
+                                 ID = 3
+                             };
 
-            var validationResultCombinations = new ValidationResult[][]
-                                               {
-                                                   new ValidationResult[] { new ValidationResult(null, null) },
-                                                   new ValidationResult[]
-                                                   { new ValidationResult("The entity is not valid.") },
-                                                   new ValidationResult[]
-                                                   { new ValidationResult("The entity is not valid.", null) },
-                                                   new ValidationResult[]
-                                                   { new ValidationResult("The entity is not valid.", new string[0]) },
-                                                   new ValidationResult[]
+            var validationResultCombinations = new[]
                                                    {
-                                                       new ValidationResult("1st invalid entity"),
-                                                       new ValidationResult("2nd invalid entity", new string[] { "ID" })
-                                                       ,
-                                                   },
-                                                   new ValidationResult[]
-                                                   {
-                                                       new ValidationResult("Invalid",
-                                                                            new string[] { "ID", null, "Test" })
-                                                   },
-                                                   new ValidationResult[]
-                                                   {
-                                                       new ValidationResult("Some properties are invalid",
-                                                                            new string[] { "Name", "xyz" }),
-                                                       new ValidationResult("Invalid",
-                                                                            new string[] { "ID", null, "Test" })
-                                                   },
-                                               };
+                                                       new[] { new ValidationResult(null, null) },
+                                                       new[]
+                                                           { new ValidationResult("The entity is not valid.") },
+                                                       new[]
+                                                           { new ValidationResult("The entity is not valid.", null) },
+                                                       new[]
+                                                           { new ValidationResult("The entity is not valid.", new string[0]) },
+                                                       new[]
+                                                           {
+                                                               new ValidationResult("1st invalid entity"),
+                                                               new ValidationResult("2nd invalid entity", new[] { "ID" })
+                                                               ,
+                                                           },
+                                                       new[]
+                                                           {
+                                                               new ValidationResult(
+                                                                   "Invalid",
+                                                                   new[] { "ID", null, "Test" })
+                                                           },
+                                                       new[]
+                                                           {
+                                                               new ValidationResult(
+                                                                   "Some properties are invalid",
+                                                                   new[] { "Name", "xyz" }),
+                                                               new ValidationResult(
+                                                                   "Invalid",
+                                                                   new[] { "ID", null, "Test" })
+                                                           },
+                                                   };
 
             foreach (var validationResults in validationResultCombinations)
             {
                 entity.ValidationResults = validationResults;
-                DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 VerifyValidationResults(entity, null, validationResults, entityValidationResult);
             }
         }
 
-        private void VerifyValidationResults(object entity, string validatedPropertyName,
-                                             IEnumerable<ValidationResult> sourceValidationResults,
-                                             DbEntityValidationResult entityValidationResult)
+        private void VerifyValidationResults(
+            object entity, string validatedPropertyName,
+            IEnumerable<ValidationResult> sourceValidationResults,
+            DbEntityValidationResult entityValidationResult)
         {
             Debug.Assert(sourceValidationResults != null);
             Debug.Assert(entityValidationResult != null);
 
-            Assert.True(sourceValidationResults.Any(r => r != null) || entityValidationResult.IsValid,
-                        "Errors returned for valid entities");
-            Assert.True(!sourceValidationResults.Any(r => r != null) || !entityValidationResult.IsValid,
-                        "Not all errors returned for an invalid entity");
+            Assert.True(
+                sourceValidationResults.Any(r => r != null) || entityValidationResult.IsValid,
+                "Errors returned for valid entities");
+            Assert.True(
+                !sourceValidationResults.Any(r => r != null) || !entityValidationResult.IsValid,
+                "Not all errors returned for an invalid entity");
 
             if (entityValidationResult != null)
             {
                 Assert.Same(entity, entityValidationResult.Entry.Entity);
 
-                List<DbValidationError> validationErrors =
+                var validationErrors =
                     new List<DbValidationError>(entityValidationResult.ValidationErrors);
 
                 foreach (var validationResult in sourceValidationResults.Where(r => r != null))
@@ -1542,15 +1738,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     // if ErrorMessage property of the ValidationResult instance returned by the user from CusomtValidationAttribute 
                     // is null, DataAnnotations validator comes up with its own non-null error message. In addition if display name 
                     // is not provided type name is being used. Note that this is not true in case of results returned IValidatableObject.Validate().
-                    string expectedErrorMessage = validationResult.ErrorMessage ??
-                                                  (entity is IValidatableObject
-                                                       ? null
-                                                       : string.Format("{0} is not valid.",
-                                                                       validatedPropertyName ?? entity.GetType().Name));
+                    var expectedErrorMessage = validationResult.ErrorMessage ??
+                                               (entity is IValidatableObject
+                                                    ? null
+                                                    : string.Format(
+                                                        "{0} is not valid.",
+                                                        validatedPropertyName ?? entity.GetType().Name));
 
                     foreach (var memberName in sourceMemberNames)
                     {
-                        DbValidationError validationError = validationErrors.FirstOrDefault(
+                        var validationError = validationErrors.FirstOrDefault(
                             e =>
                             e.PropertyName == (memberName ?? validatedPropertyName) &&
                             e.ErrorMessage == expectedErrorMessage);
@@ -1560,8 +1757,9 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     }
                 }
 
-                Assert.False(validationErrors.Any(),
-                             "Entity validation error contains errors that were not reported by validation.");
+                Assert.False(
+                    validationErrors.Any(),
+                    "Entity validation error contains errors that were not reported by validation.");
             }
         }
 
@@ -1572,27 +1770,27 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_does_not_run_type_level_validation_for_null_complex_properties()
         {
-            var entity = new EntityWithComplexTypeLevelCustomValidationAttributes()
-                         {
-                             ID = 3
-                         };
+            var entity = new EntityWithComplexTypeLevelCustomValidationAttributes
+                             {
+                                 ID = 3
+                             };
 
             try
             {
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                     (propertyValue) =>
-                    {
-                        Assert.True(false, "This shouldn't run.");
-                        return ValidationResult.Success;
-                    };
+                        {
+                            Assert.True(false, "This shouldn't run.");
+                            return ValidationResult.Success;
+                        };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithContextFunc =
                     (propertyValue, ctx) =>
-                    {
-                        Assert.True(false, "This shouldn't run.");
-                        return ValidationResult.Success;
-                    };
+                        {
+                            Assert.True(false, "This shouldn't run.");
+                            return ValidationResult.Success;
+                        };
 
-                DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 Assert.NotNull(entityValidationResult);
                 Assert.True(entityValidationResult.IsValid);
                 Assert.Same(entity, entityValidationResult.Entry.Entity);
@@ -1607,43 +1805,46 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_type_level_attributes_defined_on_complex_properties()
         {
-            var entity = new EntityWithComplexTypeLevelCustomValidationAttributes()
-                         {
-                             ID = 4,
-                             ComplexProperty =
-                                 new ComplexTypeWithTypeLevelCustomValidationAttributes { IsValid = false }
-                         };
+            var entity = new EntityWithComplexTypeLevelCustomValidationAttributes
+                             {
+                                 ID = 4,
+                                 ComplexProperty =
+                                     new ComplexTypeWithTypeLevelCustomValidationAttributes
+                                         {
+                                             IsValid = false
+                                         }
+                             };
 
-            ValidationResult result = new ValidationResult("Property is not valid.");
+            var result = new ValidationResult("Property is not valid.");
 
             try
             {
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                     (value) =>
-                    {
-                        if (!value.IsValid)
                         {
-                            return result;
-                        }
-                        return ValidationResult.Success;
-                    };
+                            if (!value.IsValid)
+                            {
+                                return result;
+                            }
+                            return ValidationResult.Success;
+                        };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithContextFunc =
                     (value, ctx) =>
-                    {
-                        if (!value.IsValid)
                         {
-                            return result;
-                        }
+                            if (!value.IsValid)
+                            {
+                                return result;
+                            }
 
-                        Assert.Equal("ID", ctx.DisplayName);
-                        return ValidationResult.Success;
-                    };
+                            Assert.Equal("ID", ctx.DisplayName);
+                            return ValidationResult.Success;
+                        };
 
-                DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 VerifyValidationResults(
                     entity,
                     "ComplexProperty",
-                    new ValidationResult[] { result, result },
+                    new[] { result, result },
                     entityValidationResult);
             }
             finally
@@ -1656,14 +1857,17 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void ValidateEntity_does_not_run_type_level_validation_for_invalid_complex_properties()
         {
-            var entity = new EntityWithComplexTypeLevelCustomValidationAttributes()
-                         {
-                             ID = 4,
-                             ComplexProperty =
-                                 new ComplexTypeWithTypeLevelCustomValidationAttributes { IsValid = false }
-                         };
+            var entity = new EntityWithComplexTypeLevelCustomValidationAttributes
+                             {
+                                 ID = 4,
+                                 ComplexProperty =
+                                     new ComplexTypeWithTypeLevelCustomValidationAttributes
+                                         {
+                                             IsValid = false
+                                         }
+                             };
 
-            string errorMessage = "Error";
+            var errorMessage = "Error";
 
             try
             {
@@ -1671,25 +1875,26 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     (propertyValue) => { return new ValidationResult(errorMessage); };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                     (value) =>
-                    {
-                        Assert.True(false, "This shouldn't run.");
-                        return ValidationResult.Success;
-                    };
+                        {
+                            Assert.True(false, "This shouldn't run.");
+                            return ValidationResult.Success;
+                        };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithContextFunc =
                     (value, ctx) =>
-                    {
-                        Assert.True(false, "This shouldn't run.");
-                        return ValidationResult.Success;
-                    };
+                        {
+                            Assert.True(false, "This shouldn't run.");
+                            return ValidationResult.Success;
+                        };
 
-                DbEntityValidationResult entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
+                var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 Assert.NotNull(entityValidationResult);
                 Assert.False(entityValidationResult.IsValid);
                 Assert.Same(entity, entityValidationResult.Entry.Entity);
 
                 Assert.Equal(1, entityValidationResult.ValidationErrors.Count);
-                Assert.True(entityValidationResult.ValidationErrors.SingleOrDefault(
-                    e => e.PropertyName == "ComplexProperty" && e.ErrorMessage == errorMessage) != null);
+                Assert.True(
+                    entityValidationResult.ValidationErrors.SingleOrDefault(
+                        e => e.PropertyName == "ComplexProperty" && e.ErrorMessage == errorMessage) != null);
             }
             finally
             {
@@ -1707,7 +1912,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
         public static IEnumerable<DbEntityValidationResult> Invoke_DbContext_GetValidationErrors(object[] entities)
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(entities))
+            using (var ctx = new SelfPopulatingContext(entities))
             {
                 return ctx.GetValidationErrors();
             }
@@ -1717,17 +1922,18 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         {
             Database.SetInitializer((IDatabaseInitializer<SelfPopulatingContext>)null);
 
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[0]))
+            using (var ctx = new SelfPopulatingContext(new object[0]))
             {
                 return ctx.ValidateEntity(ctx.Entry(entity));
             }
         }
 
-        public static DbEntityValidationResult Invoke_DbEntityEntry_GetValidationResult<TEntity>(TEntity entity,
-                                                                                                 bool asGeneric)
+        public static DbEntityValidationResult Invoke_DbEntityEntry_GetValidationResult<TEntity>(
+            TEntity entity,
+            bool asGeneric)
             where TEntity : class, new()
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[] { entity }))
+            using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 var entityEntry = ctx.Entry(entity);
                 return asGeneric
@@ -1740,7 +1946,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             TEntity entity, string property, bool asGeneric)
             where TEntity : class, new()
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[] { entity }))
+            using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 var memberEntry = ctx.Entry(entity).Member<TProperty>(property);
 
@@ -1754,7 +1960,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             TEntity entity, Expression<Func<TEntity, TProperty>> property, bool asGeneric)
             where TEntity : class, new()
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[] { entity }))
+            using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 var propertyEntry = ctx.Entry(entity).Property(property);
 
@@ -1768,7 +1974,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             <TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> property, bool asGeneric)
             where TEntity : class, new()
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[] { entity }))
+            using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 var propertyEntry = ctx.Entry(entity).ComplexProperty(property);
 
@@ -1783,7 +1989,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             where TEntity : class, new()
             where TProperty : class
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[] { entity }))
+            using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 var referenceEntry = ctx.Entry(entity).Reference(property);
 
@@ -1798,7 +2004,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             where TEntity : class, new()
             where TElement : class
         {
-            using (SelfPopulatingContext ctx = new SelfPopulatingContext(new object[] { entity }))
+            using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
                 var collectionEntry = ctx.Entry(entity).Collection(property);
 
@@ -1816,29 +2022,34 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             (EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "MaxLengthAttribute_ValidationError");
 
         private readonly string RangeAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly,
-             "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
-             "RangeAttribute_ValidationError");
+            (
+                SystemComponentModelDataAnnotationsAssembly,
+                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "RangeAttribute_ValidationError");
 
         private readonly string RegexAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly,
-             "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
-             "RegexAttribute_ValidationError");
+            (
+                SystemComponentModelDataAnnotationsAssembly,
+                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "RegexAttribute_ValidationError");
 
         private readonly string RequiredAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly,
-             "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
-             "RequiredAttribute_ValidationError");
+            (
+                SystemComponentModelDataAnnotationsAssembly,
+                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "RequiredAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly,
-             "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
-             "StringLengthAttribute_ValidationError");
+            (
+                SystemComponentModelDataAnnotationsAssembly,
+                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "StringLengthAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationErrorIncludingMinimum = LookupString
-            (SystemComponentModelDataAnnotationsAssembly,
-             "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
-             "StringLengthAttribute_ValidationErrorIncludingMinimum");
+            (
+                SystemComponentModelDataAnnotationsAssembly,
+                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                "StringLengthAttribute_ValidationErrorIncludingMinimum");
 
         #endregion
 
@@ -1873,11 +2084,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void Setting_entity_property_as_optional_does_not_override_Required_attribute()
         {
-            using (DataAnnotationsConfigurationOverridesCtx ctx = new DataAnnotationsConfigurationOverridesCtx())
+            using (var ctx = new DataAnnotationsConfigurationOverridesCtx())
             {
                 Assert.False(
-                    ctx.Entry<EntityWithSomeValidation>(new EntityWithSomeValidation()
-                                                        { ID = 0, Name = "abc", Required = null })
+                    ctx.Entry(
+                        new EntityWithSomeValidation
+                            {
+                                ID = 0,
+                                Name = "abc",
+                                Required = null
+                            })
                         .GetValidationResult().IsValid);
             }
         }
@@ -1885,60 +2101,68 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void Changing_entity_property_MaxLength_value_does_not_override_attribute_setting()
         {
-            var entity = new EntityWithSomeValidation() { ID = 0, Name = new string('a', 5), Required = 0 };
+            var entity = new EntityWithSomeValidation
+                             {
+                                 ID = 0,
+                                 Name = new string('a', 5),
+                                 Required = 0
+                             };
 
-            using (DataAnnotationsConfigurationOverridesCtx ctx = new DataAnnotationsConfigurationOverridesCtx())
+            using (var ctx = new DataAnnotationsConfigurationOverridesCtx())
             {
-                Assert.Equal(0,
-                             ctx.Entry<EntityWithSomeValidation>(entity).GetValidationResult().ValidationErrors.Count());
+                Assert.Equal(
+                    0,
+                    ctx.Entry(entity).GetValidationResult().ValidationErrors.Count());
                 entity.Name = new string('a', 10);
-                Assert.Equal(1,
-                             ctx.Entry<EntityWithSomeValidation>(entity).GetValidationResult().ValidationErrors.Count());
+                Assert.Equal(
+                    1,
+                    ctx.Entry(entity).GetValidationResult().ValidationErrors.Count());
                 entity.Name = new string('a', 21);
-                Assert.Equal(1,
-                             ctx.Entry<EntityWithSomeValidation>(entity).GetValidationResult().ValidationErrors.Count());
+                Assert.Equal(
+                    1,
+                    ctx.Entry(entity).GetValidationResult().ValidationErrors.Count());
             }
         }
 
         [Fact]
         public void Configuring_complex_type_property_MaxLength_setting_does_not_override_attribute_setting()
         {
-            var entity = new EntityWithComplexType()
-                         {
-                             ComplexProperty =
-                                 new ComplexType()
-                                 {
-                                     ByteArray = new byte[3],
-                                     RequiredProperty = "a",
-                                     StringWithStringLengthAttribute = new string('a', 8)
-                                 }
-                         };
+            var entity = new EntityWithComplexType
+                             {
+                                 ComplexProperty =
+                                     new ComplexType
+                                         {
+                                             ByteArray = new byte[3],
+                                             RequiredProperty = "a",
+                                             StringWithStringLengthAttribute = new string('a', 8)
+                                         }
+                             };
 
-            using (DataAnnotationsConfigurationOverridesCtx ctx = new DataAnnotationsConfigurationOverridesCtx())
+            using (var ctx = new DataAnnotationsConfigurationOverridesCtx())
             {
-                Assert.Equal(0, ctx.Entry<EntityWithComplexType>(entity).GetValidationResult().ValidationErrors.Count());
+                Assert.Equal(0, ctx.Entry(entity).GetValidationResult().ValidationErrors.Count());
                 entity.ComplexProperty.ByteArray = new byte[11];
-                Assert.Equal(1, ctx.Entry<EntityWithComplexType>(entity).GetValidationResult().ValidationErrors.Count());
+                Assert.Equal(1, ctx.Entry(entity).GetValidationResult().ValidationErrors.Count());
             }
         }
 
         [Fact]
         public void Configuring_property_to_be_MaxLength_does_not_override_StringLength_and_MaxLength_attributes()
         {
-            var entity = new EntityWithComplexType()
-                         {
-                             ComplexProperty =
-                                 new ComplexType()
-                                 {
-                                     StringWithMaxLengthAndStringLengthAttributes = new string('z', 4096),
-                                     RequiredProperty = "a",
-                                     StringWithStringLengthAttribute = new string('a', 8)
-                                 }
-                         };
+            var entity = new EntityWithComplexType
+                             {
+                                 ComplexProperty =
+                                     new ComplexType
+                                         {
+                                             StringWithMaxLengthAndStringLengthAttributes = new string('z', 4096),
+                                             RequiredProperty = "a",
+                                             StringWithStringLengthAttribute = new string('a', 8)
+                                         }
+                             };
 
-            using (DataAnnotationsConfigurationOverridesCtx ctx = new DataAnnotationsConfigurationOverridesCtx())
+            using (var ctx = new DataAnnotationsConfigurationOverridesCtx())
             {
-                Assert.Equal(2, ctx.Entry<EntityWithComplexType>(entity).GetValidationResult().ValidationErrors.Count());
+                Assert.Equal(2, ctx.Entry(entity).GetValidationResult().ValidationErrors.Count());
             }
         }
 

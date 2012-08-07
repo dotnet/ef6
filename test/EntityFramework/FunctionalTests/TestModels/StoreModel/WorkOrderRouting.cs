@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_workOrderID != value)
                 {
-                    if (WorkOrder != null && WorkOrder.WorkOrderID != value)
+                    if (WorkOrder != null
+                        && WorkOrder.WorkOrderID != value)
                     {
                         WorkOrder = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _workOrderID;
 
         public virtual int ProductID { get; set; }
@@ -33,7 +36,8 @@ namespace FunctionalTests.Model
             {
                 if (_locationID != value)
                 {
-                    if (Location != null && Location.LocationID != value)
+                    if (Location != null
+                        && Location.LocationID != value)
                     {
                         Location = null;
                     }
@@ -41,6 +45,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private short _locationID;
 
         public virtual DateTime ScheduledStartDate { get; set; }
@@ -72,6 +77,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Location _location;
 
         public virtual WorkOrder WorkOrder
@@ -87,11 +93,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private WorkOrder _workOrder;
 
         private void FixupLocation(Location previousValue)
         {
-            if (previousValue != null && previousValue.WorkOrderRoutings.Contains(this))
+            if (previousValue != null
+                && previousValue.WorkOrderRoutings.Contains(this))
             {
                 previousValue.WorkOrderRoutings.Remove(this);
             }
@@ -111,7 +119,8 @@ namespace FunctionalTests.Model
 
         private void FixupWorkOrder(WorkOrder previousValue)
         {
-            if (previousValue != null && previousValue.WorkOrderRoutings.Contains(this))
+            if (previousValue != null
+                && previousValue.WorkOrderRoutings.Contains(this))
             {
                 previousValue.WorkOrderRoutings.Remove(this);
             }

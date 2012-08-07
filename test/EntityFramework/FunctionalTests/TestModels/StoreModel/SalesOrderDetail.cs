@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_salesOrderID != value)
                 {
-                    if (SalesOrderHeader != null && SalesOrderHeader.SalesOrderID != value)
+                    if (SalesOrderHeader != null
+                        && SalesOrderHeader.SalesOrderID != value)
                     {
                         SalesOrderHeader = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _salesOrderID;
 
         public virtual int SalesOrderDetailID { get; set; }
@@ -35,7 +38,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (SpecialOfferProduct != null && SpecialOfferProduct.ProductID != value)
+                    if (SpecialOfferProduct != null
+                        && SpecialOfferProduct.ProductID != value)
                     {
                         SpecialOfferProduct = null;
                     }
@@ -43,6 +47,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual int SpecialOfferID
@@ -52,7 +57,8 @@ namespace FunctionalTests.Model
             {
                 if (_specialOfferID != value)
                 {
-                    if (SpecialOfferProduct != null && SpecialOfferProduct.SpecialOfferID != value)
+                    if (SpecialOfferProduct != null
+                        && SpecialOfferProduct.SpecialOfferID != value)
                     {
                         SpecialOfferProduct = null;
                     }
@@ -60,6 +66,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _specialOfferID;
 
         public virtual decimal UnitPrice { get; set; }
@@ -85,6 +92,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesOrderHeader _salesOrderHeader;
 
         public virtual SpecialOfferProduct SpecialOfferProduct
@@ -100,11 +108,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SpecialOfferProduct _specialOfferProduct;
 
         private void FixupSalesOrderHeader(SalesOrderHeader previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderDetails.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderDetails.Contains(this))
             {
                 previousValue.SalesOrderDetails.Remove(this);
             }
@@ -124,7 +134,8 @@ namespace FunctionalTests.Model
 
         private void FixupSpecialOfferProduct(SpecialOfferProduct previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderDetails.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderDetails.Contains(this))
             {
                 previousValue.SalesOrderDetails.Remove(this);
             }

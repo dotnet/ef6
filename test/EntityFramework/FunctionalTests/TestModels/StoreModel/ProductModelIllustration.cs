@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_productModelID != value)
                 {
-                    if (ProductModel != null && ProductModel.ProductModelID != value)
+                    if (ProductModel != null
+                        && ProductModel.ProductModelID != value)
                     {
                         ProductModel = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productModelID;
 
         public virtual int IllustrationID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_illustrationID != value)
                 {
-                    if (Illustration != null && Illustration.IllustrationID != value)
+                    if (Illustration != null
+                        && Illustration.IllustrationID != value)
                     {
                         Illustration = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _illustrationID;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -54,6 +59,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Illustration _illustration;
 
         public virtual ProductModel ProductModel
@@ -69,11 +75,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductModel _productModel;
 
         private void FixupIllustration(Illustration previousValue)
         {
-            if (previousValue != null && previousValue.ProductModelIllustrations.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductModelIllustrations.Contains(this))
             {
                 previousValue.ProductModelIllustrations.Remove(this);
             }
@@ -93,7 +101,8 @@ namespace FunctionalTests.Model
 
         private void FixupProductModel(ProductModel previousValue)
         {
-            if (previousValue != null && previousValue.ProductModelIllustrations.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductModelIllustrations.Contains(this))
             {
                 previousValue.ProductModelIllustrations.Remove(this);
             }

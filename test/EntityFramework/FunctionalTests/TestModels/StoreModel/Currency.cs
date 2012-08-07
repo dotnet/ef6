@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -43,6 +44,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<CountryRegionCurrency> _countryRegionCurrencies;
 
         public virtual ICollection<CurrencyRate> CurrencyRates
@@ -75,6 +77,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<CurrencyRate> _currencyRates;
 
         public virtual ICollection<CurrencyRate> CurrencyRates1
@@ -107,6 +110,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<CurrencyRate> _currencyRates1;
 
         private void FixupCountryRegionCurrencies(object sender, NotifyCollectionChangedEventArgs e)

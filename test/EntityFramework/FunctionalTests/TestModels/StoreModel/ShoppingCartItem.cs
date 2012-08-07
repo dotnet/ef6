@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -19,7 +20,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -27,6 +29,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual DateTime DateCreated { get; set; }
@@ -47,11 +50,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.ShoppingCartItems.Contains(this))
+            if (previousValue != null
+                && previousValue.ShoppingCartItems.Contains(this))
             {
                 previousValue.ShoppingCartItems.Remove(this);
             }

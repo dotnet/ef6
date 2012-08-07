@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System.Data.Entity;
@@ -8,7 +9,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for simple uses of transactions with DbContext.
+    ///     Tests for simple uses of transactions with DbContext.
     /// </summary>
     public class TransactionTests : FunctionalTestBase
     {
@@ -23,7 +24,10 @@ namespace ProductivityApiTests
             {
                 using (var context = new SimpleModelContext())
                 {
-                    var product = new Product { Name = "Fanta" };
+                    var product = new Product
+                                      {
+                                          Name = "Fanta"
+                                      };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -42,7 +46,10 @@ namespace ProductivityApiTests
             {
                 using (var context = new SimpleModelContext())
                 {
-                    var product = new Product() { Name = "BestTea" };
+                    var product = new Product
+                                      {
+                                          Name = "BestTea"
+                                      };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -75,7 +82,10 @@ namespace ProductivityApiTests
                 // Begin a local transaction
                 var transaction = BeginLocalTransaction(context);
 
-                var product = new Product { Name = "Fanta" };
+                var product = new Product
+                                  {
+                                      Name = "Fanta"
+                                  };
                 context.Products.Add(product);
                 context.SaveChanges();
 
@@ -100,7 +110,10 @@ namespace ProductivityApiTests
                 // Begin a local transaction
                 var transaction = BeginLocalTransaction(context);
 
-                var product = new Product() { Name = "New Tea" };
+                var product = new Product
+                                  {
+                                      Name = "New Tea"
+                                  };
                 context.Products.Add(product);
                 context.SaveChanges();
 
@@ -131,7 +144,10 @@ namespace ProductivityApiTests
 
                 var transaction = BeginCommittableTransaction(context);
 
-                var product = new Product { Name = "Fanta" };
+                var product = new Product
+                                  {
+                                      Name = "Fanta"
+                                  };
                 context.Products.Add(product);
                 context.SaveChanges();
 

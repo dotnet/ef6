@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -15,7 +16,7 @@ namespace ProductivityApiTests
     using Xunit.Sdk;
 
     /// <summary>
-    /// Functional tests for LINQ to Entities using DbQuery.
+    ///     Functional tests for LINQ to Entities using DbQuery.
     /// </summary>
     public class LinqTests : FunctionalTestBase
     {
@@ -55,7 +56,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Generic_CreateQuery_on_generic_DbQuery_uses_ElementType_when_ElementType_differs_from_generic_type_even_when_using_dynamic()
+        public void
+            Generic_CreateQuery_on_generic_DbQuery_uses_ElementType_when_ElementType_differs_from_generic_type_even_when_using_dynamic()
         {
             using (var context = new F1Context())
             {
@@ -70,7 +72,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Generic_CreateQuery_on_non_generic_DbQuery_uses_ElementType_when_ElementType_differs_from_generic_type_even_when_using_dynamic()
+        public void
+            Generic_CreateQuery_on_non_generic_DbQuery_uses_ElementType_when_ElementType_differs_from_generic_type_even_when_using_dynamic()
         {
             using (var context = new F1Context())
             {
@@ -267,7 +270,11 @@ namespace ProductivityApiTests
             {
                 var query =
                     context.Drivers.Where(d => d.Name.StartsWith("L")).Select(
-                        d => new DriverProjectionClass { Id = d.Id, Name = d.Name });
+                        d => new DriverProjectionClass
+                                 {
+                                     Id = d.Id,
+                                     Name = d.Name
+                                 });
                 Assert.IsType<DbQuery<DriverProjectionClass>>(query);
                 query.Load(); // Sanity test that it doesn't throw
             }
@@ -287,7 +294,11 @@ namespace ProductivityApiTests
                 var query = from n in context.Numbers
                             from p in context.Products
                             where n.Value > p.UnitsInStock
-                            select new NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                            select new NumberProductProjectionClass
+                                       {
+                                           Value = n.Value,
+                                           UnitsInStock = p.UnitsInStock
+                                       };
                 Assert.IsType<DbQuery<NumberProductProjectionClass>>(query);
                 query.Load(); // Sanity test that it doesn't throw
             }
@@ -301,7 +312,11 @@ namespace ProductivityApiTests
                 var query = from n in context.Set<NumberForLinq>()
                             from p in context.Set<ProductForLinq>()
                             where n.Value > p.UnitsInStock
-                            select new NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                            select new NumberProductProjectionClass
+                                       {
+                                           Value = n.Value,
+                                           UnitsInStock = p.UnitsInStock
+                                       };
                 Assert.IsType<DbQuery<NumberProductProjectionClass>>(query);
                 query.Load(); // Sanity test that it doesn't throw
             }
@@ -316,7 +331,11 @@ namespace ProductivityApiTests
                 var query = from n in context.Numbers
                             from p in context.Products
                             where n.Value > p.UnitsInStock && n.Value == parameter
-                            select new NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                            select new NumberProductProjectionClass
+                                       {
+                                           Value = n.Value,
+                                           UnitsInStock = p.UnitsInStock
+                                       };
                 Assert.IsType<DbQuery<NumberProductProjectionClass>>(query);
                 query.Load(); // Sanity test that it doesn't throw
             }
@@ -331,7 +350,11 @@ namespace ProductivityApiTests
                 var query = from n in context.Set<NumberForLinq>()
                             from p in context.Set<ProductForLinq>()
                             where n.Value > p.UnitsInStock && n.Value == parameter
-                            select new NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                            select new NumberProductProjectionClass
+                                       {
+                                           Value = n.Value,
+                                           UnitsInStock = p.UnitsInStock
+                                       };
                 Assert.IsType<DbQuery<NumberProductProjectionClass>>(query);
                 query.Load(); // Sanity test that it doesn't throw
             }
@@ -346,7 +369,11 @@ namespace ProductivityApiTests
                 var query = from n in context.NumbersGreaterThanTen()
                             from p in context.ProductsStartingWithP
                             where n.Value > p.UnitsInStock && n.Value == parameter
-                            select new NumberProductProjectionClass { Value = n.Value, UnitsInStock = p.UnitsInStock };
+                            select new NumberProductProjectionClass
+                                       {
+                                           Value = n.Value,
+                                           UnitsInStock = p.UnitsInStock
+                                       };
                 Assert.IsType<DbQuery<NumberProductProjectionClass>>(query);
                 query.Load(); // Sanity test that it doesn't throw
             }
@@ -444,8 +471,9 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Drivers).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery(null)).ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery(null)).ParamName);
             }
         }
 
@@ -455,9 +483,10 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Drivers).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery<Driver>(null)).
-                                 ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery<Driver>(null)).
+                        ParamName);
             }
         }
 
@@ -467,8 +496,9 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Drivers).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.Execute(null)).ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.Execute(null)).ParamName);
             }
         }
 
@@ -478,8 +508,9 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Drivers).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.Execute<Driver>(null)).ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.Execute<Driver>(null)).ParamName);
             }
         }
 
@@ -489,8 +520,9 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Set(typeof(Driver))).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery(null)).ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery(null)).ParamName);
             }
         }
 
@@ -500,9 +532,10 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Set(typeof(Driver))).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery<Driver>(null)).
-                                 ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.CreateQuery<Driver>(null)).
+                        ParamName);
             }
         }
 
@@ -512,8 +545,9 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Set(typeof(Driver))).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.Execute(null)).ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.Execute(null)).ParamName);
             }
         }
 
@@ -523,8 +557,9 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var queryProvider = ((IQueryable)context.Set(typeof(Driver))).Provider;
-                Assert.Equal("expression",
-                             Assert.Throws<ArgumentNullException>(() => queryProvider.Execute<Driver>(null)).ParamName);
+                Assert.Equal(
+                    "expression",
+                    Assert.Throws<ArgumentNullException>(() => queryProvider.Execute<Driver>(null)).ParamName);
             }
         }
 
@@ -589,7 +624,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -598,7 +634,10 @@ namespace ProductivityApiTests
         private void Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from n in q where n.Value < 5 select n, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from n in q
+                     where n.Value < 5
+                     select n, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -658,7 +697,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -667,7 +707,10 @@ namespace ProductivityApiTests
         private void Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q where p.UnitsInStock == 0 select p, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     where p.UnitsInStock == 0
+                     select p, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -727,7 +770,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -736,7 +780,10 @@ namespace ProductivityApiTests
         private void Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q where p.UnitsInStock > 0 && p.UnitPrice > 3.00M select p, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     where p.UnitsInStock > 0 && p.UnitPrice > 3.00M
+                     select p, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -796,7 +843,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -805,7 +853,14 @@ namespace ProductivityApiTests
         private void Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from c in q where c.Region == "WA" select new { c.Id, c.Orders }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     where c.Region == "WA"
+                     select new
+                                {
+                                    c.Id,
+                                    c.Orders
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -858,7 +913,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Where_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Where_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Where_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -931,7 +987,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -940,7 +997,9 @@ namespace ProductivityApiTests
         private void Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from n in q select n.Value + 1, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from n in q
+                     select n.Value + 1, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1000,7 +1059,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1009,7 +1069,9 @@ namespace ProductivityApiTests
         private void Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q select p.ProductName, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     select p.ProductName, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1055,14 +1117,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Transformation_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Select_Transformation_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Select_Transformation_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Select_Transformation_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Transformation_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Select_Transformation_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1073,7 +1138,9 @@ namespace ProductivityApiTests
         {
             string[] strings = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
-            runner(q => from n in q select strings[n.Value], ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from n in q
+                     select strings[n.Value], ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1120,14 +1187,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1136,7 +1207,13 @@ namespace ProductivityApiTests
         private void Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from w in q select new { Upper = w.Name.ToUpper(), Lower = w.Name.ToLower() }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from w in q
+                     select new
+                                {
+                                    Upper = w.Name.ToUpper(),
+                                    Lower = w.Name.ToLower()
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1176,14 +1253,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1194,7 +1275,13 @@ namespace ProductivityApiTests
         {
             string[] strings = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
-            runner(q => from n in q select new { Digit = strings[n.Value], Even = (n.Value % 2 == 0) }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from n in q
+                     select new
+                                {
+                                    Digit = strings[n.Value],
+                                    Even = (n.Value % 2 == 0)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1241,14 +1328,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1257,7 +1348,14 @@ namespace ProductivityApiTests
         private void Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q select new { p.ProductName, p.Category, Price = p.UnitPrice }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     select new
+                                {
+                                    p.ProductName,
+                                    p.Category,
+                                    Price = p.UnitPrice
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1310,7 +1408,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Select_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Select_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Select_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1319,7 +1418,13 @@ namespace ProductivityApiTests
         private void Select_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Select((num, index) => new { Num = num.Value, InPlace = (num.Value == index) }), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => q.Select(
+                    (num, index) => new
+                                        {
+                                            Num = num.Value,
+                                            InPlace = (num.Value == index)
+                                        }), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1366,27 +1471,38 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq
-                               where n.Value > p.UnitsInStock
-                               select new { n.Value, p.UnitsInStock }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq
+                            where n.Value > p.UnitsInStock
+                            select new
+                                       {
+                                           n.Value,
+                                           p.UnitsInStock
+                                       }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1433,14 +1549,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1449,10 +1569,16 @@ namespace ProductivityApiTests
         private void SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from c in q
-                        from o in c.Orders
-                        where o.Total < 500.00M
-                        select new { CustomerId = c.Id, OrderId = o.Id, o.Total }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     from o in c.Orders
+                     where o.Total < 500.00M
+                     select new
+                                {
+                                    CustomerId = c.Id,
+                                    OrderId = o.Id,
+                                    o.Total
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1499,14 +1625,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1515,10 +1645,16 @@ namespace ProductivityApiTests
         private void SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from c in q
-                        from o in c.Orders
-                        where o.OrderDate >= new DateTime(1998, 1, 1)
-                        select new { CustomerId = c.Id, OrderId = o.Id, o.OrderDate }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     from o in c.Orders
+                     where o.OrderDate >= new DateTime(1998, 1, 1)
+                     select new
+                                {
+                                    CustomerId = c.Id,
+                                    OrderId = o.Id,
+                                    o.OrderDate
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1565,14 +1701,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1581,10 +1721,16 @@ namespace ProductivityApiTests
         private void SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from c in q
-                        from o in c.Orders
-                        where o.Total >= 2000.0M
-                        select new { CustomerId = c.Id, OrderId = o.Id, o.Total }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     from o in c.Orders
+                     where o.Total >= 2000.0M
+                     select new
+                                {
+                                    CustomerId = c.Id,
+                                    OrderId = o.Id,
+                                    o.Total
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1631,14 +1777,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1649,11 +1799,16 @@ namespace ProductivityApiTests
         {
             var cutoffDate = new DateTime(1997, 1, 1);
 
-            runner(q => from c in q
-                        where c.Region == "WA"
-                        from o in c.Orders
-                        where o.OrderDate >= cutoffDate
-                        select new { CustomerId = c.Id, OrderId = o.Id }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     where c.Region == "WA"
+                     from o in c.Orders
+                     where o.OrderDate >= cutoffDate
+                     select new
+                                {
+                                    CustomerId = c.Id,
+                                    OrderId = o.Id
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1699,14 +1854,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1715,10 +1873,12 @@ namespace ProductivityApiTests
         private void SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.SelectMany((cust, custIndex) =>
-                                     cust.Orders.Select(
-                                         o => "Customer #" + (custIndex + 1) + " has an order with OrderID " + o.Id)),
-                   ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => q.SelectMany(
+                    (cust, custIndex) =>
+                    cust.Orders.Select(
+                        o => "Customer #" + (custIndex + 1) + " has an order with OrderID " + o.Id)),
+                ToListExecutor, ToListAsyncExecutor);
         }
 
         #endregion
@@ -1782,7 +1942,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1851,7 +2012,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1860,10 +2022,16 @@ namespace ProductivityApiTests
         public void Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => (from c in q
-                         from o in c.Orders
-                         where c.Region == "WA"
-                         select new { c.Id, OrderId = o.Id, o.OrderDate }).Take(3), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => (from c in q
+                      from o in c.Orders
+                      where c.Region == "WA"
+                      select new
+                                 {
+                                     c.Id,
+                                     OrderId = o.Id,
+                                     o.OrderDate
+                                 }).Take(3), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -1923,7 +2091,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1992,7 +2161,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2001,11 +2171,17 @@ namespace ProductivityApiTests
         private void Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => (from c in q
-                         from o in c.Orders
-                         where c.Region == "WA"
-                         orderby c.Id
-                         select new { c.Id, OrderId = o.Id, o.OrderDate }).Skip(2), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => (from c in q
+                      from o in c.Orders
+                      where c.Region == "WA"
+                      orderby c.Id
+                      select new
+                                 {
+                                     c.Id,
+                                     OrderId = o.Id,
+                                     o.OrderDate
+                                 }).Skip(2), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2051,14 +2227,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2113,14 +2291,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void TakeWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void TakeWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             TakeWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void TakeWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            TakeWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             TakeWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2175,14 +2355,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2237,14 +2419,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SkipWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void SkipWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             SkipWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SkipWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SkipWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             SkipWhile_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2310,14 +2494,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2326,7 +2512,10 @@ namespace ProductivityApiTests
         private void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from w in q orderby w.Name select w, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from w in q
+                     orderby w.Name
+                     select w, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2379,14 +2568,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2395,7 +2586,10 @@ namespace ProductivityApiTests
         private void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from w in q orderby w.Name.Length select w, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from w in q
+                     orderby w.Name.Length
+                     select w, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2448,14 +2642,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2464,7 +2660,10 @@ namespace ProductivityApiTests
         private void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q orderby p.ProductName select p, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     orderby p.ProductName
+                     select p, ToListExecutor, ToListAsyncExecutor);
         }
 
         public class CaseInsensitiveNumberComparer : IComparer<NumberForLinq>
@@ -2518,14 +2717,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2581,14 +2782,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2597,7 +2802,10 @@ namespace ProductivityApiTests
         private void OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from d in q orderby d.Value descending select d, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from d in q
+                     orderby d.Value descending
+                     select d, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2644,14 +2852,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2660,7 +2872,10 @@ namespace ProductivityApiTests
         private void OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q orderby p.UnitsInStock descending select p, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     orderby p.UnitsInStock descending
+                     select p, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2700,14 +2915,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2776,7 +2995,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2785,7 +3005,10 @@ namespace ProductivityApiTests
         private void ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from d in q orderby d.Name.Length, d.Value select d, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from d in q
+                     orderby d.Name.Length , d.Value
+                     select d, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2838,7 +3061,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ThenBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            ThenBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             ThenBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2847,7 +3071,8 @@ namespace ProductivityApiTests
         private void ThenBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.OrderBy(a => a.Name.Length).ThenBy(a => a, new CaseInsensitiveNumberComparer()), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => q.OrderBy(a => a.Name.Length).ThenBy(a => a, new CaseInsensitiveNumberComparer()), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2894,14 +3119,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2910,7 +3138,10 @@ namespace ProductivityApiTests
         private void ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q orderby p.Category, p.UnitPrice descending select p, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     orderby p.Category , p.UnitPrice descending
+                     select p, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -2950,14 +3181,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -2966,8 +3201,9 @@ namespace ProductivityApiTests
         private void ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.OrderBy(a => a.Name.Length).ThenByDescending(a => a, new CaseInsensitiveNumberComparer()),
-                   ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => q.OrderBy(a => a.Name.Length).ThenByDescending(a => a, new CaseInsensitiveNumberComparer()),
+                ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3020,7 +3256,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Reverse_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Reverse_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Reverse_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3029,7 +3266,10 @@ namespace ProductivityApiTests
         private void Reverse_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => (from d in q where d.Name.StartsWith("i") select d).Reverse(), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => (from d in q
+                      where d.Name.StartsWith("i")
+                      select d).Reverse(), ToListExecutor, ToListAsyncExecutor);
         }
 
         #endregion
@@ -3086,14 +3326,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3102,10 +3344,15 @@ namespace ProductivityApiTests
         private void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from n in q
-                        group n by n.Value % 5
-                            into g
-                            select new { Remainder = g.Key, Numbers = g }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from n in q
+                     group n by n.Value % 5
+                     into g
+                     select new
+                                {
+                                    Remainder = g.Key,
+                                    Numbers = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3158,14 +3405,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3174,10 +3423,15 @@ namespace ProductivityApiTests
         private void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from w in q
-                        group w by w.Name.Length
-                            into g
-                            select new { FirstLetter = g.Key, Words = g }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from w in q
+                     group w by w.Name.Length
+                     into g
+                     select new
+                                {
+                                    FirstLetter = g.Key,
+                                    Words = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3230,14 +3484,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3246,10 +3502,15 @@ namespace ProductivityApiTests
         private void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            select new { Category = g.Key, Products = g }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    Products = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3309,7 +3570,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3318,23 +3580,28 @@ namespace ProductivityApiTests
         private void GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from c in q
-                        select new
-                               {
-                                   c.CompanyName,
-                                   YearGroups = from o in c.Orders
-                                                group o by o.OrderDate.Year
-                                                    into yg
-                                                    select new
-                                                           {
-                                                               Year = yg.Key,
-                                                               MonthGroups = from o in yg
-                                                                             group o by o.OrderDate.Month
-                                                                                 into mg
-                                                                                 select
-                                                                                     new { Month = mg.Key, Orders = mg }
-                                                           }
-                               }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     select new
+                                {
+                                    c.CompanyName,
+                                    YearGroups = from o in c.Orders
+                                                 group o by o.OrderDate.Year
+                                                 into yg
+                                                 select new
+                                                            {
+                                                                Year = yg.Key,
+                                                                MonthGroups = from o in yg
+                                                                              group o by o.OrderDate.Month
+                                                                              into mg
+                                                                              select
+                                                                                  new
+                                                                                      {
+                                                                                          Month = mg.Key,
+                                                                                          Orders = mg
+                                                                                      }
+                                                            }
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         public class CaseInsensitiveStringComparer : IEqualityComparer<string>
@@ -3393,14 +3660,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3449,14 +3718,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3531,7 +3803,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3600,7 +3873,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -3609,7 +3883,9 @@ namespace ProductivityApiTests
         private void Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => (from p in q select p.Category).Distinct(), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => (from p in q
+                      select p.Category).Distinct(), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3676,7 +3952,8 @@ namespace ProductivityApiTests
         }
 
         private void Union_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
             runner((q1, q2) => q1.Union(q2), ToListExecutor, ToListAsyncExecutor);
@@ -3746,12 +4023,16 @@ namespace ProductivityApiTests
         }
 
         private void Union_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<ProductForLinq>, IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<ProductForLinq>, IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>,
+                    Func<IQueryable, object>>
                 runner)
         {
-            runner((pq, cq) => (from p in pq
-                                select p.ProductName.Substring(0, 1)).Union(from c in cq
-                                                                            select c.CompanyName.Substring(0, 1)), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (pq, cq) => (from p in pq
+                             select p.ProductName.Substring(0, 1)).Union(
+                                 from c in cq
+                                 select c.CompanyName.Substring(0, 1)), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3811,14 +4092,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
             runner((q1, q2) => q1.Intersect(q2), ToListExecutor, ToListAsyncExecutor);
@@ -3881,20 +4164,25 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<ProductForLinq>, IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<ProductForLinq>, IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>,
+                    Func<IQueryable, object>>
                 runner)
         {
-            runner((pq, cq) => (from p in pq
-                                select p.ProductName.Substring(0, 1)).Intersect(from c in cq
-                                                                                select c.CompanyName.Substring(0, 1)),
-                   ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (pq, cq) => (from p in pq
+                             select p.ProductName.Substring(0, 1)).Intersect(
+                                 from c in cq
+                                 select c.CompanyName.Substring(0, 1)),
+                ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3961,7 +4249,8 @@ namespace ProductivityApiTests
         }
 
         private void Except_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
             runner((q1, q2) => q1.Except(q2), ToListExecutor, ToListAsyncExecutor);
@@ -4031,12 +4320,16 @@ namespace ProductivityApiTests
         }
 
         private void Except_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<ProductForLinq>, IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<ProductForLinq>, IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>,
+                    Func<IQueryable, object>>
                 runner)
         {
-            runner((pq, cq) => (from p in pq
-                                select p.ProductName.Substring(0, 1)).Except(from c in cq
-                                                                             select c.CompanyName.Substring(0, 1)), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (pq, cq) => (from p in pq
+                             select p.ProductName.Substring(0, 1)).Except(
+                                 from c in cq
+                                 select c.CompanyName.Substring(0, 1)), ToListExecutor, ToListAsyncExecutor);
         }
 
         #endregion
@@ -4109,7 +4402,8 @@ namespace ProductivityApiTests
         private void ToArray_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(SimpleQuery,
+            runner(
+                SimpleQuery,
                 q => ((IQueryable<NumberForLinq>)q).ToArray(),
                 q => ((IQueryable<NumberForLinq>)q).ToArrayAsync().Result);
         }
@@ -4240,7 +4534,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4249,14 +4544,17 @@ namespace ProductivityApiTests
         private void ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(SimpleQuery,
+            runner(
+                SimpleQuery,
                 q => ((IQueryable<NumberForLinq>)q).ToDictionary(n => n.Name),
                 q => ((IQueryable<NumberForLinq>)q).ToDictionaryAsync(n => n.Name).Result);
         }
 
         private IQueryable<NumberForLinq> SimpleQuery(IQueryable<NumberForLinq> q)
         {
-            return from d in q orderby d.Value descending select d;
+            return from d in q
+                   orderby d.Value descending
+                   select d;
         }
 
         [Fact]
@@ -4331,8 +4629,9 @@ namespace ProductivityApiTests
         [Fact]
         public void OfType_directly_on_non_generic_DbSet_from_LINQ_101_returns_same_results_as_ObjectQuery()
         {
-            RunLinqTest(c => c.Set(typeof(ProductForLinq)).OfType<FeaturedProductForLinq>().ToList(),
-                        c => c.CreateObjectSet<ProductForLinq>().OfType<FeaturedProductForLinq>().ToList());
+            RunLinqTest(
+                c => c.Set(typeof(ProductForLinq)).OfType<FeaturedProductForLinq>().ToList(),
+                c => c.CreateObjectSet<ProductForLinq>().OfType<FeaturedProductForLinq>().ToList());
         }
 
         #endregion
@@ -4396,7 +4695,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4405,7 +4705,10 @@ namespace ProductivityApiTests
         private void First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q where p.Id == 12 select p,
+            runner(
+                q => from p in q
+                     where p.Id == 12
+                     select p,
                 q => ((IQueryable<ProductForLinq>)q).First(),
                 q => ((IQueryable<ProductForLinq>)q).FirstAsync().Result);
         }
@@ -4467,7 +4770,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4476,7 +4780,8 @@ namespace ProductivityApiTests
         private void First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).First(s => s.Name.Substring(0, 1) == "T"),
                 q => ((IQueryable<NumberForLinq>)q).FirstAsync(s => s.Name.Substring(0, 1) == "T").Result);
         }
@@ -4531,14 +4836,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4547,9 +4855,12 @@ namespace ProductivityApiTests
         private void FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q where p.ProductName == "Office Space" select p,
-                   q => ((IQueryable<ProductForLinq>)q).FirstOrDefault(),
-                   q => ((IQueryable<ProductForLinq>)q).FirstOrDefaultAsync().Result);
+            runner(
+                q => from p in q
+                     where p.ProductName == "Office Space"
+                     select p,
+                q => ((IQueryable<ProductForLinq>)q).FirstOrDefault(),
+                q => ((IQueryable<ProductForLinq>)q).FirstOrDefaultAsync().Result);
         }
 
         [Fact]
@@ -4596,14 +4907,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4612,7 +4927,8 @@ namespace ProductivityApiTests
         private void FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).FirstOrDefault(s => s.Name.Substring(0, 1) == "Q"),
                 q => ((IQueryable<NumberForLinq>)q).FirstOrDefaultAsync(s => s.Name.Substring(0, 1) == "Q").Result);
         }
@@ -4676,7 +4992,10 @@ namespace ProductivityApiTests
         private void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from n in q where n.Value > 5 select n,
+            runner(
+                q => from n in q
+                     where n.Value > 5
+                     select n,
                 q => ((IQueryable<NumberForLinq>)q).ElementAt(1),
                 q => ((IQueryable<NumberForLinq>)q).ElementAtAsync(1).Result);
         }
@@ -4742,7 +5061,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4751,7 +5071,8 @@ namespace ProductivityApiTests
         private void Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).Any(w => w.Name.Contains("e")),
                 q => ((IQueryable<NumberForLinq>)q).AnyAsync(w => w.Name.Contains("e")).Result);
         }
@@ -4813,7 +5134,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
@@ -4822,11 +5144,16 @@ namespace ProductivityApiTests
         public void Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            where g.Any(p => p.UnitsInStock == 0)
-                            select new { Category = g.Key, Products = g }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     where g.Any(p => p.UnitsInStock == 0)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    Products = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -4886,7 +5213,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4895,7 +5223,8 @@ namespace ProductivityApiTests
         private void All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).All(n => n.Value % 2 == 1),
                 q => ((IQueryable<NumberForLinq>)q).AllAsync(n => n.Value % 2 == 1).Result);
         }
@@ -4957,7 +5286,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -4966,11 +5296,16 @@ namespace ProductivityApiTests
         private void All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            where g.All(p => p.UnitsInStock > 0)
-                            select new { Category = g.Key, Products = g }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     where g.All(p => p.UnitsInStock > 0)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    Products = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         #endregion
@@ -5034,7 +5369,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5043,7 +5379,8 @@ namespace ProductivityApiTests
         private void Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Distinct(),
+            runner(
+                q => q.Distinct(),
                 q => ((IQueryable<NumberForLinq>)q).Count(),
                 q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
         }
@@ -5098,14 +5435,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5114,7 +5453,8 @@ namespace ProductivityApiTests
         private void Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).Count(n => n.Value % 2 == 1),
                 q => ((IQueryable<NumberForLinq>)q).CountAsync(n => n.Value % 2 == 1).Result);
         }
@@ -5176,7 +5516,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5185,7 +5526,13 @@ namespace ProductivityApiTests
         private void Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from c in q select new { c.Id, OrderCount = c.Orders.Count() }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from c in q
+                     select new
+                                {
+                                    c.Id,
+                                    OrderCount = c.Orders.Count()
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5245,7 +5592,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5254,10 +5602,15 @@ namespace ProductivityApiTests
         private void Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            select new { Category = g.Key, ProductCount = g.Count() }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    ProductCount = g.Count()
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5317,7 +5670,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5326,7 +5680,8 @@ namespace ProductivityApiTests
         private void Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Select(n => n.Value),
+            runner(
+                q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Sum(),
                 q => ((IQueryable<int>)q).SumAsync().Result);
         }
@@ -5388,7 +5743,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5397,7 +5753,8 @@ namespace ProductivityApiTests
         private void Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).Sum(n => n.Name.Length),
                 q => ((IQueryable<NumberForLinq>)q).SumAsync(n => n.Name.Length).Result);
         }
@@ -5459,7 +5816,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5468,10 +5826,15 @@ namespace ProductivityApiTests
         private void Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            select new { Category = g.Key, TotalUnitsInStock = g.Sum(p => p.UnitsInStock) }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    TotalUnitsInStock = g.Sum(p => p.UnitsInStock)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5531,7 +5894,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5540,7 +5904,8 @@ namespace ProductivityApiTests
         private void Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Select(n => n.Value),
+            runner(
+                q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Min(),
                 q => ((IQueryable<int>)q).MinAsync().Result);
         }
@@ -5602,7 +5967,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5611,7 +5977,8 @@ namespace ProductivityApiTests
         private void Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).Min(n => n.Name.Length),
                 q => ((IQueryable<NumberForLinq>)q).MinAsync(n => n.Name.Length).Result);
         }
@@ -5673,7 +6040,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5682,10 +6050,15 @@ namespace ProductivityApiTests
         private void Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            select new { Category = g.Key, CheapestPrice = g.Min(p => p.UnitPrice) }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    CheapestPrice = g.Min(p => p.UnitPrice)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5745,7 +6118,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5754,11 +6128,16 @@ namespace ProductivityApiTests
         private void Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            let minPrice = g.Min(p => p.UnitPrice)
-                            select new { Category = g.Key, CheapestProducts = g.Where(p => p.UnitPrice == minPrice) }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     let minPrice = g.Min(p => p.UnitPrice)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    CheapestProducts = g.Where(p => p.UnitPrice == minPrice)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5818,7 +6197,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5827,7 +6207,8 @@ namespace ProductivityApiTests
         private void Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Select(n => n.Value),
+            runner(
+                q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Max(),
                 q => ((IQueryable<int>)q).MaxAsync().Result);
         }
@@ -5889,7 +6270,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5898,7 +6280,8 @@ namespace ProductivityApiTests
         private void Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).Max(n => n.Name.Length),
                 q => ((IQueryable<NumberForLinq>)q).MaxAsync(n => n.Name.Length).Result);
         }
@@ -5960,7 +6343,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5969,10 +6353,15 @@ namespace ProductivityApiTests
         private void Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            select new { Category = g.Key, MostExpensivePrice = g.Max(p => p.UnitPrice) }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    MostExpensivePrice = g.Max(p => p.UnitPrice)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6032,7 +6421,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6041,12 +6431,17 @@ namespace ProductivityApiTests
         private void Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            let minPrice = g.Max(p => p.UnitPrice)
-                            select new { Category = g.Key, MostExpensiveProducts = g.Where(p => p.UnitPrice == minPrice) },
-                   ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     let minPrice = g.Max(p => p.UnitPrice)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    MostExpensiveProducts = g.Where(p => p.UnitPrice == minPrice)
+                                },
+                ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6106,7 +6501,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6115,7 +6511,8 @@ namespace ProductivityApiTests
         private void Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Select(n => n.Value),
+            runner(
+                q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Average(),
                 q => ((IQueryable<int>)q).AverageAsync().Result);
         }
@@ -6170,14 +6567,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6186,7 +6586,8 @@ namespace ProductivityApiTests
         private void Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q,
+            runner(
+                q => q,
                 q => ((IQueryable<NumberForLinq>)q).Average(n => n.Name.Length),
                 q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => n.Name.Length).Result);
         }
@@ -6248,7 +6649,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6257,11 +6659,16 @@ namespace ProductivityApiTests
         private void Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => from p in q
-                        group p by p.Category
-                            into g
-                            select new { Category = g.Key, AveragePrice = g.Average(p => p.UnitPrice) },
-                   ToListExecutor, ToListAsyncExecutor);
+            runner(
+                q => from p in q
+                     group p by p.Category
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    AveragePrice = g.Average(p => p.UnitPrice)
+                                },
+                ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6307,14 +6714,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6323,9 +6732,10 @@ namespace ProductivityApiTests
         private void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner(q => q.Select(n => n.Value),
-                   q => ((IQueryable<int>)q).Aggregate((runningProduct, nextFactor) => runningProduct * nextFactor),
-                   q => ((IQueryable<int>)q).AggregateAsync((runningProduct, nextFactor) => runningProduct * nextFactor).Result);
+            runner(
+                q => q.Select(n => n.Value),
+                q => ((IQueryable<int>)q).Aggregate((runningProduct, nextFactor) => runningProduct * nextFactor),
+                q => ((IQueryable<int>)q).AggregateAsync((runningProduct, nextFactor) => runningProduct * nextFactor).Result);
         }
 
         [Fact]
@@ -6378,7 +6788,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6388,17 +6799,20 @@ namespace ProductivityApiTests
             Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
             var startBalance = 100;
-            runner(q => q.Select(n => n.Value),
-                q => ((IQueryable<int>)q).Aggregate(startBalance,
-                                                   (balance, nextWithdrawal) =>
-                                                   ((nextWithdrawal <= balance)
-                                                           ? (balance - nextWithdrawal)
-                                                           : balance)),
-                q => ((IQueryable<int>)q).AggregateAsync(startBalance,
-                                                   (balance, nextWithdrawal) =>
-                                                   ((nextWithdrawal <= balance)
-                                                           ? (balance - nextWithdrawal)
-                                                           : balance)).Result);
+            runner(
+                q => q.Select(n => n.Value),
+                q => ((IQueryable<int>)q).Aggregate(
+                    startBalance,
+                    (balance, nextWithdrawal) =>
+                    ((nextWithdrawal <= balance)
+                         ? (balance - nextWithdrawal)
+                         : balance)),
+                q => ((IQueryable<int>)q).AggregateAsync(
+                    startBalance,
+                    (balance, nextWithdrawal) =>
+                    ((nextWithdrawal <= balance)
+                         ? (balance - nextWithdrawal)
+                         : balance)).Result);
         }
 
         #endregion
@@ -6469,7 +6883,8 @@ namespace ProductivityApiTests
         }
 
         private void Concat_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
             runner((q1, q2) => q1.Concat(q2), ToListExecutor, ToListAsyncExecutor);
@@ -6539,10 +6954,16 @@ namespace ProductivityApiTests
         }
 
         private void Concat_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<CustomerForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<CustomerForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>,
+                    Func<IQueryable, object>>
                 runner)
         {
-            runner((q1, q2) => (from c in q1 select c.CompanyName).Concat(from p in q2 select p.ProductName), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (q1, q2) => (from c in q1
+                             select c.CompanyName).Concat(
+                                 from p in q2
+                                 select p.ProductName), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6595,14 +7016,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
             runner((q1, q2) => new[] { q1.SequenceEqual(q2) }.AsQueryable(), ToListExecutor, ToListAsyncExecutor);
@@ -6658,18 +7081,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
-            runner((q1, q2) => new[] { q1.Select(n => n.Value).SequenceEqual(q2.Select(n => n.Value)) }.AsQueryable(),
-                   ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (q1, q2) => new[] { q1.Select(n => n.Value).SequenceEqual(q2.Select(n => n.Value)) }.AsQueryable(),
+                ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6722,14 +7148,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
             runner((q1, q2) => new[] { q1.OrderBy(n => n.Value).SequenceEqual(q2) }.AsQueryable(), ToListExecutor, ToListAsyncExecutor);
@@ -6796,19 +7224,27 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((q1, q2) => from c in q1
-                               join o in q2 on c equals o.Customer
-                               select new { Customer = c, o.Id }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (q1, q2) => from c in q1
+                            join o in q2 on c equals o.Customer
+                            select new
+                                       {
+                                           Customer = c,
+                                           o.Id
+                                       }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6868,19 +7304,27 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((q1, q2) => from c in q1
-                               join o in q2 on c equals o.Customer into ps
-                               select new { Customer = c, Products = ps }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (q1, q2) => from c in q1
+                            join o in q2 on c equals o.Customer into ps
+                            select new
+                                       {
+                                           Customer = c,
+                                           Products = ps
+                                       }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6927,27 +7371,38 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((q1, q2) => from c in q1
-                               join o in q2 on c equals o.Customer into ps
-                               from o in ps
-                               select new { Customer = c, o.Id }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (q1, q2) => from c in q1
+                            join o in q2 on c equals o.Customer into ps
+                            from o in ps
+                            select new
+                                       {
+                                           Customer = c,
+                                           o.Id
+                                       }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6994,27 +7449,38 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-            Action<Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<CustomerForLinq>, IQueryable<OrderForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((q1, q2) => from c in q1
-                               join o in q2 on c equals o.Customer into ps
-                               from o in ps.DefaultIfEmpty()
-                               select new { Customer = c, OrderId = o == null ? -1 : o.Id }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (q1, q2) => from c in q1
+                            join o in q2 on c equals o.Customer into ps
+                            from o in ps.DefaultIfEmpty()
+                            select new
+                                       {
+                                           Customer = c,
+                                           OrderId = o == null ? -1 : o.Id
+                                       }, ToListExecutor, ToListAsyncExecutor);
         }
 
         #endregion
@@ -7085,12 +7551,15 @@ namespace ProductivityApiTests
         }
 
         private void Very_simple_SelectMany_1_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq
-                               select n, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq
+                            select n, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7157,12 +7626,15 @@ namespace ProductivityApiTests
         }
 
         private void Very_simple_SelectMany_2_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq
-                               select p, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq
+                            select p, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7229,14 +7701,17 @@ namespace ProductivityApiTests
         }
 
         private void SelectMany_with_aggregate_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq
-                               select n,
-                               q => ((IQueryable<NumberForLinq>)q).Count(),
-                               q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq
+                            select n,
+                q => ((IQueryable<NumberForLinq>)q).Count(),
+                q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
         }
 
         [Fact]
@@ -7297,12 +7772,15 @@ namespace ProductivityApiTests
         }
 
         private void SelectMany_with_additional_predicate_in_lambda_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq.Where(r => r.Id > 0)
-                               select n, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq.Where(r => r.Id > 0)
+                            select n, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7355,28 +7833,33 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_implementation(
                 SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_implementation(
                 AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq.Where(r => r.Id > 0)
-                               select n,
-                               q => ((IQueryable<NumberForLinq>)q).Count(),
-                               q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq.Where(r => r.Id > 0)
+                            select n,
+                q => ((IQueryable<NumberForLinq>)q).Count(),
+                q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
         }
 
         [Fact]
@@ -7437,12 +7920,19 @@ namespace ProductivityApiTests
         }
 
         private void SelectMany_with_use_of_second_root_in_projection_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
-            runner((nq, pq) => from n in nq
-                               from p in pq.Where(r => r.Id > 0)
-                               select new { n, foo = pq.Where(z => n.Id == z.Id) }, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from n in nq
+                            from p in pq.Where(r => r.Id > 0)
+                            select new
+                                       {
+                                           n,
+                                           foo = pq.Where(z => n.Id == z.Id)
+                                       }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7509,13 +7999,16 @@ namespace ProductivityApiTests
         }
 
         private void Query_with_nested_query_in_select_clause_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
             var parameter = 1;
-            runner((nq, pq) => from p in pq
-                               where p.Id == parameter
-                               select nq.Where(q => q.Id == p.Id), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from p in pq
+                            where p.Id == parameter
+                            select nq.Where(q => q.Id == p.Id), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7582,14 +8075,17 @@ namespace ProductivityApiTests
         }
 
         private void Query_with_multiple_things_in_the_closure_works_implementation(
-            Action<Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<NumberForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>
+                    >
                 runner)
         {
             var parameter1 = 1;
             var parameter2 = "Name";
-            runner((nq, pq) => from p in pq
-                               where p.Id == parameter1
-                               select nq.Where(q => q.Id == p.Id && q.Name == parameter2), ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (nq, pq) => from p in pq
+                            where p.Id == parameter1
+                            select nq.Where(q => q.Id == p.Id && q.Name == parameter2), ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7649,20 +8145,25 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_nested_query_and_Contains_call_in_where_clause_works_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Query_with_nested_query_and_Contains_call_in_where_clause_works_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
         {
             Query_with_nested_query_and_Contains_call_in_where_clause_works_implementation(
                 AsyncRunnerAdapter<ProductForLinq, ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Query_with_nested_query_and_Contains_call_in_where_clause_works_implementation(
-            Action<Func<IQueryable<ProductForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            Action
+                <Func<IQueryable<ProductForLinq>, IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>,
+                    Func<IQueryable, object>>
                 runner)
         {
-            runner((pq1, pq2) => from c1 in pq1
-                                 where (from c2 in pq2 select c2.Id).Contains(c1.Id)
-                                 orderby c1.ProductName descending
-                                 select c1, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (pq1, pq2) => from c1 in pq1
+                              where (from c2 in pq2
+                                     select c2.Id).Contains(c1.Id)
+                              orderby c1.ProductName descending
+                              select c1, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7709,14 +8210,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_implementation(
                 SyncRunnerAdapter<ProductForLinq, NumberForLinq, int>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void
+            Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_implementation(
                 AsyncRunnerAdapter<ProductForLinq, NumberForLinq, int>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7726,11 +8230,13 @@ namespace ProductivityApiTests
             Action<Func<IQueryable<ProductForLinq>, IQueryable<int>, IQueryable>,
                 Func<IQueryable<NumberForLinq>, IQueryable<int>>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
         {
-            runner((pq1, nq) => from c in pq1
-                                where nq.Contains(c.Id)
-                                orderby c.ProductName descending
-                                select c,
-                   pq2 => from c in pq2 select c.Id, ToListExecutor, ToListAsyncExecutor);
+            runner(
+                (pq1, nq) => from c in pq1
+                             where nq.Contains(c.Id)
+                             orderby c.ProductName descending
+                             select c,
+                pq2 => from c in pq2
+                       select c.Id, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -7913,7 +8419,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_using_Set_method_obtained_from_context_field_with_other_fields_also_in_classin_select_with_other_fields_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_using_Set_method_obtained_from_context_field_with_other_fields_also_in_classin_select_with_other_fields_also_in_class_works
+            ()
         {
             Verify142979Results(
                 new ClassWithContextFieldAndOtherFields().
@@ -7921,7 +8429,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_obtained_from_static_context_field_with_in_select_with_other_fields_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_obtained_from_static_context_field_with_in_select_with_other_fields_also_in_class_works()
         {
             Verify142979Results(
                 new ClassWithContextFieldAndOtherFields().
@@ -7929,7 +8438,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_using_Set_method_obtained_from_static_context_field_with_other_fields_also_in_classin_select_with_other_fields_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_using_Set_method_obtained_from_static_context_field_with_other_fields_also_in_classin_select_with_other_fields_also_in_class_works
+            ()
         {
             Verify142979Results(
                 new ClassWithContextFieldAndOtherFields().
@@ -7988,7 +8499,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_obtained_from_context_property_with_in_select_with_other_properties_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_obtained_from_context_property_with_in_select_with_other_properties_also_in_class_works()
         {
             Verify142979Results(
                 new ClassWithContextPropertyAndOtherProperties().
@@ -7996,7 +8508,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_using_Set_method_obtained_from_context_property_with_other_properties_also_in_classin_select_with_other_fields_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_using_Set_method_obtained_from_context_property_with_other_properties_also_in_classin_select_with_other_fields_also_in_class_works
+            ()
         {
             Verify142979Results(
                 new ClassWithContextPropertyAndOtherProperties().
@@ -8004,7 +8518,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_obtained_from_static_context_property_with_in_select_with_other_properties_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_obtained_from_static_context_property_with_in_select_with_other_properties_also_in_class_works
+            ()
         {
             Verify142979Results(
                 new ClassWithContextPropertyAndOtherProperties().
@@ -8012,7 +8528,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Query_with_top_level_nested_query_using_Set_method_obtained_from_static_context_property_with_other_properties_also_in_classin_select_with_other_fields_also_in_class_works()
+        public void
+            Query_with_top_level_nested_query_using_Set_method_obtained_from_static_context_property_with_other_properties_also_in_classin_select_with_other_fields_also_in_class_works
+            ()
         {
             Verify142979Results(
                 new ClassWithContextPropertyAndOtherProperties().
@@ -8039,7 +8557,12 @@ namespace ProductivityApiTests
         public void Nesting_ObjectQuery_inside_a_DbQuery_Join_works()
         {
             RunWithObjectQueryNestedInsideDbQuery(
-                (l, r) => l.Join(r, le => le.Id, re => re.Id, (le, re) => new { le, re }).ToList());
+                (l, r) => l.Join(
+                    r, le => le.Id, re => re.Id, (le, re) => new
+                                                                 {
+                                                                     le,
+                                                                     re
+                                                                 }).ToList());
         }
 
         [Fact]
@@ -8073,11 +8596,11 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Tests that using a <see cref="DbQuery"/> with an <see cref="ObjectQuery"/> in its expression tree works.
-        /// Note that the reverse (using a DbQuery inside an ObjectQuery) may not work if the expression
-        /// tree given to the ObjectQuery provider contains a DbQuery node.
+        ///     Tests that using a <see cref="DbQuery" /> with an <see cref="ObjectQuery" /> in its expression tree works.
+        ///     Note that the reverse (using a DbQuery inside an ObjectQuery) may not work if the expression
+        ///     tree given to the ObjectQuery provider contains a DbQuery node.
         /// </summary>
-        /// <param name="query">The query.</param>
+        /// <param name="query"> The query. </param>
         private void RunWithObjectQueryNestedInsideDbQuery(
             Func<IQueryable<ProductForLinq>, IQueryable<ProductForLinq>, object> query)
         {
@@ -8129,13 +8652,16 @@ namespace ProductivityApiTests
         {
             try
             {
-                RunLinqTest(c => (from n in (useNonGeneric
-                                                 ? (IQueryable<NumberForLinq>)c.Set(typeof(NumberForLinq))
-                                                 : c.Set<NumberForLinq>())
-                                  orderby n.Id
-                                  select n.Value).First(),
-                            c =>
-                            (from n in c.CreateObjectSet<NumberForLinq>() orderby n.Id select n.Value).Skip(1).First());
+                RunLinqTest(
+                    c => (from n in (useNonGeneric
+                                         ? (IQueryable<NumberForLinq>)c.Set(typeof(NumberForLinq))
+                                         : c.Set<NumberForLinq>())
+                          orderby n.Id
+                          select n.Value).First(),
+                    c =>
+                    (from n in c.CreateObjectSet<NumberForLinq>()
+                     orderby n.Id
+                     select n.Value).Skip(1).First());
                 Assert.True(false);
             }
             catch (AssertException ex)
@@ -8160,13 +8686,17 @@ namespace ProductivityApiTests
         {
             try
             {
-                RunLinqTest(c => (from n in (useNonGeneric
-                                                 ? (IQueryable<NumberForLinq>)c.Set(typeof(NumberForLinq))
-                                                 : c.Set<NumberForLinq>())
-                                  orderby n.Id
-                                  select n).ToList(),
-                            c =>
-                            (from n in c.CreateObjectSet<NumberForLinq>() orderby n.Id where n.Id != 7 select n).ToList());
+                RunLinqTest(
+                    c => (from n in (useNonGeneric
+                                         ? (IQueryable<NumberForLinq>)c.Set(typeof(NumberForLinq))
+                                         : c.Set<NumberForLinq>())
+                          orderby n.Id
+                          select n).ToList(),
+                    c =>
+                    (from n in c.CreateObjectSet<NumberForLinq>()
+                     orderby n.Id
+                     where n.Id != 7
+                     select n).ToList());
                 Assert.True(false);
             }
             catch (AssertException ex)
@@ -8192,14 +8722,17 @@ namespace ProductivityApiTests
         {
             try
             {
-                RunLinqTest(c => (from n in (useNonGeneric
-                                                 ? (IQueryable<CustomerForLinq>)c.Set(typeof(CustomerForLinq))
-                                                 : c.Set<CustomerForLinq>())
-                                  orderby n.Id
-                                  select n).ToList(),
-                            c =>
-                            (from n in c.CreateObjectSet<CustomerForLinq>().Include("Orders") orderby n.Id select n).
-                                ToList());
+                RunLinqTest(
+                    c => (from n in (useNonGeneric
+                                         ? (IQueryable<CustomerForLinq>)c.Set(typeof(CustomerForLinq))
+                                         : c.Set<CustomerForLinq>())
+                          orderby n.Id
+                          select n).ToList(),
+                    c =>
+                    (from n in c.CreateObjectSet<CustomerForLinq>().Include("Orders")
+                     orderby n.Id
+                     select n).
+                        ToList());
                 Assert.True(false);
             }
             catch (AssertException ex)
@@ -8225,15 +8758,24 @@ namespace ProductivityApiTests
         {
             try
             {
-                RunLinqTest(c => (from n in (useNonGeneric
-                                                 ? (IQueryable<CustomerForLinq>)c.Set(typeof(CustomerForLinq))
-                                                 : c.Set<CustomerForLinq>())
-                                  where n.Id == 0
-                                  select new { n.Region, Orders = n.Orders }).ToList(),
-                            c =>
-                            (from n in c.CreateObjectSet<CustomerForLinq>()
-                             where n.Id == 1
-                             select new { n.Region, Orders = n.Orders }).ToList());
+                RunLinqTest(
+                    c => (from n in (useNonGeneric
+                                         ? (IQueryable<CustomerForLinq>)c.Set(typeof(CustomerForLinq))
+                                         : c.Set<CustomerForLinq>())
+                          where n.Id == 0
+                          select new
+                                     {
+                                         n.Region,
+                                         n.Orders
+                                     }).ToList(),
+                    c =>
+                    (from n in c.CreateObjectSet<CustomerForLinq>()
+                     where n.Id == 1
+                     select new
+                                {
+                                    n.Region,
+                                    n.Orders
+                                }).ToList());
                 Assert.True(false);
             }
             catch (AssertException ex)
@@ -8249,8 +8791,8 @@ namespace ProductivityApiTests
         #region RunLinqTest methods for queries with one root
 
         /// <summary>
-        /// This is the default LINQ query executor that does (basically) a ToList.
-        /// Some tests use First, Single(), etc instead.
+        ///     This is the default LINQ query executor that does (basically) a ToList.
+        ///     Some tests use First, Single(), etc instead.
         /// </summary>
         private static object ToListExecutor(IQueryable query)
         {
@@ -8258,8 +8800,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// This is the default async LINQ query executor that does (basically) a ToListAsync.
-        /// Some tests use First, Single(), etc instead.
+        ///     This is the default async LINQ query executor that does (basically) a ToListAsync.
+        ///     Some tests use First, Single(), etc instead.
         /// </summary>
         private static object ToListAsyncExecutor(IQueryable query)
         {
@@ -8267,8 +8809,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Returns a method that examines the AggregateExceptions thrown by the <paramref name="executor"/>
-        /// and rethrows the inner exception if only one is contained.
+        ///     Returns a method that examines the AggregateExceptions thrown by the <paramref name="executor" />
+        ///     and rethrows the inner exception if only one is contained.
         /// </summary>
         private static Func<IQueryable, object> UnwrapAggregateExceptions(Func<IQueryable, object> executor)
         {
@@ -8276,87 +8818,98 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
+        ///     Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
         /// </summary>
-        private Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> SyncRunnerAdapter<TEntity>(
+        private Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> SyncRunnerAdapter<TEntity>
+            (
             Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>> runner) where TEntity : class
         {
             return (query, syncExecutor, asyncExecutor) => runner(query, syncExecutor);
         }
 
         /// <summary>
-        /// Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
+        ///     Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
         /// </summary>
-        private Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> AsyncRunnerAdapter<TEntity>(
+        private Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> AsyncRunnerAdapter
+            <TEntity>(
             Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>> runner) where TEntity : class
         {
             return (query, syncExecutor, asyncExecutor) => runner(query, asyncExecutor);
         }
 
         /// <summary>
-        /// First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
-        /// the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
-        /// query using this set as the root for the query.  The query must return an IQueryable itself, which is then
-        /// evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
+        ///     First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
+        ///     the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
+        ///     query using this set as the root for the query.  The query must return an IQueryable itself, which is then
+        ///     evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
         /// </summary>
-        private void RunLinqTest<TEntity>(Func<IQueryable<TEntity>, IQueryable> query,
-                                          Func<IQueryable, object> executor) where TEntity : class
+        private void RunLinqTest<TEntity>(
+            Func<IQueryable<TEntity>, IQueryable> query,
+            Func<IQueryable, object> executor) where TEntity : class
         {
             RunLinqTest(c => executor(query(c.Set<TEntity>())), c => executor(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that uses different executors for DbContext and ObjectContext
+        ///     Version of RunLinqTest that uses different executors for DbContext and ObjectContext
         /// </summary>
-        private void RunLinqTest<TEntity>(Func<IQueryable<TEntity>, IQueryable> query,
-                                          Func<IQueryable, object> dbExecutor,
-                                          Func<IQueryable, object> objectExecutor) where TEntity : class
+        private void RunLinqTest<TEntity>(
+            Func<IQueryable<TEntity>, IQueryable> query,
+            Func<IQueryable, object> dbExecutor,
+            Func<IQueryable, object> objectExecutor) where TEntity : class
         {
             RunLinqTest(c => dbExecutor(query(c.Set<TEntity>())), c => objectExecutor(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a non-generic DbSet and treats is as a generic IQueryable.
+        ///     Version of RunLinqTest that starts with a non-generic DbSet and treats is as a generic IQueryable.
         /// </summary>
-        private void RunLinqTestNonGeneric<TEntity>(Func<IQueryable<TEntity>, IQueryable> query,
-                                                    Func<IQueryable, object> executor) where TEntity : class
+        private void RunLinqTestNonGeneric<TEntity>(
+            Func<IQueryable<TEntity>, IQueryable> query,
+            Func<IQueryable, object> executor) where TEntity : class
         {
-            RunLinqTest(c => executor(query((IQueryable<TEntity>)(c.Set(typeof(TEntity))))),
-                        c => executor(query(c.CreateObjectSet<TEntity>())));
+            RunLinqTest(
+                c => executor(query((IQueryable<TEntity>)(c.Set(typeof(TEntity))))),
+                c => executor(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
-        private void RunLinqTestWithNonGenericCreateQuery<TEntity>(Func<IQueryable<TEntity>, IQueryable> query,
-                                                                   Func<IQueryable, object> executor)
+        private void RunLinqTestWithNonGenericCreateQuery<TEntity>(
+            Func<IQueryable<TEntity>, IQueryable> query,
+            Func<IQueryable, object> executor)
             where TEntity : class
         {
-            RunLinqTest(c => executor(CreateQueryWithNonGenericCreateQuery(c, query)),
-                        c => executor(query(c.CreateObjectSet<TEntity>())));
+            RunLinqTest(
+                c => executor(CreateQueryWithNonGenericCreateQuery(c, query)),
+                c => executor(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestNonGenericWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query, Func<IQueryable, object> executor) where TEntity : class
         {
-            RunLinqTest(c => executor(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
-                        c => executor(query(c.CreateObjectSet<TEntity>())));
+            RunLinqTest(
+                c => executor(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
+                c => executor(query(c.CreateObjectSet<TEntity>())));
         }
 
-        private IQueryable CreateQueryWithNonGenericCreateQuery<TEntity>(DbContext context,
-                                                                         Func<IQueryable<TEntity>, IQueryable> query)
+        private IQueryable CreateQueryWithNonGenericCreateQuery<TEntity>(
+            DbContext context,
+            Func<IQueryable<TEntity>, IQueryable> query)
             where TEntity : class
         {
             var set = context.Set<TEntity>();
             return ((IQueryable)set).Provider.CreateQuery(query(set).Expression);
         }
 
-        private IQueryable CreateQueryNonGenericWithNonGenericCreateQuery<TEntity>(DbContext context,
-                                                                                   Func<IQueryable<TEntity>, IQueryable>
-                                                                                       query) where TEntity : class
+        private IQueryable CreateQueryNonGenericWithNonGenericCreateQuery<TEntity>(
+            DbContext context,
+            Func<IQueryable<TEntity>, IQueryable>
+                query) where TEntity : class
         {
             var expression = query((IQueryable<TEntity>)context.Set(typeof(TEntity))).Expression;
             return ((IQueryable)context.Set(typeof(TEntity))).Provider.CreateQuery(expression);
@@ -8367,9 +8920,10 @@ namespace ProductivityApiTests
         #region RunLinqTest methods for queries with two roots
 
         /// <summary>
-        /// Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
+        ///     Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
         /// </summary>
-        private Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> SyncRunnerAdapter<TEntity1, TEntity2>(
+        private Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            SyncRunnerAdapter<TEntity1, TEntity2>(
             Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>> runner)
             where TEntity1 : class
             where TEntity2 : class
@@ -8378,9 +8932,10 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
+        ///     Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
         /// </summary>
-        private Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> AsyncRunnerAdapter<TEntity1, TEntity2>(
+        private Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
+            AsyncRunnerAdapter<TEntity1, TEntity2>(
             Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>> runner)
             where TEntity1 : class
             where TEntity2 : class
@@ -8389,35 +8944,39 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
-        /// the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
-        /// query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
-        /// evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
+        ///     First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
+        ///     the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
+        ///     query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
+        ///     evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
         /// </summary>
-        private void RunLinqTest<TEntity1, TEntity2>(Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query,
-                                                     Func<IQueryable, object> executor)
+        private void RunLinqTest<TEntity1, TEntity2>(
+            Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query,
+            Func<IQueryable, object> executor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => executor(query(c.Set<TEntity1>(), c.Set<TEntity2>())),
-                        c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunLinqTest(
+                c => executor(query(c.Set<TEntity1>(), c.Set<TEntity2>())),
+                c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that uses different executors for DbContext and ObjectContext
+        ///     Version of RunLinqTest that uses different executors for DbContext and ObjectContext
         /// </summary>
-        private void RunLinqTest<TEntity1, TEntity2>(Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query,
-                                          Func<IQueryable, object> dbExecutor,
-                                          Func<IQueryable, object> objectExecutor)
+        private void RunLinqTest<TEntity1, TEntity2>(
+            Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query,
+            Func<IQueryable, object> dbExecutor,
+            Func<IQueryable, object> objectExecutor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => dbExecutor(query(c.Set<TEntity1>(), c.Set<TEntity2>())),
-                        c => objectExecutor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunLinqTest(
+                c => dbExecutor(query(c.Set<TEntity1>(), c.Set<TEntity2>())),
+                c => objectExecutor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a non-generic DbSet.
+        ///     Version of RunLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunLinqTestNonGeneric<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -8426,39 +8985,45 @@ namespace ProductivityApiTests
         {
             RunLinqTest(
                 c =>
-                executor(query((IQueryable<TEntity1>)c.Set(typeof(TEntity1)),
-                               (IQueryable<TEntity2>)c.Set(typeof(TEntity2)))),
+                executor(
+                    query(
+                        (IQueryable<TEntity1>)c.Set(typeof(TEntity1)),
+                        (IQueryable<TEntity2>)c.Set(typeof(TEntity2)))),
                 c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
+
         /// <summary>
-        /// Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => executor(CreateQueryWithNonGenericCreateQuery(c, query)),
-                        c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunLinqTest(
+                c => executor(CreateQueryWithNonGenericCreateQuery(c, query)),
+                c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => executor(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
-                        c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunLinqTest(
+                c => executor(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
+                c => executor(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
-        private IQueryable CreateQueryWithNonGenericCreateQuery<TEntity1, TEntity2>(DbContext context,
-                                                                                    Func
-                                                                                        <IQueryable<TEntity1>,
-                                                                                        IQueryable<TEntity2>, IQueryable
-                                                                                        > query)
+        private IQueryable CreateQueryWithNonGenericCreateQuery<TEntity1, TEntity2>(
+            DbContext context,
+            Func
+                <IQueryable<TEntity1>,
+                    IQueryable<TEntity2>, IQueryable
+                    > query)
             where TEntity1 : class
             where TEntity2 : class
         {
@@ -8467,11 +9032,12 @@ namespace ProductivityApiTests
             return ((IQueryable)set1).Provider.CreateQuery(query(set1, set2).Expression);
         }
 
-        private IQueryable CreateQueryNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2>(DbContext context,
-                                                                                              Func
-                                                                                                  <IQueryable<TEntity1>,
-                                                                                                  IQueryable<TEntity2>,
-                                                                                                  IQueryable> query)
+        private IQueryable CreateQueryNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2>(
+            DbContext context,
+            Func
+                <IQueryable<TEntity1>,
+                    IQueryable<TEntity2>,
+                    IQueryable> query)
             where TEntity1 : class
             where TEntity2 : class
         {
@@ -8486,11 +9052,13 @@ namespace ProductivityApiTests
         #region RunLinqTest methods for queries with an extracted nested query
 
         /// <summary>
-        /// Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
+        ///     Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>,
             Func<IQueryable, object>, Func<IQueryable, object>> SyncRunnerAdapter<TEntity1, TEntity2, TNested>(
-            Action<Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>, Func<IQueryable, object>> runner)
+            Action
+                <Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>,
+                    Func<IQueryable, object>> runner)
             where TEntity1 : class
             where TEntity2 : class
         {
@@ -8498,11 +9066,13 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
+        ///     Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>,
             Func<IQueryable, object>, Func<IQueryable, object>> AsyncRunnerAdapter<TEntity1, TEntity2, TNested>(
-            Action<Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>, Func<IQueryable, object>> runner)
+            Action
+                <Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>,
+                    Func<IQueryable, object>> runner)
             where TEntity1 : class
             where TEntity2 : class
         {
@@ -8510,10 +9080,10 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
-        /// the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
-        /// query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
-        /// evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
+        ///     First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
+        ///     the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
+        ///     query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
+        ///     evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
         /// </summary>
         private void RunLinqTest<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -8521,27 +9091,29 @@ namespace ProductivityApiTests
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => executor(query(c.Set<TEntity1>(), nestedQuery(c.Set<TEntity2>()))),
-                        c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
+            RunLinqTest(
+                c => executor(query(c.Set<TEntity1>(), nestedQuery(c.Set<TEntity2>()))),
+                c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that uses different executors for DbContext and ObjectContext
+        ///     Version of RunLinqTest that uses different executors for DbContext and ObjectContext
         /// </summary>
         private void RunLinqTest<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
             Func<IQueryable<TEntity2>, IQueryable<TNested>> nestedQuery,
-                                          Func<IQueryable, object> dbExecutor,
-                                          Func<IQueryable, object> objectExecutor)
+            Func<IQueryable, object> dbExecutor,
+            Func<IQueryable, object> objectExecutor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => dbExecutor(query(c.Set<TEntity1>(), nestedQuery(c.Set<TEntity2>()))),
-                        c => objectExecutor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
+            RunLinqTest(
+                c => dbExecutor(query(c.Set<TEntity1>(), nestedQuery(c.Set<TEntity2>()))),
+                c => objectExecutor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a non-generic DbSet.
+        ///     Version of RunLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunLinqTestNonGeneric<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -8551,13 +9123,15 @@ namespace ProductivityApiTests
         {
             RunLinqTest(
                 c =>
-                executor(query((IQueryable<TEntity1>)c.Set(typeof(TEntity1)),
-                               nestedQuery((IQueryable<TEntity2>)c.Set(typeof(TEntity2))))),
+                executor(
+                    query(
+                        (IQueryable<TEntity1>)c.Set(typeof(TEntity1)),
+                        nestedQuery((IQueryable<TEntity2>)c.Set(typeof(TEntity2))))),
                 c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestWithNonGenericCreateQuery<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -8565,12 +9139,13 @@ namespace ProductivityApiTests
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => executor(CreateQueryWithNonGenericCreateQuery(c, query, nestedQuery)),
-                        c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
+            RunLinqTest(
+                c => executor(CreateQueryWithNonGenericCreateQuery(c, query, nestedQuery)),
+                c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
         }
 
         /// <summary>
-        /// Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -8578,19 +9153,21 @@ namespace ProductivityApiTests
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunLinqTest(c => executor(CreateQueryNonGenericWithNonGenericCreateQuery(c, query, nestedQuery)),
-                        c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
+            RunLinqTest(
+                c => executor(CreateQueryNonGenericWithNonGenericCreateQuery(c, query, nestedQuery)),
+                c => executor(query(c.CreateObjectSet<TEntity1>(), nestedQuery(c.CreateObjectSet<TEntity2>()))));
         }
 
-        private IQueryable CreateQueryWithNonGenericCreateQuery<TEntity1, TEntity2, TNested>(DbContext context,
-                                                                                             Func
-                                                                                                 <IQueryable<TEntity1>,
-                                                                                                 IQueryable<TNested>,
-                                                                                                 IQueryable> query,
-                                                                                             Func
-                                                                                                 <IQueryable<TEntity2>,
-                                                                                                 IQueryable<TNested>>
-                                                                                                 nestedQuery)
+        private IQueryable CreateQueryWithNonGenericCreateQuery<TEntity1, TEntity2, TNested>(
+            DbContext context,
+            Func
+                <IQueryable<TEntity1>,
+                    IQueryable<TNested>,
+                    IQueryable> query,
+            Func
+                <IQueryable<TEntity2>,
+                    IQueryable<TNested>>
+                nestedQuery)
             where TEntity1 : class
             where TEntity2 : class
         {
@@ -8616,48 +9193,54 @@ namespace ProductivityApiTests
         #region RunNotSupportedLinqTest for queries with one root
 
         /// <summary>
-        /// First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
-        /// the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
-        /// query using this set as the root for the query.  The query must return an IQueryable itself, which is then
-        /// evaluated with a call to ToList.
-        /// It is expected (and asserted) that both these queries will throw a NotSupportedException.
+        ///     First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
+        ///     the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
+        ///     query using this set as the root for the query.  The query must return an IQueryable itself, which is then
+        ///     evaluated with a call to ToList.
+        ///     It is expected (and asserted) that both these queries will throw a NotSupportedException.
         /// </summary>
-        private void RunNotSupportedLinqTest<TEntity>(Func<IQueryable<TEntity>, IQueryable> query,
-                                                      Func<IQueryable, object> executor) where TEntity : class
+        private void RunNotSupportedLinqTest<TEntity>(
+            Func<IQueryable<TEntity>, IQueryable> query,
+            Func<IQueryable, object> executor) where TEntity : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(query(c.Set<TEntity>())),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(query(c.Set<TEntity>())),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
+        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
         /// </summary>
-        private void RunNotSupportedLinqTestNonGeneric<TEntity>(Func<IQueryable<TEntity>, IQueryable> query,
-                                                                Func<IQueryable, object> executor)
+        private void RunNotSupportedLinqTestNonGeneric<TEntity>(
+            Func<IQueryable<TEntity>, IQueryable> query,
+            Func<IQueryable, object> executor)
             where TEntity : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(query((IQueryable<TEntity>)c.Set(typeof(TEntity)))),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(query((IQueryable<TEntity>)c.Set(typeof(TEntity)))),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query, Func<IQueryable, object> executor) where TEntity : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(CreateQueryWithNonGenericCreateQuery(c, query)),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(CreateQueryWithNonGenericCreateQuery(c, query)),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
         }
 
         /// <summary>
-        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query, Func<IQueryable, object> executor) where TEntity : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity>())));
         }
 
         #endregion
@@ -8665,22 +9248,23 @@ namespace ProductivityApiTests
         #region RunNotSupportedLinqTest methods for queries with two roots
 
         /// <summary>
-        /// First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
-        /// the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
-        /// query using these sets as the roots for the query.  The query returns an object rather than an IQueryable.
-        /// It is expected (and asserted) that both these queries will throw a NotSupportedException.
+        ///     First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
+        ///     the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
+        ///     query using these sets as the roots for the query.  The query returns an object rather than an IQueryable.
+        ///     It is expected (and asserted) that both these queries will throw a NotSupportedException.
         /// </summary>
         private void RunNotSupportedLinqTest<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(query(c.Set<TEntity1>(), c.Set<TEntity2>())),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(query(c.Set<TEntity1>(), c.Set<TEntity2>())),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         /// <summary>
-        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
+        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunNotSupportedLinqTestNonGeneric<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -8689,33 +9273,37 @@ namespace ProductivityApiTests
         {
             RunNotSupportedLinqTest(
                 c =>
-                UnwrapAggregateExceptions(executor)(query((IQueryable<TEntity1>)c.Set(typeof(TEntity1)),
-                                                          (IQueryable<TEntity2>)c.Set(typeof(TEntity2)))),
+                UnwrapAggregateExceptions(executor)(
+                    query(
+                        (IQueryable<TEntity1>)c.Set(typeof(TEntity1)),
+                        (IQueryable<TEntity2>)c.Set(typeof(TEntity2)))),
                 c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         /// <summary>
-        /// Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(CreateQueryWithNonGenericCreateQuery(c, query)),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(CreateQueryWithNonGenericCreateQuery(c, query)),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         /// <summary>
-        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
             where TEntity1 : class
             where TEntity2 : class
         {
-            RunNotSupportedLinqTest(c => UnwrapAggregateExceptions(executor)(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
-                                    c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
+            RunNotSupportedLinqTest(
+                c => UnwrapAggregateExceptions(executor)(CreateQueryNonGenericWithNonGenericCreateQuery(c, query)),
+                c => UnwrapAggregateExceptions(executor)(query(c.CreateObjectSet<TEntity1>(), c.CreateObjectSet<TEntity2>())));
         }
 
         #endregion
@@ -8723,8 +9311,8 @@ namespace ProductivityApiTests
         #region Low-level RunLinqTest and RunNotSupportedLinqTest methods
 
         /// <summary>
-        /// Executes one delegate against a DbContext and the other against an ObjectContext and asserts that
-        /// a NotSupportedException with the same message is thrown in both cases.
+        ///     Executes one delegate against a DbContext and the other against an ObjectContext and asserts that
+        ///     a NotSupportedException with the same message is thrown in both cases.
         /// </summary>
         private void RunNotSupportedLinqTest(Func<DbContext, object> dbQuery, Func<ObjectContext, object> obQuery)
         {
@@ -8754,8 +9342,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Executes one delegate against a DbContext and the other against an ObjectContext, and then asserts that
-        /// the results are the same.
+        ///     Executes one delegate against a DbContext and the other against an ObjectContext, and then asserts that
+        ///     the results are the same.
         /// </summary>
         private void RunLinqTest(Func<DbContext, object> dbQuery, Func<ObjectContext, object> obQuery)
         {
@@ -8763,8 +9351,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
-        /// of DbContext and then returns the result.
+        ///     Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
+        ///     of DbContext and then returns the result.
         /// </summary>
         private object RunAgainstDbQuery(Func<DbContext, object> query)
         {
@@ -8775,8 +9363,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
-        /// of ObjectContext and then returns the result.
+        ///     Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
+        ///     of ObjectContext and then returns the result.
         /// </summary>
         private object RunAgainstObQuery(Func<ObjectContext, object> query)
         {
@@ -8791,14 +9379,14 @@ namespace ProductivityApiTests
         #region Assertion helpers
 
         /// <summary>
-        /// Asserts that the two objects are equal using the following heuristics:
-        /// - If one is null, then the other must be null
-        /// - Else if one is IEnumerable, then the other must be IEnumerable and the two enumerations are
-        ///   passed to AssertEnumerationsEqual to tests their elements
-        /// - Else the types of the two objects must be exactly the same
-        /// - And if they are instances of BaseTypeForLinq, then the EntityEquals method is used
-        /// - Else if Object.Equals indicates that they are equal, then this is trusted
-        /// - Else each property is tested for equality with a recursive call to AssertResultsEqual
+        ///     Asserts that the two objects are equal using the following heuristics:
+        ///     - If one is null, then the other must be null
+        ///     - Else if one is IEnumerable, then the other must be IEnumerable and the two enumerations are
+        ///     passed to AssertEnumerationsEqual to tests their elements
+        ///     - Else the types of the two objects must be exactly the same
+        ///     - And if they are instances of BaseTypeForLinq, then the EntityEquals method is used
+        ///     - Else if Object.Equals indicates that they are equal, then this is trusted
+        ///     - Else each property is tested for equality with a recursive call to AssertResultsEqual
         /// </summary>
         private void AssertResultsEqual(object left, object right)
         {
@@ -8824,8 +9412,9 @@ namespace ProductivityApiTests
                 Assert.Same(left.GetType(), right.GetType());
                 if (left is BaseTypeForLinq)
                 {
-                    Assert.True(((BaseTypeForLinq)left).EntityEquals((BaseTypeForLinq)right),
-                                String.Format("Left '{0}' different from right '{1}'", left, right));
+                    Assert.True(
+                        ((BaseTypeForLinq)left).EntityEquals((BaseTypeForLinq)right),
+                        String.Format("Left '{0}' different from right '{1}'", left, right));
                 }
                 else
                 {
@@ -8851,8 +9440,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Asserts that each enumeration has the same number of elements and that each element tests
-        /// equal with the AssertResultsEqual method.
+        ///     Asserts that each enumeration has the same number of elements and that each element tests
+        ///     equal with the AssertResultsEqual method.
         /// </summary>
         private void AssertEnumerationsEqual(IEnumerable leftResult, IEnumerable rightResult)
         {

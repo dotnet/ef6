@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
@@ -21,15 +22,21 @@ namespace System.Data.Entity
     {
         internal static void ShellEdmx(this DbDatabaseMapping databaseMapping, string fileName = "Dump.edmx")
         {
-            new EdmxSerializer().Serialize(databaseMapping, databaseMapping.Database.GetProviderInfo(),
-                                           XmlWriter.Create(File.CreateText(fileName),
-                                                            new XmlWriterSettings { Indent = true }));
+            new EdmxSerializer().Serialize(
+                databaseMapping, databaseMapping.Database.GetProviderInfo(),
+                XmlWriter.Create(
+                    File.CreateText(fileName),
+                    new XmlWriterSettings
+                        {
+                            Indent = true
+                        }));
 
             Process.Start(fileName);
         }
 
-        internal static bool EdmxIsEqualTo(this DbDatabaseMapping databaseMapping,
-                                           DbDatabaseMapping otherDatabaseMapping)
+        internal static bool EdmxIsEqualTo(
+            this DbDatabaseMapping databaseMapping,
+            DbDatabaseMapping otherDatabaseMapping)
         {
             return SerializeToString(databaseMapping) == SerializeToString(otherDatabaseMapping);
         }
@@ -37,8 +44,13 @@ namespace System.Data.Entity
         internal static string SerializeToString(DbDatabaseMapping databaseMapping)
         {
             var edmx = new StringBuilder();
-            new EdmxSerializer().Serialize(databaseMapping, databaseMapping.Database.GetProviderInfo(),
-                                           XmlWriter.Create(edmx, new XmlWriterSettings { Indent = true }));
+            new EdmxSerializer().Serialize(
+                databaseMapping, databaseMapping.Database.GetProviderInfo(),
+                XmlWriter.Create(
+                    edmx, new XmlWriterSettings
+                              {
+                                  Indent = true
+                              }));
             return edmx.ToString();
         }
 

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace System.Data.Entity
         {
             Contract.Requires(enumerator != null);
 
-            List<T> resultList = new List<T>();
+            var resultList = new List<T>();
 
             while (enumerator.MoveNext())
             {
@@ -32,7 +33,7 @@ namespace System.Data.Entity
         {
             Contract.Requires(enumerator != null);
 
-            List<T> resultList = new List<T>();
+            var resultList = new List<T>();
 
             while (await enumerator.MoveNextAsync(cancellationToken))
             {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System.Data.Entity.Core;
@@ -49,8 +50,9 @@ namespace ProductivityApiTests
 
                 using (var dtr = CreateIntReader())
                 {
-                    Assert.Equal(EnumNotInModel.NorwegianForestCat,
-                                 objectContext.Translate<EnumNotInModel>(dtr).Single());
+                    Assert.Equal(
+                        EnumNotInModel.NorwegianForestCat,
+                        objectContext.Translate<EnumNotInModel>(dtr).Single());
                 }
             }
         }
@@ -92,8 +94,9 @@ namespace ProductivityApiTests
 
                 using (var dtr = CreateLongReader())
                 {
-                    Assert.Equal(LongEnumNotInModel.NorwegianForestCat,
-                                 objectContext.Translate<LongEnumNotInModel>(dtr).Single());
+                    Assert.Equal(
+                        LongEnumNotInModel.NorwegianForestCat,
+                        objectContext.Translate<LongEnumNotInModel>(dtr).Single());
                 }
             }
         }

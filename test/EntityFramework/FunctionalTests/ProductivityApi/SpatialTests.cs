@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -14,7 +15,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for spatial and DbContext.
+    ///     Tests for spatial and DbContext.
     /// </summary>
     public class SpatialTests : FunctionalTestBase
     {
@@ -25,15 +26,17 @@ namespace ProductivityApiTests
         static SpatialTests()
         {
             const string prefix = "FunctionalTests.ProductivityApi.SpatialTvfsModel.";
-            ResourceUtilities.CopyEmbeddedResourcesToCurrentDir(typeof(SpatialTests).Assembly, prefix, /*overwrite*/ true,
-                                                              "226644SpatialModel.csdl", "226644SpatialModel.msl",
-                                                              "226644SpatialModel.ssdl");
+            ResourceUtilities.CopyEmbeddedResourcesToCurrentDir(
+                typeof(SpatialTests).Assembly, prefix, /*overwrite*/ true,
+                "226644SpatialModel.csdl", "226644SpatialModel.msl",
+                "226644SpatialModel.ssdl");
 
             const string baseConnectionString =
                 @"metadata=.\226644SpatialModel.csdl|.\226644SpatialModel.ssdl|.\226644SpatialModel.msl;
                                                   provider=System.Data.SqlClient;provider connection string='{0}'";
-            _connectionString = String.Format(CultureInfo.InvariantCulture, baseConnectionString,
-                                             SimpleConnectionString<SpatialNorthwindContext>());
+            _connectionString = String.Format(
+                CultureInfo.InvariantCulture, baseConnectionString,
+                SimpleConnectionString<SpatialNorthwindContext>());
         }
 
         #endregion
@@ -58,11 +61,14 @@ namespace ProductivityApiTests
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
-                var suppliers = toList(from x in context.Suppliers
-                                       select
-                                         context.SuppliersWithinRange(1000,
-                                            DbGeography.FromText("POINT(-122.335576 47.610676)",
-                                                4326)));
+                var suppliers = toList(
+                    from x in context.Suppliers
+                    select
+                        context.SuppliersWithinRange(
+                            1000,
+                            DbGeography.FromText(
+                                "POINT(-122.335576 47.610676)",
+                                4326)));
 
                 Assert.Equal(16, suppliers.Count);
             }
@@ -85,12 +91,14 @@ namespace ProductivityApiTests
         {
             using (var context = new SpatialNorthwindContext(_connectionString))
             {
-                var suppliers = toList(from x in context.Suppliers
-                                       select
-                                         SpatialNorthwindContext.StaticSuppliersWithinRange(1000,
-                                            DbGeography.FromText(
-                                                "POINT(-122.335576 47.610676)",
-                                                4326)));
+                var suppliers = toList(
+                    from x in context.Suppliers
+                    select
+                        SpatialNorthwindContext.StaticSuppliersWithinRange(
+                            1000,
+                            DbGeography.FromText(
+                                "POINT(-122.335576 47.610676)",
+                                4326)));
 
                 Assert.Equal(16, suppliers.Count);
             }
@@ -121,9 +129,11 @@ namespace ProductivityApiTests
             {
                 var suppliers = (from x in context.Suppliers
                                  select
-                                     ArbitrarySuppliersWithinRange(1000,
-                                                                   DbGeography.FromText("POINT(-122.335576 47.610676)",
-                                                                                        4326))).ToList();
+                                     ArbitrarySuppliersWithinRange(
+                                         1000,
+                                         DbGeography.FromText(
+                                             "POINT(-122.335576 47.610676)",
+                                             4326))).ToList();
 
                 Assert.Equal(16, suppliers.Count);
             }
@@ -140,7 +150,11 @@ namespace ProductivityApiTests
                      from s2 in
                          context.SuppliersWithinRange(1000, DbGeography.FromText("POINT(-122.335576 47.610676)", 4326))
                      where s1.Name == s2.Name
-                     select new { s1, s2 }).ToList();
+                     select new
+                                {
+                                    s1,
+                                    s2
+                                }).ToList();
 
                 Assert.Equal(16, results.Count);
             }
@@ -156,15 +170,23 @@ namespace ProductivityApiTests
 
                 var results =
                     (from s1 in
-                         context.SuppliersWithinRangeUsingPoint(1000,
-                                                                DbGeography.FromText("POINT(-122.335576 47.610676)",
-                                                                                     4326))
+                         context.SuppliersWithinRangeUsingPoint(
+                             1000,
+                             DbGeography.FromText(
+                                 "POINT(-122.335576 47.610676)",
+                                 4326))
                      from s2 in
-                         context.SuppliersWithinRangeUsingPoint(1000,
-                                                                DbGeography.FromText("POINT(-122.335576 47.610676)",
-                                                                                     4326))
+                         context.SuppliersWithinRangeUsingPoint(
+                             1000,
+                             DbGeography.FromText(
+                                 "POINT(-122.335576 47.610676)",
+                                 4326))
                      where s1.Name == s2.Name
-                     select new { s1, s2 }).ToList();
+                     select new
+                                {
+                                    s1,
+                                    s2
+                                }).ToList();
 
                 Assert.Equal(16, results.Count);
             }
@@ -179,12 +201,18 @@ namespace ProductivityApiTests
 
                 var results =
                     (from s1 in
-                         context.SupplierLocationsWithinRange(1000,
-                                                              DbGeography.FromText("POINT(-122.335576 47.610676)", 4326))
+                         context.SupplierLocationsWithinRange(
+                             1000,
+                             DbGeography.FromText("POINT(-122.335576 47.610676)", 4326))
                      from s2 in
-                         context.SupplierLocationsWithinRange(1000,
-                                                              DbGeography.FromText("POINT(-122.335576 47.610676)", 4326))
-                     select new { s1, s2 }).ToList();
+                         context.SupplierLocationsWithinRange(
+                             1000,
+                             DbGeography.FromText("POINT(-122.335576 47.610676)", 4326))
+                     select new
+                                {
+                                    s1,
+                                    s2
+                                }).ToList();
 
                 Assert.Equal(256, results.Count);
             }
@@ -214,13 +242,15 @@ namespace ProductivityApiTests
                 var query =
                     @"select value ProductivityApiTests.WidgetWithGeometry(-77, N'MyName', Edm.GeometryFromText(""POINT(-122.335576 47.610676)""), ProductivityApiTests.ComplexWithGeometry(N'A', Edm.GeometryFromText(""POINT(-122.335576 47.610676)""))) 
                               from [SpatialNorthwindContext].[Widgets] as WidgetWithGeometry";
-                Assert.Equal(4, TestWithReader(context, query, r =>
-                                                               {
-                                                                   Assert.Equal(-77, r.GetInt32(0));
-                                                                   Assert.IsType<DbGeometry>(r.GetValue(2));
-                                                                   var nestedRecord = r.GetDataRecord(3);
-                                                                   Assert.IsType<DbGeometry>(nestedRecord.GetValue(1));
-                                                               }));
+                Assert.Equal(
+                    4, TestWithReader(
+                        context, query, r =>
+                                            {
+                                                Assert.Equal(-77, r.GetInt32(0));
+                                                Assert.IsType<DbGeometry>(r.GetValue(2));
+                                                var nestedRecord = r.GetDataRecord(3);
+                                                Assert.IsType<DbGeometry>(nestedRecord.GetValue(1));
+                                            }));
             }
         }
 
@@ -232,11 +262,13 @@ namespace ProductivityApiTests
                 var query =
                     @"select value ProductivityApiTests.ComplexWithGeometry(N'A', Edm.GeometryFromText(""POINT(-122.335576 47.610676)"")) 
                               from [SpatialNorthwindContext].[Widgets] as WidgetWithGeometry";
-                Assert.Equal(4, TestWithReader(context, query, r =>
-                                                               {
-                                                                   Assert.Equal("A", r.GetString(0));
-                                                                   Assert.IsType<DbGeometry>(r.GetValue(1));
-                                                               }));
+                Assert.Equal(
+                    4, TestWithReader(
+                        context, query, r =>
+                                            {
+                                                Assert.Equal("A", r.GetString(0));
+                                                Assert.IsType<DbGeometry>(r.GetValue(1));
+                                            }));
             }
         }
 
@@ -247,7 +279,7 @@ namespace ProductivityApiTests
             {
                 command.CommandText = query;
                 entityConnection.Open();
-                int count = 0;
+                var count = 0;
                 var reader = command.ExecuteReader(CommandBehavior.SequentialAccess);
                 while (reader.Read())
                 {
@@ -339,7 +371,8 @@ namespace ProductivityApiTests
             }
         }
 
-        private List<DbDataRecord> ExecuteESqlQuery(DbContext context, string query,
+        private List<DbDataRecord> ExecuteESqlQuery(
+            DbContext context, string query,
             Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             var objectContext = ((IObjectContextAdapter)context).ObjectContext;
@@ -348,13 +381,14 @@ namespace ProductivityApiTests
             return toList(objectContext.CreateQuery<DbDataRecord>(query));
         }
 
-        private List<DbDataRecord> ExecuteESqlQueryAsync(DbContext context, string query,
+        private List<DbDataRecord> ExecuteESqlQueryAsync(
+            DbContext context, string query,
             Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             var objectContext = ((IObjectContextAdapter)context).ObjectContext;
             objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly);
 
-            return  toList(objectContext.CreateQuery<DbDataRecord>(query));
+            return toList(objectContext.CreateQuery<DbDataRecord>(query));
         }
 
         private List<T> ToList<T>(IQueryable<T> query)

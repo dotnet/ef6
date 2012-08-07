@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace AdvancedPatternsModel
 {
     using System.Data.Entity;
@@ -7,7 +8,8 @@ namespace AdvancedPatternsModel
     {
         public AdvancedPatternsEmployeeContext()
             : base("AdvancedPatternsDatabase")
-        {}
+        {
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

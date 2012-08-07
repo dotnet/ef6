@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System.Collections.Generic;
@@ -64,6 +65,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Employee> _employees;
 
         public virtual ICollection<ContactCreditCard> ContactCreditCards
@@ -96,6 +98,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ContactCreditCard> _contactCreditCards;
 
         public virtual ICollection<Individual> Individuals
@@ -128,6 +131,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Individual> _individuals;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -160,6 +164,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         public virtual ICollection<StoreContact> StoreContacts
@@ -192,6 +197,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<StoreContact> _storeContacts;
 
         public virtual ICollection<VendorContact> VendorContacts
@@ -224,6 +230,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<VendorContact> _vendorContacts;
 
         private void FixupEmployees(object sender, NotifyCollectionChangedEventArgs e)

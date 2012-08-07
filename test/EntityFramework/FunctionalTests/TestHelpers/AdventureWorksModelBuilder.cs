@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -16,10 +17,12 @@ namespace System.Data.Entity
 
         internal void IgnoreAll(params Type[] unignoredTypes)
         {
-            Ignore(Assembly.GetExecutingAssembly().GetTypes()
-               .Where(t => !string.IsNullOrWhiteSpace(t.Namespace)
-                           && t.Namespace.Contains("Model")).Except(
-                               Configurations.GetConfiguredTypes().Union(unignoredTypes)));
+            Ignore(
+                Assembly.GetExecutingAssembly().GetTypes()
+                    .Where(
+                        t => !string.IsNullOrWhiteSpace(t.Namespace)
+                             && t.Namespace.Contains("Model")).Except(
+                                 Configurations.GetConfiguredTypes().Union(unignoredTypes)));
         }
 
         internal DbDatabaseMapping BuildAndValidate(DbProviderInfo providerInfo, bool throwOnError, params Type[] unignoredTypes)

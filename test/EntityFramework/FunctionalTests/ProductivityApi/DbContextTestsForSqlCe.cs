@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -15,7 +16,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// DbContext Construction tests for SqlCe
+    ///     DbContext Construction tests for SqlCe
     /// </summary>
     public class DbContextTestsForSqlCe : FunctionalTestBase, IDisposable
     {
@@ -27,8 +28,9 @@ namespace ProductivityApiTests
         {
             _previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
 
-            var sqlCeConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0",
-                                                                    AppDomain.CurrentDomain.BaseDirectory, "");
+            var sqlCeConnectionFactory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0",
+                AppDomain.CurrentDomain.BaseDirectory, "");
             DefaultConnectionFactoryResolver.Instance.ConnectionFactory = sqlCeConnectionFactory;
         }
 
@@ -82,8 +84,9 @@ namespace ProductivityApiTests
         {
             // Act
             using (
-                var context = CreateContext<SimpleModelContext>(ctorArguments,
-                                                                providerName: "System.Data.SqlServerCe.4.0"))
+                var context = CreateContext<SimpleModelContext>(
+                    ctorArguments,
+                    providerName: "System.Data.SqlServerCe.4.0"))
             {
                 // Assert
                 Assert.NotNull(context.Products);
@@ -92,19 +95,24 @@ namespace ProductivityApiTests
                 context.Assert<Product>().IsInModel();
                 context.Assert<Category>().IsInModel();
 
-                Assert.Equal(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SimpleModel.SimpleModelContext.sdf"),
-                             context.Database.Connection.Database);
+                Assert.Equal(
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SimpleModel.SimpleModelContext.sdf"),
+                    context.Database.Connection.Database);
             }
         }
 
         [Fact]
-        public void Database_Name_in_CE_is_from_App_config_if_named_connection_string_matches_convention_name_when_using_empty_constructor_on_DbContext()
+        public void
+            Database_Name_in_CE_is_from_App_config_if_named_connection_string_matches_convention_name_when_using_empty_constructor_on_DbContext
+            ()
         {
             Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string();
         }
 
         [Fact]
-        public void Database_Name_in_CE_is_from_App_Config_if_named_connection_string_matches_convention_name_when_using_named_connection_string_when_using_model_constructor_on_DbContext()
+        public void
+            Database_Name_in_CE_is_from_App_Config_if_named_connection_string_matches_convention_name_when_using_named_connection_string_when_using_model_constructor_on_DbContext
+            ()
         {
             Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string(
                 new DbModelBuilder().Build(ProviderRegistry.SqlCe4_ProviderInfo).Compile());
@@ -126,37 +134,43 @@ namespace ProductivityApiTests
         [Fact]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_empty_DbCompiledModel_on_SqlCe()
         {
-            VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.IsEmpty,
-                                                                   ProviderRegistry.SqlCe4_ProviderInfo);
+            VerifySetsAreInitialized<SimpleModelContextWithNoData>(
+                DbCompiledModelContents.IsEmpty,
+                ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
         [Fact]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_subset_DbCompiledModel_on_SqlCe()
         {
-            VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.IsSubset,
-                                                                   ProviderRegistry.SqlCe4_ProviderInfo);
+            VerifySetsAreInitialized<SimpleModelContextWithNoData>(
+                DbCompiledModelContents.IsSubset,
+                ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
         [Fact]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_superset_DbCompiledModel_on_SqlCe()
         {
-            VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.IsSuperset,
-                                                                   ProviderRegistry.SqlCe4_ProviderInfo);
+            VerifySetsAreInitialized<SimpleModelContextWithNoData>(
+                DbCompiledModelContents.IsSuperset,
+                ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
         [Fact]
         public void
             Sets_are_initialized_for_DbContext_constructor_when_using_DbCompiledModel_that_matches_the_context_on_SqlCe()
         {
-            VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.Match,
-                                                                   ProviderRegistry.SqlCe4_ProviderInfo);
+            VerifySetsAreInitialized<SimpleModelContextWithNoData>(
+                DbCompiledModelContents.Match,
+                ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
         [Fact]
-        public void Sets_are_initialized_for_DbContext_constructor_when_using_DbCompiledModel_that_doesnt_match_context_definitions_on_SqlCe()
+        public void Sets_are_initialized_for_DbContext_constructor_when_using_DbCompiledModel_that_doesnt_match_context_definitions_on_SqlCe
+            ()
         {
-            VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.DontMatch,
-                                                                   ProviderRegistry.SqlCe4_ProviderInfo);
+            VerifySetsAreInitialized<SimpleModelContextWithNoData>(
+                DbCompiledModelContents.DontMatch,
+                ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
         [Fact]
@@ -176,12 +190,11 @@ namespace ProductivityApiTests
 
                 // Assert that Building doesnt have a composite key as defined in OnModelCreating 
                 // rather has Details as the only key.
-                EntityType type = GetEntityType(context, typeof(Blog));
+                var type = GetEntityType(context, typeof(Blog));
                 Assert.True(type.KeyMembers.Count == 1);
                 Assert.Equal(type.KeyMembers.First().Name, "Title");
             }
         }
-
 
         [Fact]
         public void Verify_DbContext_construction_using_connection_string_ctor_when_string_is_database_name_on_SqlCe()
@@ -200,8 +213,9 @@ namespace ProductivityApiTests
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SimpleModel.SimpleModelContextWithNoData.sdf"));
         }
 
-        private void Verify_DbContext_construction_using_connection_string_ctor(string nameOrConnectionString,
-                                                                                string expectedDatabaseName)
+        private void Verify_DbContext_construction_using_connection_string_ctor(
+            string nameOrConnectionString,
+            string expectedDatabaseName)
         {
             using (var context = new SimpleModelContextWithNoData(nameOrConnectionString))
             {
@@ -228,31 +242,38 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe()
+        public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe(
+            )
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.IsSubset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.IsSubset);
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe()
+        public void
+            Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.IsSuperset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.IsSuperset);
         }
 
         [Fact]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.Match);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.Match);
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe()
+        public void
+            Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.DatabaseName,
-                                                                          DbCompiledModelContents.DontMatch);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.DatabaseName,
+                DbCompiledModelContents.DontMatch);
         }
 
         [Fact]
@@ -264,28 +285,36 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe
+            ()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsSubset);
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe
+            ()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsSuperset);
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe(
+            )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.Match);
         }
 
         [Fact]
-        public void Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe()
+        public void
+            Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe
+            ()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.DontMatch);
@@ -295,36 +324,48 @@ namespace ProductivityApiTests
         public void
             Verify_DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_is_empty_on_SqlCe()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.IsEmpty);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.IsEmpty);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe()
+        public void
+            DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe
+            ()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.IsSubset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.IsSubset);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe()
+        public void
+            DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe
+            ()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.IsSuperset);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.IsSuperset);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe()
+        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe
+            ()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.Match);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.Match);
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe()
+        public void
+            DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe
+            ()
         {
-            DbContext_construction_using_connection_string_and_model_Ctor(ConnectionStringFormat.NamedConnectionString,
-                                                                          DbCompiledModelContents.DontMatch);
+            DbContext_construction_using_connection_string_and_model_Ctor(
+                ConnectionStringFormat.NamedConnectionString,
+                DbCompiledModelContents.DontMatch);
         }
 
         private void DbContext_construction_using_connection_string_and_model_Ctor(
@@ -380,9 +421,10 @@ namespace ProductivityApiTests
 
             // Act
             using (
-                var context = new SimpleModelContextWithNoData(connectionString,
-                                                               builder.Build(ProviderRegistry.SqlCe4_ProviderInfo).
-                                                                   Compile()))
+                var context = new SimpleModelContextWithNoData(
+                    connectionString,
+                    builder.Build(ProviderRegistry.SqlCe4_ProviderInfo).
+                        Compile()))
             {
                 // Assert
                 switch (modelContents)
@@ -420,8 +462,9 @@ namespace ProductivityApiTests
                         context.Assert<FeaturedProduct>().IsInModel();
                         break;
                     default:
-                        throw new ArgumentException("Invalid DbCompiledModelContents Arguments passed in, " +
-                                                    modelContents);
+                        throw new ArgumentException(
+                            "Invalid DbCompiledModelContents Arguments passed in, " +
+                            modelContents);
                 }
             }
         }
@@ -431,8 +474,9 @@ namespace ProductivityApiTests
         {
             using (var connection = SimpleCeConnection<SimpleModelContextWithNoData>())
             {
-                Verify_DbContext_construction_using_connection_and_model_Ctor(connection,
-                                                                              DbCompiledModelContents.IsEmpty);
+                Verify_DbContext_construction_using_connection_and_model_Ctor(
+                    connection,
+                    DbCompiledModelContents.IsEmpty);
             }
         }
 
@@ -441,23 +485,29 @@ namespace ProductivityApiTests
         {
             using (var connection = SimpleCeConnection<SimpleModelContextWithNoData>())
             {
-                Verify_DbContext_construction_using_connection_and_model_Ctor(connection,
-                                                                              DbCompiledModelContents.IsSubset);
+                Verify_DbContext_construction_using_connection_and_model_Ctor(
+                    connection,
+                    DbCompiledModelContents.IsSubset);
             }
         }
 
         [Fact]
-        public void Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_is_a_superset_on_SqlCe()
+        public void
+            Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_is_a_superset_on_SqlCe
+            ()
         {
             using (var connection = SimpleCeConnection<SimpleModelContextWithNoData>())
             {
-                Verify_DbContext_construction_using_connection_and_model_Ctor(connection,
-                                                                              DbCompiledModelContents.IsSuperset);
+                Verify_DbContext_construction_using_connection_and_model_Ctor(
+                    connection,
+                    DbCompiledModelContents.IsSuperset);
             }
         }
 
         [Fact]
-        public void Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_matches_on_SqlCe()
+        public void
+            Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_matches_on_SqlCe
+            ()
         {
             using (var connection = SimpleCeConnection<SimpleModelContextWithNoData>())
             {
@@ -466,17 +516,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_doesnt_match_on_SqlCe()
+        public void
+            Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_doesnt_match_on_SqlCe
+            ()
         {
             using (var connection = SimpleConnection<SimpleModelContextWithNoData>())
             {
-                Verify_DbContext_construction_using_connection_and_model_Ctor(connection,
-                                                                              DbCompiledModelContents.DontMatch);
+                Verify_DbContext_construction_using_connection_and_model_Ctor(
+                    connection,
+                    DbCompiledModelContents.DontMatch);
             }
         }
 
-        private void Verify_DbContext_construction_using_connection_and_model_Ctor(DbConnection connection,
-                                                                                   DbCompiledModelContents contents)
+        private void Verify_DbContext_construction_using_connection_and_model_Ctor(
+            DbConnection connection,
+            DbCompiledModelContents contents)
         {
             // Arrange
             // DbCompiledModel creation as appropriate for the various model content options
@@ -508,7 +562,7 @@ namespace ProductivityApiTests
                     throw new ArgumentException("Invalid DbCompiledModelContents Arguments passed in, " + contents);
             }
 
-            DbCompiledModel model = builder.Build(connection).Compile();
+            var model = builder.Build(connection).Compile();
 
             // Act
             using (var context = new SimpleModelContextWithNoData(connection, model))
@@ -586,14 +640,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void DbContext_constructed_with_connection_and_DbCompiledModel_ctor_will_dispose_underlying_object_context_but_not_the_connection_on_SqlCe()
+        public void
+            DbContext_constructed_with_connection_and_DbCompiledModel_ctor_will_dispose_underlying_object_context_but_not_the_connection_on_SqlCe
+            ()
         {
             DbContext_disposal_behavior_wrt_to_object_context_and_connection(
                 DbContextConstructorArgumentType.ConnectionAndDbCompiledModel);
         }
 
         [Fact]
-        public void DbContext_constructed_with_connection_string_and_DbCompiledModel_ctor_will_dispose_underlying_object_context_and_the_connection_on_SqlCe()
+        public void
+            DbContext_constructed_with_connection_string_and_DbCompiledModel_ctor_will_dispose_underlying_object_context_and_the_connection_on_SqlCe
+            ()
         {
             DbContext_disposal_behavior_wrt_to_object_context_and_connection(
                 DbContextConstructorArgumentType.ConnectionStringAndDbCompiledModel);
@@ -606,7 +664,6 @@ namespace ProductivityApiTests
             DbConnection storeConnection = null;
             using (
                 var context =
-                    (SimpleModelContext)
                     CreateContext<SimpleModelContext>(ctorArguments, providerName: "System.Data.SqlServerCe.4.0"))
             {
                 // Arrange
@@ -624,18 +681,21 @@ namespace ProductivityApiTests
                     "ObjectContext_ObjectDisposed");
             }
 
-            if (ctorArguments.Equals(DbContextConstructorArgumentType.Connection) ||
+            if (ctorArguments.Equals(DbContextConstructorArgumentType.Connection)
+                ||
                 ctorArguments.Equals(DbContextConstructorArgumentType.ConnectionAndDbCompiledModel))
             {
                 // Assert that connection is closed but not disposed
-                Assert.True(storeConnection.State == ConnectionState.Closed &&
-                            !storeConnection.ConnectionString.Equals(string.Empty));
+                Assert.True(
+                    storeConnection.State == ConnectionState.Closed &&
+                    !storeConnection.ConnectionString.Equals(string.Empty));
             }
             else
             {
                 // Assert connection is disposed
-                Assert.True(storeConnection.State == ConnectionState.Closed &&
-                            storeConnection.ConnectionString.Equals(string.Empty));
+                Assert.True(
+                    storeConnection.State == ConnectionState.Closed &&
+                    storeConnection.ConnectionString.Equals(string.Empty));
             }
         }
 
@@ -649,10 +709,11 @@ namespace ProductivityApiTests
             var sqlCeAssembly =
                 new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly;
             var context = new SimpleModelContextWithNoData("Data Sourc=Scenario_Use_AppConfig.sdf");
-            Assert.Throws<ArgumentException>(() => GetObjectContext(context)).ValidateMessage(sqlCeAssembly,
-                                                                                              "ADP_KeywordNotSupported",
-                                                                                              "System.Data.SqlServerCe",
-                                                                                              "data sourc");
+            Assert.Throws<ArgumentException>(() => GetObjectContext(context)).ValidateMessage(
+                sqlCeAssembly,
+                "ADP_KeywordNotSupported",
+                "System.Data.SqlServerCe",
+                "data sourc");
         }
 
         #endregion

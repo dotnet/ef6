@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace SimpleModel
 {
     using System.Data.Entity;
     using System.Linq;
 
     /// <summary>
-    /// A simple context for use in DbQuery LINQ testing.
+    ///     A simple context for use in DbQuery LINQ testing.
     /// </summary>
     public class SimpleModelForLinq : DbContext
     {

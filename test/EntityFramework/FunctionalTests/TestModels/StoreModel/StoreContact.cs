@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_customerID != value)
                 {
-                    if (Store != null && Store.CustomerID != value)
+                    if (Store != null
+                        && Store.CustomerID != value)
                     {
                         Store = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _customerID;
 
         public virtual int ContactID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_contactID != value)
                 {
-                    if (Contact != null && Contact.ContactID != value)
+                    if (Contact != null
+                        && Contact.ContactID != value)
                     {
                         Contact = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactID;
 
         public virtual int ContactTypeID
@@ -46,7 +51,8 @@ namespace FunctionalTests.Model
             {
                 if (_contactTypeID != value)
                 {
-                    if (ContactType != null && ContactType.ContactTypeID != value)
+                    if (ContactType != null
+                        && ContactType.ContactTypeID != value)
                     {
                         ContactType = null;
                     }
@@ -54,6 +60,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactTypeID;
 
         public virtual Guid rowguid { get; set; }
@@ -73,6 +80,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Contact _contact;
 
         public virtual ContactType ContactType
@@ -88,6 +96,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ContactType _contactType;
 
         public virtual Store Store
@@ -103,11 +112,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Store _store;
 
         private void FixupContact(Contact previousValue)
         {
-            if (previousValue != null && previousValue.StoreContacts.Contains(this))
+            if (previousValue != null
+                && previousValue.StoreContacts.Contains(this))
             {
                 previousValue.StoreContacts.Remove(this);
             }
@@ -127,7 +138,8 @@ namespace FunctionalTests.Model
 
         private void FixupContactType(ContactType previousValue)
         {
-            if (previousValue != null && previousValue.StoreContacts.Contains(this))
+            if (previousValue != null
+                && previousValue.StoreContacts.Contains(this))
             {
                 previousValue.StoreContacts.Remove(this);
             }
@@ -147,7 +159,8 @@ namespace FunctionalTests.Model
 
         private void FixupStore(Store previousValue)
         {
-            if (previousValue != null && previousValue.StoreContacts.Contains(this))
+            if (previousValue != null
+                && previousValue.StoreContacts.Contains(this))
             {
                 previousValue.StoreContacts.Remove(this);
             }

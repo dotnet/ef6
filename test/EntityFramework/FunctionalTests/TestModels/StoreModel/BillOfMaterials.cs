@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -17,7 +18,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_productAssemblyID != value)
                     {
-                        if (Product1 != null && Product1.ProductID != value)
+                        if (Product1 != null
+                            && Product1.ProductID != value)
                         {
                             Product1 = null;
                         }
@@ -30,6 +32,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _productAssemblyID;
 
         public virtual int ComponentID
@@ -42,7 +45,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_componentID != value)
                     {
-                        if (Product != null && Product.ProductID != value)
+                        if (Product != null
+                            && Product.ProductID != value)
                         {
                             Product = null;
                         }
@@ -55,6 +59,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _componentID;
 
         public virtual DateTime StartDate { get; set; }
@@ -71,7 +76,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_unitMeasureCode != value)
                     {
-                        if (UnitMeasure != null && UnitMeasure.UnitMeasureCode != value)
+                        if (UnitMeasure != null
+                            && UnitMeasure.UnitMeasureCode != value)
                         {
                             UnitMeasure = null;
                         }
@@ -84,6 +90,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _unitMeasureCode;
 
         public virtual short BOMLevel { get; set; }
@@ -105,6 +112,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         public virtual Product Product1
@@ -120,6 +128,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product1;
 
         public virtual UnitMeasure UnitMeasure { get; set; }
@@ -128,7 +137,8 @@ namespace FunctionalTests.Model
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.BillOfMaterials.Contains(this))
+            if (previousValue != null
+                && previousValue.BillOfMaterials.Contains(this))
             {
                 previousValue.BillOfMaterials.Remove(this);
             }
@@ -148,7 +158,8 @@ namespace FunctionalTests.Model
 
         private void FixupProduct1(Product previousValue)
         {
-            if (previousValue != null && previousValue.BillOfMaterials1.Contains(this))
+            if (previousValue != null
+                && previousValue.BillOfMaterials1.Contains(this))
             {
                 previousValue.BillOfMaterials1.Remove(this);
             }

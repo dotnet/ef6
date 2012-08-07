@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual short LocationID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_locationID != value)
                 {
-                    if (Location != null && Location.LocationID != value)
+                    if (Location != null
+                        && Location.LocationID != value)
                     {
                         Location = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private short _locationID;
 
         public virtual string Shelf { get; set; }
@@ -62,6 +67,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Location _location;
 
         public virtual Product Product
@@ -77,11 +83,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         private void FixupLocation(Location previousValue)
         {
-            if (previousValue != null && previousValue.ProductInventories.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductInventories.Contains(this))
             {
                 previousValue.ProductInventories.Remove(this);
             }
@@ -101,7 +109,8 @@ namespace FunctionalTests.Model
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.ProductInventories.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductInventories.Contains(this))
             {
                 previousValue.ProductInventories.Remove(this);
             }

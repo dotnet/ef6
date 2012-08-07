@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
-    public class TypeAssertion<TStructuralType> where TStructuralType : class
+    public class TypeAssertion<TStructuralType>
+        where TStructuralType : class
     {
         private readonly DbContext _context;
 
@@ -26,8 +28,9 @@ namespace System.Data.Entity
         public void IsComplexType()
         {
             Assert.NotNull(
-                ModelHelpers.GetStructuralType<ComplexType>(TestBase.GetObjectContext(_context),
-                                                                     typeof(TStructuralType)));
+                ModelHelpers.GetStructuralType<ComplexType>(
+                    TestBase.GetObjectContext(_context),
+                    typeof(TStructuralType)));
         }
     }
 }

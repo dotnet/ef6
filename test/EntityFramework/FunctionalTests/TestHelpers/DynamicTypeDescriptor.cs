@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -113,7 +114,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///   If set to true will not return attributes defined on the type at compile time
+        ///     If set to true will not return attributes defined on the type at compile time
         /// </summary>
         public bool IgnoreBase { get; set; }
 

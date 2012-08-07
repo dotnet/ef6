@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -15,8 +16,8 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Functional tests for property values.
-    /// Unit tests also exist in the unit tests project.
+    ///     Functional tests for property values.
+    ///     Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbPropertyValuesTests : FunctionalTestBase
     {
@@ -175,7 +176,11 @@ namespace ProductivityApiTests
                 var buildingId =
                     context.Buildings.Where(b => b.Name == "Building One").Select(b => b.BuildingId).Single();
 
-                var building = new Building { BuildingId = buildingId, Name = "New Building" };
+                var building = new Building
+                                   {
+                                       BuildingId = buildingId,
+                                       Name = "New Building"
+                                   };
                 context.Buildings.Attach(building);
 
                 var values = getPropertyValues(context.Entry(building));
@@ -193,12 +198,17 @@ namespace ProductivityApiTests
                 var buildingId =
                     context.Buildings.Where(b => b.Name == "Building One").Select(b => b.BuildingId).Single();
 
-                var building = new Building { BuildingId = buildingId, Name = "New Building" };
+                var building = new Building
+                                   {
+                                       BuildingId = buildingId,
+                                       Name = "New Building"
+                                   };
                 context.Buildings.Attach(building);
 
                 Assert.Throws<InvalidOperationException>(() => context.Entry(building).GetDatabaseValues()).
-                    ValidateMessage("DbPropertyValues_CannotGetStoreValuesWhenComplexPropertyIsNull", "Address",
-                                    "Building");
+                    ValidateMessage(
+                        "DbPropertyValues_CannotGetStoreValuesWhenComplexPropertyIsNull", "Address",
+                        "Building");
             }
         }
 
@@ -368,8 +378,9 @@ namespace ProductivityApiTests
             TestSetPropertyValuesScalars(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestSetPropertyValuesScalars(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                                  Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestSetPropertyValuesScalars(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -401,8 +412,9 @@ namespace ProductivityApiTests
             TestSetPropertyValuesComplex(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestSetPropertyValuesComplex(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                                  Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestSetPropertyValuesComplex(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -454,8 +466,9 @@ namespace ProductivityApiTests
             TestSetFullPropertyValuesComplex(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestSetFullPropertyValuesComplex(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                                      Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestSetFullPropertyValuesComplex(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -514,8 +527,9 @@ namespace ProductivityApiTests
             TestSetNonGenericPropertyValuesScalars(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestSetNonGenericPropertyValuesScalars(Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
-                                                            Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestSetNonGenericPropertyValuesScalars(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -547,8 +561,9 @@ namespace ProductivityApiTests
             TestSetNonGenericPropertyValuesComplex(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestSetNonGenericPropertyValuesComplex(Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
-                                                            Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestSetNonGenericPropertyValuesComplex(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -598,8 +613,9 @@ namespace ProductivityApiTests
             TestSetFullNonGenericPropertyValuesComplex(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestSetFullNonGenericPropertyValuesComplex(Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
-                                                                Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestSetFullNonGenericPropertyValuesComplex(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1167,8 +1183,9 @@ namespace ProductivityApiTests
             TestGenericObjectSetValues(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestGenericObjectSetValues(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                                Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestGenericObjectSetValues(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1178,19 +1195,23 @@ namespace ProductivityApiTests
                 var infoValues = (DbPropertyValues)addressValues["SiteInfo"];
 
                 var newBuilding = new Building
-                                  {
-                                      BuildingId = new Guid(building.BuildingId.ToString()),
-                                      Name = "Values End",
-                                      Value = building.Value,
-                                      Address = new Address
-                                                {
-                                                    Street = "The Hill",
-                                                    City = "Hobbiton",
-                                                    State = "WF",
-                                                    ZipCode = "00001",
-                                                    SiteInfo = new SiteInfo { Zone = 3, Environment = "Comfortable" }
-                                                },
-                                  };
+                                      {
+                                          BuildingId = new Guid(building.BuildingId.ToString()),
+                                          Name = "Values End",
+                                          Value = building.Value,
+                                          Address = new Address
+                                                        {
+                                                            Street = "The Hill",
+                                                            City = "Hobbiton",
+                                                            State = "WF",
+                                                            ZipCode = "00001",
+                                                            SiteInfo = new SiteInfo
+                                                                           {
+                                                                               Zone = 3,
+                                                                               Environment = "Comfortable"
+                                                                           }
+                                                        },
+                                      };
 
                 buildingValues.SetValues(newBuilding);
 
@@ -1211,8 +1232,9 @@ namespace ProductivityApiTests
             }
         }
 
-        private void ValidateBuildingPropereties(AdvancedPatternsMasterContext context, Building building,
-                                                 Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void ValidateBuildingPropereties(
+            AdvancedPatternsMasterContext context, Building building,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             // Check underlying data record
 
@@ -1257,8 +1279,9 @@ namespace ProductivityApiTests
             TestNonGenericObjectSetValues(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestNonGenericObjectSetValues(Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
-                                                   Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestNonGenericObjectSetValues(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1268,19 +1291,23 @@ namespace ProductivityApiTests
                 var infoValues = (DbPropertyValues)addressValues["SiteInfo"];
 
                 var newBuilding = new Building
-                                  {
-                                      BuildingId = new Guid(building.BuildingId.ToString()),
-                                      Name = "Values End",
-                                      Value = building.Value,
-                                      Address = new Address
-                                                {
-                                                    Street = "The Hill",
-                                                    City = "Hobbiton",
-                                                    State = "WF",
-                                                    ZipCode = "00001",
-                                                    SiteInfo = new SiteInfo { Zone = 3, Environment = "Comfortable" }
-                                                },
-                                  };
+                                      {
+                                          BuildingId = new Guid(building.BuildingId.ToString()),
+                                          Name = "Values End",
+                                          Value = building.Value,
+                                          Address = new Address
+                                                        {
+                                                            Street = "The Hill",
+                                                            City = "Hobbiton",
+                                                            State = "WF",
+                                                            ZipCode = "00001",
+                                                            SiteInfo = new SiteInfo
+                                                                           {
+                                                                               Zone = 3,
+                                                                               Environment = "Comfortable"
+                                                                           }
+                                                        },
+                                      };
 
                 buildingValues.SetValues(newBuilding);
 
@@ -1317,8 +1344,9 @@ namespace ProductivityApiTests
             TestGenericValuesSetValues(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestGenericValuesSetValues(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                                Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestGenericValuesSetValues(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1376,8 +1404,9 @@ namespace ProductivityApiTests
             TestNonGenericValuesSetValues(e => e.OriginalValues, e => e.GetUpdatableOriginalValues());
         }
 
-        private void TestNonGenericValuesSetValues(Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
-                                                   Func<ObjectStateEntry, IDataRecord> getDataRecord)
+        private void TestNonGenericValuesSetValues(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues,
+            Func<ObjectStateEntry, IDataRecord> getDataRecord)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1435,8 +1464,9 @@ namespace ProductivityApiTests
             TestKeyChange(e => e.OriginalValues, "ObjectStateEntry_SetOriginalPrimaryKey");
         }
 
-        private void TestKeyChange(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                   string exceptionStringResource)
+        private void TestKeyChange(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            string exceptionStringResource)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1543,8 +1573,9 @@ namespace ProductivityApiTests
             TestKeyChangeByObject(e => e.OriginalValues, "ObjectStateEntry_SetOriginalPrimaryKey");
         }
 
-        private void TestKeyChangeByObject(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                           string exceptionStringResource)
+        private void TestKeyChangeByObject(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            string exceptionStringResource)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1575,8 +1606,9 @@ namespace ProductivityApiTests
             TestKeyChangeByValues(e => e.OriginalValues, "ObjectStateEntry_SetOriginalPrimaryKey");
         }
 
-        private void TestKeyChangeByValues(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
-                                           string exceptionStringResource)
+        private void TestKeyChangeByValues(
+            Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues,
+            string exceptionStringResource)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1820,9 +1852,10 @@ namespace ProductivityApiTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var employee = (CurrentEmployee)context.Entry(context.Employees
-                                                                  .OfType<CurrentEmployee>()
-                                                                  .Single(b => b.FirstName == "Rowan"))
+                var employee = (CurrentEmployee)context.Entry(
+                    context.Employees
+                                                    .OfType<CurrentEmployee>()
+                                                    .Single(b => b.FirstName == "Rowan"))
                                                     .CurrentValues
                                                     .ToObject();
                 employee.EmployeeId = -77;
@@ -1838,9 +1871,10 @@ namespace ProductivityApiTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var employee = (CurrentEmployee)context.Entry(context.Employees
-                                                                  .OfType<CurrentEmployee>()
-                                                                  .Single(b => b.FirstName == "Rowan"))
+                var employee = (CurrentEmployee)context.Entry(
+                    context.Employees
+                                                    .OfType<CurrentEmployee>()
+                                                    .Single(b => b.FirstName == "Rowan"))
                                                     .CurrentValues
                                                     .ToObject();
                 employee.EmployeeId = -77;
@@ -1862,9 +1896,10 @@ namespace ProductivityApiTests
                     .FirstOrDefault()
                     .EmployeeId;
 
-                var employee = (CurrentEmployee)context.Entry(context.Employees
-                                                                  .OfType<CurrentEmployee>()
-                                                                  .Single(b => b.FirstName == "Rowan"))
+                var employee = (CurrentEmployee)context.Entry(
+                    context.Employees
+                                                    .OfType<CurrentEmployee>()
+                                                    .Single(b => b.FirstName == "Rowan"))
                                                     .CurrentValues
                                                     .ToObject();
                 employee.EmployeeId = pastEmployeeId;
@@ -1886,9 +1921,10 @@ namespace ProductivityApiTests
                     .FirstOrDefault()
                     .EmployeeId;
 
-                var employee = (CurrentEmployee)context.Entry(context.Employees
-                                                                  .OfType<CurrentEmployee>()
-                                                                  .Single(b => b.FirstName == "Rowan"))
+                var employee = (CurrentEmployee)context.Entry(
+                    context.Employees
+                                                    .OfType<CurrentEmployee>()
+                                                    .Single(b => b.FirstName == "Rowan"))
                                                     .CurrentValues
                                                     .ToObject();
                 employee.EmployeeId = pastEmployeeId;
@@ -2024,7 +2060,11 @@ namespace NamespaceForContext
         protected override void Seed(ContextInANamespace context)
         {
             context.Foos.Add(new FooInANamespace());
-            context.SuperFoos.Add(new SuperFooInANamespace { SomeSuperFoo = "Baa!" });
+            context.SuperFoos.Add(
+                new SuperFooInANamespace
+                    {
+                        SomeSuperFoo = "Baa!"
+                    });
         }
     }
 }

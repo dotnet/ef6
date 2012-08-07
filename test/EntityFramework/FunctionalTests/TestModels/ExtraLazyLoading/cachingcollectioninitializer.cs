@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace LazyUnicorns
 {
     using System;
@@ -22,7 +23,8 @@ namespace LazyUnicorns
             // We can only replace properties that are declared as ICollection<T> and have a setter.
             var propertyType = collectionProperty.PropertyType;
             if (propertyType.IsGenericType &&
-                propertyType.GetGenericTypeDefinition() == typeof(ICollection<>) &&
+                propertyType.GetGenericTypeDefinition() == typeof(ICollection<>)
+                &&
                 collectionProperty.GetSetMethod() != null)
             {
                 return propertyType.GetGenericArguments().Single();
@@ -32,33 +34,33 @@ namespace LazyUnicorns
 
         public virtual void InitializeCollections(DbContext context, object entity)
         {
-            var factories = _factories.GetOrAdd(entity.GetType(), t =>
-            {
-                var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
+            var factories = _factories.GetOrAdd(
+                entity.GetType(), t =>
+                                      {
+                                          var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
 
-                foreach (var property in t.GetProperties())
-                {
-                    var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
+                                          foreach (var property in t.GetProperties())
+                                          {
+                                              var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
 
-                    if (collectionEntry != null)
-                    {
-                        var elementType = TryGetElementType(property);
-                        if (elementType != null)
-                        {
-                            list.Add(Tuple.Create(property.Name, CreateCollectionFactory(elementType)));
-                        }
-                    }
-                }
+                                              if (collectionEntry != null)
+                                              {
+                                                  var elementType = TryGetElementType(property);
+                                                  if (elementType != null)
+                                                  {
+                                                      list.Add(Tuple.Create(property.Name, CreateCollectionFactory(elementType)));
+                                                  }
+                                              }
+                                          }
 
-                return list;
-            });
+                                          return list;
+                                      });
 
             foreach (var factory in factories)
             {
                 var collectionEntry = context.Entry(entity).Collection(factory.Item1);
                 collectionEntry.CurrentValue = factory.Item2(collectionEntry);
             }
-
         }
 
         public virtual Func<DbCollectionEntry, object> CreateCollectionFactory(Type elementType)

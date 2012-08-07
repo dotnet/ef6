@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -23,7 +24,11 @@ namespace ProductivityApiTests
                 product.Id = 1;
                 product.Name = "Marmite";
                 product.Properties = new ProductProperties
-                                     { SpecialOfferCode = "YEAST", StockCount = 77, UnitCost = 1.99m };
+                                         {
+                                             SpecialOfferCode = "YEAST",
+                                             StockCount = 77,
+                                             UnitCost = 1.99m
+                                         };
 
                 context.Products.Attach(product);
 
@@ -41,13 +46,17 @@ namespace ProductivityApiTests
         {
             using (var context = new ProxiesContext())
             {
-                for (int i = 0; i < 2; i++)
+                for (var i = 0; i < 2; i++)
                 {
                     var product = context.Products.Create();
                     product.Id = i;
                     product.Name = "Marmite";
                     product.Properties = new ProductProperties
-                                         { SpecialOfferCode = "YEAST", StockCount = 77, UnitCost = 1.99m };
+                                             {
+                                                 SpecialOfferCode = "YEAST",
+                                                 StockCount = 77,
+                                                 UnitCost = 1.99m
+                                             };
 
                     var category = context.Categories.Create();
                     category.Id = i;
@@ -76,18 +85,25 @@ namespace ProductivityApiTests
         {
             using (var context = new Context36323())
             {
-                var entry = context.Entry(new Model36323
+                var entry = context.Entry(
+                    new Model36323
+                        {
+                            Id = 14,
+                            Contact = new ContactInfo36323
                                           {
-                                              Id = 14,
-                                              Contact = new ContactInfo36323
-                                                        {
-                                                            First = "Name",
-                                                            HomePhone = new Phone36323 { Number = "12345" }
-                                                        }
-                                          });
+                                              First = "Name",
+                                              HomePhone = new Phone36323
+                                                              {
+                                                                  Number = "12345"
+                                                              }
+                                          }
+                        });
                 entry.State = EntityState.Unchanged;
 
-                entry.Entity.Contact.WorkPhone = new Phone36323 { Number = "1234" };
+                entry.Entity.Contact.WorkPhone = new Phone36323
+                                                     {
+                                                         Number = "1234"
+                                                     };
 
                 context.ChangeTracker.DetectChanges();
 
@@ -96,15 +112,18 @@ namespace ProductivityApiTests
 
                 Assert.NotNull(entry.ComplexProperty(m => m.Contact).Property(c => c.HomePhone).OriginalValue);
                 Assert.NotNull(entry.ComplexProperty(m => m.Contact).Property(c => c.HomePhone).CurrentValue);
-                Assert.Equal("12345",
-                             entry.ComplexProperty(m => m.Contact).Property(c => c.HomePhone).OriginalValue.Number);
-                Assert.Equal("12345",
-                             entry.ComplexProperty(m => m.Contact).Property(c => c.HomePhone).CurrentValue.Number);
+                Assert.Equal(
+                    "12345",
+                    entry.ComplexProperty(m => m.Contact).Property(c => c.HomePhone).OriginalValue.Number);
+                Assert.Equal(
+                    "12345",
+                    entry.ComplexProperty(m => m.Contact).Property(c => c.HomePhone).CurrentValue.Number);
 
                 Assert.Null(entry.ComplexProperty(m => m.Contact).Property(c => c.WorkPhone).OriginalValue);
                 Assert.NotNull(entry.ComplexProperty(m => m.Contact).Property(c => c.WorkPhone).CurrentValue);
-                Assert.Equal("1234",
-                             entry.ComplexProperty(m => m.Contact).Property(c => c.WorkPhone).CurrentValue.Number);
+                Assert.Equal(
+                    "1234",
+                    entry.ComplexProperty(m => m.Contact).Property(c => c.WorkPhone).CurrentValue.Number);
             }
         }
 
@@ -125,8 +144,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     entry.ComplexProperty(b => b.Address).Property(a => a.SiteInfo).OriginalValue = CreateSiteInfo()).
-                    ValidateMessage("DbPropertyValues_CannotSetPropertyOnNullOriginalValue", typeof(SiteInfo).Name,
-                                    typeof(Address).Name);
+                    ValidateMessage(
+                        "DbPropertyValues_CannotSetPropertyOnNullOriginalValue", typeof(SiteInfo).Name,
+                        typeof(Address).Name);
             }
         }
 
@@ -141,8 +161,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     entry.ComplexProperty(b => b.Address).Property(a => a.SiteInfo).CurrentValue = CreateSiteInfo()).
-                    ValidateMessage("DbPropertyValues_CannotSetPropertyOnNullCurrentValue", typeof(SiteInfo).Name,
-                                    typeof(Address).Name);
+                    ValidateMessage(
+                        "DbPropertyValues_CannotSetPropertyOnNullCurrentValue", typeof(SiteInfo).Name,
+                        typeof(Address).Name);
             }
         }
 
@@ -157,8 +178,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     entry.ComplexProperty(b => b.Address).Property(a => a.SiteInfo).OriginalValue = CreateSiteInfo()).
-                    ValidateMessage("DbPropertyValues_CannotSetPropertyOnNullOriginalValue", typeof(SiteInfo).Name,
-                                    typeof(Address).Name);
+                    ValidateMessage(
+                        "DbPropertyValues_CannotSetPropertyOnNullOriginalValue", typeof(SiteInfo).Name,
+                        typeof(Address).Name);
             }
         }
 
@@ -173,8 +195,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     entry.ComplexProperty(b => b.Address).Property(a => a.SiteInfo).CurrentValue = CreateSiteInfo()).
-                    ValidateMessage("DbPropertyValues_CannotSetPropertyOnNullCurrentValue", typeof(SiteInfo).Name,
-                                    typeof(Address).Name);
+                    ValidateMessage(
+                        "DbPropertyValues_CannotSetPropertyOnNullCurrentValue", typeof(SiteInfo).Name,
+                        typeof(Address).Name);
             }
         }
 
@@ -188,8 +211,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     entry.ComplexProperty(b => b.Address).Property(a => a.SiteInfo).CurrentValue = CreateSiteInfo()).
-                    ValidateMessage("DbPropertyValues_CannotSetPropertyOnNullCurrentValue", typeof(SiteInfo).Name,
-                                    typeof(Address).Name);
+                    ValidateMessage(
+                        "DbPropertyValues_CannotSetPropertyOnNullCurrentValue", typeof(SiteInfo).Name,
+                        typeof(Address).Name);
             }
         }
 
@@ -235,7 +259,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Calling_DetectChanges_twice_for_complex_type_that_was_null_but_is_no_longer_null_should_work_and_original_value_should_be_null()
+        public void
+            Calling_DetectChanges_twice_for_complex_type_that_was_null_but_is_no_longer_null_should_work_and_original_value_should_be_null()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -259,7 +284,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Calling_DetectChanges_twice_for_nested_complex_type_that_was_null_but_is_no_longer_null_should_work_and_original_value_should_be_null()
+        public void
+            Calling_DetectChanges_twice_for_nested_complex_type_that_was_null_but_is_no_longer_null_should_work_and_original_value_should_be_null
+            ()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -287,28 +314,32 @@ namespace ProductivityApiTests
         private Building CreateBuilding(bool nullAddress, bool nullSiteInfo = true)
         {
             return new Building
-                   {
-                       Name = "Unicorn Mannor",
-                       Address = nullAddress ? null : CreateAddress(nullSiteInfo),
-                   };
+                       {
+                           Name = "Unicorn Mannor",
+                           Address = nullAddress ? null : CreateAddress(nullSiteInfo),
+                       };
         }
 
         private Address CreateAddress(bool nullSiteInfo)
         {
             return new Address
-                   {
-                       Street = "Donkey Boulevard",
-                       City = "Working Horse City",
-                       State = "WA",
-                       ZipCode = "98052",
-                       County = "KING",
-                       SiteInfo = nullSiteInfo ? null : CreateSiteInfo(),
-                   };
+                       {
+                           Street = "Donkey Boulevard",
+                           City = "Working Horse City",
+                           State = "WA",
+                           ZipCode = "98052",
+                           County = "KING",
+                           SiteInfo = nullSiteInfo ? null : CreateSiteInfo(),
+                       };
         }
 
         private SiteInfo CreateSiteInfo()
         {
-            return new SiteInfo { Zone = 18, Environment = "Dungy" };
+            return new SiteInfo
+                       {
+                           Zone = 18,
+                           Environment = "Dungy"
+                       };
         }
 
         #endregion

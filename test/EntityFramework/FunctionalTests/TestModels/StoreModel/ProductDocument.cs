@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual int DocumentID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_documentID != value)
                 {
-                    if (Document != null && Document.DocumentID != value)
+                    if (Document != null
+                        && Document.DocumentID != value)
                     {
                         Document = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _documentID;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -54,6 +59,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Document _document;
 
         public virtual Product Product
@@ -69,11 +75,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         private void FixupDocument(Document previousValue)
         {
-            if (previousValue != null && previousValue.ProductDocuments.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductDocuments.Contains(this))
             {
                 previousValue.ProductDocuments.Remove(this);
             }
@@ -93,7 +101,8 @@ namespace FunctionalTests.Model
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.ProductDocuments.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductDocuments.Contains(this))
             {
                 previousValue.ProductDocuments.Remove(this);
             }

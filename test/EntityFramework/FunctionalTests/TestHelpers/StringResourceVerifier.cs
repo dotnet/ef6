@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -8,89 +9,78 @@ namespace System.Data.Entity
     using Xunit;
 
     /// <summary>
-    /// Helpers for verifying strings that are pulled from a localized resources
+    ///     Helpers for verifying strings that are pulled from a localized resources
     /// </summary>
     public class StringResourceVerifier
     {
         private readonly AssemblyResourceLookup _lookup;
 
         /// <summary>
-        /// Initializes a new instance of the StringResourceVerifier class.
+        ///     Initializes a new instance of the StringResourceVerifier class.
         /// </summary>
-        /// <param name="lookup">Lookup to be used for locating string resources</param>
+        /// <param name="lookup"> Lookup to be used for locating string resources </param>
         public StringResourceVerifier(AssemblyResourceLookup lookup)
         {
-            this._lookup = lookup;
+            _lookup = lookup;
         }
 
         /// <summary>
-        /// Determines if the supplied string is an instance of the string defined in localized resources
+        ///     Determines if the supplied string is an instance of the string defined in localized resources
         /// </summary>
-        /// <param name="expectedResourceKey">The key of the resource string to match against</param>
-        /// <param name="actualMessage">String value to be verified</param>
-        /// <param name="stringParameters">
-        /// Expected values for string.Format placeholders in the resource string
-        /// If none are supplied then any values for placeholders in the resource string will count as a match
-        /// </param>
-        /// <returns>True if the string matches, false otherwise</returns>
+        /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
+        /// <param name="actualMessage"> String value to be verified </param>
+        /// <param name="stringParameters"> Expected values for string.Format placeholders in the resource string If none are supplied then any values for placeholders in the resource string will count as a match </param>
+        /// <returns> True if the string matches, false otherwise </returns>
         public bool IsMatch(string expectedResourceKey, string actualMessage, params object[] stringParameters)
         {
-            return this.IsMatch(expectedResourceKey, actualMessage, true, stringParameters);
+            return IsMatch(expectedResourceKey, actualMessage, true, stringParameters);
         }
 
         /// <summary>
-        /// Determines if the supplied string is an instance of the string defined in localized resources
+        ///     Determines if the supplied string is an instance of the string defined in localized resources
         /// </summary>
-        /// <param name="expectedResourceKey">The key of the resource string to match against</param>
-        /// <param name="actualMessage">String value to be verified</param>
-        /// <param name="isExactMatch">Determines whether the exception message must be exact match of the message in the resource file, or just contain it.</param>
-        /// <param name="stringParameters">
-        /// Expected values for string.Format placeholders in the resource string
-        /// If none are supplied then any values for placeholders in the resource string will count as a match
-        /// </param>
-        /// <returns>True if the string matches, false otherwise</returns>
+        /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
+        /// <param name="actualMessage"> String value to be verified </param>
+        /// <param name="isExactMatch"> Determines whether the exception message must be exact match of the message in the resource file, or just contain it. </param>
+        /// <param name="stringParameters"> Expected values for string.Format placeholders in the resource string If none are supplied then any values for placeholders in the resource string will count as a match </param>
+        /// <returns> True if the string matches, false otherwise </returns>
         public bool IsMatch(string expectedResourceKey, string actualMessage, bool isExactMatch, params object[] stringParameters)
         {
             string messageFromResources;
-            return this.IsMatch(expectedResourceKey, actualMessage, isExactMatch, stringParameters, out messageFromResources);
+            return IsMatch(expectedResourceKey, actualMessage, isExactMatch, stringParameters, out messageFromResources);
         }
 
         /// <summary>
-        /// Verified the supplied string is an instance of the string defined in resources
+        ///     Verified the supplied string is an instance of the string defined in resources
         /// </summary>
-        /// <param name="expectedResourceKey">The key of the resource string to match against</param>
-        /// <param name="actualMessage">String value to be verified</param>
-        /// <param name="stringParameters">
-        /// Expected values for string.Format placeholders in the resource string
-        /// If none are supplied then any values for placeholders in the resource string will count as a match
-        /// </param>
+        /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
+        /// <param name="actualMessage"> String value to be verified </param>
+        /// <param name="stringParameters"> Expected values for string.Format placeholders in the resource string If none are supplied then any values for placeholders in the resource string will count as a match </param>
         public void VerifyMatch(string expectedResourceKey, string actualMessage, params object[] stringParameters)
         {
-            this.VerifyMatch(expectedResourceKey, actualMessage, true, stringParameters);
+            VerifyMatch(expectedResourceKey, actualMessage, true, stringParameters);
         }
 
         /// <summary>
-        /// Determines if the supplied string is an instance of the string defined in localized resources
-        /// If the string in the resource file contains string.Format place holders then the actual message can contain any values for these
+        ///     Determines if the supplied string is an instance of the string defined in localized resources
+        ///     If the string in the resource file contains string.Format place holders then the actual message can contain any values for these
         /// </summary>
-        /// <param name="expectedResourceKey">The key of the resource string to match against</param>
-        /// <param name="actualMessage">String value to be verified</param>
-        /// <param name="isExactMatch">Determines whether the exception message must be exact match of the message in the resource file, or just contain it.</param>
-        /// <param name="stringParameters">
-        /// Expected values for string.Format placeholders in the resource string
-        /// If none are supplied then any values for placeholders in the resource string will count as a match
-        /// </param>
+        /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
+        /// <param name="actualMessage"> String value to be verified </param>
+        /// <param name="isExactMatch"> Determines whether the exception message must be exact match of the message in the resource file, or just contain it. </param>
+        /// <param name="stringParameters"> Expected values for string.Format placeholders in the resource string If none are supplied then any values for placeholders in the resource string will count as a match </param>
         public void VerifyMatch(string expectedResourceKey, string actualMessage, bool isExactMatch, params object[] stringParameters)
         {
             string messageFromResources;
             Assert.True(
-                this.IsMatch(expectedResourceKey, actualMessage, isExactMatch, stringParameters,
-                             out messageFromResources),
-                             string.Format(
-                @"Actual string does not match the message defined in resources.
+                IsMatch(
+                    expectedResourceKey, actualMessage, isExactMatch, stringParameters,
+                    out messageFromResources),
+                string.Format(
+                    @"Actual string does not match the message defined in resources.
 Expected:'{0}',
 Actual:'{1}'",
-                messageFromResources, actualMessage));
+                    messageFromResources, actualMessage));
         }
 
         private static bool IsMatchWithAnyPlaceholderValues(string expectedMessage, string actualMessage, bool isExactMatch)
@@ -99,17 +89,18 @@ Actual:'{1}'",
             var sections = FindMessageSections(expectedMessage);
 
             // Check that each section is present in the actual message in correct order
-            int indexToCheckFrom = 0;
+            var indexToCheckFrom = 0;
             foreach (var section in sections)
             {
                 // Check if it is present in the actual message
-                int index = actualMessage.IndexOf(section, indexToCheckFrom, StringComparison.Ordinal);
+                var index = actualMessage.IndexOf(section, indexToCheckFrom, StringComparison.Ordinal);
                 if (index < 0)
                 {
                     return false;
                 }
 
-                if (section.Length == 0 && section == sections.Last())
+                if (section.Length == 0
+                    && section == sections.Last())
                 {
                     // If the last section is a zero-length string
                     // then this indicates that the placeholder is the
@@ -137,14 +128,19 @@ Actual:'{1}'",
 
             // Start with a section that spans the whole string
             // While there are still place holders shorten the previous section to end at the next { and start a new section from the following }
-            sections.Add(new StringSection { StartIndex = 0, EndIndex = messageFromResources.Length });
-            int indexToCheckFrom = 0;
+            sections.Add(
+                new StringSection
+                    {
+                        StartIndex = 0,
+                        EndIndex = messageFromResources.Length
+                    });
+            var indexToCheckFrom = 0;
             while (messageFromResources.IndexOf("{", indexToCheckFrom, StringComparison.Ordinal) >= 0)
             {
                 // Find the indexes to split the new section around
                 var previous = sections.Last();
-                int previousEndIndex = messageFromResources.IndexOf("{", indexToCheckFrom, StringComparison.Ordinal);
-                int nextStartIndex = messageFromResources.IndexOf("}", previousEndIndex, StringComparison.Ordinal) + 1;
+                var previousEndIndex = messageFromResources.IndexOf("{", indexToCheckFrom, StringComparison.Ordinal);
+                var nextStartIndex = messageFromResources.IndexOf("}", previousEndIndex, StringComparison.Ordinal) + 1;
 
                 // If there are no remaining closing tags then we are done
                 if (nextStartIndex == 0)
@@ -155,12 +151,13 @@ Actual:'{1}'",
                 {
                     // Contents of place holder must be integer
                     int temp;
-                    bool intContents = int.TryParse(messageFromResources.Substring(previousEndIndex + 1, nextStartIndex - previousEndIndex - 2), out temp);
+                    var intContents =
+                        int.TryParse(messageFromResources.Substring(previousEndIndex + 1, nextStartIndex - previousEndIndex - 2), out temp);
 
                     // Place holder must not be escaped (i.e. {{0}})
-                    bool escaped = messageFromResources[previousEndIndex] == '{' 
-                        && nextStartIndex < messageFromResources.Length 
-                        && messageFromResources[nextStartIndex] == '}';
+                    var escaped = messageFromResources[previousEndIndex] == '{'
+                                  && nextStartIndex < messageFromResources.Length
+                                  && messageFromResources[nextStartIndex] == '}';
 
                     if (!intContents || escaped)
                     {
@@ -177,20 +174,28 @@ Actual:'{1}'",
                 // helps verification ensure that there is actually a wildcard
                 // at this point in the string instead of the string ending
                 // without a wildcard.
-                sections.Add(new StringSection { StartIndex = nextStartIndex, EndIndex = messageFromResources.Length });
+                sections.Add(
+                    new StringSection
+                        {
+                            StartIndex = nextStartIndex,
+                            EndIndex = messageFromResources.Length
+                        });
                 indexToCheckFrom = nextStartIndex;
             }
 
             // Pull out the sections
-            return sections.Select(s => messageFromResources.Substring(s.StartIndex, s.EndIndex - s.StartIndex).Replace("{{", "{").Replace("}}", "}"));
+            return
+                sections.Select(
+                    s => messageFromResources.Substring(s.StartIndex, s.EndIndex - s.StartIndex).Replace("{{", "{").Replace("}}", "}"));
         }
 
-        private bool IsMatch(string expectedResourceKey, string actualMessage, bool isExactMatch, object[] stringParameters, out string messageFromResources)
+        private bool IsMatch(
+            string expectedResourceKey, string actualMessage, bool isExactMatch, object[] stringParameters, out string messageFromResources)
         {
             ExceptionHelpers.CheckStringArgumentIsNotNullOrEmpty(expectedResourceKey, "expectedResourceKey");
             ExceptionHelpers.CheckArgumentNotNull(actualMessage, "actualMessage");
 
-            messageFromResources = this._lookup.LookupString(expectedResourceKey);
+            messageFromResources = _lookup.LookupString(expectedResourceKey);
 
             if (stringParameters.Length == 0)
             {
@@ -205,17 +210,17 @@ Actual:'{1}'",
         }
 
         /// <summary>
-        /// Represents a section of a string
+        ///     Represents a section of a string
         /// </summary>
         private class StringSection
         {
             /// <summary>
-            /// Gets or sets the index the section starts at
+            ///     Gets or sets the index the section starts at
             /// </summary>
             public int StartIndex { get; set; }
 
             /// <summary>
-            /// Gets or sets the index the section ends at
+            ///     Gets or sets the index the section ends at
             /// </summary>
             public int EndIndex { get; set; }
         }

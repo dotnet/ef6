@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -14,7 +15,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Functional tests for WriteEdmx methods.
+    ///     Functional tests for WriteEdmx methods.
     /// </summary>
     public class WriteEdmxTests : FunctionalTestBase
     {
@@ -85,9 +86,9 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Not really testing that the EDMX is correct, just that a sanity check
-        /// that the string has something in it. Testing that the EDMX is correct
-        /// should be done at the EdmLib/EdmxSerializer level.
+        ///     Not really testing that the EDMX is correct, just that a sanity check
+        ///     that the string has something in it. Testing that the EDMX is correct
+        ///     should be done at the EdmLib/EdmxSerializer level.
         /// </summary>
         private void SanityCheckEdmx(StringBuilder edmxBuilder)
         {
@@ -134,8 +135,9 @@ namespace ProductivityApiTests
         public void Context_based_WriteEdmx_throws_when_used_with_Model_First_DbContext()
         {
             using (
-                var context = new DbContext(new EntityConnection(SimpleModelEntityConnectionString),
-                                            contextOwnsConnection: true))
+                var context = new DbContext(
+                    new EntityConnection(SimpleModelEntityConnectionString),
+                    contextOwnsConnection: true))
             {
                 Assert.Throws<NotSupportedException>(() => EdmxWriter.WriteEdmx(context, XmlWriter.Create(Stream.Null)))
                     .ValidateMessage("EdmxWriter_EdmxFromModelFirstNotSupported");
@@ -174,8 +176,9 @@ namespace ProductivityApiTests
         [Fact]
         public void EdmxWriter_can_write_an_EDMX_when_DbContextInfo_is_used_to_specify_the_provider_info()
         {
-            var contextInfo = new DbContextInfo(typeof(SimpleModelContext),
-                                                new DbProviderInfo("System.Data.SqlClient", "2008"));
+            var contextInfo = new DbContextInfo(
+                typeof(SimpleModelContext),
+                new DbProviderInfo("System.Data.SqlClient", "2008"));
 
             using (var context = contextInfo.CreateInstance())
             {

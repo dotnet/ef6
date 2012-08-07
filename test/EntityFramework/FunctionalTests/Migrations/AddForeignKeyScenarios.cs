@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Linq;
@@ -33,9 +34,13 @@ namespace System.Data.Entity.Migrations
             var foreignKey = Info.TableConstraints.OfType<ReferentialConstraintInfo>().SingleOrDefault(rc => rc.Name == "FK_Custom_Name");
             Assert.NotNull(foreignKey);
             Assert.Equal(1, foreignKey.KeyColumnUsages.Count());
-            Assert.True(foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 1 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "OrderId"));
+            Assert.True(
+                foreignKey.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 1 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "OrderId"));
             Assert.Equal(1, foreignKey.UniqueConstraint.KeyColumnUsages.Count());
-            var keyColumnUsage = foreignKey.UniqueConstraint.KeyColumnUsages.SingleOrDefault(kcu => kcu.Position == 1 && kcu.ColumnTableName == "Orders" && kcu.ColumnName == "OrderId");
+            var keyColumnUsage =
+                foreignKey.UniqueConstraint.KeyColumnUsages.SingleOrDefault(
+                    kcu => kcu.Position == 1 && kcu.ColumnTableName == "Orders" && kcu.ColumnName == "OrderId");
             Assert.NotNull(keyColumnUsage);
             WhenNotSqlCe(() => Assert.Equal("ordering", keyColumnUsage.ColumnTableSchema));
         }
@@ -61,14 +66,23 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            var foreignKey = Info.TableConstraints.OfType<ReferentialConstraintInfo>().SingleOrDefault(rc => rc.Name == "FK_OrderLines_MigrationsProducts_ProductId_Sku");
+            var foreignKey =
+                Info.TableConstraints.OfType<ReferentialConstraintInfo>().SingleOrDefault(
+                    rc => rc.Name == "FK_OrderLines_MigrationsProducts_ProductId_Sku");
             Assert.NotNull(foreignKey);
             Assert.Equal(2, foreignKey.KeyColumnUsages.Count());
-            Assert.True(foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 1 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "ProductId"));
-            Assert.True(foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 2 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "Sku"));
+            Assert.True(
+                foreignKey.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 1 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "ProductId"));
+            Assert.True(
+                foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 2 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "Sku"));
             Assert.Equal(2, foreignKey.UniqueConstraint.KeyColumnUsages.Count());
-            Assert.True(foreignKey.UniqueConstraint.KeyColumnUsages.Any(kcu => kcu.Position == 1 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "ProductId"));
-            Assert.True(foreignKey.UniqueConstraint.KeyColumnUsages.Any(kcu => kcu.Position == 2 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "Sku"));
+            Assert.True(
+                foreignKey.UniqueConstraint.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 1 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "ProductId"));
+            Assert.True(
+                foreignKey.UniqueConstraint.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 2 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "Sku"));
         }
 
         private class AddForeignKeyNoPrincipalMigration : DbMigration
@@ -92,14 +106,23 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            var foreignKey = Info.TableConstraints.OfType<ReferentialConstraintInfo>().SingleOrDefault(rc => rc.Name == "FK_OrderLines_MigrationsProducts_ProductId_Sku");
+            var foreignKey =
+                Info.TableConstraints.OfType<ReferentialConstraintInfo>().SingleOrDefault(
+                    rc => rc.Name == "FK_OrderLines_MigrationsProducts_ProductId_Sku");
             Assert.NotNull(foreignKey);
             Assert.Equal(2, foreignKey.KeyColumnUsages.Count());
-            Assert.True(foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 1 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "ProductId"));
-            Assert.True(foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 2 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "Sku"));
+            Assert.True(
+                foreignKey.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 1 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "ProductId"));
+            Assert.True(
+                foreignKey.KeyColumnUsages.Any(kcu => kcu.Position == 2 && kcu.ColumnTableName == "OrderLines" && kcu.ColumnName == "Sku"));
             Assert.Equal(2, foreignKey.UniqueConstraint.KeyColumnUsages.Count());
-            Assert.True(foreignKey.UniqueConstraint.KeyColumnUsages.Any(kcu => kcu.Position == 1 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "ProductId"));
-            Assert.True(foreignKey.UniqueConstraint.KeyColumnUsages.Any(kcu => kcu.Position == 2 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "Sku"));
+            Assert.True(
+                foreignKey.UniqueConstraint.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 1 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "ProductId"));
+            Assert.True(
+                foreignKey.UniqueConstraint.KeyColumnUsages.Any(
+                    kcu => kcu.Position == 2 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "Sku"));
         }
     }
 }

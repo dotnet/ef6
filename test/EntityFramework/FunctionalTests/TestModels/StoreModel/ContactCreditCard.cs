@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_contactID != value)
                 {
-                    if (Contact != null && Contact.ContactID != value)
+                    if (Contact != null
+                        && Contact.ContactID != value)
                     {
                         Contact = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactID;
 
         public virtual int CreditCardID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_creditCardID != value)
                 {
-                    if (CreditCard != null && CreditCard.CreditCardID != value)
+                    if (CreditCard != null
+                        && CreditCard.CreditCardID != value)
                     {
                         CreditCard = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _creditCardID;
 
         public virtual DateTime ModifiedDate { get; set; }
@@ -54,6 +59,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Contact _contact;
 
         public virtual CreditCard CreditCard
@@ -69,11 +75,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private CreditCard _creditCard;
 
         private void FixupContact(Contact previousValue)
         {
-            if (previousValue != null && previousValue.ContactCreditCards.Contains(this))
+            if (previousValue != null
+                && previousValue.ContactCreditCards.Contains(this))
             {
                 previousValue.ContactCreditCards.Remove(this);
             }
@@ -93,7 +101,8 @@ namespace FunctionalTests.Model
 
         private void FixupCreditCard(CreditCard previousValue)
         {
-            if (previousValue != null && previousValue.ContactCreditCards.Contains(this))
+            if (previousValue != null
+                && previousValue.ContactCreditCards.Contains(this))
             {
                 previousValue.ContactCreditCards.Remove(this);
             }

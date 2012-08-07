@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Linq;
@@ -18,7 +19,13 @@ namespace System.Data.Entity.Migrations
 
             protected override void Seed(ShopContext_v1 context)
             {
-                context.Products.Add(new MigrationsProduct { Name = "Foomatic 1000", ProductId = 123, Sku = "BAR123" });
+                context.Products.Add(
+                    new MigrationsProduct
+                        {
+                            Name = "Foomatic 1000",
+                            ProductId = 123,
+                            Sku = "BAR123"
+                        });
             }
         }
 

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -39,7 +40,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_customerID != value)
                     {
-                        if (Customer != null && Customer.CustomerID != value)
+                        if (Customer != null
+                            && Customer.CustomerID != value)
                         {
                             Customer = null;
                         }
@@ -52,6 +54,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _customerID;
 
         public virtual int ContactID
@@ -64,7 +67,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_contactID != value)
                     {
-                        if (Contact != null && Contact.ContactID != value)
+                        if (Contact != null
+                            && Contact.ContactID != value)
                         {
                             Contact = null;
                         }
@@ -77,6 +81,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _contactID;
 
         public virtual int? SalesPersonID
@@ -89,7 +94,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_salesPersonID != value)
                     {
-                        if (SalesPerson != null && SalesPerson.SalesPersonID != value)
+                        if (SalesPerson != null
+                            && SalesPerson.SalesPersonID != value)
                         {
                             SalesPerson = null;
                         }
@@ -102,6 +108,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _salesPersonID;
 
         public virtual int? TerritoryID
@@ -114,7 +121,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_territoryID != value)
                     {
-                        if (SalesTerritory != null && SalesTerritory.TerritoryID != value)
+                        if (SalesTerritory != null
+                            && SalesTerritory.TerritoryID != value)
                         {
                             SalesTerritory = null;
                         }
@@ -127,6 +135,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _territoryID;
 
         public virtual int BillToAddressID
@@ -139,7 +148,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_billToAddressID != value)
                     {
-                        if (Address != null && Address.AddressID != value)
+                        if (Address != null
+                            && Address.AddressID != value)
                         {
                             Address = null;
                         }
@@ -152,6 +162,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _billToAddressID;
 
         public virtual int ShipToAddressID
@@ -164,7 +175,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_shipToAddressID != value)
                     {
-                        if (Address1 != null && Address1.AddressID != value)
+                        if (Address1 != null
+                            && Address1.AddressID != value)
                         {
                             Address1 = null;
                         }
@@ -177,6 +189,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _shipToAddressID;
 
         public virtual int ShipMethodID
@@ -189,7 +202,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_shipMethodID != value)
                     {
-                        if (ShipMethod != null && ShipMethod.ShipMethodID != value)
+                        if (ShipMethod != null
+                            && ShipMethod.ShipMethodID != value)
                         {
                             ShipMethod = null;
                         }
@@ -202,6 +216,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _shipMethodID;
 
         public virtual int? CreditCardID
@@ -214,7 +229,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_creditCardID != value)
                     {
-                        if (CreditCard != null && CreditCard.CreditCardID != value)
+                        if (CreditCard != null
+                            && CreditCard.CreditCardID != value)
                         {
                             CreditCard = null;
                         }
@@ -227,6 +243,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _creditCardID;
 
         public virtual string CreditCardApprovalCode { get; set; }
@@ -241,7 +258,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_currencyRateID != value)
                     {
-                        if (CurrencyRate != null && CurrencyRate.CurrencyRateID != value)
+                        if (CurrencyRate != null
+                            && CurrencyRate.CurrencyRateID != value)
                         {
                             CurrencyRate = null;
                         }
@@ -254,6 +272,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _currencyRateID;
 
         public virtual decimal SubTotal { get; set; }
@@ -283,6 +302,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Address _address;
 
         public virtual Address Address1
@@ -298,6 +318,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Address _address1;
 
         public virtual Contact Contact
@@ -313,6 +334,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Contact _contact;
 
         public virtual ShipMethod ShipMethod
@@ -328,6 +350,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ShipMethod _shipMethod;
 
         public virtual CreditCard CreditCard
@@ -343,6 +366,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private CreditCard _creditCard;
 
         public virtual CurrencyRate CurrencyRate
@@ -358,6 +382,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private CurrencyRate _currencyRate;
 
         public virtual Customer Customer
@@ -373,6 +398,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Customer _customer;
 
         public virtual ICollection<SalesOrderDetail> SalesOrderDetails
@@ -405,6 +431,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderDetail> _salesOrderDetails;
 
         public virtual SalesPerson SalesPerson
@@ -420,6 +447,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesPerson _salesPerson;
 
         public virtual SalesTerritory SalesTerritory
@@ -435,6 +463,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesTerritory _salesTerritory;
 
         public virtual ICollection<SalesReason> SalesReasons { get; set; }
@@ -443,7 +472,8 @@ namespace FunctionalTests.Model
 
         private void FixupAddress(Address previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -463,7 +493,8 @@ namespace FunctionalTests.Model
 
         private void FixupAddress1(Address previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders1.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders1.Contains(this))
             {
                 previousValue.SalesOrderHeaders1.Remove(this);
             }
@@ -483,7 +514,8 @@ namespace FunctionalTests.Model
 
         private void FixupContact(Contact previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -503,7 +535,8 @@ namespace FunctionalTests.Model
 
         private void FixupShipMethod(ShipMethod previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -523,7 +556,8 @@ namespace FunctionalTests.Model
 
         private void FixupCreditCard(CreditCard previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -547,7 +581,8 @@ namespace FunctionalTests.Model
 
         private void FixupCurrencyRate(CurrencyRate previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -571,7 +606,8 @@ namespace FunctionalTests.Model
 
         private void FixupCustomer(Customer previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -591,7 +627,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesPerson(SalesPerson previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }
@@ -615,7 +652,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesTerritory(SalesTerritory previousValue)
         {
-            if (previousValue != null && previousValue.SalesOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesOrderHeaders.Contains(this))
             {
                 previousValue.SalesOrderHeaders.Remove(this);
             }

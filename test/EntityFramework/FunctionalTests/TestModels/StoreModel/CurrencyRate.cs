@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -18,7 +19,8 @@ namespace FunctionalTests.Model
             {
                 if (_fromCurrencyCode != value)
                 {
-                    if (Currency != null && Currency.CurrencyCode != value)
+                    if (Currency != null
+                        && Currency.CurrencyCode != value)
                     {
                         Currency = null;
                     }
@@ -26,6 +28,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _fromCurrencyCode;
 
         public virtual string ToCurrencyCode
@@ -35,7 +38,8 @@ namespace FunctionalTests.Model
             {
                 if (_toCurrencyCode != value)
                 {
-                    if (Currency1 != null && Currency1.CurrencyCode != value)
+                    if (Currency1 != null
+                        && Currency1.CurrencyCode != value)
                     {
                         Currency1 = null;
                     }
@@ -43,6 +47,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _toCurrencyCode;
 
         public virtual decimal AverageRate { get; set; }
@@ -64,6 +69,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Currency _currency;
 
         public virtual Currency Currency1
@@ -79,6 +85,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Currency _currency1;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -111,11 +118,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         private void FixupCurrency(Currency previousValue)
         {
-            if (previousValue != null && previousValue.CurrencyRates.Contains(this))
+            if (previousValue != null
+                && previousValue.CurrencyRates.Contains(this))
             {
                 previousValue.CurrencyRates.Remove(this);
             }
@@ -135,7 +144,8 @@ namespace FunctionalTests.Model
 
         private void FixupCurrency1(Currency previousValue)
         {
-            if (previousValue != null && previousValue.CurrencyRates1.Contains(this))
+            if (previousValue != null
+                && previousValue.CurrencyRates1.Contains(this))
             {
                 previousValue.CurrencyRates1.Remove(this);
             }

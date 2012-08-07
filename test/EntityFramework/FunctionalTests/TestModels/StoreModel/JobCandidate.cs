@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -17,7 +18,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_employeeID != value)
                     {
-                        if (Employee != null && Employee.EmployeeID != value)
+                        if (Employee != null
+                            && Employee.EmployeeID != value)
                         {
                             Employee = null;
                         }
@@ -30,6 +32,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _employeeID;
 
         public virtual string Resume { get; set; }
@@ -49,13 +52,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Employee _employee;
 
         private bool _settingFK;
 
         private void FixupEmployee(Employee previousValue)
         {
-            if (previousValue != null && previousValue.JobCandidates.Contains(this))
+            if (previousValue != null
+                && previousValue.JobCandidates.Contains(this))
             {
                 previousValue.JobCandidates.Remove(this);
             }

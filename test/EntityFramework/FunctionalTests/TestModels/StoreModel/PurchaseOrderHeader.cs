@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -20,7 +21,8 @@ namespace FunctionalTests.Model
             {
                 if (_employeeID != value)
                 {
-                    if (Employee != null && Employee.EmployeeID != value)
+                    if (Employee != null
+                        && Employee.EmployeeID != value)
                     {
                         Employee = null;
                     }
@@ -28,6 +30,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _employeeID;
 
         public virtual int VendorID
@@ -37,7 +40,8 @@ namespace FunctionalTests.Model
             {
                 if (_vendorID != value)
                 {
-                    if (Vendor != null && Vendor.VendorID != value)
+                    if (Vendor != null
+                        && Vendor.VendorID != value)
                     {
                         Vendor = null;
                     }
@@ -45,6 +49,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _vendorID;
 
         public virtual int ShipMethodID
@@ -54,7 +59,8 @@ namespace FunctionalTests.Model
             {
                 if (_shipMethodID != value)
                 {
-                    if (ShipMethod != null && ShipMethod.ShipMethodID != value)
+                    if (ShipMethod != null
+                        && ShipMethod.ShipMethodID != value)
                     {
                         ShipMethod = null;
                     }
@@ -62,6 +68,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _shipMethodID;
 
         public virtual DateTime OrderDate { get; set; }
@@ -91,6 +98,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Employee _employee;
 
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails
@@ -123,6 +131,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<PurchaseOrderDetail> _purchaseOrderDetails;
 
         public virtual ShipMethod ShipMethod
@@ -138,6 +147,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ShipMethod _shipMethod;
 
         public virtual Vendor Vendor
@@ -153,11 +163,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Vendor _vendor;
 
         private void FixupEmployee(Employee previousValue)
         {
-            if (previousValue != null && previousValue.PurchaseOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.PurchaseOrderHeaders.Contains(this))
             {
                 previousValue.PurchaseOrderHeaders.Remove(this);
             }
@@ -177,7 +189,8 @@ namespace FunctionalTests.Model
 
         private void FixupShipMethod(ShipMethod previousValue)
         {
-            if (previousValue != null && previousValue.PurchaseOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.PurchaseOrderHeaders.Contains(this))
             {
                 previousValue.PurchaseOrderHeaders.Remove(this);
             }
@@ -197,7 +210,8 @@ namespace FunctionalTests.Model
 
         private void FixupVendor(Vendor previousValue)
         {
-            if (previousValue != null && previousValue.PurchaseOrderHeaders.Contains(this))
+            if (previousValue != null
+                && previousValue.PurchaseOrderHeaders.Contains(this))
             {
                 previousValue.PurchaseOrderHeaders.Remove(this);
             }

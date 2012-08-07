@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -15,38 +16,42 @@ namespace System.Data.Entity
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Various utilities for dealing with embedded resources
+    ///     Various utilities for dealing with embedded resources
     /// </summary>
     public static class ResourceUtilities
     {
 #if !SILVERLIGHT
         /// <summary>
-        /// Extracts the specified compressed resource to a given directory
+        ///     Extracts the specified compressed resource to a given directory
         /// </summary>
-        /// <param name="outputDirectory">Output directory</param>
-        /// <param name="assembly">Assembly that contains the resource</param>
-        /// <param name="resourceName">Partial resource name</param>
-        /// <remarks>The method prefixes the actual resource with unqualified assembly name + '.Resources.' (
-        /// so you should put all your resources under 'Resources' directory within a project)
-        /// and appends '.gz' to it. You should use gzip to produce compressed files.</remarks>
+        /// <param name="outputDirectory"> Output directory </param>
+        /// <param name="assembly"> Assembly that contains the resource </param>
+        /// <param name="resourceName"> Partial resource name </param>
+        /// <remarks>
+        ///     The method prefixes the actual resource with unqualified assembly name + '.Resources.' (
+        ///     so you should put all your resources under 'Resources' directory within a project)
+        ///     and appends '.gz' to it. You should use gzip to produce compressed files.
+        /// </remarks>
         [SecuritySafeCritical]
         // Calling File.Create demands FileIOPermission (Write flag) for the file path to which the resource is extracted.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "gz", Justification = ".gz is GZIP file extension")]
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Bogus warning, object will be disposed once.")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "gz",
+            Justification = ".gz is GZIP file extension")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
+            Justification = "Bogus warning, object will be disposed once.")]
         public static void ExtractCompressedResourceToDirectory(string outputDirectory, Assembly assembly, string resourceName)
         {
             ValidateCommonArguments(outputDirectory, assembly, resourceName);
 
-            string fullResourceName = new AssemblyName(assembly.FullName).Name + ".Resources." + resourceName + ".gz";
-            using (Stream compressedInputStream = assembly.GetManifestResourceStream(fullResourceName))
+            var fullResourceName = new AssemblyName(assembly.FullName).Name + ".Resources." + resourceName + ".gz";
+            using (var compressedInputStream = assembly.GetManifestResourceStream(fullResourceName))
             {
                 if (compressedInputStream == null)
                 {
                     throw new IOException("Embedded resource " + fullResourceName + " not found in " + assembly.FullName);
                 }
 
-                using (GZipStream decompressedInputStream = new GZipStream(compressedInputStream, CompressionMode.Decompress))
+                using (var decompressedInputStream = new GZipStream(compressedInputStream, CompressionMode.Decompress))
                 {
                     using (Stream outputStream = File.Create(Path.Combine(outputDirectory, resourceName)))
                     {
@@ -60,12 +65,13 @@ namespace System.Data.Entity
         /// <summary>
         ///     Copies the named embedded resources from given assembly into the current directory.
         /// </summary>
-        /// <param name = "assembly">The assembly.</param>
-        /// <param name = "prefix">The prefix to use for each name.</param>
-        /// <param name = "overwrite">if set to <c>true</c> then an existing file of the same name name will be overwritten.</param>
-        /// <param name = "names">The resource names, which will become the file names.</param>
-        public static void CopyEmbeddedResourcesToCurrentDir(Assembly assembly, string prefix, bool overwrite,
-                                                             params string[] names)
+        /// <param name="assembly"> The assembly. </param>
+        /// <param name="prefix"> The prefix to use for each name. </param>
+        /// <param name="overwrite"> if set to <c>true</c> then an existing file of the same name name will be overwritten. </param>
+        /// <param name="names"> The resource names, which will become the file names. </param>
+        public static void CopyEmbeddedResourcesToCurrentDir(
+            Assembly assembly, string prefix, bool overwrite,
+            params string[] names)
         {
             foreach (var name in names)
             {
@@ -89,10 +95,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Builds a resource manager for the given assembly.
+        ///     Builds a resource manager for the given assembly.
         /// </summary>
-        /// <param name="assembly">The assembly to build the resource manager for.</param>
-        /// <returns>The resource manager.</returns>
+        /// <param name="assembly"> The assembly to build the resource manager for. </param>
+        /// <returns> The resource manager. </returns>
         public static ResourceManager BuildResourceManager(Assembly assembly)
         {
             ExceptionHelpers.CheckArgumentNotNull(assembly, "assembly");
@@ -116,7 +122,8 @@ namespace System.Data.Entity
             var resources = assembly.GetManifestResourceNames().Where(r => r.EndsWith(".resources", StringComparison.Ordinal));
             if (resources.Count() != 1)
             {
-                throw new NotSupportedException("The supplied assembly does not contain exactly one resource table, if the assembly contains multiple tables call the overload that specifies which table to use.");
+                throw new NotSupportedException(
+                    "The supplied assembly does not contain exactly one resource table, if the assembly contains multiple tables call the overload that specifies which table to use.");
             }
 
             var resource = resources.Single();

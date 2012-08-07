@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -10,14 +11,15 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Functional tests for implementations of IDbConnectionFactory.
+    ///     Functional tests for implementations of IDbConnectionFactory.
     /// </summary>
     public class DbConnectionFactoryTests : FunctionalTestBase
     {
         #region Infrastructure/setup
 
-        private static readonly Lazy<Assembly> _sqlCeAssembly 
-            = new Lazy<Assembly>(() => new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly);
+        private static readonly Lazy<Assembly> _sqlCeAssembly
+            =
+            new Lazy<Assembly>(() => new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly);
 
         #endregion
 
@@ -40,14 +42,16 @@ namespace ProductivityApiTests
         public void
             SqlCeConnectionFactory_creates_a_SQL_CE_connection_using_changed_database_path_and_base_connection_string()
         {
-            var factory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", @"C:\VicAndBob\",
-                                                     "Persist Security Info=False");
+            var factory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0", @"C:\VicAndBob\",
+                "Persist Security Info=False");
             using (var connection = factory.CreateConnection("FakeDatabaseName"))
             {
                 var sqlCeExceptionType = _sqlCeAssembly.Value.GetType("System.Data.SqlServerCe.SqlCeConnection");
                 Assert.IsType(sqlCeExceptionType, connection);
-                Assert.Equal(@"Data Source=C:\VicAndBob\FakeDatabaseName.sdf; Persist Security Info=False",
-                             connection.ConnectionString);
+                Assert.Equal(
+                    @"Data Source=C:\VicAndBob\FakeDatabaseName.sdf; Persist Security Info=False",
+                    connection.ConnectionString);
             }
         }
 
@@ -61,17 +65,19 @@ namespace ProductivityApiTests
             var factory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", @"//C:::\\\D:\\D::::D\\\", "");
             using (var connection = factory.CreateConnection("FakeDatabaseName"))
             {
-                Assert.Throws<NotSupportedException>(() => connection.Open()).ValidateMessage(typeof(File).Assembly,
-                                                                                              "Argument_PathFormatNotSupported",
-                                                                                              null);
+                Assert.Throws<NotSupportedException>(() => connection.Open()).ValidateMessage(
+                    typeof(File).Assembly,
+                    "Argument_PathFormatNotSupported",
+                    null);
             }
         }
 
         [Fact]
         public void SqlCeConnectionFactory_throws_when_a_base_connection_already_containing_a_data_source_is_used()
         {
-            var factory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", "",
-                                                     "Data Source=VicAndBobsDatabase.sdf");
+            var factory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0", "",
+                "Data Source=VicAndBobsDatabase.sdf");
             using (var connection = factory.CreateConnection("FakeDatabaseName"))
             {
                 var sqlCeExceptionType = _sqlCeAssembly.Value.GetType("System.Data.SqlServerCe.SqlCeException");
@@ -91,8 +97,9 @@ namespace ProductivityApiTests
         [Fact]
         public void SqlCeConnectionFactory_throws_when_a_bad_base_connection_string_is_used()
         {
-            var factory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", "",
-                                                     "Whats On The End Of The Stick Vic=Admiral Nelsons Final Flannel");
+            var factory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0", "",
+                "Whats On The End Of The Stick Vic=Admiral Nelsons Final Flannel");
 
             Assert.Throws<ArgumentException>(() => factory.CreateConnection("Something")).ValidateMessage(
                 _sqlCeAssembly.Value, "ADP_KeywordNotSupported", null, "whats on the end of the stick vic");

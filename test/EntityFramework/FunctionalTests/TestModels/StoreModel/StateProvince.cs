@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -18,7 +19,8 @@ namespace FunctionalTests.Model
             {
                 if (_countryRegionCode != value)
                 {
-                    if (CountryRegion != null && CountryRegion.CountryRegionCode != value)
+                    if (CountryRegion != null
+                        && CountryRegion.CountryRegionCode != value)
                     {
                         CountryRegion = null;
                     }
@@ -26,6 +28,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private string _countryRegionCode;
 
         public virtual bool IsOnlyStateProvinceFlag { get; set; }
@@ -39,7 +42,8 @@ namespace FunctionalTests.Model
             {
                 if (_territoryID != value)
                 {
-                    if (SalesTerritory != null && SalesTerritory.TerritoryID != value)
+                    if (SalesTerritory != null
+                        && SalesTerritory.TerritoryID != value)
                     {
                         SalesTerritory = null;
                     }
@@ -47,6 +51,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _territoryID;
 
         public virtual Guid rowguid { get; set; }
@@ -83,6 +88,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Address> _addresses;
 
         public virtual CountryRegion CountryRegion
@@ -98,6 +104,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private CountryRegion _countryRegion;
 
         public virtual ICollection<SalesTaxRate> SalesTaxRates
@@ -130,6 +137,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesTaxRate> _salesTaxRates;
 
         public virtual SalesTerritory SalesTerritory
@@ -145,11 +153,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesTerritory _salesTerritory;
 
         private void FixupCountryRegion(CountryRegion previousValue)
         {
-            if (previousValue != null && previousValue.StateProvinces.Contains(this))
+            if (previousValue != null
+                && previousValue.StateProvinces.Contains(this))
             {
                 previousValue.StateProvinces.Remove(this);
             }
@@ -169,7 +179,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesTerritory(SalesTerritory previousValue)
         {
-            if (previousValue != null && previousValue.StateProvinces.Contains(this))
+            if (previousValue != null
+                && previousValue.StateProvinces.Contains(this))
             {
                 previousValue.StateProvinces.Remove(this);
             }

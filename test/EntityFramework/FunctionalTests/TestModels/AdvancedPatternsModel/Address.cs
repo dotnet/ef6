@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace AdvancedPatternsModel
 {
     using System;
@@ -17,19 +18,14 @@ namespace AdvancedPatternsModel
 
         public string FormattedAddress
         {
-            get
-            {
-                return String.Format(CultureInfo.InvariantCulture, "{0}, {1}, {2} {3}", Street, City, State, ZipCode);
-            }
+            get { return String.Format(CultureInfo.InvariantCulture, "{0}, {1}, {2} {3}", Street, City, State, ZipCode); }
         }
 
         private string _writeOnly = "WriteOnly";
+
         public string WriteOnly
         {
-            set
-            {
-                _writeOnly = value;
-            }
+            set { _writeOnly = value; }
         }
 
         public string GetWriteOnlyValue()

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ConcurrencyModel
 {
     using System.Data.Entity.Core.Common;
@@ -31,25 +32,30 @@ namespace ConcurrencyModel
             SetContextOptions(lazyLoadingEnabled, proxyCreationEnabled);
         }
 
-        public F1Context(string nameOrConnectionString, DbCompiledModel model, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
+        public F1Context(
+            string nameOrConnectionString, DbCompiledModel model, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
             : base(nameOrConnectionString, model)
         {
             SetContextOptions(lazyLoadingEnabled, proxyCreationEnabled);
         }
 
-        public F1Context(DbConnection existingConnection, bool contextOwnsConnection, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
+        public F1Context(
+            DbConnection existingConnection, bool contextOwnsConnection, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
             : base(existingConnection, contextOwnsConnection)
         {
             SetContextOptions(lazyLoadingEnabled, proxyCreationEnabled);
         }
 
-        public F1Context(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
+        public F1Context(
+            DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection, bool lazyLoadingEnabled = true,
+            bool proxyCreationEnabled = true)
             : base(existingConnection, model, contextOwnsConnection)
         {
             SetContextOptions(lazyLoadingEnabled, proxyCreationEnabled);
         }
 
-        public F1Context(ObjectContext objectContext, bool dbContextOwnsObjectContext, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
+        public F1Context(
+            ObjectContext objectContext, bool dbContextOwnsObjectContext, bool lazyLoadingEnabled = true, bool proxyCreationEnabled = true)
             : base(objectContext, dbContextOwnsObjectContext)
         {
             SetContextOptions(lazyLoadingEnabled, proxyCreationEnabled);

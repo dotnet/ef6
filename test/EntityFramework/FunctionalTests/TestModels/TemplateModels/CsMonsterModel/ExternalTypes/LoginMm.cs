@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace Another.Place
 {
     using System.Collections.Generic;
     using FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel;
 
-    public partial class LoginMm
+    public class LoginMm
     {
         public LoginMm()
         {
-           SentMessages = new HashSet<MessageMm>();
-           ReceivedMessages = new HashSet<MessageMm>();
-           Orders = new HashSet<OrderMm>();
+            SentMessages = new HashSet<MessageMm>();
+            ReceivedMessages = new HashSet<MessageMm>();
+            Orders = new HashSet<OrderMm>();
         }
 
         public string Username { get; set; }

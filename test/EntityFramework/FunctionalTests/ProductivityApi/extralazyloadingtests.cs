@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System.Collections.Generic;
@@ -95,9 +96,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Collections_not_declared_as_ICollection_are_ignored()
         {
-            Assert.Null(new QueryableCollectionInitializer()
-                            .TryGetElementType(typeof(FakeEntityWithListCollection)
-                                                   .GetProperty("Posts")));
+            Assert.Null(
+                new QueryableCollectionInitializer()
+                    .TryGetElementType(
+                        typeof(FakeEntityWithListCollection)
+                            .GetProperty("Posts")));
         }
 
         public class FakeEntityWithReadonlyCollection
@@ -111,9 +114,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Collections_without_setters_are_ignored()
         {
-            Assert.Null(new QueryableCollectionInitializer()
-                            .TryGetElementType(typeof(FakeEntityWithReadonlyCollection)
-                                                   .GetProperty("Posts")));
+            Assert.Null(
+                new QueryableCollectionInitializer()
+                    .TryGetElementType(
+                        typeof(FakeEntityWithReadonlyCollection)
+                            .GetProperty("Posts")));
         }
 
         [Fact]

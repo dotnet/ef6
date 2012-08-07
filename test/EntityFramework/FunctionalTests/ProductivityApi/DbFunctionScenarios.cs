@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.ProductivityApi
 {
     using System;
@@ -114,16 +115,16 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         0.71, (double)context.WithRelationships.Select(
                             e => new
-                            {
-                                Result = DbFunctions.StandardDeviation(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.StandardDeviation(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
 
                     Assert.Equal(
                         0.71, (double)GetObjectSet<EntityWithRelationship>(context).Select(
                             e => new
-                            {
-                                Result = DbFunctions.StandardDeviation(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.StandardDeviation(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
                 }
             }
         }
@@ -230,16 +231,16 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         0.5, (double)context.WithRelationships.Select(
                             e => new
-                            {
-                                Result = DbFunctions.StandardDeviationP(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.StandardDeviationP(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
 
                     Assert.Equal(
                         0.5, (double)GetObjectSet<EntityWithRelationship>(context).Select(
                             e => new
-                            {
-                                Result = DbFunctions.StandardDeviationP(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.StandardDeviationP(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
                 }
             }
         }
@@ -334,16 +335,16 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         0.5, (double)context.WithRelationships.Select(
                             e => new
-                            {
-                                Result = DbFunctions.Var(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.Var(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
 
                     Assert.Equal(
                         0.5, (double)GetObjectSet<EntityWithRelationship>(context).Select(
                             e => new
-                            {
-                                Result = DbFunctions.Var(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.Var(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
                 }
             }
         }
@@ -440,16 +441,16 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         0.25, (double)context.WithRelationships.Select(
                             e => new
-                            {
-                                Result = DbFunctions.VarP(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.VarP(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
 
                     Assert.Equal(
                         0.25, (double)GetObjectSet<EntityWithRelationship>(context).Select(
                             e => new
-                            {
-                                Result = DbFunctions.VarP(e.Types.Select(t => t.Decimal))
-                            }).First().Result, 2);
+                                     {
+                                         Result = DbFunctions.VarP(e.Types.Select(t => t.Decimal))
+                                     }).First().Result, 2);
                 }
             }
         }
@@ -734,7 +735,6 @@ namespace FunctionalTests.ProductivityApi
                             e => DbFunctions.AddDays(e.DateTime, e.Int)).First());
                 }
             }
-
 
             [Fact]
             public void AddHours_on_offset_can_be_used_in_DbQuery_or_ObjectQuery()
@@ -1021,7 +1021,8 @@ namespace FunctionalTests.ProductivityApi
                 {
                     Assert.Equal(
                         new TimeSpan(4, 1, 0).Ticks + 1,
-                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.AddNanoseconds(e.TimeSpan, e.Int * 100)).First().Value.Ticks);
+                        context.WithTypes.OrderBy(e => e.Id).Select(e => DbFunctions.AddNanoseconds(e.TimeSpan, e.Int * 100)).First().Value.
+                            Ticks);
 
                     Assert.Equal(
                         new TimeSpan(4, 1, 0).Ticks + 1,
@@ -1208,7 +1209,7 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         1,
                         context.WithTypes.OrderBy(e => e.Id).Select(
-                        e => DbFunctions.DiffMinutes(e.TimeSpan, new TimeSpan(4, 2, 0))).First());
+                            e => DbFunctions.DiffMinutes(e.TimeSpan, new TimeSpan(4, 2, 0))).First());
 
                     Assert.Equal(
                         1, GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
@@ -1554,7 +1555,6 @@ namespace FunctionalTests.ProductivityApi
                             TimeSpan = new TimeSpan(4, 3, 1),
                             Relationship = entityWithRelationship
                         }
-
                 }.Each(e => context.WithTypes.Add(e));
         }
     }

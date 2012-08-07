@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -17,8 +18,8 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for creating and managing connections at the DbContext, DbContextFactory, and Database level.
-    /// Note that the LazyConnectionTests in the UnitTests project cover more low-level cases that don't require an actual context.
+    ///     Tests for creating and managing connections at the DbContext, DbContextFactory, and Database level.
+    ///     Note that the LazyConnectionTests in the UnitTests project cover more low-level cases that don't require an actual context.
     /// </summary>
     public class ConnectionTests : FunctionalTestBase
     {
@@ -126,8 +127,9 @@ namespace ProductivityApiTests
         public void EntitConnection_object_with_empty_context_can_be_used_to_create_context_for_existing_model()
         {
             using (
-                var context = new DbContext(new EntityConnection(SimpleModelEntityConnectionString),
-                                            contextOwnsConnection: true))
+                var context = new DbContext(
+                    new EntityConnection(SimpleModelEntityConnectionString),
+                    contextOwnsConnection: true))
             {
                 VerifySimpleModelContext(context);
             }
@@ -181,14 +183,15 @@ namespace ProductivityApiTests
                 }
                 Assert.Equal(initialState, connection.State);
 
-                bool opened = false;
+                var opened = false;
                 connection.StateChange += (_, e) =>
-                                          {
-                                              if (e.CurrentState == ConnectionState.Open)
                                               {
-                                                  opened = true;
-                                              }
-                                          };
+                                                  if (e.CurrentState
+                                                      == ConnectionState.Open)
+                                                  {
+                                                      opened = true;
+                                                  }
+                                              };
 
                 using (var context = new SimpleModelContext(connection))
                 {
@@ -205,7 +208,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Existing_connection_is_not_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var connection = SimpleConnection<SimpleModelContext>())
             {
                 connection.Disposed += (_, __) => disposed = true;
@@ -223,7 +226,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Existing_EntityConnection_is_not_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
             using (var connection = new EntityConnection(SimpleModelEntityConnectionString))
             {
                 connection.Disposed += (_, __) => disposed = true;
@@ -258,7 +261,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Overriding_Dispose_can_be_used_to_dispose_a_passed_DbConnection()
         {
-            bool disposed = false;
+            var disposed = false;
             var connection = SimpleConnection<SimpleModelContextWithDispose>();
 
             connection.Disposed += (_, __) => disposed = true;
@@ -274,7 +277,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Existing_connection_is_disposed_after_use_if_DbContext_owns_connection()
         {
-            bool disposed = false;
+            var disposed = false;
             var connection = SimpleConnection<SimpleModelContext>();
 
             connection.Disposed += (_, __) => disposed = true;
@@ -290,7 +293,7 @@ namespace ProductivityApiTests
         public class SimpleModelEntityConnectionContext : SimpleModelContext
         {
             public SimpleModelEntityConnectionContext(EntityConnection entityConnection, bool contextOwnsConnection = false)
-                : base (entityConnection, contextOwnsConnection)
+                : base(entityConnection, contextOwnsConnection)
             {
             }
         }
@@ -298,7 +301,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Existing_EntityConnection_is_disposed_after_use_if_DbContext_owns_connection()
         {
-            bool disposed = false;
+            var disposed = false;
             var connection = new EntityConnection(SimpleModelEntityConnectionString);
 
             connection.Disposed += (_, __) => disposed = true;
@@ -318,7 +321,7 @@ namespace ProductivityApiTests
 
             var model = SimpleModelContext.CreateBuilder().Build(connection).Compile();
 
-            bool disposed = false;
+            var disposed = false;
 
             connection.Disposed += (_, __) => disposed = true;
 
@@ -355,14 +358,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ObjectContext_connection_is_not_disposed_after_use_when_DbContext_owns_ObjectContext_when_ObjectContext_does_not_own_connection()
+        public void
+            ObjectContext_connection_is_not_disposed_after_use_when_DbContext_owns_ObjectContext_when_ObjectContext_does_not_own_connection(
+            )
         {
             ObjectContext_connection_is_not_disposed_after_use_implementation(dbContextOwnsObjectContext: true);
         }
 
         private void ObjectContext_connection_is_not_disposed_after_use_implementation(bool dbContextOwnsObjectContext)
         {
-            bool disposed = false;
+            var disposed = false;
             using (var outerContext = new SimpleModelContext())
             {
                 var connection = outerContext.Database.Connection;
@@ -423,7 +428,7 @@ namespace ProductivityApiTests
         {
             EnsureAppConfigDatabaseExists();
 
-            bool disposed = false;
+            var disposed = false;
 
             using (var context = new SimpleModelContext("SimpleModelInAppConfig"))
             {
@@ -437,7 +442,7 @@ namespace ProductivityApiTests
         [Fact]
         public void EntityConnection_created_from_app_config_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
 
             using (var context = new EntityConnectionForSimpleModel())
             {
@@ -465,7 +470,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Connection_created_from_hard_coded_connection_string_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
 
             using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
             {
@@ -479,7 +484,7 @@ namespace ProductivityApiTests
         [Fact]
         public void EntityConnection_created_from_hard_coded_connection_string_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
 
             using (var context = new SimpleModelContext(SimpleModelEntityConnectionString))
             {
@@ -525,7 +530,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Context_created_from_factory_is_disposed_after_use()
         {
-            bool disposed = false;
+            var disposed = false;
 
             using (var context = new SimpleModelContext())
             {
@@ -540,7 +545,8 @@ namespace ProductivityApiTests
 
         #region EntityConnection following opening/closing store connection
 
-        public abstract class OnModelConnectionContext<TContext> : DbContext where TContext : DbContext
+        public abstract class OnModelConnectionContext<TContext> : DbContext
+            where TContext : DbContext
         {
             static OnModelConnectionContext()
             {
@@ -663,7 +669,8 @@ namespace ProductivityApiTests
         {
             using (var context = new OnModelConnectionContextWithOpen())
             {
-                Assert.Throws<ArgumentException>(() => context.Database.Initialize(force: false)).ValidateMessage("EntityClient_ConnectionMustBeClosed");
+                Assert.Throws<ArgumentException>(() => context.Database.Initialize(force: false)).ValidateMessage(
+                    "EntityClient_ConnectionMustBeClosed");
 
                 Assert.True(context.ModelCreated);
             }
@@ -826,7 +833,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_connection_created_by_convention_and_contains_cookie()
+        public void
+            Connection_can_be_obtained_after_initializing_the_context_when_using_connection_created_by_convention_and_contains_cookie()
         {
             using (var context = new SimpleModelContext())
             {
@@ -835,7 +843,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_connection_built_from_connection_string_and_contains_cookie()
+        public void
+            Connection_can_be_obtained_after_initializing_the_context_when_using_connection_built_from_connection_string_and_contains_cookie
+            ()
         {
             using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
             {
@@ -844,7 +854,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_built_from_connection_string_and_contains_cookie()
+        public void
+            Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_built_from_connection_string_and_contains_cookie
+            ()
         {
             using (var context = new SimpleModelContextForModelFirst(SimpleModelEntityConnectionString))
             {
@@ -864,7 +876,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_from_app_config_and_contains_cookie()
+        public void
+            Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_from_app_config_and_contains_cookie()
         {
             using (var context = new SimpleModelContextForModelFirst("name=EntityConnectionForSimpleModel"))
             {
@@ -904,11 +917,14 @@ namespace ProductivityApiTests
             var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             try
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new SqlConnectionFactory("Data Source=(localdb)\v11.0; Integrated Security=True; MultipleActiveResultSets=True; Connection Timeout=1");
+                DefaultConnectionFactoryResolver.Instance.ConnectionFactory =
+                    new SqlConnectionFactory(
+                        "Data Source=(localdb)\v11.0; Integrated Security=True; MultipleActiveResultSets=True; Connection Timeout=1");
 
                 using (var context = new BadMvcContext())
                 {
-                    Assert.Throws<ProviderIncompatibleException>(() => context.Database.Initialize(force: false)).ValidateMessage("BadLocalDBDatabaseName");
+                    Assert.Throws<ProviderIncompatibleException>(() => context.Database.Initialize(force: false)).ValidateMessage(
+                        "BadLocalDBDatabaseName");
                 }
             }
             finally
@@ -937,7 +953,7 @@ namespace ProductivityApiTests
             using (var context = new BadConnectionStringContext())
             {
                 Assert.Throws<ProviderIncompatibleException>(() => context.Database.Initialize(force: false)).ValidateMessage(
-                                                             "FailedToGetProviderInformation");
+                    "FailedToGetProviderInformation");
             }
         }
 

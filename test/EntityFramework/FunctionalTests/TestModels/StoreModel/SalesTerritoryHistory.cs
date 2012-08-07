@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_salesPersonID != value)
                 {
-                    if (SalesPerson != null && SalesPerson.SalesPersonID != value)
+                    if (SalesPerson != null
+                        && SalesPerson.SalesPersonID != value)
                     {
                         SalesPerson = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _salesPersonID;
 
         public virtual int TerritoryID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_territoryID != value)
                 {
-                    if (SalesTerritory != null && SalesTerritory.TerritoryID != value)
+                    if (SalesTerritory != null
+                        && SalesTerritory.TerritoryID != value)
                     {
                         SalesTerritory = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _territoryID;
 
         public virtual DateTime StartDate { get; set; }
@@ -60,6 +65,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesPerson _salesPerson;
 
         public virtual SalesTerritory SalesTerritory
@@ -75,11 +81,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesTerritory _salesTerritory;
 
         private void FixupSalesPerson(SalesPerson previousValue)
         {
-            if (previousValue != null && previousValue.SalesTerritoryHistories.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesTerritoryHistories.Contains(this))
             {
                 previousValue.SalesTerritoryHistories.Remove(this);
             }
@@ -99,7 +107,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesTerritory(SalesTerritory previousValue)
         {
-            if (previousValue != null && previousValue.SalesTerritoryHistories.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesTerritoryHistories.Contains(this))
             {
                 previousValue.SalesTerritoryHistories.Remove(this);
             }

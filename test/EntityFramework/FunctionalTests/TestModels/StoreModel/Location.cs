@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -47,6 +48,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductInventory> _productInventories;
 
         public virtual ICollection<WorkOrderRouting> WorkOrderRoutings
@@ -79,6 +81,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<WorkOrderRouting> _workOrderRoutings;
 
         private void FixupProductInventories(object sender, NotifyCollectionChangedEventArgs e)

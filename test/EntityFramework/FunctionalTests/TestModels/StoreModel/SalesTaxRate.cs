@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -14,7 +15,8 @@ namespace FunctionalTests.Model
             {
                 if (_stateProvinceID != value)
                 {
-                    if (StateProvince != null && StateProvince.StateProvinceID != value)
+                    if (StateProvince != null
+                        && StateProvince.StateProvinceID != value)
                     {
                         StateProvince = null;
                     }
@@ -22,6 +24,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _stateProvinceID;
 
         public virtual byte TaxType { get; set; }
@@ -47,11 +50,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private StateProvince _stateProvince;
 
         private void FixupStateProvince(StateProvince previousValue)
         {
-            if (previousValue != null && previousValue.SalesTaxRates.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesTaxRates.Contains(this))
             {
                 previousValue.SalesTaxRates.Remove(this);
             }

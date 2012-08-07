@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace LazyUnicorns
 {
     using System;
@@ -51,18 +52,12 @@ namespace LazyUnicorns
 
         public int Count
         {
-            get
-            {
-                return IsLoaded ? _collection.Count : _query.Count();
-            }
+            get { return IsLoaded ? _collection.Count : _query.Count(); }
         }
 
         public bool IsReadOnly
         {
-            get
-            {
-                return _collection.IsReadOnly;
-            }
+            get { return _collection.IsReadOnly; }
         }
 
         public bool Remove(T item)
@@ -78,7 +73,7 @@ namespace LazyUnicorns
         }
 
         public bool TestLoadInEnumerator { get; set; }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             // Calling lazy load here would previously cause EF to throw--see Dev11 205813

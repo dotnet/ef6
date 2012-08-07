@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -10,9 +11,9 @@ namespace System.Data.Entity
 
     public class ConnectionEventsTracker
     {
-        private int countOpenClose = 0;
-        private int countCloseOpen = 0;
-        private int countOtherConnectionStates = 0;
+        private int countOpenClose;
+        private int countCloseOpen;
+        private int countOtherConnectionStates;
 
         public ConnectionEventsTracker(DbConnection connection)
         {
@@ -21,11 +22,11 @@ namespace System.Data.Entity
                 throw new ArgumentException("Cannot track events for a null connection!");
             }
 
-            connection.StateChange += new StateChangeEventHandler(OnStateChange);
+            connection.StateChange += OnStateChange;
         }
 
         /// <summary>
-        /// Verifies the no connection events were fired.
+        ///     Verifies the no connection events were fired.
         /// </summary>
         public void VerifyNoConnectionEventsWereFired()
         {
@@ -35,7 +36,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Verifies the connection open and close events were fired.
+        ///     Verifies the connection open and close events were fired.
         /// </summary>
         public void VerifyConnectionOpenCloseEventsWereFired()
         {
@@ -45,7 +46,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Verifies the connection opened event was fired.
+        ///     Verifies the connection opened event was fired.
         /// </summary>
         public void VerifyConnectionOpenedEventWasFired()
         {
@@ -55,7 +56,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Verifies the connection closed event was fired.
+        ///     Verifies the connection closed event was fired.
         /// </summary>
         public void VerifyConnectionClosedEventWasFired()
         {
@@ -71,11 +72,13 @@ namespace System.Data.Entity
 
         private void OnStateChange(object sender, StateChangeEventArgs args)
         {
-            if (args.OriginalState == ConnectionState.Closed && args.CurrentState == ConnectionState.Open)
+            if (args.OriginalState == ConnectionState.Closed
+                && args.CurrentState == ConnectionState.Open)
             {
                 countCloseOpen++;
             }
-            else if (args.OriginalState == ConnectionState.Open && args.CurrentState == ConnectionState.Closed)
+            else if (args.OriginalState == ConnectionState.Open
+                     && args.CurrentState == ConnectionState.Closed)
             {
                 countOpenClose++;
             }

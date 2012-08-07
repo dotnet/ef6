@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_productID != value)
                 {
-                    if (Product != null && Product.ProductID != value)
+                    if (Product != null
+                        && Product.ProductID != value)
                     {
                         Product = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productID;
 
         public virtual int ProductPhotoID
@@ -29,7 +32,8 @@ namespace FunctionalTests.Model
             {
                 if (_productPhotoID != value)
                 {
-                    if (ProductPhoto != null && ProductPhoto.ProductPhotoID != value)
+                    if (ProductPhoto != null
+                        && ProductPhoto.ProductPhotoID != value)
                     {
                         ProductPhoto = null;
                     }
@@ -37,6 +41,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productPhotoID;
 
         public virtual bool Primary { get; set; }
@@ -56,6 +61,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Product _product;
 
         public virtual ProductPhoto ProductPhoto
@@ -71,11 +77,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductPhoto _productPhoto;
 
         private void FixupProduct(Product previousValue)
         {
-            if (previousValue != null && previousValue.ProductProductPhotoes.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductProductPhotoes.Contains(this))
             {
                 previousValue.ProductProductPhotoes.Remove(this);
             }
@@ -95,7 +103,8 @@ namespace FunctionalTests.Model
 
         private void FixupProductPhoto(ProductPhoto previousValue)
         {
-            if (previousValue != null && previousValue.ProductProductPhotoes.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductProductPhotoes.Contains(this))
             {
                 previousValue.ProductProductPhotoes.Remove(this);
             }

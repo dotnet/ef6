@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -12,7 +13,8 @@ namespace FunctionalTests.Model
             {
                 if (_salesPersonID != value)
                 {
-                    if (SalesPerson != null && SalesPerson.SalesPersonID != value)
+                    if (SalesPerson != null
+                        && SalesPerson.SalesPersonID != value)
                     {
                         SalesPerson = null;
                     }
@@ -20,6 +22,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _salesPersonID;
 
         public virtual DateTime QuotaDate { get; set; }
@@ -43,11 +46,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesPerson _salesPerson;
 
         private void FixupSalesPerson(SalesPerson previousValue)
         {
-            if (previousValue != null && previousValue.SalesPersonQuotaHistories.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesPersonQuotaHistories.Contains(this))
             {
                 previousValue.SalesPersonQuotaHistories.Remove(this);
             }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -31,7 +32,8 @@ namespace System.Data.Entity
             Contract.Requires(resourceAssembly != null);
             Contract.Requires(expectedResourceKey != null);
 
-            if (resourceTable == null && resourceAssembly == TestBase.EntityFrameworkAssembly)
+            if (resourceTable == null
+                && resourceAssembly == TestBase.EntityFrameworkAssembly)
             {
                 resourceTable = "System.Data.Entity.Properties.Resources";
             }
@@ -40,7 +42,7 @@ namespace System.Data.Entity
             var argException = exception as ArgumentException;
             if (argException != null)
             {
-                int paramPartIndex = argException.Message.LastIndexOf("\r\n");
+                var paramPartIndex = argException.Message.LastIndexOf("\r\n");
                 if (paramPartIndex != -1)
                 {
                     actualMessage = argException.Message.Substring(0, paramPartIndex);

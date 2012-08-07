@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace Another.Place
 {
-    public partial class PhoneMm
+    public class PhoneMm
     {
         public PhoneMm()
         {

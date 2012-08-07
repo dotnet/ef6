@@ -18,17 +18,17 @@ namespace System.Data.Entity.Migrations
             {
                 CreateTable(
                     "Oob_Principal", t => new
-                        {
-                            Id = t.Int()
-                        })
+                                              {
+                                                  Id = t.Int()
+                                              })
                     .PrimaryKey(t => t.Id);
 
                 CreateTable(
                     "Oob_Dependent", t => new
-                        {
-                            Id = t.Int(),
-                            Fk = t.Int()
-                        })
+                                              {
+                                                  Id = t.Int(),
+                                                  Fk = t.Int()
+                                              })
                     .ForeignKey("Oob_Principal", t => t.Fk);
             }
         }
@@ -73,10 +73,10 @@ namespace System.Data.Entity.Migrations
             {
                 CreateTable(
                     "Oob_Dependent", t => new
-                        {
-                            Id = t.Int(),
-                            Fk = t.Int()
-                        })
+                                              {
+                                                  Id = t.Int(),
+                                                  Fk = t.Int()
+                                              })
                     .ForeignKey("Oob_Principal", t => t.Fk);
             }
         }
@@ -102,9 +102,9 @@ namespace System.Data.Entity.Migrations
             {
                 CreateTable(
                     "Foo", t => new
-                        {
-                            Id = t.Int(name: "12 Foo Id")
-                        });
+                                    {
+                                        Id = t.Int(name: "12 Foo Id")
+                                    });
             }
         }
 

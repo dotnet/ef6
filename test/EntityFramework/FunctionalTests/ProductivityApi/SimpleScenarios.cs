@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -11,16 +12,18 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// These are not really tests, but rather simple scenarios with minimal final state validation.
-    /// They are here as a good starting point for understanding the functionality and to give some level
-    /// of confidence that the simple scenarios keep on working as the code evolves.
+    ///     These are not really tests, but rather simple scenarios with minimal final state validation.
+    ///     They are here as a good starting point for understanding the functionality and to give some level
+    ///     of confidence that the simple scenarios keep on working as the code evolves.
     /// </summary>
     public class SimpleScenarios : FunctionalTestBase
     {
         #region Scenarios for SQL Server
 
-        [Fact] 
-        public void SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
+        [Fact]
+        public void
+            SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
+            ()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
@@ -29,12 +32,12 @@ namespace ProductivityApiTests
                 using (var context = new ModelWithWideProperties())
                 {
                     var entity = new EntityWithExplicitWideProperties
-                                 {
-                                     Property1 = new String('1', 1000),
-                                     Property2 = new String('2', 1000),
-                                     Property3 = new String('3', 1000),
-                                     Property4 = new String('4', 1000),
-                                 };
+                                     {
+                                         Property1 = new String('1', 1000),
+                                         Property2 = new String('2', 1000),
+                                         Property3 = new String('3', 1000),
+                                         Property4 = new String('4', 1000),
+                                     };
 
                     context.ExplicitlyWide.Add(entity);
 
@@ -49,7 +52,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void SqlServer_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
+        public void
+            SqlServer_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
+            ()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
@@ -58,12 +63,12 @@ namespace ProductivityApiTests
                 using (var context = new ModelWithWideProperties())
                 {
                     var entity = new EntityWithImplicitWideProperties
-                                 {
-                                     Property1 = new String('1', 1000),
-                                     Property2 = new String('2', 1000),
-                                     Property3 = new String('3', 1000),
-                                     Property4 = new String('4', 1000),
-                                 };
+                                     {
+                                         Property1 = new String('1', 1000),
+                                         Property2 = new String('2', 1000),
+                                         Property3 = new String('3', 1000),
+                                         Property4 = new String('4', 1000),
+                                     };
 
                     context.ImplicitlyWide.Add(entity);
 
@@ -107,7 +112,10 @@ namespace ProductivityApiTests
             {
                 using (var context = new SimpleModelContext())
                 {
-                    var product = new Product() { Name = "Vegemite" };
+                    var product = new Product
+                                      {
+                                          Name = "Vegemite"
+                                      };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -161,7 +169,11 @@ namespace ProductivityApiTests
                 using (var context = new SimpleModelContext())
                 {
                     var category = context.Categories.Find("Foods");
-                    var product = new Product() { Name = "Bovril", Category = category };
+                    var product = new Product
+                                      {
+                                          Name = "Bovril",
+                                          Category = category
+                                      };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -188,7 +200,11 @@ namespace ProductivityApiTests
             {
                 using (var context = new SimpleModelContext())
                 {
-                    var product = new Product() { Name = "Bovril", CategoryId = "Foods" };
+                    var product = new Product
+                                      {
+                                          Name = "Bovril",
+                                          CategoryId = "Foods"
+                                      };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -242,8 +258,17 @@ namespace ProductivityApiTests
 
         private void InsertIntoCleanContext(SimpleModelContextWithNoData context)
         {
-            context.Categories.Add(new Category() { Id = "Large Hadron Collider" });
-            context.Products.Add(new Product() { Name = "Higgs Boson", CategoryId = "Large Hadron Collider" });
+            context.Categories.Add(
+                new Category
+                    {
+                        Id = "Large Hadron Collider"
+                    });
+            context.Products.Add(
+                new Product
+                    {
+                        Name = "Higgs Boson",
+                        CategoryId = "Large Hadron Collider"
+                    });
             context.SaveChanges();
         }
 
@@ -257,7 +282,11 @@ namespace ProductivityApiTests
             {
                 using (var context = new LoginsContext())
                 {
-                    var login = new Login() { Id = Guid.NewGuid(), Username = "elmo" };
+                    var login = new Login
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        Username = "elmo"
+                                    };
                     context.Logins.Add(login);
                     context.SaveChanges();
 
@@ -271,8 +300,15 @@ namespace ProductivityApiTests
             {
                 using (var context = new SimpleModelContext())
                 {
-                    var category = new Category() { Id = "Books" };
-                    var product = new Product() { Name = "The Unbearable Lightness of Being", Category = category };
+                    var category = new Category
+                                       {
+                                           Id = "Books"
+                                       };
+                    var product = new Product
+                                      {
+                                          Name = "The Unbearable Lightness of Being",
+                                          Category = category
+                                      };
                     context.Products.Add(product);
                     context.SaveChanges();
 

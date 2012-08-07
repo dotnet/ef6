@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
@@ -113,7 +114,9 @@ namespace System.Data.Entity.Migrations
 
             var migrator = CreateMigrator<EmptyModel>();
 
-            Assert.Equal(new AutomaticDataLossException("Automatic migration was not applied because it would result in data loss.").Message, Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
+            Assert.Equal(
+                new AutomaticDataLossException("Automatic migration was not applied because it would result in data loss.").Message,
+                Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
         }
 
         [MigrationsTheory]
@@ -157,10 +160,10 @@ namespace System.Data.Entity.Migrations
 
             var migrator = CreateMigrator<ShopContext_v2>();
 
-            var scaffoldedMigration 
+            var scaffoldedMigration
                 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
 
-            migrator 
+            migrator
                 = CreateMigrator<ShopContext_v2>(
                     scaffoldedMigrations: scaffoldedMigration,
                     automaticDataLossEnabled: true);

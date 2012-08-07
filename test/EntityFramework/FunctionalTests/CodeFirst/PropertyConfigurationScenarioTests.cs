@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -111,32 +112,34 @@ namespace FunctionalTests
         [Fact]
         public void Configure_is_max_length_on_complex_property_using_api()
         {
-            Configure_is_max_length_on_complex_property(modelBuilder =>
-                                                        {
-                                                            modelBuilder.Entity<BillOfMaterials>().Ignore(b => b.Product);
-                                                            modelBuilder.Entity<BillOfMaterials>().Ignore(
-                                                                b => b.Product1);
-                                                            modelBuilder.ComplexType<UnitMeasure>().Property(u => u.Name)
-                                                                .IsMaxLength();
-                                                        });
+            Configure_is_max_length_on_complex_property(
+                modelBuilder =>
+                    {
+                        modelBuilder.Entity<BillOfMaterials>().Ignore(b => b.Product);
+                        modelBuilder.Entity<BillOfMaterials>().Ignore(
+                            b => b.Product1);
+                        modelBuilder.ComplexType<UnitMeasure>().Property(u => u.Name)
+                            .IsMaxLength();
+                    });
         }
 
         [Fact]
         public void Configure_is_max_length_on_complex_property_using_configuration()
         {
-            Configure_is_max_length_on_complex_property(modelBuilder =>
-                                                        {
-                                                            var configuration =
-                                                                new ComplexTypeConfiguration<UnitMeasure>();
+            Configure_is_max_length_on_complex_property(
+                modelBuilder =>
+                    {
+                        var configuration =
+                            new ComplexTypeConfiguration<UnitMeasure>();
 
-                                                            configuration.Property(u => u.Name).IsMaxLength();
+                        configuration.Property(u => u.Name).IsMaxLength();
 
-                                                            modelBuilder.Configurations.Add(configuration);
+                        modelBuilder.Configurations.Add(configuration);
 
-                                                            modelBuilder.Entity<BillOfMaterials>().Ignore(b => b.Product);
-                                                            modelBuilder.Entity<BillOfMaterials>().Ignore(
-                                                                b => b.Product1);
-                                                        });
+                        modelBuilder.Entity<BillOfMaterials>().Ignore(b => b.Product);
+                        modelBuilder.Entity<BillOfMaterials>().Ignore(
+                            b => b.Product1);
+                    });
         }
 
         [Fact]
@@ -223,9 +226,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            Assert.Equal(System.Data.Entity.Edm.EdmConcurrencyMode.Fixed,
-                         databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
-                             .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
+            Assert.Equal(
+                System.Data.Entity.Edm.EdmConcurrencyMode.Fixed,
+                databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
+                    .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
         }
 
         [Fact]
@@ -245,9 +249,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            Assert.Equal(System.Data.Entity.Edm.EdmConcurrencyMode.Fixed,
-                         databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
-                             .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
+            Assert.Equal(
+                System.Data.Entity.Edm.EdmConcurrencyMode.Fixed,
+                databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
+                    .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
         }
 
         [Fact]
@@ -304,11 +309,12 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(DbStoreGeneratedPattern.Identity,
-                         databaseMapping.Model.Namespaces.Single().ComplexTypes.Single().Properties
-                             .Where(p => p.Name == "OrderQty").Single().Annotations.Where(
-                                 a => a.Name == "StoreGeneratedPattern")
-                             .Single().Value);
+            Assert.Equal(
+                DbStoreGeneratedPattern.Identity,
+                databaseMapping.Model.Namespaces.Single().ComplexTypes.Single().Properties
+                    .Where(p => p.Name == "OrderQty").Single().Annotations.Where(
+                        a => a.Name == "StoreGeneratedPattern")
+                    .Single().Value);
         }
 
         [Fact]
@@ -343,8 +349,9 @@ namespace FunctionalTests
                 .Property(b => b.Address.Line1)
                 .IsOptional();
 
-            Assert.Throws<InvalidOperationException>(() =>
-                                                     modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
         }
 
         [Fact]
@@ -358,8 +365,9 @@ namespace FunctionalTests
                 .Property(b => b.Address.Line1)
                 .IsOptional();
 
-            Assert.Throws<InvalidOperationException>(() =>
-                                                     modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
         }
 
         [Fact]
@@ -376,8 +384,9 @@ namespace FunctionalTests
                 .Property(b => b.Address.Line1)
                 .IsOptional();
 
-            Assert.Throws<InvalidOperationException>(() =>
-                                                     modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
         }
 
         [Fact]
@@ -449,9 +458,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<CTEmployee>("CTEmployees").HasColumns("CTEmployeeId", "HomeAddress",
-                                                                         "HomeAddress_Line2", "FirstLine",
-                                                                         "WorkAddress_Line2", "Discriminator");
+            databaseMapping.Assert<CTEmployee>("CTEmployees").HasColumns(
+                "CTEmployeeId", "HomeAddress",
+                "HomeAddress_Line2", "FirstLine",
+                "WorkAddress_Line2", "Discriminator");
 
             databaseMapping.Assert<Building>("Buildings").HasColumns("Id", "StreetAddress", "Address_Line2");
         }
@@ -471,9 +481,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<CTEmployee>("CTEmployees").HasColumns("CTEmployeeId", "HomeAddress",
-                                                                         "HomeAddress_Line2", "FirstLine",
-                                                                         "WorkAddress_Line2", "Discriminator");
+            databaseMapping.Assert<CTEmployee>("CTEmployees").HasColumns(
+                "CTEmployeeId", "HomeAddress",
+                "HomeAddress_Line2", "FirstLine",
+                "WorkAddress_Line2", "Discriminator");
 
             databaseMapping.Assert<Building>("Buildings").HasColumns("Id", "FirstLine", "Address_Line2");
         }
@@ -490,8 +501,9 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
-            Assert.Throws<MetadataException>(() =>
-                                             databaseMapping.AssertValid());
+            Assert.Throws<MetadataException>(
+                () =>
+                databaseMapping.AssertValid());
         }
 
         [Fact]

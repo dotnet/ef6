@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace AllTypeKeysModel
 {
     using System.ComponentModel.DataAnnotations.Schema;
@@ -34,9 +35,15 @@ namespace AllTypeKeysModel
 
         private static void CreateModel(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CompositeKeyEntity>().HasKey(k => new { k.binaryKey, k.intKey, k.stringKey });
+            modelBuilder.Entity<CompositeKeyEntity>().HasKey(
+                k => new
+                         {
+                             k.binaryKey,
+                             k.intKey,
+                             k.stringKey
+                         });
             modelBuilder.Entity<CompositeKeyEntityWithOrderingAnnotations>();
-            
+
             modelBuilder.Entity<BoolKeyEntity>();
             modelBuilder.Entity<ByteKeyEntity>();
             modelBuilder.Entity<DateTimeKeyEntity>();

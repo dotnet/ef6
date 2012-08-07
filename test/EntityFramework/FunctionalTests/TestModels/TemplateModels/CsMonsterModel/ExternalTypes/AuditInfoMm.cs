@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace Another.Place
 {
     using System;
     using FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel;
 
-    public partial class AuditInfoMm
+    public class AuditInfoMm
     {
         public AuditInfoMm()
         {

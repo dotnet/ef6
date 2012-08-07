@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -16,7 +17,8 @@ namespace FunctionalTests.Model
             {
                 if (_productCategoryID != value)
                 {
-                    if (ProductCategory != null && ProductCategory.ProductCategoryID != value)
+                    if (ProductCategory != null
+                        && ProductCategory.ProductCategoryID != value)
                     {
                         ProductCategory = null;
                     }
@@ -24,6 +26,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _productCategoryID;
 
         public virtual string Name { get; set; }
@@ -62,6 +65,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Product> _products;
 
         public virtual ProductCategory ProductCategory
@@ -77,11 +81,13 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductCategory _productCategory;
 
         private void FixupProductCategory(ProductCategory previousValue)
         {
-            if (previousValue != null && previousValue.ProductSubcategories.Contains(this))
+            if (previousValue != null
+                && previousValue.ProductSubcategories.Contains(this))
             {
                 previousValue.ProductSubcategories.Remove(this);
             }

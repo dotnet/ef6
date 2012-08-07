@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -24,9 +25,10 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(1,
-                         databaseMapping.Database.Schemas.Single().Tables.Count(
-                             t => t.DatabaseIdentifier == "Customers_tbl"));
+            Assert.Equal(
+                1,
+                databaseMapping.Database.Schemas.Single().Tables.Count(
+                    t => t.DatabaseIdentifier == "Customers_tbl"));
         }
 
         private sealed class DbaTableNamingConvention : IDbConvention<DbTableMetadata>
@@ -54,8 +56,9 @@ namespace FunctionalTests
         {
             private const string Code = "Code";
 
-            protected override EdmProperty MatchKeyProperty(EdmEntityType entityType,
-                                                            IEnumerable<EdmProperty> primitiveProperties)
+            protected override EdmProperty MatchKeyProperty(
+                EdmEntityType entityType,
+                IEnumerable<EdmProperty> primitiveProperties)
             {
                 return primitiveProperties
                            .SingleOrDefault(p => Code.Equals(p.Name, StringComparison.OrdinalIgnoreCase))

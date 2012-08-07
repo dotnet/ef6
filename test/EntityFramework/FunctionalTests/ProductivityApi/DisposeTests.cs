@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -21,11 +22,11 @@ namespace ProductivityApiTests
         #region Infrastructure/setup
 
         /// <summary>
-        /// Asserts that an operation on a set from a disposed context throws, but only when the operation is
-        /// executed, not when the set is created.
+        ///     Asserts that an operation on a set from a disposed context throws, but only when the operation is
+        ///     executed, not when the set is created.
         /// </summary>
-        /// <param name="entityType">The type of entity for which the set is for.</param>
-        /// <param name="test">The test to run on the set.</param>
+        /// <param name="entityType"> The type of entity for which the set is for. </param>
+        /// <param name="test"> The test to run on the set. </param>
         private void ThrowsWithDisposedContextNonGeneric(Type entityType, Action<DbSet> test)
         {
             var context = CreateDisposedContext();
@@ -36,11 +37,11 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Asserts that an operation on a set from a disposed context throws, but only when the operation is
-        /// executed, not when the set is created.
+        ///     Asserts that an operation on a set from a disposed context throws, but only when the operation is
+        ///     executed, not when the set is created.
         /// </summary>
-        /// <typeparam name="TEntity">The type of entity for which a set should be created.</typeparam>
-        /// <param name="test">The test to run on the set.</param>
+        /// <typeparam name="TEntity"> The type of entity for which a set should be created. </typeparam>
+        /// <param name="test"> The test to run on the set. </param>
         private void ThrowsWithDisposedContext<TEntity>(Action<IDbSet<TEntity>> test) where TEntity : class
         {
             var context = CreateDisposedContext();
@@ -51,7 +52,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Creates a disposed context.
+        ///     Creates a disposed context.
         /// </summary>
         private SimpleModelContext CreateDisposedContext()
         {
@@ -65,9 +66,9 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        /// Asserts that an operation on a disposed context throws.
+        ///     Asserts that an operation on a disposed context throws.
         /// </summary>
-        /// <param name="test">The test to run on the context.</param>
+        /// <param name="test"> The test to run on the context. </param>
         private void ThrowsWithDisposedContext(Action<SimpleModelContext> test)
         {
             var context = CreateDisposedContext();
@@ -147,14 +148,15 @@ namespace ProductivityApiTests
         [Fact]
         public void Dispose_disposes_underlying_ObjectContext_created_with_entity_connection_string()
         {
-            Dispose_disposes_underlying_ObjectContext_if_DbContext_owns_it(() => new ContextForDisposeTests(
-                                                                                     SimpleModelEntityConnectionString.
-                                                                                         Replace(
-                                                                                             DefaultDbName
-                                                                                                 <SimpleModelContext>(),
-                                                                                             DefaultDbName
-                                                                                                 <ContextForDisposeTests
-                                                                                                 >())));
+            Dispose_disposes_underlying_ObjectContext_if_DbContext_owns_it(
+                () => new ContextForDisposeTests(
+                          SimpleModelEntityConnectionString.
+                          Replace(
+                              DefaultDbName
+                          <SimpleModelContext>(),
+                              DefaultDbName
+                          <ContextForDisposeTests
+                          >())));
         }
 
         [Fact]
@@ -162,8 +164,9 @@ namespace ProductivityApiTests
         {
             Dispose_disposes_underlying_ObjectContext_if_DbContext_owns_it(
                 () =>
-                new ContextForDisposeTests(new EntityConnection(SimpleModelEntityConnectionString),
-                                           contextOwnsConnection: true));
+                new ContextForDisposeTests(
+                    new EntityConnection(SimpleModelEntityConnectionString),
+                    contextOwnsConnection: true));
         }
 
         private void Dispose_disposes_underlying_ObjectContext_if_DbContext_owns_it(
@@ -180,11 +183,13 @@ namespace ProductivityApiTests
             }
             Assert.Throws<ObjectDisposedException>(() => objectContext.SaveChanges()).ValidateMessage(
                 "ObjectContext_ObjectDisposed");
-            Assert.True(storeConnection.State == ConnectionState.Closed &&
-                        storeConnection.ConnectionString.Equals(string.Empty));
+            Assert.True(
+                storeConnection.State == ConnectionState.Closed &&
+                storeConnection.ConnectionString.Equals(string.Empty));
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void Dispose_does_not_dispose_underlying_ObjectContext_if_DbContext_does_not_own_it()
         {
             using (var outerContext = new SimpleModelContext())
@@ -230,12 +235,15 @@ namespace ProductivityApiTests
             // Assert
             Assert.Throws<ObjectDisposedException>(() => objectContext.SaveChanges()).ValidateMessage(
                 "ObjectContext_ObjectDisposed");
-            Assert.True(storeConnection.State == ConnectionState.Closed &&
-                        storeConnection.ConnectionString.Equals(string.Empty));
+            Assert.True(
+                storeConnection.State == ConnectionState.Closed &&
+                storeConnection.ConnectionString.Equals(string.Empty));
         }
 
         [Fact]
-        public void Disposing_DbContext_constructed_using_database_name_connection_string_ctor_will_dispose_underlying_Object_Context_and_connection()
+        public void
+            Disposing_DbContext_constructed_using_database_name_connection_string_ctor_will_dispose_underlying_Object_Context_and_connection
+            ()
         {
             DbContext_should_dispose_underlying_context_and_connection_if_it_does_not_own_it(
                 ConnectionStringFormat.DatabaseName);
@@ -249,14 +257,16 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void DbContext_construction_using_provider_connection_string_constructor_will_dispose_underlying_Object_Context_and_connection()
+        public void
+            DbContext_construction_using_provider_connection_string_constructor_will_dispose_underlying_Object_Context_and_connection()
         {
             DbContext_should_dispose_underlying_context_and_connection_if_it_does_not_own_it(
                 ConnectionStringFormat.ProviderConnectionString);
         }
 
         [Fact]
-        public void DbContext_construction_using_database_name_and_db_model_constructor_will_dispose_underlying_Object_Context_and_connection()
+        public void
+            DbContext_construction_using_database_name_and_db_model_constructor_will_dispose_underlying_Object_Context_and_connection()
         {
             DbContext_should_dispose_underlying_context_and_connection_if_it_does_not_own_it(
                 ConnectionStringFormat.DatabaseName,
@@ -264,7 +274,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void DbContext_construction_using_named_connection_string_db_model_constructor_will_dispose_underlying_Object_Context_and_connection()
+        public void
+            DbContext_construction_using_named_connection_string_db_model_constructor_will_dispose_underlying_Object_Context_and_connection(
+            )
         {
             DbContext_should_dispose_underlying_context_and_connection_if_it_does_not_own_it(
                 ConnectionStringFormat.DatabaseName,
@@ -272,7 +284,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void DbContext_construction_using_provider_connection_string_and_db_model_constructor_will_dispose_underlying_Object_Context_and_connection()
+        public void
+            DbContext_construction_using_provider_connection_string_and_db_model_constructor_will_dispose_underlying_Object_Context_and_connection
+            ()
         {
             DbContext_should_dispose_underlying_context_and_connection_if_it_does_not_own_it(
                 ConnectionStringFormat.DatabaseName,
@@ -296,8 +310,9 @@ namespace ProductivityApiTests
                     connectionString = SimpleConnectionString<SimpleModelContextWithNoData>();
                     break;
                 default:
-                    throw new ArgumentException("Invalid Connection String Format specified"
-                                                + connStringFormat);
+                    throw new ArgumentException(
+                        "Invalid Connection String Format specified"
+                        + connStringFormat);
             }
 
             ObjectContext objectContext = null;
@@ -366,46 +381,77 @@ namespace ProductivityApiTests
         [Fact]
         public void Non_generic_Set_throws_only_when_used_if_context_is_disposed()
         {
-            ThrowsWithDisposedContextNonGeneric(typeof(FeaturedProduct),
-                                                set => set.Cast<FeaturedProduct>().FirstOrDefault());
+            ThrowsWithDisposedContextNonGeneric(
+                typeof(FeaturedProduct),
+                set => set.Cast<FeaturedProduct>().FirstOrDefault());
         }
 
         [Fact]
         public void Add_throws_when_context_is_disposed()
         {
-            ThrowsWithDisposedContext<Product>(set => set.Add(new Product() { Name = "Fruity Sauce" }));
+            ThrowsWithDisposedContext<Product>(
+                set => set.Add(
+                    new Product
+                        {
+                            Name = "Fruity Sauce"
+                        }));
         }
 
         [Fact]
         public void Non_generic_Add_throws_when_context_is_disposed()
         {
-            ThrowsWithDisposedContextNonGeneric(typeof(Product), set => set.Add(new Product() { Name = "Fruity Sauce" }));
+            ThrowsWithDisposedContextNonGeneric(
+                typeof(Product), set => set.Add(
+                    new Product
+                        {
+                            Name = "Fruity Sauce"
+                        }));
         }
 
         [Fact]
         public void Attach_throws_when_context_is_disposed()
         {
-            ThrowsWithDisposedContext<Product>(set => set.Attach(new Product() { Name = "Fruity Sauce" }));
+            ThrowsWithDisposedContext<Product>(
+                set => set.Attach(
+                    new Product
+                        {
+                            Name = "Fruity Sauce"
+                        }));
         }
 
         [Fact]
         public void Non_generic_Attach_throws_when_context_is_disposed()
         {
-            ThrowsWithDisposedContextNonGeneric(typeof(Product),
-                                                set => set.Attach(new Product() { Name = "Fruity Sauce" }));
+            ThrowsWithDisposedContextNonGeneric(
+                typeof(Product),
+                set => set.Attach(
+                    new Product
+                        {
+                            Name = "Fruity Sauce"
+                        }));
         }
 
         [Fact]
         public void Remove_throws_when_context_is_disposed()
         {
-            ThrowsWithDisposedContext<Product>(set => set.Remove(new Product() { Name = "Fruity Sauce" }));
+            ThrowsWithDisposedContext<Product>(
+                set => set.Remove(
+                    new Product
+                        {
+                            Name = "Fruity Sauce"
+                        }));
         }
 
         [Fact]
         public void Non_generic_Remove_throws_when_context_is_disposed()
         {
-            ThrowsWithDisposedContextNonGeneric(typeof(Product),
-                                                set => set.Remove(new Product() { Name = "Fruity Sauce" }));
+            ThrowsWithDisposedContextNonGeneric(
+                typeof(Product),
+                set => set.Remove(
+                    new Product
+                        {
+                            Name = "Fruity Sauce"
+                        }));
         }
 
         #endregion

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -46,7 +47,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_productSubcategoryID != value)
                     {
-                        if (ProductSubcategory != null && ProductSubcategory.ProductSubcategoryID != value)
+                        if (ProductSubcategory != null
+                            && ProductSubcategory.ProductSubcategoryID != value)
                         {
                             ProductSubcategory = null;
                         }
@@ -59,6 +61,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _productSubcategoryID;
 
         public virtual int? ProductModelID
@@ -71,7 +74,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_productModelID != value)
                     {
-                        if (ProductModel != null && ProductModel.ProductModelID != value)
+                        if (ProductModel != null
+                            && ProductModel.ProductModelID != value)
                         {
                             ProductModel = null;
                         }
@@ -84,6 +88,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _productModelID;
 
         public virtual DateTime SellStartDate { get; set; }
@@ -125,6 +130,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<BillOfMaterials> _billOfMaterials;
 
         public virtual ICollection<BillOfMaterials> BillOfMaterials1
@@ -157,6 +163,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<BillOfMaterials> _billOfMaterials1;
 
         public virtual ProductModel ProductModel
@@ -172,6 +179,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductModel _productModel;
 
         public virtual ProductSubcategory ProductSubcategory
@@ -187,6 +195,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ProductSubcategory _productSubcategory;
 
         public virtual UnitMeasure SizeUnitMeasure { get; set; }
@@ -222,6 +231,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductCostHistory> _productCostHistories;
 
         public virtual ICollection<ProductDocument> ProductDocuments
@@ -254,6 +264,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductDocument> _productDocuments;
 
         public virtual ICollection<ProductInventory> ProductInventories
@@ -286,6 +297,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductInventory> _productInventories;
 
         public virtual ICollection<ProductListPriceHistory> ProductListPriceHistories
@@ -318,6 +330,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductListPriceHistory> _productListPriceHistories;
 
         public virtual ICollection<ProductProductPhoto> ProductProductPhotoes
@@ -350,6 +363,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductProductPhoto> _productProductPhotoes;
 
         public virtual ICollection<ProductReview> ProductReviews
@@ -382,6 +396,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductReview> _productReviews;
 
         public virtual ICollection<ProductVendor> ProductVendors
@@ -414,6 +429,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ProductVendor> _productVendors;
 
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails
@@ -446,6 +462,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<PurchaseOrderDetail> _purchaseOrderDetails;
 
         public virtual ICollection<ShoppingCartItem> ShoppingCartItems
@@ -478,6 +495,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<ShoppingCartItem> _shoppingCartItems;
 
         public virtual ICollection<SpecialOfferProduct> SpecialOfferProducts
@@ -510,6 +528,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SpecialOfferProduct> _specialOfferProducts;
 
         public virtual ICollection<TransactionHistory> TransactionHistories
@@ -542,6 +561,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<TransactionHistory> _transactionHistories;
 
         public virtual ICollection<WorkOrder> WorkOrders
@@ -574,13 +594,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<WorkOrder> _workOrders;
 
         private bool _settingFK;
 
         private void FixupProductModel(ProductModel previousValue)
         {
-            if (previousValue != null && previousValue.Products.Contains(this))
+            if (previousValue != null
+                && previousValue.Products.Contains(this))
             {
                 previousValue.Products.Remove(this);
             }
@@ -604,7 +626,8 @@ namespace FunctionalTests.Model
 
         private void FixupProductSubcategory(ProductSubcategory previousValue)
         {
-            if (previousValue != null && previousValue.Products.Contains(this))
+            if (previousValue != null
+                && previousValue.Products.Contains(this))
             {
                 previousValue.Products.Remove(this);
             }

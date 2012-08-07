@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -10,8 +11,8 @@ namespace System.Data.Entity
     using System.Threading;
 
     /// <summary>
-    /// This class provides utility methods for common I/O tasks not directly supported by .NET Framework BCL,
-    /// as well as I/O tasks that require elevated privileges.
+    ///     This class provides utility methods for common I/O tasks not directly supported by .NET Framework BCL,
+    ///     as well as I/O tasks that require elevated privileges.
     /// </summary>
     public static class IOHelpers
     {
@@ -19,12 +20,10 @@ namespace System.Data.Entity
 
 #if !SILVERLIGHT
         /// <summary>
-        /// Safely determines whether the given path refers to an existing directory on disk.
+        ///     Safely determines whether the given path refers to an existing directory on disk.
         /// </summary>
-        /// <param name="path">The path to test.</param>
-        /// <returns>
-        /// True if path refers to an existing directory; otherwise, false.
-        /// </returns>
+        /// <param name="path"> The path to test. </param>
+        /// <returns> True if path refers to an existing directory; otherwise, false. </returns>
         [SecuritySafeCritical]
         // Calling Directory.Exists demands FileIOPermission (Read flag) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -34,9 +33,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates the specified directory if it doesn't exist or removes all contents of an existing directory.
+        ///     Creates the specified directory if it doesn't exist or removes all contents of an existing directory.
         /// </summary>
-        /// <param name="path">Path to directory to create.</param>
+        /// <param name="path"> Path to directory to create. </param>
         [SecuritySafeCritical]
         // Calling Directory.Exists demands FileIOPermission (Read flag) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -50,8 +49,10 @@ namespace System.Data.Entity
             EnsureDirectoryExists(path);
         }
 
-        /// <summary>Creates the specified directory if it doesn't exist.</summary>
-        /// <param name="path">Path to directory to create.</param>
+        /// <summary>
+        ///     Creates the specified directory if it doesn't exist.
+        /// </summary>
+        /// <param name="path"> Path to directory to create. </param>
         [SecuritySafeCritical]
         // Calling Directory.Exists and Directory.CreateDirectory demands FileIOPermission (Read | Write) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -64,16 +65,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Safely determines whether the specified file exists.
+        ///     Safely determines whether the specified file exists.
         /// </summary>
-        /// <param name="path">The file to check.</param>
-        /// <returns>
-        /// True if the caller has the required permissions and path contains the name
-        /// of an existing file; otherwise, false. This method also returns false if
-        /// path is null, an invalid path, or a zero-length string. If the caller does
-        /// not have sufficient permissions to read the specified file, no exception
-        /// is thrown and the method returns false regardless of the existence of path.
-        /// </returns>
+        /// <param name="path"> The file to check. </param>
+        /// <returns> True if the caller has the required permissions and path contains the name of an existing file; otherwise, false. This method also returns false if path is null, an invalid path, or a zero-length string. If the caller does not have sufficient permissions to read the specified file, no exception is thrown and the method returns false regardless of the existence of path. </returns>
         [SecuritySafeCritical]
         // Calling File.Exists demands FileIOPermission (Read flag) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -83,12 +78,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Safely returns the absolute path for the specified path string.
+        ///     Safely returns the absolute path for the specified path string.
         /// </summary>
-        /// <param name="path">The file or directory for which to obtain absolute path information.</param>
-        /// <returns>
-        /// A string containing the fully qualified location of path, such as "C:\MyFile.txt".
-        /// </returns>
+        /// <param name="path"> The file or directory for which to obtain absolute path information. </param>
+        /// <returns> A string containing the fully qualified location of path, such as "C:\MyFile.txt". </returns>
         [SecuritySafeCritical]
         // Calling Path.GetFullPath demands FileIOPermission (PathDiscovery flag) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -98,9 +91,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Safely deletes the file and ignores any access violation exceptions.
+        ///     Safely deletes the file and ignores any access violation exceptions.
         /// </summary>
-        /// <param name="path">The directory to delete.</param>
+        /// <param name="path"> The directory to delete. </param>
         [SecuritySafeCritical]
         // Calling File.Delete demands FileIOPermission (Write flag) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -118,9 +111,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Safely deletes the directory and ignores any access violation exceptions.
+        ///     Safely deletes the directory and ignores any access violation exceptions.
         /// </summary>
-        /// <param name="path">The directory to delete.</param>
+        /// <param name="path"> The directory to delete. </param>
         [SecuritySafeCritical]
         // Calling Directory.Delete demands FileIOPermission (Write flag) for the specified path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
@@ -128,7 +121,7 @@ namespace System.Data.Entity
         public static void SafeDeleteDirectory(string path)
         {
             // try different ways of contents of directory, fail after 3 attempts
-            for (int i = 0; i < 3; ++i)
+            for (var i = 0; i < 3; ++i)
             {
                 try
                 {
@@ -144,7 +137,7 @@ namespace System.Data.Entity
 
                 try
                 {
-                    foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+                    foreach (var file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
                     {
                         SafeDeleteFile(file);
                     }
@@ -160,10 +153,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a uniquely named, empty temporary directory on disk and returns the
-        /// full path of that directory.
+        ///     Creates a uniquely named, empty temporary directory on disk and returns the
+        ///     full path of that directory.
         /// </summary>
-        /// <returns>A <see cref="String"/> containing the full path of the temporary directory.</returns>
+        /// <returns> A <see cref="String" /> containing the full path of the temporary directory. </returns>
         public static string GetTempDirName()
         {
             var tempDir = Path.GetTempFileName();
@@ -174,21 +167,22 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Copies the specified source files to a given directory.
+        ///     Copies the specified source files to a given directory.
         /// </summary>
-        /// <param name="destinationDirectory">The destination directory.</param>
-        /// <param name="sourceFiles">The source files.</param>
+        /// <param name="destinationDirectory"> The destination directory. </param>
+        /// <param name="sourceFiles"> The source files. </param>
         [SecuritySafeCritical]
         // Calling File.Copy demands FileIOPermission (Write flag) for the destination file path.
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         public static void CopyToDirectory(string destinationDirectory, params string[] sourceFiles)
         {
-            foreach (string sourceFile in sourceFiles)
+            foreach (var sourceFile in sourceFiles)
             {
-                string baseName = Path.GetFileName(sourceFile);
-                string destinationFile = Path.Combine(destinationDirectory, baseName);
+                var baseName = Path.GetFileName(sourceFile);
+                var destinationFile = Path.Combine(destinationDirectory, baseName);
 
-                if (new FileInfo(sourceFile).FullName != new FileInfo(destinationFile).FullName)
+                if (new FileInfo(sourceFile).FullName
+                    != new FileInfo(destinationFile).FullName)
                 {
                     File.Copy(sourceFile, destinationFile, true);
                 }
@@ -206,34 +200,30 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Copies contents of one stream into another.
+        ///     Copies contents of one stream into another.
         /// </summary>
-        /// <param name="source">Stream to read from.</param>
-        /// <param name="destination">Stream to write to.</param>
-        /// <returns>
-        /// The number of bytes copied from the source.
-        /// </returns>
+        /// <param name="source"> Stream to read from. </param>
+        /// <param name="destination"> Stream to write to. </param>
+        /// <returns> The number of bytes copied from the source. </returns>
         public static int CopyStream(Stream source, Stream destination)
         {
             return CopyStream(source, destination, new byte[DefaultCopyBufferSize]);
         }
 
         /// <summary>
-        /// Copies contents of one stream into another.
+        ///     Copies contents of one stream into another.
         /// </summary>
-        /// <param name="source">Stream to read from.</param>
-        /// <param name="destination">Stream to write to.</param>
-        /// <param name="copyBuffer">The copy buffer.</param>
-        /// <returns>
-        /// The number of bytes copied from the source.
-        /// </returns>
+        /// <param name="source"> Stream to read from. </param>
+        /// <param name="destination"> Stream to write to. </param>
+        /// <param name="copyBuffer"> The copy buffer. </param>
+        /// <returns> The number of bytes copied from the source. </returns>
         public static int CopyStream(Stream source, Stream destination, byte[] copyBuffer)
         {
             ExceptionHelpers.CheckArgumentNotNull(source, "source");
             ExceptionHelpers.CheckArgumentNotNull(destination, "destination");
             ExceptionHelpers.CheckArgumentNotNull(copyBuffer, "copyBuffer");
 
-            int bytesCopied = 0;
+            var bytesCopied = 0;
             int bytesRead;
 
             do
@@ -248,11 +238,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Write an embedded resource to a local file
+        ///     Write an embedded resource to a local file
         /// </summary>
-        /// <param name="resourceName">Resource to be written</param>
-        /// <param name="fileName">File to write resource to</param>
-        /// <param name="assembly">Assembly to extract resource from</param>
+        /// <param name="resourceName"> Resource to be written </param>
+        /// <param name="fileName"> File to write resource to </param>
+        /// <param name="assembly"> Assembly to extract resource from </param>
 #if !SILVERLIGHT
         [SecuritySafeCritical]
         // Calling File.Open demands FileIOPermission (Append flag) for the destination file path.
@@ -260,14 +250,14 @@ namespace System.Data.Entity
 #endif
         public static void WriteResourceToFile(string resourceName, string fileName, Assembly assembly)
         {
-            using (Stream resourceStream = assembly.GetManifestResourceStream(resourceName))
+            using (var resourceStream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (resourceStream == null)
                 {
                     throw new IOException("Resource '" + resourceName + "' not found in '" + assembly.FullName + "'");
                 }
 
-                using (FileStream fileStream = File.Open(fileName, FileMode.Append))
+                using (var fileStream = File.Open(fileName, FileMode.Append))
                 {
                     CopyStream(resourceStream, fileStream);
                 }
@@ -276,20 +266,20 @@ namespace System.Data.Entity
 
 #if !SILVERLIGHT
         /// <summary>
-        /// Adds the given set of file attributes to the file at the given path
+        ///     Adds the given set of file attributes to the file at the given path
         /// </summary>
-        /// <param name="fileName">The name/path of the file</param>
-        /// <param name="toAdd">The bit-field of attributes to add</param>
+        /// <param name="fileName"> The name/path of the file </param>
+        /// <param name="toAdd"> The bit-field of attributes to add </param>
         public static void AddFileAttributes(string fileName, FileAttributes toAdd)
         {
             File.SetAttributes(fileName, File.GetAttributes(fileName) | toAdd);
         }
 
         /// <summary>
-        /// Removes the given set of file attributes from the file at the given path
+        ///     Removes the given set of file attributes from the file at the given path
         /// </summary>
-        /// <param name="fileName">The name/path of the file</param>
-        /// <param name="toRemove">The bit-field of attributes to remove</param>
+        /// <param name="fileName"> The name/path of the file </param>
+        /// <param name="toRemove"> The bit-field of attributes to remove </param>
         public static void RemoveFileAttributes(string fileName, FileAttributes toRemove)
         {
             File.SetAttributes(fileName, File.GetAttributes(fileName) & ~toRemove);

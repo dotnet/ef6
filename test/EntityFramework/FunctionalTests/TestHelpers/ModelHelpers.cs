@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System;
@@ -26,66 +27,67 @@ namespace System.Data.Entity
         #region State entry helpers
 
         /// <summary>
-        /// Gets all GetStateEntries for the given DbContext.
+        ///     Gets all GetStateEntries for the given DbContext.
         /// </summary>
-        /// <param name="dbContext">A DbContext instance.</param>
-        /// <returns>All state entries in the ObjectStateManager.</returns>
+        /// <param name="dbContext"> A DbContext instance. </param>
+        /// <returns> All state entries in the ObjectStateManager. </returns>
         public static IEnumerable<ObjectStateEntry> GetStateEntries(DbContext dbContext)
         {
             return GetStateEntries(TestBase.GetObjectContext(dbContext));
         }
 
         /// <summary>
-        /// Gets all GetStateEntries for the given ObjectContext.
+        ///     Gets all GetStateEntries for the given ObjectContext.
         /// </summary>
-        /// <param name="objectContext">A ObjectContext instance.</param>
-        /// <returns>All state entries in the ObjectStateManager.</returns>
+        /// <param name="objectContext"> A ObjectContext instance. </param>
+        /// <returns> All state entries in the ObjectStateManager. </returns>
         public static IEnumerable<ObjectStateEntry> GetStateEntries(ObjectContext objectContext)
         {
             return objectContext.ObjectStateManager.GetObjectStateEntries(~EntityState.Detached);
         }
 
         /// <summary>
-        /// Gets the ObjectStateEntry for the given entity in the given DbContext.
+        ///     Gets the ObjectStateEntry for the given entity in the given DbContext.
         /// </summary>
-        /// <param name="dbContext">A DbContext instance.</param>
-        /// <param name="entity">The entity to lookup.</param>
-        /// <returns>The ObjectStateEntry.</returns>
+        /// <param name="dbContext"> A DbContext instance. </param>
+        /// <param name="entity"> The entity to lookup. </param>
+        /// <returns> The ObjectStateEntry. </returns>
         public static ObjectStateEntry GetStateEntry(DbContext dbContext, object entity)
         {
             return GetStateEntry(TestBase.GetObjectContext(dbContext), entity);
         }
 
         /// <summary>
-        /// Gets the ObjectStateEntry for the given entity in the given ObjectContext.
+        ///     Gets the ObjectStateEntry for the given entity in the given ObjectContext.
         /// </summary>
-        /// <param name="objectContext">A ObjectContext instance.</param>
-        /// <param name="entity">The entity to lookup.</param>
-        /// <returns>The ObjectStateEntry.</returns>
+        /// <param name="objectContext"> A ObjectContext instance. </param>
+        /// <param name="entity"> The entity to lookup. </param>
+        /// <returns> The ObjectStateEntry. </returns>
         public static ObjectStateEntry GetStateEntry(ObjectContext objectContext, object entity)
         {
             return objectContext.ObjectStateManager.GetObjectStateEntry(entity);
         }
 
         /// <summary>
-        /// Asserts that there's no ObjectStateEntry for the given entity in the given DbContext.
+        ///     Asserts that there's no ObjectStateEntry for the given entity in the given DbContext.
         /// </summary>
-        /// <param name="dbContext">A DbContext instance.</param>
-        /// <param name="entity">The entity to lookup.</param>
+        /// <param name="dbContext"> A DbContext instance. </param>
+        /// <param name="entity"> The entity to lookup. </param>
         public static void AssertNoStateEntry(DbContext dbContext, object entity)
         {
             AssertNoStateEntry(TestBase.GetObjectContext(dbContext), entity);
         }
 
         /// <summary>
-        /// Asserts that there's no ObjectStateEntry for the given entity in the given ObjectContext.
+        ///     Asserts that there's no ObjectStateEntry for the given entity in the given ObjectContext.
         /// </summary>
-        /// <param name="objectContext">A ObjectContext instance.</param>
-        /// <param name="entity">The entity to lookup.</param>
+        /// <param name="objectContext"> A ObjectContext instance. </param>
+        /// <param name="entity"> The entity to lookup. </param>
         public static void AssertNoStateEntry(ObjectContext objectContext, object entity)
         {
             ObjectStateEntry entry;
-            Assert.False(objectContext.ObjectStateManager.TryGetObjectStateEntry(entity, out entry),
+            Assert.False(
+                objectContext.ObjectStateManager.TryGetObjectStateEntry(entity, out entry),
                 "The context contains an unexpected entry for the given entity");
         }
 
@@ -94,96 +96,99 @@ namespace System.Data.Entity
         #region Connection helpers
 
         /// <summary>
-        /// Returns a simple SQL Server connection string to the local machine with the given database name.
+        ///     Returns a simple SQL Server connection string to the local machine with the given database name.
         /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>The connection string.</returns>
+        /// <param name="databaseName"> The database name. </param>
+        /// <returns> The connection string. </returns>
         public static string SimpleConnectionString(string databaseName)
         {
-            return String.Format(CultureInfo.InvariantCulture,
-                                 @"Data Source=.\SQLEXPRESS;Initial Catalog={0};Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFrameworkMUE",
-                                 databaseName);
+            return String.Format(
+                CultureInfo.InvariantCulture,
+                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFrameworkMUE",
+                databaseName);
         }
 
         /// <summary>
-        /// Returns a simple SQL Server connection string to the local machine using an attachable database with the given database name.
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database with the given database name.
         /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>The connection string.</returns>
+        /// <param name="databaseName"> The database name. </param>
+        /// <returns> The connection string. </returns>
         public static string SimpleAttachConnectionString(string databaseName)
         {
             var databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName + ".mdf");
 
-            return String.Format(CultureInfo.InvariantCulture,
-                                 @"Data Source=.\SQLEXPRESS;Initial Catalog={0};AttachDBFilename={1};Integrated Security=True;MultipleActiveResultSets=True",
-                                 databaseName, databasePath);
+            return String.Format(
+                CultureInfo.InvariantCulture,
+                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};AttachDBFilename={1};Integrated Security=True;MultipleActiveResultSets=True",
+                databaseName, databasePath);
         }
 
         /// <summary>
-        /// Returns a simple SQL CE connection string to the local machine with the given database name.
-        /// <param name="databaseName">Name of the database.</param>
-        /// <returns>The connection string.</returns>
+        ///     Returns a simple SQL CE connection string to the local machine with the given database name.
+        ///     <param name="databaseName"> Name of the database. </param>
+        ///     <returns> The connection string. </returns>
         public static string SimpleCeConnectionString(string databaseName)
         {
-            return String.Format(CultureInfo.InvariantCulture, "Data Source={0}.sdf;Persist Security Info=False;",
-                                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName));
+            return String.Format(
+                CultureInfo.InvariantCulture, "Data Source={0}.sdf;Persist Security Info=False;",
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName));
         }
 
         /// <summary>
-        /// Returns the default name that will be created for the context of the given type.
+        ///     Returns the default name that will be created for the context of the given type.
         /// </summary>
-        /// <typeparam name="TContext">The type of the context to create a name for.</typeparam>
-        /// <returns>The name.</returns>
+        /// <typeparam name="TContext"> The type of the context to create a name for. </typeparam>
+        /// <returns> The name. </returns>
         public static string DefaultDbName<TContext>() where TContext : DbContext
         {
             return typeof(TContext).FullName;
         }
 
         /// <summary>
-        /// Returns a simple SQL Server connection string to the local machine for the given context type.
+        ///     Returns a simple SQL Server connection string to the local machine for the given context type.
         /// </summary>
-        /// <typeparam name="TContext">The type of the context to create a connection string for.</typeparam>
-        /// <returns>The connection string.</returns>
+        /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
+        /// <returns> The connection string. </returns>
         public static string SimpleConnectionString<TContext>() where TContext : DbContext
         {
             return SimpleConnectionString(DefaultDbName<TContext>());
         }
 
         /// <summary>
-        /// Returns a simple SQL Server connection string to the local machine using an attachable database for the given context type.
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database for the given context type.
         /// </summary>
-        /// <typeparam name="TContext">The type of the context to create a connection string for.</typeparam>
-        /// <returns>The connection string.</returns>
+        /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
+        /// <returns> The connection string. </returns>
         public static string SimpleAttachConnectionString<TContext>() where TContext : DbContext
         {
             return SimpleAttachConnectionString(DefaultDbName<TContext>());
         }
 
         /// <summary>
-        /// Returns a simple SQLCE connection string to the local machine for the given context type.
+        ///     Returns a simple SQLCE connection string to the local machine for the given context type.
         /// </summary>
-        /// <typeparam name="TContext">The type of the context to create a connection string for.</typeparam>
-        /// <returns>The connection string.</returns>
+        /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
+        /// <returns> The connection string. </returns>
         public static string SimpleCeConnectionString<TContext>() where TContext : DbContext
         {
             return SimpleCeConnectionString(DefaultDbName<TContext>());
         }
 
         /// <summary>
-        /// Returns a simple SQL Server connection to the local machine for the given context type.
+        ///     Returns a simple SQL Server connection to the local machine for the given context type.
         /// </summary>
-        /// <typeparam name="TContext">The type of the context to create a connection for.</typeparam>
-        /// <returns>The connection.</returns>
+        /// <typeparam name="TContext"> The type of the context to create a connection for. </typeparam>
+        /// <returns> The connection. </returns>
         public static SqlConnection SimpleConnection<TContext>() where TContext : DbContext
         {
             return new SqlConnection(SimpleConnectionString<TContext>());
         }
 
         /// <summary>
-        /// Returns a simple SQL CE connection for the given context type.
+        ///     Returns a simple SQL CE connection for the given context type.
         /// </summary>
-        /// <typeparam name="TContext">The type of the context to create a connection for.</typeparam>
-        /// <returns>The connection.</returns>
+        /// <typeparam name="TContext"> The type of the context to create a connection for. </typeparam>
+        /// <returns> The connection. </returns>
         public static DbConnection SimpleCeConnection<TContext>() where TContext : DbContext
         {
             return
@@ -196,22 +201,22 @@ namespace System.Data.Entity
         #region Entity set name helpers
 
         /// <summary>
-        /// Gets the entity set name for the given CLR type, assuming no MEST.
+        ///     Gets the entity set name for the given CLR type, assuming no MEST.
         /// </summary>
-        /// <param name="dbContext">The context to look in.</param>
-        /// <param name="clrType">The type to lookup.</param>
-        /// <returns>The entity set name.</returns>
+        /// <param name="dbContext"> The context to look in. </param>
+        /// <param name="clrType"> The type to lookup. </param>
+        /// <returns> The entity set name. </returns>
         public static string GetEntitySetName(DbContext dbContext, Type clrType)
         {
             return GetEntitySetName(TestBase.GetObjectContext(dbContext), clrType);
         }
 
         /// <summary>
-        /// Gets the entity set name for the given CLR type, assuming no MEST.
+        ///     Gets the entity set name for the given CLR type, assuming no MEST.
         /// </summary>
-        /// <param name="objectContext">The context to look in.</param>
-        /// <param name="clrType">The type to lookup.</param>
-        /// <returns>The entity set name.</returns>
+        /// <param name="objectContext"> The context to look in. </param>
+        /// <param name="clrType"> The type to lookup. </param>
+        /// <returns> The entity set name. </returns>
         public static string GetEntitySetName(ObjectContext objectContext, Type clrType)
         {
             var cspaceType = GetStructuralType<EntityType>(objectContext, clrType);
@@ -225,8 +230,8 @@ namespace System.Data.Entity
             {
                 inverseHierarchy.Push(cspaceType);
                 cspaceType = (EntityType)cspaceType.BaseType;
-            } while (cspaceType != null);
-
+            }
+            while (cspaceType != null);
 
             while (inverseHierarchy.Count > 0)
             {
@@ -248,22 +253,22 @@ namespace System.Data.Entity
         #region Entity type helpers
 
         /// <summary>
-        /// Gets the Entity Type of the entity, given the CLR type
+        ///     Gets the Entity Type of the entity, given the CLR type
         /// </summary>
-        /// <param name="dbContext">The context to look in.</param>
-        /// <param name="clrType">Type of the CLR.</param>
-        /// <returns></returns>
+        /// <param name="dbContext"> The context to look in. </param>
+        /// <param name="clrType"> Type of the CLR. </param>
+        /// <returns> </returns>
         public static EntityType GetEntityType(DbContext dbContext, Type clrType)
         {
             return GetStructuralType<EntityType>(TestBase.GetObjectContext(dbContext), clrType);
         }
 
         /// <summary>
-        /// Gets the structural type of the entity type or complex type given the CLR type
+        ///     Gets the structural type of the entity type or complex type given the CLR type
         /// </summary>
-        /// <param name="objectContext">The context to look in.</param>
-        /// <param name="clrType">The CLR type.</param>
-        /// <returns>The EntityType or ComplexType</returns>
+        /// <param name="objectContext"> The context to look in. </param>
+        /// <param name="clrType"> The CLR type. </param>
+        /// <returns> The EntityType or ComplexType </returns>
         public static TStructural GetStructuralType<TStructural>(ObjectContext objectContext, Type clrType)
             where TStructural : StructuralType
         {
@@ -289,37 +294,39 @@ namespace System.Data.Entity
         #region Helpers for creating metadata (csdl/ssdl/msl) files
 
         /// <summary>
-        /// Writes an edmx file into the current directory for the model generated from the given model builder.
+        ///     Writes an edmx file into the current directory for the model generated from the given model builder.
         /// </summary>
-        /// <param name="builder">The builder.</param>
-        /// <param name="filename">The filename to use for the edmx file.</param>
+        /// <param name="builder"> The builder. </param>
+        /// <param name="filename"> The filename to use for the edmx file. </param>
         public static void WriteEdmx(DbModelBuilder builder, string filename)
         {
-            EdmxWriter.WriteEdmx(builder.Build(new DbProviderInfo("System.Data.SqlClient", "2008")),
-                                 XmlWriter.Create(filename));
+            EdmxWriter.WriteEdmx(
+                builder.Build(new DbProviderInfo("System.Data.SqlClient", "2008")),
+                XmlWriter.Create(filename));
         }
 
         /// <summary>
-        /// Writes csdl, msdl, and ssdl files into the current directory for the model generated from
-        /// the given model builder.
+        ///     Writes csdl, msdl, and ssdl files into the current directory for the model generated from
+        ///     the given model builder.
         /// </summary>
-        /// <param name="builder">The builder.</param>
-        /// <param name="filename">The base filename to use for csdl, msdl, and sssl files.</param>
+        /// <param name="builder"> The builder. </param>
+        /// <param name="filename"> The base filename to use for csdl, msdl, and sssl files. </param>
         public static void WriteMetadataFiles(DbModelBuilder builder, string filename)
         {
             var xml = new StringBuilder();
-            EdmxWriter.WriteEdmx(builder.Build(new DbProviderInfo("System.Data.SqlClient", "2008")),
-                                 XmlWriter.Create(xml));
+            EdmxWriter.WriteEdmx(
+                builder.Build(new DbProviderInfo("System.Data.SqlClient", "2008")),
+                XmlWriter.Create(xml));
 
             WriteMetadataFiles(xml.ToString(), filename);
         }
 
         /// <summary>
-        /// Takes the edmx given as input and splits it into csdl, msl, and ssdl files that are written to the
-        /// current directory.
+        ///     Takes the edmx given as input and splits it into csdl, msl, and ssdl files that are written to the
+        ///     current directory.
         /// </summary>
-        /// <param name="edmx">The edmx. (Note that this is NOT the filename of an edmx file; it is the actual edmx.)</param>
-        /// <param name="filename">The base filename to use for csdl, msdl, and sssl files.</param>
+        /// <param name="edmx"> The edmx. (Note that this is NOT the filename of an edmx file; it is the actual edmx.) </param>
+        /// <param name="filename"> The base filename to use for csdl, msdl, and sssl files. </param>
         public static void WriteMetadataFiles(string edmx, string filename)
         {
             var csdlNameV2 = (XNamespace)"http://schemas.microsoft.com/ado/2008/09/edm" + "Schema";
@@ -332,10 +339,12 @@ namespace System.Data.Entity
 
             var edmxDoc = XDocument.Load(new StringReader(edmx));
 
-            WriteMetadataFile(filename + ".csdl",
-                              ExtractMetadataContent(edmxDoc, "ConceptualModels", csdlNameV2, csdlNameV3));
-            WriteMetadataFile(filename + ".ssdl",
-                              ExtractMetadataContent(edmxDoc, "StorageModels", ssdlNameV2, ssdlNameV3));
+            WriteMetadataFile(
+                filename + ".csdl",
+                ExtractMetadataContent(edmxDoc, "ConceptualModels", csdlNameV2, csdlNameV3));
+            WriteMetadataFile(
+                filename + ".ssdl",
+                ExtractMetadataContent(edmxDoc, "StorageModels", ssdlNameV2, ssdlNameV3));
             WriteMetadataFile(filename + ".msl", ExtractMetadataContent(edmxDoc, "Mappings", mslNameV2, mslNameV3));
         }
 

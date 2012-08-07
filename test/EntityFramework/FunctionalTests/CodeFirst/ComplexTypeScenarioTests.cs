@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -154,7 +155,6 @@ namespace FunctionalTests
         public string ZipCode { get; set; }
     }
 
-
     public class ComplexTypeWithColumnRename
     {
         [Column("ColumnFor_Details")]
@@ -186,19 +186,21 @@ namespace FunctionalTests
             modelBuilder.ComplexType<ComplexTypeWithColumnRename>();
 
             modelBuilder.Entity<EntityWithColumnsRename>()
-                .Map(mapping =>
-                     {
-                         mapping.ToTable("Table1");
-                         mapping.Properties(e => e.Property1);
-                     });
+                .Map(
+                    mapping =>
+                        {
+                            mapping.ToTable("Table1");
+                            mapping.Properties(e => e.Property1);
+                        });
 
             modelBuilder.Entity<EntityWithColumnsRename>()
-                .Map(mapping =>
-                     {
-                         mapping.ToTable("Table2");
-                         mapping.Properties(e => e.Property2);
-                         mapping.Properties(e => e.ComplexProp);
-                     });
+                .Map(
+                    mapping =>
+                        {
+                            mapping.ToTable("Table2");
+                            mapping.Properties(e => e.Property2);
+                            mapping.Properties(e => e.ComplexProp);
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -231,9 +233,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            databaseMapping.Assert<ChildComplexType>(c => c.Property).DbEqual("Foo", c => c.Name).DbEqual(false,
-                                                                                                          c =>
-                                                                                                          c.IsNullable);
+            databaseMapping.Assert<ChildComplexType>(c => c.Property).DbEqual("Foo", c => c.Name).DbEqual(
+                false,
+                c =>
+                c.IsNullable);
         }
 
         [Fact]
@@ -250,8 +253,9 @@ namespace FunctionalTests
 
             Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
 
-            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns("Id", "Bar",
-                                                                                                           "Foo", "Foo1");
+            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
+                "Id", "Bar",
+                "Foo", "Foo1");
         }
 
         [Fact]
@@ -268,8 +272,9 @@ namespace FunctionalTests
 
             Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
 
-            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns("Id", "Bar",
-                                                                                                           "Foo");
+            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
+                "Id", "Bar",
+                "Foo");
         }
 
         [Fact]
@@ -290,9 +295,10 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
-            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns("Id", "Bar",
-                                                                                                           "Foo2",
-                                                                                                           "Foo1");
+            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
+                "Id", "Bar",
+                "Foo2",
+                "Foo1");
         }
 
         [Fact]
@@ -309,8 +315,9 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
-            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns("Id", "Bar",
-                                                                                                           "Foo", "Foo1");
+            databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
+                "Id", "Bar",
+                "Foo", "Foo1");
         }
 
         [Fact]
@@ -325,8 +332,9 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
-            Assert.Throws<MetadataException>(() =>
-                                             databaseMapping.AssertValid());
+            Assert.Throws<MetadataException>(
+                () =>
+                databaseMapping.AssertValid());
         }
 
         [Fact]
@@ -353,9 +361,10 @@ namespace FunctionalTests
             modelBuilder.Entity<ComplexTypeEntity>();
             modelBuilder.ComplexType<ComplexType>();
 
-            Assert.Equal(Strings.CircularComplexTypeHierarchy,
-                         Assert.Throws<InvalidOperationException>(
-                             () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.CircularComplexTypeHierarchy,
+                Assert.Throws<InvalidOperationException>(
+                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -393,8 +402,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<ProductDescription>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo,
-                                                                typeof(RowDetails));
+            var databaseMapping = modelBuilder.BuildAndValidate(
+                ProviderRegistry.Sql2008_ProviderInfo,
+                typeof(RowDetails));
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
             Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
@@ -407,8 +417,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<BillOfMaterials>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo,
-                                                                typeof(UnitMeasure));
+            var databaseMapping = modelBuilder.BuildAndValidate(
+                ProviderRegistry.Sql2008_ProviderInfo,
+                typeof(UnitMeasure));
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
             Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
@@ -512,19 +523,23 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             // Not propagated
-            Assert.Equal(false,
-                         databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line1")
-                             .IsNullable);
-            Assert.Equal(true,
-                         databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "WorkAddress_Line1")
-                             .IsNullable);
+            Assert.Equal(
+                false,
+                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line1")
+                    .IsNullable);
+            Assert.Equal(
+                true,
+                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "WorkAddress_Line1")
+                    .IsNullable);
 
-            Assert.Equal(true,
-                         databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line2")
-                             .IsNullable);
-            Assert.Equal(true,
-                         databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "WorkAddress_Line2")
-                             .IsNullable);
+            Assert.Equal(
+                true,
+                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line2")
+                    .IsNullable);
+            Assert.Equal(
+                true,
+                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "WorkAddress_Line2")
+                    .IsNullable);
         }
 
         [Fact]
@@ -541,19 +556,23 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            Assert.Equal(false,
-                         databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line1")
-                             .IsNullable);
-            Assert.Equal(false,
-                         databaseMapping.Database.Schemas[0].Tables[1].Columns.Single(c => c.Name == "WorkAddress_Line1")
-                             .IsNullable);
+            Assert.Equal(
+                false,
+                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line1")
+                    .IsNullable);
+            Assert.Equal(
+                false,
+                databaseMapping.Database.Schemas[0].Tables[1].Columns.Single(c => c.Name == "WorkAddress_Line1")
+                    .IsNullable);
 
-            Assert.Equal(true,
-                         databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line2")
-                             .IsNullable);
-            Assert.Equal(true,
-                         databaseMapping.Database.Schemas[0].Tables[1].Columns.Single(c => c.Name == "WorkAddress_Line2")
-                             .IsNullable);
+            Assert.Equal(
+                true,
+                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line2")
+                    .IsNullable);
+            Assert.Equal(
+                true,
+                databaseMapping.Database.Schemas[0].Tables[1].Columns.Single(c => c.Name == "WorkAddress_Line2")
+                    .IsNullable);
         }
 
         [Fact]
@@ -571,7 +590,12 @@ namespace FunctionalTests
                 .HasKey(o => o.Number);
 
             modelBuilder.Entity<LoCTEmployeePhoto>()
-                .HasKey(p => new { p.EmployeeNo, p.PhotoId });
+                .HasKey(
+                    p => new
+                             {
+                                 p.EmployeeNo,
+                                 p.PhotoId
+                             });
 
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
@@ -594,9 +618,10 @@ namespace FunctionalTests
                 .EntityTypes.Single(x => x.Name == "CTEmployee")
                 .Properties.Single(p => p.Name == "HomeAddress")
                 .Annotations;
-            Assert.Equal(0,
-                         ((ICollection<Attribute>)annotations.SingleOrDefault(a => a.Name == "ClrAttributes").Value).
-                             Count);
+            Assert.Equal(
+                0,
+                ((ICollection<Attribute>)annotations.SingleOrDefault(a => a.Name == "ClrAttributes").Value).
+                    Count);
         }
 
         [Fact]

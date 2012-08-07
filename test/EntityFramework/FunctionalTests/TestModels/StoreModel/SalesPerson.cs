@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests.Model
 {
     using System;
@@ -17,7 +18,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_salesPersonID != value)
                     {
-                        if (Employee != null && Employee.EmployeeID != value)
+                        if (Employee != null
+                            && Employee.EmployeeID != value)
                         {
                             Employee = null;
                         }
@@ -30,6 +32,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int _salesPersonID;
 
         public virtual int? TerritoryID
@@ -42,7 +45,8 @@ namespace FunctionalTests.Model
                     _settingFK = true;
                     if (_territoryID != value)
                     {
-                        if (SalesTerritory != null && SalesTerritory.TerritoryID != value)
+                        if (SalesTerritory != null
+                            && SalesTerritory.TerritoryID != value)
                         {
                             SalesTerritory = null;
                         }
@@ -55,6 +59,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private int? _territoryID;
 
         public virtual decimal? SalesQuota { get; set; }
@@ -84,6 +89,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private Employee _employee;
 
         public virtual ICollection<SalesOrderHeader> SalesOrderHeaders
@@ -116,6 +122,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesOrderHeader> _salesOrderHeaders;
 
         public virtual SalesTerritory SalesTerritory
@@ -131,6 +138,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private SalesTerritory _salesTerritory;
 
         public virtual ICollection<SalesPersonQuotaHistory> SalesPersonQuotaHistories
@@ -163,6 +171,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesPersonQuotaHistory> _salesPersonQuotaHistories;
 
         public virtual ICollection<SalesTerritoryHistory> SalesTerritoryHistories
@@ -195,6 +204,7 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<SalesTerritoryHistory> _salesTerritoryHistories;
 
         public virtual ICollection<Store> Stores
@@ -227,13 +237,15 @@ namespace FunctionalTests.Model
                 }
             }
         }
+
         private ICollection<Store> _stores;
 
         private bool _settingFK;
 
         private void FixupEmployee(Employee previousValue)
         {
-            if (previousValue != null && ReferenceEquals(previousValue.SalesPerson, this))
+            if (previousValue != null
+                && ReferenceEquals(previousValue.SalesPerson, this))
             {
                 previousValue.SalesPerson = null;
             }
@@ -250,7 +262,8 @@ namespace FunctionalTests.Model
 
         private void FixupSalesTerritory(SalesTerritory previousValue)
         {
-            if (previousValue != null && previousValue.SalesPersons.Contains(this))
+            if (previousValue != null
+                && previousValue.SalesPersons.Contains(this))
             {
                 previousValue.SalesPersons.Remove(this);
             }

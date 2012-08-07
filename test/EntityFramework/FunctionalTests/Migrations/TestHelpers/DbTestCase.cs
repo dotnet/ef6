@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
@@ -150,13 +151,13 @@ namespace System.Data.Entity.Migrations
             where TContext : DbContext
         {
             var migrationsConfiguration = new DbMigrationsConfiguration
-                {
-                    AutomaticMigrationsEnabled = automaticMigrationsEnabled,
-                    AutomaticMigrationDataLossAllowed = automaticDataLossEnabled,
-                    ContextType = typeof(TContext),
-                    MigrationsAssembly = TestBase.SystemComponentModelDataAnnotationsAssembly,
-                    MigrationsNamespace = typeof(TContext).Namespace
-                };
+                                              {
+                                                  AutomaticMigrationsEnabled = automaticMigrationsEnabled,
+                                                  AutomaticMigrationDataLossAllowed = automaticDataLossEnabled,
+                                                  ContextType = typeof(TContext),
+                                                  MigrationsAssembly = TestBase.SystemComponentModelDataAnnotationsAssembly,
+                                                  MigrationsNamespace = typeof(TContext).Namespace
+                                              };
 
             if (!string.IsNullOrWhiteSpace(targetDatabase))
             {
@@ -191,7 +192,8 @@ namespace System.Data.Entity.Migrations
         {
             var contextInfo = new DbContextInfo(typeof(TContext));
 
-            contextInfo = new DbContextInfo(typeof(TContext), new DbConnectionInfo(TestDatabase.ConnectionString, TestDatabase.ProviderName));
+            contextInfo = new DbContextInfo(
+                typeof(TContext), new DbConnectionInfo(TestDatabase.ConnectionString, TestDatabase.ProviderName));
 
             return (TContext)contextInfo.CreateInstance();
         }
@@ -276,7 +278,8 @@ namespace System.Data.Entity.Migrations
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        if (connection.State != ConnectionState.Open)
+                        if (connection.State
+                            != ConnectionState.Open)
                         {
                             connection.Open();
                         }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -15,7 +16,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Functional tests for data binding and DbSet.Local.  Unit tests also exist in the unit tests project.
+    ///     Functional tests for data binding and DbSet.Local.  Unit tests also exist in the unit tests project.
     /// </summary>
     public class DatabindingTests : FunctionalTestBase
     {
@@ -39,8 +40,20 @@ namespace ProductivityApiTests
             drivers.Load();
             drivers.Local.Where(d => d.TeamId == DeletedTeam).ToList().ForEach(d => drivers.Remove(d));
             drivers.Local.Where(d => d.TeamId == ModifedTeam).ToList().ForEach(d => d.Races = 5);
-            drivers.Add(new Driver { Name = "Pedro de la Rosa", TeamId = AddedTeam, CarNumber = 13 });
-            drivers.Add(new Driver { Name = "Kamui Kobayashi", TeamId = AddedTeam, CarNumber = null });
+            drivers.Add(
+                new Driver
+                    {
+                        Name = "Pedro de la Rosa",
+                        TeamId = AddedTeam,
+                        CarNumber = 13
+                    });
+            drivers.Add(
+                new Driver
+                    {
+                        Name = "Kamui Kobayashi",
+                        TeamId = AddedTeam,
+                        CarNumber = null
+                    });
         }
 
         #endregion
@@ -94,7 +107,12 @@ namespace ProductivityApiTests
             {
                 var local = getLocal(context);
 
-                var larry = new Driver { Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 context.Drivers.Add(larry);
 
                 Assert.True(local.Contains(larry));
@@ -120,7 +138,12 @@ namespace ProductivityApiTests
             {
                 var local = getLocal(context);
 
-                var larry = new Driver { Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 context.Drivers.Attach(larry);
 
                 Assert.True(local.Contains(larry));
@@ -274,12 +297,19 @@ namespace ProductivityApiTests
             {
                 var local = getLocal(context);
 
-                var larry = new Driver { Id = -1, Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Id = -1,
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 local.Add(larry);
 
                 Assert.Same(larry, context.Drivers.Find(-1));
-                Assert.Equal(EntityState.Added,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(larry).State);
+                Assert.Equal(
+                    EntityState.Added,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(larry).State);
             }
         }
 
@@ -308,8 +338,9 @@ namespace ProductivityApiTests
                 var alonso = local.Cast<Driver>().Single(d => d.Name == "Fernando Alonso");
                 local.Remove(alonso);
 
-                Assert.Equal(EntityState.Deleted,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
+                Assert.Equal(
+                    EntityState.Deleted,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
             }
         }
 
@@ -339,8 +370,9 @@ namespace ProductivityApiTests
                 var alonso = local.Cast<Driver>().Single(d => d.Name == "Fernando Alonso");
                 local.Add(alonso);
 
-                Assert.Equal(EntityState.Unchanged,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
+                Assert.Equal(
+                    EntityState.Unchanged,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
             }
         }
 
@@ -371,7 +403,12 @@ namespace ProductivityApiTests
                 var local = context.Drivers.Local;
                 var count = local.Count;
 
-                context.Teams.Add(new Team { Id = -1, Name = "Wubbsy Racing" });
+                context.Teams.Add(
+                    new Team
+                        {
+                            Id = -1,
+                            Name = "Wubbsy Racing"
+                        });
 
                 Assert.Equal(count, local.Count);
             }
@@ -395,7 +432,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Adding_entity_of_wrong_type_to_non_generic_local_view_throws()
         {
-            var team = new Team { Id = -1, Name = "Wubbsy Racing" };
+            var team = new Team
+                           {
+                               Id = -1,
+                               Name = "Wubbsy Racing"
+                           };
             var expectedException = GenerateException(() => ((IList)new List<Driver>()).Add(team));
 
             using (var context = new F1Context())
@@ -458,13 +499,15 @@ namespace ProductivityApiTests
                 var alonso = context.Drivers.Single(d => d.Name == "Fernando Alonso");
                 alonso.CarNumber = 13;
 
-                Assert.Equal(EntityState.Unchanged,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
+                Assert.Equal(
+                    EntityState.Unchanged,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
 
                 getLocal(context);
 
-                Assert.Equal(EntityState.Modified,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
+                Assert.Equal(
+                    EntityState.Modified,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
             }
         }
 
@@ -491,7 +534,12 @@ namespace ProductivityApiTests
 
                 Assert.Equal(0, local.Count);
 
-                context.Teams.Add(new Team { Id = -1, Name = "Wubbsy Racing" });
+                context.Teams.Add(
+                    new Team
+                        {
+                            Id = -1,
+                            Name = "Wubbsy Racing"
+                        });
 
                 Assert.Equal(1, local.Count);
             }
@@ -523,7 +571,12 @@ namespace ProductivityApiTests
             {
                 var bindingList = context.Drivers.Local.ToBindingList();
 
-                var larry = new Driver { Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 context.Drivers.Add(larry);
 
                 Assert.True(bindingList.Contains(larry));
@@ -580,12 +633,19 @@ namespace ProductivityApiTests
             {
                 var bindingList = context.Drivers.Local.ToBindingList();
 
-                var larry = new Driver { Id = -1, Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Id = -1,
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 bindingList.Add(larry);
 
                 Assert.Same(larry, context.Drivers.Find(-1));
-                Assert.Equal(EntityState.Added,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(larry).State);
+                Assert.Equal(
+                    EntityState.Added,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(larry).State);
             }
         }
 
@@ -600,8 +660,9 @@ namespace ProductivityApiTests
                 var alonso = bindingList.Single(d => d.Name == "Fernando Alonso");
                 bindingList.Remove(alonso);
 
-                Assert.Equal(EntityState.Deleted,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
+                Assert.Equal(
+                    EntityState.Deleted,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
             }
         }
 
@@ -616,8 +677,9 @@ namespace ProductivityApiTests
                 var alonso = bindingList.Single(d => d.Name == "Fernando Alonso");
                 bindingList.Add(alonso);
 
-                Assert.Equal(EntityState.Unchanged,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
+                Assert.Equal(
+                    EntityState.Unchanged,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(alonso).State);
             }
         }
 
@@ -649,7 +711,12 @@ namespace ProductivityApiTests
                 var bindingList = context.Drivers.Local.ToBindingList();
                 var count = bindingList.Count;
 
-                context.Teams.Add(new Team { Id = -1, Name = "Wubbsy Racing" });
+                context.Teams.Add(
+                    new Team
+                        {
+                            Id = -1,
+                            Name = "Wubbsy Racing"
+                        });
 
                 Assert.Equal(count, bindingList.Count);
             }
@@ -676,14 +743,27 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var featuredProducts = context.Set<FeaturedProduct>();
-                featuredProducts.Attach(new FeaturedProduct { Id = 3 });
-                featuredProducts.Attach(new FeaturedProduct { Id = 1 });
-                featuredProducts.Attach(new FeaturedProduct { Id = 4 });
+                featuredProducts.Attach(
+                    new FeaturedProduct
+                        {
+                            Id = 3
+                        });
+                featuredProducts.Attach(
+                    new FeaturedProduct
+                        {
+                            Id = 1
+                        });
+                featuredProducts.Attach(
+                    new FeaturedProduct
+                        {
+                            Id = 4
+                        });
 
                 var bindingList = featuredProducts.Local.ToBindingList();
 
-                ((IBindingList)bindingList).ApplySort(TypeDescriptor.GetProperties(typeof(Product))["Id"],
-                                                      ListSortDirection.Ascending);
+                ((IBindingList)bindingList).ApplySort(
+                    TypeDescriptor.GetProperties(typeof(Product))["Id"],
+                    ListSortDirection.Ascending);
 
                 Assert.Equal(1, bindingList[0].Id);
                 Assert.Equal(3, bindingList[1].Id);
@@ -696,14 +776,27 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                context.Products.Attach(new FeaturedProduct { Id = 3 });
-                context.Products.Attach(new FeaturedProduct { Id = 1 });
-                context.Products.Attach(new FeaturedProduct { Id = 4 });
+                context.Products.Attach(
+                    new FeaturedProduct
+                        {
+                            Id = 3
+                        });
+                context.Products.Attach(
+                    new FeaturedProduct
+                        {
+                            Id = 1
+                        });
+                context.Products.Attach(
+                    new FeaturedProduct
+                        {
+                            Id = 4
+                        });
 
                 var bindingList = context.Products.Local.ToBindingList();
 
-                ((IBindingList)bindingList).ApplySort(TypeDescriptor.GetProperties(typeof(Product))["Id"],
-                                                      ListSortDirection.Ascending);
+                ((IBindingList)bindingList).ApplySort(
+                    TypeDescriptor.GetProperties(typeof(Product))["Id"],
+                    ListSortDirection.Ascending);
 
                 Assert.Equal(1, bindingList[0].Id);
                 Assert.Equal(3, bindingList[1].Id);
@@ -733,9 +826,10 @@ namespace ProductivityApiTests
             {
                 context.Drivers.Where(d => d.TeamId == UnchangedTeam).Load();
 
-                Assert.Equal(UnchangedCount,
-                             GetObjectContext(context).ObjectStateManager.GetObjectStateEntries(~EntityState.Detached).
-                                 Count());
+                Assert.Equal(
+                    UnchangedCount,
+                    GetObjectContext(context).ObjectStateManager.GetObjectStateEntries(~EntityState.Detached).
+                        Count());
             }
         }
 
@@ -749,8 +843,9 @@ namespace ProductivityApiTests
 
                 objectSet.Where(d => d.TeamId == UnchangedTeam).Load();
 
-                Assert.Equal(UnchangedCount,
-                             objectContext.ObjectStateManager.GetObjectStateEntries(~EntityState.Detached).Count());
+                Assert.Equal(
+                    UnchangedCount,
+                    objectContext.ObjectStateManager.GetObjectStateEntries(~EntityState.Detached).Count());
             }
         }
 
@@ -766,7 +861,12 @@ namespace ProductivityApiTests
                 var ferrari = context.Teams.Include(t => t.Drivers).Single(t => t.Id == Team.Ferrari);
                 var navBindingList = ((IListSource)ferrari.Drivers).GetList();
 
-                var larry = new Driver { Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 context.Drivers.Add(larry);
 
                 Assert.True(navBindingList.Contains(larry));
@@ -797,7 +897,13 @@ namespace ProductivityApiTests
                 var navBindingList = ((IListSource)ferrari.Drivers).GetList();
                 var localDrivers = context.Drivers.Local;
 
-                var larry = new Driver { Id = -1, Name = "Larry David", TeamId = Team.Ferrari, CarNumber = 13 };
+                var larry = new Driver
+                                {
+                                    Id = -1,
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari,
+                                    CarNumber = 13
+                                };
                 navBindingList.Add(larry);
 
                 Assert.False(localDrivers.Contains(larry));

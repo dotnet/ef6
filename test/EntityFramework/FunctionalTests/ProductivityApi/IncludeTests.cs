@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -10,7 +11,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for the Include extension methods on IQueryable.
+    ///     Tests for the Include extension methods on IQueryable.
     /// </summary>
     public class IncludeTests : FunctionalTestBase
     {
@@ -75,7 +76,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
+                var query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
                 AssertAllOfficesIncluded(query.Include("Offices").ToList());
             }
         }
@@ -85,7 +86,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
+                var query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
                 AssertAllOfficesIncluded(query.Include("Offices").ToList());
             }
         }
@@ -95,7 +96,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = context.Offices.Where(o => o.Number != null);
+                var query = context.Offices.Where(o => o.Number != null);
                 AssertAllBuildingsIncluded(query.Include("Building").ToList());
             }
         }
@@ -105,7 +106,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
+                var query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
                 AssertAllBuildingsIncluded(query.Include("Building").ToList());
             }
         }
@@ -237,7 +238,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
+                var query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
                 AssertAllOfficesIncluded(query.Include(b => b.Offices).ToList());
             }
         }
@@ -247,7 +248,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
+                var query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
                 AssertAllOfficesIncluded(query.Include(b => b.Offices).ToList());
             }
         }
@@ -257,7 +258,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = context.Offices.Where(o => o.Number != null);
+                var query = context.Offices.Where(o => o.Number != null);
                 AssertAllBuildingsIncluded(query.Include(o => o.Building).ToList());
             }
         }
@@ -267,7 +268,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
+                var query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
                 AssertAllBuildingsIncluded(query.Include(o => o.Building).ToList());
             }
         }
@@ -301,7 +302,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
+                var query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
                 var buildings = query.Include("Offices.Whiteboards").ToList();
                 AssertAllOfficesAndWhiteboardsIncluded(buildings);
             }
@@ -312,7 +313,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
+                var query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
                 var buildings = query.Include("Offices.Whiteboards").ToList();
                 AssertAllOfficesAndWhiteboardsIncluded(buildings);
             }
@@ -348,7 +349,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
+                var query = context.Buildings.Where(b => b.BuildingId != Guid.Empty);
                 var buildings = query.Include(b => b.Offices.Select(o => o.WhiteBoards)).ToList();
                 AssertAllOfficesAndWhiteboardsIncluded(buildings);
             }
@@ -359,7 +360,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Building> query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
+                var query = CreateObjectSet<Building>(context).Where(b => b.BuildingId != Guid.Empty);
                 var buildings = query.Include(b => b.Offices.Select(o => o.WhiteBoards)).ToList();
                 AssertAllOfficesAndWhiteboardsIncluded(buildings);
             }
@@ -396,7 +397,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = context.Offices.Where(o => o.Number != null);
+                var query = context.Offices.Where(o => o.Number != null);
                 var offices = query.Include("Building").Include("Whiteboards").ToList();
                 AssertAllBuildingsIncluded(offices);
                 AssertAllWhiteboardsIncluded(offices);
@@ -408,7 +409,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
+                var query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
                 var offices = query.Include("Building").Include("Whiteboards").ToList();
                 AssertAllBuildingsIncluded(offices);
                 AssertAllWhiteboardsIncluded(offices);
@@ -447,7 +448,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = context.Offices.Where(o => o.Number != null);
+                var query = context.Offices.Where(o => o.Number != null);
                 var offices = query.Include(o => o.Building).Include(o => o.WhiteBoards).ToList();
                 AssertAllBuildingsIncluded(offices);
                 AssertAllWhiteboardsIncluded(offices);
@@ -459,7 +460,7 @@ namespace ProductivityApiTests
         {
             using (var context = AdvancedContextWithNoLazyLoading())
             {
-                IQueryable<Office> query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
+                var query = CreateObjectSet<Office>(context).Where(o => o.Number != null);
                 var offices = query.Include(o => o.Building).Include(o => o.WhiteBoards).ToList();
                 AssertAllBuildingsIncluded(offices);
                 AssertAllWhiteboardsIncluded(offices);

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -17,8 +18,8 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// General functional tests for DbEntityEntry and related classes/methods.
-    /// Unit tests also exist in the unit tests project.
+    ///     General functional tests for DbEntityEntry and related classes/methods.
+    ///     Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbEntityEntryTests : FunctionalTestBase
     {
@@ -76,7 +77,7 @@ namespace ProductivityApiTests
                 var product = context.Products.Find(1);
                 ((IObjectContextAdapter)context).ObjectContext.ObjectStateManager.ChangeObjectState(product, state);
 
-                var entry = context.Entry<Product>(product);
+                var entry = context.Entry(product);
 
                 Assert.NotNull(entry);
                 Assert.Same(product, entry.Entity);
@@ -267,8 +268,9 @@ namespace ProductivityApiTests
                     context.SaveChanges();
 
                     // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(entry.Entity.GetType(),
-                                 ObjectContext.GetObjectType(entry.Entity.GetType()));
+                    Assert.Equal(
+                        entry.Entity.GetType(),
+                        ObjectContext.GetObjectType(entry.Entity.GetType()));
 
                     ((Product)entry.Entity).Name = "foo";
 
@@ -290,8 +292,9 @@ namespace ProductivityApiTests
                     context.SaveChanges();
 
                     // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(entry.Entity.GetType(),
-                                 ObjectContext.GetObjectType(entry.Entity.GetType()));
+                    Assert.Equal(
+                        entry.Entity.GetType(),
+                        ObjectContext.GetObjectType(entry.Entity.GetType()));
 
                     // DetectChanges is called the first time the state is queried for a detached entity
                     Assert.Equal(EntityState.Unchanged, entry.State);
@@ -315,8 +318,9 @@ namespace ProductivityApiTests
                     context.SaveChanges();
 
                     // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(entry.Entity.GetType(),
-                                 ObjectContext.GetObjectType(entry.Entity.GetType()));
+                    Assert.Equal(
+                        entry.Entity.GetType(),
+                        ObjectContext.GetObjectType(entry.Entity.GetType()));
 
                     entry.Entity.Name = "foo";
 
@@ -338,8 +342,9 @@ namespace ProductivityApiTests
                     context.SaveChanges();
 
                     // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(entry.Entity.GetType(),
-                                 ObjectContext.GetObjectType(entry.Entity.GetType()));
+                    Assert.Equal(
+                        entry.Entity.GetType(),
+                        ObjectContext.GetObjectType(entry.Entity.GetType()));
 
                     // DetectChanges is called the first time the state is queried for a detached entity
                     Assert.Equal(EntityState.Unchanged, entry.State);
@@ -377,7 +382,7 @@ namespace ProductivityApiTests
 
                 Assert.Equal(EntityState.Unchanged, ose.State);
 
-                context.Entry<Product>(product).State = EntityState.Modified;
+                context.Entry(product).State = EntityState.Modified;
 
                 Assert.Equal(EntityState.Modified, ose.State);
             }
@@ -505,15 +510,21 @@ namespace ProductivityApiTests
         {
             using (var context = new F1Context())
             {
-                var larry = new Driver { Name = "Larry David", TeamId = Team.Ferrari };
+                var larry = new Driver
+                                {
+                                    Name = "Larry David",
+                                    TeamId = Team.Ferrari
+                                };
                 var entry = context.Entry(larry);
 
                 entry.State = EntityState.Detached;
 
                 Assert.Equal(EntityState.Detached, entry.State);
                 ObjectStateEntry objectStateEntry;
-                Assert.False(GetObjectContext(context).ObjectStateManager.TryGetObjectStateEntry(larry,
-                                                                                                 out objectStateEntry));
+                Assert.False(
+                    GetObjectContext(context).ObjectStateManager.TryGetObjectStateEntry(
+                        larry,
+                        out objectStateEntry));
             }
         }
 
@@ -630,7 +641,15 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var team = new Team
-                           { Id = -1, Name = "Wubbsy Racing", Chassis = new Chassis { TeamId = -1, Name = "Wubbsy" } };
+                               {
+                                   Id = -1,
+                                   Name = "Wubbsy Racing",
+                                   Chassis = new Chassis
+                                                 {
+                                                     TeamId = -1,
+                                                     Name = "Wubbsy"
+                                                 }
+                               };
                 var entry = context.Entry(team);
 
                 context.Teams.Attach(team);
@@ -650,7 +669,7 @@ namespace ProductivityApiTests
             {
                 var product = context.Products.Find(1);
 
-                DbEntityEntry<Product> genericEntry = context.Entry(product);
+                var genericEntry = context.Entry(product);
 
                 NonGenericTestMethod(genericEntry, genericEntry.Entity);
             }
@@ -670,8 +689,14 @@ namespace ProductivityApiTests
         {
             using (var db = new DetachmentContext())
             {
-                var login = new DeLogin { Id = 14 };
-                var order = new DeOrder { Id = 19 };
+                var login = new DeLogin
+                                {
+                                    Id = 14
+                                };
+                var order = new DeOrder
+                                {
+                                    Id = 19
+                                };
 
                 login.Orders.Add(order);
                 order.Login = login;
@@ -818,9 +843,19 @@ namespace ProductivityApiTests
     {
         protected override void Seed(DetachmentContext context)
         {
-            var login = new DeLogin { Id = 14, CustomerId = 21 };
-            var order = new DeOrder { Id = 19 };
-            var customer = new DeCustomer { DeCustomerId = 21 };
+            var login = new DeLogin
+                            {
+                                Id = 14,
+                                CustomerId = 21
+                            };
+            var order = new DeOrder
+                            {
+                                Id = 19
+                            };
+            var customer = new DeCustomer
+                               {
+                                   DeCustomerId = 21
+                               };
 
             login.Orders.Add(order);
             order.Login = login;
@@ -834,7 +869,7 @@ namespace ProductivityApiTests
     {
         public DeLogin()
         {
-            this.Orders = new List<DeOrder>();
+            Orders = new List<DeOrder>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -861,7 +896,6 @@ namespace ProductivityApiTests
         public ICollection<DeLogin> Logins { get; set; }
     }
 
-
     public class RefreshContext : DbContext
     {
         public RefreshContext()
@@ -877,7 +911,15 @@ namespace ProductivityApiTests
         protected override void Seed(RefreshContext context)
         {
             context.Products.Add(
-                new ReProduct { Id = "ALFKI", Supplier = new ReSupplier { Id = 14, Name = "Initial" } });
+                new ReProduct
+                    {
+                        Id = "ALFKI",
+                        Supplier = new ReSupplier
+                                       {
+                                           Id = 14,
+                                           Name = "Initial"
+                                       }
+                    });
         }
     }
 
@@ -950,8 +992,17 @@ namespace ProductivityApiTests
         protected override void Seed(MixedIAAndFKContext context)
         {
             var principal = new MixedPrincipal();
-            var both = new MixedBoth { IAPrincipal = principal, FKPrincipal = principal };
-            context.Dependents.Add(new MixedDependent { IAPrincipal = both, FKPrincipal = both });
+            var both = new MixedBoth
+                           {
+                               IAPrincipal = principal,
+                               FKPrincipal = principal
+                           };
+            context.Dependents.Add(
+                new MixedDependent
+                    {
+                        IAPrincipal = both,
+                        FKPrincipal = both
+                    });
         }
     }
 

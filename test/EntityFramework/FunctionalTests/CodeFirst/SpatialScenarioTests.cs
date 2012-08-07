@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace FunctionalTests
 {
     using System;
@@ -102,10 +103,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Spatial_Customer>().Property(e => e.Geography);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geography"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geography"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -115,10 +118,12 @@ namespace FunctionalTests
 
             modelBuilder.ComplexType<Spatial_ComplexType>().Property(c => c.Geography);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_ComplexType", "Geography"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_ComplexType", "Geography"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -128,10 +133,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Spatial_Customer>().HasKey(e => e.Geography);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geography"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geography"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -139,12 +146,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
 
-            modelBuilder.Entity<Spatial_Customer>().HasKey(e => new { e.Id, e.Geography });
+            modelBuilder.Entity<Spatial_Customer>().HasKey(
+                e => new
+                         {
+                             e.Id,
+                             e.Geography
+                         });
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geography"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geography"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -152,16 +166,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
 
-            modelBuilder.Entity<Spatial_Customer>().Map(mapping =>
-                                                        {
-                                                            mapping.ToTable("Table1");
-                                                            mapping.Properties(e => e.Geography);
-                                                        });
+            modelBuilder.Entity<Spatial_Customer>().Map(
+                mapping =>
+                    {
+                        mapping.ToTable("Table1");
+                        mapping.Properties(e => e.Geography);
+                    });
 
-            Assert.Equal(Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("Spatial_Customer", "Geography"),
-                         Assert.Throws<InvalidOperationException>(() =>
-                                                                  modelBuilder.Build(
-                                                                      ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("Spatial_Customer", "Geography"),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    modelBuilder.Build(
+                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
 
         [Fact]
@@ -171,10 +188,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Spatial_Customer>().Property(e => e.Geometry);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geometry"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geometry"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -184,10 +203,12 @@ namespace FunctionalTests
 
             modelBuilder.ComplexType<Spatial_ComplexType>().Property(c => c.Geometry);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_ComplexType", "Geometry"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_ComplexType", "Geometry"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -197,10 +218,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Spatial_Customer>().HasKey(e => e.Geometry);
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geometry"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geometry"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -208,12 +231,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
 
-            modelBuilder.Entity<Spatial_Customer>().HasKey(e => new { e.Id, e.Geometry });
+            modelBuilder.Entity<Spatial_Customer>().HasKey(
+                e => new
+                         {
+                             e.Id,
+                             e.Geometry
+                         });
 
-            Assert.Equal(Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geometry"),
-                         Assert.Throws<NotSupportedException>(() =>
-                                                              modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                             .Message);
+            Assert.Equal(
+                Strings.UnsupportedUseOfV3Type("Spatial_Customer", "Geometry"),
+                Assert.Throws<NotSupportedException>(
+                    () =>
+                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                    .Message);
         }
 
         [Fact]
@@ -221,16 +251,19 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
 
-            modelBuilder.Entity<Spatial_Customer>().Map(mapping =>
-                                                        {
-                                                            mapping.ToTable("Table1");
-                                                            mapping.Properties(e => e.Geometry);
-                                                        });
+            modelBuilder.Entity<Spatial_Customer>().Map(
+                mapping =>
+                    {
+                        mapping.ToTable("Table1");
+                        mapping.Properties(e => e.Geometry);
+                    });
 
-            Assert.Equal(Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("Spatial_Customer", "Geometry"),
-                         Assert.Throws<InvalidOperationException>(() =>
-                                                                  modelBuilder.Build(
-                                                                      ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Equal(
+                Strings.EntityMappingConfiguration_CannotMapIgnoredProperty("Spatial_Customer", "Geometry"),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    modelBuilder.Build(
+                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
         }
     }
 }

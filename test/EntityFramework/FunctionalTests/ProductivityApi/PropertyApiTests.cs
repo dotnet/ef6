@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace ProductivityApiTests
 {
     using System;
@@ -18,8 +19,8 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    /// Functional tests for the Property, Reference, and Collection methods on DbEntityEntry.
-    /// Unit tests also exist in the unit tests project.
+    ///     Functional tests for the Property, Reference, and Collection methods on DbEntityEntry.
+    ///     Unit tests also exist in the unit tests project.
     /// </summary>
     public class PropertyApiTests : FunctionalTestBase
     {
@@ -165,7 +166,8 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact, AutoRollback]
+        [Fact]
+        [AutoRollback]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded()
         {
             using (var context = new F1Context())
@@ -184,7 +186,12 @@ namespace ProductivityApiTests
                 // Add a new driver to the database
                 using (var innerContext = new F1Context())
                 {
-                    innerContext.Drivers.Add(new Driver { Name = "Larry David", TeamId = Team.McLaren });
+                    innerContext.Drivers.Add(
+                        new Driver
+                            {
+                                Name = "Larry David",
+                                TeamId = Team.McLaren
+                            });
                     innerContext.SaveChanges();
                 }
 
@@ -231,14 +238,25 @@ namespace ProductivityApiTests
         private DbEntityEntry<Team> GetTeamEntry(F1Context context)
         {
             var team = new Team
-                       { Id = -1, Name = "Wubbsy Racing", Chassis = new Chassis { TeamId = -1, Name = "Wubbsy" } };
+                           {
+                               Id = -1,
+                               Name = "Wubbsy Racing",
+                               Chassis = new Chassis
+                                             {
+                                                 TeamId = -1,
+                                                 Name = "Wubbsy"
+                                             }
+                           };
             team.Engine = new Engine
-                          {
-                              Id = -2,
-                              Name = "WubbsyV8",
-                              Teams = new List<Team> { team },
-                              Gearboxes = new List<Gearbox>()
-                          };
+                              {
+                                  Id = -2,
+                                  Name = "WubbsyV8",
+                                  Teams = new List<Team>
+                                              {
+                                                  team
+                                              },
+                                  Gearboxes = new List<Gearbox>()
+                              };
             context.Teams.Attach(team);
             return context.Entry(team);
         }
@@ -313,7 +331,11 @@ namespace ProductivityApiTests
         private DbEntityEntry<Gearbox> GetGearboxEntry(F1Context context)
         {
             var team = GetTeamEntry(context).Entity;
-            var gearbox = new Gearbox { Id = 1, Name = "WubbsyGears" };
+            var gearbox = new Gearbox
+                              {
+                                  Id = 1,
+                                  Name = "WubbsyGears"
+                              };
             team.Gearbox = gearbox;
             team.Engine.Gearboxes.Add(gearbox);
 
@@ -756,7 +778,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Original_value_cannot_be_read_or_set_for_an_object_in_the_Added_state()
         {
-            EntityState state = EntityState.Added;
+            var state = EntityState.Added;
             using (var context = new AdvancedPatternsMasterContext())
             {
                 var building = context.Buildings.Single(b => b.Name == "Building One");
@@ -778,9 +800,10 @@ namespace ProductivityApiTests
             TestPropertyValuePositiveForState(e => e.CurrentValue, (e, v) => e.CurrentValue = v, EntityState.Detached);
         }
 
-        private void TestPropertyValuePositiveForState(Func<DbPropertyEntry<Building, string>, string> getValue,
-                                                       Action<DbPropertyEntry<Building, string>, string> setValue,
-                                                       EntityState state)
+        private void TestPropertyValuePositiveForState(
+            Func<DbPropertyEntry<Building, string>, string> getValue,
+            Action<DbPropertyEntry<Building, string>, string> setValue,
+            EntityState state)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -829,7 +852,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void IsModified_can_be_set_to_true_on_nested_property_when_it_is_currently_false_and_entire_complex_property_is_marked_modified()
+        public void
+            IsModified_can_be_set_to_true_on_nested_property_when_it_is_currently_false_and_entire_complex_property_is_marked_modified()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -912,9 +936,10 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Unchanged, entry.State);
 
                 var objectContext = GetObjectContext(context);
-                Assert.Equal(0,
-                             objectContext.ObjectStateManager.GetObjectStateEntry(building).GetModifiedProperties().
-                                 Count());
+                Assert.Equal(
+                    0,
+                    objectContext.ObjectStateManager.GetObjectStateEntry(building).GetModifiedProperties().
+                        Count());
             }
         }
 
@@ -940,12 +965,14 @@ namespace ProductivityApiTests
             Assert.Equal("Redmond", entry.ComplexProperty(b => b.Address).Property(a => a.City).CurrentValue);
             Assert.Equal("WA", entry.ComplexProperty(b => b.Address).Property(a => a.State).CurrentValue);
             Assert.Equal("98052", entry.ComplexProperty(b => b.Address).Property(a => a.ZipCode).CurrentValue);
-            Assert.Equal("Clean",
-                         entry.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).Property(
-                             i => i.Environment).CurrentValue);
-            Assert.Equal(1,
-                         entry.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).Property(i => i.Zone).
-                             CurrentValue);
+            Assert.Equal(
+                "Clean",
+                entry.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).Property(
+                    i => i.Environment).CurrentValue);
+            Assert.Equal(
+                1,
+                entry.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).Property(i => i.Zone).
+                    CurrentValue);
 
             var objectContext = GetObjectContext(context);
             var modified = objectContext.ObjectStateManager.GetObjectStateEntry(building).GetModifiedProperties();
@@ -956,13 +983,17 @@ namespace ProductivityApiTests
         private static Address CreateNewAddress()
         {
             return new Address
-                   {
-                       Street = "300 Main St",
-                       City = "Ames",
-                       State = "IA",
-                       ZipCode = "50010",
-                       SiteInfo = new SiteInfo { Zone = 3, Environment = "Contaminated" }
-                   };
+                       {
+                           Street = "300 Main St",
+                           City = "Ames",
+                           State = "IA",
+                           ZipCode = "50010",
+                           SiteInfo = new SiteInfo
+                                          {
+                                              Zone = 3,
+                                              Environment = "Contaminated"
+                                          }
+                       };
         }
 
         [Fact]
@@ -998,7 +1029,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Rejecting_changes_to_a_complex_property_creates_a_new_complex_object_which_is_then_not_detected_as_changed_by_future_DetectChanges()
+        public void
+            Rejecting_changes_to_a_complex_property_creates_a_new_complex_object_which_is_then_not_detected_as_changed_by_future_DetectChanges
+            ()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1035,7 +1068,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Setting_IsModified_to_false_for_a_nested_property_of_a_modified_complex_property_rejects_changes_to_the_top_level_complex_property()
+        public void
+            Setting_IsModified_to_false_for_a_nested_property_of_a_modified_complex_property_rejects_changes_to_the_top_level_complex_property
+            ()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1069,7 +1104,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Setting_IsModified_to_false_for_a_modified_complex_property_marks_the_entity_as_Unchanged_if_no_properties_remain_modified()
+        public void
+            Setting_IsModified_to_false_for_a_modified_complex_property_marks_the_entity_as_Unchanged_if_no_properties_remain_modified()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1090,7 +1126,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Setting_IsModified_to_false_for_a_nested_property_of_a_modified_complex_property_marks_the_entity_as_Unchanged_if_no_properties_remain_modified()
+        public void
+            Setting_IsModified_to_false_for_a_nested_property_of_a_modified_complex_property_marks_the_entity_as_Unchanged_if_no_properties_remain_modified
+            ()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1181,25 +1219,30 @@ namespace ProductivityApiTests
             }
         }
 
-        private void AssertStateOfAddressProperties(DbComplexPropertyEntry<Building, Address> addressEntry, string city,
-                                                    string state, string environment, bool isModified)
+        private void AssertStateOfAddressProperties(
+            DbComplexPropertyEntry<Building, Address> addressEntry, string city,
+            string state, string environment, bool isModified)
         {
             Assert.Equal(isModified, addressEntry.IsModified);
             Assert.Equal(isModified, addressEntry.Property(a => a.City).IsModified);
             Assert.Equal(isModified, addressEntry.Property(a => a.State).IsModified);
-            Assert.Equal(isModified,
-                         addressEntry.ComplexProperty(a => a.SiteInfo).Property(s => s.Environment).IsModified);
+            Assert.Equal(
+                isModified,
+                addressEntry.ComplexProperty(a => a.SiteInfo).Property(s => s.Environment).IsModified);
 
             Assert.Equal(city, addressEntry.Property(a => a.City).CurrentValue);
             Assert.Equal(state, addressEntry.Property(a => a.State).CurrentValue);
-            Assert.Equal(environment,
-                         addressEntry.ComplexProperty(a => a.SiteInfo).Property(s => s.Environment).CurrentValue);
+            Assert.Equal(
+                environment,
+                addressEntry.ComplexProperty(a => a.SiteInfo).Property(s => s.Environment).CurrentValue);
 
             Assert.Equal(isModified ? EntityState.Modified : EntityState.Unchanged, addressEntry.EntityEntry.State);
         }
 
         [Fact]
-        public void IsModified_stays_true_for_properties_of_a_complex_property_until_changes_are_rejected_to_all_properties_even_if_the_instance_has_been_changed()
+        public void
+            IsModified_stays_true_for_properties_of_a_complex_property_until_changes_are_rejected_to_all_properties_even_if_the_instance_has_been_changed
+            ()
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -1229,8 +1272,9 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"),
-                             Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges(null)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                    Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges(null)).Message);
             }
         }
 
@@ -1399,7 +1443,6 @@ namespace ProductivityApiTests
                 building.Name = "Building One";
                 context.ChangeTracker.DetectChanges();
 
-
                 Assert.True(entry.Property(b => b.Name).IsModified);
                 Assert.False(stateEntry.IsPropertyChanged("Name"));
             }
@@ -1408,125 +1451,135 @@ namespace ProductivityApiTests
         [Fact]
         public void IsPropertyChanged_returns_true_for_scalar_property_that_is_changed_but_not_marked_as_modified()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      building.Name = "Oops I Did It Again!";
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        building.Name = "Oops I Did It Again!";
 
-                                      Assert.False(entry.Property(b => b.Name).IsModified);
-                                      Assert.True(stateEntry.IsPropertyChanged("Name"));
-                                      Assert.False(entry.Property(b => b.Name).IsModified);
-                                  });
+                        Assert.False(entry.Property(b => b.Name).IsModified);
+                        Assert.True(stateEntry.IsPropertyChanged("Name"));
+                        Assert.False(entry.Property(b => b.Name).IsModified);
+                    });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_false_for_scalar_property_that_is_not_changed_but_marked_as_modified()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      entry.Property(b => b.Name).IsModified = true;
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        entry.Property(b => b.Name).IsModified = true;
 
-                                      Assert.False(stateEntry.IsPropertyChanged("Name"));
-                                  });
+                        Assert.False(stateEntry.IsPropertyChanged("Name"));
+                    });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_false_for_scalar_property_that_is_not_changed_and_not_marked_as_modified()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      Assert.False(entry.Property(b => b.Name).IsModified);
-                                      Assert.False(stateEntry.IsPropertyChanged("Name"));
-                                      Assert.False(entry.Property(b => b.Name).IsModified);
-                                  });
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        Assert.False(entry.Property(b => b.Name).IsModified);
+                        Assert.False(stateEntry.IsPropertyChanged("Name"));
+                        Assert.False(entry.Property(b => b.Name).IsModified);
+                    });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_true_for_scalar_property_that_is_changed_to_null()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      building.Name = null;
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        building.Name = null;
 
-                                      Assert.True(stateEntry.IsPropertyChanged("Name"));
-                                  });
+                        Assert.True(stateEntry.IsPropertyChanged("Name"));
+                    });
         }
 
         private void IsPropertyChanged_returns_true_for_complex_property_that_is_changed_and_marked_as_modified(
             Action<Building, DbComplexPropertyEntry<Building, Address>> changeAddress)
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      changeAddress(building, entry.ComplexProperty(b => b.Address));
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                                      Assert.True(entry.Property(b => b.Address).IsModified);
-                                      Assert.True(stateEntry.IsPropertyChanged("Address"));
-                                  });
+                        Assert.True(entry.Property(b => b.Address).IsModified);
+                        Assert.True(stateEntry.IsPropertyChanged("Address"));
+                    });
         }
 
         private void IsPropertyChanged_returns_true_for_complex_property_that_is_changed_but_not_marked_as_modified(
             Action<Building, DbComplexPropertyEntry<Building, Address>> changeAddress)
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      changeAddress(building, entry.ComplexProperty(b => b.Address));
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                                      Assert.False(entry.Property(b => b.Address).IsModified);
-                                      Assert.True(stateEntry.IsPropertyChanged("Address"));
-                                      Assert.False(entry.Property(b => b.Address).IsModified);
-                                  });
+                        Assert.False(entry.Property(b => b.Address).IsModified);
+                        Assert.True(stateEntry.IsPropertyChanged("Address"));
+                        Assert.False(entry.Property(b => b.Address).IsModified);
+                    });
         }
 
         private void
             IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_reference_only_and_marked_as_modified_implementation
             (Action<Building, DbComplexPropertyEntry<Building, Address>> changeAddress)
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      changeAddress(building, entry.ComplexProperty(b => b.Address));
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                                      Assert.True(entry.Property(b => b.Address).IsModified);
-                                      Assert.False(stateEntry.IsPropertyChanged("Address"));
-                                  });
+                        Assert.True(entry.Property(b => b.Address).IsModified);
+                        Assert.False(stateEntry.IsPropertyChanged("Address"));
+                    });
         }
 
         private void
             IsPropertyChanged_returns_true_for_complex_property_that_is_changed_by_reference_only_but_not_marked_as_modified
             (Action<Building, DbComplexPropertyEntry<Building, Address>> changeAddress)
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      changeAddress(building, entry.ComplexProperty(b => b.Address));
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                                      Assert.False(entry.Property(b => b.Address).IsModified);
-                                      Assert.False(stateEntry.IsPropertyChanged("Address"));
-                                      Assert.False(entry.Property(b => b.Address).IsModified);
-                                  });
+                        Assert.False(entry.Property(b => b.Address).IsModified);
+                        Assert.False(stateEntry.IsPropertyChanged("Address"));
+                        Assert.False(entry.Property(b => b.Address).IsModified);
+                    });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_reference_only_and_marked_as_modified()
         {
             IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_reference_only_and_marked_as_modified_implementation
-                ((b, e) =>
-                 {
-                     var originalAddress = b.Address;
-                     var newAddress = CloneAddress(originalAddress);
-                     newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
-                     e.CurrentValue = newAddress;
-                 });
+                (
+                    (b, e) =>
+                        {
+                            var originalAddress = b.Address;
+                            var newAddress = CloneAddress(originalAddress);
+                            newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
+                            e.CurrentValue = newAddress;
+                        });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_reference_only_but_not_marked_as_modified()
         {
             IsPropertyChanged_returns_true_for_complex_property_that_is_changed_by_reference_only_but_not_marked_as_modified
-                ((b, e) =>
-                 {
-                     var originalAddress = b.Address;
-                     var newAddress = CloneAddress(originalAddress);
-                     newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
-                     b.Address = newAddress;
-                 });
+                (
+                    (b, e) =>
+                        {
+                            var originalAddress = b.Address;
+                            var newAddress = CloneAddress(originalAddress);
+                            newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
+                            b.Address = newAddress;
+                        });
         }
 
         [Fact]
@@ -1553,63 +1606,79 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void IsPropertyChanged_returns_true_for_complex_property_that_is_changed_by_nested_property_mutation_but_not_marked_as_modified()
+        public void
+            IsPropertyChanged_returns_true_for_complex_property_that_is_changed_by_nested_property_mutation_but_not_marked_as_modified()
         {
             IsPropertyChanged_returns_true_for_complex_property_that_is_changed_but_not_marked_as_modified(
                 (b, e) => b.Address.SiteInfo.Environment = "Fishy");
         }
 
         [Fact]
-        public void IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_nested_property_reference_and_marked_as_modified()
+        public void IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_nested_property_reference_and_marked_as_modified
+            ()
         {
             IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_reference_only_and_marked_as_modified_implementation
-                ((b, e) =>
-                 e.ComplexProperty(a => a.SiteInfo).CurrentValue =
-                 new SiteInfo { Environment = b.Address.SiteInfo.Environment, Zone = b.Address.SiteInfo.Zone });
+                (
+                    (b, e) =>
+                    e.ComplexProperty(a => a.SiteInfo).CurrentValue =
+                    new SiteInfo
+                        {
+                            Environment = b.Address.SiteInfo.Environment,
+                            Zone = b.Address.SiteInfo.Zone
+                        });
         }
 
         [Fact]
-        public void IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_nested_property_reference_but_not_marked_as_modified()
+        public void
+            IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_nested_property_reference_but_not_marked_as_modified()
         {
             IsPropertyChanged_returns_true_for_complex_property_that_is_changed_by_reference_only_but_not_marked_as_modified
-                ((b, e) =>
-                 b.Address.SiteInfo =
-                 new SiteInfo { Environment = b.Address.SiteInfo.Environment, Zone = b.Address.SiteInfo.Zone });
+                (
+                    (b, e) =>
+                    b.Address.SiteInfo =
+                    new SiteInfo
+                        {
+                            Environment = b.Address.SiteInfo.Environment,
+                            Zone = b.Address.SiteInfo.Zone
+                        });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_false_for_complex_property_that_is_not_changed_but_marked_as_modified()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      entry.Property(b => b.Name).IsModified = true;
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        entry.Property(b => b.Name).IsModified = true;
 
-                                      Assert.False(stateEntry.IsPropertyChanged("Address"));
-                                  });
+                        Assert.False(stateEntry.IsPropertyChanged("Address"));
+                    });
         }
 
         [Fact]
         public void IsPropertyChanged_returns_false_for_complex_property_that_is_not_changed_and_not_marked_as_modified()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      Assert.False(entry.Property(b => b.Address).IsModified);
-                                      Assert.False(stateEntry.IsPropertyChanged("Address"));
-                                      Assert.False(entry.Property(b => b.Address).IsModified);
-                                  });
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        Assert.False(entry.Property(b => b.Address).IsModified);
+                        Assert.False(stateEntry.IsPropertyChanged("Address"));
+                        Assert.False(entry.Property(b => b.Address).IsModified);
+                    });
         }
 
         [Fact]
         public void IsPropertyChanged_throws_if_complex_property_is_changed_to_null()
         {
-            IsPropertyChangedTest((building, entry, stateEntry) =>
-                                  {
-                                      building.Address = null;
+            IsPropertyChangedTest(
+                (building, entry, stateEntry) =>
+                    {
+                        building.Address = null;
 
-                                      Assert.Throws<InvalidOperationException>(
-                                          () => stateEntry.IsPropertyChanged("Address")).ValidateMessage(
-                                              "ComplexObject_NullableComplexTypesNotSupported", "Address");
-                                  });
+                        Assert.Throws<InvalidOperationException>(
+                            () => stateEntry.IsPropertyChanged("Address")).ValidateMessage(
+                                "ComplexObject_NullableComplexTypesNotSupported", "Address");
+                    });
         }
 
         [Fact]
@@ -1620,8 +1689,9 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"),
-                             Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged(null)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                    Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged(null)).Message);
             }
         }
 
@@ -1647,7 +1717,7 @@ namespace ProductivityApiTests
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
                 Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged("Team")).ValidateMessage(
-                     "ObjectStateEntry_SetModifiedOnInvalidProperty", "Team");
+                    "ObjectStateEntry_SetModifiedOnInvalidProperty", "Team");
             }
         }
 
@@ -1750,8 +1820,9 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"),
-                             Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty(null)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                    Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty(null)).Message);
 
                 Assert.Equal(EntityState.Unchanged, stateEntry.State);
             }
@@ -1761,8 +1832,9 @@ namespace ProductivityApiTests
 
         #region Tests for property access including detached entities and properties that are not in the model
 
-        private void TestScalarCurrentValue(DbEntityEntry entityEntry, DbPropertyEntry<Building, string> propertyEntry,
-                                            DbPropertyValues currentValues, Func<string> getter, string initialValue)
+        private void TestScalarCurrentValue(
+            DbEntityEntry entityEntry, DbPropertyEntry<Building, string> propertyEntry,
+            DbPropertyValues currentValues, Func<string> getter, string initialValue)
         {
             var initialState = entityEntry.State;
 
@@ -1781,7 +1853,8 @@ namespace ProductivityApiTests
             CheckPropertyIsModified(entityEntry, propertyEntry, initialState);
 
             // New value reflected in record
-            if (initialState != EntityState.Deleted && initialState != EntityState.Detached)
+            if (initialState != EntityState.Deleted
+                && initialState != EntityState.Detached)
             {
                 Assert.Equal("New Value", currentValues[propertyEntry.Name]);
 
@@ -1797,8 +1870,9 @@ namespace ProductivityApiTests
             Assert.Null(getter());
         }
 
-        private void TestScalarOriginalValue(DbEntityEntry entityEntry, DbPropertyEntry<Building, string> propertyEntry,
-                                             Type objectType, DbPropertyValues originalValues, string initialValue)
+        private void TestScalarOriginalValue(
+            DbEntityEntry entityEntry, DbPropertyEntry<Building, string> propertyEntry,
+            Type objectType, DbPropertyValues originalValues, string initialValue)
         {
             var initialState = entityEntry.State;
 
@@ -1814,8 +1888,9 @@ namespace ProductivityApiTests
             if (initialState == EntityState.Detached)
             {
                 Assert.Throws<InvalidOperationException>(() => { var _ = propertyEntry.OriginalValue; }).ValidateMessage
-                    ("DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
-                     entityEntry.Entity.GetType().Name);
+                    (
+                        "DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
+                        entityEntry.Entity.GetType().Name);
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.OriginalValue = "").ValidateMessage(
                     "DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
                     entityEntry.Entity.GetType().Name);
@@ -1847,10 +1922,12 @@ namespace ProductivityApiTests
             Assert.Equal(null, propertyEntry.OriginalValue);
         }
 
-        private void CheckPropertyIsModified(DbEntityEntry entityEntry, DbPropertyEntry propertyEntry,
-                                             EntityState initialState)
+        private void CheckPropertyIsModified(
+            DbEntityEntry entityEntry, DbPropertyEntry propertyEntry,
+            EntityState initialState)
         {
-            if (initialState == EntityState.Modified || initialState == EntityState.Unchanged)
+            if (initialState == EntityState.Modified
+                || initialState == EntityState.Unchanged)
             {
                 Assert.True(propertyEntry.IsModified);
                 Assert.Equal(EntityState.Modified, entityEntry.State);
@@ -1862,8 +1939,9 @@ namespace ProductivityApiTests
             }
         }
 
-        private void TestComplexOriginalValue(DbEntityEntry<Building> entityEntry,
-                                              DbPropertyEntry<Building, Address> propertyEntry)
+        private void TestComplexOriginalValue(
+            DbEntityEntry<Building> entityEntry,
+            DbPropertyEntry<Building, Address> propertyEntry)
         {
             var initialState = entityEntry.State;
 
@@ -1879,11 +1957,13 @@ namespace ProductivityApiTests
             if (initialState == EntityState.Detached)
             {
                 Assert.Throws<InvalidOperationException>(() => { var _ = propertyEntry.OriginalValue; }).ValidateMessage
-                    ("DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
-                     entityEntry.Entity.GetType().Name);
+                    (
+                        "DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
+                        entityEntry.Entity.GetType().Name);
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.OriginalValue = new Address()).
-                    ValidateMessage("DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
-                                    entityEntry.Entity.GetType().Name);
+                    ValidateMessage(
+                        "DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
+                        entityEntry.Entity.GetType().Name);
                 return;
             }
 
@@ -1901,13 +1981,17 @@ namespace ProductivityApiTests
 
             // Set to new value; prop marked as modified
             var newAddress = new Address
-                             {
-                                 Street = "300 Main St",
-                                 City = "Ames",
-                                 State = "IA",
-                                 ZipCode = "50010",
-                                 SiteInfo = new SiteInfo { Zone = 2, Environment = "Contaminated" }
-                             };
+                                 {
+                                     Street = "300 Main St",
+                                     City = "Ames",
+                                     State = "IA",
+                                     ZipCode = "50010",
+                                     SiteInfo = new SiteInfo
+                                                    {
+                                                        Zone = 2,
+                                                        Environment = "Contaminated"
+                                                    }
+                                 };
 
             propertyEntry.OriginalValue = newAddress;
             Assert.Equal("Ames", propertyEntry.OriginalValue.City);
@@ -1915,7 +1999,8 @@ namespace ProductivityApiTests
             CheckPropertyIsModified(entityEntry, propertyEntry, initialState);
 
             // New value reflected in record
-            if (initialState != EntityState.Added && initialState != EntityState.Detached)
+            if (initialState != EntityState.Added
+                && initialState != EntityState.Detached)
             {
                 var addressValues = (DbPropertyValues)entityEntry.OriginalValues["Address"];
                 var siteValues = (DbPropertyValues)addressValues["SiteInfo"];
@@ -1937,23 +2022,25 @@ namespace ProductivityApiTests
 
             // Set to new value that has a nested null complex object
             // Should always throw, but Originally only throws if the entity is Added/Modified/Unchanged
-            if (initialState != EntityState.Detached && initialState != EntityState.Deleted)
+            if (initialState != EntityState.Detached
+                && initialState != EntityState.Deleted)
             {
                 var addressWithNull = new Address
-                                      {
-                                          Street = "300 Main St",
-                                          City = "Ames",
-                                          State = "IA",
-                                          ZipCode = "50010",
-                                          SiteInfo = null
-                                      };
+                                          {
+                                              Street = "300 Main St",
+                                              City = "Ames",
+                                              State = "IA",
+                                              ZipCode = "50010",
+                                              SiteInfo = null
+                                          };
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.OriginalValue = addressWithNull).
                     ValidateMessage("DbPropertyValues_ComplexObjectCannotBeNull", "SiteInfo", "Address");
             }
         }
 
-        private void TestComplexOriginalValue(DbEntityEntry<Building> entityEntry,
-                                              DbPropertyEntry<Building, SiteInfo> propertyEntry)
+        private void TestComplexOriginalValue(
+            DbEntityEntry<Building> entityEntry,
+            DbPropertyEntry<Building, SiteInfo> propertyEntry)
         {
             var initialState = entityEntry.State;
 
@@ -1969,11 +2056,13 @@ namespace ProductivityApiTests
             if (initialState == EntityState.Detached)
             {
                 Assert.Throws<InvalidOperationException>(() => { var _ = propertyEntry.OriginalValue; }).ValidateMessage
-                    ("DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
-                     typeof(Building).Name);
+                    (
+                        "DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
+                        typeof(Building).Name);
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.OriginalValue = new SiteInfo()).
-                    ValidateMessage("DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
-                                    typeof(Building).Name);
+                    ValidateMessage(
+                        "DbPropertyEntry_NotSupportedForDetached", "OriginalValue", propertyEntry.Name,
+                        typeof(Building).Name);
                 return;
             }
 
@@ -1988,14 +2077,19 @@ namespace ProductivityApiTests
             Assert.Equal(initialState, entityEntry.State);
 
             // Set to new value; prop marked as modified
-            var newInfo = new SiteInfo { Zone = 2, Environment = "Contaminated" };
+            var newInfo = new SiteInfo
+                              {
+                                  Zone = 2,
+                                  Environment = "Contaminated"
+                              };
 
             propertyEntry.OriginalValue = newInfo;
             Assert.Equal("Contaminated", propertyEntry.OriginalValue.Environment);
             CheckPropertyIsModified(entityEntry, propertyEntry, initialState);
 
             // New value reflected in record
-            if (initialState != EntityState.Added && initialState != EntityState.Detached)
+            if (initialState != EntityState.Added
+                && initialState != EntityState.Detached)
             {
                 var siteValues =
                     entityEntry.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue<DbPropertyValues>(
@@ -2017,23 +2111,28 @@ namespace ProductivityApiTests
         private Address CloneAddress(Address source)
         {
             return new Address
-                   {
-                       Street = source.Street,
-                       City = source.City,
-                       State = source.State,
-                       ZipCode = source.ZipCode,
-                       SiteInfo = CloneSiteInfo(source.SiteInfo)
-                   };
+                       {
+                           Street = source.Street,
+                           City = source.City,
+                           State = source.State,
+                           ZipCode = source.ZipCode,
+                           SiteInfo = CloneSiteInfo(source.SiteInfo)
+                       };
         }
 
         private SiteInfo CloneSiteInfo(SiteInfo source)
         {
-            return new SiteInfo { Zone = source.Zone, Environment = source.Environment };
+            return new SiteInfo
+                       {
+                           Zone = source.Zone,
+                           Environment = source.Environment
+                       };
         }
 
-        private void TestComplexCurentValue(DbEntityEntry<Building> entityEntry,
-                                            DbComplexPropertyEntry<Building, Address> propertyEntry,
-                                            Func<Address> getter)
+        private void TestComplexCurentValue(
+            DbEntityEntry<Building> entityEntry,
+            DbComplexPropertyEntry<Building, Address> propertyEntry,
+            Func<Address> getter)
         {
             var initialState = entityEntry.State;
 
@@ -2073,13 +2172,17 @@ namespace ProductivityApiTests
 
             // Set to new value; prop marked as modified
             var newAddress = new Address
-                             {
-                                 Street = "300 Main St",
-                                 City = "Ames",
-                                 State = "IA",
-                                 ZipCode = "50010",
-                                 SiteInfo = new SiteInfo { Zone = 2, Environment = "Contaminated" }
-                             };
+                                 {
+                                     Street = "300 Main St",
+                                     City = "Ames",
+                                     State = "IA",
+                                     ZipCode = "50010",
+                                     SiteInfo = new SiteInfo
+                                                    {
+                                                        Zone = 2,
+                                                        Environment = "Contaminated"
+                                                    }
+                                 };
 
             propertyEntry.CurrentValue = newAddress;
             Assert.Equal("Ames", propertyEntry.CurrentValue.City);
@@ -2090,7 +2193,8 @@ namespace ProductivityApiTests
             Assert.Same(newAddress, getter());
 
             // New value reflected in record
-            if (initialState != EntityState.Deleted && initialState != EntityState.Detached)
+            if (initialState != EntityState.Deleted
+                && initialState != EntityState.Detached)
             {
                 var addressValues = (DbPropertyValues)entityEntry.CurrentValues["Address"];
                 var siteValues = (DbPropertyValues)addressValues["SiteInfo"];
@@ -2112,24 +2216,26 @@ namespace ProductivityApiTests
 
             // Set to new value that has a nested null complex object
             // Should always throw, but currently only throws if the entity is Added/Modified/Unchanged
-            if (initialState != EntityState.Detached && initialState != EntityState.Deleted)
+            if (initialState != EntityState.Detached
+                && initialState != EntityState.Deleted)
             {
                 var addressWithNull = new Address
-                                      {
-                                          Street = "300 Main St",
-                                          City = "Ames",
-                                          State = "IA",
-                                          ZipCode = "50010",
-                                          SiteInfo = null
-                                      };
+                                          {
+                                              Street = "300 Main St",
+                                              City = "Ames",
+                                              State = "IA",
+                                              ZipCode = "50010",
+                                              SiteInfo = null
+                                          };
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.CurrentValue = addressWithNull).
                     ValidateMessage("DbPropertyValues_ComplexObjectCannotBeNull", "SiteInfo", "Address");
             }
         }
 
-        private void TestComplexCurentValue(DbEntityEntry<Building> entityEntry,
-                                            DbComplexPropertyEntry<Building, SiteInfo> propertyEntry,
-                                            Func<SiteInfo> getter)
+        private void TestComplexCurentValue(
+            DbEntityEntry<Building> entityEntry,
+            DbComplexPropertyEntry<Building, SiteInfo> propertyEntry,
+            Func<SiteInfo> getter)
         {
             var initialState = entityEntry.State;
 
@@ -2163,7 +2269,11 @@ namespace ProductivityApiTests
             }
 
             // Set to new value; prop marked as modified
-            var newInfo = new SiteInfo { Zone = 2, Environment = "Contaminated" };
+            var newInfo = new SiteInfo
+                              {
+                                  Zone = 2,
+                                  Environment = "Contaminated"
+                              };
 
             propertyEntry.CurrentValue = newInfo;
             Assert.Equal("Contaminated", propertyEntry.CurrentValue.Environment);
@@ -2172,7 +2282,8 @@ namespace ProductivityApiTests
             Assert.Same(newInfo, getter());
 
             // New value reflected in record
-            if (initialState != EntityState.Deleted && initialState != EntityState.Detached)
+            if (initialState != EntityState.Deleted
+                && initialState != EntityState.Detached)
             {
                 var siteValues =
                     entityEntry.CurrentValues.GetValue<DbPropertyValues>("Address").GetValue<DbPropertyValues>(
@@ -2204,7 +2315,8 @@ namespace ProductivityApiTests
                 return;
             }
 
-            if (initialState == EntityState.Added || initialState == EntityState.Deleted)
+            if (initialState == EntityState.Added
+                || initialState == EntityState.Deleted)
             {
                 Assert.False(propertyEntry.IsModified);
                 Assert.Throws<InvalidOperationException>(() => propertyEntry.IsModified = true).ValidateMessage(
@@ -2216,9 +2328,10 @@ namespace ProductivityApiTests
             Assert.True(propertyEntry.IsModified);
         }
 
-        private void TestCurrentValueNotInModel(DbEntityEntry entityEntry, DbPropertyEntry propertyEntry,
-                                                Type objectType, Func<string> getter, string initialValue,
-                                                bool hasGetter, bool hasSetter)
+        private void TestCurrentValueNotInModel(
+            DbEntityEntry entityEntry, DbPropertyEntry propertyEntry,
+            Type objectType, Func<string> getter, string initialValue,
+            bool hasGetter, bool hasSetter)
         {
             Assert.False(propertyEntry.IsModified);
             if (hasGetter)
@@ -2253,8 +2366,9 @@ namespace ProductivityApiTests
             Assert.False(propertyEntry.IsModified);
         }
 
-        private void TestOriginalValueNotInModel(DbEntityEntry entityEntry,
-                                                 DbPropertyEntry<Building, string> propertyEntry)
+        private void TestOriginalValueNotInModel(
+            DbEntityEntry entityEntry,
+            DbPropertyEntry<Building, string> propertyEntry)
         {
             Assert.Throws<InvalidOperationException>(() => { var _ = propertyEntry.OriginalValue; }).ValidateMessage(
                 "DbPropertyEntry_NotSupportedForPropertiesNotInTheModel", "OriginalValue", propertyEntry.Name,
@@ -2276,20 +2390,25 @@ namespace ProductivityApiTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var entry = context.Entry(new Building
+                var entry = context.Entry(
+                    new Building
+                        {
+                            Name = "Building 18",
+                            Address = new Address
                                           {
-                                              Name = "Building 18",
-                                              Address = new Address
-                                                        {
-                                                            Street = "1 Microsoft Way",
-                                                            City = "Redmond",
-                                                            State = "WA",
-                                                            ZipCode = "98052",
-                                                            County = "KING",
-                                                            SiteInfo = new SiteInfo { Zone = 2, Environment = "Clean" }
-                                                        },
-                                              NotInModel = "NotInModel",
-                                          });
+                                              Street = "1 Microsoft Way",
+                                              City = "Redmond",
+                                              State = "WA",
+                                              ZipCode = "98052",
+                                              County = "KING",
+                                              SiteInfo = new SiteInfo
+                                                             {
+                                                                 Zone = 2,
+                                                                 Environment = "Clean"
+                                                             }
+                                          },
+                            NotInModel = "NotInModel",
+                        });
 
                 entry.State = state;
 
@@ -2302,27 +2421,32 @@ namespace ProductivityApiTests
         [Fact]
         public void Scalar_CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestScalarCurrentValue(e, e.Property(b => b.Name), e.CurrentValues, () => e.Entity.Name,
-                                                       "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.Property(b => b.Name), e.CurrentValues, () => e.Entity.Name,
+                    "Building 18"));
         }
 
         [Fact]
         public void Scalar_OriginalValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Name), typeof(Building), null,
-                                                        "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Name), typeof(Building), null,
+                    "Building 18"));
         }
 
         [Fact]
         public void Complex_CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -2340,11 +2464,13 @@ namespace ProductivityApiTests
         [Fact]
         public void CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NotInModel), typeof(Building),
-                                                           () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NotInModel), typeof(Building),
+                    () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
@@ -2360,202 +2486,241 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("NoGetter"), typeof(Building),
-                                                           () => e.Entity.GetNoGetterValue(), "NotInModel",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("NoGetter"), typeof(Building),
+                    () => e.Entity.GetNoGetterValue(), "NotInModel",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NoSetter), typeof(Building),
-                                                           () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NoSetter), typeof(Building),
+                    () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
+                    hasGetter: true));
         }
 
         [Fact]
         public void
             DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
-                                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
+                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void DbComplexPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
-                                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
+                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void
             Nested_scalar_CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestScalarCurrentValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City),
-                                                       e.CurrentValues.GetValue<DbPropertyValues>("Address"),
-                                                       () => e.Entity.Address.City, "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City),
+                    e.CurrentValues.GetValue<DbPropertyValues>("Address"),
+                    () => e.Entity.Address.City, "Redmond"));
         }
 
         [Fact]
         public void
             Nested_scalar_OriginalValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Address.City), typeof(Address), null,
-                                                        "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Address.City), typeof(Address), null,
+                    "Redmond"));
         }
 
         [Fact]
         public void
             Nested_complex_CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestComplexCurentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
-                                                       () => e.Entity.Address.SiteInfo));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestComplexCurentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
+                    () => e.Entity.Address.SiteInfo));
         }
 
         [Fact]
         public void
             Nested_complex_OriginalValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address.SiteInfo)));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address.SiteInfo)));
         }
 
         [Fact]
         public void Double_nested_scalar_CurrentValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestScalarCurrentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
-                                                           .Property(s => s.Environment),
-                                                       e.CurrentValues.GetValue<DbPropertyValues>("Address").GetValue
-                                                           <DbPropertyValues>("SiteInfo"),
-                                                       () => e.Entity.Address.SiteInfo.Environment, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestScalarCurrentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
+                    .Property(s => s.Environment),
+                    e.CurrentValues.GetValue<DbPropertyValues>("Address").GetValue
+                    <DbPropertyValues>("SiteInfo"),
+                    () => e.Entity.Address.SiteInfo.Environment, "Clean"));
         }
 
         [Fact]
         public void Double_nested_scalar_OriginalValue_on_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Address.SiteInfo.Environment),
-                                                        typeof(SiteInfo), null, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Address.SiteInfo.Environment),
+                    typeof(SiteInfo), null, "Clean"));
         }
 
         [Fact]
         public void IsModified_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
         }
 
         [Fact]
         public void
             IsModified_on_double_nested_DbPropertyEntry_from_an_added_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestIsModified(e,
-                                               e.ComplexProperty(b => b.Address).Property(a => a.SiteInfo.Environment)));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestIsModified(
+                    e,
+                    e.ComplexProperty(b => b.Address).Property(a => a.SiteInfo.Environment)));
         }
 
         [Fact]
         public void
             CurrentValue_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.Address.County), typeof(Address),
-                                                           () => e.Entity.Address.County, "KING", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.Address.County), typeof(Address),
+                    () => e.Entity.Address.County, "KING", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
         public void
             OriginalValue_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
         public void
             IsModified_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("Address.WriteOnly"), typeof(Address),
-                                                           () => e.Entity.Address.GetWriteOnlyValue(), "WriteOnly",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("Address.WriteOnly"), typeof(Address),
+                    () => e.Entity.Address.GetWriteOnlyValue(), "WriteOnly",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                TestCurrentValueNotInModel(e,
-                                                           e.ComplexProperty(b => b.Address).Property(
-                                                               b => b.FormattedAddress), typeof(Address),
-                                                           () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
-                                                           hasSetter: false, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                TestCurrentValueNotInModel(
+                    e,
+                    e.ComplexProperty(b => b.Address).Property(
+                        b => b.FormattedAddress), typeof(Address),
+                    () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
+                    hasSetter: false, hasGetter: true));
         }
 
         [Fact]
         public void Nested_DbPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).Property("BadProperty")).ValidateMessage(
-                                        "DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).Property("BadProperty")).ValidateMessage(
+                        "DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_an_added_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_an_added_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
+        public void Nested_DbComplexPropertyEntry_from_an_added_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used
+            ()
         {
-            DbPropertyEntryTest(EntityState.Added,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
-                                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Added,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
+                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
         }
 
         #endregion
@@ -2566,37 +2731,43 @@ namespace ProductivityApiTests
         public void
             Scalar_CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestScalarCurrentValue(e, e.Property(b => b.Name), e.CurrentValues, () => e.Entity.Name,
-                                                       "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.Property(b => b.Name), e.CurrentValues, () => e.Entity.Name,
+                    "Building 18"));
         }
 
         [Fact]
         public void
             Scalar_OriginalValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Name), typeof(Building), e.OriginalValues,
-                                                        "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Name), typeof(Building), e.OriginalValues,
+                    "Building 18"));
         }
 
         [Fact]
         public void
             Complex_CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
         public void
             Complex_OriginalValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address)));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address)));
         }
 
         [Fact]
@@ -2608,19 +2779,22 @@ namespace ProductivityApiTests
         [Fact]
         public void CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NotInModel), typeof(Building),
-                                                           () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NotInModel), typeof(Building),
+                    () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
         public void
             OriginalValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestOriginalValueNotInModel(e, e.Property(b => b.NotInModel)));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestOriginalValueNotInModel(e, e.Property(b => b.NotInModel)));
         }
 
         [Fact]
@@ -2630,96 +2804,117 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("NoGetter"), typeof(Building),
-                                                           () => e.Entity.GetNoGetterValue(), "NotInModel",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("NoGetter"), typeof(Building),
+                    () => e.Entity.GetNoGetterValue(), "NotInModel",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NoSetter), typeof(Building),
-                                                           () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NoSetter), typeof(Building),
+                    () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
+                    hasGetter: true));
         }
 
         [Fact]
         public void DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
-                                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
+                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void DbComplexPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
-                                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
+                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void Nested_scalar_CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged, e => TestScalarCurrentValue(e, e.Property(b => b.Address.City),
-                                                                                   e.CurrentValues.GetValue
-                                                                                       <DbPropertyValues>("Address"),
-                                                                                   () => e.Entity.Address.City,
-                                                                                   "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged, e => TestScalarCurrentValue(
+                    e, e.Property(b => b.Address.City),
+                    e.CurrentValues.GetValue
+                                                <DbPropertyValues>("Address"),
+                    () => e.Entity.Address.City,
+                    "Redmond"));
         }
 
         [Fact]
         public void Nested_scalar_OriginalValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestScalarOriginalValue(e, e.Property(b => b.Address.City), typeof(Address),
-                                                             e.OriginalValues.GetValue<DbPropertyValues>("Address"),
-                                                             "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestScalarOriginalValue(
+                    e, e.Property(b => b.Address.City), typeof(Address),
+                    e.OriginalValues.GetValue<DbPropertyValues>("Address"),
+                    "Redmond"));
         }
 
         [Fact]
         public void Nested_complex_CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestComplexCurentValue(e, e.ComplexProperty(b => b.Address.SiteInfo),
-                                                            () => e.Entity.Address.SiteInfo));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestComplexCurentValue(
+                    e, e.ComplexProperty(b => b.Address.SiteInfo),
+                    () => e.Entity.Address.SiteInfo));
         }
 
         [Fact]
         public void Nested_complex_OriginalValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address.SiteInfo)));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address.SiteInfo)));
         }
 
         [Fact]
         public void Double_nested_scalar_CurrentValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestScalarCurrentValue(e, e.Property(b => b.Address.SiteInfo.Environment),
-                                                            e.CurrentValues.GetValue<DbPropertyValues>("Address").
-                                                                GetValue<DbPropertyValues>("SiteInfo"),
-                                                            () => e.Entity.Address.SiteInfo.Environment, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestScalarCurrentValue(
+                    e, e.Property(b => b.Address.SiteInfo.Environment),
+                    e.CurrentValues.GetValue<DbPropertyValues>("Address").
+                         GetValue<DbPropertyValues>("SiteInfo"),
+                    () => e.Entity.Address.SiteInfo.Environment, "Clean"));
         }
 
         [Fact]
         public void Double_nested_scalar_OriginalValue_on_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Address.SiteInfo.Environment),
-                                                        typeof(SiteInfo),
-                                                        e.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue
-                                                            <DbPropertyValues>("SiteInfo"), "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Address.SiteInfo.Environment),
+                    typeof(SiteInfo),
+                    e.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue
+                    <DbPropertyValues>("SiteInfo"), "Clean"));
         }
 
         [Fact]
@@ -2732,82 +2927,100 @@ namespace ProductivityApiTests
         public void
             IsModified_on_double_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestIsModified(e, e.Property(b => b.Address.SiteInfo.Environment)));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestIsModified(e, e.Property(b => b.Address.SiteInfo.Environment)));
         }
 
         [Fact]
         public void
             CurrentValue_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.Address.County), typeof(Address),
-                                                           () => e.Entity.Address.County, "KING", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.Address.County), typeof(Address),
+                    () => e.Entity.Address.County, "KING", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
         public void OriginalValue_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestOriginalValueNotInModel(e, e.Property(b => b.Address.County)));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestOriginalValueNotInModel(e, e.Property(b => b.Address.County)));
         }
 
         [Fact]
         public void
             IsModified_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e => TestIsModifiedNotInModel(e, e.Property(b => b.Address.County)));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e => TestIsModifiedNotInModel(e, e.Property(b => b.Address.County)));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("Address.WriteOnly"), typeof(Address),
-                                                           () => e.Entity.Address.GetWriteOnlyValue(), "WriteOnly",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("Address.WriteOnly"), typeof(Address),
+                    () => e.Entity.Address.GetWriteOnlyValue(), "WriteOnly",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.Address.FormattedAddress),
-                                                           typeof(Address), () => e.Entity.NoSetter,
-                                                           "1 Microsoft Way, Redmond, WA 98052", hasSetter: false,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.Address.FormattedAddress),
+                    typeof(Address), () => e.Entity.NoSetter,
+                    "1 Microsoft Way, Redmond, WA 98052", hasSetter: false,
+                    hasGetter: true));
         }
 
         [Fact]
         public void Nested_DbPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.Property<int>("Address.BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.Property<int>("Address.BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_an_unchanged_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty("Address.BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty("Address.BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_an_unchanged_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_an_unchanged_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Unchanged,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty(b => b.Address.City)).
-                                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "City", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Unchanged,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty(b => b.Address.City)).
+                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "City", "Address"));
         }
 
         #endregion
@@ -2817,35 +3030,41 @@ namespace ProductivityApiTests
         [Fact]
         public void Scalar_CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestScalarCurrentValue(e, e.Property(b => b.Name), e.CurrentValues, () => e.Entity.Name,
-                                                       "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.Property(b => b.Name), e.CurrentValues, () => e.Entity.Name,
+                    "Building 18"));
         }
 
         [Fact]
         public void Scalar_OriginalValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Name), typeof(Building), e.OriginalValues,
-                                                        "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Name), typeof(Building), e.OriginalValues,
+                    "Building 18"));
         }
 
         [Fact]
         public void Complex_CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
         public void
             Complex_OriginalValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address)));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address)));
         }
 
         [Fact]
@@ -2857,11 +3076,13 @@ namespace ProductivityApiTests
         [Fact]
         public void CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NotInModel), typeof(Building),
-                                                           () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NotInModel), typeof(Building),
+                    () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
@@ -2877,209 +3098,250 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only(
+            )
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("NoGetter"), typeof(Building),
-                                                           () => e.Entity.GetNoGetterValue(), "NotInModel",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("NoGetter"), typeof(Building),
+                    () => e.Entity.GetNoGetterValue(), "NotInModel",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NoSetter), typeof(Building),
-                                                           () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NoSetter), typeof(Building),
+                    () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
+                    hasGetter: true));
         }
 
         [Fact]
         public void DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
-                                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
+                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void DbComplexPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
-                                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
+                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void
             Nested_scalar_CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e => TestScalarCurrentValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City),
-                                                            e.CurrentValues.GetValue<DbPropertyValues>("Address"),
-                                                            () => e.Entity.Address.City, "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e => TestScalarCurrentValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City),
+                    e.CurrentValues.GetValue<DbPropertyValues>("Address"),
+                    () => e.Entity.Address.City, "Redmond"));
         }
 
         [Fact]
         public void
             Nested_scalar_OriginalValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestScalarOriginalValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City),
-                                                        typeof(Address),
-                                                        e.OriginalValues.GetValue<DbPropertyValues>("Address"),
-                                                        "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City),
+                    typeof(Address),
+                    e.OriginalValues.GetValue<DbPropertyValues>("Address"),
+                    "Redmond"));
         }
 
         [Fact]
         public void
             Nested_complex_CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestComplexCurentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
-                                                       () => e.Entity.Address.SiteInfo));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestComplexCurentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
+                    () => e.Entity.Address.SiteInfo));
         }
 
         [Fact]
         public void Nested_complex_OriginalValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestComplexOriginalValue(e,
-                                                         e.ComplexProperty(b => b.Address).ComplexProperty(
-                                                             a => a.SiteInfo)));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestComplexOriginalValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(
+                        a => a.SiteInfo)));
         }
 
         [Fact]
         public void Double_nested_scalar_CurrentValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestScalarCurrentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
-                                                           .Property(s => s.Environment),
-                                                       e.CurrentValues.GetValue<DbPropertyValues>("Address").GetValue
-                                                           <DbPropertyValues>("SiteInfo"),
-                                                       () => e.Entity.Address.SiteInfo.Environment, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestScalarCurrentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
+                    .Property(s => s.Environment),
+                    e.CurrentValues.GetValue<DbPropertyValues>("Address").GetValue
+                    <DbPropertyValues>("SiteInfo"),
+                    () => e.Entity.Address.SiteInfo.Environment, "Clean"));
         }
 
         [Fact]
         public void Double_nested_scalar_OriginalValue_on_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestScalarOriginalValue(e,
-                                                        e.ComplexProperty(b => b.Address).ComplexProperty(
-                                                            a => a.SiteInfo).Property(s => s.Environment),
-                                                        typeof(SiteInfo),
-                                                        e.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue
-                                                            <DbPropertyValues>("SiteInfo"), "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestScalarOriginalValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(
+                        a => a.SiteInfo).Property(s => s.Environment),
+                    typeof(SiteInfo),
+                    e.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue
+                    <DbPropertyValues>("SiteInfo"), "Clean"));
         }
 
         [Fact]
         public void IsModified_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
         }
 
         [Fact]
         public void
             IsModified_on_double_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestIsModified(e,
-                                               e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).
-                                                   Property(s => s.Environment)));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestIsModified(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).
+                    Property(s => s.Environment)));
         }
 
         [Fact]
         public void
             CurrentValue_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(a => a.County),
-                                                           typeof(Address), () => e.Entity.Address.County, "KING",
-                                                           hasSetter: true, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.County),
+                    typeof(Address), () => e.Entity.Address.County, "KING",
+                    hasSetter: true, hasGetter: true));
         }
 
         [Fact]
         public void
             OriginalValue_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
         public void
             IsModified_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.ComplexProperty(b => b.Address).Property("WriteOnly"),
-                                                           typeof(Address), () => e.Entity.Address.GetWriteOnlyValue(),
-                                                           "WriteOnly", hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.ComplexProperty(b => b.Address).Property("WriteOnly"),
+                    typeof(Address), () => e.Entity.Address.GetWriteOnlyValue(),
+                    "WriteOnly", hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                TestCurrentValueNotInModel(e,
-                                                           e.ComplexProperty(b => b.Address).Property(
-                                                               b => b.FormattedAddress), typeof(Address),
-                                                           () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
-                                                           hasSetter: false, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                TestCurrentValueNotInModel(
+                    e,
+                    e.ComplexProperty(b => b.Address).Property(
+                        b => b.FormattedAddress), typeof(Address),
+                    () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
+                    hasSetter: false, hasGetter: true));
         }
 
         [Fact]
         public void Nested_DbPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).Property<object>("BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).Property<object>("BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_a_modified_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_a_modified_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_a_modified_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Modified,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
-                                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Modified,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
+                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
         }
 
         #endregion
@@ -3089,27 +3351,32 @@ namespace ProductivityApiTests
         [Fact]
         public void Scalar_CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestScalarCurrentValue(e, e.Property(b => b.Name), null, () => e.Entity.Name,
-                                                       "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.Property(b => b.Name), null, () => e.Entity.Name,
+                    "Building 18"));
         }
 
         [Fact]
         public void Scalar_OriginalValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Name), typeof(Building), e.OriginalValues,
-                                                        "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Name), typeof(Building), e.OriginalValues,
+                    "Building 18"));
         }
 
         [Fact]
         public void Complex_CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
@@ -3128,11 +3395,13 @@ namespace ProductivityApiTests
         [Fact]
         public void CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NotInModel), typeof(Building),
-                                                           () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NotInModel), typeof(Building),
+                    () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
@@ -3152,11 +3421,13 @@ namespace ProductivityApiTests
             CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("NoGetter"), typeof(Building),
-                                                           () => e.Entity.GetNoGetterValue(), "NotInModel",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("NoGetter"), typeof(Building),
+                    () => e.Entity.GetNoGetterValue(), "NotInModel",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
@@ -3164,11 +3435,13 @@ namespace ProductivityApiTests
             CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NoSetter), typeof(Building),
-                                                           () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NoSetter), typeof(Building),
+                    () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
+                    hasGetter: true));
         }
 
         [Fact]
@@ -3176,10 +3449,11 @@ namespace ProductivityApiTests
             DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
-                                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
+                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
         }
 
         [Fact]
@@ -3187,54 +3461,63 @@ namespace ProductivityApiTests
             DbComplexPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
-                                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
+                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void
             Nested_scalar_CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestScalarCurrentValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City), null,
-                                                       () => e.Entity.Address.City, "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City), null,
+                    () => e.Entity.Address.City, "Redmond"));
         }
 
         [Fact]
         public void
             Nested_scalar_OriginalValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestScalarOriginalValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City),
-                                                        typeof(Address),
-                                                        e.OriginalValues.GetValue<DbPropertyValues>("Address"),
-                                                        "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City),
+                    typeof(Address),
+                    e.OriginalValues.GetValue<DbPropertyValues>("Address"),
+                    "Redmond"));
         }
 
         [Fact]
         public void
             Nested_complex_CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestComplexCurentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
-                                                       () => e.Entity.Address.SiteInfo));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestComplexCurentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
+                    () => e.Entity.Address.SiteInfo));
         }
 
         [Fact]
         public void
             Nested_complex_OriginalValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestComplexOriginalValue(e,
-                                                         e.ComplexProperty(b => b.Address).ComplexProperty(
-                                                             a => a.SiteInfo)));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestComplexOriginalValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(
+                        a => a.SiteInfo)));
         }
 
         [Fact]
@@ -3242,12 +3525,14 @@ namespace ProductivityApiTests
             Double_nested_scalar_CurrentValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestScalarCurrentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
-                                                           .Property(s => s.Environment), null,
-                                                       () => e.Entity.Address.SiteInfo.Environment, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestScalarCurrentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
+                    .Property(s => s.Environment), null,
+                    () => e.Entity.Address.SiteInfo.Environment, "Clean"));
         }
 
         [Fact]
@@ -3255,61 +3540,70 @@ namespace ProductivityApiTests
             Double_nested_scalar_OriginalValue_on_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestScalarOriginalValue(e,
-                                                        e.ComplexProperty(b => b.Address).ComplexProperty(
-                                                            a => a.SiteInfo).Property(s => s.Environment),
-                                                        typeof(SiteInfo),
-                                                        e.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue
-                                                            <DbPropertyValues>("SiteInfo"), "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestScalarOriginalValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(
+                        a => a.SiteInfo).Property(s => s.Environment),
+                    typeof(SiteInfo),
+                    e.OriginalValues.GetValue<DbPropertyValues>("Address").GetValue
+                    <DbPropertyValues>("SiteInfo"), "Clean"));
         }
 
         [Fact]
         public void IsModified_on_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
         }
 
         [Fact]
         public void
             IsModified_on_double_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestIsModified(e,
-                                               e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).
-                                                   Property(s => s.Environment)));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestIsModified(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).
+                    Property(s => s.Environment)));
         }
 
         [Fact]
         public void
             CurrentValue_on_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(a => a.County),
-                                                           typeof(Address), () => e.Entity.Address.County, "KING",
-                                                           hasSetter: true, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.County),
+                    typeof(Address), () => e.Entity.Address.County, "KING",
+                    hasSetter: true, hasGetter: true));
         }
 
         [Fact]
         public void
             OriginalValue_on_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
         public void
             IsModified_on_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
@@ -3317,11 +3611,13 @@ namespace ProductivityApiTests
             CurrentValue_on_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.ComplexProperty(b => b.Address).Property("WriteOnly"),
-                                                           typeof(Address), () => e.Entity.Address.GetWriteOnlyValue(),
-                                                           "WriteOnly", hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.ComplexProperty(b => b.Address).Property("WriteOnly"),
+                    typeof(Address), () => e.Entity.Address.GetWriteOnlyValue(),
+                    "WriteOnly", hasSetter: true, hasGetter: false));
         }
 
         [Fact]
@@ -3329,13 +3625,15 @@ namespace ProductivityApiTests
             CurrentValue_on_nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                TestCurrentValueNotInModel(e,
-                                                           e.ComplexProperty(b => b.Address).Property(
-                                                               b => b.FormattedAddress), typeof(Address),
-                                                           () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
-                                                           hasSetter: false, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                TestCurrentValueNotInModel(
+                    e,
+                    e.ComplexProperty(b => b.Address).Property(
+                        b => b.FormattedAddress), typeof(Address),
+                    () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
+                    hasSetter: false, hasGetter: true));
         }
 
         [Fact]
@@ -3343,11 +3641,12 @@ namespace ProductivityApiTests
             Nested_DbPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).Property("BadProperty")).ValidateMessage(
-                                        "DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).Property("BadProperty")).ValidateMessage(
+                        "DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
         }
 
         [Fact]
@@ -3355,11 +3654,12 @@ namespace ProductivityApiTests
             Nested_DbComplexPropertyEntry_from_a_deleted_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
         }
 
         [Fact]
@@ -3367,11 +3667,12 @@ namespace ProductivityApiTests
             Nested_DbComplexPropertyEntry_from_a_deleted_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used
             ()
         {
-            DbPropertyEntryTest(EntityState.Deleted,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
-                                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Deleted,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
+                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
         }
 
         #endregion
@@ -3381,35 +3682,41 @@ namespace ProductivityApiTests
         [Fact]
         public void Scalar_CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestScalarCurrentValue(e, e.Property(b => b.Name), null, () => e.Entity.Name,
-                                                       "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.Property(b => b.Name), null, () => e.Entity.Name,
+                    "Building 18"));
         }
 
         [Fact]
         public void Scalar_OriginalValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestScalarOriginalValue(e, e.Property(b => b.Name), typeof(Building), null,
-                                                        "Building 18"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.Property(b => b.Name), typeof(Building), null,
+                    "Building 18"));
         }
 
         [Fact]
         public void Complex_CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestComplexCurentValue(e, e.ComplexProperty(b => b.Address), () => e.Entity.Address));
         }
 
         [Fact]
         public void
             Complex_OriginalValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address)));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e => TestComplexOriginalValue(e, e.ComplexProperty(b => b.Address)));
         }
 
         [Fact]
@@ -3421,11 +3728,13 @@ namespace ProductivityApiTests
         [Fact]
         public void CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NotInModel), typeof(Building),
-                                                           () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NotInModel), typeof(Building),
+                    () => e.Entity.NotInModel, "NotInModel", hasSetter: true,
+                    hasGetter: true));
         }
 
         [Fact]
@@ -3441,203 +3750,244 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only(
+            )
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property("NoGetter"), typeof(Building),
-                                                           () => e.Entity.GetNoGetterValue(), "NotInModel",
-                                                           hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property("NoGetter"), typeof(Building),
+                    () => e.Entity.GetNoGetterValue(), "NotInModel",
+                    hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.Property(b => b.NoSetter), typeof(Building),
-                                                           () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
-                                                           hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.Property(b => b.NoSetter), typeof(Building),
+                    () => e.Entity.NoSetter, "NoSetter", hasSetter: false,
+                    hasGetter: true));
         }
 
         [Fact]
         public void DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
-                                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.Property("BadProperty")).ValidateMessage(
+                    "DbEntityEntry_NotAScalarProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void DbComplexPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
-                                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                Assert.Throws<ArgumentException>(() => e.ComplexProperty("BadProperty")).ValidateMessage
+                    ("DbEntityEntry_NotAComplexProperty", "BadProperty", "Building"));
         }
 
         [Fact]
         public void
             Nested_scalar_CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestScalarCurrentValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City), null,
-                                                       () => e.Entity.Address.City, "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestScalarCurrentValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City), null,
+                    () => e.Entity.Address.City, "Redmond"));
         }
 
         [Fact]
         public void
             Nested_scalar_OriginalValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestScalarOriginalValue(e, e.ComplexProperty(b => b.Address).Property(a => a.City),
-                                                        typeof(Address), null, "Redmond"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestScalarOriginalValue(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.City),
+                    typeof(Address), null, "Redmond"));
         }
 
         [Fact]
         public void
             Nested_complex_CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestComplexCurentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
-                                                       () => e.Entity.Address.SiteInfo));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestComplexCurentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo),
+                    () => e.Entity.Address.SiteInfo));
         }
 
         [Fact]
         public void Nested_complex_OriginalValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestComplexOriginalValue(e,
-                                                         e.ComplexProperty(b => b.Address).ComplexProperty(
-                                                             a => a.SiteInfo)));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestComplexOriginalValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(
+                        a => a.SiteInfo)));
         }
 
         [Fact]
         public void Double_nested_scalar_CurrentValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestScalarCurrentValue(e,
-                                                       e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
-                                                           .Property(s => s.Environment), null,
-                                                       () => e.Entity.Address.SiteInfo.Environment, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestScalarCurrentValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo)
+                    .Property(s => s.Environment), null,
+                    () => e.Entity.Address.SiteInfo.Environment, "Clean"));
         }
 
         [Fact]
         public void Double_nested_scalar_OriginalValue_on_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestScalarOriginalValue(e,
-                                                        e.ComplexProperty(b => b.Address).ComplexProperty(
-                                                            a => a.SiteInfo).Property(s => s.Environment),
-                                                        typeof(SiteInfo), null, "Clean"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestScalarOriginalValue(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(
+                        a => a.SiteInfo).Property(s => s.Environment),
+                    typeof(SiteInfo), null, "Clean"));
         }
 
         [Fact]
         public void IsModified_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e => TestIsModified(e, e.ComplexProperty(b => b.Address).Property(a => a.City)));
         }
 
         [Fact]
         public void
             IsModified_on_double_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestIsModified(e,
-                                               e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).
-                                                   Property(s => s.Environment)));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestIsModified(
+                    e,
+                    e.ComplexProperty(b => b.Address).ComplexProperty(a => a.SiteInfo).
+                    Property(s => s.Environment)));
         }
 
         [Fact]
         public void
             CurrentValue_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_can_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(a => a.County),
-                                                           typeof(Address), () => e.Entity.Address.County, "KING",
-                                                           hasSetter: true, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.ComplexProperty(b => b.Address).Property(a => a.County),
+                    typeof(Address), () => e.Entity.Address.County, "KING",
+                    hasSetter: true, hasGetter: true));
         }
 
         [Fact]
         public void
             OriginalValue_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestOriginalValueNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
         public void
             IsModified_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_cannot_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestIsModifiedNotInModel(e, e.ComplexProperty(b => b.Address).Property(b => b.County)));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_getter_can_be_used_to_write_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestCurrentValueNotInModel(e, e.ComplexProperty(b => b.Address).Property("WriteOnly"),
-                                                           typeof(Address), () => e.Entity.Address.GetWriteOnlyValue(),
-                                                           "WriteOnly", hasSetter: true, hasGetter: false));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestCurrentValueNotInModel(
+                    e, e.ComplexProperty(b => b.Address).Property("WriteOnly"),
+                    typeof(Address), () => e.Entity.Address.GetWriteOnlyValue(),
+                    "WriteOnly", hasSetter: true, hasGetter: false));
         }
 
         [Fact]
-        public void CurrentValue_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only()
+        public void
+            CurrentValue_on_nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_without_a_setter_can_be_used_to_read_only
+            ()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                TestCurrentValueNotInModel(e,
-                                                           e.ComplexProperty(b => b.Address).Property(
-                                                               b => b.FormattedAddress), typeof(Address),
-                                                           () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
-                                                           hasSetter: false, hasGetter: true));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                TestCurrentValueNotInModel(
+                    e,
+                    e.ComplexProperty(b => b.Address).Property(
+                        b => b.FormattedAddress), typeof(Address),
+                    () => e.Entity.NoSetter, "1 Microsoft Way, Redmond, WA 98052",
+                    hasSetter: false, hasGetter: true));
         }
 
         [Fact]
         public void Nested_DbPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).Property("BadProperty")).ValidateMessage(
-                                        "DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).Property("BadProperty")).ValidateMessage(
+                        "DbEntityEntry_NotAScalarProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_a_detached_entity_for_a_property_not_in_the_EDM_and_not_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
-                                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("BadProperty")).
+                    ValidateMessage("DbEntityEntry_NotAComplexProperty", "BadProperty", "Address"));
         }
 
         [Fact]
-        public void Nested_DbComplexPropertyEntry_from_a_detached_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
+        public void
+            Nested_DbComplexPropertyEntry_from_a_detached_entity_for_a_scalar_property_in_the_EDM_and_in_the_CLR_class_can_not_be_used()
         {
-            DbPropertyEntryTest(EntityState.Detached,
-                                e =>
-                                Assert.Throws<ArgumentException>(
-                                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
-                                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
+            DbPropertyEntryTest(
+                EntityState.Detached,
+                e =>
+                Assert.Throws<ArgumentException>(
+                    () => e.ComplexProperty(b => b.Address).ComplexProperty("City")).ValidateMessage(
+                        "DbEntityEntry_NotAComplexProperty", "City", "Address"));
         }
 
         #endregion
@@ -3822,7 +4172,8 @@ namespace ProductivityApiTests
                 var value = refEntry.CurrentValue;
                 Assert.Same(chassisEntry.Entity.Team, value);
 
-                if (state == EntityState.Unchanged || state == EntityState.Modified)
+                if (state == EntityState.Unchanged
+                    || state == EntityState.Modified)
                 {
                     // Changing the reference to the principal will cause EF to throw a referential integrity exception
                     // because it would need a change in the PK of the dependent.
@@ -3902,11 +4253,15 @@ namespace ProductivityApiTests
                 var value = refEntry.CurrentValue;
                 Assert.Same(teamEntry.Entity.Gearbox, value);
 
-                value = new Gearbox { Id = -7 };
+                value = new Gearbox
+                            {
+                                Id = -7
+                            };
                 refEntry.CurrentValue = value;
                 Assert.Same(teamEntry.Entity.Gearbox, value);
 
-                if (state != EntityState.Detached && state != EntityState.Deleted)
+                if (state != EntityState.Detached
+                    && state != EntityState.Deleted)
                 {
                     // FK is fixed up without a call to DetectChanges
                     Assert.Equal(teamEntry.Entity.GearboxId, value.Id);
@@ -3962,7 +4317,6 @@ namespace ProductivityApiTests
             }
         }
 
-
         [Fact]
         public void DbContext_switches_UseConsistentNullReferenceBehavior_on_by_default()
         {
@@ -3986,7 +4340,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Setting_current_value_of_reference_nav_prop_to_null_does_nothing_for_an_FK_relationship_if_the_relationship_is_not_loaded_and_legacy_behavior_is_set_on_ObjectContext()
+        public void
+            Setting_current_value_of_reference_nav_prop_to_null_does_nothing_for_an_FK_relationship_if_the_relationship_is_not_loaded_and_legacy_behavior_is_set_on_ObjectContext
+            ()
         {
             using (var context = new SimpleModelContext())
             {
@@ -4019,7 +4375,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Setting_current_value_of_reference_nav_prop_to_null_for_an_independent_association_clears_the_relationship_even_if_it_is_not_loaded()
+        public void
+            Setting_current_value_of_reference_nav_prop_to_null_for_an_independent_association_clears_the_relationship_even_if_it_is_not_loaded
+            ()
         {
             using (var context = new F1Context())
             {
@@ -4027,20 +4385,22 @@ namespace ProductivityApiTests
 
                 var team = context.Teams.Find(Team.McLaren);
                 Assert.Null(team.Engine);
-                Assert.Equal(0, ((IObjectContextAdapter)context).ObjectContext
-                                    .ObjectStateManager
-                                    .GetObjectStateEntries(EntityState.Deleted)
-                                    .Where(e => e.IsRelationship)
-                                    .Count());
+                Assert.Equal(
+                    0, ((IObjectContextAdapter)context).ObjectContext
+                        .ObjectStateManager
+                        .GetObjectStateEntries(EntityState.Deleted)
+                        .Where(e => e.IsRelationship)
+                        .Count());
 
                 context.Entry(team).Reference(p => p.Engine).CurrentValue = null;
 
                 Assert.Null(team.Engine);
-                Assert.Equal(1, ((IObjectContextAdapter)context).ObjectContext
-                                    .ObjectStateManager
-                                    .GetObjectStateEntries(EntityState.Deleted)
-                                    .Where(e => e.IsRelationship)
-                                    .Count());
+                Assert.Equal(
+                    1, ((IObjectContextAdapter)context).ObjectContext
+                        .ObjectStateManager
+                        .GetObjectStateEntries(EntityState.Deleted)
+                        .Where(e => e.IsRelationship)
+                        .Count());
             }
         }
 
@@ -4212,7 +4572,15 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var team = new Team
-                           { Id = -1, Name = "Wubbsy Racing", Chassis = new Chassis { TeamId = -1, Name = "Wubbsy" } };
+                               {
+                                   Id = -1,
+                                   Name = "Wubbsy Racing",
+                                   Chassis = new Chassis
+                                                 {
+                                                     TeamId = -1,
+                                                     Name = "Wubbsy"
+                                                 }
+                               };
                 var entry = context.Entry(team).Reference(t => t.Chassis);
 
                 context.Teams.Attach(team);
@@ -4248,7 +4616,15 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var team = new Team
-                           { Id = -1, Name = "Wubbsy Racing", Chassis = new Chassis { TeamId = -1, Name = "Wubbsy" } };
+                               {
+                                   Id = -1,
+                                   Name = "Wubbsy Racing",
+                                   Chassis = new Chassis
+                                                 {
+                                                     TeamId = -1,
+                                                     Name = "Wubbsy"
+                                                 }
+                               };
                 var entry = context.Entry(team).Collection(t => t.Drivers);
 
                 context.Teams.Attach(team);
@@ -4285,7 +4661,15 @@ namespace ProductivityApiTests
             using (var context = new F1Context())
             {
                 var team = new Team
-                           { Id = -1, Name = "Wubbsy Racing", Chassis = new Chassis { TeamId = -1, Name = "Wubbsy" } };
+                               {
+                                   Id = -1,
+                                   Name = "Wubbsy Racing",
+                                   Chassis = new Chassis
+                                                 {
+                                                     TeamId = -1,
+                                                     Name = "Wubbsy"
+                                                 }
+                               };
                 var entry = context.Entry(team).Property(t => t.Name);
 
                 context.Teams.Attach(team);
@@ -4391,7 +4775,7 @@ namespace ProductivityApiTests
 
                 // Note that DbMemberEntry type if in terms of ICollection<Element> while DbCollectionEntry
                 // type is in terms of Element only.
-                DbMemberEntry<Team, ICollection<Driver>> propEntry = entityEntry.Member<ICollection<Driver>>("Drivers");
+                var propEntry = entityEntry.Member<ICollection<Driver>>("Drivers");
 
                 Assert.IsType<DbCollectionEntry<Team, Driver>>(propEntry);
                 Assert.Same(entityEntry.Entity.Drivers, propEntry.CurrentValue);
@@ -4438,8 +4822,9 @@ namespace ProductivityApiTests
                 // MailRooms is typed as IList<MailRoom> so at first glance it looks like this should work
                 // but it doesn't because the returned type must use ICollection.
                 Assert.Throws<ArgumentException>(() => entityEntry.Member<IList<MailRoom>>("MailRooms")).ValidateMessage
-                    ("DbEntityEntry_WrongGenericForCollectionNavProp", typeof(IList<MailRoom>).ToString(), "MailRooms",
-                     typeof(Building).ToString(), typeof(ICollection<MailRoom>).ToString());
+                    (
+                        "DbEntityEntry_WrongGenericForCollectionNavProp", typeof(IList<MailRoom>).ToString(), "MailRooms",
+                        typeof(Building).ToString(), typeof(ICollection<MailRoom>).ToString());
             }
         }
 
