@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
 
     /// <summary>
-    /// Models a Linq to Entities ObjectQuery
+    ///     Models a Linq to Entities ObjectQuery
     /// </summary>
     internal class ELinqQueryState : ObjectQueryState
     {
@@ -31,12 +32,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         #region Constructors
 
         /// <summary>
-        /// Constructs a new <see cref="ELinqQueryState"/> instance based on the specified Linq Expression
-        /// against the specified ObjectContext.
+        ///     Constructs a new <see cref="ELinqQueryState" /> instance based on the specified Linq Expression
+        ///     against the specified ObjectContext.
         /// </summary>
-        /// <param name="elementType">The element type of the implemented ObjectQuery, as a CLR type.</param>
-        /// <param name="context">The ObjectContext with which the implemented ObjectQuery is associated.</param>
-        /// <param name="expression">The Linq Expression that defines this query.</param>
+        /// <param name="elementType"> The element type of the implemented ObjectQuery, as a CLR type. </param>
+        /// <param name="context"> The ObjectContext with which the implemented ObjectQuery is associated. </param>
+        /// <param name="expression"> The Linq Expression that defines this query. </param>
         internal ELinqQueryState(
             Type elementType, ObjectContext context, Expression expression,
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
@@ -56,12 +57,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Constructs a new <see cref="ELinqQueryState"/> instance based on the specified Linq Expression,
-        /// copying the state information from the specified ObjectQuery.
+        ///     Constructs a new <see cref="ELinqQueryState" /> instance based on the specified Linq Expression,
+        ///     copying the state information from the specified ObjectQuery.
         /// </summary>
-        /// <param name="elementType">The element type of the implemented ObjectQuery, as a CLR type.</param>
-        /// <param name="query">The ObjectQuery from which the state information should be copied.</param>
-        /// <param name="expression">The Linq Expression that defines this query.</param>
+        /// <param name="elementType"> The element type of the implemented ObjectQuery, as a CLR type. </param>
+        /// <param name="query"> The ObjectQuery from which the state information should be copied. </param>
+        /// <param name="expression"> The Linq Expression that defines this query. </param>
         internal ELinqQueryState(
             Type elementType, ObjectQuery query, Expression expression,
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
@@ -229,14 +230,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Returns a new ObjectQueryState instance with the specified navigation property path specified as an Include span.
-        /// For eLINQ queries the Include operation is modelled as a method call expression applied to the source ObectQuery,
-        /// so the <see cref="Span"/> property is always <c>null</c> on the returned instance.
+        ///     Returns a new ObjectQueryState instance with the specified navigation property path specified as an Include span.
+        ///     For eLINQ queries the Include operation is modelled as a method call expression applied to the source ObectQuery,
+        ///     so the <see cref="Span" /> property is always <c>null</c> on the returned instance.
         /// </summary>
-        /// <typeparam name="TElementType">The element type of the resulting query</typeparam>
-        /// <param name="sourceQuery">The ObjectQuery on which Include was called; required to build the new method call expression</param>
-        /// <param name="includePath">The new Include path</param>
-        /// <returns>A new ObjectQueryState instance that incorporates the Include path, in this case a new method call expression</returns>
+        /// <typeparam name="TElementType"> The element type of the resulting query </typeparam>
+        /// <param name="sourceQuery"> The ObjectQuery on which Include was called; required to build the new method call expression </param>
+        /// <param name="includePath"> The new Include path </param>
+        /// <returns> A new ObjectQueryState instance that incorporates the Include path, in this case a new method call expression </returns>
         internal override ObjectQueryState Include<TElementType>(ObjectQuery<TElementType> sourceQuery, string includePath)
         {
             var includeMethod = sourceQuery.GetType().GetMethod("Include", BindingFlags.Public | BindingFlags.Instance);
@@ -250,10 +251,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// eLINQ queries do not have command text. This method always returns <c>false</c>.
+        ///     eLINQ queries do not have command text. This method always returns <c>false</c>.
         /// </summary>
-        /// <param name="commandText">Always set to <c>null</c></param>
-        /// <returns>Always returns <c>false</c></returns>
+        /// <param name="commandText"> Always set to <c>null</c> </param>
+        /// <returns> Always returns <c>false</c> </returns>
         internal override bool TryGetCommandText(out string commandText)
         {
             commandText = null;
@@ -261,12 +262,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Gets the LINQ Expression that defines this query for external (of ObjectQueryState) use.
-        /// Note that the <see cref="Expression"/> property is used, which is overridden by compiled eLINQ
-        /// queries to produce an Expression tree where parameter references have been replaced with constants.
+        ///     Gets the LINQ Expression that defines this query for external (of ObjectQueryState) use.
+        ///     Note that the <see cref="Expression" /> property is used, which is overridden by compiled eLINQ
+        ///     queries to produce an Expression tree where parameter references have been replaced with constants.
         /// </summary>
-        /// <param name="expression">The LINQ expression that describes this query</param>
-        /// <returns>Always returns <c>true</c></returns>
+        /// <param name="expression"> The LINQ expression that describes this query </param>
+        /// <returns> Always returns <c>true</c> </returns>
         internal override bool TryGetExpression(out Expression expression)
         {
             expression = Expression;

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an AssociationSet element.
+    ///     Represents an AssociationSet element.
     /// </summary>
     internal sealed class EntityContainerAssociationSet : EntityContainerRelationshipSet
     {
@@ -21,16 +22,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private readonly List<EntityContainerAssociationSetEnd> _rolelessEnds = new List<EntityContainerAssociationSetEnd>();
 
         /// <summary>
-        /// Constructs an EntityContainerAssociationSet
+        ///     Constructs an EntityContainerAssociationSet
         /// </summary>
-        /// <param name="parentElement">Reference to the schema element.</param>
+        /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerAssociationSet(EntityContainer parentElement)
             : base(parentElement)
         {
         }
 
         /// <summary>
-        /// The ends defined and infered for this AssociationSet
+        ///     The ends defined and infered for this AssociationSet
         /// </summary>
         internal override IEnumerable<EntityContainerRelationshipSetEnd> Ends
         {
@@ -78,9 +79,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The method that is called when an End element is encountered.
+        ///     The method that is called when an End element is encountered.
         /// </summary>
-        /// <param name="reader">The XmlReader positioned at the EndElement.</param>
+        /// <param name="reader"> The XmlReader positioned at the EndElement. </param>
         private void HandleEndElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -146,10 +147,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Create and add a EntityContainerEnd from the IRelationshipEnd provided
+        ///     Create and add a EntityContainerEnd from the IRelationshipEnd provided
         /// </summary>
-        /// <param name="relationshipEnd">The relationship end of the end to add.</param>
-        /// <param name="entitySet">The entitySet to associate with the relationship end.</param>
+        /// <param name="relationshipEnd"> The relationship end of the end to add. </param>
+        /// <param name="entitySet"> The entitySet to associate with the relationship end. </param>
         protected override void AddEnd(IRelationshipEnd relationshipEnd, EntityContainerEntitySet entitySet)
         {
             Debug.Assert(relationshipEnd != null);

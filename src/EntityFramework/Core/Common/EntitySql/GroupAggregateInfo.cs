@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Linq;
 
     /// <summary>
-    /// Represents group aggregate information during aggregate construction/resolution.
+    ///     Represents group aggregate information during aggregate construction/resolution.
     /// </summary>
     internal abstract class GroupAggregateInfo
     {
@@ -53,8 +54,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Updates referenced scope index of the aggregate.
-        /// Function call is not allowed after <see cref="ValidateAndComputeEvaluatingScopeRegion"/> has been called.
+        ///     Updates referenced scope index of the aggregate.
+        ///     Function call is not allowed after <see cref="ValidateAndComputeEvaluatingScopeRegion" /> has been called.
         /// </summary>
         internal void UpdateScopeIndex(int referencedScopeIndex, SemanticResolver sr)
         {
@@ -72,10 +73,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Gets/sets the innermost referenced scope region of the current aggregate.
-        /// This property is used to save/restore the scope region value during a potentially throw-away attempt to
-        /// convert an <see cref="AST.MethodExpr"/> as a collection function in the <see cref="SemanticAnalyzer.ConvertAggregateFunctionInGroupScope"/> method.
-        /// Setting the value is not allowed after <see cref="ValidateAndComputeEvaluatingScopeRegion"/> has been called.
+        ///     Gets/sets the innermost referenced scope region of the current aggregate.
+        ///     This property is used to save/restore the scope region value during a potentially throw-away attempt to
+        ///     convert an <see cref="AST.MethodExpr" /> as a collection function in the <see
+        ///      cref="SemanticAnalyzer.ConvertAggregateFunctionInGroupScope" /> method.
+        ///     Setting the value is not allowed after <see cref="ValidateAndComputeEvaluatingScopeRegion" /> has been called.
         /// </summary>
         internal ScopeRegion InnermostReferencedScopeRegion
         {
@@ -92,8 +94,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private ScopeRegion _innermostReferencedScopeRegion;
 
         /// <summary>
-        /// Validates the aggregate info and computes <see cref="EvaluatingScopeRegion"/> property.
-        /// Seals the aggregate info object (no more AddContainedAggregate(...), RemoveContainedAggregate(...) and UpdateScopeIndex(...) calls allowed).
+        ///     Validates the aggregate info and computes <see cref="EvaluatingScopeRegion" /> property.
+        ///     Seals the aggregate info object (no more AddContainedAggregate(...), RemoveContainedAggregate(...) and UpdateScopeIndex(...) calls allowed).
         /// </summary>
         internal void ValidateAndComputeEvaluatingScopeRegion(SemanticResolver sr)
         {
@@ -168,9 +170,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Recursively validates that <see cref="GroupAggregateInfo.EvaluatingScopeRegion"/> of all contained aggregates 
-        /// is outside of the range of scope regions defined by <paramref name="outerBoundaryScopeRegionIndex"/> and <paramref name="innerBoundaryScopeRegionIndex"/>.
-        /// Throws in the case of violation.
+        ///     Recursively validates that <see cref="GroupAggregateInfo.EvaluatingScopeRegion" /> of all contained aggregates 
+        ///     is outside of the range of scope regions defined by <paramref name="outerBoundaryScopeRegionIndex" /> and <paramref
+        ///      name="innerBoundaryScopeRegionIndex" />.
+        ///     Throws in the case of violation.
         /// </summary>
         private void ValidateContainedAggregates(int outerBoundaryScopeRegionIndex, int innerBoundaryScopeRegionIndex)
         {
@@ -277,8 +280,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Function call is not allowed after <see cref="ValidateAndComputeEvaluatingScopeRegion"/> has been called.
-        /// Adding new contained aggregate may invalidate the current aggregate.
+        ///     Function call is not allowed after <see cref="ValidateAndComputeEvaluatingScopeRegion" /> has been called.
+        ///     Adding new contained aggregate may invalidate the current aggregate.
         /// </summary>
         private void AddContainedAggregate(GroupAggregateInfo containedAggregate)
         {
@@ -295,24 +298,24 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private List<GroupAggregateInfo> _containedAggregates;
 
         /// <summary>
-        /// Function call is _allowed_ after <see cref="ValidateAndComputeEvaluatingScopeRegion"/> has been called.
-        /// Removing contained aggregates cannot invalidate the current aggregate.
+        ///     Function call is _allowed_ after <see cref="ValidateAndComputeEvaluatingScopeRegion" /> has been called.
+        ///     Removing contained aggregates cannot invalidate the current aggregate.
         /// 
-        /// Consider the following query:
+        ///     Consider the following query:
         /// 
-        ///   select value max(a + anyelement(select value max(b + max(a + anyelement(select value c1 
-        ///                                                                           from {2} as c group by c as c1))) 
-        ///                                   from {1} as b group by b as b1)) 
-        ///   from {0} as a group by a as a1
+        ///     select value max(a + anyelement(select value max(b + max(a + anyelement(select value c1 
+        ///     from {2} as c group by c as c1))) 
+        ///     from {1} as b group by b as b1)) 
+        ///     from {0} as a group by a as a1
         ///   
-        /// Outer aggregate - max1, middle aggregate - max2, inner aggregate - max3.
-        /// In this query after max1 have been processed as a collection function, max2 and max3 are wired as containing/contained.
-        /// There is a point later when max1 is processed as an aggregate, max2 is processed as a collection function and max3 is processed as
-        /// an aggregate. Note that at this point the "aggregate" version of max2 is dropped and detached from the AST node when the middle scope region 
-        /// completes processing; also note that because evaluating scope region of max3 is the outer scope region, max3 aggregate info is still attached to 
-        /// the AST node and it is still wired to the dropped aggregate info object of max2. At this point max3 does not see new max2 as a containing aggregate, 
-        /// and it rewires to max1, during this rewiring it needs to to remove itself from the old max2 and add itself to max1.
-        /// The old max2 at this point is sealed, so the removal is performed on the sealed object.
+        ///     Outer aggregate - max1, middle aggregate - max2, inner aggregate - max3.
+        ///     In this query after max1 have been processed as a collection function, max2 and max3 are wired as containing/contained.
+        ///     There is a point later when max1 is processed as an aggregate, max2 is processed as a collection function and max3 is processed as
+        ///     an aggregate. Note that at this point the "aggregate" version of max2 is dropped and detached from the AST node when the middle scope region 
+        ///     completes processing; also note that because evaluating scope region of max3 is the outer scope region, max3 aggregate info is still attached to 
+        ///     the AST node and it is still wired to the dropped aggregate info object of max2. At this point max3 does not see new max2 as a containing aggregate, 
+        ///     and it rewires to max1, during this rewiring it needs to to remove itself from the old max2 and add itself to max1.
+        ///     The old max2 at this point is sealed, so the removal is performed on the sealed object.
         /// </summary>
         private void RemoveContainedAggregate(GroupAggregateInfo containedAggregate)
         {
@@ -326,19 +329,19 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal readonly GroupAggregateKind AggregateKind;
 
         /// <summary>
-        /// Null when <see cref="GroupAggregateInfo"/> is created for a group key processing.
+        ///     Null when <see cref="GroupAggregateInfo" /> is created for a group key processing.
         /// </summary>
         internal readonly GroupAggregateExpr AstNode;
 
         internal readonly ErrorContext ErrCtx;
 
         /// <summary>
-        /// Scope region that contains the aggregate expression.
+        ///     Scope region that contains the aggregate expression.
         /// </summary>
         internal readonly ScopeRegion DefiningScopeRegion;
 
         /// <summary>
-        /// Scope region that evaluates the aggregate expression.
+        ///     Scope region that evaluates the aggregate expression.
         /// </summary>
         internal ScopeRegion EvaluatingScopeRegion
         {
@@ -355,8 +358,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private ScopeRegion _evaluatingScopeRegion;
 
         /// <summary>
-        /// Parent aggregate expression that contains the current aggregate expression.
-        /// May be null.
+        ///     Parent aggregate expression that contains the current aggregate expression.
+        ///     May be null.
         /// </summary>
         internal GroupAggregateInfo ContainingAggregate
         {

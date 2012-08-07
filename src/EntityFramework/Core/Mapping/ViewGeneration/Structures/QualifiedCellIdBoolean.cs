@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -7,15 +8,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    /// A class that denotes "block_alias.booleanVar", e.g., "T1._from2".
-    /// It is a subclass of <see cref="CellIdBoolean"/> with an added block alias.
+    ///     A class that denotes "block_alias.booleanVar", e.g., "T1._from2".
+    ///     It is a subclass of <see cref="CellIdBoolean" /> with an added block alias.
     /// </summary>
     internal sealed class QualifiedCellIdBoolean : CellIdBoolean
     {
         #region Constructor
 
         /// <summary>
-        /// Creates a boolean of the form "<paramref name="block"/>.<paramref name="originalCellNum"/>".
+        ///     Creates a boolean of the form "<paramref name="block" />.<paramref name="originalCellNum" />".
         /// </summary>
         internal QualifiedCellIdBoolean(CqlBlock block, CqlIdentifiers identifiers, int originalCellNum)
             : base(identifiers, originalCellNum)

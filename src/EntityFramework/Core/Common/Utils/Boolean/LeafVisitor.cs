@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
@@ -6,9 +7,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Linq;
 
     /// <summary>
-    /// A Visitor class that returns all the leaves in a boolean expression
+    ///     A Visitor class that returns all the leaves in a boolean expression
     /// </summary>
-    /// <typeparam name="T_Identifier">Type of leaf term identifiers in expression.</typeparam>
+    /// <typeparam name="T_Identifier"> Type of leaf term identifiers in expression. </typeparam>
     internal class LeafVisitor<T_Identifier> : Visitor<T_Identifier, bool>
     {
         private readonly List<TermExpr<T_Identifier>> _terms;

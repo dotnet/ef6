@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using NodeColor = System.Byte;
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
 
     /// <summary>
-    /// Manages interactions between keys in the update pipeline (e.g. via referential constraints)
+    ///     Manages interactions between keys in the update pipeline (e.g. via referential constraints)
     /// </summary>
     internal class KeyManager
     {
@@ -24,9 +25,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly Dictionary<EntityKey, int> _keyIdentifiers = new Dictionary<EntityKey, int>();
 
         private readonly List<IdentifierInfo> _identifiers = new List<IdentifierInfo>
-            {
-                new IdentifierInfo()
-            };
+                                                                 {
+                                                                     new IdentifierInfo()
+                                                                 };
 
         private const NodeColor White = 0;
         private const NodeColor Black = 1;
@@ -37,8 +38,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Methods
 
         /// <summary>
-        /// Given an identifier, returns the canonical identifier for the clique including all identifiers
-        /// with the same value (via referential integrity constraints).
+        ///     Given an identifier, returns the canonical identifier for the clique including all identifiers
+        ///     with the same value (via referential integrity constraints).
         /// </summary>
         internal int GetCliqueIdentifier(int identifier)
         {
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Indicate that the principal identifier controls the value for the dependent identifier.
+        ///     Indicate that the principal identifier controls the value for the dependent identifier.
         /// </summary>
         internal void AddReferentialConstraint(IEntityStateEntry dependentStateEntry, int dependentIdentifier, int principalIdentifier)
         {
@@ -76,8 +77,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Given an 'identifier' result, register it as the owner (for purposes of error reporting,
-        /// since foreign key results can sometimes get projected out after a join)
+        ///     Given an 'identifier' result, register it as the owner (for purposes of error reporting,
+        ///     since foreign key results can sometimes get projected out after a join)
         /// </summary>
         internal void RegisterIdentifierOwner(PropagatorResult owner)
         {
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Checks if the given identifier has a registered 'owner'
+        ///     Checks if the given identifier has a registered 'owner'
         /// </summary>
         internal bool TryGetIdentifierOwner(int identifier, out PropagatorResult owner)
         {
@@ -98,8 +99,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gets identifier for an entity key member at the given offset (ordinal of the property
-        /// in the key properties for the relevant entity set)
+        ///     Gets identifier for an entity key member at the given offset (ordinal of the property
+        ///     in the key properties for the relevant entity set)
         /// </summary>
         internal int GetKeyIdentifierForMemberOffset(EntityKey entityKey, int memberOffset, int keyMemberCount)
         {
@@ -122,7 +123,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Creates identifier for a (non-key) entity member (or return existing identifier).
+        ///     Creates identifier for a (non-key) entity member (or return existing identifier).
         /// </summary>
         internal int GetKeyIdentifierForMember(EntityKey entityKey, string member, bool currentValues)
         {
@@ -140,9 +141,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gets all relationship entries constrained by the given identifier. If there is a referential constraint
-        /// where the identifier is the principal, returns results corresponding to the constrained
-        /// dependent relationships.
+        ///     Gets all relationship entries constrained by the given identifier. If there is a referential constraint
+        ///     where the identifier is the principal, returns results corresponding to the constrained
+        ///     dependent relationships.
         /// </summary>
         internal IEnumerable<IEntityStateEntry> GetDependentStateEntries(int identifier)
         {
@@ -150,7 +151,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Given a value, returns the value for its principal owner.
+        ///     Given a value, returns the value for its principal owner.
         /// </summary>
         internal object GetPrincipalValue(PropagatorResult result)
         {
@@ -196,7 +197,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gives all principals affecting the given identifier.
+        ///     Gives all principals affecting the given identifier.
         /// </summary>
         internal IEnumerable<int> GetPrincipals(int identifier)
         {
@@ -204,7 +205,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gives all direct references of the given identifier
+        ///     Gives all direct references of the given identifier
         /// </summary>
         internal IEnumerable<int> GetDirectReferences(int identifier)
         {
@@ -216,7 +217,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gets all dependents affected by the given identifier.
+        ///     Gets all dependents affected by the given identifier.
         /// </summary>
         internal IEnumerable<int> GetDependents(int identifier)
         {
@@ -252,7 +253,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Checks whether the given identifier has any contributing principals.
+        ///     Checks whether the given identifier has any contributing principals.
         /// </summary>
         internal bool HasPrincipals(int identifier)
         {
@@ -260,7 +261,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Checks whether there is a cycle in the identifier graph.
+        ///     Checks whether there is a cycle in the identifier graph.
         /// </summary>
         internal void ValidateReferentialIntegrityGraphAcyclic()
         {
@@ -289,7 +290,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Registers an added entity so that it can be matched by a foreign key lookup.
+        ///     Registers an added entity so that it can be matched by a foreign key lookup.
         /// </summary>
         internal void RegisterKeyValueForAddedEntity(IEntityStateEntry addedEntry)
         {
@@ -344,11 +345,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// There are three states:
+        ///     There are three states:
         /// 
-        /// - No temp keys with the given value exists (return false, out null)
-        /// - A single temp key exists with the given value (return true, out non null)
-        /// - Multiple temp keys exist with the given value (return true, out null)
+        ///     - No temp keys with the given value exists (return false, out null)
+        ///     - A single temp key exists with the given value (return true, out non null)
+        ///     - Multiple temp keys exist with the given value (return true, out null)
         /// </summary>
         internal bool TryGetTempKey(EntityKey valueKey, out EntityKey tempKey)
         {
@@ -401,7 +402,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #endregion
 
         /// <summary>
-        /// Ensures firstId and secondId belong to the same partition
+        ///     Ensures firstId and secondId belong to the same partition
         /// </summary>
         internal void AssociateNodes(int firstId, int secondId)
         {
@@ -481,7 +482,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Simple linked list class.
+        ///     Simple linked list class.
         /// </summary>
         private sealed class LinkedList<T>
         {
@@ -510,7 +511,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Collects information relevant to a particular identifier.
+        ///     Collects information relevant to a particular identifier.
         /// </summary>
         private sealed class IdentifierInfo
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -23,12 +24,12 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets an <see cref = "EdmCollectionKind" /> value that indicates which collection semantics - if any - apply to the property.
+        ///     Gets or sets an <see cref="EdmCollectionKind" /> value that indicates which collection semantics - if any - apply to the property.
         /// </summary>
         public virtual EdmCollectionKind CollectionKind { get; set; }
 
         /// <summary>
-        ///     Gets or sets a <see cref = "EdmConcurrencyMode" /> value that indicates whether the property is used for concurrency validation.
+        ///     Gets or sets a <see cref="EdmConcurrencyMode" /> value that indicates whether the property is used for concurrency validation.
         /// </summary>
         public virtual EdmConcurrencyMode ConcurrencyMode { get; set; }
 
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Edm
         public virtual object DefaultValue { get; set; }
 
         /// <summary>
-        ///     Gets or sets an <see cref = "EdmTypeReference" /> that specifies the result type of the property.
+        ///     Gets or sets an <see cref="EdmTypeReference" /> that specifies the result type of the property.
         /// </summary>
         public virtual EdmTypeReference PropertyType { get; set; }
     }

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
@@ -49,9 +50,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        /// Checks for the PK property being an FK in a different table. A PK which is also an FK but
-        /// in the same table is used for table splitting and can still be an identity column because
-        /// the update pipeline is only inserting into one column of one table.
+        ///     Checks for the PK property being an FK in a different table. A PK which is also an FK but
+        ///     in the same table is used for table splitting and can still be an identity column because
+        ///     the update pipeline is only inserting into one column of one table.
         /// </summary>
         private static bool IsNonTableSplittingForeignKey(EdmAssociationType association, EdmProperty property)
         {

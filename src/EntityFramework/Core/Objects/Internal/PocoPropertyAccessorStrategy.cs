@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using Util = System.Data.Entity.Core.Common.Internal.Materialization.Util;
 
     /// <summary>
-    /// Implementation of the property accessor strategy that gets and sets values on POCO entities.  That is,
-    /// entities that do not implement IEntityWithRelationships.
+    ///     Implementation of the property accessor strategy that gets and sets values on POCO entities.  That is,
+    ///     entities that do not implement IEntityWithRelationships.
     /// </summary>
     internal sealed class PocoPropertyAccessorStrategy : IPropertyAccessorStrategy
     {
@@ -25,9 +26,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         private readonly object _entity;
 
         /// <summary>
-        /// Constructs a strategy object to work with the given entity.
+        ///     Constructs a strategy object to work with the given entity.
         /// </summary>
-        /// <param name="entity">The entity to use</param>
+        /// <param name="entity"> The entity to use </param>
         public PocoPropertyAccessorStrategy(object entity)
         {
             _entity = entity;
@@ -198,16 +199,16 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Action<object, object> AddToCollection<T>()
         {
             return (collectionArg, item) =>
-                {
-                    var collection = (ICollection<T>)collectionArg;
-                    var array = collection as Array;
-                    if (array != null
-                        && array.IsFixedSize)
-                    {
-                        throw new InvalidOperationException(Strings.RelatedEnd_CannotAddToFixedSizeArray(array.GetType()));
-                    }
-                    collection.Add((T)item);
-                };
+                       {
+                           var collection = (ICollection<T>)collectionArg;
+                           var array = collection as Array;
+                           if (array != null
+                               && array.IsFixedSize)
+                           {
+                               throw new InvalidOperationException(Strings.RelatedEnd_CannotAddToFixedSizeArray(array.GetType()));
+                           }
+                           collection.Add((T)item);
+                       };
         }
 
         #endregion
@@ -261,16 +262,16 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Func<object, object, bool> RemoveFromCollection<T>()
         {
             return (collectionArg, item) =>
-                {
-                    var collection = (ICollection<T>)collectionArg;
-                    var array = collection as Array;
-                    if (array != null
-                        && array.IsFixedSize)
-                    {
-                        throw new InvalidOperationException(Strings.RelatedEnd_CannotRemoveFromFixedSizeArray(array.GetType()));
-                    }
-                    return collection.Remove((T)item);
-                };
+                       {
+                           var collection = (ICollection<T>)collectionArg;
+                           var array = collection as Array;
+                           if (array != null
+                               && array.IsFixedSize)
+                           {
+                               throw new InvalidOperationException(Strings.RelatedEnd_CannotRemoveFromFixedSizeArray(array.GetType()));
+                           }
+                           return collection.Remove((T)item);
+                       };
         }
 
         #endregion
@@ -298,8 +299,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// We only get here if a navigation property getter returns null.  In this case, we try to set the
-        /// navigation property to some collection that will work.
+        ///     We only get here if a navigation property getter returns null.  In this case, we try to set the
+        ///     navigation property to some collection that will work.
         /// </summary>
         private static Func<object> CreateCollectionCreateDelegate(Type navigationPropertyType, string propName)
         {

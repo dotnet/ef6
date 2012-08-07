@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections.Generic;
@@ -7,11 +8,11 @@ namespace System.Data.Entity.Internal.Linq
     using System.Linq;
 
     /// <summary>
-    ///     An instance of this internal class is created whenever an instance of the public <see cref = "DbQuery" />
+    ///     An instance of this internal class is created whenever an instance of the public <see cref="DbQuery" />
     ///     class is needed. This allows the public surface to be non-generic, while the runtime type created
-    ///     still implements <see cref = "IQueryable{T}" />.
+    ///     still implements <see cref="IQueryable{T}" />.
     /// </summary>
-    /// <typeparam name = "TElement">The type of the element.</typeparam>
+    /// <typeparam name="TElement"> The type of the element. </typeparam>
     internal class InternalDbQuery<TElement> : DbQuery, IOrderedQueryable<TElement>, IDbAsyncEnumerable<TElement>
     {
         #region Fields and constructors
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Creates a new query that will be backed by the given internal query object.
         /// </summary>
-        /// <param name = "internalQuery">The backing query.</param>
+        /// <param name="internalQuery"> The backing query. </param>
         public InternalDbQuery(IInternalQuery<TElement> internalQuery)
         {
             Contract.Requires(internalQuery != null);
@@ -37,14 +38,14 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Gets the underlying internal query object.
         /// </summary>
-        /// <value>The internal query.</value>
+        /// <value> The internal query. </value>
         internal override IInternalQuery InternalQuery
         {
             get { return _internalQuery; }
         }
 
         /// <summary>
-        ///     See comments in <see cref = "DbQuery" />.
+        ///     See comments in <see cref="DbQuery" />.
         /// </summary>
         public override DbQuery Include(string path)
         {
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     See comments in <see cref = "DbQuery" />.
+        ///     See comments in <see cref="DbQuery" />.
         /// </summary>
         public override DbQuery AsNoTracking()
         {
@@ -68,9 +69,9 @@ namespace System.Data.Entity.Internal.Linq
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IEnumerator{TEntity}" /> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns> An enumerator for the query </returns>
         public IEnumerator<TElement> GetEnumerator()
         {
             return _internalQuery.GetEnumerator();
@@ -81,9 +82,9 @@ namespace System.Data.Entity.Internal.Linq
         #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}"/> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>An enumerator for the query</returns>
+        /// <returns> An enumerator for the query </returns>
         public IDbAsyncEnumerator<TElement> GetAsyncEnumerator()
         {
             return _internalQuery.GetAsyncEnumerator();

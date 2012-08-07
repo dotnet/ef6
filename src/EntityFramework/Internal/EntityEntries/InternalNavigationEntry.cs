@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Objects.DataClasses;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    ///     Base class for <see cref = "InternalCollectionEntry" /> and <see cref = "InternalReferenceEntry" />
+    ///     Base class for <see cref="InternalCollectionEntry" /> and <see cref="InternalReferenceEntry" />
     ///     containing common code for collection and reference navigation property entries.
     /// </summary>
     internal abstract class InternalNavigationEntry : InternalMemberEntry
@@ -22,10 +23,10 @@ namespace System.Data.Entity.Internal
         private bool _triedToGetSetter;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalNavigationEntry" /> class.
+        ///     Initializes a new instance of the <see cref="InternalNavigationEntry" /> class.
         /// </summary>
-        /// <param name = "internalEntityEntry">The internal entity entry.</param>
-        /// <param name = "navigationMetadata">The navigation metadata.</param>
+        /// <param name="internalEntityEntry"> The internal entity entry. </param>
+        /// <param name="navigationMetadata"> The navigation metadata. </param>
         protected InternalNavigationEntry(
             InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
             : base(internalEntityEntry, navigationMetadata)
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Internal
         #region Loading
 
         /// <summary>
-        ///     Calls Load on the underlying <see cref = "IRelatedEnd" />.
+        ///     Calls Load on the underlying <see cref="IRelatedEnd" />.
         /// </summary>
         public void Load()
         {
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Calls IsLoaded on the underlying <see cref = "IRelatedEnd" />.
+        ///     Calls IsLoaded on the underlying <see cref="IRelatedEnd" />.
         /// </summary>
         public bool IsLoaded
         {
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Uses CreateSourceQuery on the underlying <see cref = "RelatedEnd" /> to create a query for this
+        ///     Uses CreateSourceQuery on the underlying <see cref="RelatedEnd" /> to create a query for this
         ///     navigation property.
         /// </summary>
         public IQueryable Query()
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the related end, which will be null if the entity is not being tracked.
         /// </summary>
-        /// <value>The related end.</value>
+        /// <value> The related end. </value>
         protected IRelatedEnd RelatedEnd
         {
             get
@@ -101,7 +102,7 @@ namespace System.Data.Entity.Internal
         ///     for a collection property.
         ///     This property is virtual so that it can be mocked.
         /// </summary>
-        /// <value>The current value.</value>
+        /// <value> The current value. </value>
         public override object CurrentValue
         {
             get
@@ -123,7 +124,7 @@ namespace System.Data.Entity.Internal
         ///     Gets a delegate that can be used to get the value of the property directly from the entity.
         ///     Returns null if the property does not have an accessible getter.
         /// </summary>
-        /// <value>The getter delegate, or null.</value>
+        /// <value> The getter delegate, or null. </value>
         protected Func<object, object> Getter
         {
             get
@@ -141,7 +142,7 @@ namespace System.Data.Entity.Internal
         ///     Gets a delegate that can be used to set the value of the property directly on the entity.
         ///     Returns null if the property does not have an accessible setter.
         /// </summary>
-        /// <value>The setter delegate, or null.</value>
+        /// <value> The setter delegate, or null. </value>
         protected Action<object, object> Setter
         {
             get
@@ -156,10 +157,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the navigation property value from the <see cref = "IRelatedEnd" /> object.
+        ///     Gets the navigation property value from the <see cref="IRelatedEnd" /> object.
         /// </summary>
-        /// <param name = "entity">The entity.</param>
-        /// <returns>The navigation property value.</returns>
+        /// <param name="entity"> The entity. </param>
+        /// <returns> The navigation property value. </returns>
         protected abstract object GetNavigationPropertyFromRelatedEnd(object entity);
 
         #endregion
@@ -167,7 +168,8 @@ namespace System.Data.Entity.Internal
         #region Handling entries for detached entities
 
         /// <summary>
-        ///     Validates that the owning entity entry is associated with an underlying <see cref = "System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
+        ///     Validates that the owning entity entry is associated with an underlying <see
+        ///      cref="System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
         ///     is not just wrapping a non-attached entity.
         ///     If the entity is not detached, then the RelatedEnd for this navigation property is obtained.
         /// </summary>

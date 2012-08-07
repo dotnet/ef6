@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
@@ -28,15 +29,11 @@ namespace System.Data.Entity.Internal.Validation
         ///     Validates an entity or a complex type implementing IValidatableObject interface.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "entityValidationContext">Validation context. Never null.</param>
-        /// <param name = "property">
-        ///     Property to validate. Null if this is the entity that will be validated. Never null if this 
-        ///     is the complex type that will be validated.
-        /// </param>
-        /// <returns>Validation error as <see cref = "IEnumerable{DbValidationError}" />. Empty if no errors. Never null.
-        /// </returns>
+        /// <param name="entityValidationContext"> Validation context. Never null. </param>
+        /// <param name="property"> Property to validate. Null if this is the entity that will be validated. Never null if this is the complex type that will be validated. </param>
+        /// <returns> Validation error as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null. </returns>
         /// <remarks>
-        ///     Note that <paramref name = "property" /> is used to figure out what needs to be validated. If it not null the complex
+        ///     Note that <paramref name="property" /> is used to figure out what needs to be validated. If it not null the complex
         ///     type will be validated otherwise the entity will be validated.
         ///     Also if this is an IValidatableObject complex type but the instance (.CurrentValue) is null we won't validate
         ///     anything and will not return any errors. The reason for this is that Validation is supposed to validate using

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -237,8 +238,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// True is property is scalar, otherwise false.
-        /// During validation (after all types have been resolved).
+        ///     True is property is scalar, otherwise false.
+        ///     During validation (after all types have been resolved).
         /// </summary>
         internal bool ValidateIsScalar()
         {

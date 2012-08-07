@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
@@ -7,10 +8,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    /// Used in the Translator to aggregate information about a (nested) record
-    /// state.  After the translator visits the columnMaps, it will compile
-    /// the recordState(s) which produces an immutable RecordStateFactory that 
-    /// can be shared amongst many query instances.
+    ///     Used in the Translator to aggregate information about a (nested) record
+    ///     state.  After the translator visits the columnMaps, it will compile
+    ///     the recordState(s) which produces an immutable RecordStateFactory that 
+    ///     can be shared amongst many query instances.
     /// </summary>
     internal class RecordStateScratchpad
     {
@@ -39,15 +40,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             var result = (RecordStateFactory)Activator.CreateInstance(
                 typeof(RecordStateFactory), new object[]
-                    {
-                        StateSlotNumber,
-                        ColumnCount,
-                        nestedRecordStateFactories,
-                        DataRecordInfo,
-                        GatherData,
-                        PropertyNames,
-                        TypeUsages
-                    });
+                                                {
+                                                    StateSlotNumber,
+                                                    ColumnCount,
+                                                    nestedRecordStateFactories,
+                                                    DataRecordInfo,
+                                                    GatherData,
+                                                    PropertyNames,
+                                                    TypeUsages
+                                                });
             return result;
         }
     }

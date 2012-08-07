@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -12,9 +13,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         private const string s_NullForeignKey = "EntityHasNullForeignKey.EntityHasNullForeignKey";
 
         /// <summary>
-        /// Returns true if the supplied key represents a Conceptual Null
+        ///     Returns true if the supplied key represents a Conceptual Null
         /// </summary>
-        /// <param name="key">The key to be checked</param>
+        /// <param name="key"> The key to be checked </param>
         public static bool IsConceptualNullKey(EntityKey key)
         {
             if (key == null)
@@ -27,12 +28,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Checks if the Real Key represents different FK values 
-        /// than those present when the Conceptual Null was created
+        ///     Checks if the Real Key represents different FK values 
+        ///     than those present when the Conceptual Null was created
         /// </summary>
-        /// <param name="conceptualNullKey">The key representing the Conceptual Null</param>
-        /// <param name="realKey">The key to be checked</param>
-        /// <returns>True if the values are different, false otherwise</returns>
+        /// <param name="conceptualNullKey"> The key representing the Conceptual Null </param>
+        /// <param name="realKey"> The key to be checked </param>
+        /// <returns> True if the values are different, false otherwise </returns>
         public static bool IsConceptualNullKeyChanged(EntityKey conceptualNullKey, EntityKey realKey)
         {
             Debug.Assert(IsConceptualNullKey(conceptualNullKey), "The key supplied is not a null key");
@@ -46,10 +47,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Creates an EntityKey that represents a Conceptual Null
+        ///     Creates an EntityKey that represents a Conceptual Null
         /// </summary>
-        /// <param name="originalKey">An EntityKey representing the existing FK values that could not be nulled</param>
-        /// <returns>EntityKey marked as a conceptual null with the FK values from the original key</returns>
+        /// <param name="originalKey"> An EntityKey representing the existing FK values that could not be nulled </param>
+        /// <returns> EntityKey marked as a conceptual null with the FK values from the original key </returns>
         public static EntityKey CreateConceptualNullKey(EntityKey originalKey)
         {
             Debug.Assert(originalKey != null, "Original key can not be null");
@@ -60,12 +61,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Creates an EntityKey for a principal entity based on the foreign key values contained
-        /// in this entity.  This implies that this entity is at the dependent end of the relationship.
+        ///     Creates an EntityKey for a principal entity based on the foreign key values contained
+        ///     in this entity.  This implies that this entity is at the dependent end of the relationship.
         /// </summary>
-        /// <param name="dependentEntry">The EntityEntry for the dependent that contains the FK</param>
-        /// <param name="relatedEnd">Identifies the principal end for which a key is required</param>
-        /// <returns>The key, or null if any value in the key is null</returns>
+        /// <param name="dependentEntry"> The EntityEntry for the dependent that contains the FK </param>
+        /// <param name="relatedEnd"> Identifies the principal end for which a key is required </param>
+        /// <returns> The key, or null if any value in the key is null </returns>
         public static EntityKey CreateKeyFromForeignKeyValues(EntityEntry dependentEntry, RelatedEnd relatedEnd)
         {
             // Note: there is only ever one constraint per association type
@@ -76,14 +77,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Creates an EntityKey for a principal entity based on the foreign key values contained
-        /// in this entity.  This implies that this entity is at the dependent end of the relationship.
+        ///     Creates an EntityKey for a principal entity based on the foreign key values contained
+        ///     in this entity.  This implies that this entity is at the dependent end of the relationship.
         /// </summary>
-        /// <param name="dependentEntry">The EntityEntry for the dependent that contains the FK</param>
-        /// <param name="constraint">The constraint that describes this FK relationship</param>
-        /// <param name="principalEntitySet">The entity set at the principal end of the the relationship</param>
-        /// <param name="useOriginalValues">If true then the key will be constructed from the original FK values</param>
-        /// <returns>The key, or null if any value in the key is null</returns>
+        /// <param name="dependentEntry"> The EntityEntry for the dependent that contains the FK </param>
+        /// <param name="constraint"> The constraint that describes this FK relationship </param>
+        /// <param name="principalEntitySet"> The entity set at the principal end of the the relationship </param>
+        /// <param name="useOriginalValues"> If true then the key will be constructed from the original FK values </param>
+        /// <returns> The key, or null if any value in the key is null </returns>
         public static EntityKey CreateKeyFromForeignKeyValues(
             EntityEntry dependentEntry, ReferentialConstraint constraint, EntitySet principalEntitySet, bool useOriginalValues)
         {

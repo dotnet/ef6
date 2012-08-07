@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -7,14 +8,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    /// This class is just a wrapper over case statements so that we don't pollute the <see cref="CaseStatement"/> class itself.
+    ///     This class is just a wrapper over case statements so that we don't pollute the <see cref="CaseStatement" /> class itself.
     /// </summary>
     internal sealed class CaseStatementProjectedSlot : ProjectedSlot
     {
         #region Constructor
 
         /// <summary>
-        /// Creates a slot for <paramref name="statement"/>.
+        ///     Creates a slot for <paramref name="statement" />.
         /// </summary>
         internal CaseStatementProjectedSlot(CaseStatement statement, IEnumerable<WithRelationship> withRelationships)
         {
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Fields
 
         /// <summary>
-        /// The actual case statement.
+        ///     The actual case statement.
         /// </summary>
         private readonly CaseStatement m_caseStatement;
 
@@ -38,9 +39,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Methods
 
         /// <summary>
-        /// Creates new <see cref="ProjectedSlot"/> that is qualified with <paramref name="block"/>.CqlAlias.
-        /// If current slot is composite (such as <see cref="CaseStatementProjectedSlot"/>, then this method recursively qualifies all parts
-        /// and returns a new deeply qualified slot (as opposed to <see cref="CqlBlock.QualifySlotWithBlockAlias"/>).
+        ///     Creates new <see cref="ProjectedSlot" /> that is qualified with <paramref name="block" />.CqlAlias.
+        ///     If current slot is composite (such as <see cref="CaseStatementProjectedSlot" />, then this method recursively qualifies all parts
+        ///     and returns a new deeply qualified slot (as opposed to <see cref="CqlBlock.QualifySlotWithBlockAlias" />).
         /// </summary>
         internal override ProjectedSlot DeepQualify(CqlBlock block)
         {

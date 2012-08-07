@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
@@ -14,26 +15,26 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq.Expressions;
 
     /// <summary>
-    /// ObjectQueryState based on Entity-SQL query text.
+    ///     ObjectQueryState based on Entity-SQL query text.
     /// </summary>
     internal sealed class EntitySqlQueryState : ObjectQueryState
     {
         /// <summary>
-        /// The Entity-SQL text that defines the query.
+        ///     The Entity-SQL text that defines the query.
         /// </summary>
         /// <remarks>
-        /// It is important that this field is readonly for consistency reasons wrt <see cref="_queryExpression"/>.
-        /// If this field becomes read-write, then write should be allowed only when <see cref="_queryExpression"/> is null, 
-        /// or there should be a mechanism keeping both fields consistent.
+        ///     It is important that this field is readonly for consistency reasons wrt <see cref="_queryExpression" />.
+        ///     If this field becomes read-write, then write should be allowed only when <see cref="_queryExpression" /> is null, 
+        ///     or there should be a mechanism keeping both fields consistent.
         /// </remarks>
         private readonly string _queryText;
 
         /// <summary>
-        /// Optional <see cref="DbExpression"/> that defines the query. Must be semantically equal to the <see cref="_queryText"/>.
+        ///     Optional <see cref="DbExpression" /> that defines the query. Must be semantically equal to the <see cref="_queryText" />.
         /// </summary>
         /// <remarks>
-        /// It is important that this field is readonly for consistency reasons wrt <see cref="_queryText"/>.
-        /// If this field becomes read-write, then there should be a mechanism keeping both fields consistent.
+        ///     It is important that this field is readonly for consistency reasons wrt <see cref="_queryText" />.
+        ///     If this field becomes read-write, then there should be a mechanism keeping both fields consistent.
         /// </remarks>
         private readonly DbExpression _queryExpression;
 
@@ -45,19 +46,11 @@ namespace System.Data.Entity.Core.Objects
         private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
 
         /// <summary>
-        /// Initializes a new query EntitySqlQueryState instance.
+        ///     Initializes a new query EntitySqlQueryState instance.
         /// </summary>
-        /// <param name="context">
-        ///     The ObjectContext containing the metadata workspace the query was
-        ///     built against, the connection on which to execute the query, and the
-        ///     cache to store the results in. Must not be null.
-        /// </param>
-        /// <param name="commandText">
-        ///     The Entity-SQL text of the query
-        /// </param>
-        /// <param name="mergeOption">
-        ///     The merge option to use when retrieving results if an explicit merge option is not specified
-        /// </param>
+        /// <param name="context"> The ObjectContext containing the metadata workspace the query was built against, the connection on which to execute the query, and the cache to store the results in. Must not be null. </param>
+        /// <param name="commandText"> The Entity-SQL text of the query </param>
+        /// <param name="mergeOption"> The merge option to use when retrieving results if an explicit merge option is not specified </param>
         internal EntitySqlQueryState(
             Type elementType, string commandText, bool allowsLimit, ObjectContext context, ObjectParameterCollection parameters, Span span)
             : this(elementType, commandText, /*expression*/ null, allowsLimit, context, parameters, span)
@@ -65,22 +58,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Initializes a new query EntitySqlQueryState instance.
+        ///     Initializes a new query EntitySqlQueryState instance.
         /// </summary>
-        /// <param name="context">
-        ///     The ObjectContext containing the metadata workspace the query was
-        ///     built against, the connection on which to execute the query, and the
-        ///     cache to store the results in. Must not be null.
-        /// </param>
-        /// <param name="commandText">
-        ///     The Entity-SQL text of the query
-        /// </param>
-        /// <param name="expression">
-        ///     Optional <see cref="DbExpression"/> that defines the query. Must be semantically equal to the <paramref name="commandText"/>.
-        /// </param>
-        /// <param name="mergeOption">
-        ///     The merge option to use when retrieving results if an explicit merge option is not specified
-        /// </param>
+        /// <param name="context"> The ObjectContext containing the metadata workspace the query was built against, the connection on which to execute the query, and the cache to store the results in. Must not be null. </param>
+        /// <param name="commandText"> The Entity-SQL text of the query </param>
+        /// <param name="expression"> Optional <see cref="DbExpression" /> that defines the query. Must be semantically equal to the <paramref
+        ///      name="commandText" /> . </param>
+        /// <param name="mergeOption"> The merge option to use when retrieving results if an explicit merge option is not specified </param>
         internal EntitySqlQueryState(
             Type elementType, string commandText, DbExpression expression, bool allowsLimit, ObjectContext context,
             ObjectParameterCollection parameters, Span span,
@@ -103,20 +87,17 @@ namespace System.Data.Entity.Core.Objects
         ///     Determines whether or not the current query is a 'Skip' or 'Sort' operation
         ///     and so would allow a 'Limit' clause to be appended to the current query text.
         /// </summary>
-        /// <returns>
-        ///     <c>True</c> if the current query is a Skip or Sort expression, or a
-        ///     Project expression with a Skip or Sort expression input.
-        /// </returns>
+        /// <returns> <c>True</c> if the current query is a Skip or Sort expression, or a Project expression with a Skip or Sort expression input. </returns>
         internal bool AllowsLimitSubclause
         {
             get { return _allowsLimit; }
         }
 
         /// <summary>
-        /// Always returns the Entity-SQL text of the implemented ObjectQuery.
+        ///     Always returns the Entity-SQL text of the implemented ObjectQuery.
         /// </summary>
-        /// <param name="commandText">Always set to the Entity-SQL text of this ObjectQuery.</param>
-        /// <returns>Always returns <c>true</c>.</returns>
+        /// <param name="commandText"> Always set to the Entity-SQL text of this ObjectQuery. </param>
+        /// <returns> Always returns <c>true</c> . </returns>
         internal override bool TryGetCommandText(out string commandText)
         {
             commandText = _queryText;

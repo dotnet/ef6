@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
-    /// Represents the Edm Collection Type
+    ///     Represents the Edm Collection Type
     /// </summary>
     public class CollectionType : EdmType
     {
@@ -16,9 +17,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing a CollectionType object with the element type it contains
+        ///     The constructor for constructing a CollectionType object with the element type it contains
         /// </summary>
-        /// <param name="elementType">The element type that this collection type contains</param>
+        /// <param name="elementType"> The element type that this collection type contains </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal CollectionType(EdmType elementType)
@@ -28,9 +29,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing a CollectionType object with the element type (as a TypeUsage) it contains
+        ///     The constructor for constructing a CollectionType object with the element type (as a TypeUsage) it contains
         /// </summary>
-        /// <param name="elementType">The element type that this collection type contains</param>
+        /// <param name="elementType"> The element type that this collection type contains </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal CollectionType(TypeUsage elementType)
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The type of the element that this collection type contains
+        ///     The type of the element that this collection type contains
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public virtual TypeUsage TypeUsage
@@ -73,10 +74,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Constructs the name of the collection type
+        ///     Constructs the name of the collection type
         /// </summary>
-        /// <param name="typeUsage">The typeusage for the element type that this collection type refers to</param>
-        /// <returns>The identity of the resulting collection type</returns>
+        /// <param name="typeUsage"> The typeusage for the element type that this collection type refers to </param>
+        /// <returns> The identity of the resulting collection type </returns>
         private static string GetIdentity(TypeUsage typeUsage)
         {
             var builder = new StringBuilder(50);
@@ -87,10 +88,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Override EdmEquals to support value comparison of TypeUsage property
+        ///     Override EdmEquals to support value comparison of TypeUsage property
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item"> </param>
+        /// <returns> </returns>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

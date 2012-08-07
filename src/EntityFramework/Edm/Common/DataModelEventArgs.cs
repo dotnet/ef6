@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Common
 {
     /// <summary>
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Edm.Common
     internal abstract class DataModelEventArgs : EventArgs
     {
         /// <summary>
-        ///     Gets a value indicating the <see cref = "DataModelItem" /> that caused the event to be raised.
+        ///     Gets a value indicating the <see cref="DataModelItem" /> that caused the event to be raised.
         /// </summary>
         internal DataModelItem Item
         {

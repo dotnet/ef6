@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents CREATEREF(entitySet, keys) expression.
+    ///     Represents CREATEREF(entitySet, keys) expression.
     /// </summary>
     internal sealed class CreateRefExpr : Node
     {
@@ -11,16 +12,16 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _typeIdentifier;
 
         /// <summary>
-        /// Initializes CreateRefExpr.
+        ///     Initializes CreateRefExpr.
         /// </summary>
-        /// <param name="entitySet">expression representing the entity set</param>
+        /// <param name="entitySet"> expression representing the entity set </param>
         internal CreateRefExpr(Node entitySet, Node keys)
             : this(entitySet, keys, null)
         {
         }
 
         /// <summary>
-        /// Initializes CreateRefExpr.
+        ///     Initializes CreateRefExpr.
         /// </summary>
         internal CreateRefExpr(Node entitySet, Node keys, Node typeIdentifier)
         {
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns the expression for the entity set.
+        ///     Returns the expression for the entity set.
         /// </summary>
         internal Node EntitySet
         {
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns the expression for the keys.
+        ///     Returns the expression for the keys.
         /// </summary>
         internal Node Keys
         {
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Gets optional typeidentifier. May be null.
+        ///     Gets optional typeidentifier. May be null.
         /// </summary>
         internal Node TypeIdentifier
         {

@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
     using System.Threading;
 
     /// <summary>
-    /// Cached dynamic method to get the property value from a CLR instance
-    /// </summary> 
+    ///     Cached dynamic method to get the property value from a CLR instance
+    /// </summary>
     internal class NavigationPropertyAccessor
     {
         #region Constructors
@@ -41,7 +42,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _propertyName; }
         }
 
-        /// <summary>cached dynamic method to get the property value from a CLR instance</summary> 
+        /// <summary>
+        ///     cached dynamic method to get the property value from a CLR instance
+        /// </summary>
         public Func<object, object> ValueGetter
         {
             get { return _memberGetter; }
@@ -53,7 +56,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>cached dynamic method to set the property value from a CLR instance</summary> 
+        /// <summary>
+        ///     cached dynamic method to set the property value from a CLR instance
+        /// </summary>
         public Action<object, object> ValueSetter
         {
             get { return _memberSetter; }

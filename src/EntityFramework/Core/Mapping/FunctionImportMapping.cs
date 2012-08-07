@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Represents a mapping from a model function import to a store composable or non-composable function.
+    ///     Represents a mapping from a model function import to a store composable or non-composable function.
     /// </summary>
     internal abstract class FunctionImportMapping
     {
@@ -19,12 +20,12 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets model function (or source of the mapping)
+        ///     Gets model function (or source of the mapping)
         /// </summary>
         internal readonly EdmFunction FunctionImport;
 
         /// <summary>
-        /// Gets store function (or target of the mapping)
+        ///     Gets store function (or target of the mapping)
         /// </summary>
         internal readonly EdmFunction TargetFunction;
     }

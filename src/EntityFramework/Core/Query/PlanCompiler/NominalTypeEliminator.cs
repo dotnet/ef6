@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
@@ -15,35 +16,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using SortKey = System.Data.Entity.Core.Query.InternalTrees.SortKey;
 
     /// <summary>
-    /// The goal of this module is to eliminate all references to nominal types
-    /// in the tree. Additionally, all structured types are replaced by "flat"
-    /// record types - where every field of the structured type is a scalar type.
-    /// Note that UDTs are not considered to be structured types.
+    ///     The goal of this module is to eliminate all references to nominal types
+    ///     in the tree. Additionally, all structured types are replaced by "flat"
+    ///     record types - where every field of the structured type is a scalar type.
+    ///     Note that UDTs are not considered to be structured types.
     /// 
-    /// At the end of this phase,
-    /// * there are no more nominal types in the tree
-    /// * there are no more nested record types in the tree
-    /// * No Var in the tree is of an structured type
-    /// * Additionally (and these follow from the statements above)
-    ///   * There are no NewInstanceOp constructors in the tree
-    ///   * There are no PropertyOp operators where the result is a structured type
+    ///     At the end of this phase,
+    ///     * there are no more nominal types in the tree
+    ///     * there are no more nested record types in the tree
+    ///     * No Var in the tree is of an structured type
+    ///     * Additionally (and these follow from the statements above)
+    ///     * There are no NewInstanceOp constructors in the tree
+    ///     * There are no PropertyOp operators where the result is a structured type
     /// 
-    /// This module uses information from the PropertyPushdown phase to "optimize"
-    /// structured type elimination. Essentially, if we can avoid producing pieces
-    /// of information that will be discarded later, then lets do that.
+    ///     This module uses information from the PropertyPushdown phase to "optimize"
+    ///     structured type elimination. Essentially, if we can avoid producing pieces
+    ///     of information that will be discarded later, then lets do that.
     /// 
-    /// The general mechanism of type elimination is as follows. We walk up the tree
-    /// in a bottom up fashion, and try to convert all structured types into flattened
-    /// record types - type constructors are first converted into flat record constructors
-    /// and then dismantled etc. The barrier points - Vars - are all converted into
-    /// scalar types, and all intermediate stages will be eliminated in transition.
+    ///     The general mechanism of type elimination is as follows. We walk up the tree
+    ///     in a bottom up fashion, and try to convert all structured types into flattened
+    ///     record types - type constructors are first converted into flat record constructors
+    ///     and then dismantled etc. The barrier points - Vars - are all converted into
+    ///     scalar types, and all intermediate stages will be eliminated in transition.
     /// 
-    /// The output from this phase includes a ColumnMap - which is used later by
-    /// the execution model to produce results in the right form from an otherwise
-    /// flat query
+    ///     The output from this phase includes a ColumnMap - which is used later by
+    ///     the execution model to produce results in the right form from an otherwise
+    ///     flat query
     /// 
-    /// Notes: This phase could be combined later with the PropertyPushdown phase
-    /// 
+    ///     Notes: This phase could be combined later with the PropertyPushdown phase
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class NominalTypeEliminator : BasicOpVisitorOfNode
@@ -51,32 +51,32 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Nested Classes
 
         /// <summary>
-        /// Describes an operation kind - for various property extractions
+        ///     Describes an operation kind - for various property extractions
         /// </summary>
         internal enum OperationKind
         {
             /// <summary>
-            /// Comparing two instances for equality
+            ///     Comparing two instances for equality
             /// </summary>
             Equality,
 
             /// <summary>
-            /// Checking to see if an instance is null
+            ///     Checking to see if an instance is null
             /// </summary>
             IsNull,
 
             /// <summary>
-            /// Getting the "identity" of an entity
+            ///     Getting the "identity" of an entity
             /// </summary>
             GetIdentity,
 
             /// <summary>
-            /// Getting the keys of an entity
+            ///     Getting the keys of an entity
             /// </summary>
             GetKeys,
 
             /// <summary>
-            /// All properties of an entity
+            ///     All properties of an entity
             /// </summary>
             All
         }
@@ -125,18 +125,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Process Driver
 
         /// <summary>
-        /// Eliminates all structural types from the query
+        ///     Eliminates all structural types from the query
         /// </summary>
-        /// <param name="compilerState">current compiler state</param>
-        /// <param name="structuredTypeInfo"></param>
-        /// <param name="tvfResultKeys">inferred s-space keys for TVFs that are mapped to entities</param>
+        /// <param name="compilerState"> current compiler state </param>
+        /// <param name="structuredTypeInfo"> </param>
+        /// <param name="tvfResultKeys"> inferred s-space keys for TVFs that are mapped to entities </param>
         internal static void Process(
             PlanCompiler compilerState,
             StructuredTypeInfo structuredTypeInfo,
             Dictionary<md.EdmFunction, md.EdmProperty[]> tvfResultKeys)
         {
 #if DEBUG
-    //string phase0 = Dump.ToXml(compilerState.Command);
+            //string phase0 = Dump.ToXml(compilerState.Command);
             Validator.Validate(compilerState);
 #endif
 
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             PropertyPushdownHelper.Process(compilerState.Command, out varPropertyMap, out nodePropertyMap);
 
 #if DEBUG
-    //string phase1 = Dump.ToXml(compilerState.Command);
+            //string phase1 = Dump.ToXml(compilerState.Command);
             Validator.Validate(compilerState);
 #endif
 
@@ -156,21 +156,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             nte.Process();
 
 #if DEBUG
-    //string phase2 = Dump.ToXml(compilerState.Command);
+            //string phase2 = Dump.ToXml(compilerState.Command);
             Validator.Validate(compilerState);
 #endif
 
 #if DEBUG
-    //To avoid garbage collection
-    //int size = phase0.Length;
-    //size = phase1.Length;
-    //size = phase2.Length;
+            //To avoid garbage collection
+            //int size = phase0.Length;
+            //size = phase1.Length;
+            //size = phase2.Length;
 #endif
         }
 
         /// <summary>
-        /// The real driver. Invokes the visitor to traverse the tree bottom-up,
-        /// and modifies the tree along the way.
+        ///     The real driver. Invokes the visitor to traverse the tree bottom-up,
+        ///     and modifies the tree along the way.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region type utilities
 
         /// <summary>
-        /// The datatype of the typeid property
+        ///     The datatype of the typeid property
         /// </summary>
         private md.TypeUsage DefaultTypeIdType
         {
@@ -209,16 +209,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get the "new" type corresponding to the input type. 
-        /// For structured types, we simply look up the typeInfoMap
-        /// For collection types, we create a new collection type based on the 
-        ///   "new" element type.
-        /// For enums we return the underlying type of the enum type.
-        /// For strong spatial types we return the union type that includes the strong spatial type.
-        /// For all other types, we simply return the input type
+        ///     Get the "new" type corresponding to the input type. 
+        ///     For structured types, we simply look up the typeInfoMap
+        ///     For collection types, we create a new collection type based on the 
+        ///     "new" element type.
+        ///     For enums we return the underlying type of the enum type.
+        ///     For strong spatial types we return the union type that includes the strong spatial type.
+        ///     For all other types, we simply return the input type
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type"> </param>
+        /// <returns> </returns>
         private md.TypeUsage GetNewType(md.TypeUsage type)
         {
             md.TypeUsage newType;
@@ -264,20 +264,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region misc utilities
 
         /// <summary>
-        /// This function builds a "property accessor" over the input expression.  It
-        /// can produce one of three results:
+        ///     This function builds a "property accessor" over the input expression.  It
+        ///     can produce one of three results:
         /// 
-        ///   - It can return "null", if it is convinced that the input has no 
+        ///     - It can return "null", if it is convinced that the input has no 
         ///     such expression
-        ///   - It can return a subnode of the input, if that subnode represents
+        ///     - It can return a subnode of the input, if that subnode represents
         ///     the property
-        ///   - Or, it can build a PropertyOp explicitly
+        ///     - Or, it can build a PropertyOp explicitly
         /// 
-        /// Assertion: the property is not a structured type
+        ///     Assertion: the property is not a structured type
         /// </summary>
-        /// <param name="input">The input expression</param>
-        /// <param name="property">The desired property</param>
-        /// <returns></returns>
+        /// <param name="input"> The input expression </param>
+        /// <param name="property"> The desired property </param>
+        /// <returns> </returns>
         private Node BuildAccessor(Node input, md.EdmProperty property)
         {
             var inputOp = input.Op;
@@ -311,12 +311,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// A BuildAccessor variant. If the appropriate property was not found, then
-        /// build up a null constant instead
+        ///     A BuildAccessor variant. If the appropriate property was not found, then
+        ///     build up a null constant instead
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
+        /// <param name="input"> </param>
+        /// <param name="property"> </param>
+        /// <returns> </returns>
         private Node BuildAccessorWithNulls(Node input, md.EdmProperty property)
         {
             var newNode = BuildAccessor(input, property);
@@ -328,13 +328,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Builds up an accessor to the typeid property. If the type has no typeid
-        /// property, then we simply create a constantOp with the corresponding 
-        /// typeid value for the type
+        ///     Builds up an accessor to the typeid property. If the type has no typeid
+        ///     property, then we simply create a constantOp with the corresponding 
+        ///     typeid value for the type
         /// </summary>
-        /// <param name="input">the input expression</param>
-        /// <param name="typeInfo">the original type of the input expression</param>
-        /// <returns></returns>
+        /// <param name="input"> the input expression </param>
+        /// <param name="typeInfo"> the original type of the input expression </param>
+        /// <returns> </returns>
         private Node BuildTypeIdAccessor(Node input, TypeInfo typeInfo)
         {
             Node result;
@@ -352,11 +352,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Builds a SoftCast operator over the input - if one is necessary.
+        ///     Builds a SoftCast operator over the input - if one is necessary.
         /// </summary>
-        /// <param name="node">the input expression to "cast"</param>
-        /// <param name="targetType">the target type</param>
-        /// <returns>the "cast"ed expression</returns>
+        /// <param name="node"> the input expression to "cast" </param>
+        /// <param name="targetType"> the target type </param>
+        /// <returns> the "cast"ed expression </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SoftCast")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-ScalarOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -379,31 +379,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Clones a subtree.
-        /// This is used by the "BuildAccessor" routines to build a property-accessor
-        /// over some input. If we're reusing the input, the input must be cloned.
+        ///     Clones a subtree.
+        ///     This is used by the "BuildAccessor" routines to build a property-accessor
+        ///     over some input. If we're reusing the input, the input must be cloned.
         /// </summary>
-        /// <param name="n">The subtree to copy</param>
-        /// <returns></returns>
+        /// <param name="n"> The subtree to copy </param>
+        /// <returns> </returns>
         private Node Copy(Node n)
         {
             return OpCopier.Copy(m_command, n);
         }
 
         /// <summary>
-        /// Returns a node for a null constant of the desired type
+        ///     Returns a node for a null constant of the desired type
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type"> </param>
+        /// <returns> </returns>
         private Node CreateNullConstantNode(md.TypeUsage type)
         {
             return m_command.CreateNode(m_command.CreateNullOp(type));
         }
 
         /// <summary>
-        /// Create a node to represent nullability.
+        ///     Create a node to represent nullability.
         /// </summary>
-        /// <returns>Node for the typeid constant</returns>
+        /// <returns> Node for the typeid constant </returns>
         private Node CreateNullSentinelConstant()
         {
             var op = m_command.CreateNullSentinelOp();
@@ -411,10 +411,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Create a node to represent the exact value of the typeid constant
+        ///     Create a node to represent the exact value of the typeid constant
         /// </summary>
-        /// <param name="typeInfo">The current type</param>
-        /// <returns>Node for the typeid constant</returns>
+        /// <param name="typeInfo"> The current type </param>
+        /// <returns> Node for the typeid constant </returns>
         private Node CreateTypeIdConstant(TypeInfo typeInfo)
         {
             var value = typeInfo.TypeId;
@@ -432,12 +432,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Create a node to represent a typeid constant for a prefix match. 
-        /// If the typeid value were "123X", then we would generate a constant 
-        /// like "123X%"
+        ///     Create a node to represent a typeid constant for a prefix match. 
+        ///     If the typeid value were "123X", then we would generate a constant 
+        ///     like "123X%"
         /// </summary>
-        /// <param name="typeInfo">the current type</param>
-        /// <returns>Node for the typeid constant</returns>
+        /// <param name="typeInfo"> the current type </param>
+        /// <returns> Node for the typeid constant </returns>
         private Node CreateTypeIdConstantForPrefixMatch(TypeInfo typeInfo)
         {
             var value = typeInfo.TypeId + PrefixMatchCharacter;
@@ -446,11 +446,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Identify the list of property refs for comparison and isnull semantics
+        ///     Identify the list of property refs for comparison and isnull semantics
         /// </summary>
-        /// <param name="typeInfo"></param>
-        /// <param name="opKind"></param>
-        /// <returns></returns>
+        /// <param name="typeInfo"> </param>
+        /// <param name="opKind"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "isNull")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "opKind")]
@@ -536,11 +536,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get the list of "desired" propertyrefs for the specified type and operation
+        ///     Get the list of "desired" propertyrefs for the specified type and operation
         /// </summary>
-        /// <param name="typeInfo"></param>
-        /// <param name="opKind"></param>
-        /// <returns></returns>
+        /// <param name="typeInfo"> </param>
+        /// <param name="opKind"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyRefs")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OperationKind")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -563,36 +563,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get a list of "desired" properties for each operationKind (specified by the opKind
-        /// parameter). The OpKinds we support are 
+        ///     Get a list of "desired" properties for each operationKind (specified by the opKind
+        ///     parameter). The OpKinds we support are 
         /// 
-        ///  * GetKeys
-        ///    Applies only to entity and ref types - gets the key properties (more specifically
-        ///      the flattened equivalents)
-        ///  * GetIdentity
-        ///    Applies only to entity and ref types - gets the entityset id property first, and then the
-        ///      the Key properties
-        ///  * All
-        ///    Gets all properties of the flattened type
+        ///     * GetKeys
+        ///     Applies only to entity and ref types - gets the key properties (more specifically
+        ///     the flattened equivalents)
+        ///     * GetIdentity
+        ///     Applies only to entity and ref types - gets the entityset id property first, and then the
+        ///     the Key properties
+        ///     * All
+        ///     Gets all properties of the flattened type
         /// 
-        ///  * Equality
-        ///    Scalar types - the entire instance
-        ///    Entity - the identity properties
-        ///    Ref - all properties (= identity properties)
-        ///    Complex/Collection - Not supported
-        ///    Record - recurse over each property
+        ///     * Equality
+        ///     Scalar types - the entire instance
+        ///     Entity - the identity properties
+        ///     Ref - all properties (= identity properties)
+        ///     Complex/Collection - Not supported
+        ///     Record - recurse over each property
         /// 
-        ///  * IsNull
-        ///    Scalar types - entire instance
-        ///    Entity - typeid property, if it exists; otherwise, the key properties
-        ///    ComplexType - typeid property
-        ///    Ref - all properties
-        ///    Collection - not supported
-        ///    Record - recurse over each property
+        ///     * IsNull
+        ///     Scalar types - entire instance
+        ///     Entity - typeid property, if it exists; otherwise, the key properties
+        ///     ComplexType - typeid property
+        ///     Ref - all properties
+        ///     Collection - not supported
+        ///     Record - recurse over each property
         /// </summary>
-        /// <param name="typeInfo">Type information for the current op</param>
-        /// <param name="opKind">Current operation kind</param>
-        /// <returns>List of desired properties</returns>
+        /// <param name="typeInfo"> Type information for the current op </param>
+        /// <param name="opKind"> Current operation kind </param>
+        /// <returns> List of desired properties </returns>
         private IEnumerable<md.EdmProperty> GetProperties(TypeInfo typeInfo, OperationKind opKind)
         {
             if (opKind == OperationKind.All)
@@ -612,17 +612,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get a list of properties and value (expressions) for each desired property of the
-        /// input. The list of desired properties is based on the opKind parameter. 
-        /// The ignoreMissingProperties indicates if we should create a null constant, in case
-        /// the input cannot produce the specified property
+        ///     Get a list of properties and value (expressions) for each desired property of the
+        ///     input. The list of desired properties is based on the opKind parameter. 
+        ///     The ignoreMissingProperties indicates if we should create a null constant, in case
+        ///     the input cannot produce the specified property
         /// </summary>
-        /// <param name="typeInfo">typeinfo for the input</param>
-        /// <param name="opKind">Current operation kind</param>
-        /// <param name="input">The input expression tree</param>
-        /// <param name="ignoreMissingProperties">Should we ignore missing properties</param>
-        /// <param name="properties">Output: list of properties</param>
-        /// <param name="values">Output: correspondng list of values</param>
+        /// <param name="typeInfo"> typeinfo for the input </param>
+        /// <param name="opKind"> Current operation kind </param>
+        /// <param name="input"> The input expression tree </param>
+        /// <param name="ignoreMissingProperties"> Should we ignore missing properties </param>
+        /// <param name="properties"> Output: list of properties </param>
+        /// <param name="values"> Output: correspondng list of values </param>
         private void GetPropertyValues(
             TypeInfo typeInfo, OperationKind opKind, Node input, bool ignoreMissingProperties,
             out List<md.EdmProperty> properties, out List<Node> values)
@@ -641,13 +641,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Build up a key-value pair of (property, expression) to represent 
-        /// the extraction of the appropriate property from the input expression
+        ///     Build up a key-value pair of (property, expression) to represent 
+        ///     the extraction of the appropriate property from the input expression
         /// </summary>
-        /// <param name="input">The input (structured type) expression</param>
-        /// <param name="property">The property in question</param>
-        /// <param name="ignoreMissingProperties">should we ignore missing properties</param>
-        /// <returns></returns>
+        /// <param name="input"> The input (structured type) expression </param>
+        /// <param name="property"> The property in question </param>
+        /// <param name="ignoreMissingProperties"> should we ignore missing properties </param>
+        /// <returns> </returns>
         private KeyValuePair<md.EdmProperty, Node> GetPropertyValue(Node input, md.EdmProperty property, bool ignoreMissingProperties)
         {
             Node n = null;
@@ -664,13 +664,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Walk the SortKeys, and expand out 
-        /// any Structured type Var references 
-        /// If any of the sort keys is expanded to include a var representing a null sentinel,
-        /// set PlanCompiler.HasSortingOnNullSentinels to true.
+        ///     Walk the SortKeys, and expand out 
+        ///     any Structured type Var references 
+        ///     If any of the sort keys is expanded to include a var representing a null sentinel,
+        ///     set PlanCompiler.HasSortingOnNullSentinels to true.
         /// </summary>
-        /// <param name="keys">The list of input keys</param>
-        /// <returns>An expanded list of keys. If there is nothing to expand it returns the original list.</returns>
+        /// <param name="keys"> The list of input keys </param>
+        /// <returns> An expanded list of keys. If there is nothing to expand it returns the original list. </returns>
         private List<SortKey> HandleSortKeys(List<SortKey> keys)
         {
             var newSortKeys = new List<SortKey>();
@@ -705,9 +705,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Project properties of <paramref name="unnestOpTableTypeInfo"/> that represents the flattened type of the <paramref name="unnestNode"/>.
-        /// The <paramref name="unnestNode"/> contains a TVF call. 
-        /// Return new node with ProjectOp and <paramref name="newVars"/> representing the projection outputs.
+        ///     Project properties of <paramref name="unnestOpTableTypeInfo" /> that represents the flattened type of the <paramref
+        ///      name="unnestNode" />.
+        ///     The <paramref name="unnestNode" /> contains a TVF call. 
+        ///     Return new node with ProjectOp and <paramref name="newVars" /> representing the projection outputs.
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -773,22 +774,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region AncillaryOp Visitors
 
         /// <summary>
-        /// VarDefListOp
+        ///     VarDefListOp
         /// 
-        /// Walks each VarDefOp child, and "expands" it out if the Var is a 
-        /// structured type. If the Var is of enum type it replaces the var 
-        /// with a var whose type is the underlying type of the enum type from
-        /// the original Var.  If the Var is of strong spatial type it replaces the var 
-        /// with a var whose type is the spatial union type that contains the strong spatial type of
-        /// the original Var.
+        ///     Walks each VarDefOp child, and "expands" it out if the Var is a 
+        ///     structured type. If the Var is of enum type it replaces the var 
+        ///     with a var whose type is the underlying type of the enum type from
+        ///     the original Var.  If the Var is of strong spatial type it replaces the var 
+        ///     with a var whose type is the spatial union type that contains the strong spatial type of
+        ///     the original Var.
         /// 
-        /// For each Var that is expanded, a new expression is created to compute
-        /// its value (from the original computed expression)
-        /// A new VarDefListOp is created to hold all the "expanded" Varlist
+        ///     For each Var that is expanded, a new expression is created to compute
+        ///     its value (from the original computed expression)
+        ///     A new VarDefListOp is created to hold all the "expanded" Varlist
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -832,13 +833,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Helps flatten out a computedVar expression
+        ///     Helps flatten out a computedVar expression
         /// </summary>
-        /// <param name="v">The Var</param>
-        /// <param name="node">Subtree rooted at the VarDefOp expression</param>
-        /// <param name="newNodes">list of new nodes produced</param>
-        /// <param name="newType"></param>
-        /// <returns>VarInfo for this var</returns>
+        /// <param name="v"> The Var </param>
+        /// <param name="node"> Subtree rooted at the VarDefOp expression </param>
+        /// <param name="newNodes"> list of new nodes produced </param>
+        /// <param name="newType"> </param>
+        /// <returns> VarInfo for this var </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void FlattenComputedVar(ComputedVar v, Node node, out List<Node> newNodes, out md.TypeUsage newType)
@@ -916,13 +917,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Is the given propertyRef representing a null sentinel
-        /// It is if:
-        ///  - it is a NullSentinelPropertyRef
-        ///  - it is a NestedPropertyRef with the outer property being a NullSentinelPropertyRef
+        ///     Is the given propertyRef representing a null sentinel
+        ///     It is if:
+        ///     - it is a NullSentinelPropertyRef
+        ///     - it is a NestedPropertyRef with the outer property being a NullSentinelPropertyRef
         /// </summary>
-        /// <param name="propertyRef"></param>
-        /// <returns></returns>
+        /// <param name="propertyRef"> </param>
+        /// <returns> </returns>
         private static bool IsNullSentinelPropertyRef(PropertyRef propertyRef)
         {
             if (propertyRef is NullSentinelPropertyRef)
@@ -938,11 +939,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Helps flatten out an enum or strong spatial Var
+        ///     Helps flatten out an enum or strong spatial Var
         /// </summary>
-        /// <param name="varDefOp">Var definition expression. Must not be null.</param>
-        /// <param name="node">Subtree rooted at the VarDefOp expression. Must not be null.</param>
-        /// <returns>VarDefNode referencing the newly created Var.</returns>
+        /// <param name="varDefOp"> Var definition expression. Must not be null. </param>
+        /// <param name="node"> Subtree rooted at the VarDefOp expression. Must not be null. </param>
+        /// <returns> VarDefNode referencing the newly created Var. </returns>
         private Node FlattenEnumOrStrongSpatialVar(VarDefOp varDefOp, Node node)
         {
             Debug.Assert(varDefOp != null, "varDefOp != null");
@@ -960,11 +961,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region PhysicalOp Visitors
 
         /// <summary>
-        /// PhysicalProjectOp
+        ///     PhysicalProjectOp
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
             // visit my children
@@ -1028,11 +1029,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOp Visitors
 
         /// <summary>
-        /// Walk the input var sequence, flatten each var, and return the new sequence of
-        /// Vars
+        ///     Walk the input var sequence, flatten each var, and return the new sequence of
+        ///     Vars
         /// </summary>
-        /// <param name="vars">input Var sequence</param>
-        /// <returns>flattened output var sequence</returns>
+        /// <param name="vars"> input Var sequence </param>
+        /// <returns> flattened output var sequence </returns>
         private IEnumerable<Var> FlattenVars(IEnumerable<Var> vars)
         {
             foreach (var v in vars)
@@ -1054,11 +1055,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Probe the current VarSet for "structured" Vars - replace these with the
-        /// corresponding sets of flattened Vars
+        ///     Probe the current VarSet for "structured" Vars - replace these with the
+        ///     corresponding sets of flattened Vars
         /// </summary>
-        /// <param name="varSet">current set of vars</param>
-        /// <returns>an "expanded" varset</returns>
+        /// <param name="varSet"> current set of vars </param>
+        /// <returns> an "expanded" varset </returns>
         private VarVec FlattenVarSet(VarVec varSet)
         {
             var newVarSet = m_command.CreateVarVec(FlattenVars(varSet));
@@ -1066,11 +1067,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Build up a new varlist, where each structured var has been replaced by its
-        /// corresponding flattened vars
+        ///     Build up a new varlist, where each structured var has been replaced by its
+        ///     corresponding flattened vars
         /// </summary>
-        /// <param name="varList">the varlist to flatten</param>
-        /// <returns>the new flattened varlist</returns>
+        /// <param name="varList"> the varlist to flatten </param>
+        /// <returns> the new flattened varlist </returns>
         private VarList FlattenVarList(VarList varList)
         {
             var newVarList = Command.CreateVarList(FlattenVars(varList));
@@ -1078,11 +1079,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Simply flatten out every var in the keys, and return a new DistinctOp
+        ///     Simply flatten out every var in the keys, and return a new DistinctOp
         /// </summary>
-        /// <param name="op">DistinctOp</param>
-        /// <param name="n">Current subtree</param>
-        /// <returns></returns>
+        /// <param name="op"> DistinctOp </param>
+        /// <param name="n"> Current subtree </param>
+        /// <returns> </returns>
         public override Node Visit(DistinctOp op, Node n)
         {
             VisitChildren(n);
@@ -1094,17 +1095,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// GroupBy
+        ///     GroupBy
         /// 
-        /// Again, VisitChildren - for the Keys and Properties VarDefList nodes - does
-        /// the real work. 
+        ///     Again, VisitChildren - for the Keys and Properties VarDefList nodes - does
+        ///     the real work. 
         /// 
-        /// The "Keys" and the "OutputVars" varsets are updated to flatten out 
-        /// references to any structured Vars.
+        ///     The "Keys" and the "OutputVars" varsets are updated to flatten out 
+        ///     references to any structured Vars.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(GroupByOp op, Node n)
         {
             VisitChildren(n);
@@ -1123,17 +1124,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// GroupByInto
+        ///     GroupByInto
         /// 
-        /// Again, VisitChildren - for the Keys and Properties VarDefList nodes - does
-        /// the real work. 
+        ///     Again, VisitChildren - for the Keys and Properties VarDefList nodes - does
+        ///     the real work. 
         /// 
-        /// The "Keys", "InputVars" and "OutputVars" varsets are updated to flatten out 
-        /// references to any structured Vars.
+        ///     The "Keys", "InputVars" and "OutputVars" varsets are updated to flatten out 
+        ///     references to any structured Vars.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             VisitChildren(n);
@@ -1153,15 +1154,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// ProjectOp
+        ///     ProjectOp
         /// 
-        /// The computedVars (the VarDefList) are processed via the VisitChildren() call
-        /// We then try to update the "Vars" property to flatten out any structured
-        /// type Vars - if a new VarSet is produced, then the ProjectOp is cloned
+        ///     The computedVars (the VarDefList) are processed via the VisitChildren() call
+        ///     We then try to update the "Vars" property to flatten out any structured
+        ///     type Vars - if a new VarSet is produced, then the ProjectOp is cloned
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(ProjectOp op, Node n)
         {
             VisitChildren(n);
@@ -1182,14 +1183,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// ScanTableOp
+        ///     ScanTableOp
         /// 
-        /// Visit a scanTable Op. Flatten out the table's record into one column
-        /// for each field. Additionally, set up the VarInfo map appropriately
+        ///     Visit a scanTable Op. Flatten out the table's record into one column
+        ///     for each field. Additionally, set up the VarInfo map appropriately
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(ScanTableOp op, Node n)
         {
             var columnVar = op.Table.Columns[0];
@@ -1229,11 +1230,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get the *single" var produced by the subtree rooted at this node. 
-        /// Returns null, if the node produces more than one var, or less than one
+        ///     Get the *single" var produced by the subtree rooted at this node. 
+        ///     Returns null, if the node produces more than one var, or less than one
         /// </summary>
-        /// <param name="n">the node</param>
-        /// <returns>the single var produced by the node</returns>
+        /// <param name="n"> the node </param>
+        /// <returns> the single var produced by the node </returns>
         internal static Var GetSingletonVar(Node n)
         {
             switch (n.Op.OpType)
@@ -1281,14 +1282,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// ScanViewOp
+        ///     ScanViewOp
         /// 
-        /// Flatten out the view definition, and return that after 
-        /// the appropriate remapping
+        ///     Flatten out the view definition, and return that after 
+        ///     the appropriate remapping
         /// </summary>
-        /// <param name="op">the ScanViewOp</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>the flattened view definition</returns>
+        /// <param name="op"> the ScanViewOp </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> the flattened view definition </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "inputVar")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanViewOp")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanViewOp")]
@@ -1325,12 +1326,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Convert a SortOp. Specifically, walk the SortKeys, and expand out 
-        /// any Structured type Var references 
+        ///     Convert a SortOp. Specifically, walk the SortKeys, and expand out 
+        ///     any Structured type Var references
         /// </summary>
-        /// <param name="op">the sortOp</param>
-        /// <param name="n">the current node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the sortOp </param>
+        /// <param name="n"> the current node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(SortOp op, Node n)
         {
             VisitChildren(n);
@@ -1345,16 +1346,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// UnnestOp
+        ///     UnnestOp
         /// 
-        /// Converts an UnnestOp to the right shape. 
-        /// - Visits UnnestOp input node and then rebuilds the Table instance according to the new flattened output of the input node.
-        /// - In the case of a TVF call represented by Unnest(Func()) builds another projection that converts raw TVF output to a collection of flattened rows:
-        ///   Unnest(Func()) -> Project(Unnest(Func()))
+        ///     Converts an UnnestOp to the right shape. 
+        ///     - Visits UnnestOp input node and then rebuilds the Table instance according to the new flattened output of the input node.
+        ///     - In the case of a TVF call represented by Unnest(Func()) builds another projection that converts raw TVF output to a collection of flattened rows:
+        ///     Unnest(Func()) -> Project(Unnest(Func()))
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> new subtree </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newUnnestVar")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "unnest")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1524,15 +1525,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region SetOps
 
         /// <summary>
-        /// SetOp
+        ///     SetOp
         /// 
-        /// Converts all SetOps - union/intersect/except. 
-        /// Calls VisitChildren() to do the bulk of the work. After that, the VarMaps
-        /// need to be updated to reflect the removal of any structured Vars
+        ///     Converts all SetOps - union/intersect/except. 
+        ///     Calls VisitChildren() to do the bulk of the work. After that, the VarMaps
+        ///     need to be updated to reflect the removal of any structured Vars
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> new subtree </returns>
         protected override Node VisitSetOp(SetOp op, Node n)
         {
             VisitChildren(n);
@@ -1558,18 +1559,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Fixes up a SetOp child.
-        /// As part of Var flattening, it may so happen that the outer var in the VarMap
-        /// may require a property that has no corresponding analog in the inner Var
-        /// This logically implies that the corresponding inner property is null. H
-        /// What we do here is to throw an additional projectOp over the setOp child to
-        /// add computed Vars (whose defining expressions are null constants) for each
-        /// of those missing properties
+        ///     Fixes up a SetOp child.
+        ///     As part of Var flattening, it may so happen that the outer var in the VarMap
+        ///     may require a property that has no corresponding analog in the inner Var
+        ///     This logically implies that the corresponding inner property is null. H
+        ///     What we do here is to throw an additional projectOp over the setOp child to
+        ///     add computed Vars (whose defining expressions are null constants) for each
+        ///     of those missing properties
         /// </summary>
-        /// <param name="setOpChild">one child of the setop</param>
-        /// <param name="varMap">the varmap for this child</param>
-        /// <param name="newComputedVars">list of new Vars produced</param>
-        /// <returns>new node for the setOpchild (if any)</returns>
+        /// <param name="setOpChild"> one child of the setop </param>
+        /// <param name="varMap"> the varmap for this child </param>
+        /// <param name="newComputedVars"> list of new Vars produced </param>
+        /// <returns> new node for the setOpchild (if any) </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newComputedVars")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varMap")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "setOpChild")]
@@ -1603,21 +1604,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Flattens out a VarMap. 
+        ///     Flattens out a VarMap. 
         /// 
-        /// Any structured type Vars are expanded out; and collection type Vars 
-        /// are replaced by new Vars that reflect the new collection types.
+        ///     Any structured type Vars are expanded out; and collection type Vars 
+        ///     are replaced by new Vars that reflect the new collection types.
         /// 
-        /// There is one special case when dealing with Structured type Vars -
-        /// the output and input vars may no longer be 1-1; specifically, there 
-        /// may be no input Var corresponding to an output var. In such cases, we 
-        /// build up a new ComputedVar (with an expected value of null), and use that
-        /// in place of the inner var. A subsequent stage will inspect the list of 
-        /// new ComputedVars, and perform the appropriate fixups
+        ///     There is one special case when dealing with Structured type Vars -
+        ///     the output and input vars may no longer be 1-1; specifically, there 
+        ///     may be no input Var corresponding to an output var. In such cases, we 
+        ///     build up a new ComputedVar (with an expected value of null), and use that
+        ///     in place of the inner var. A subsequent stage will inspect the list of 
+        ///     new ComputedVars, and perform the appropriate fixups
         /// </summary>
-        /// <param name="varMap">The VarMap to fixup</param>
-        /// <param name="newComputedVars">list of any new computedVars that are created</param>
-        /// <returns>a new VarMap</returns>
+        /// <param name="varMap"> The VarMap to fixup </param>
+        /// <param name="newComputedVars"> list of any new computedVars that are created </param>
+        /// <returns> a new VarMap </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarInfo")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -1693,11 +1694,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Flattens a SetOpVar (used in SetOps). Simply produces a list of 
-        /// properties corresponding to each desired property
+        ///     Flattens a SetOpVar (used in SetOps). Simply produces a list of 
+        ///     properties corresponding to each desired property
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v"> </param>
+        /// <returns> </returns>
         private VarInfo FlattenSetOpVar(SetOpVar v)
         {
             if (TypeUtils.IsCollectionType(v.Type))
@@ -1761,31 +1762,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ScalarOp Visitors
 
         /// <summary>
-        /// SoftCastOp
+        ///     SoftCastOp
         /// 
-        /// Visit the children first.
+        ///     Visit the children first.
         /// 
-        /// If this is an entity type, complextype or ref type, simply return the
-        ///   visited child. (Rationale: These must be in the same type hierarchy; or
-        ///   the earlier stages of query would have failed. And, we end up
-        ///   using the same "flat" type for every type in the hierarchy)
+        ///     If this is an entity type, complextype or ref type, simply return the
+        ///     visited child. (Rationale: These must be in the same type hierarchy; or
+        ///     the earlier stages of query would have failed. And, we end up
+        ///     using the same "flat" type for every type in the hierarchy)
         /// 
-        /// If this is a scalar type, then simply return the current node 
+        ///     If this is a scalar type, then simply return the current node 
         /// 
-        /// If this is a collection type, then create a new softcastOp over the input
-        ///  (the collection type may have changed)
+        ///     If this is a collection type, then create a new softcastOp over the input
+        ///     (the collection type may have changed)
         /// 
-        /// Otherwise, we're dealing with a record type. Since our earlier 
-        /// definitions of equivalence required that equivalent record types must 
-        /// have the same number of fields, with "promotable" types, and in the same
-        /// order; *and* since we asked for all properties (see PropertyPushdownHelper),
-        /// the input must be a NewRecordOp, whose fields line up 1-1 with our fields. 
-        /// Build up a new NewRecordOp based on the arguments to the input NewRecordOp, 
-        /// and build up SoftCastOps for any field whose type does not match
+        ///     Otherwise, we're dealing with a record type. Since our earlier 
+        ///     definitions of equivalence required that equivalent record types must 
+        ///     have the same number of fields, with "promotable" types, and in the same
+        ///     order; *and* since we asked for all properties (see PropertyPushdownHelper),
+        ///     the input must be a NewRecordOp, whose fields line up 1-1 with our fields. 
+        ///     Build up a new NewRecordOp based on the arguments to the input NewRecordOp, 
+        ///     and build up SoftCastOps for any field whose type does not match
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NullSentinelProperty")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -1895,11 +1896,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Removes or rewrites cast to enum or spatial type.
+        ///     Removes or rewrites cast to enum or spatial type.
         /// </summary>
-        /// <param name="op"><see cref="CastOp"/> operator.</param>
-        /// <param name="n">Current node.</param>
-        /// <returns>Visited, possible rewritten <paramref name="n"/>.</returns>
+        /// <param name="op"> <see cref="CastOp" /> operator. </param>
+        /// <param name="n"> Current node. </param>
+        /// <returns> Visited, possible rewritten <paramref name="n" /> . </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(CastOp op, Node n)
@@ -1946,12 +1947,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Converts Constant enum value to its underlying type.   Converts strong spatial constants to be union typed
-        /// The node is processed only if it represents enum or strong spatial constant.
+        ///     Converts Constant enum value to its underlying type.   Converts strong spatial constants to be union typed
+        ///     The node is processed only if it represents enum or strong spatial constant.
         /// </summary>
-        /// <param name="op"><see cref="ConstantOp"/> operator.</param>
-        /// <param name="n">Current node.</param>
-        /// <returns>Possible rewritten <paramref name="n"/>.</returns>
+        /// <param name="op"> <see cref="ConstantOp" /> operator. </param>
+        /// <param name="n"> Current node. </param>
+        /// <returns> Possible rewritten <paramref name="n" /> . </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ConstantOp op, Node n)
@@ -1985,21 +1986,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// CaseOp
+        ///     CaseOp
         /// 
-        /// Special handling
+        ///     Special handling
         /// 
-        /// If the case statement is of one of the following two shapes:
+        ///     If the case statement is of one of the following two shapes:
         ///     (1) case when X then NULL else Y, or
         ///     (2) case when X then Y else NULL,
-        /// where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
-        /// it gets rewritten into:  Y', where Y's null sentinel N' is:
+        ///     where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
+        ///     it gets rewritten into:  Y', where Y's null sentinel N' is:
         ///     (1) case when X then NULL else N, or
-        /// where N is Y's null sentinel.
+        ///     where N is Y's null sentinel.
         /// </summary>
-        /// <param name="op">the CaseOp</param>
-        /// <param name="n">corresponding node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the CaseOp </param>
+        /// <param name="n"> corresponding node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(CaseOp op, Node n)
         {
             // Before visiting the children, check whether the case statment can be optimized 
@@ -2053,22 +2054,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Given a case statement of one of the following two shapes:
+        ///     Given a case statement of one of the following two shapes:
         ///     (1) case when X then NULL else Y, or
         ///     (2) case when X then Y else NULL,
-        /// where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
-        /// it rewrittes into:  Y', where Y's null sentinel N' is:
+        ///     where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
+        ///     it rewrittes into:  Y', where Y's null sentinel N' is:
         ///     (1) case when X then NULL else N, or
-        /// where N is Y's null sentinel.
+        ///     where N is Y's null sentinel.
         /// 
-        /// The rewrite only happens if: 
+        ///     The rewrite only happens if: 
         ///     (1) Y has null sentinel, and
         ///     (2) Y is a NewRecordOp.
         /// </summary>
-        /// <param name="n"></param>
-        /// <param name="thenClauseIsNull"></param>
-        /// <param name="rewrittenNode"></param>
-        /// <returns>Whether a rewrite was done</returns>
+        /// <param name="n"> </param>
+        /// <param name="thenClauseIsNull"> </param>
+        /// <param name="rewrittenNode"> </param>
+        /// <returns> Whether a rewrite was done </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool TryRewriteCaseOp(Node n, bool thenClauseIsNull, out Node rewrittenNode)
@@ -2114,26 +2115,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Flattens a CaseOp - Specifically, if the CaseOp returns a structuredtype,
-        /// then the CaseOp is broken up so that we build up a "flat" record constructor
-        /// for that structured type, with each argument to the record constructor being 
-        /// a (scalar) CaseOp.  For example:
+        ///     Flattens a CaseOp - Specifically, if the CaseOp returns a structuredtype,
+        ///     then the CaseOp is broken up so that we build up a "flat" record constructor
+        ///     for that structured type, with each argument to the record constructor being 
+        ///     a (scalar) CaseOp.  For example:
         /// 
         ///     Case when b1 then e1 else e2 end
         /// 
-        /// gets translated into:
+        ///     gets translated into:
         /// 
         ///     RecordOp(case when b1 then e1.a else e2.a end,
-        ///              case when b1 then e1.b else e2.b end,
-        ///              ...)
+        ///     case when b1 then e1.b else e2.b end,
+        ///     ...)
         /// 
-        /// The property extraction is optimized by producing only those properties 
-        /// that have actually been requested.
+        ///     The property extraction is optimized by producing only those properties 
+        ///     that have actually been requested.
         /// </summary>
-        /// <param name="n">Node corresponding to the CaseOp</param>
-        /// <param name="typeInfo">Information about the type</param>
-        /// <param name="desiredProperties">Set of properties desired</param>
-        /// <returns></returns>
+        /// <param name="n"> Node corresponding to the CaseOp </param>
+        /// <param name="typeInfo"> Information about the type </param>
+        /// <param name="desiredProperties"> Set of properties desired </param>
+        /// <returns> </returns>
         private Node FlattenCaseOp(Node n, TypeInfo typeInfo, PropertyRefList desiredProperties)
         {
             // Build up a type constructor - with only as many fields filled in 
@@ -2176,13 +2177,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// CollectOp
+        ///     CollectOp
         /// 
-        /// Nothing much to do - simply update the result type
+        ///     Nothing much to do - simply update the result type
         /// </summary>
-        /// <param name="op">the NestOp</param>
-        /// <param name="n">corresponding node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the NestOp </param>
+        /// <param name="n"> corresponding node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(CollectOp op, Node n)
         {
             VisitChildren(n);
@@ -2192,15 +2193,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// ComparisonOp
+        ///     ComparisonOp
         /// 
-        /// If the inputs to the comparisonOp are Refs/records/entitytypes, then
-        /// we need to flatten these out. Of course, the only reasonable comparisons
-        /// should be EQ and NE
+        ///     If the inputs to the comparisonOp are Refs/records/entitytypes, then
+        ///     we need to flatten these out. Of course, the only reasonable comparisons
+        ///     should be EQ and NE
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(ComparisonOp op, Node n)
@@ -2262,13 +2263,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// ConditionalOp
+        ///     ConditionalOp
         /// 
-        /// IsNull requires special handling.
+        ///     IsNull requires special handling.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetPropertyValues")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IsNull")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -2336,12 +2337,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Convert a ConstrainedSortOp. Specifically, walk the SortKeys, and expand out 
-        /// any Structured type Var references 
+        ///     Convert a ConstrainedSortOp. Specifically, walk the SortKeys, and expand out 
+        ///     any Structured type Var references
         /// </summary>
-        /// <param name="op">the constrainedSortOp</param>
-        /// <param name="n">the current node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the constrainedSortOp </param>
+        /// <param name="n"> the current node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(ConstrainedSortOp op, Node n)
         {
             VisitChildren(n);
@@ -2356,36 +2357,36 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// GetEntityKeyOp
+        ///     GetEntityKeyOp
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(GetEntityRefOp op, Node n)
         {
             return FlattenGetKeyOp(op, n);
         }
 
         /// <summary>
-        /// GetRefKeyOp
+        ///     GetRefKeyOp
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(GetRefKeyOp op, Node n)
         {
             return FlattenGetKeyOp(op, n);
         }
 
         /// <summary>
-        /// GetEntityKeyOp/GetRefKeyOp common handling
+        ///     GetEntityKeyOp/GetRefKeyOp common handling
         /// 
-        /// In either case, get the "key" properties from the input entity/ref, and 
-        /// build up a record constructor from these values
+        ///     In either case, get the "key" properties from the input entity/ref, and 
+        ///     build up a record constructor from these values
         /// </summary>
-        /// <param name="op">the GetRefKey/GetEntityKey op</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>new expression subtree</returns>
+        /// <param name="op"> the GetRefKey/GetEntityKey op </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> new expression subtree </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "fieldTypes")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "OpType")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRef")]
@@ -2441,13 +2442,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Common handler for PropertyOp and RelPropertyOp
+        ///     Common handler for PropertyOp and RelPropertyOp
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <param name="propertyRef"></param>
-        /// <param name="throwIfMissing">ignore missing properties</param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <param name="propertyRef"> </param>
+        /// <param name="throwIfMissing"> ignore missing properties </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2506,31 +2507,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// PropertyOp
+        ///     PropertyOp
         /// 
-        /// If this is a scalar/collection property, then simply get the appropriate
-        /// field out.
+        ///     If this is a scalar/collection property, then simply get the appropriate
+        ///     field out.
         /// 
-        /// Otherwise, build up a record constructor corresponding to the result
-        /// type - optimize this by only getting those properties that are needed
+        ///     Otherwise, build up a record constructor corresponding to the result
+        ///     type - optimize this by only getting those properties that are needed
         /// 
-        /// If the instance is not a structured type (ie) it is a UDT, then simply return
-        /// 
+        ///     If the instance is not a structured type (ie) it is a UDT, then simply return
         /// </summary>
-        /// <param name="op">the PropertyOp</param>
-        /// <param name="n">the corresponding node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the PropertyOp </param>
+        /// <param name="n"> the corresponding node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(PropertyOp op, Node n)
         {
             return VisitPropertyOp(op, n, new SimplePropertyRef(op.PropertyInfo), throwIfMissing: true);
         }
 
         /// <summary>
-        /// RelPropertyOp. Pick out the appropriate property from the child
+        ///     RelPropertyOp. Pick out the appropriate property from the child
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(RelPropertyOp op, Node n)
         {
             // DevDiv #7246: When the underlying source is "OF TYPE ONLY" query, the view does not have the
@@ -2540,14 +2540,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// RefOp
+        ///     RefOp
         /// 
-        /// Simply convert this into the corresponding record type - with one
-        /// field for each key, and one for the entitysetid
+        ///     Simply convert this into the corresponding record type - with one
+        ///     field for each key, and one for the entitysetid
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "entitySetId")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2629,15 +2629,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// VarRefOp
+        ///     VarRefOp
         /// 
-        /// Replace a VarRef with a copy of the corresponding "Record" constructor.
-        /// For collection and enum Var references replaces VarRef with the new Var
-        /// stored in the VarInfo.
+        ///     Replace a VarRef with a copy of the corresponding "Record" constructor.
+        ///     For collection and enum Var references replaces VarRef with the new Var
+        ///     stored in the VarInfo.
         /// </summary>
-        /// <param name="op">the VarRefOp</param>
-        /// <param name="n">the node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the VarRefOp </param>
+        /// <param name="n"> the node </param>
+        /// <returns> new subtree </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varInfo")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2689,46 +2689,46 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region record construction ops
 
         /// <summary>
-        /// Handler for NewEntity
+        ///     Handler for NewEntity
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(NewEntityOp op, Node n)
         {
             return FlattenConstructor(op, n);
         }
 
         /// <summary>
-        /// NewInstanceOp
+        ///     NewInstanceOp
         /// </summary>
-        /// <param name="op">the NewInstanceOp</param>
-        /// <param name="n">corresponding node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the NewInstanceOp </param>
+        /// <param name="n"> corresponding node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(NewInstanceOp op, Node n)
         {
             return FlattenConstructor(op, n);
         }
 
         /// <summary>
-        /// DiscriminatedNewInstanceOp
+        ///     DiscriminatedNewInstanceOp
         /// </summary>
-        /// <param name="op">the DiscriminatedNewInstanceOp</param>
-        /// <param name="n">corresponding node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the DiscriminatedNewInstanceOp </param>
+        /// <param name="n"> corresponding node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(DiscriminatedNewEntityOp op, Node n)
         {
             return FlattenConstructor(op, n);
         }
 
         /// <summary>
-        /// Given an explicit discriminator value, map to normalized values. Essentially, this allows
-        /// a discriminated new instance to coexist with free-floating entities, MEST, etc. which use
-        /// general purpose ordpath type ids (e.g. '0X0X')
+        ///     Given an explicit discriminator value, map to normalized values. Essentially, this allows
+        ///     a discriminated new instance to coexist with free-floating entities, MEST, etc. which use
+        ///     general purpose ordpath type ids (e.g. '0X0X')
         /// 
-        /// An example of the normalization is given:
+        ///     An example of the normalization is given:
         /// 
-        /// CASE 
+        ///     CASE 
         ///     WHEN discriminator = 'Base' THEN '0X'
         ///     WHEN discriminator = 'Derived1' THEN '0X0X'
         ///     WHEN discriminator = 'Derived2' THEN '0X1X'
@@ -2774,22 +2774,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// NewRecordOp
+        ///     NewRecordOp
         /// </summary>
-        /// <param name="op">the newRecordOp</param>
-        /// <param name="n">corresponding node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the newRecordOp </param>
+        /// <param name="n"> corresponding node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(NewRecordOp op, Node n)
         {
             return FlattenConstructor(op, n);
         }
 
         /// <summary>
-        /// Build out an expression corresponding to the entitysetid 
+        ///     Build out an expression corresponding to the entitysetid
         /// </summary>
-        /// <param name="entitySetidProperty">the property corresponding to the entitysetid</param>
-        /// <param name="op">the *NewEntity op</param>
-        /// <returns></returns>
+        /// <param name="entitySetidProperty"> the property corresponding to the entitysetid </param>
+        /// <param name="op"> the *NewEntity op </param>
+        /// <returns> </returns>
         private Node GetEntitySetIdExpr(md.EdmProperty entitySetIdProperty, NewEntityBaseOp op)
         {
             Node entitySetIdNode;
@@ -2812,13 +2812,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Flattens out a constructor into a "flat" record constructor. 
-        /// The "flat" record type is looked up for the current constructor's type,
-        /// and each property is filled out from the current constructor's fields
+        ///     Flattens out a constructor into a "flat" record constructor. 
+        ///     The "flat" record type is looked up for the current constructor's type,
+        ///     and each property is filled out from the current constructor's fields
         /// </summary>
-        /// <param name="op">The NewRecordOp/NewInstanceOp</param>
-        /// <param name="n">The current subtree</param>
-        /// <returns>the new subtree</returns>
+        /// <param name="op"> The NewRecordOp/NewInstanceOp </param>
+        /// <param name="n"> The current subtree </param>
+        /// <returns> the new subtree </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -3001,15 +3001,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// NullOp
+        ///     NullOp
         /// 
-        /// If the node represents a null of an entity type it 'flattens' it into a new record,
-        /// with at most one non-null value: for the typeIdProperty, if one is needed.
-        /// If the node represents an null of a non-entity type, no special work is done.
+        ///     If the node represents a null of an entity type it 'flattens' it into a new record,
+        ///     with at most one non-null value: for the typeIdProperty, if one is needed.
+        ///     If the node represents an null of a non-entity type, no special work is done.
         /// </summary>
-        /// <param name="op">The NullOp</param>
-        /// <param name="n">The current subtree</param>
-        /// <returns>the new subtree</returns>
+        /// <param name="op"> The NullOp </param>
+        /// <param name="n"> The current subtree </param>
+        /// <returns> the new subtree </returns>
         public override Node Visit(NullOp op, Node n)
         {
             if (!TypeUtils.IsStructuredType(op.Type))
@@ -3049,17 +3049,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region type comparison ops
 
         /// <summary>
-        /// IsOf
+        ///     IsOf
         /// 
-        /// Convert an IsOf operator into a typeid comparison:
+        ///     Convert an IsOf operator into a typeid comparison:
         /// 
         ///     IsOfOnly(e, T) => e.TypeId == TypeIdValue(T)
         ///     IsOf(e, T)     => e.TypeId like TypeIdValue(T)% escape null
-        /// 
         /// </summary>
-        /// <param name="op">The IsOfOp to handle</param>
-        /// <param name="n">current isof subtree</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> The IsOfOp to handle </param>
+        /// <param name="n"> current isof subtree </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(IsOfOp op, Node n)
         {
             // First visit all my children
@@ -3075,13 +3074,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// TreatOp
+        ///     TreatOp
         /// 
         ///     TreatOp(e, T) => case when e.TypeId like TypeIdValue(T) then T else null end
         /// </summary>
-        /// <param name="op">the TreatOp</param>
-        /// <param name="n">the node</param>
-        /// <returns>new subtree</returns>
+        /// <param name="op"> the TreatOp </param>
+        /// <param name="n"> the node </param>
+        /// <returns> new subtree </returns>
         public override Node Visit(TreatOp op, Node n)
         {
             // First visit all my children
@@ -3125,18 +3124,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Create a typeid-comparison operator - more specifically, create an 
-        /// operator that compares a typeid value with the typeid property of an 
-        /// input structured type.
-        /// The comparison may be "exact" - in which case we're looking for the exact
-        /// type; otherwise, we're looking for any possible subtypes. 
-        /// The "exact" variant is used by the IsOfOp (only); the other variant is
-        /// used by IsOfOp and TreatOp
+        ///     Create a typeid-comparison operator - more specifically, create an 
+        ///     operator that compares a typeid value with the typeid property of an 
+        ///     input structured type.
+        ///     The comparison may be "exact" - in which case we're looking for the exact
+        ///     type; otherwise, we're looking for any possible subtypes. 
+        ///     The "exact" variant is used by the IsOfOp (only); the other variant is
+        ///     used by IsOfOp and TreatOp
         /// </summary>
-        /// <param name="input">The input structured type expression</param>
-        /// <param name="typeInfo">Augmented type information for the type</param>
-        /// <param name="isExact">Exact comparison?</param>
-        /// <returns>New comparison expression</returns>
+        /// <param name="input"> The input structured type expression </param>
+        /// <param name="typeInfo"> Augmented type information for the type </param>
+        /// <param name="isExact"> Exact comparison? </param>
+        /// <returns> New comparison expression </returns>
         private Node CreateTypeComparisonOp(Node input, TypeInfo typeInfo, bool isExact)
         {
             var typeIdProperty = BuildTypeIdAccessor(input, typeInfo);
@@ -3164,15 +3163,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Create a filter matching all types in the given hierarchy (typeIdProperty IN typeInfo.Hierarchy) e.g.:
+        ///     Create a filter matching all types in the given hierarchy (typeIdProperty IN typeInfo.Hierarchy) e.g.:
         /// 
         ///     typeIdProperty = 'Base' OR typeIdProperty = 'Derived1' ...
         ///     
-        /// This is called only for types using DiscriminatorMap (explicit discriminator values)
+        ///     This is called only for types using DiscriminatorMap (explicit discriminator values)
         /// </summary>
-        /// <param name="typeInfo"></param>
-        /// <param name="typeIdProperty"></param>
-        /// <returns>type hierarchy check</returns>
+        /// <param name="typeInfo"> </param>
+        /// <param name="typeIdProperty"> </param>
+        /// <returns> type hierarchy check </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DiscriminatorMap")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -3205,11 +3204,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Generates a node of the form typeIdProperty = typeInfo.TypeId
+        ///     Generates a node of the form typeIdProperty = typeInfo.TypeId
         /// </summary>
-        /// <param name="typeInfo"></param>
-        /// <param name="typeIdProperty"></param>
-        /// <returns>type equality check</returns>
+        /// <param name="typeInfo"> </param>
+        /// <param name="typeIdProperty"> </param>
+        /// <returns> type equality check </returns>
         private Node CreateTypeEqualsOp(TypeInfo typeInfo, Node typeIdProperty)
         {
             var typeIdConstantNode = CreateTypeIdConstant(typeInfo);

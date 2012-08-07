@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     /// <summary>
-    ///     An implementation of <see cref = "IPropertyValuesItem" /> for an item in a <see cref = "ClonedPropertyValues" />.
+    ///     An implementation of <see cref="IPropertyValuesItem" /> for an item in a <see cref="ClonedPropertyValues" />.
     /// </summary>
     internal class ClonedPropertyValuesItem : IPropertyValuesItem
     {
@@ -13,12 +14,12 @@ namespace System.Data.Entity.Internal
         private readonly Type _type;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "ClonedPropertyValuesItem" /> class.
+        ///     Initializes a new instance of the <see cref="ClonedPropertyValuesItem" /> class.
         /// </summary>
-        /// <param name = "name">The name.</param>
-        /// <param name = "value">The value.</param>
-        /// <param name = "type">The type.</param>
-        /// <param name = "isComplex">If set to <c>true</c> this item represents a complex property.</param>
+        /// <param name="name"> The name. </param>
+        /// <param name="value"> The value. </param>
+        /// <param name="type"> The type. </param>
+        /// <param name="isComplex"> If set to <c>true</c> this item represents a complex property. </param>
         public ClonedPropertyValuesItem(string name, object value, Type type, bool isComplex)
         {
             _name = name;
@@ -34,13 +35,13 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets or sets the value of the property represented by this item.
         /// </summary>
-        /// <value>The value.</value>
+        /// <value> The value. </value>
         public object Value { get; set; }
 
         /// <summary>
         ///     Gets the name of the property.
         /// </summary>
-        /// <value>The name.</value>
+        /// <value> The name. </value>
         public string Name
         {
             get { return _name; }
@@ -49,9 +50,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether this item represents a complex property.
         /// </summary>
-        /// <value>
-        ///     <c>true</c> If this instance represents a complex property; otherwise, <c>false</c>.
-        /// </value>
+        /// <value> <c>true</c> If this instance represents a complex property; otherwise, <c>false</c> . </value>
         public bool IsComplex
         {
             get { return _isComplex; }
@@ -60,7 +59,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the type of the underlying property.
         /// </summary>
-        /// <value>The property type.</value>
+        /// <value> The property type. </value>
         public Type Type
         {
             get { return _type; }

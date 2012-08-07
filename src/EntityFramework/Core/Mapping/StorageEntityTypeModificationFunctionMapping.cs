@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Describes modification function mappings for an entity type within an entity set.
+    ///     Describes modification function mappings for an entity type within an entity set.
     /// </summary>
     internal sealed class StorageEntityTypeModificationFunctionMapping
     {
@@ -26,22 +27,22 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets (specific) entity type these functions handle.
+        ///     Gets (specific) entity type these functions handle.
         /// </summary>
         internal readonly EntityType EntityType;
 
         /// <summary>
-        /// Gets delete function for the current entity type.
+        ///     Gets delete function for the current entity type.
         /// </summary>
         internal readonly StorageModificationFunctionMapping DeleteFunctionMapping;
 
         /// <summary>
-        /// Gets insert function for the current entity type.
+        ///     Gets insert function for the current entity type.
         /// </summary>
         internal readonly StorageModificationFunctionMapping InsertFunctionMapping;
 
         /// <summary>
-        /// Gets update function for the current entity type.
+        ///     Gets update function for the current entity type.
         /// </summary>
         internal readonly StorageModificationFunctionMapping UpdateFunctionMapping;
 

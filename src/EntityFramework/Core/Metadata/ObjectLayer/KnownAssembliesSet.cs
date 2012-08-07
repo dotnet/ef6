@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -7,17 +8,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    /// This class is responsible for keeping track of which assemblies we have already 
-    /// considered so we don't reconsider them again. 
+    ///     This class is responsible for keeping track of which assemblies we have already 
+    ///     considered so we don't reconsider them again. 
     /// 
-    /// The current rules for an assembly to be "seen" is
+    ///     The current rules for an assembly to be "seen" is
     ///     1. It is already in our dictionary
     ///     AND
-    ///         1.  We are in attribute loading mode
-    ///         OR
-    ///         2. We have seen it already with a non null EdmItemCollection
-    ///         OR
-    ///         3. We are seeing it with a null EdmItemCollection this time
+    ///     1.  We are in attribute loading mode
+    ///     OR
+    ///     2. We have seen it already with a non null EdmItemCollection
+    ///     OR
+    ///     3. We are seeing it with a null EdmItemCollection this time
     /// </summary>
     internal class KnownAssembliesSet
     {

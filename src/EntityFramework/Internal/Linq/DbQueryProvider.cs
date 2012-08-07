@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Data.Entity.Core.Objects;
@@ -13,9 +14,9 @@ namespace System.Data.Entity.Internal.Linq
 
     /// <summary>
     ///     A wrapping query provider that performs expression transformation and then delegates
-    ///     to the <see cref = "ObjectQuery" /> provider.  The <see cref = "IQueryable" /> objects returned
-    ///     are always instances of <see cref = "DbQuery{TResult}" />. This provider is associated with
-    ///     generic <see cref = "DbQuery{T}" /> objects.
+    ///     to the <see cref="ObjectQuery" /> provider.  The <see cref="IQueryable" /> objects returned
+    ///     are always instances of <see cref="DbQuery{TResult}" />. This provider is associated with
+    ///     generic <see cref="DbQuery{T}" /> objects.
     /// </summary>
     internal class DbQueryProvider : IQueryProvider, IDbAsyncQueryProvider
     {
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Creates a provider that wraps the given provider.
         /// </summary>
-        /// <param name = "provider">The provider to wrap.</param>
+        /// <param name="provider"> The provider to wrap. </param>
         public DbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
         {
             Contract.Requires(internalContext != null);
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Internal.Linq
 
         /// <summary>
         ///     Performs expression replacement and then delegates to the wrapped provider before wrapping
-        ///     the returned <see cref = "ObjectQuery" /> as a <see cref = "DbQuery{T}" />.
+        ///     the returned <see cref="ObjectQuery" /> as a <see cref="DbQuery{T}" />.
         /// </summary>
         public virtual IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Internal.Linq
 
         /// <summary>
         ///     Performs expression replacement and then delegates to the wrapped provider before wrapping
-        ///     the returned <see cref = "ObjectQuery" /> as a <see cref = "DbQuery{T}" /> where T is determined
+        ///     the returned <see cref="ObjectQuery" /> as a <see cref="DbQuery{T}" /> where T is determined
         ///     from the element type of the ObjectQuery.
         /// </summary>
         public virtual IQueryable CreateQuery(Expression expression)
@@ -145,7 +146,7 @@ namespace System.Data.Entity.Internal.Linq
 
         /// <summary>
         ///     Performs expression replacement and then delegates to the wrapped provider to create an
-        ///     <see cref = "ObjectQuery" />.
+        ///     <see cref="ObjectQuery" />.
         /// </summary>
         protected ObjectQuery CreateObjectQuery(Expression expression)
         {
@@ -157,7 +158,7 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Wraps the given <see cref = "ObjectQuery" /> as a <see cref = "InternalQuery{T}" /> where T is determined
+        ///     Wraps the given <see cref="ObjectQuery" /> as a <see cref="InternalQuery{T}" /> where T is determined
         ///     from the element type of the ObjectQuery.
         /// </summary>
         protected IInternalQuery CreateInternalQuery(ObjectQuery objectQuery)
@@ -175,7 +176,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Gets the internal context.
         /// </summary>
-        /// <value>The internal context.</value>
+        /// <value> The internal context. </value>
         public InternalContext InternalContext
         {
             get { return _internalContext; }

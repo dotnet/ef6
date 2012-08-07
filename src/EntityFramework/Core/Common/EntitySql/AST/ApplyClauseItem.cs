@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents apply expression.
+    ///     Represents apply expression.
     /// </summary>
     internal sealed class ApplyClauseItem : Node
     {
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly ApplyKind _applyKind;
 
         /// <summary>
-        /// Initializes apply clause item.
+        ///     Initializes apply clause item.
         /// </summary>
         internal ApplyClauseItem(FromClauseItem applyLeft, FromClauseItem applyRight, ApplyKind applyKind)
         {
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns apply left expression.
+        ///     Returns apply left expression.
         /// </summary>
         internal FromClauseItem LeftExpr
         {
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns apply right expression.
+        ///     Returns apply right expression.
         /// </summary>
         internal FromClauseItem RightExpr
         {
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns apply kind (cross,outer).
+        ///     Returns apply kind (cross,outer).
         /// </summary>
         internal ApplyKind ApplyKind
         {

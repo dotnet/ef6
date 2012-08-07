@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Data.Common;
@@ -6,23 +7,23 @@ namespace System.Data.Entity.Core
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// DataRecord interface supporting structured types and rich metadata information.
+    ///     DataRecord interface supporting structured types and rich metadata information.
     /// </summary>
     public interface IExtendedDataRecord : IDataRecord
     {
         /// <summary>
-        /// DataRecordInfo property describing the contents of the record.
+        ///     DataRecordInfo property describing the contents of the record.
         /// </summary>
         DataRecordInfo DataRecordInfo { get; }
 
         /// <summary>
-        /// Used to return a nested DbDataRecord.
+        ///     Used to return a nested DbDataRecord.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "i")]
         DbDataRecord GetDataRecord(int i);
 
         /// <summary>
-        /// Used to return a nested result
+        ///     Used to return a nested result
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "i")]
         DbDataReader GetDataReader(int i);

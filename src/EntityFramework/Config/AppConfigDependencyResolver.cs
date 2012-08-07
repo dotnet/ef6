@@ -11,7 +11,7 @@ namespace System.Data.Entity.Config
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Resolves dependencies from a config file.
+    ///     Resolves dependencies from a config file.
     /// </summary>
     internal class AppConfigDependencyResolver : IDbDependencyResolver
     {

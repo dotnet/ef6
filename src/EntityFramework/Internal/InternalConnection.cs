@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
@@ -15,8 +16,8 @@ namespace System.Data.Entity.Internal
 
     /// <summary>
     ///     InternalConnection objects manage DbConnections.
-    ///     Two concrete base classes of this abstract interface exist:<see cref = "LazyInternalConnection" />
-    ///     and <see cref = "EagerInternalConnection" />.
+    ///     Two concrete base classes of this abstract interface exist:<see cref="LazyInternalConnection" />
+    ///     and <see cref="EagerInternalConnection" />.
     /// </summary>
     internal abstract class InternalConnection : IInternalConnection
     {
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Internal
         ///     Returns a key consisting of the connection type and connection string.
         ///     If this is an EntityConnection then the metadata path is included in the key returned.
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         public virtual string ConnectionKey
         {
             get
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Internal
         ///     metadata specifying the model, or instead is a store connection, in which case it contains no
         ///     model info.
         /// </summary>
-        /// <value><c>true</c> if the connection contains model info; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if the connection contains model info; otherwise, <c>false</c> . </value>
         public virtual bool ConnectionHasModel
         {
             get
@@ -138,10 +139,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates an <see cref = "ObjectContext" /> from metadata in the connection.  This method must
+        ///     Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
         ///     only be called if ConnectionHasModel returns true.
         /// </summary>
-        /// <returns>The newly created context.</returns>
+        /// <returns> The newly created context. </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContext CreateObjectContextFromConnectionModel()
         {
@@ -168,10 +169,10 @@ namespace System.Data.Entity.Internal
         public abstract void Dispose();
 
         /// <summary>
-        ///     Gets or sets the underlying <see cref = "DbConnection" /> object.  No initialization is done when the
+        ///     Gets or sets the underlying <see cref="DbConnection" /> object.  No initialization is done when the
         ///     connection is obtained, and it can also be set to null.
         /// </summary>
-        /// <value>The underlying connection.</value>
+        /// <value> The underlying connection. </value>
         protected DbConnection UnderlyingConnection { get; set; }
 
         /// <summary>

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    /// Helps map one variable to the next.
+    ///     Helps map one variable to the next.
     /// </summary>
     internal class VarMap : Dictionary<Var, Var>
     {

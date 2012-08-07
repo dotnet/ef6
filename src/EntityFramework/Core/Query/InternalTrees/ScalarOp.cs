@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
     /// <summary>
-    /// All scalars fall into this category
+    ///     All scalars fall into this category
     /// </summary>
     internal abstract class ScalarOp : Op
     {
@@ -18,10 +19,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
-        /// <param name="opType">kind of Op</param>
-        /// <param name="type">type of value produced by this Op</param>
+        /// <param name="opType"> kind of Op </param>
+        /// <param name="type"> type of value produced by this Op </param>
         internal ScalarOp(OpType opType, TypeUsage type)
             : this(opType)
         {
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        /// ScalarOp
+        ///     ScalarOp
         /// </summary>
         internal override bool IsScalarOp
         {
@@ -47,19 +48,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Two scalarOps are equivalent (usually) if their OpTypes and types are the 
-        /// same. Obviously, their arguments need to be equivalent as well - but that's
-        /// checked elsewhere
+        ///     Two scalarOps are equivalent (usually) if their OpTypes and types are the 
+        ///     same. Obviously, their arguments need to be equivalent as well - but that's
+        ///     checked elsewhere
         /// </summary>
-        /// <param name="other">The other Op to compare against</param>
-        /// <returns>true, if the Ops are indeed equivalent</returns>
+        /// <param name="other"> The other Op to compare against </param>
+        /// <returns> true, if the Ops are indeed equivalent </returns>
         internal override bool IsEquivalent(Op other)
         {
             return (other.OpType == OpType && TypeSemantics.IsStructurallyEqual(Type, other.Type));
         }
 
         /// <summary>
-        /// Datatype of result
+        ///     Datatype of result
         /// </summary>
         internal override TypeUsage Type
         {
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this an Aggregate
+        ///     Is this an Aggregate
         /// </summary>
         internal virtual bool IsAggregateOp
         {

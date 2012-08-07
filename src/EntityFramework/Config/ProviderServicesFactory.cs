@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Config
     using System.Reflection;
 
     /// <summary>
-    /// Responsible for obtaining <see cref="DbProviderServices"/> Singleton instances.
+    ///     Responsible for obtaining <see cref="DbProviderServices" /> Singleton instances.
     /// </summary>
     internal class ProviderServicesFactory
     {

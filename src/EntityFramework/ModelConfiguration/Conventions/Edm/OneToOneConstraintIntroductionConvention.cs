@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
@@ -35,10 +36,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         dependentEnd = dependentEnd ?? associationType.TargetEnd;
 
                         var constraint = new EdmAssociationConstraint
-                            {
-                                DependentEnd = dependentEnd,
-                                DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
-                            };
+                                             {
+                                                 DependentEnd = dependentEnd,
+                                                 DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
+                                             };
 
                         associationType.Constraint = constraint;
                     }

@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Enumerates all <see cref = "EdmStructuralMember" /> s declared or inherited by an <see cref = "EdmStructuralType" /> .
+    ///     Enumerates all <see cref="EdmStructuralMember" /> s declared or inherited by an <see cref="EdmStructuralType" /> .
     /// </summary>
     internal sealed class EdmStructuralTypeMemberCollection : IEnumerable<EdmStructuralMember>
     {

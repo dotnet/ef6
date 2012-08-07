@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.ComponentModel;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Globalization;
 
     /// <summary>
-    /// Class representing a parameter used in EntityCommand
+    ///     Class representing a parameter used in EntityCommand
     /// </summary>
     public class EntityParameter : DbParameter, IDbDataParameter
     {
@@ -35,17 +36,17 @@ namespace System.Data.Entity.Core.EntityClient
         private bool? _isNullable;
 
         /// <summary>
-        /// Constructs the EntityParameter object
+        ///     Constructs the EntityParameter object
         /// </summary>
         public EntityParameter()
         {
         }
 
         /// <summary>
-        /// Constructs the EntityParameter object with the given parameter name and the type of the parameter
+        ///     Constructs the EntityParameter object with the given parameter name and the type of the parameter
         /// </summary>
-        /// <param name="parameterName">The name of the parameter</param>
-        /// <param name="dbType">The type of the parameter</param>
+        /// <param name="parameterName"> The name of the parameter </param>
+        /// <param name="dbType"> The type of the parameter </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType)
         {
@@ -54,12 +55,12 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Constructs the EntityParameter object with the given parameter name, the type of the parameter, and the size of the
-        /// parameter
+        ///     Constructs the EntityParameter object with the given parameter name, the type of the parameter, and the size of the
+        ///     parameter
         /// </summary>
-        /// <param name="parameterName">The name of the parameter</param>
-        /// <param name="dbType">The type of the parameter</param>
-        /// <param name="size">The size of the parameter</param>
+        /// <param name="parameterName"> The name of the parameter </param>
+        /// <param name="dbType"> The type of the parameter </param>
+        /// <param name="size"> The size of the parameter </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size)
         {
@@ -69,13 +70,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Constructs the EntityParameter object with the given parameter name, the type of the parameter, the size of the
-        /// parameter, and the name of the source column
+        ///     Constructs the EntityParameter object with the given parameter name, the type of the parameter, the size of the
+        ///     parameter, and the name of the source column
         /// </summary>
-        /// <param name="parameterName">The name of the parameter</param>
-        /// <param name="dbType">The type of the parameter</param>
-        /// <param name="size">The size of the parameter</param>
-        /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
+        /// <param name="parameterName"> The name of the parameter </param>
+        /// <param name="dbType"> The type of the parameter </param>
+        /// <param name="size"> The size of the parameter </param>
+        /// <param name="sourceColumn"> The name of the source column mapped to the data set, used for loading the parameter value </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size, string sourceColumn)
         {
@@ -86,19 +87,19 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Constructs the EntityParameter object with the given parameter name, the type of the parameter, the size of the
-        /// parameter, and the name of the source column
+        ///     Constructs the EntityParameter object with the given parameter name, the type of the parameter, the size of the
+        ///     parameter, and the name of the source column
         /// </summary>
-        /// <param name="parameterName">The name of the parameter</param>
-        /// <param name="dbType">The type of the parameter</param>
-        /// <param name="size">The size of the parameter</param>
-        /// <param name="direction">The direction of the parameter, whether it's input/output/both/return value</param>
-        /// <param name="isNullable">If the parameter is nullable</param>
-        /// <param name="precision">The floating point precision of the parameter, valid only if the parameter type is a floating point type</param>
-        /// <param name="scale">The scale of the parameter, valid only if the parameter type is a floating point type</param>
-        /// <param name="sourceColumn">The name of the source column mapped to the data set, used for loading the parameter value</param>
-        /// <param name="sourceVersion">The data row version to use when loading the parameter value</param>
-        /// <param name="value">The value of the parameter</param>
+        /// <param name="parameterName"> The name of the parameter </param>
+        /// <param name="dbType"> The type of the parameter </param>
+        /// <param name="size"> The size of the parameter </param>
+        /// <param name="direction"> The direction of the parameter, whether it's input/output/both/return value </param>
+        /// <param name="isNullable"> If the parameter is nullable </param>
+        /// <param name="precision"> The floating point precision of the parameter, valid only if the parameter type is a floating point type </param>
+        /// <param name="scale"> The scale of the parameter, valid only if the parameter type is a floating point type </param>
+        /// <param name="sourceColumn"> The name of the source column mapped to the data set, used for loading the parameter value </param>
+        /// <param name="sourceVersion"> The data row version to use when loading the parameter value </param>
+        /// <param name="value"> The value of the parameter </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(
             string parameterName,
@@ -139,7 +140,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The name of the parameter
+        ///     The name of the parameter
         /// </summary>
         public override string ParameterName
         {
@@ -148,13 +149,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Helper method to validate the parameter name; Ideally we'd only call this once, but 
-        /// we have to put an argumentName on the Argument exception, and the property setter would
-        /// need "value" which confuses folks when they call the constructor that takes the value 
-        /// of the parameter.  c'est la vie.
+        ///     Helper method to validate the parameter name; Ideally we'd only call this once, but 
+        ///     we have to put an argumentName on the Argument exception, and the property setter would
+        ///     need "value" which confuses folks when they call the constructor that takes the value 
+        ///     of the parameter.  c'est la vie.
         /// </summary>
-        /// <param name="parameterName"></param>
-        /// <param name="argumentName"></param>
+        /// <param name="parameterName"> </param>
+        /// <param name="argumentName"> </param>
         private void SetParameterNameWithValidation(string parameterName, string argumentName)
         {
             if (!string.IsNullOrEmpty(parameterName)
@@ -168,7 +169,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The type of the parameter, EdmType may also be set, and may provide more detailed information.
+        ///     The type of the parameter, EdmType may also be set, and may provide more detailed information.
         /// </summary>
         public override DbType DbType
         {
@@ -214,10 +215,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The type of the parameter, expressed as an EdmType.
-        /// May be null (which is what it will be if unset).  This means
-        /// that the DbType contains all the type information.
-        /// Non-null values must not contradict DbType (only restate or specialize).
+        ///     The type of the parameter, expressed as an EdmType.
+        ///     May be null (which is what it will be if unset).  This means
+        ///     that the DbType contains all the type information.
+        ///     Non-null values must not contradict DbType (only restate or specialize).
         /// </summary>
         public virtual EdmType EdmType
         {
@@ -236,7 +237,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The precision of the parameter if the parameter is a floating point type
+        ///     The precision of the parameter if the parameter is a floating point type
         /// </summary>
         public virtual byte Precision
         {
@@ -253,7 +254,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The scale of the parameter if the parameter is a floating point type
+        ///     The scale of the parameter if the parameter is a floating point type
         /// </summary>
         public virtual byte Scale
         {
@@ -270,7 +271,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The value of the parameter
+        ///     The value of the parameter
         /// </summary>
         public override object Value
         {
@@ -309,7 +310,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets whether this collection has been changes since the last reset
+        ///     Gets whether this collection has been changes since the last reset
         /// </summary>
         internal virtual bool IsDirty
         {
@@ -317,7 +318,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Indicates whether the DbType property has been set by the user;
+        ///     Indicates whether the DbType property has been set by the user;
         /// </summary>
         internal virtual bool IsDbTypeSpecified
         {
@@ -325,7 +326,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Indicates whether the Direction property has been set by the user;
+        ///     Indicates whether the Direction property has been set by the user;
         /// </summary>
         internal virtual bool IsDirectionSpecified
         {
@@ -333,7 +334,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Indicates whether the IsNullable property has been set by the user;
+        ///     Indicates whether the IsNullable property has been set by the user;
         /// </summary>
         internal virtual bool IsIsNullableSpecified
         {
@@ -341,7 +342,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Indicates whether the Precision property has been set by the user;
+        ///     Indicates whether the Precision property has been set by the user;
         /// </summary>
         internal virtual bool IsPrecisionSpecified
         {
@@ -349,7 +350,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Indicates whether the Scale property has been set by the user;
+        ///     Indicates whether the Scale property has been set by the user;
         /// </summary>
         internal virtual bool IsScaleSpecified
         {
@@ -357,7 +358,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Indicates whether the Size property has been set by the user;
+        ///     Indicates whether the Size property has been set by the user;
         /// </summary>
         internal virtual bool IsSizeSpecified
         {
@@ -491,7 +492,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Resets the DbType property to its original settings
+        ///     Resets the DbType property to its original settings
         /// </summary>
         public override void ResetDbType()
         {
@@ -506,7 +507,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Marks that this parameter has been changed
+        ///     Marks that this parameter has been changed
         /// </summary>
         private void PropertyChanging()
         {
@@ -514,28 +515,28 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Determines the size of the given object
+        ///     Determines the size of the given object
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value"> </param>
+        /// <returns> </returns>
         private static int ValueSize(object value)
         {
             return ValueSizeCore(value);
         }
 
         /// <summary>
-        /// Clones this parameter object
+        ///     Clones this parameter object
         /// </summary>
-        /// <returns>The new cloned object</returns>
+        /// <returns> The new cloned object </returns>
         internal virtual EntityParameter Clone()
         {
             return new EntityParameter(this);
         }
 
         /// <summary>
-        /// Clones this parameter object
+        ///     Clones this parameter object
         /// </summary>
-        /// <returns>The new cloned object</returns>
+        /// <returns> The new cloned object </returns>
         private void CloneHelper(EntityParameter destination)
         {
             destination._value = _value;
@@ -556,10 +557,12 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get the type usage for this parameter in model terms.
+        ///     Get the type usage for this parameter in model terms.
         /// </summary>
-        /// <returns>The type usage for this parameter</returns>
-        /// <remarks>Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution</remarks>
+        /// <returns> The type usage for this parameter </returns>
+        /// <remarks>
+        ///     Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution
+        /// </remarks>
         internal virtual TypeUsage GetTypeUsage()
         {
             TypeUsage typeUsage;
@@ -597,7 +600,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Reset the dirty flag on the collection
+        ///     Reset the dirty flag on the collection
         /// </summary>
         internal virtual void ResetIsDirty()
         {

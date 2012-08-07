@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
     using System.Collections.Generic;
@@ -235,18 +236,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        /// Traverse the tree and perform the following rewrites:
+        ///     Traverse the tree and perform the following rewrites:
         ///     1. Flatten unions contained as left children of LOJs: LOJ(A, Union(B, C)) -> LOJ(A, B, C).
         ///     2. Rewrite flat LOJs into nested LOJs. The nesting is determined by FKs between right cell table PKs.
-        ///        Example: if we have an LOJ(A, B, C, D) and we know there are FKs from C.PK and D.PK to B.PK,
-        ///        we want to rewrite into this - LOJ(A, LOJ(B, C, D)).
+        ///     Example: if we have an LOJ(A, B, C, D) and we know there are FKs from C.PK and D.PK to B.PK,
+        ///     we want to rewrite into this - LOJ(A, LOJ(B, C, D)).
         ///     3. As a special case we also look into LOJ driving node (left most child in LOJ) and if it is an IJ,
-        ///        then we consider attaching LOJ children to nodes inside IJ based on the same principle as above.
-        ///        Example: LOJ(IJ(A, B, C), D, E, F) -> LOJ(IJ(LOJ(A, D), B, LOJ(C, E)), F) iff D has FK to A and E has FK to C.
+        ///     then we consider attaching LOJ children to nodes inside IJ based on the same principle as above.
+        ///     Example: LOJ(IJ(A, B, C), D, E, F) -> LOJ(IJ(LOJ(A, D), B, LOJ(C, E)), F) iff D has FK to A and E has FK to C.
         ///        
-        /// This normalization enables FK-based join elimination in plan compiler, so for a query such as
-        /// "select e.ID from ABCDSet" we want plan compiler to produce "select a.ID from A" instead of 
-        /// "select a.ID from A LOJ B LOJ C LOJ D".
+        ///     This normalization enables FK-based join elimination in plan compiler, so for a query such as
+        ///     "select e.ID from ABCDSet" we want plan compiler to produce "select a.ID from A" instead of 
+        ///     "select a.ID from A LOJ B LOJ C LOJ D".
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private CellTreeNode ConvertUnionsToNormalizedLOJs(CellTreeNode rootNode)

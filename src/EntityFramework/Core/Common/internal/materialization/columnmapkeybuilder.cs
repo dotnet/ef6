@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
@@ -11,14 +12,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Text;
 
     /// <summary>
-    /// Supports building a unique key for a column map so that compiled delegates (<see cref="ShaperFactory"/>)
-    /// can be cached. The general rule: if the <see cref="Translator"/> cares about some property of
-    /// the column map, the generated key must include that property value.
+    ///     Supports building a unique key for a column map so that compiled delegates (<see cref="ShaperFactory" />)
+    ///     can be cached. The general rule: if the <see cref="Translator" /> cares about some property of
+    ///     the column map, the generated key must include that property value.
     /// </summary>
     /// <remarks>
-    /// IMPORTANT:
-    /// The "X-" prefixes introduced in the different column map types should be unique. This avoids
-    /// conflicts for different column maps with similar properties (e.g. ComplexType and EntityType)
+    ///     IMPORTANT:
+    ///     The "X-" prefixes introduced in the different column map types should be unique. This avoids
+    ///     conflicts for different column maps with similar properties (e.g. ComplexType and EntityType)
     /// </remarks>
     internal class ColumnMapKeyBuilder : ColumnMapVisitor<int>
     {
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         #region "public" surface area
 
         /// <summary>
-        /// Returns a string uniquely identifying the given ColumnMap.
+        ///     Returns a string uniquely identifying the given ColumnMap.
         /// </summary>
         internal static string GetColumnMapKey(ColumnMap columnMap, SpanIndex spanIndex)
         {

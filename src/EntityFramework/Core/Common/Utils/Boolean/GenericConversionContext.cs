@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Linq;
 
     /// <summary>
-    /// Generic implementation of a ConversionContext
+    ///     Generic implementation of a ConversionContext
     /// </summary>
     internal sealed class GenericConversionContext<T_Identifier> : ConversionContext<T_Identifier>
     {

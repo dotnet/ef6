@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Resources;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the default coordinate system id (SRID) for geometry values.
+        ///     Gets the default coordinate system id (SRID) for geometry values.
         /// </summary>
         public static int DefaultCoordinateSystemId
         {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets a representation of this DbGeometry value that is specific to the underlying provider that constructed it.
+        ///     Gets a representation of this DbGeometry value that is specific to the underlying provider that constructed it.
         /// </summary>
         public object ProviderValue
         {
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the spatial provider that will be used for operations on this spatial type.
+        ///     Gets the spatial provider that will be used for operations on this spatial type.
         /// </summary>
         public virtual DbSpatialServices Provider
         {
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets or sets a data contract serializable well known representation of this DbGeometry value.
+        ///     Gets or sets a data contract serializable well known representation of this DbGeometry value.
         /// </summary>
         [DataMember(Name = "Geometry")]
         public DbGeometryWellKnownValue WellKnownValue
@@ -74,11 +75,14 @@ namespace System.Data.Entity.Spatial
         #region Well Known Binary Static Constructors
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> value based on the specified well known binary value. 
+        ///     Creates a new <see cref="DbGeometry" /> value based on the specified well known binary value.
         /// </summary>
-        /// <param name="wellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the default geometry coordinate system identifier (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="wellKnownBinary"/> is null.</exception>
+        /// <param name="wellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the default geometry coordinate system identifier ( <see
+        ///      cref="DbGeometry.DefaultCoordinateSystemId" /> ). </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="wellKnownBinary" />
+        ///     is null.</exception>
         public static DbGeometry FromBinary(byte[] wellKnownBinary)
         {
             Contract.Requires(wellKnownBinary != null);
@@ -86,13 +90,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="wellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="wellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="wellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="wellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry FromBinary(byte[] wellKnownBinary, int coordinateSystemId)
         {
             Contract.Requires(wellKnownBinary != null);
@@ -100,13 +108,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> line value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> line value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="lineWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="lineWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="lineWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="lineWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry LineFromBinary(byte[] lineWellKnownBinary, int coordinateSystemId)
         {
             Contract.Requires(lineWellKnownBinary != null);
@@ -114,13 +126,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> point value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> point value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="pointWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pointWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="pointWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="pointWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry PointFromBinary(byte[] pointWellKnownBinary, int coordinateSystemId)
         {
             Contract.Requires(pointWellKnownBinary != null);
@@ -128,13 +144,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> polygon value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> polygon value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="polygonWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="polygonWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="polygonWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="polygonWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry PolygonFromBinary(byte[] polygonWellKnownBinary, int coordinateSystemId)
         {
             Contract.Requires(polygonWellKnownBinary != null);
@@ -142,13 +162,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> multi-line value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> multi-line value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="multiLineWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="multiLineWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="multiLineWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
@@ -164,13 +188,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> multi-point value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> multi-point value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="multiPointWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="multiPointWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="multiPointWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
@@ -186,13 +214,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> multi-polygon value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> multi-polygon value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="multiPolygonWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="multiPolygonWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="multiPolygonWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
@@ -204,13 +236,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> collection value based on the specified well known binary value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> collection value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="geometryCollectionWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="geometryCollectionWellKnownBinary"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="geometryCollectionWellKnownBinary"> A byte array that contains a well known binary representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="geometryCollectionWellKnownBinary" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry GeometryCollectionFromBinary(byte[] geometryCollectionWellKnownBinary, int coordinateSystemId)
         {
             Contract.Requires(geometryCollectionWellKnownBinary != null);
@@ -222,11 +258,14 @@ namespace System.Data.Entity.Spatial
         #region GML Static Constructors
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> value based on the specified Geography Markup Language (GML) value.
+        ///     Creates a new <see cref="DbGeometry" /> value based on the specified Geography Markup Language (GML) value.
         /// </summary>
-        /// <param name="geometryMarkup">A string that contains a Geography Markup Language (GML) representation of the geometry value.</param>
-        /// <returns>A new DbGeometry value as defined by the GML value with the default geometry coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="geometryMarkup"/> is null.</exception>
+        /// <param name="geometryMarkup"> A string that contains a Geography Markup Language (GML) representation of the geometry value. </param>
+        /// <returns> A new DbGeometry value as defined by the GML value with the default geometry coordinate system identifier (SRID) ( <see
+        ///      cref="DbGeometry.DefaultCoordinateSystemId" /> ). </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="geometryMarkup" />
+        ///     is null.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbGeometry FromGml(string geometryMarkup)
         {
@@ -235,13 +274,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> value based on the specified Geography Markup Language (GML) value and coordinate system identifier (SRID).
+        ///     Creates a new <see cref="DbGeometry" /> value based on the specified Geography Markup Language (GML) value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="geometryMarkup">A string that contains a Geography Markup Language (GML) representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the GML value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="geometryMarkup"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="geometryMarkup"> A string that contains a Geography Markup Language (GML) representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the GML value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="geometryMarkup" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public static DbGeometry FromGml(string geometryMarkup, int coordinateSystemId)
         {
@@ -254,11 +297,14 @@ namespace System.Data.Entity.Spatial
         #region Well Known Text Static Constructors
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> value based on the specified well known text value. 
+        ///     Creates a new <see cref="DbGeometry" /> value based on the specified well known text value.
         /// </summary>
-        /// <param name="wellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the default geometry coordinate system identifier (SRID) (<see cref="DbGeometry.DefaultCoordinateSystemId"/>).</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="wellKnownText"/> is null.</exception>
+        /// <param name="wellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the default geometry coordinate system identifier (SRID) ( <see
+        ///      cref="DbGeometry.DefaultCoordinateSystemId" /> ). </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="wellKnownText" />
+        ///     is null.</exception>
         public static DbGeometry FromText(string wellKnownText)
         {
             Contract.Requires(wellKnownText != null);
@@ -266,13 +312,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="wellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="wellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="wellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="wellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry FromText(string wellKnownText, int coordinateSystemId)
         {
             Contract.Requires(wellKnownText != null);
@@ -280,13 +330,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> line value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> line value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="lineWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="lineWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="lineWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="lineWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry LineFromText(string lineWellKnownText, int coordinateSystemId)
         {
             Contract.Requires(lineWellKnownText != null);
@@ -294,13 +348,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> point value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> point value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="pointWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pointWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="pointWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="pointWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry PointFromText(string pointWellKnownText, int coordinateSystemId)
         {
             Contract.Requires(pointWellKnownText != null);
@@ -308,13 +366,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> polygon value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> polygon value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="polygonWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="polygonWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="polygonWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="polygonWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry PolygonFromText(string polygonWellKnownText, int coordinateSystemId)
         {
             Contract.Requires(polygonWellKnownText != null);
@@ -322,13 +384,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> multi-line value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> multi-line value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="multiLineWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="multiLineWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="multiLineWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="multiLineWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
@@ -344,13 +410,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> multi-point value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> multi-point value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="multiPointWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="multiPointWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="multiPointWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="multiPointWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
@@ -366,13 +436,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> multi-polygon value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> multi-polygon value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="multiPolygonWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="multiPolygonWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="multiPolygonWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="multiPolygonWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
@@ -384,13 +458,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbGeometry"/> collection value based on the specified well known text value and coordinate system identifier (SRID). 
+        ///     Creates a new <see cref="DbGeometry" /> collection value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
-        /// <param name="geometryCollectionWellKnownText">A string that contains a well known text representation of the geometry value.</param>
-        /// <param name="coordinateSystemId">The identifier of the coordinate system that the new DbGeometry value should use.</param>
-        /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="geometryCollectionWellKnownText"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="coordinateSystemId"/> is not valid.</exception>
+        /// <param name="geometryCollectionWellKnownText"> A string that contains a well known text representation of the geometry value. </param>
+        /// <param name="coordinateSystemId"> The identifier of the coordinate system that the new DbGeometry value should use. </param>
+        /// <returns> A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="geometryCollectionWellKnownText" />
+        ///     is null.</exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="coordinateSystemId" />
+        ///     is not valid.</exception>
         public static DbGeometry GeometryCollectionFromText(string geometryCollectionWellKnownText, int coordinateSystemId)
         {
             Contract.Requires(geometryCollectionWellKnownText != null);
@@ -418,7 +496,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the dimension of the given <see cref="DbGeometry"/> value or, if the value is a collection, the dimension of its largest element.
+        ///     Gets the dimension of the given <see cref="DbGeometry" /> value or, if the value is a collection, the dimension of its largest element.
         /// </summary>
         public int Dimension
         {
@@ -426,7 +504,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the envelope (minimum bounding box) of this DbGeometry value, as a geometry value.
+        ///     Gets the envelope (minimum bounding box) of this DbGeometry value, as a geometry value.
         /// </summary>
         public DbGeometry Envelope
         {
@@ -470,27 +548,27 @@ namespace System.Data.Entity.Spatial
         #region Geometry Well Known Format Conversion
 
         /// <summary>
-        /// Generates the well known text representation of this DbGeometry value.  Includes only X and Y coordinates for points.
+        ///     Generates the well known text representation of this DbGeometry value.  Includes only X and Y coordinates for points.
         /// </summary>
-        /// <returns>A string containing the well known text representation of this DbGeometry value.</returns>
+        /// <returns> A string containing the well known text representation of this DbGeometry value. </returns>
         public virtual string AsText()
         {
             return _spatialProvider.AsText(this);
         }
 
         /// <summary>
-        /// Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
+        ///     Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
         /// </summary>
-        /// <returns>A string containing the well known text representation of this DbGeometry value.</returns>
+        /// <returns> A string containing the well known text representation of this DbGeometry value. </returns>
         internal string AsTextIncludingElevationAndMeasure()
         {
             return _spatialProvider.AsTextIncludingElevationAndMeasure(this);
         }
 
         /// <summary>
-        /// Generates the well known binary representation of this DbGeometry value.
+        ///     Generates the well known binary representation of this DbGeometry value.
         /// </summary>
-        /// <returns>A byte array containing the well known binary representation of this DbGeometry value.</returns>
+        /// <returns> A byte array containing the well known binary representation of this DbGeometry value. </returns>
         public byte[] AsBinary()
         {
             return _spatialProvider.AsBinary(this);
@@ -498,9 +576,9 @@ namespace System.Data.Entity.Spatial
 
         // Non-OGC
         /// <summary>
-        /// Generates the Geography Markup Language (GML) representation of this DbGeometry value.
+        ///     Generates the Geography Markup Language (GML) representation of this DbGeometry value.
         /// </summary>
-        /// <returns>A string containing the GML representation of this DbGeometry value.</returns>
+        /// <returns> A string containing the GML representation of this DbGeometry value. </returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml")]
         public string AsGml()
         {
@@ -512,11 +590,13 @@ namespace System.Data.Entity.Spatial
         #region Geometry Operations - Spatial Relation
 
         /// <summary>
-        /// Determines whether this DbGeometry is spatially equal to the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry is spatially equal to the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for equality.</param>
-        /// <returns><c>true</c> if <paramref name="other"/> is spatially equal to this geometry value; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for equality. </param>
+        /// <returns> <c>true</c> if <paramref name="other" /> is spatially equal to this geometry value; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool SpatialEquals(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -524,11 +604,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry is spatially disjoint from the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry is spatially disjoint from the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for disjointness.</param>
-        /// <returns><c>true</c> if <paramref name="other"/> is disjoint from this geometry value; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for disjointness. </param>
+        /// <returns> <c>true</c> if <paramref name="other" /> is disjoint from this geometry value; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Disjoint(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -536,11 +618,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value spatially intersects the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry value spatially intersects the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for intersection.</param>
-        /// <returns><c>true</c> if <paramref name="other"/> intersects this geometry value; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for intersection. </param>
+        /// <returns> <c>true</c> if <paramref name="other" /> intersects this geometry value; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Intersects(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -548,11 +632,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value spatially touches the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry value spatially touches the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value.</param>
-        /// <returns><c>true</c> if <paramref name="other"/> touches this geometry value; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value. </param>
+        /// <returns> <c>true</c> if <paramref name="other" /> touches this geometry value; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Touches(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -560,11 +646,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value spatially crosses the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry value spatially crosses the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value.</param>
-        /// <returns><c>true</c> if <paramref name="other"/> crosses this geometry value; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value. </param>
+        /// <returns> <c>true</c> if <paramref name="other" /> crosses this geometry value; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Crosses(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -572,11 +660,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value is spatially within the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry value is spatially within the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for containment.</param>
-        /// <returns><c>true</c> if this geometry value is within <paramref name="other"/>; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for containment. </param>
+        /// <returns> <c>true</c> if this geometry value is within <paramref name="other" /> ; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Within(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -584,11 +674,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value spatially contains the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry value spatially contains the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for containment.</param>
-        /// <returns><c>true</c> if this geometry value contains <paramref name="other"/>; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for containment. </param>
+        /// <returns> <c>true</c> if this geometry value contains <paramref name="other" /> ; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Contains(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -596,11 +688,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value spatially overlaps the specified DbGeometry argument.
+        ///     Determines whether this DbGeometry value spatially overlaps the specified DbGeometry argument.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for overlap.</param>
-        /// <returns><c>true</c> if this geometry value overlaps <paramref name="other"/>; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for overlap. </param>
+        /// <returns> <c>true</c> if this geometry value overlaps <paramref name="other" /> ; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public bool Overlaps(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -608,13 +702,17 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Determines whether this DbGeometry value spatially relates to the specified DbGeometry argument according to the
-        /// given Dimensionally Extended Nine-Intersection Model (DE-9IM) intersection pattern.
+        ///     Determines whether this DbGeometry value spatially relates to the specified DbGeometry argument according to the
+        ///     given Dimensionally Extended Nine-Intersection Model (DE-9IM) intersection pattern.
         /// </summary>
-        /// <param name="other">The geometry value that should be compared with this geometry value for relation.</param>
-        /// <param name="matrix">A string that contains the text representation of the (DE-9IM) intersection pattern that defines the relation.</param>
-        /// <returns><c>true</c> if this geometry value relates to <paramref name="other"/> according to the specified intersection pattern matrix; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> or <paramref name="matrix"/> is null.</exception>
+        /// <param name="other"> The geometry value that should be compared with this geometry value for relation. </param>
+        /// <param name="matrix"> A string that contains the text representation of the (DE-9IM) intersection pattern that defines the relation. </param>
+        /// <returns> <c>true</c> if this geometry value relates to <paramref name="other" /> according to the specified intersection pattern matrix; otherwise <c>false</c> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     or
+        ///     <paramref name="matrix" />
+        ///     is null.</exception>
         public bool Relate(DbGeometry other, string matrix)
         {
             Contract.Requires(other != null);
@@ -627,11 +725,13 @@ namespace System.Data.Entity.Spatial
         #region Geometry Operations - Spatial Analysis
 
         /// <summary>
-        /// Creates a geometry value representing all points less than or equal to <paramref name="distance"/> from this DbGeometry value.
+        ///     Creates a geometry value representing all points less than or equal to <paramref name="distance" /> from this DbGeometry value.
         /// </summary>
-        /// <param name="distance">A double value specifying how far from this geometry value to buffer.</param>
-        /// <returns>A new DbGeometry value representing all points less than or equal to <paramref name="distance"/> from this geometry value.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="distance"/> is null.</exception>
+        /// <param name="distance"> A double value specifying how far from this geometry value to buffer. </param>
+        /// <returns> A new DbGeometry value representing all points less than or equal to <paramref name="distance" /> from this geometry value. </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="distance" />
+        ///     is null.</exception>
         public DbGeometry Buffer(double? distance)
         {
             if (!distance.HasValue)
@@ -642,11 +742,14 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Computes the distance between the closest points in this DbGeometry value and another DbGeometry value.
+        ///     Computes the distance between the closest points in this DbGeometry value and another DbGeometry value.
         /// </summary>
-        /// <param name="other">The geometry value for which the distance from this value should be computed.</param>
-        /// <returns>A double value that specifies the distance between the two closest points in this geometry value and <paramref name="other"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value for which the distance from this value should be computed. </param>
+        /// <returns> A double value that specifies the distance between the two closest points in this geometry value and <paramref
+        ///      name="other" /> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public double? Distance(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -654,7 +757,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the convex hull of this DbGeometry value as another DbGeometry value.
+        ///     Gets the convex hull of this DbGeometry value as another DbGeometry value.
         /// </summary>
         public DbGeometry ConvexHull
         {
@@ -662,11 +765,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Computes the intersection of this DbGeometry value and another DbGeometry value.
+        ///     Computes the intersection of this DbGeometry value and another DbGeometry value.
         /// </summary>
-        /// <param name="other">The geometry value for which the intersection with this value should be computed.</param>
-        /// <returns>A new DbGeometry value representing the intersection between this geometry value and <paramref name="other"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value for which the intersection with this value should be computed. </param>
+        /// <returns> A new DbGeometry value representing the intersection between this geometry value and <paramref name="other" /> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public DbGeometry Intersection(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -674,11 +779,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Computes the union of this DbGeometry value and another DbGeometry value.
+        ///     Computes the union of this DbGeometry value and another DbGeometry value.
         /// </summary>
-        /// <param name="other">The geometry value for which the union with this value should be computed.</param>
-        /// <returns>A new DbGeometry value representing the union between this geometry value and <paramref name="other"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value for which the union with this value should be computed. </param>
+        /// <returns> A new DbGeometry value representing the union between this geometry value and <paramref name="other" /> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public DbGeometry Union(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -686,11 +793,13 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Computes the difference between this DbGeometry value and another DbGeometry value.
+        ///     Computes the difference between this DbGeometry value and another DbGeometry value.
         /// </summary>
-        /// <param name="other">The geometry value for which the difference with this value should be computed.</param>
-        /// <returns>A new DbGeometry value representing the difference between this geometry value and <paramref name="other"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value for which the difference with this value should be computed. </param>
+        /// <returns> A new DbGeometry value representing the difference between this geometry value and <paramref name="other" /> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public DbGeometry Difference(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -698,11 +807,14 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Computes the symmetric difference between this DbGeometry value and another DbGeometry value.
+        ///     Computes the symmetric difference between this DbGeometry value and another DbGeometry value.
         /// </summary>
-        /// <param name="other">The geometry value for which the symmetric difference with this value should be computed.</param>
-        /// <returns>A new DbGeometry value representing the symmetric difference between this geometry value and <paramref name="other"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="other"/> is null.</exception>
+        /// <param name="other"> The geometry value for which the symmetric difference with this value should be computed. </param>
+        /// <returns> A new DbGeometry value representing the symmetric difference between this geometry value and <paramref
+        ///      name="other" /> . </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="other" />
+        ///     is null.</exception>
         public DbGeometry SymmetricDifference(DbGeometry other)
         {
             Contract.Requires(other != null);
@@ -714,19 +826,19 @@ namespace System.Data.Entity.Spatial
         #region Geometry Collection
 
         /// <summary>
-        /// Gets the number of elements in this DbGeometry value, if it represents a geometry collection.
+        ///     Gets the number of elements in this DbGeometry value, if it represents a geometry collection.
         /// </summary>
-        /// <returns>The number of elements in this geometry value, if it represents a collection of other geometry values; otherwise <c>null</c>.</returns>
+        /// <returns> The number of elements in this geometry value, if it represents a collection of other geometry values; otherwise <c>null</c> . </returns>
         public int? ElementCount
         {
             get { return _spatialProvider.GetElementCount(this); }
         }
 
         /// <summary>
-        /// Returns an element of this DbGeometry value from a specific position, if it represents a geometry collection.
+        ///     Returns an element of this DbGeometry value from a specific position, if it represents a geometry collection.
         /// </summary>
-        /// <param name="index">The position within this geometry value from which the element should be taken.</param>
-        /// <returns>The element in this geometry value at the specified position, if it represents a collection of other geometry values; otherwise <c>null</c>.</returns>
+        /// <param name="index"> The position within this geometry value from which the element should be taken. </param>
+        /// <returns> The element in this geometry value at the specified position, if it represents a collection of other geometry values; otherwise <c>null</c> . </returns>
         public DbGeometry ElementAt(int index)
         {
             return _spatialProvider.ElementAt(this, index);
@@ -737,8 +849,8 @@ namespace System.Data.Entity.Spatial
         #region Point
 
         /// <summary>
-        /// Gets the X coordinate of this DbGeometry value, if it represents a point.
-        /// <returns>The X coordinate value of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
+        ///     Gets the X coordinate of this DbGeometry value, if it represents a point.
+        ///     <returns> The X coordinate value of this geometry value, if it represents a point; otherwise <c>null</c> . </returns>
         /// </summary>
         public double? XCoordinate
         {
@@ -746,8 +858,8 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the Y coordinate of this DbGeometry value, if it represents a point.
-        /// <returns>The Y coordinate value of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
+        ///     Gets the Y coordinate of this DbGeometry value, if it represents a point.
+        ///     <returns> The Y coordinate value of this geometry value, if it represents a point; otherwise <c>null</c> . </returns>
         /// </summary>
         public double? YCoordinate
         {
@@ -755,8 +867,8 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the elevation (Z coordinate) of this DbGeometry value, if it represents a point.
-        /// <returns>The elevation (Z coordinate) of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
+        ///     Gets the elevation (Z coordinate) of this DbGeometry value, if it represents a point.
+        ///     <returns> The elevation (Z coordinate) of this geometry value, if it represents a point; otherwise <c>null</c> . </returns>
         /// </summary>
         public double? Elevation
         {
@@ -764,8 +876,8 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the Measure (M coordinate) of this DbGeometry value, if it represents a point.
-        /// <returns>The Measure (M coordinate) value of this geometry value, if it represents a point; otherwise <c>null</c>.</returns>
+        ///     Gets the Measure (M coordinate) of this DbGeometry value, if it represents a point.
+        ///     <returns> The Measure (M coordinate) value of this geometry value, if it represents a point; otherwise <c>null</c> . </returns>
         /// </summary>
         public double? Measure
         {
@@ -777,7 +889,7 @@ namespace System.Data.Entity.Spatial
         #region Curve
 
         /// <summary>
-        /// Gets a nullable double value that indicates the length of this DbGeometry value, which may be null if this value does not represent a curve.
+        ///     Gets a nullable double value that indicates the length of this DbGeometry value, which may be null if this value does not represent a curve.
         /// </summary>
         public double? Length
         {
@@ -785,7 +897,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets a DbGeometry value representing the start point of this value, which may be null if this DbGeometry value does not represent a curve.
+        ///     Gets a DbGeometry value representing the start point of this value, which may be null if this DbGeometry value does not represent a curve.
         /// </summary>
         public DbGeometry StartPoint
         {
@@ -793,7 +905,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets a DbGeometry value representing the start point of this value, which may be null if this DbGeometry value does not represent a curve.
+        ///     Gets a DbGeometry value representing the start point of this value, which may be null if this DbGeometry value does not represent a curve.
         /// </summary>
         public DbGeometry EndPoint
         {
@@ -801,7 +913,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets a nullable Boolean value indicating whether this DbGeometry value is closed, which may be null if this value does not represent a curve.
+        ///     Gets a nullable Boolean value indicating whether this DbGeometry value is closed, which may be null if this value does not represent a curve.
         /// </summary>
         public bool? IsClosed
         {
@@ -809,7 +921,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets a nullable Boolean value indicating whether this DbGeometry value is a ring, which may be null if this value does not represent a curve.
+        ///     Gets a nullable Boolean value indicating whether this DbGeometry value is a ring, which may be null if this value does not represent a curve.
         /// </summary>
         public bool? IsRing
         {
@@ -821,8 +933,8 @@ namespace System.Data.Entity.Spatial
         #region LineString, Line, LinearRing
 
         /// <summary>
-        /// Gets the number of points in this DbGeometry value, if it represents a linestring or linear ring.
-        /// <returns>The number of elements in this geometry value, if it represents a linestring or linear ring; otherwise <c>null</c>.</returns>
+        ///     Gets the number of points in this DbGeometry value, if it represents a linestring or linear ring.
+        ///     <returns> The number of elements in this geometry value, if it represents a linestring or linear ring; otherwise <c>null</c> . </returns>
         /// </summary>
         public int? PointCount
         {
@@ -830,9 +942,9 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Returns an element of this DbGeometry value from a specific position, if it represents a linestring or linear ring.
-        /// <param name="index">The position within this geometry value from which the element should be taken.</param>
-        /// <returns>The element in this geometry value at the specified position, if it represents a linestring or linear ring; otherwise <c>null</c>.</returns>
+        ///     Returns an element of this DbGeometry value from a specific position, if it represents a linestring or linear ring.
+        ///     <param name="index"> The position within this geometry value from which the element should be taken. </param>
+        ///     <returns> The element in this geometry value at the specified position, if it represents a linestring or linear ring; otherwise <c>null</c> . </returns>
         /// </summary>
         public DbGeometry PointAt(int index)
         {
@@ -844,7 +956,7 @@ namespace System.Data.Entity.Spatial
         #region Surface
 
         /// <summary>
-        /// Gets a nullable double value that indicates the area of this DbGeometry value, which may be null if this value does not represent a surface.
+        ///     Gets a nullable double value that indicates the area of this DbGeometry value, which may be null if this value does not represent a surface.
         /// </summary>
         public double? Area
         {
@@ -852,7 +964,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the DbGeometry value that represents the centroid of this DbGeometry value, which may be null if this value does not represent a surface.
+        ///     Gets the DbGeometry value that represents the centroid of this DbGeometry value, which may be null if this value does not represent a surface.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Centroid",
             Justification = "Naming convention prescribed by OGC specification")]
@@ -862,7 +974,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets a point on the surface of this DbGeometry value, which may be null if this value does not represent a surface.
+        ///     Gets a point on the surface of this DbGeometry value, which may be null if this value does not represent a surface.
         /// </summary>
         public DbGeometry PointOnSurface
         {
@@ -874,7 +986,7 @@ namespace System.Data.Entity.Spatial
         #region Polygon
 
         /// <summary>
-        /// Gets the DbGeometry value that represents the exterior ring of this DbGeometry value, which may be null if this value does not represent a polygon.
+        ///     Gets the DbGeometry value that represents the exterior ring of this DbGeometry value, which may be null if this value does not represent a polygon.
         /// </summary>
         public DbGeometry ExteriorRing
         {
@@ -882,19 +994,19 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Gets the number of interior rings in this DbGeometry value, if it represents a polygon.
+        ///     Gets the number of interior rings in this DbGeometry value, if it represents a polygon.
         /// </summary>
-        /// <returns>The number of elements in this geometry value, if it represents a polygon; otherwise <c>null</c>.</returns>
+        /// <returns> The number of elements in this geometry value, if it represents a polygon; otherwise <c>null</c> . </returns>
         public int? InteriorRingCount
         {
             get { return _spatialProvider.GetInteriorRingCount(this); }
         }
 
         /// <summary>
-        /// Returns an interior ring from this DbGeometry value at a specific position, if it represents a polygon.
+        ///     Returns an interior ring from this DbGeometry value at a specific position, if it represents a polygon.
         /// </summary>
-        /// <param name="index">The position within this geometry value from which the interior ring should be taken.</param>
-        /// <returns>The interior ring in this geometry value at the specified position, if it represents a polygon; otherwise <c>null</c>.</returns>
+        /// <param name="index"> The position within this geometry value from which the interior ring should be taken. </param>
+        /// <returns> The interior ring in this geometry value at the specified position, if it represents a polygon; otherwise <c>null</c> . </returns>
         public DbGeometry InteriorRingAt(int index)
         {
             return _spatialProvider.InteriorRingAt(this, index);
@@ -905,7 +1017,7 @@ namespace System.Data.Entity.Spatial
         #region ToString
 
         /// <summary>
-        /// Returns a string representation of the geometry value.
+        ///     Returns a string representation of the geometry value.
         /// </summary>
         public override string ToString()
         {

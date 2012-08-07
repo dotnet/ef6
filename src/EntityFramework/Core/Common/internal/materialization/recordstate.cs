@@ -1,45 +1,46 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Text;
 
     /// <summary>
-    /// The RecordState class is responsible for tracking state about a record
-    /// that should be returned from a data reader.
+    ///     The RecordState class is responsible for tracking state about a record
+    ///     that should be returned from a data reader.
     /// </summary>
     internal class RecordState
     {
         #region state
 
         /// <summary>
-        /// Where to find the static information about this record
+        ///     Where to find the static information about this record
         /// </summary>
         private readonly RecordStateFactory RecordStateFactory;
 
         /// <summary>
-        /// The coordinator factory (essentially, the reader) that we're a part of.
+        ///     The coordinator factory (essentially, the reader) that we're a part of.
         /// </summary>
         internal readonly CoordinatorFactory CoordinatorFactory;
 
         /// <summary>
-        /// True when the record is supposed to be null. (Null Structured Types...)
+        ///     True when the record is supposed to be null. (Null Structured Types...)
         /// </summary>
         private bool _pendingIsNull;
 
         private bool _currentIsNull;
 
         /// <summary>
-        /// An EntityRecordInfo, with EntityKey and EntitySet populated; set 
-        /// by the GatherData expression.
+        ///     An EntityRecordInfo, with EntityKey and EntitySet populated; set 
+        ///     by the GatherData expression.
         /// </summary>
         private EntityRecordInfo _currentEntityRecordInfo;
 
         private EntityRecordInfo _pendingEntityRecordInfo;
 
         /// <summary>
-        /// The column values; set by the GatherData expression. Really ought 
-        /// to be in the Shaper.State.
+        ///     The column values; set by the GatherData expression. Really ought 
+        ///     to be in the Shaper.State.
         /// </summary>
         internal object[] CurrentColumnValues;
 
@@ -62,12 +63,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         #region "public" surface area
 
         /// <summary>
-        /// Move the PendingValues to the CurrentValues for this record and all nested
-        /// records.  We keep the pending values separate from the current ones because
-        /// we may have a nested reader in the middle, and while we're reading forward
-        /// on the nested reader we we'll blast over the pending values.
+        ///     Move the PendingValues to the CurrentValues for this record and all nested
+        ///     records.  We keep the pending values separate from the current ones because
+        ///     we may have a nested reader in the middle, and while we're reading forward
+        ///     on the nested reader we we'll blast over the pending values.
         /// 
-        /// This should be called as part of the data reader's Read() method.
+        ///     This should be called as part of the data reader's Read() method.
         /// </summary>
         internal void AcceptPendingValues()
         {
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Return the number of columns
+        ///     Return the number of columns
         /// </summary>
         internal int ColumnCount
         {
@@ -107,8 +108,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Return the DataRecordInfo for this record; if we had an EntityRecordInfo
-        /// set, then return it otherwise return the static one from the factory.
+        ///     Return the DataRecordInfo for this record; if we had an EntityRecordInfo
+        ///     set, then return it otherwise return the static one from the factory.
         /// </summary>
         internal DataRecordInfo DataRecordInfo
         {
@@ -124,7 +125,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Is the record NULL?
+        ///     Is the record NULL?
         /// </summary>
         internal bool IsNull
         {
@@ -132,7 +133,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Implementation of DataReader's GetBytes method
+        ///     Implementation of DataReader's GetBytes method
         /// </summary>
         internal long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
@@ -154,7 +155,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Implementation of DataReader's GetChars method
+        ///     Implementation of DataReader's GetChars method
         /// </summary>
         internal long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
@@ -190,7 +191,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Return the name of the column at the ordinal specified.
+        ///     Return the name of the column at the ordinal specified.
         /// </summary>
         internal string GetName(int ordinal)
         {
@@ -204,7 +205,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// This is where the GetOrdinal method for DbDataReader/DbDataRecord end up.
+        ///     This is where the GetOrdinal method for DbDataReader/DbDataRecord end up.
         /// </summary>
         internal int GetOrdinal(string name)
         {
@@ -212,7 +213,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Return the type of the column at the ordinal specified.
+        ///     Return the type of the column at the ordinal specified.
         /// </summary>
         internal TypeUsage GetTypeUsage(int ordinal)
         {
@@ -220,8 +221,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Returns true when the column at the ordinal specified is 
-        /// a record or reader column that requires special handling.
+        ///     Returns true when the column at the ordinal specified is 
+        ///     a record or reader column that requires special handling.
         /// </summary>
         internal bool IsNestedObject(int ordinal)
         {
@@ -229,10 +230,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Called whenever we hand this record state out as the default state for
-        /// a data reader; we will have already handled any existing data back to
-        /// the previous group of records (that is, we couldn't be using it from two
-        /// distinct readers at the same time).
+        ///     Called whenever we hand this record state out as the default state for
+        ///     a data reader; we will have already handled any existing data back to
+        ///     the previous group of records (that is, we couldn't be using it from two
+        ///     distinct readers at the same time).
         /// </summary>
         internal void ResetToDefaultState()
         {
@@ -244,9 +245,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         #region called from Shaper's Element Expression
 
         /// <summary>
-        /// Called from the Element expression on the Coordinator to gather all 
-        /// the data for the record; we just turn around and call the expression
-        /// we build on the RecordStateFactory.
+        ///     Called from the Element expression on the Coordinator to gather all 
+        ///     the data for the record; we just turn around and call the expression
+        ///     we build on the RecordStateFactory.
         /// </summary>
         internal RecordState GatherData(Shaper shaper)
         {
@@ -256,8 +257,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Called by the GatherData expression to set the data for the 
-        /// specified column value
+        ///     Called by the GatherData expression to set the data for the 
+        ///     specified column value
         /// </summary>
         internal bool SetColumnValue(int ordinal, object value)
         {
@@ -266,8 +267,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Called by the GatherData expression to set the data for the 
-        /// EntityRecordInfo
+        ///     Called by the GatherData expression to set the data for the 
+        ///     EntityRecordInfo
         /// </summary>
         internal bool SetEntityRecordInfo(EntityKey entityKey, EntitySet entitySet)
         {
@@ -276,8 +277,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Called from the Element expression on the Coordinator to indicate that
-        /// the record should be NULL.
+        ///     Called from the Element expression on the Coordinator to indicate that
+        ///     the record should be NULL.
         /// </summary>
         internal RecordState SetNullRecord()
         {

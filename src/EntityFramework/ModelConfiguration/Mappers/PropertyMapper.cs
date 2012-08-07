@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Data.Entity.Edm;
@@ -70,9 +71,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 if (complexType != null)
                 {
                     property = new EdmProperty
-                        {
-                            Name = propertyInfo.Name
-                        }.AsComplex(complexType);
+                                   {
+                                       Name = propertyInfo.Name
+                                   }.AsComplex(complexType);
                 }
                 else
                 {
@@ -85,9 +86,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                         if (enumType != null)
                         {
                             property = new EdmProperty
-                                {
-                                    Name = propertyInfo.Name,
-                                }.AsEnum(enumType);
+                                           {
+                                               Name = propertyInfo.Name,
+                                           }.AsEnum(enumType);
                             property.PropertyType.IsNullable = isNullable;
                         }
                     }

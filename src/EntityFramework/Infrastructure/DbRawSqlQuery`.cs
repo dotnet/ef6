@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections;
@@ -8,13 +9,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a SQL query for non-entities that is created from a <see cref = "DbContext" /> 
+    ///     Represents a SQL query for non-entities that is created from a <see cref="DbContext" /> 
     ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref = "DbContext.Database" /> instance.
+    ///     Instances of this class are obtained from the <see cref="DbContext.Database" /> instance.
     ///     The query is not executed when this object is created; it is executed
     ///     each time it is enumerated, for example by using foreach.
-    ///     SQL queries for entities are created using <see cref = "DbSet{TEntity}.SqlQuery" />.
-    ///     See <see cref = "DbRawSqlQuery{TElement}" /> for a non-generic version of this class.
+    ///     SQL queries for entities are created using <see cref="DbSet{TEntity}.SqlQuery" />.
+    ///     See <see cref="DbRawSqlQuery{TElement}" /> for a non-generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class DbRawSqlQuery<TElement> : IEnumerable<TElement>, IDbAsyncEnumerable<TElement>, IListSource
@@ -24,9 +25,9 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalSqlQuery _internalQuery;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbRawSqlQuery{TElement}" /> class.
+        ///     Initializes a new instance of the <see cref="DbRawSqlQuery{TElement}" /> class.
         /// </summary>
-        /// <param name = "internalQuery">The internal query.</param>
+        /// <param name="internalQuery"> The internal query. </param>
         internal DbRawSqlQuery(InternalSqlQuery internalQuery)
         {
             _internalQuery = internalQuery;
@@ -37,22 +38,18 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TEntity}"/> which when enumerated will execute the SQL query against the database.
+        ///     Returns an <see cref="IEnumerator{TEntity}" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>
-        ///     An <see cref = "IEnumerator{TEntity}" /> object that can be used to iterate through the elements.
-        /// </returns>
+        /// <returns> An <see cref="IEnumerator{TEntity}" /> object that can be used to iterate through the elements. </returns>
         public IEnumerator<TElement> GetEnumerator()
         {
             return (IEnumerator<TElement>)_internalQuery.GetEnumerator();
         }
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the SQL query against the database.
+        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>
-        ///     An <see cref="IEnumerator"/> object that can be used to iterate through the elements.
-        /// </returns>
+        /// <returns> An <see cref="IEnumerator" /> object that can be used to iterate through the elements. </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -63,11 +60,9 @@ namespace System.Data.Entity.Infrastructure
         #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerable{T}"/> which when enumerated will execute the SQL query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerable{T}" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>
-        ///     An <see cref="IDbAsyncEnumerable{T}"/> object that can be used to iterate through the elements.
-        /// </returns>
+        /// <returns> An <see cref="IDbAsyncEnumerable{T}" /> object that can be used to iterate through the elements. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<TElement> IDbAsyncEnumerable<TElement>.GetAsyncEnumerator()
         {
@@ -75,11 +70,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerable"/> which when enumerated will execute the SQL query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerable" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
-        /// <returns>
-        ///     An <see cref="IDbAsyncEnumerable"/> object that can be used to iterate through the elements.
-        /// </returns>
+        /// <returns> An <see cref="IDbAsyncEnumerable" /> object that can be used to iterate through the elements. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
@@ -91,12 +84,10 @@ namespace System.Data.Entity.Infrastructure
         #region ToString
 
         /// <summary>
-        ///     Returns a <see cref = "System.String" /> that contains the SQL string that was set
+        ///     Returns a <see cref="System.String" /> that contains the SQL string that was set
         ///     when the query was created.  The parameters are not included.
         /// </summary>
-        /// <returns>
-        ///     A <see cref = "System.String" /> that represents this instance.
-        /// </returns>
+        /// <returns> A <see cref="System.String" /> that represents this instance. </returns>
         public override string ToString()
         {
             return _internalQuery.ToString();
@@ -109,7 +100,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets the internal query.
         /// </summary>
-        /// <value>The internal query.</value>
+        /// <value> The internal query. </value>
         internal InternalSqlQuery InternalQuery
         {
             get { return _internalQuery; }
@@ -122,7 +113,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Returns <c>false</c>.
         /// </summary>
-        /// <returns><c>false</c>.</returns>
+        /// <returns> <c>false</c> . </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
@@ -136,9 +127,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Throws an exception indicating that binding directly to a store query is not supported.
         /// </summary>
-        /// <returns>
-        ///     Never returns; always throws.
-        /// </returns>
+        /// <returns> Never returns; always throws. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {

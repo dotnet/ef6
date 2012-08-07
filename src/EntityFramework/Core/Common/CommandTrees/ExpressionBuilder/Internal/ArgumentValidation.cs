@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 {
     using System.Collections.Generic;
@@ -338,16 +339,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             var expectedParams = GetExpectedParameters(function);
             var funcArgs = CreateExpressionList(
                 args, "argument", expectedParams.Length, (exp, idx) =>
-                    {
-                        var paramType = expectedParams[idx].TypeUsage;
-                        TypeUsage elementType = null;
-                        if (TypeHelpers.TryGetCollectionElementType(paramType, out elementType))
-                        {
-                            paramType = elementType;
-                        }
+                                                             {
+                                                                 var paramType = expectedParams[idx].TypeUsage;
+                                                                 TypeUsage elementType = null;
+                                                                 if (TypeHelpers.TryGetCollectionElementType(paramType, out elementType))
+                                                                 {
+                                                                     paramType = elementType;
+                                                                 }
 
-                        RequireCompatibleType(exp, paramType, "argument");
-                    }
+                                                                 RequireCompatibleType(exp, paramType, "argument");
+                                                             }
                 );
 
             return funcArgs;
@@ -650,9 +651,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Validates the input and sort key arguments to both DbSkipExpression and DbSortExpression.
+        ///     Validates the input and sort key arguments to both DbSkipExpression and DbSortExpression.
         /// </summary>
-        /// <param name="sortOrder">A list of SortClauses that specifies the sort order to apply to the input collection</param>
+        /// <param name="sortOrder"> A list of SortClauses that specifies the sort order to apply to the input collection </param>
         private static ReadOnlyCollection<DbSortClause> ValidateSortArguments(IEnumerable<DbSortClause> sortOrder)
         {
             var ev = CreateValidator(
@@ -1440,21 +1441,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             TypeUsage commonResultType = null;
             validThens = CreateExpressionList(
                 thenExpressions, "thenExpressions", (exp, idx) =>
-                    {
-                        if (null == commonResultType)
-                        {
-                            commonResultType = exp.ResultType;
-                        }
-                        else
-                        {
-                            commonResultType = TypeHelpers.GetCommonTypeUsage(
-                                exp.ResultType, commonResultType);
-                            if (null == commonResultType)
-                            {
-                                throw new ArgumentException(Strings.Cqt_Case_InvalidResultType);
-                            }
-                        }
-                    }
+                                                        {
+                                                            if (null == commonResultType)
+                                                            {
+                                                                commonResultType = exp.ResultType;
+                                                            }
+                                                            else
+                                                            {
+                                                                commonResultType = TypeHelpers.GetCommonTypeUsage(
+                                                                    exp.ResultType, commonResultType);
+                                                                if (null == commonResultType)
+                                                                {
+                                                                    throw new ArgumentException(Strings.Cqt_Case_InvalidResultType);
+                                                                }
+                                                            }
+                                                        }
                 );
             Debug.Assert(validWhens.Count > 0, "CreateExpressionList(arguments, argumentName, validationCallback) allowed empty Thens?");
 
@@ -1529,10 +1530,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             validArguments = null;
             var argValidator = CreateValidator(
                 arguments, "arguments", (exp, idx) =>
-                    {
-                        RequireCompatibleType(exp, lambda.Variables[idx].ResultType, "arguments", idx);
-                        return exp;
-                    },
+                                            {
+                                                RequireCompatibleType(exp, lambda.Variables[idx].ResultType, "arguments", idx);
+                                                return exp;
+                                            },
                 expList => new DbExpressionList(expList)
                 );
             argValidator.ExpectedElementCount = lambda.Variables.Count;
@@ -1548,22 +1549,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             TypeUsage commonElementType = null;
             validElements = CreateExpressionList(
                 elements, "elements", (exp, idx) =>
-                    {
-                        if (commonElementType == null)
-                        {
-                            commonElementType = exp.ResultType;
-                        }
-                        else
-                        {
-                            commonElementType = TypeSemantics.GetCommonType(commonElementType, exp.ResultType);
-                        }
+                                          {
+                                              if (commonElementType == null)
+                                              {
+                                                  commonElementType = exp.ResultType;
+                                              }
+                                              else
+                                              {
+                                                  commonElementType = TypeSemantics.GetCommonType(commonElementType, exp.ResultType);
+                                              }
 
-                        if (null == commonElementType)
-                        {
-                            throw new ArgumentException(
-                                Strings.Cqt_Factory_NewCollectionInvalidCommonType, "collectionElements");
-                        }
-                    }
+                                              if (null == commonElementType)
+                                              {
+                                                  throw new ArgumentException(
+                                                      Strings.Cqt_Factory_NewCollectionInvalidCommonType, "collectionElements");
+                                              }
+                                          }
                 );
 
             Debug.Assert(
@@ -1590,12 +1591,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             var columnTypes = new List<KeyValuePair<string, TypeUsage>>();
             var columnValidator = CreateValidator(
                 columnValues, "columnValues", (columnValue, idx) =>
-                    {
-                        CheckNamed(columnValue, "columnValues", idx);
-                        columnTypes.Add(
-                            new KeyValuePair<string, TypeUsage>(columnValue.Key, columnValue.Value.ResultType));
-                        return columnValue.Value;
-                    },
+                                                  {
+                                                      CheckNamed(columnValue, "columnValues", idx);
+                                                      columnTypes.Add(
+                                                          new KeyValuePair<string, TypeUsage>(columnValue.Key, columnValue.Value.ResultType));
+                                                      return columnValue.Value;
+                                                  },
                 expList => new DbExpressionList(expList)
                 );
             columnValidator.GetName = ((columnValue, idx) => columnValue.Key);
@@ -1826,9 +1827,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Ensures that the  specified type is non-null, associated with the correct metadata workspace/dataspace, and is not NullType.
+        ///     Ensures that the  specified type is non-null, associated with the correct metadata workspace/dataspace, and is not NullType.
         /// </summary>
-        /// <param name="type">The type usage instance to verify.</param>
+        /// <param name="type"> The type usage instance to verify. </param>
         /// <exception cref="ArgumentNullException">If the specified type metadata is null</exception>
         /// <exception cref="ArgumentException">If the specified type metadata belongs to a metadata workspace other than the workspace of the command tree</exception>
         /// <exception cref="ArgumentException">If the specified type metadata belongs to a dataspace other than the dataspace of the command tree</exception>
@@ -1852,10 +1853,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Verifies that the specified member is valid - non-null, from the same metadata workspace and data space as the command tree, etc
+        ///     Verifies that the specified member is valid - non-null, from the same metadata workspace and data space as the command tree, etc
         /// </summary>
-        /// <param name="memberMeta">The member to verify</param>
-        /// <param name="varName">The name of the variable to which this member instance is being assigned</param>
+        /// <param name="memberMeta"> The member to verify </param>
+        /// <param name="varName"> The name of the variable to which this member instance is being assigned </param>
         private static void CheckMember(EdmMember memberMeta, string varName)
         {
             Contract.Requires(memberMeta != null);
@@ -1888,9 +1889,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Verifies that the specified function metadata is valid - non-null and either created by this command tree (if a LambdaFunction) or from the same metadata collection and data space as the command tree (for ordinary function metadata)
+        ///     Verifies that the specified function metadata is valid - non-null and either created by this command tree (if a LambdaFunction) or from the same metadata collection and data space as the command tree (for ordinary function metadata)
         /// </summary>
-        /// <param name="function">The function metadata to verify</param>
+        /// <param name="function"> The function metadata to verify </param>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static void CheckFunction(EdmFunction function)
         {
@@ -1933,10 +1934,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Verifies that the specified EntitySet is valid with respect to the command tree
+        ///     Verifies that the specified EntitySet is valid with respect to the command tree
         /// </summary>
-        /// <param name="entitySet">The EntitySet to verify</param>
-        /// <param name="varName">The variable name to use if an exception should be thrown</param>
+        /// <param name="entitySet"> The EntitySet to verify </param>
+        /// <param name="varName"> The variable name to use if an exception should be thrown </param>
         private static void CheckEntitySet(EntitySetBase entitySet, string varName)
         {
             Contract.Requires(entitySet != null);
@@ -2081,9 +2082,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Requires: non-null expression
-        /// Determines whether the expression is a constant negative integer value. Always returns
-        /// false for non-constant, non-integer expression instances.
+        ///     Requires: non-null expression
+        ///     Determines whether the expression is a constant negative integer value. Always returns
+        ///     false for non-constant, non-integer expression instances.
         /// </summary>
         private static bool IsConstantNegativeInteger(DbExpression expression)
         {
@@ -2098,20 +2099,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        /// Checks whether the clr enum type matched the edm enum type.
+        ///     Checks whether the clr enum type matched the edm enum type.
         /// </summary>
-        /// <param name="edmEnumType">Edm enum type.</param>
-        /// <param name="clrEnumType">Clr enum type.</param>
-        /// <returns>
-        /// <c>true</c> if types match otherwise <c>false</c>.
-        /// </returns>
+        /// <param name="edmEnumType"> Edm enum type. </param>
+        /// <param name="clrEnumType"> Clr enum type. </param>
+        /// <returns> <c>true</c> if types match otherwise <c>false</c> . </returns>
         /// <remarks>
-        /// The clr enum type matches the edm enum type if:
-        /// - type names are the same
-        /// - both types have the same underlying type (note that this prevents from over- and underflows)
-        /// - both types have the same number of members
-        /// - members have the same names
-        /// - members have the same values
+        ///     The clr enum type matches the edm enum type if:
+        ///     - type names are the same
+        ///     - both types have the same underlying type (note that this prevents from over- and underflows)
+        ///     - both types have the same number of members
+        ///     - members have the same names
+        ///     - members have the same values
         /// </remarks>
         private static bool ClrEdmEnumTypesMatch(EnumType edmEnumType, Type clrEnumType)
         {

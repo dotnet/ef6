@@ -1,236 +1,237 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    /// The operator types. Includes both scalar and relational operators, 
-    /// and physical and logical operators, and rule operators 
+    ///     The operator types. Includes both scalar and relational operators, 
+    ///     and physical and logical operators, and rule operators
     /// </summary>
     internal enum OpType
     {
         #region ScalarOpType
 
         /// <summary>
-        /// Constants
+        ///     Constants
         /// </summary>
         Constant,
 
         /// <summary>
-        /// An internally generated constant
+        ///     An internally generated constant
         /// </summary>
         InternalConstant,
 
         /// <summary>
-        /// An internally generated constant used as a null sentinel
+        ///     An internally generated constant used as a null sentinel
         /// </summary>
         NullSentinel,
 
         /// <summary>
-        /// A null constant
+        ///     A null constant
         /// </summary>
         Null,
 
         /// <summary>
-        /// ConstantPredicate
+        ///     ConstantPredicate
         /// </summary>
         ConstantPredicate,
 
         /// <summary>
-        /// A Var reference
+        ///     A Var reference
         /// </summary>
         VarRef,
 
         /// <summary>
-        /// GreaterThan
+        ///     GreaterThan
         /// </summary>
         GT,
 
         /// <summary>
-        /// >=
+        ///     >=
         /// </summary>
         GE,
 
         /// <summary>
-        /// Lessthan or equals
+        ///     Lessthan or equals
         /// </summary>
         LE,
 
         /// <summary>
-        /// Less than
+        ///     Less than
         /// </summary>
         LT,
 
         /// <summary>
-        /// Equals 
+        ///     Equals
         /// </summary>
         EQ,
 
         /// <summary>
-        /// Not equals
+        ///     Not equals
         /// </summary>
         NE,
 
         /// <summary>
-        /// String comparison
+        ///     String comparison
         /// </summary>
         Like,
 
         /// <summary>
-        /// Addition
+        ///     Addition
         /// </summary>
         Plus,
 
         /// <summary>
-        /// Subtraction
+        ///     Subtraction
         /// </summary>
         Minus,
 
         /// <summary>
-        /// Multiplication 
+        ///     Multiplication
         /// </summary>
         Multiply,
 
         /// <summary>
-        /// Division 
+        ///     Division
         /// </summary>
         Divide,
 
         /// <summary>
-        /// Modulus 
+        ///     Modulus
         /// </summary>
         Modulo,
 
         /// <summary>
-        /// Unary Minus 
+        ///     Unary Minus
         /// </summary>
         UnaryMinus,
 
         /// <summary>
-        /// And 
+        ///     And
         /// </summary>
         And,
 
         /// <summary>
-        /// Or
+        ///     Or
         /// </summary>
         Or,
 
         /// <summary>
-        /// Not
+        ///     Not
         /// </summary>
         Not,
 
         /// <summary>
-        /// is null 
+        ///     is null
         /// </summary>
         IsNull,
 
         /// <summary>
-        /// switched case expression
+        ///     switched case expression
         /// </summary>
         Case,
 
         /// <summary>
-        /// treat-as 
+        ///     treat-as
         /// </summary>
         Treat,
 
         /// <summary>
-        /// is-of 
+        ///     is-of
         /// </summary>
         IsOf,
 
         /// <summary>
-        /// Cast
+        ///     Cast
         /// </summary>
         Cast,
 
         /// <summary>
-        /// Internal cast
+        ///     Internal cast
         /// </summary>
         SoftCast,
 
         /// <summary>
-        /// a basic aggregate
+        ///     a basic aggregate
         /// </summary>
         Aggregate,
 
         /// <summary>
-        /// function call
+        ///     function call
         /// </summary>
         Function,
 
         /// <summary>
-        /// Reference to a "relationship" property
+        ///     Reference to a "relationship" property
         /// </summary>
         RelProperty,
 
         /// <summary>
-        /// property reference
+        ///     property reference
         /// </summary>
         Property,
 
         /// <summary>
-        /// entity constructor
+        ///     entity constructor
         /// </summary>
         NewEntity,
 
         /// <summary>
-        /// new instance constructor for a named type(other than multiset, record)
+        ///     new instance constructor for a named type(other than multiset, record)
         /// </summary>
         NewInstance,
 
         /// <summary>
-        /// new instance constructor for a named type and sub-types
+        ///     new instance constructor for a named type and sub-types
         /// </summary>
         DiscriminatedNewEntity,
 
         /// <summary>
-        /// Multiset constructor
+        ///     Multiset constructor
         /// </summary>
         NewMultiset,
 
         /// <summary>
-        /// record constructor
+        ///     record constructor
         /// </summary>
         NewRecord,
 
         /// <summary>
-        /// Get the key from a Ref
+        ///     Get the key from a Ref
         /// </summary>
         GetRefKey,
 
         /// <summary>
-        /// Get the ref from an entity instance
+        ///     Get the ref from an entity instance
         /// </summary>
         GetEntityRef,
 
         /// <summary>
-        /// create a reference 
+        ///     create a reference
         /// </summary>
         Ref,
 
         /// <summary>
-        /// exists
+        ///     exists
         /// </summary>
         Exists,
 
         /// <summary>
-        /// get the singleton element from a collection
+        ///     get the singleton element from a collection
         /// </summary>
         Element,
 
         /// <summary>
-        /// Builds up a collection
+        ///     Builds up a collection
         /// </summary>
         Collect,
 
         /// <summary>
-        /// gets the target entity pointed at by a reference
+        ///     gets the target entity pointed at by a reference
         /// </summary>
         Deref,
 
         /// <summary>
-        /// Traverse a relationship and get the references of the other end
+        ///     Traverse a relationship and get the references of the other end
         /// </summary>
         Navigate,
 
@@ -239,107 +240,107 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region RelOpType
 
         /// <summary>
-        /// A table scan
+        ///     A table scan
         /// </summary>
         ScanTable,
 
         /// <summary>
-        /// A view scan
+        ///     A view scan
         /// </summary>
         ScanView,
 
         /// <summary>
-        /// Filter
+        ///     Filter
         /// </summary>
         Filter,
 
         /// <summary>
-        /// Project
+        ///     Project
         /// </summary>
         Project,
 
         /// <summary>
-        /// InnerJoin
+        ///     InnerJoin
         /// </summary>
         InnerJoin,
 
         /// <summary>
-        /// LeftOuterJoin
+        ///     LeftOuterJoin
         /// </summary>
         LeftOuterJoin,
 
         /// <summary>
-        /// FullOuter join
+        ///     FullOuter join
         /// </summary>
         FullOuterJoin,
 
         /// <summary>
-        /// Cross join
+        ///     Cross join
         /// </summary>
         CrossJoin,
 
         /// <summary>
-        /// cross apply
+        ///     cross apply
         /// </summary>
         CrossApply,
 
         /// <summary>
-        /// outer apply 
+        ///     outer apply
         /// </summary>
         OuterApply,
 
         /// <summary>
-        /// Unnest
+        ///     Unnest
         /// </summary>
         Unnest,
 
         /// <summary>
-        /// Sort
+        ///     Sort
         /// </summary>
         Sort,
 
         /// <summary>
-        /// Constrained Sort (physical paging - Limit and Skip)
+        ///     Constrained Sort (physical paging - Limit and Skip)
         /// </summary>
         ConstrainedSort,
 
         /// <summary>
-        /// GroupBy
+        ///     GroupBy
         /// </summary>
         GroupBy,
 
         /// <summary>
-        /// GroupByInto (projects the group as well)
+        ///     GroupByInto (projects the group as well)
         /// </summary>
         GroupByInto,
 
         /// <summary>
-        /// UnionAll
+        ///     UnionAll
         /// </summary>
         UnionAll,
 
         /// <summary>
-        /// Intersect
+        ///     Intersect
         /// </summary>
         Intersect,
 
         /// <summary>
-        /// Except
+        ///     Except
         /// </summary>
         Except,
 
         /// <summary>
-        /// Distinct
+        ///     Distinct
         /// </summary>
         Distinct,
 
         /// <summary>
-        /// Select a single row from a subquery
+        ///     Select a single row from a subquery
         /// </summary>
         SingleRow,
 
         /// <summary>
-        /// A table with exactly one row
+        ///     A table with exactly one row
         /// </summary>
         SingleRowTable,
 
@@ -348,12 +349,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region AncillaryOpType
 
         /// <summary>
-        /// Variable definition
+        ///     Variable definition
         /// </summary>
         VarDef,
 
         /// <summary>
-        /// List of variable definitions
+        ///     List of variable definitions
         /// </summary>
         VarDefList,
 
@@ -362,7 +363,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region RulePatternOpType
 
         /// <summary>
-        /// Leaf
+        ///     Leaf
         /// </summary>
         Leaf,
 
@@ -371,24 +372,24 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region PhysicalOpType
 
         /// <summary>
-        /// Physical Project
+        ///     Physical Project
         /// </summary>
         PhysicalProject,
 
         /// <summary>
-        /// single-stream nest aggregation
+        ///     single-stream nest aggregation
         /// </summary>
         SingleStreamNest,
 
         /// <summary>
-        /// multi-stream nest aggregation
+        ///     multi-stream nest aggregation
         /// </summary>
         MultiStreamNest,
 
         #endregion
 
         /// <summary>
-        /// NotValid
+        ///     NotValid
         /// </summary>
         MaxMarker,
         NotValid = MaxMarker

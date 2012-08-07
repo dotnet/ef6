@@ -1,17 +1,18 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    /// AncillaryOp
+    ///     AncillaryOp
     /// </summary>
     internal abstract class AncillaryOp : Op
     {
         #region constructors
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
-        /// <param name="opType">kind of Op</param>
+        /// <param name="opType"> kind of Op </param>
         internal AncillaryOp(OpType opType)
             : base(opType)
         {
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        /// AncillaryOp
+        ///     AncillaryOp
         /// </summary>
         internal override bool IsAncillaryOp
         {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
@@ -43,8 +44,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Initializes a new instance of the MigratorLoggingDecorator class.
         /// </summary>
-        /// <param name = "innerMigrator">The migrator that this decorator is wrapping.</param>
-        /// <param name = "logger">The logger to write messages to.</param>
+        /// <param name="innerMigrator"> The migrator that this decorator is wrapping. </param>
+        /// <param name="logger"> The logger to write messages to. </param>
         public MigratorLoggingDecorator(MigratorBase innerMigrator, MigrationsLogger logger)
             : base(innerMigrator)
         {

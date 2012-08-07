@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Config;
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Creates a database using the core provider (i.e. ObjectContext.CreateDatabase) or
-        ///     by using Code First Migrations <see cref = "DbMigrator" /> to create an empty database
+        ///     by using Code First Migrations <see cref="DbMigrator" /> to create an empty database
         ///     and the perform an automatic migration to the current model.
         ///     Migrations is used if Code First is being used and the EF provider is for SQL Server
         ///     or SQL Compact. The core is used for non-Code First models and for other providers even
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Internal
                             MigrationsNamespace = contextType.Namespace,
                             TargetDatabase =
                                 new DbConnectionInfo(
-                                    internalContext.OriginalConnectionString, internalContext.ProviderName)
+                                internalContext.OriginalConnectionString, internalContext.ProviderName)
                         },
                     internalContext.Owner);
 

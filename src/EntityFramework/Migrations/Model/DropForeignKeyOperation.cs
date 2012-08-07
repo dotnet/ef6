@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Migrations.Extensions;
@@ -16,10 +17,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Initializes a new instance of the DropForeignKeyOperation class.
         ///     The PrincipalTable, DependentTable and DependentColumns properties should also be populated.
         /// </summary>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropForeignKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
@@ -29,11 +27,8 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the DropForeignKeyOperation class.
         /// </summary>
-        /// <param name = "inverse">The operation that represents reverting dropping the foreign key constraint.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="inverse"> The operation that represents reverting dropping the foreign key constraint. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropForeignKeyOperation(AddForeignKeyOperation inverse, object anonymousArguments = null)
             : base(anonymousArguments)
@@ -46,14 +41,14 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Gets an operation to drop the associated index on the foreign key column(s).
         /// </summary>
-        /// <returns>An operation to drop the index.</returns>
+        /// <returns> An operation to drop the index. </returns>
         public virtual DropIndexOperation CreateDropIndexOperation()
         {
             var dropIndexOperation
                 = new DropIndexOperation(_inverse.CreateCreateIndexOperation())
-                    {
-                        Table = DependentTable
-                    };
+                      {
+                          Table = DependentTable
+                      };
 
             DependentColumns.Each(c => dropIndexOperation.Columns.Add(c));
 

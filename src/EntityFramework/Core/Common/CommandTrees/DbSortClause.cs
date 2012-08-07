@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Diagnostics;
 
     /// <summary>
-    /// Specifies a sort key that can be used as part of the sort order in a DbSortExpression.
+    ///     Specifies a sort key that can be used as part of the sort order in a DbSortExpression.
     /// </summary>
     public sealed class DbSortClause
     {
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets a Boolean value indicating whether or not this sort key is sorted ascending.
+        ///     Gets a Boolean value indicating whether or not this sort key is sorted ascending.
         /// </summary>
         public bool Ascending
         {
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets a string value that specifies the collation for this sort key.
+        ///     Gets a string value that specifies the collation for this sort key.
         /// </summary>
         public string Collation
         {
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets the <see cref="DbExpression"/> that provides the value for this sort key.
+        ///     Gets the <see cref="DbExpression" /> that provides the value for this sort key.
         /// </summary>
         public DbExpression Expression
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
@@ -18,10 +19,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool _triedLoadingWebAssembly;
 
         /// <summary>
-        /// Determine whether we are inside an ASP.NET application.
+        ///     Determine whether we are inside an ASP.NET application.
         /// </summary>
-        /// <param name="webAssembly">The System.Web assembly</param>
-        /// <returns>true if we are running inside an ASP.NET application</returns>
+        /// <param name="webAssembly"> The System.Web assembly </param>
+        /// <returns> true if we are running inside an ASP.NET application </returns>
         internal bool IsAspNetEnvironment()
         {
             if (!TryInitializeWebAssembly())
@@ -100,21 +101,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// This method accepts a string parameter that represents a path in a Web (specifically,
-        /// an ASP.NET) application -- one that starts with a '~' -- and resolves it to a 
-        /// canonical file path.
+        ///     This method accepts a string parameter that represents a path in a Web (specifically,
+        ///     an ASP.NET) application -- one that starts with a '~' -- and resolves it to a 
+        ///     canonical file path.
         /// </summary>
         /// <remarks>
-        /// The implementation assumes that you cannot have file names that begin with the '~'
-        /// character. (This is a pretty reasonable assumption.) Additionally, the method does not
-        /// test for the existence of a directory or file resource after resolving the path.
-        /// CONSIDER: Caching the reflection results to satisfy subsequent path resolution requests.
-        /// ISSUE: Need to maintain context for a set of path resolution requests, so that we
-        /// don't run into a situation where an incorrect context is applied to a path resolution
-        /// request.
+        ///     The implementation assumes that you cannot have file names that begin with the '~'
+        ///     character. (This is a pretty reasonable assumption.) Additionally, the method does not
+        ///     test for the existence of a directory or file resource after resolving the path.
+        ///     CONSIDER: Caching the reflection results to satisfy subsequent path resolution requests.
+        ///     ISSUE: Need to maintain context for a set of path resolution requests, so that we
+        ///     don't run into a situation where an incorrect context is applied to a path resolution
+        ///     request.
         /// </remarks>
-        /// <param name="path">A path in an ASP.NET application</param>
-        /// <returns>A fully-qualified path</returns>
+        /// <param name="path"> A path in an ASP.NET application </param>
+        /// <returns> A fully-qualified path </returns>
         internal string MapWebPath(string path)
         {
             Debug.Assert(path != null, "path == null");

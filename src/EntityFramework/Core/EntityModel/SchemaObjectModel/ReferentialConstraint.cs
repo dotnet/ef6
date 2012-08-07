@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an referential constraint on a relationship
+    ///     Represents an referential constraint on a relationship
     /// </summary>
     internal sealed class ReferentialConstraint : SchemaElement
     {
@@ -17,16 +18,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private ReferentialConstraintRoleElement _dependentRole;
 
         /// <summary>
-        /// construct a Referential constraint
+        ///     construct a Referential constraint
         /// </summary>
-        /// <param name="relationship"></param>
+        /// <param name="relationship"> </param>
         public ReferentialConstraint(Relationship relationship)
             : base(relationship)
         {
         }
 
         /// <summary>
-        /// Validate this referential constraint
+        ///     Validate this referential constraint
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Validate()
@@ -258,14 +259,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Resolves the given property names to the property in the item
-        /// Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
+        ///     Resolves the given property names to the property in the item
+        ///     Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
         /// </summary>
-        /// <param name="roleElement"></param>
-        /// <param name="itemType"></param>
-        /// <param name="isKeyProperty"></param>
-        /// <param name="areAllPropertiesNullable"></param>
-        /// <param name="isSubsetOfKeyProperties"></param>
+        /// <param name="roleElement"> </param>
+        /// <param name="itemType"> </param>
+        /// <param name="isKeyProperty"> </param>
+        /// <param name="areAllPropertiesNullable"> </param>
+        /// <param name="isSubsetOfKeyProperties"> </param>
         private static void IsKeyProperty(
             ReferentialConstraintRoleElement roleElement, SchemaEntityType itemType,
             out bool isKeyProperty,
@@ -361,7 +362,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The parent element as an IRelationship
+        ///     The parent element as an IRelationship
         /// </summary>
         internal new IRelationship ParentElement
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Specifies a clause in a modification operation setting the value of a property.
+    ///     Specifies a clause in a modification operation setting the value of a property.
     /// </summary>
     public sealed class DbSetClause : DbModificationClause
     {
@@ -23,10 +24,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets an <see cref="DbExpression"/> that specifies the property that should be updated.
+        ///     Gets an <see cref="DbExpression" /> that specifies the property that should be updated.
         /// </summary>
         /// <remarks>
-        /// Constrained to be a <see cref="DbPropertyExpression"/>.
+        ///     Constrained to be a <see cref="DbPropertyExpression" />.
         /// </remarks>
         public DbExpression Property
         {
@@ -34,10 +35,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets an <see cref="DbExpression"/> that specifies the new value with which to update the property.
+        ///     Gets an <see cref="DbExpression" /> that specifies the new value with which to update the property.
         /// </summary>
         /// <remarks>
-        /// Constrained to be a <see cref="DbConstantExpression"/> or <see cref="DbNullExpression"/>
+        ///     Constrained to be a <see cref="DbConstantExpression" /> or <see cref="DbNullExpression" />
         /// </remarks>
         public DbExpression Value
         {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Core.Mapping
     using OM = System.Collections.ObjectModel;
 
     /// <summary>
-    /// Represents a mapping from a model function import to a store non-composable function.
+    ///     Represents a mapping from a model function import to a store non-composable function.
     /// </summary>
     internal sealed class FunctionImportMappingNonComposable : FunctionImportMapping
     {
@@ -55,13 +56,13 @@ namespace System.Data.Entity.Core.Mapping
         private readonly bool noExplicitResultMappings;
 
         /// <summary>
-        /// Gets function import return type mapping knowledge bases.
+        ///     Gets function import return type mapping knowledge bases.
         /// </summary>
         internal readonly OM.ReadOnlyCollection<FunctionImportStructuralTypeMappingKB> ResultMappings;
 
         /// <summary>
-        /// If no return mappings were specified in the MSL return an empty return type mapping knowledge base.
-        /// Otherwise return the resultSetIndexth return type mapping knowledge base, or throw if resultSetIndex is out of range
+        ///     If no return mappings were specified in the MSL return an empty return type mapping knowledge base.
+        ///     Otherwise return the resultSetIndexth return type mapping knowledge base, or throw if resultSetIndex is out of range
         /// </summary>
         internal FunctionImportStructuralTypeMappingKB GetResultMapping(int resultSetIndex)
         {
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets the disctriminator columns resultSetIndexth result set, or an empty array if the index is not in range
+        ///     Gets the disctriminator columns resultSetIndexth result set, or an empty array if the index is not in range
         /// </summary>
         internal IList<string> GetDiscriminatorColumns(int resultSetIndex)
         {
@@ -91,8 +92,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Given discriminator values (ordinally aligned with DiscriminatorColumns), determines 
-        /// the entity type to return. Throws a CommandExecutionException if the type is ambiguous.
+        ///     Given discriminator values (ordinally aligned with DiscriminatorColumns), determines 
+        ///     the entity type to return. Throws a CommandExecutionException if the type is ambiguous.
         /// </summary>
         internal EntityType Discriminate(object[] discriminatorValues, int resultSetIndex)
         {
@@ -156,17 +157,17 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Determines the expected shape of store results. We expect a column for every property
-        /// of the mapped type (or types) and a column for every discriminator column. We make no
-        /// assumptions about the order of columns: the provider is expected to determine appropriate
-        /// types by looking at the names of the result columns, not the order of columns, which is
-        /// different from the typical handling of row types in the EF.
+        ///     Determines the expected shape of store results. We expect a column for every property
+        ///     of the mapped type (or types) and a column for every discriminator column. We make no
+        ///     assumptions about the order of columns: the provider is expected to determine appropriate
+        ///     types by looking at the names of the result columns, not the order of columns, which is
+        ///     different from the typical handling of row types in the EF.
         /// </summary>
         /// <remarks>
-        /// Requires that the given function import mapping refers to a Collection(Entity) or Collection(ComplexType) CSDL
-        /// function.
+        ///     Requires that the given function import mapping refers to a Collection(Entity) or Collection(ComplexType) CSDL
+        ///     function.
         /// </remarks>
-        /// <returns>Row type.</returns>
+        /// <returns> Row type. </returns>
         internal TypeUsage GetExpectedTargetResultType(int resultSetIndex)
         {
             var resultMapping = GetResultMapping(resultSetIndex);

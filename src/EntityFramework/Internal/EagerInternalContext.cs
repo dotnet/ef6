@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
@@ -10,9 +11,9 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     An <see cref = "EagerInternalContext" /> is an <see cref = "InternalContext" /> where the <see cref = "ObjectContext" /> 
+    ///     An <see cref="EagerInternalContext" /> is an <see cref="InternalContext" /> where the <see cref="ObjectContext" /> 
     ///     instance that it wraps is set immediately at construction time rather than being created lazily. In this case
-    ///     the internal context may or may not own the <see cref = "ObjectContext" /> instance but will only dispose it
+    ///     the internal context may or may not own the <see cref="ObjectContext" /> instance but will only dispose it
     ///     if it does own it.
     /// </summary>
     internal class EagerInternalContext : InternalContext
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Internal
         private readonly string _originalConnectionString;
 
         /// <summary>
-        /// For mocking.
+        ///     For mocking.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public EagerInternalContext(DbContext owner)
@@ -34,10 +35,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Constructs an <see cref = "EagerInternalContext" /> for an already existing <see cref = "ObjectContext" />.
+        ///     Constructs an <see cref="EagerInternalContext" /> for an already existing <see cref="ObjectContext" />.
         /// </summary>
-        /// <param name = "owner">The owner <see cref = "DbContext" />.</param>
-        /// <param name = "objectContext">The existing <see cref = "ObjectContext" />.</param>
+        /// <param name="owner"> The owner <see cref="DbContext" /> . </param>
+        /// <param name="objectContext"> The existing <see cref="ObjectContext" /> . </param>
         public EagerInternalContext(DbContext owner, ObjectContext objectContext, bool objectContextOwned)
             : base(owner)
         {
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Internal
         #region ObjectContext and model
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" />.
+        ///     Returns the underlying <see cref="ObjectContext" />.
         /// </summary>
         public override ObjectContext ObjectContext
         {
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" /> without causing the underlying database to be created
+        ///     Returns the underlying <see cref="ObjectContext" /> without causing the underlying database to be created
         ///     or the database initialization strategy to be executed.
         ///     This is used to get a context that can then be used for database creation/initialization.
         /// </summary>
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Internal
         #region Initialization
 
         /// <summary>
-        ///     Does nothing, since the <see cref = "ObjectContext" /> already exists.
+        ///     Does nothing, since the <see cref="ObjectContext" /> already exists.
         /// </summary>
         protected override void InitializeContext()
         {
@@ -92,24 +93,24 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Does nothing since the database is always considered initialized if the <see cref = "DbContext" /> was created
-        ///     from an existing <see cref = "ObjectContext" />.
+        ///     Does nothing since the database is always considered initialized if the <see cref="DbContext" /> was created
+        ///     from an existing <see cref="ObjectContext" />.
         /// </summary>
         public override void MarkDatabaseNotInitialized()
         {
         }
 
         /// <summary>
-        ///     Does nothing since the database is always considered initialized if the <see cref = "DbContext" /> was created
-        ///     from an existing <see cref = "ObjectContext" />.
+        ///     Does nothing since the database is always considered initialized if the <see cref="DbContext" /> was created
+        ///     from an existing <see cref="ObjectContext" />.
         /// </summary>
         public override void MarkDatabaseInitialized()
         {
         }
 
         /// <summary>
-        ///     Does nothing since the database is always considered initialized if the <see cref = "DbContext" /> was created
-        ///     from an existing <see cref = "ObjectContext" />.
+        ///     Does nothing since the database is always considered initialized if the <see cref="DbContext" /> was created
+        ///     from an existing <see cref="ObjectContext" />.
         /// </summary>
         protected override void InitializeDatabase()
         {
@@ -117,10 +118,10 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets the default database initializer to use for this context if no other has been registered.
-        ///     For code first this property returns a <see cref = "CreateDatabaseIfNotExists{TContext}" /> instance.
+        ///     For code first this property returns a <see cref="CreateDatabaseIfNotExists{TContext}" /> instance.
         ///     For database/model first, this property returns null.
         /// </summary>
-        /// <value>The default initializer.</value>
+        /// <value> The default initializer. </value>
         public override IDatabaseInitializer<DbContext> DefaultInitializer
         {
             get { return null; }
@@ -131,7 +132,7 @@ namespace System.Data.Entity.Internal
         #region Dispose
 
         /// <summary>
-        ///     Disposes the context. The underlying <see cref = "ObjectContext" /> is also disposed if it is owned.
+        ///     Disposes the context. The underlying <see cref="ObjectContext" /> is also disposed if it is owned.
         /// </summary>
         public override void DisposeContext()
         {
@@ -160,8 +161,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// The connection string as originally applied to the context. This is used to perform operations
-        /// that need the connection string in a non-mutated form, such as with security info still intact.
+        ///     The connection string as originally applied to the context. This is used to perform operations
+        ///     that need the connection string in a non-mutated form, such as with security info still intact.
         /// </summary>
         public override string OriginalConnectionString
         {
@@ -176,7 +177,7 @@ namespace System.Data.Entity.Internal
             get { return DbConnectionStringOrigin.UserCode; }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void OverrideConnection(IInternalConnection connection)
         {
             throw Error.EagerInternalContext_CannotSetConnectionInfo();
@@ -188,7 +189,7 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets or sets a value indicating whether lazy loading is enabled.  This is just a wrapper
-        ///     over the same flag in the underlying <see cref = "ObjectContext" />.
+        ///     over the same flag in the underlying <see cref="ObjectContext" />.
         /// </summary>
         public override bool LazyLoadingEnabled
         {

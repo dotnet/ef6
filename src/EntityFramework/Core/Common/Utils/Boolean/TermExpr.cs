@@ -1,24 +1,24 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
-    /// A term is a leaf node in a Boolean expression. Its value (T/F) is undefined.
+    ///     A term is a leaf node in a Boolean expression. Its value (T/F) is undefined.
     /// </summary>
-    /// <typeparam name="T_Identifier">The type of leaf term identifiers in this expression.</typeparam>
+    /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
     internal sealed class TermExpr<T_Identifier> : BoolExpr<T_Identifier>, IEquatable<TermExpr<T_Identifier>>
     {
         private readonly T_Identifier _identifier;
         private readonly IEqualityComparer<T_Identifier> _comparer;
 
         /// <summary>
-        /// Construct a term. 
+        ///     Construct a term.
         /// </summary>
-        /// <param name="comparer">Value comparer to use when comparing two
-        /// term expressions.</param>
-        /// <param name="identifier">Identifier/tag for this term.</param>
+        /// <param name="comparer"> Value comparer to use when comparing two term expressions. </param>
+        /// <param name="identifier"> Identifier/tag for this term. </param>
         internal TermExpr(IEqualityComparer<T_Identifier> comparer, T_Identifier identifier)
         {
             Debug.Assert(null != identifier);
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        /// Gets identifier for this term. This value is used to determine whether
-        /// two terms as equivalent.
+        ///     Gets identifier for this term. This value is used to determine whether
+        ///     two terms as equivalent.
         /// </summary>
         internal T_Identifier Identifier
         {

@@ -1,24 +1,24 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     /// <summary>
-    /// Summary description for SchemaType.
+    ///     Summary description for SchemaType.
     /// </summary>
     internal abstract class SchemaType : SchemaElement
     {
         #region Public Properties
 
         /// <summary>
-        /// Gets the Namespace that this type is in.
+        ///     Gets the Namespace that this type is in.
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         public string Namespace
         {
             get { return Schema.Namespace; }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public override string Identity
         {
@@ -26,7 +26,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public override string FQName
         {
@@ -38,9 +37,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal SchemaType(Schema parentElement)
             : base(parentElement)
         {

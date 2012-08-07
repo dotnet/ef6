@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
 
     /// <summary>
-    /// Class representing a collection of entity set objects
+    ///     Class representing a collection of entity set objects
     /// </summary>
     internal sealed class EntitySetBaseCollection : MetadataCollection<EntitySetBase>
     {
@@ -15,9 +16,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Constructors
 
         /// <summary>
-        /// Default constructor for constructing an empty collection
+        ///     Default constructor for constructing an empty collection
         /// </summary>
-        /// <param name="entityContainer">The entity container that has this entity set collection</param>
+        /// <param name="entityContainer"> The entity container that has this entity set collection </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument entityContainer is null</exception>
         internal EntitySetBaseCollection(EntityContainer entityContainer)
             : this(entityContainer, null)
@@ -25,10 +26,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing the collection with the given items
+        ///     The constructor for constructing the collection with the given items
         /// </summary>
-        /// <param name="entityContainer">The entity container that has this entity set collection</param>
-        /// <param name="items">The items to populate the collection</param>
+        /// <param name="entityContainer"> The entity container that has this entity set collection </param>
+        /// <param name="items"> The items to populate the collection </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument entityContainer is null</exception>
         internal EntitySetBaseCollection(EntityContainer entityContainer, IEnumerable<EntitySetBase> items)
             : base(items)
@@ -48,10 +49,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Gets an item from the collection with the given index
+        ///     Gets an item from the collection with the given index
         /// </summary>
-        /// <param name="index">The index to search for</param>
-        /// <returns>An item from the collection</returns>
+        /// <param name="index"> The index to search for </param>
+        /// <returns> An item from the collection </returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the index is out of the range for the Collection</exception>
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public override EntitySetBase this[int index]
@@ -61,10 +62,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets an item from the collection with the given identity
+        ///     Gets an item from the collection with the given identity
         /// </summary>
-        /// <param name="identity">The identity of the item to search for</param>
-        /// <returns>An item from the collection</returns>
+        /// <param name="identity"> The identity of the item to search for </param>
+        /// <returns> An item from the collection </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an EntitySet with the given identity</exception>
         /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
@@ -79,9 +80,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Adds an item to the collection 
+        ///     Adds an item to the collection
         /// </summary>
-        /// <param name="item">The item to add to the list</param>
+        /// <param name="item"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
         /// <exception cref="System.ArgumentException">Thrown if the EntitySetBase that is being added already belongs to another EntityContainer</exception>
@@ -98,10 +99,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Checks if the given entity set already has a entity container, if so, throw an exception
+        ///     Checks if the given entity set already has a entity container, if so, throw an exception
         /// </summary>
-        /// <param name="entitySet">The entity set to check for</param>
-        /// <param name="argumentName">The name of the argument from the caller</param>
+        /// <param name="entitySet"> The entity set to check for </param>
+        /// <param name="argumentName"> The name of the argument from the caller </param>
         private static void ThrowIfItHasEntityContainer(EntitySetBase entitySet, string argumentName)
         {
             EntityUtil.GenericCheckArgumentNull(entitySet, argumentName);

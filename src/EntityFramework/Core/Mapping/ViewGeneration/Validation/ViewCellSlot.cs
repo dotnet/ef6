@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     using System.Text;
 
     /// <summary>
-    /// Represents a slot that is projected by C and S queries in a cell.
+    ///     Represents a slot that is projected by C and S queries in a cell.
     /// </summary>
     internal class ViewCellSlot : ProjectedSlot
     {
@@ -17,8 +18,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
         // effects: 
         /// <summary>
-        /// Creates a view cell slot that corresponds to <paramref name="slotNum"/> in some cell. The <paramref name="cSlot"/> and <paramref name="sSlot"/> represent the
-        /// slots in the left and right queries of the view cell.
+        ///     Creates a view cell slot that corresponds to <paramref name="slotNum" /> in some cell. The <paramref name="cSlot" /> and <paramref
+        ///      name="sSlot" /> represent the
+        ///     slots in the left and right queries of the view cell.
         /// </summary>
         internal ViewCellSlot(int slotNum, MemberProjectedSlot cSlot, MemberProjectedSlot sSlot)
         {
@@ -40,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         #region Properties
 
         /// <summary>
-        /// Returns the slot corresponding to the left cellquery.
+        ///     Returns the slot corresponding to the left cellquery.
         /// </summary>
         internal MemberProjectedSlot CSlot
         {
@@ -48,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         /// <summary>
-        /// Returns the slot corresponding to the right cellquery.
+        ///     Returns the slot corresponding to the right cellquery.
         /// </summary>
         internal MemberProjectedSlot SSlot
         {
@@ -80,7 +82,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         /// <summary>
-        /// Given a list of <paramref name="slots"/>, converts the left/right slots (if left is true/false) to a human-readable string.
+        ///     Given a list of <paramref name="slots" />, converts the left/right slots (if left is true/false) to a human-readable string.
         /// </summary>
         internal static string SlotsToUserString(IEnumerable<ViewCellSlot> slots, bool isFromCside)
         {
@@ -106,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         /// <summary>
-        /// Not supported in this class.
+        ///     Not supported in this class.
         /// </summary>
         internal override string GetCqlFieldAlias(MemberPath outputMember)
         {
@@ -115,7 +117,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         /// <summary>
-        /// Not supported in this class.
+        ///     Not supported in this class.
         /// </summary>
         internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias, int indentLevel)
         {
@@ -124,7 +126,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         /// <summary>
-        /// Not supported in this class.
+        ///     Not supported in this class.
         /// </summary>
         internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
         {

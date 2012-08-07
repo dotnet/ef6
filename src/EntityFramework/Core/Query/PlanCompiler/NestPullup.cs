@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
@@ -10,12 +11,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// This class "pulls" up nest operations to the root of the tree
-    /// </summary>
-    /// <remarks>
-    /// The goal of this module is to eliminate nest operations from the query - more
-    /// specifically, the nest operations are pulled up to the root of the query instead.
+    ///<summary>
+    ///    This class "pulls" up nest operations to the root of the tree
+    ///</summary>
+    ///<remarks>
+    ///    The goal of this module is to eliminate nest operations from the query - more
+    ///    specifically, the nest operations are pulled up to the root of the query instead.
     ///</remarks>
     [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
         MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -26,28 +27,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly PlanCompiler m_compilerState;
 
         /// <summary>
-        /// map from a collection var to the node where it's defined; the node should be
-        /// the node that should be used as the replacement for the var if it is referred
-        /// to in an UnnestOp (through a VarRef)  Note that we expect this to contain the
-        /// PhysicalProjectOp of the node, so we can use the VarList when mapping vars to
-        /// the copy; (We'll remove the PhysicalProjectOp when we copy it...)
+        ///     map from a collection var to the node where it's defined; the node should be
+        ///     the node that should be used as the replacement for the var if it is referred
+        ///     to in an UnnestOp (through a VarRef)  Note that we expect this to contain the
+        ///     PhysicalProjectOp of the node, so we can use the VarList when mapping vars to
+        ///     the copy; (We'll remove the PhysicalProjectOp when we copy it...)
         /// </summary>
         private readonly Dictionary<Var, Node> m_definingNodeMap = new Dictionary<Var, Node>();
 
         /// <summary>
-        /// map from var to the var we're supposed to replace it with
+        ///     map from var to the var we're supposed to replace it with
         /// </summary>
         private readonly VarRemapper m_varRemapper;
 
         /// <summary>
-        /// Map from VarRef vars to what they're referencing; used to enable the defining
-        /// node map to contain only the definitions, not all the references to it.
+        ///     Map from VarRef vars to what they're referencing; used to enable the defining
+        ///     node map to contain only the definitions, not all the references to it.
         /// </summary>
         private readonly Dictionary<Var, Var> m_varRefMap = new Dictionary<Var, Var>();
 
         /// <summary>
-        /// Whether a sort was encountered under an UnnestOp.
-        /// If so, sort removal needs to be performed.  
+        ///     Whether a sort was encountered under an UnnestOp.
+        ///     If so, sort removal needs to be performed.
         /// </summary>
         private bool m_foundSortUnderUnnest;
 
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// The driver routine. Does all the hard work of processing
+        ///     The driver routine. Does all the hard work of processing
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region VisitorHelpers
 
         /// <summary>
-        /// the iqt we're processing
+        ///     the iqt we're processing
         /// </summary>
         private Command Command
         {
@@ -103,10 +104,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// is the node a NestOp node?
+        ///     is the node a NestOp node?
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "singleStreamNest")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -116,16 +117,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return (n.Op.OpType == OpType.SingleStreamNest || n.Op.OpType == OpType.MultiStreamNest);
         }
 
-        /// <summary>
-        /// Not Supported common processing
+        ///<summary>
+        ///    Not Supported common processing
         ///
-        /// For all those cases where we don't intend to support
-        /// a nest operation as a child, we have this routine to
-        /// do the work.
-        /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    For all those cases where we don't intend to support
+        ///    a nest operation as a child, we have this routine to
+        ///    do the work.
+        ///</summary>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         private Node NestingNotSupported(Op op, Node n)
         {
             // First, visit my children
@@ -144,10 +145,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Follow the VarRef chain to the defining var
+        ///     Follow the VarRef chain to the defining var
         /// </summary>
-        /// <param name="refVar"></param>
-        /// <returns></returns>
+        /// <param name="refVar"> </param>
+        /// <returns> </returns>
         private Var ResolveVarReference(Var refVar)
         {
             var x = refVar;
@@ -159,13 +160,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Update the replacement Var map with the vars from the pulled-up
-        /// operation; the shape is supposed to be identical, so we should not
-        /// have more vars on either side, and the order is guaranteed to be
-        /// the same.
+        ///     Update the replacement Var map with the vars from the pulled-up
+        ///     operation; the shape is supposed to be identical, so we should not
+        ///     have more vars on either side, and the order is guaranteed to be
+        ///     the same.
         /// </summary>
-        /// <param name="fromVars"></param>
-        /// <param name="toVars"></param>
+        /// <param name="fromVars"> </param>
+        /// <param name="toVars"> </param>
         private void UpdateReplacementVarMap(IEnumerable<Var> fromVars, IEnumerable<Var> toVars)
         {
             var toVarEnumerator = toVars.GetEnumerator();
@@ -188,10 +189,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region remapping helpers
 
         /// <summary>
-        /// Replace a list of sortkeys *IN-PLACE* with the corresponding "mapped" Vars
+        ///     Replace a list of sortkeys *IN-PLACE* with the corresponding "mapped" Vars
         /// </summary>
-        /// <param name="sortKeys">sortkeys</param>
-        /// <param name="varMap">the mapping info for Vars</param>
+        /// <param name="sortKeys"> sortkeys </param>
+        /// <param name="varMap"> the mapping info for Vars </param>
         private static void RemapSortKeys(List<SortKey> sortKeys, Dictionary<Var, Var> varMap)
         {
             if (sortKeys != null)
@@ -208,12 +209,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Produce a "mapped" sequence of the input Var sequence - based on the supplied
-        /// map
+        ///     Produce a "mapped" sequence of the input Var sequence - based on the supplied
+        ///     map
         /// </summary>
-        /// <param name="vars">input var sequence</param>
-        /// <param name="varMap">var->var map</param>
-        /// <returns>the mapped var sequence</returns>
+        /// <param name="vars"> input var sequence </param>
+        /// <param name="varMap"> var->var map </param>
+        /// <returns> the mapped var sequence </returns>
         private IEnumerable<Var> RemapVars(IEnumerable<Var> vars, Dictionary<Var, Var> varMap)
         {
             foreach (var v in vars)
@@ -231,11 +232,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Produce a "mapped" varList
+        ///     Produce a "mapped" varList
         /// </summary>
-        /// <param name="varList"></param>
-        /// <param name="varMap"></param>
-        /// <returns></returns>
+        /// <param name="varList"> </param>
+        /// <param name="varMap"> </param>
+        /// <returns> </returns>
         private VarList RemapVarList(VarList varList, Dictionary<Var, Var> varMap)
         {
             var newVarList = Command.CreateVarList(RemapVars(varList, varMap));
@@ -243,11 +244,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Produce a "mapped" varVec
+        ///     Produce a "mapped" varVec
         /// </summary>
-        /// <param name="varVec"></param>
-        /// <param name="varMap"></param>
-        /// <returns></returns>
+        /// <param name="varVec"> </param>
+        /// <param name="varMap"> </param>
+        /// <returns> </returns>
         private VarVec RemapVarVec(VarVec varVec, Dictionary<Var, Var> varMap)
         {
             var newVarVec = Command.CreateVarVec(RemapVars(varVec, varMap));
@@ -261,14 +262,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region AncillaryOp Visitors
 
         /// <summary>
-        /// VarDefOp
+        ///     VarDefOp
         /// 
-        /// Essentially, maintains m_varRefMap, adding an entry for each VarDef that has a 
-        /// VarRef on it.
+        ///     Essentially, maintains m_varRefMap, adding an entry for each VarDef that has a 
+        ///     VarRef on it.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(VarDefOp op, Node n)
         {
             VisitChildren(n);
@@ -285,17 +286,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// VarRefOp
+        ///     VarRefOp
         /// </summary>
         /// <remarks>
-        /// When we remove the UnnestOp, we are left with references to it's column vars that
-        /// need to be fixed up; we do this by creating a var replacement map when we remove the
-        /// UnnestOp and whenever we find a reference to a var in the map, we replace it with a
-        /// reference to the replacement var instead;
+        ///     When we remove the UnnestOp, we are left with references to it's column vars that
+        ///     need to be fixed up; we do this by creating a var replacement map when we remove the
+        ///     UnnestOp and whenever we find a reference to a var in the map, we replace it with a
+        ///     reference to the replacement var instead;
         /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(VarRefOp op, Node n)
         {
             // First, visit my children (do I have children?)
@@ -310,11 +311,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ScalarOp Visitors
 
         /// <summary>
-        /// We don't yet support nest pullups over Case
+        ///     We don't yet support nest pullups over Case
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(CaseOp op, Node n)
         {
             // Make sure we don't have a child that is a nest op.
@@ -340,13 +341,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// The input to Exists is always a ProjectOp with a single constant var projected.
-        /// If the input to that ProjectOp contains nesting, it may end up with additional outputs after being
-        /// processed. If so, we clear out those additional outputs.
+        ///     The input to Exists is always a ProjectOp with a single constant var projected.
+        ///     If the input to that ProjectOp contains nesting, it may end up with additional outputs after being
+        ///     processed. If so, we clear out those additional outputs.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExistsOp")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NestPull")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -372,48 +373,48 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOp Visitors
 
         /// <summary>
-        /// Default RelOp processing: 
+        ///     Default RelOp processing: 
         /// 
-        /// We really don't want to allow any NestOps through; just fail if we don't have
-        /// something coded.
+        ///     We really don't want to allow any NestOps through; just fail if we don't have
+        ///     something coded.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override Node VisitRelOpDefault(RelOp op, Node n)
         {
             return NestingNotSupported(op, n);
         }
 
-        /// <summary>
-        /// ApplyOp/JoinOp common processing
-        /// </summary>
-        /// <remarks>
-        /// If one of the inputs to any JoinOp/ApplyOp is a NestOp, then the NestOp
-        /// can be pulled above the join/apply if every input to the join/apply has
-        /// a key(s). The keys of the NestOp are augmented with the keys of the
-        /// other join inputs:
+        ///<summary>
+        ///    ApplyOp/JoinOp common processing
+        ///</summary>
+        ///<remarks>
+        ///    If one of the inputs to any JoinOp/ApplyOp is a NestOp, then the NestOp
+        ///    can be pulled above the join/apply if every input to the join/apply has
+        ///    a key(s). The keys of the NestOp are augmented with the keys of the
+        ///    other join inputs:
         ///
-        ///     JoinOp/ApplyOp(NestOp(X, ...), Y) => NestOp(JoinOp/ApplyOp(X, Y), ...)
+        ///    JoinOp/ApplyOp(NestOp(X, ...), Y) => NestOp(JoinOp/ApplyOp(X, Y), ...)
         ///
-        /// In addition, if the NestOp is on a 'nullable' side of a join (i.e. right side of
-        /// LeftOuterJoin/OuterApply or either side of FullOuterJoin), the driving node 
-        /// of that NestOp (X) is capped with a project with a null sentinel and 
-        /// the dependant collection nodes (the rest of the NestOp children)
-        /// are filtered based on that sentinel:
+        ///    In addition, if the NestOp is on a 'nullable' side of a join (i.e. right side of
+        ///    LeftOuterJoin/OuterApply or either side of FullOuterJoin), the driving node 
+        ///    of that NestOp (X) is capped with a project with a null sentinel and 
+        ///    the dependant collection nodes (the rest of the NestOp children)
+        ///    are filtered based on that sentinel:
         ///
-        ///  LOJ/OA/FOJ (X, NestOp(Y, Z1, Z2, ..ZN))  =>  NestOp( LOJ/OA/FOJ (X, PROJECT (Y, v = 1)), FILTER(Z1, v!=null), FILTER(Z2, v!=null), ... FILTER(ZN, v!=null))
-        ///         FOJ (NestOp(Y, Z1, Z2, ..ZN), X)  =>  NestOp( LOJ/OA/FOJ (PROJECT (Y, v = 1), X), FILTER(Z1, v!=null), FILTER(Z2, v!=null), ... FILTER(ZN, v!=null))
+        ///    LOJ/OA/FOJ (X, NestOp(Y, Z1, Z2, ..ZN))  =>  NestOp( LOJ/OA/FOJ (X, PROJECT (Y, v = 1)), FILTER(Z1, v!=null), FILTER(Z2, v!=null), ... FILTER(ZN, v!=null))
+        ///    FOJ (NestOp(Y, Z1, Z2, ..ZN), X)  =>  NestOp( LOJ/OA/FOJ (PROJECT (Y, v = 1), X), FILTER(Z1, v!=null), FILTER(Z2, v!=null), ... FILTER(ZN, v!=null))
         ///
-        ///  Also, FILTER(Zi, v != null) may be transformed to push the filter below any NestOps. 
-        ///  The definitions for collection vars corresponding to the filtered collection nodes (in m_definingNodeMap)
-        ///  are also updated to filter based on the sentinel. 
+        ///    Also, FILTER(Zi, v != null) may be transformed to push the filter below any NestOps. 
+        ///    The definitions for collection vars corresponding to the filtered collection nodes (in m_definingNodeMap)
+        ///    are also updated to filter based on the sentinel. 
         ///  
-        /// Requires: Every input to the join/apply must have a key.
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    Requires: Every input to the join/apply must have a key.
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         private Node ApplyOpJoinOp(Op op, Node n)
         {
             // First, visit my children
@@ -558,14 +559,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Applies a IsNotNull(sentinelVar) filter to the given node.
-        /// The filter is pushed below all MultiStremNest-s, because this part of the tree has 
-        /// already been visited and it is expected that the MultiStreamNests have bubbled up
-        /// above the filters. 
+        ///     Applies a IsNotNull(sentinelVar) filter to the given node.
+        ///     The filter is pushed below all MultiStremNest-s, because this part of the tree has 
+        ///     already been visited and it is expected that the MultiStreamNests have bubbled up
+        ///     above the filters.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="sentinelVar"></param>
-        /// <returns></returns>
+        /// <param name="node"> </param>
+        /// <param name="sentinelVar"> </param>
+        /// <returns> </returns>
         private Node ApplyIsNotNullFilter(Node node, Var sentinelVar)
         {
             var newFilterChild = node;
@@ -593,11 +594,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Input =>  Filter(input, Ref(var) is not null)
+        ///     Input =>  Filter(input, Ref(var) is not null)
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="var"></param>
-        /// <returns></returns>
+        /// <param name="input"> </param>
+        /// <param name="var"> </param>
+        /// <returns> </returns>
         private Node CapWithIsNotNullFilter(Node input, Var var)
         {
             var varRefNode = Command.CreateNode(Command.CreateVarRefOp(var));
@@ -612,49 +613,49 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// ApplyOp common processing
+        ///     ApplyOp common processing
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override Node VisitApplyOp(ApplyBaseOp op, Node n)
         {
             return ApplyOpJoinOp(op, n);
         }
 
         /// <summary>
-        /// DistinctOp
+        ///     DistinctOp
         /// </summary>
         /// <remarks>
-        /// The input to a DistinctOp cannot be a NestOp – that would imply that
-        /// we support distinctness over collections - which we don’t.
+        ///     The input to a DistinctOp cannot be a NestOp – that would imply that
+        ///     we support distinctness over collections - which we don’t.
         /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(DistinctOp op, Node n)
         {
             return NestingNotSupported(op, n);
         }
 
-        /// <summary>
-        /// FilterOp
-        /// </summary>
-        /// <remarks>
-        /// If the input to the FilterOp is a NestOp, and if the filter predicate
-        /// does not reference any of the collection Vars of the nestOp, then the
-        /// FilterOp can be simply pushed below the NestOp:
+        ///<summary>
+        ///    FilterOp
+        ///</summary>
+        ///<remarks>
+        ///    If the input to the FilterOp is a NestOp, and if the filter predicate
+        ///    does not reference any of the collection Vars of the nestOp, then the
+        ///    FilterOp can be simply pushed below the NestOp:
         ///
-        ///     Filter(Nest(X, ...), pred) => Nest(Filter(X, pred), ...)
+        ///    Filter(Nest(X, ...), pred) => Nest(Filter(X, pred), ...)
         ///
-        /// Note: even if the filter predicate originally referenced one of the
-        /// collection vars, as part of our bottom up traversal, the appropriate
-        /// Var was replaced by a copy of the source of the collection. So, this
-        /// transformation should always be legal.
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    Note: even if the filter predicate originally referenced one of the
+        ///    collection vars, as part of our bottom up traversal, the appropriate
+        ///    Var was replaced by a copy of the source of the collection. So, this
+        ///    transformation should always be legal.
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         public override Node Visit(FilterOp op, Node n)
         {
             // First, visit my children
@@ -666,9 +667,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (null != nestOp)
             {
 #if DEBUG
-    // check to see if the predicate references any of the collection
-    // expressions. If it doesn't, then we can push the filter down, but
-    // even if it does it's probably OK.
+                // check to see if the predicate references any of the collection
+                // expressions. If it doesn't, then we can push the filter down, but
+                // even if it does it's probably OK.
                 var predicateNodeInfo = Command.GetNodeInfo(n.Child1);
                 foreach (var ci in nestOp.CollectionInfo)
                 {
@@ -693,37 +694,37 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// GroupByOp
+        ///     GroupByOp
         /// </summary>
         /// <remarks>
-        /// At this point in the process, there really isn't a way we should actually
-        /// have a NestOp as an input to the GroupByOp, and we currently aren't allowing
-        /// you to specify a collection as an aggregation Var or key, so if we find a
-        /// NestOp anywhere on the inputs, it's a NotSupported situation.
+        ///     At this point in the process, there really isn't a way we should actually
+        ///     have a NestOp as an input to the GroupByOp, and we currently aren't allowing
+        ///     you to specify a collection as an aggregation Var or key, so if we find a
+        ///     NestOp anywhere on the inputs, it's a NotSupported situation.
         /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(GroupByOp op, Node n)
         {
             return NestingNotSupported(op, n);
         }
 
         /// <summary>
-        /// GroupByIntoOp
+        ///     GroupByIntoOp
         /// </summary>
         /// <remarks>
-        /// Transform the GroupByInto node into a Project over a GroupBy. The project 
-        /// outputs all keys and aggregates produced by the GroupBy and has the definition of the 
-        /// group aggregates var in its var def list.
+        ///     Transform the GroupByInto node into a Project over a GroupBy. The project 
+        ///     outputs all keys and aggregates produced by the GroupBy and has the definition of the 
+        ///     group aggregates var in its var def list.
         /// 
-        /// GroupByInto({key1, key2, ... , keyn}, {fa1, fa1, ... , fan}, {ga1, ga2, ..., gn}) => 
+        ///     GroupByInto({key1, key2, ... , keyn}, {fa1, fa1, ... , fan}, {ga1, ga2, ..., gn}) => 
         ///     Project(GroupBy({key1, key2, ... , keyn}, {fa1, fa1, ... , fan}),   // input
-        ///             {ga1, ga2, ..., gn}                                         // vardeflist
+        ///     {ga1, ga2, ..., gn}                                         // vardeflist
         /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GroupByIntoOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -754,55 +755,55 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// JoinOp common processing
+        ///     JoinOp common processing
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             return ApplyOpJoinOp(op, n);
         }
 
-        /// <summary>
-        /// ProjectOp
-        /// </summary>
-        /// <remarks>
-        /// If after visiting the children, the ProjectOp's input is a SortOp, swap the ProjectOp and the SortOp, 
-        /// to allow the SortOp to bubble up and be honored. This may only occur if the original input to the  
-        /// ProjectOp was an UnnestOp. 
+        ///<summary>
+        ///    ProjectOp
+        ///</summary>
+        ///<remarks>
+        ///    If after visiting the children, the ProjectOp's input is a SortOp, swap the ProjectOp and the SortOp, 
+        ///    to allow the SortOp to bubble up and be honored. This may only occur if the original input to the  
+        ///    ProjectOp was an UnnestOp. 
         /// 
-        /// There are three cases to handle in ProjectOp:
+        ///    There are three cases to handle in ProjectOp:
         ///
-        ///  (1) The input is not a NestOp; but the ProjectOp locally defines some Vars
-        ///      as collections:
+        ///    (1) The input is not a NestOp; but the ProjectOp locally defines some Vars
+        ///    as collections:
         ///
-        ///         ProjectOp(X,{a,CollectOp(PhysicalProjectOp(Y)),b,...}) ==> MsnOp(ProjectOp'(X,{a,b,...}),Y)
-        ///         ProjectOp(X,{a,VarRef(ref-to-collect-var-Y),b,...})    ==> MsnOp(ProjectOp'(X,{a,b,...}),copy-of-Y)
+        ///    ProjectOp(X,{a,CollectOp(PhysicalProjectOp(Y)),b,...}) ==> MsnOp(ProjectOp'(X,{a,b,...}),Y)
+        ///    ProjectOp(X,{a,VarRef(ref-to-collect-var-Y),b,...})    ==> MsnOp(ProjectOp'(X,{a,b,...}),copy-of-Y)
         ///
-        ///     Where:
-        ///         ProjectOp' is ProjectOp less any vars that were collection vars, plus
-        ///                    any additional Vars needed by the collection.
+        ///    Where:
+        ///    ProjectOp' is ProjectOp less any vars that were collection vars, plus
+        ///    any additional Vars needed by the collection.
         ///
-        ///  (2) The input is a NestOp, but the ProjectOp does not local define some Vars
-        ///      as collections:
+        ///    (2) The input is a NestOp, but the ProjectOp does not local define some Vars
+        ///    as collections:
         ///
-        ///         ProjectOp(MsnOp(X,Y,...)) => MsnOp'(ProjectOp'(X),Y,...)
+        ///    ProjectOp(MsnOp(X,Y,...)) => MsnOp'(ProjectOp'(X),Y,...)
         ///
-        ///      Where:
-        ///         ProjectOp' is ProjectOp plus any additional Vars needed by NestOp
-        ///                    (see NestOp.Outputs – except the collection vars)
+        ///    Where:
+        ///    ProjectOp' is ProjectOp plus any additional Vars needed by NestOp
+        ///    (see NestOp.Outputs – except the collection vars)
         ///
-        ///         MsnOp'     should be MsnOp. Additionally, its Outputs should be enhanced
-        ///                    to include any Vars produced by the ProjectOp
+        ///    MsnOp'     should be MsnOp. Additionally, its Outputs should be enhanced
+        ///    to include any Vars produced by the ProjectOp
         ///
-        ///  (3) The combination of both (1) and (2) -- both the vars define a collection,
-        ///      and the input is also a nestOp.  we handle this by first processing Case1,
-        ///      then processing Case2.
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    (3) The combination of both (1) and (2) -- both the vars define a collection,
+        ///    and the input is also a nestOp.  we handle this by first processing Case1,
+        ///    then processing Case2.
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         public override Node Visit(ProjectOp op, Node n)
         {
 #if DEBUG
@@ -851,10 +852,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Helper method for <see cref="Visit(ProjectOp, Node)"/>.
+        ///     Helper method for <see cref="Visit(ProjectOp, Node)" />.
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         private Node HandleProjectNode(Node n)
         {
             // First, convert any nestOp inputs;
@@ -876,25 +877,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Fold nested MultiStreamNestOps into one:
+        ///     Fold nested MultiStreamNestOps into one:
         /// 
         ///     MSN(MSN(X,Y),Z) ==> MSN(X,Y,Z)
         /// 
-        /// NOTE: It would be incorrect to merge NestOps from the non-driving node
-        ///       into one nest op, because that would change the intent.  Instead, 
-        ///       we let those go through the tree and wait until we get to the top
-        ///       level PhysicalProject, when we'll use the ConvertToSingleStreamNest
-        ///       process to handle them.
+        ///     NOTE: It would be incorrect to merge NestOps from the non-driving node
+        ///     into one nest op, because that would change the intent.  Instead, 
+        ///     we let those go through the tree and wait until we get to the top
+        ///     level PhysicalProject, when we'll use the ConvertToSingleStreamNest
+        ///     process to handle them.
         /// 
-        /// NOTE: We should never have three levels of nestOps, because we should
-        ///       have folded the lower two together when we constructed one of them.
+        ///     NOTE: We should never have three levels of nestOps, because we should
+        ///     have folded the lower two together when we constructed one of them.
         /// 
-        /// We also remove unreferenced collections, that is, if any collection is
-        /// not referred to by the top level-NestOp, we can safely remove it from 
-        /// the merged NestOp we produce.
+        ///     We also remove unreferenced collections, that is, if any collection is
+        ///     not referred to by the top level-NestOp, we can safely remove it from 
+        ///     the merged NestOp we produce.
         /// </summary>
-        /// <param name="nestNode"></param>
-        /// <returns></returns>
+        /// <param name="nestNode"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Vars")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "collectionVar")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -984,15 +985,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return newNode;
         }
 
-        /// <summary>
-        /// ProjectOp(X,{a,CollectOp(PhysicalProjectOp(Y)),b,...}) ==> MsnOp(ProjectOp'(X,{a,b,...}),Y)
-        /// ProjectOp(X,{a,VarRef(ref-to-collect-var-Y),b,...})    ==> MsnOp(ProjectOp'(X,{a,b,...}),copy-of-Y)
+        ///<summary>
+        ///    ProjectOp(X,{a,CollectOp(PhysicalProjectOp(Y)),b,...}) ==> MsnOp(ProjectOp'(X,{a,b,...}),Y)
+        ///    ProjectOp(X,{a,VarRef(ref-to-collect-var-Y),b,...})    ==> MsnOp(ProjectOp'(X,{a,b,...}),copy-of-Y)
         ///
-        /// Remove CollectOps from projection, constructing a NestOp
-        /// over the ProjectOp.
-        /// </summary>
-        /// <param name="projectNode"></param>
-        /// <returns></returns>
+        ///    Remove CollectOps from projection, constructing a NestOp
+        ///    over the ProjectOp.
+        ///</summary>
+        ///<param name="projectNode"> </param>
+        ///<returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -1205,12 +1206,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// If we're going to eat the ProjectNode, then we at least need to make 
-        /// sure we remap any vars it defines as varRefs, and ensure that any
-        /// references to them are switched.
+        ///     If we're going to eat the ProjectNode, then we at least need to make 
+        ///     sure we remap any vars it defines as varRefs, and ensure that any
+        ///     references to them are switched.
         /// </summary>
-        /// <param name="referencedVars"></param>
-        /// <param name="outputVars"></param>
+        /// <param name="referencedVars"> </param>
+        /// <param name="outputVars"> </param>
         private void EnsureReferencedVarsAreRemoved(List<Node> referencedVars, VarVec outputVars)
         {
             foreach (var chi in referencedVars)
@@ -1225,10 +1226,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// We need to make sure that we remap the column maps that we're pulling
-        /// up to point to the defined var, not it's reference. 
+        ///     We need to make sure that we remap the column maps that we're pulling
+        ///     up to point to the defined var, not it's reference.
         /// </summary>
-        /// <param name="referencedVars"></param>
+        /// <param name="referencedVars"> </param>
         private void EnsureReferencedVarsAreRemapped(List<Node> referencedVars)
         {
             foreach (var chi in referencedVars)
@@ -1240,23 +1241,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Convert a CollectOp subtree (when used as the defining expression for a
-        /// VarDefOp) into a reasonable input to a NestOp.
-        /// </summary>
-        /// <remarks>
-        /// There are a couple of cases that we handle here:
+        ///<summary>
+        ///    Convert a CollectOp subtree (when used as the defining expression for a
+        ///    VarDefOp) into a reasonable input to a NestOp.
+        ///</summary>
+        ///<remarks>
+        ///    There are a couple of cases that we handle here:
         ///
-        ///     (a) PhysicalProject(X) ==> X
-        ///     (b) PhysicalProject(Sort(X)) ==> Sort(X)
-        ///
-        /// </remarks>
-        /// <param name="physicalProjectNode">the child of the CollectOp</param>
-        /// <param name="collectionVar">the collectionVar being defined</param>
-        /// <param name="collectionInfoList">where to append the new collectionInfo</param>
-        /// <param name="collectionNodes">where to append the collectionNode</param>
-        /// <param name="externalReferences">a bit vector of external references of the physicalProject</param>
-        /// <param name="collectionReferences">a bit vector of collection vars</param>
+        ///    (a) PhysicalProject(X) ==> X
+        ///    (b) PhysicalProject(Sort(X)) ==> Sort(X)
+        ///</remarks>
+        ///<param name="physicalProjectNode"> the child of the CollectOp </param>
+        ///<param name="collectionVar"> the collectionVar being defined </param>
+        ///<param name="collectionInfoList"> where to append the new collectionInfo </param>
+        ///<param name="collectionNodes"> where to append the collectionNode </param>
+        ///<param name="externalReferences"> a bit vector of external references of the physicalProject </param>
+        ///<param name="collectionReferences"> a bit vector of collection vars </param>
         private void ConvertToNestOpInput(
             Node physicalProjectNode, Var collectionVar, List<CollectionInfo> collectionInfoList, List<Node> collectionNodes,
             VarVec externalReferences, VarVec collectionReferences)
@@ -1316,39 +1316,39 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             collectionReferences.Set(collectionVar);
         }
 
-        /// <summary>
-        /// Case 2 for ProjectOp: NestOp is the input:
+        ///<summary>
+        ///    Case 2 for ProjectOp: NestOp is the input:
         ///
-        ///     ProjectOp(NestOp(X,Y,...)) => NestOp'(ProjectOp'(X),Y,...)
+        ///    ProjectOp(NestOp(X,Y,...)) => NestOp'(ProjectOp'(X),Y,...)
         ///
-        /// Remove collection references from the ProjectOp and pull the
-        /// NestOp over it, adding any outputs that the projectOp added.
+        ///    Remove collection references from the ProjectOp and pull the
+        ///    NestOp over it, adding any outputs that the projectOp added.
         ///
-        /// The outputs are important here; expanding the above:
+        ///    The outputs are important here; expanding the above:
         ///
-        ///     P{a,n}(N{x1,x2,x3,y}(X,Y)) => N{a,x1,x2,x3,y}(P{a,x1,x2,x3}(X),Y)
+        ///    P{a,n}(N{x1,x2,x3,y}(X,Y)) => N{a,x1,x2,x3,y}(P{a,x1,x2,x3}(X),Y)
         ///
-        /// Strategy:
+        ///    Strategy:
         ///
-        ///     (1) Determine oldNestOpCollectionOutputs
-        ///     (2) oldNestOpNonCollectionOutputs = oldNestOpOutputs - oldNestOpCollectionOutputs;
-        ///     (3) oldProjectOpNonCollectionOutputs = oldProjectOpOutputs - oldNestOpCollectionOutputs
-        ///     (4) oldProjectOpCollectionOutputs = oldProjectOpOutputs - oldProjectOpNonCollectionOutputs
-        ///     (5) build a new list of collectionInfo's for the new NestOp, including
-        ///         only oldProjectOpCollectionOutputs.
-        ///     (6) leftCorrelationVars = vars that are defined by the left most child of the input nestOpNode 
-        ///         and used in the subtrees rooted at the other children of the input nestOpNode
-        ///     (7) newProjectOpOutputs = oldProjectOpNonCollectionOutputs + oldNestOpNonCollectionOutputs + leftCorrelationVars
+        ///    (1) Determine oldNestOpCollectionOutputs
+        ///    (2) oldNestOpNonCollectionOutputs = oldNestOpOutputs - oldNestOpCollectionOutputs;
+        ///    (3) oldProjectOpNonCollectionOutputs = oldProjectOpOutputs - oldNestOpCollectionOutputs
+        ///    (4) oldProjectOpCollectionOutputs = oldProjectOpOutputs - oldProjectOpNonCollectionOutputs
+        ///    (5) build a new list of collectionInfo's for the new NestOp, including
+        ///    only oldProjectOpCollectionOutputs.
+        ///    (6) leftCorrelationVars = vars that are defined by the left most child of the input nestOpNode 
+        ///    and used in the subtrees rooted at the other children of the input nestOpNode
+        ///    (7) newProjectOpOutputs = oldProjectOpNonCollectionOutputs + oldNestOpNonCollectionOutputs + leftCorrelationVars
         ///         
-        ///     (8) newProjectOpChildren = ....
+        ///    (8) newProjectOpChildren = ....
         /// 
-        /// Of course everything needs to be "derefed", that is, expressed in the projectOp Var Ids.
+        ///    Of course everything needs to be "derefed", that is, expressed in the projectOp Var Ids.
         ///
-        ///     (9) Set ProjectOp's input to NestOp's input
-        ///     (10) Set NestOp's input to ProjectOp.
-        /// </summary>
-        /// <param name="projectNode"></param>
-        /// <returns></returns>
+        ///    (9) Set ProjectOp's input to NestOp's input
+        ///    (10) Set NestOp's input to ProjectOp.
+        ///</summary>
+        ///<param name="projectNode"> </param>
+        ///<returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProjectOpCase2(Node projectNode)
@@ -1361,10 +1361,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var nestNode = projectNode.Child0;
             var nestOp = nestNode.Op as NestBaseOp;
 #if DEBUG
-    // NOTE: I do not believe that we need to remap the nest op in terms of
-    //       the project op, but I can't prove it right now; if the assert
-    //       below fires, I was wrong.
-    //Dictionary<Var, Var> projectToNestVarMap = new Dictionary<Var, Var>();
+            // NOTE: I do not believe that we need to remap the nest op in terms of
+            //       the project op, but I can't prove it right now; if the assert
+            //       below fires, I was wrong.
+            //Dictionary<Var, Var> projectToNestVarMap = new Dictionary<Var, Var>();
 
             Command.RecomputeNodeInfo(projectNode);
             var projectNodeInfo = Command.GetExtendedNodeInfo(projectNode);
@@ -1539,33 +1539,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return nestNode;
         }
 
-        /// <summary>
-        /// SetOp common processing
-        /// </summary>
-        /// <remarks>
-        /// The input to an IntersectOp or an ExceptOp cannot be a NestOp – that
-        /// would imply that we support distinctness over collections  - which
-        /// we don’t.
+        ///<summary>
+        ///    SetOp common processing
+        ///</summary>
+        ///<remarks>
+        ///    The input to an IntersectOp or an ExceptOp cannot be a NestOp – that
+        ///    would imply that we support distinctness over collections  - which
+        ///    we don’t.
         ///
-        /// UnionAllOp is somewhat trickier. We would need a way to percolate keys
-        /// up the UnionAllOp – and I’m ok with not supporting this case for now.
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    UnionAllOp is somewhat trickier. We would need a way to percolate keys
+        ///    up the UnionAllOp – and I’m ok with not supporting this case for now.
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         protected override Node VisitSetOp(SetOp op, Node n)
         {
             return NestingNotSupported(op, n);
         }
 
         /// <summary>
-        /// SingleRowOp
+        ///     SingleRowOp
         /// 
-        /// SingleRowOp(NestOp(x,...)) => NestOp(SingleRowOp(x),...)
+        ///     SingleRowOp(NestOp(x,...)) => NestOp(SingleRowOp(x),...)
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(SingleRowOp op, Node n)
         {
             VisitChildren(n);
@@ -1581,16 +1581,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// SortOp
+        ///     SortOp
         /// </summary>
         /// <remarks>
-        /// If the input to a SortOp is a NestOp, then none of the sort
-        /// keys can be collection Vars of the NestOp – we don't support
-        /// sorts over collections.
+        ///     If the input to a SortOp is a NestOp, then none of the sort
+        ///     keys can be collection Vars of the NestOp – we don't support
+        ///     sorts over collections.
         /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(SortOp op, Node n)
         {
             // Visit the children
@@ -1610,20 +1610,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return n;
         }
 
-        /// <summary>
-        /// ConstrainedSortOp
-        /// </summary>
-        /// <remarks>
-        /// Push the ConstrainedSortOp onto the driving node of the NestOp:
+        ///<summary>
+        ///    ConstrainedSortOp
+        ///</summary>
+        ///<remarks>
+        ///    Push the ConstrainedSortOp onto the driving node of the NestOp:
         ///
-        ///     ConstrainedSortOp(NestOp(X,Y,...)) ==> NestOp(ConstrainedSortOp(X),Y,...)
+        ///    ConstrainedSortOp(NestOp(X,Y,...)) ==> NestOp(ConstrainedSortOp(X),Y,...)
         /// 
-        /// There should not be any need for var renaming, because the ConstrainedSortOp cannot 
-        /// refer to any vars from the NestOp
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    There should not be any need for var renaming, because the ConstrainedSortOp cannot 
+        ///    refer to any vars from the NestOp
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         public override Node Visit(ConstrainedSortOp op, Node n)
         {
             // Visit the children
@@ -1644,13 +1644,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Helper method used by Visit(ConstrainedSortOp, Node)and Visit(SortOp, Node).
-        /// It returns a NestBaseOp equivalent to the inputNestOp, only with the given sortKeys
-        /// prepended to the prefix sort keys already on the inputNestOp.
+        ///     Helper method used by Visit(ConstrainedSortOp, Node)and Visit(SortOp, Node).
+        ///     It returns a NestBaseOp equivalent to the inputNestOp, only with the given sortKeys
+        ///     prepended to the prefix sort keys already on the inputNestOp.
         /// </summary>
-        /// <param name="inputNestOp"></param>
-        /// <param name="sortKeys"></param>
-        /// <returns></returns>
+        /// <param name="inputNestOp"> </param>
+        /// <param name="sortKeys"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SingleStreamNestOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -1689,12 +1689,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Helper method that given two lists of sort keys creates a single list of sort keys without duplicates.
-        /// First the keys from the first given list are added, then from the second one.
+        ///     Helper method that given two lists of sort keys creates a single list of sort keys without duplicates.
+        ///     First the keys from the first given list are added, then from the second one.
         /// </summary>
-        /// <param name="sortKeyList1"></param>
-        /// <param name="sortKeyList2"></param>
-        /// <returns></returns>
+        /// <param name="sortKeyList1"> </param>
+        /// <param name="sortKeyList2"> </param>
+        /// <returns> </returns>
         private List<SortKey> ConsolidateSortKeys(List<SortKey> sortKeyList1, List<SortKey> sortKeyList2)
         {
             var sortVars = Command.CreateVarVec();
@@ -1724,51 +1724,51 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return sortKeyList;
         }
 
-        /// <summary>
-        /// UnnestOp
-        /// </summary>
-        /// <remarks>
-        /// Logically, the UnnestOp can simply be replaced with the defining expression
-        /// corresponding to the Var property of the UnnestOp. The tricky part is that
-        /// the UnnestOp produces a set of ColumnVars which may be referenced in other
-        /// parts of the query, and these need to be replaced by the corresponding Vars
-        /// produced by the defining expression.
+        ///<summary>
+        ///    UnnestOp
+        ///</summary>
+        ///<remarks>
+        ///    Logically, the UnnestOp can simply be replaced with the defining expression
+        ///    corresponding to the Var property of the UnnestOp. The tricky part is that
+        ///    the UnnestOp produces a set of ColumnVars which may be referenced in other
+        ///    parts of the query, and these need to be replaced by the corresponding Vars
+        ///    produced by the defining expression.
         ///
-        /// There are essentially four cases:
+        ///    There are essentially four cases:
         /// 
-        /// Case 1: The UnnestOps Var is a UDT. Only the store can handle this, so we
-        ///         pass it on without changing it.
+        ///    Case 1: The UnnestOps Var is a UDT. Only the store can handle this, so we
+        ///    pass it on without changing it.
         /// 
-        /// Case 2: The UnnestOp has a Function as its input.  This implies that the
-        ///         store has TVFs, which it can Unnest, so we let it handle that and do 
-        ///         nothing.
+        ///    Case 2: The UnnestOp has a Function as its input.  This implies that the
+        ///    store has TVFs, which it can Unnest, so we let it handle that and do 
+        ///    nothing.
         /// 
-        /// Case 3: The UnnestOp Var defines a Nested collection.  We'll just replace 
-        ///         the UnnestOp with the Input:
+        ///    Case 3: The UnnestOp Var defines a Nested collection.  We'll just replace 
+        ///    the UnnestOp with the Input:
         /// 
-        ///             UnnestOp(VarDef(CollectOp(PhysicalProjectOp(input)))) => input
+        ///    UnnestOp(VarDef(CollectOp(PhysicalProjectOp(input)))) => input
         ///
-        /// Case 4: The UnnestOp Var refers to a Nested collection from elsewhere.  As we
-        ///         discover NestOps, we maintain a var->PhysicalProject Node map.  When
-        ///         we get this case, we just make a copy of the PhysicalProject node, for
-        ///         the referenced Var, and we replace the UnnestOp with it.
+        ///    Case 4: The UnnestOp Var refers to a Nested collection from elsewhere.  As we
+        ///    discover NestOps, we maintain a var->PhysicalProject Node map.  When
+        ///    we get this case, we just make a copy of the PhysicalProject node, for
+        ///    the referenced Var, and we replace the UnnestOp with it.
         /// 
-        ///             UnnestOp(VarDef(VarRef(v))) ==> copy-of-defining-node-for-v
+        ///    UnnestOp(VarDef(VarRef(v))) ==> copy-of-defining-node-for-v
         /// 
-        /// Then, we need to update all references to the output Vars (ColumnVars) produced
-        /// by the Unnest to instead refer to the Vars produced by the copy of the subquery.
-        /// We produce a map from the Vars of the subquery to the corresponding vars of the
-        /// UnnestOp. We then use this map as we walk up the tree, and replace any references
-        /// to the Unnest Vars by the new Vars.
+        ///    Then, we need to update all references to the output Vars (ColumnVars) produced
+        ///    by the Unnest to instead refer to the Vars produced by the copy of the subquery.
+        ///    We produce a map from the Vars of the subquery to the corresponding vars of the
+        ///    UnnestOp. We then use this map as we walk up the tree, and replace any references
+        ///    to the Unnest Vars by the new Vars.
         ///
-        /// To simplify this process, as part of the ITreeGenerator, whenever we generate
-        /// an UnnestOp, we will generate a ProjectOp above it – which simply selects out
-        /// all Vars from the UnnestOp; and has no local definitions. This allows us to
-        /// restrict the Var->Var replacement to just ProjectOp.
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    To simplify this process, as part of the ITreeGenerator, whenever we generate
+        ///    an UnnestOp, we will generate a ProjectOp above it – which simply selects out
+        ///    all Vars from the UnnestOp; and has no local definitions. This allows us to
+        ///    restrict the Var->Var replacement to just ProjectOp.
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1858,26 +1858,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return newNode;
         }
 
-        /// <summary>
-        /// Copies the given defining node for a collection var, but also makes sure to 'register' all newly
-        /// created collection vars (i.e. copied).
+        ///<summary>
+        ///    Copies the given defining node for a collection var, but also makes sure to 'register' all newly
+        ///    created collection vars (i.e. copied).
         /// 
-        ///SQLBUDT #557427: The defining node that is being copied may itself contain definitions to other
-        /// collection vars. These defintions would be present in m_definingNodeMap. However, after we make a copy 
-        /// of the defining node, we need to make sure to also put 'matching' definitions of these other collection 
-        /// vars into m_definingNodeMap.
-        /// The dictionary collectionVarDefinitions (below) contains the copied definitions of such collection vars. 
-        /// but without the wrapping PhysicalProjectOp.
+        ///    SQLBUDT #557427: The defining node that is being copied may itself contain definitions to other
+        ///    collection vars. These defintions would be present in m_definingNodeMap. However, after we make a copy 
+        ///    of the defining node, we need to make sure to also put 'matching' definitions of these other collection 
+        ///    vars into m_definingNodeMap.
+        ///    The dictionary collectionVarDefinitions (below) contains the copied definitions of such collection vars. 
+        ///    but without the wrapping PhysicalProjectOp.
         ///
-        /// Example:     m_definingNodeMap contains (var1, definition1) and (var2, definintion2). 
-        ///              var2 is defined inside the definition of var1. 
-        ///              Here we copy definition1 -> definintion1'.
-        ///              We need to add to m_definitionNodeMap (var2', definition2').
-        ///              definition2' should be a copy of definiton2 in the context of to definition1', 
-        ///              i.e. definition2' should relate to definition1' in same way that definition2 relates to definition1 
-        ///         /// </summary>
-        /// <param name="refVarDefiningNode"></param>
-        /// <returns></returns>
+        ///    Example:     m_definingNodeMap contains (var1, definition1) and (var2, definintion2). 
+        ///    var2 is defined inside the definition of var1. 
+        ///    Here we copy definition1 -> definintion1'.
+        ///    We need to add to m_definitionNodeMap (var2', definition2').
+        ///    definition2' should be a copy of definiton2 in the context of to definition1', 
+        ///    i.e. definition2' should relate to definition1' in same way that definition2 relates to definition1 
+        ///    ///
+        ///</summary>
+        ///<param name="refVarDefiningNode"> </param>
+        ///<returns> </returns>
         private Node CopyCollectionVarDefinition(Node refVarDefiningNode)
         {
             VarMap varMap;
@@ -1926,15 +1927,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region PhysicalOp Visitors
 
-        /// <summary>
-        /// MultiStreamNestOp/SingleStreamNestOp common processing.
+        ///<summary>
+        ///    MultiStreamNestOp/SingleStreamNestOp common processing.
         ///
-        /// Pretty much just verifies that we didn't leave a NestOp behind.
-        /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        ///
+        ///    Pretty much just verifies that we didn't leave a NestOp behind.
+        ///</summary>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         protected override Node VisitNestOp(NestBaseOp op, Node n)
         {
             // First, visit my children
@@ -1952,24 +1952,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return n;
         }
 
-        /// <summary>
-        /// PhysicalProjectOp
-        /// </summary>
-        /// <remarks>
-        /// Tranformation:
+        ///<summary>
+        ///    PhysicalProjectOp
+        ///</summary>
+        ///<remarks>
+        ///    Tranformation:
         ///
-        ///     PhysicalProjectOp(MultiStreamNestOp(...)) => PhysicalProjectOp(SortOp(...))
+        ///    PhysicalProjectOp(MultiStreamNestOp(...)) => PhysicalProjectOp(SortOp(...))
         ///
-        /// Strategy:
+        ///    Strategy:
         ///
-        ///     (1) Convert MultiStreamNestOp(...) => SingleStreamNestOp(...)
-        ///     (2) Convert SingleStreamNestOp(...) => SortOp(...)
-        ///     (3) Fixup the column maps.
-        ///
-        /// </remarks>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        ///    (1) Convert MultiStreamNestOp(...) => SingleStreamNestOp(...)
+        ///    (2) Convert SingleStreamNestOp(...) => SortOp(...)
+        ///    (3) Fixup the column maps.
+        ///</remarks>
+        ///<param name="op"> </param>
+        ///<param name="n"> </param>
+        ///<returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2042,12 +2041,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Build up a sort node above the nestOp's input - only if there 
-        /// are any sort keys to produce
+        ///     Build up a sort node above the nestOp's input - only if there 
+        ///     are any sort keys to produce
         /// </summary>
-        /// <param name="ssnOp"></param>
-        /// <param name="nestNode"></param>
-        /// <returns></returns>
+        /// <param name="ssnOp"> </param>
+        /// <param name="nestNode"> </param>
+        /// <returns> </returns>
         private Node BuildSortForNestElimination(SingleStreamNestOp ssnOp, Node nestNode)
         {
             Node sortNode;
@@ -2069,20 +2068,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return sortNode;
         }
 
-        /// <summary>
-        /// Build up the list of sortkeys. This list should comprise (in order):
+        ///<summary>
+        ///    Build up the list of sortkeys. This list should comprise (in order):
         ///
-        ///  - Any prefix sort keys (these represent sort operations on the
+        ///    - Any prefix sort keys (these represent sort operations on the
         ///    driving table, that were logically above the nest)
-        ///  - The keys of the nest operation
-        ///  - The discriminator column for the nest operation
-        ///  - the list of postfix sort keys (used to represent nested collections)
+        ///    - The keys of the nest operation
+        ///    - The discriminator column for the nest operation
+        ///    - the list of postfix sort keys (used to represent nested collections)
         ///
-        /// Note that we only add the first occurrance of a var to the list; further
-        /// references to the same variable would be trumped by the first one.
-        /// </summary>
-        /// <param name="ssnOp"></param>
-        /// <returns></returns>
+        ///    Note that we only add the first occurrance of a var to the list; further
+        ///    references to the same variable would be trumped by the first one.
+        ///</summary>
+        ///<param name="ssnOp"> </param>
+        ///<returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private List<SortKey> BuildSortKeyList(SingleStreamNestOp ssnOp)
@@ -2127,51 +2126,51 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return sortKeyList;
         }
 
-        /// <summary>
-        /// convert MultiStreamNestOp to SingleStreamNestOp
-        /// </summary>
-        /// <remarks>
-        /// A MultiStreamNestOp is typically of the form M(D, N1, N2, ..., Nk)
-        /// where D is the driver stream, and N1, N2 etc. represent the collections.
+        ///<summary>
+        ///    convert MultiStreamNestOp to SingleStreamNestOp
+        ///</summary>
+        ///<remarks>
+        ///    A MultiStreamNestOp is typically of the form M(D, N1, N2, ..., Nk)
+        ///    where D is the driver stream, and N1, N2 etc. represent the collections.
         ///
-        /// In general, this can be converted into a SingleStreamNestOp over:
+        ///    In general, this can be converted into a SingleStreamNestOp over:
         ///
         ///    (D+ outerApply N1) AugmentedUnionAll (D+ outerApply N2) ...
         ///
-        /// Where:
+        ///    Where:
         ///
-        ///     D+ is D with an extra discriminator column that helps to identify
-        ///     the specific collection.
+        ///    D+ is D with an extra discriminator column that helps to identify
+        ///    the specific collection.
         ///
-        ///     AugmentedUnionAll is simply a unionAll where each branch of the
-        ///     unionAll is augmented with nulls for the corresponding columns
-        ///     of other tables in the branch
+        ///    AugmentedUnionAll is simply a unionAll where each branch of the
+        ///    unionAll is augmented with nulls for the corresponding columns
+        ///    of other tables in the branch
         ///
-        /// The simple case where there is only a single nested collection is easier
-        /// to address, and can be represented by:
+        ///    The simple case where there is only a single nested collection is easier
+        ///    to address, and can be represented by:
         ///
-        ///     MultiStreamNest(D, N1) => SingleStreamNest(OuterApply(D, N1))
+        ///    MultiStreamNest(D, N1) => SingleStreamNest(OuterApply(D, N1))
         ///
-        /// The more complex case, where there is more than one nested column, requires
-        /// quite a bit more work:
+        ///    The more complex case, where there is more than one nested column, requires
+        ///    quite a bit more work:
         ///
-        ///     MultiStreamNest(D, X, Y,...) => SingleStreamNest(UnionAll(Project{"1", D1...Dn, X1...Xn, nY1...nYn}(OuterApply(D, X)), Project{"2", D1...Dn, nX1...nXn, Y1...Yn}(OuterApply(D, Y)), ...))
+        ///    MultiStreamNest(D, X, Y,...) => SingleStreamNest(UnionAll(Project{"1", D1...Dn, X1...Xn, nY1...nYn}(OuterApply(D, X)), Project{"2", D1...Dn, nX1...nXn, Y1...Yn}(OuterApply(D, Y)), ...))
         ///
-        /// Where:
-        ///      D           is the driving collection
-        ///      D1...Dn     are the columns from the driving collection
-        ///      X           is the first nested collection
-        ///      X1...Xn     are the columns from the first nested collection
-        ///      nX1...nXn   are null values for all columns from the first nested collection
-        ///      Y           is the second nested collection
-        ///      Y1...Yn     are the columns from the second nested collection
-        ///      nY1...nYn   are null values for all columns from the second nested collection
-        /// </remarks>
-        /// <param name="nestNode"></param>
-        /// <param name="varRefReplacementMap"></param>
-        /// <param name="flattenedOutputVarList"></param>
-        /// <param name="parentKeyColumnMaps"></param>
-        /// <returns></returns>
+        ///    Where:
+        ///    D           is the driving collection
+        ///    D1...Dn     are the columns from the driving collection
+        ///    X           is the first nested collection
+        ///    X1...Xn     are the columns from the first nested collection
+        ///    nX1...nXn   are null values for all columns from the first nested collection
+        ///    Y           is the second nested collection
+        ///    Y1...Yn     are the columns from the second nested collection
+        ///    nY1...nYn   are null values for all columns from the second nested collection
+        ///</remarks>
+        ///<param name="nestNode"> </param>
+        ///<param name="varRefReplacementMap"> </param>
+        ///<param name="flattenedOutputVarList"> </param>
+        ///<param name="parentKeyColumnMaps"> </param>
+        ///<returns> </returns>
         private Node ConvertToSingleStreamNest(
             Node nestNode, Dictionary<Var, ColumnMap> varRefReplacementMap, VarList flattenedOutputVarList,
             out SimpleColumnMap[] parentKeyColumnMaps)
@@ -2402,21 +2401,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return newNestNode;
         }
 
-        /// <summary>
-        /// "Normalize" each input to the NestOp.
-        /// We're now in the context of a MultiStreamNestOp, and we're trying to convert this
-        /// into a SingleStreamNestOp.
+        ///<summary>
+        ///    "Normalize" each input to the NestOp.
+        ///    We're now in the context of a MultiStreamNestOp, and we're trying to convert this
+        ///    into a SingleStreamNestOp.
         ///
-        /// Normalization specifically refers to
-        ///   - augmenting each input with a discriminator value (that describes the collection)
-        ///   - removing the sort node at the root (and capturing this information as part of the sortkeys)
-        /// </summary>
-        /// <param name="nestOp">the nestOp</param>
-        /// <param name="nestNode">the nestOp subtree</param>
-        /// <param name="discriminatorVarList">Discriminator Vars for each Collection input</param>
-        /// <param name="sortKeys">SortKeys (postfix) for each Collection input</param>
-        /// 
-        /// 
+        ///    Normalization specifically refers to
+        ///    - augmenting each input with a discriminator value (that describes the collection)
+        ///    - removing the sort node at the root (and capturing this information as part of the sortkeys)
+        ///</summary>
+        ///<param name="nestOp"> the nestOp </param>
+        ///<param name="nestNode"> the nestOp subtree </param>
+        ///<param name="discriminatorVarList"> Discriminator Vars for each Collection input </param>
+        ///<param name="sortKeys"> SortKeys (postfix) for each Collection input </param>
         private void NormalizeNestOpInputs(
             NestBaseOp nestOp, Node nestNode, out VarList discriminatorVarList, out List<List<SortKey>> sortKeys)
         {
@@ -2490,27 +2487,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// 'Extend' a given input node to also project out an internal integer constant with the given value
+        ///     'Extend' a given input node to also project out an internal integer constant with the given value
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="value"></param>
-        /// <param name="internalConstantVar"></param>
-        /// <returns></returns>
+        /// <param name="input"> </param>
+        /// <param name="value"> </param>
+        /// <param name="internalConstantVar"> </param>
+        /// <returns> </returns>
         private Node AugmentNodeWithInternalIntegerConstant(Node input, int value, out Var internalConstantVar)
         {
             return AugmentNodeWithConstant(
                 input, () => Command.CreateInternalConstantOp(Command.IntegerType, value), out internalConstantVar);
         }
 
-        /// <summary>
-        /// Add a constant to a node. Specifically:
+        ///<summary>
+        ///    Add a constant to a node. Specifically:
         ///
-        ///     N ==> Project(N,{definitions-from-N, constant})
-        /// </summary>
-        /// <param name="input">the input node to augment</param>
-        /// <param name="createOp">The fucntion to create the constant op </param>
-        /// <param name="constantVar">the computed Var for the internal constant</param>
-        /// <returns>the augmented node</returns>
+        ///    N ==> Project(N,{definitions-from-N, constant})
+        ///</summary>
+        ///<param name="input"> the input node to augment </param>
+        ///<param name="createOp"> The fucntion to create the constant op </param>
+        ///<param name="constantVar"> the computed Var for the internal constant </param>
+        ///<returns> the augmented node </returns>
         private Node AugmentNodeWithConstant(Node input, Func<ConstantBaseOp> createOp, out Var constantVar)
         {
             // Construct the op for the constant value and 
@@ -2532,15 +2529,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Convert a SingleStreamNestOp into a massive UnionAllOp
+        ///     Convert a SingleStreamNestOp into a massive UnionAllOp
         /// </summary>
-        /// <param name="nestOp"></param>
-        /// <param name="nestNode"></param>
-        /// <param name="drivingNodeVars"></param>
-        /// <param name="discriminatorVarList"></param>
-        /// <param name="discriminatorVar"></param>
-        /// <param name="varMapList"></param>
-        /// <returns></returns>
+        /// <param name="nestOp"> </param>
+        /// <param name="nestNode"> </param>
+        /// <param name="drivingNodeVars"> </param>
+        /// <param name="discriminatorVarList"> </param>
+        /// <param name="discriminatorVar"> </param>
+        /// <param name="varMapList"> </param>
+        /// <returns> </returns>
         private Node BuildUnionAllSubqueryForNestOp(
             NestBaseOp nestOp, Node nestNode, VarList drivingNodeVars, VarList discriminatorVarList, out Var discriminatorVar,
             out List<Dictionary<Var, Var>> varMapList)
@@ -2705,13 +2702,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get back an ordered list of outputs from a union-all op. The ordering should
-        /// be identical to the ordered list "leftVars" which describes the left input of
-        /// the unionAllOp
+        ///     Get back an ordered list of outputs from a union-all op. The ordering should
+        ///     be identical to the ordered list "leftVars" which describes the left input of
+        ///     the unionAllOp
         /// </summary>
-        /// <param name="unionOp">the unionall Op</param>
-        /// <param name="leftVars">vars of the left input</param>
-        /// <returns>output vars ordered in the same way as the left input</returns>
+        /// <param name="unionOp"> the unionall Op </param>
+        /// <param name="leftVars"> vars of the left input </param>
+        /// <returns> output vars ordered in the same way as the left input </returns>
         private static VarList GetUnionOutputs(UnionAllOp unionOp, VarList leftVars)
         {
             var varMap = unionOp.VarMap[0];

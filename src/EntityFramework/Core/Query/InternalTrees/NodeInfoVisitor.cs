@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -6,19 +7,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    /// The NodeInfoVisitor is a simple class (ab)using the Visitor pattern to define
-    /// NodeInfo semantics for various nodes in the tree
+    ///     The NodeInfoVisitor is a simple class (ab)using the Visitor pattern to define
+    ///     NodeInfo semantics for various nodes in the tree
     /// </summary>
     internal class NodeInfoVisitor : BasicOpVisitorOfT<NodeInfo>
     {
         #region public methods
 
         /// <summary>
-        /// The only public method. Recomputes the nodeInfo for a node in the tree, 
-        /// but only if the node info has already been computed.  
-        /// Assumes that the NodeInfo for each child (if computed already) is valid
+        ///     The only public method. Recomputes the nodeInfo for a node in the tree, 
+        ///     but only if the node info has already been computed.  
+        ///     Assumes that the NodeInfo for each child (if computed already) is valid
         /// </summary>
-        /// <param name="n">Node to get NodeInfo for</param>
+        /// <param name="n"> Node to get NodeInfo for </param>
         internal void RecomputeNodeInfo(Node n)
         {
             if (n.IsNodeInfoInitialized)
@@ -33,9 +34,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        /// Basic constructor
+        ///     Basic constructor
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command"> </param>
         internal NodeInfoVisitor(Command command)
         {
             m_command = command;
@@ -80,11 +81,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region VisitorHelpers
 
         /// <summary>
-        /// Default implementation for scalarOps. Simply adds up external references
-        /// from each child
+        ///     Default implementation for scalarOps. Simply adds up external references
+        ///     from each child
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitDefault(Node n)
         {
             Debug.Assert(n.Op.IsScalarOp || n.Op.IsAncillaryOp, "not a supported optype");
@@ -101,12 +102,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// The given definition is non nullable if it is a non-null constant
-        /// or a reference to non-nullable input
+        ///     The given definition is non nullable if it is a non-null constant
+        ///     or a reference to non-nullable input
         /// </summary>
-        /// <param name="definition"></param>
-        /// <param name="nonNullableInputs"></param>
-        /// <returns></returns>
+        /// <param name="definition"> </param>
+        /// <param name="nonNullableInputs"> </param>
+        /// <returns> </returns>
         private static bool IsDefinitionNonNullable(Node definition, VarVec nonNullableInputs)
         {
             return (definition.Op.OpType == OpType.Constant
@@ -131,12 +132,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region ScalarOps
 
         /// <summary>
-        /// The only special case among all scalar and ancillaryOps. Simply adds
-        /// its var to the list of unreferenced Ops
+        ///     The only special case among all scalar and ancillaryOps. Simply adds
+        ///     its var to the list of unreferenced Ops
         /// </summary>
-        /// <param name="op">The VarRefOp</param>
-        /// <param name="n">Current node</param>
-        /// <returns></returns>
+        /// <param name="op"> The VarRefOp </param>
+        /// <param name="n"> Current node </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(VarRefOp op, Node n)
         {
             var nodeInfo = InitNodeInfo(n);
@@ -154,16 +155,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Definitions = Local Definitions = referenced table columns
-        /// External References = none
-        /// Keys = keys of entity type
-        /// RowCount (default): MinRows = 0, MaxRows = * 
-        /// NonNullableDefinitions : non nullable table columns that are definitions
-        /// NonNullableInputDefinitions : default(empty) because cannot be used
+        ///     Definitions = Local Definitions = referenced table columns
+        ///     External References = none
+        ///     Keys = keys of entity type
+        ///     RowCount (default): MinRows = 0, MaxRows = * 
+        ///     NonNullableDefinitions : non nullable table columns that are definitions
+        ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
-        /// <param name="op">ScanTable/ScanView op</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>nodeinfo for this subtree</returns>
+        /// <param name="op"> ScanTable/ScanView op </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> nodeinfo for this subtree </returns>
         protected override NodeInfo VisitTableOp(ScanTableBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -187,18 +188,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for an UnnestOp.
-        /// Definitions = columns of the table produced by this Op
-        /// Keys = none
-        /// External References = the unnestVar + any external references of the
-        ///   computed Var (if any)
-        /// RowCount (default): MinRows = 0; MaxRows = *
-        /// NonNullableDefinitions: default(empty) 
-        /// NonNullableInputDefinitions : default(empty) because cannot be used
+        ///     Computes a NodeInfo for an UnnestOp.
+        ///     Definitions = columns of the table produced by this Op
+        ///     Keys = none
+        ///     External References = the unnestVar + any external references of the
+        ///     computed Var (if any)
+        ///     RowCount (default): MinRows = 0; MaxRows = *
+        ///     NonNullableDefinitions: default(empty) 
+        ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(UnnestOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -241,11 +242,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Walk through the computed vars defined by a VarDefListNode, and look for
-        /// "simple" Var renames. Build up a mapping from original Vars to the renamed Vars
+        ///     Walk through the computed vars defined by a VarDefListNode, and look for
+        ///     "simple" Var renames. Build up a mapping from original Vars to the renamed Vars
         /// </summary>
-        /// <param name="varDefListNode">the varDefListNode subtree</param>
-        /// <returns>A dictionary of Var->Var renames</returns>
+        /// <param name="varDefListNode"> the varDefListNode subtree </param>
+        /// <returns> A dictionary of Var->Var renames </returns>
         internal static Dictionary<Var, Var> ComputeVarRemappings(Node varDefListNode)
         {
             Debug.Assert(varDefListNode.Op.OpType == OpType.VarDefList);
@@ -265,19 +266,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a ProjectOp.
-        /// Definitions = the Vars property of this Op
-        /// LocalDefinitions = list of computed Vars produced by this node
-        /// Keys = Keys of the input Relop (if they are all preserved)
-        /// External References = any external references from the computed Vars
-        /// RowCount = Input's RowCount
-        /// NonNullabeDefinitions = Outputs that are either among the NonNullableDefinitions of the child or
-        ///                         are constants defined on this node
-        /// NonNullableInputDefinitions = NonNullableDefinitions of the child 
+        ///     Computes a NodeInfo for a ProjectOp.
+        ///     Definitions = the Vars property of this Op
+        ///     LocalDefinitions = list of computed Vars produced by this node
+        ///     Keys = Keys of the input Relop (if they are all preserved)
+        ///     External References = any external references from the computed Vars
+        ///     RowCount = Input's RowCount
+        ///     NonNullabeDefinitions = Outputs that are either among the NonNullableDefinitions of the child or
+        ///     are constants defined on this node
+        ///     NonNullableInputDefinitions = NonNullableDefinitions of the child
         /// </summary>
-        /// <param name="op">The ProjectOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The ProjectOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(ProjectOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -345,22 +346,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a FilterOp.
-        /// Definitions = Definitions of the input Relop
-        /// LocalDefinitions = None
-        /// Keys = Keys of the input Relop
-        /// External References = any external references from the input + any external
-        ///    references from the predicate
-        /// MaxOneRow = Input's RowCount
-        ///    If the predicate is a "false" predicate, then max RowCount is zero
-        ///    If we can infer additional info from the key-selector, we may be 
+        ///     Computes a NodeInfo for a FilterOp.
+        ///     Definitions = Definitions of the input Relop
+        ///     LocalDefinitions = None
+        ///     Keys = Keys of the input Relop
+        ///     External References = any external references from the input + any external
+        ///     references from the predicate
+        ///     MaxOneRow = Input's RowCount
+        ///     If the predicate is a "false" predicate, then max RowCount is zero
+        ///     If we can infer additional info from the key-selector, we may be 
         ///     able to get better estimates
-        /// NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
-        /// NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
+        ///     NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
+        ///     NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
         /// </summary>
-        /// <param name="op">The FilterOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The FilterOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(FilterOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -403,22 +404,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a GroupByOp.
-        /// Definitions = Keys + aggregates
-        /// LocalDefinitions = Keys + Aggregates
-        /// Keys = GroupBy Keys
-        /// External References = any external references from the input + any external
-        ///    references from the local computed Vars
-        /// RowCount = 
-        ///          (1,1) if no group-by keys; 
-        ///          otherwise if input MinRows is 1 then (1, input MaxRows); 
-        ///          otherwise (0, input MaxRows)
-        /// NonNullableDefinitions: non-nullable keys
-        /// NonNullableInputDefinitions : default(empty)        
+        ///     Computes a NodeInfo for a GroupByOp.
+        ///     Definitions = Keys + aggregates
+        ///     LocalDefinitions = Keys + Aggregates
+        ///     Keys = GroupBy Keys
+        ///     External References = any external references from the input + any external
+        ///     references from the local computed Vars
+        ///     RowCount = 
+        ///     (1,1) if no group-by keys; 
+        ///     otherwise if input MinRows is 1 then (1, input MaxRows); 
+        ///     otherwise (0, input MaxRows)
+        ///     NonNullableDefinitions: non-nullable keys
+        ///     NonNullableInputDefinitions : default(empty)
         /// </summary>
-        /// <param name="op">The GroupByOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The GroupByOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -470,19 +471,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a CrossJoinOp.
-        /// Definitions = Definitions of my children
-        /// LocalDefinitions = None
-        /// Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
-        /// External References = any external references from the inputs
-        /// RowCount: MinRows: min(min-rows of each child)
-        ///              MaxRows: max(max-rows of each child)
-        /// NonNullableDefinitions : The NonNullableDefinitions of the children
-        /// NonNullableInputDefinitions : default(empty) because cannot be used
+        ///     Computes a NodeInfo for a CrossJoinOp.
+        ///     Definitions = Definitions of my children
+        ///     LocalDefinitions = None
+        ///     Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
+        ///     External References = any external references from the inputs
+        ///     RowCount: MinRows: min(min-rows of each child)
+        ///     MaxRows: max(max-rows of each child)
+        ///     NonNullableDefinitions : The NonNullableDefinitions of the children
+        ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
-        /// <param name="op">The CrossJoinOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The CrossJoinOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(CrossJoinOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -522,27 +523,27 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for an Inner/LeftOuter/FullOuter JoinOp.
-        /// Definitions = Definitions of my children
-        /// LocalDefinitions = None
-        /// Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
-        /// External References = any external references from the inputs + any external
-        ///    references from the join predicates
-        /// RowCount: 
-        ///    FullOuterJoin: MinRows = 0, MaxRows = N
-        ///    InnerJoin: MinRows = 0; 
-        ///               MaxRows = N; if both inputs have RowCount lesser than (or equal to) 1, then maxCard = 1
-        ///    OuterJoin: MinRows = leftInput.MinRows
-        ///               MaxRows = N; if both inputs have RowCount lesser than (or equal to) 1, then maxCard = 1
-        /// NonNullableDefinitions:
-        ///    FullOuterJoin: None.
-        ///    InnerJoin: NonNullableDefinitions of both children
-        ///    LeftOuterJoin: NonNullableDefinitions of the left child
-        /// NonNullableInputDefinitions : NonNullabeDefinitions of both children  
+        ///     Computes a NodeInfo for an Inner/LeftOuter/FullOuter JoinOp.
+        ///     Definitions = Definitions of my children
+        ///     LocalDefinitions = None
+        ///     Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
+        ///     External References = any external references from the inputs + any external
+        ///     references from the join predicates
+        ///     RowCount: 
+        ///     FullOuterJoin: MinRows = 0, MaxRows = N
+        ///     InnerJoin: MinRows = 0; 
+        ///     MaxRows = N; if both inputs have RowCount lesser than (or equal to) 1, then maxCard = 1
+        ///     OuterJoin: MinRows = leftInput.MinRows
+        ///     MaxRows = N; if both inputs have RowCount lesser than (or equal to) 1, then maxCard = 1
+        ///     NonNullableDefinitions:
+        ///     FullOuterJoin: None.
+        ///     InnerJoin: NonNullableDefinitions of both children
+        ///     LeftOuterJoin: NonNullableDefinitions of the left child
+        ///     NonNullableInputDefinitions : NonNullabeDefinitions of both children
         /// </summary>
-        /// <param name="op">The JoinOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The JoinOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (!(op.OpType == OpType.InnerJoin ||
@@ -625,24 +626,24 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a CrossApply/OuterApply op.
-        /// Definitions = Definitions of my children
-        /// LocalDefinitions = None
-        /// Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
-        /// External References = any external references from the inputs 
-        /// RowCount:
-        ///    CrossApply: minRows=0; MaxRows=Unbounded 
-        ///         (MaxRows = 1, if both inputs have MaxRow less than or equal to 1)
-        ///    OuterApply: minRows=leftInput.MinRows; MaxRows=Unbounded
-        ///         (MaxRows = 1, if both inputs have MaxRow less than or equal to 1)
-        /// NonNullableDefinitions = 
-        ///    CrossApply: NonNullableDefinitions of both children
-        ///    OuterApply: NonNullableDefinitions of the left child
-        /// NonNullableInputDefinitions = NonNullabeDefinitions of both children  
+        ///     Computes a NodeInfo for a CrossApply/OuterApply op.
+        ///     Definitions = Definitions of my children
+        ///     LocalDefinitions = None
+        ///     Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
+        ///     External References = any external references from the inputs 
+        ///     RowCount:
+        ///     CrossApply: minRows=0; MaxRows=Unbounded 
+        ///     (MaxRows = 1, if both inputs have MaxRow less than or equal to 1)
+        ///     OuterApply: minRows=leftInput.MinRows; MaxRows=Unbounded
+        ///     (MaxRows = 1, if both inputs have MaxRow less than or equal to 1)
+        ///     NonNullableDefinitions = 
+        ///     CrossApply: NonNullableDefinitions of both children
+        ///     OuterApply: NonNullableDefinitions of the left child
+        ///     NonNullableInputDefinitions = NonNullabeDefinitions of both children
         /// </summary>
-        /// <param name="op">The ApplyOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The ApplyOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitApplyOp(ApplyBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -687,22 +688,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for SetOps (UnionAll, Intersect, Except).
-        /// Definitions = OutputVars
-        /// LocalDefinitions = OutputVars
-        /// Keys = Output Vars for Intersect, Except. For UnionAll ??
-        /// External References = any external references from the inputs 
-        /// RowCount: Min = 0, Max = unbounded.
-        ///    For UnionAlls, MinRows = max(MinRows of left and right inputs)
-        /// NonNullable definitions =   
+        ///     Computes a NodeInfo for SetOps (UnionAll, Intersect, Except).
+        ///     Definitions = OutputVars
+        ///     LocalDefinitions = OutputVars
+        ///     Keys = Output Vars for Intersect, Except. For UnionAll ??
+        ///     External References = any external references from the inputs 
+        ///     RowCount: Min = 0, Max = unbounded.
+        ///     For UnionAlls, MinRows = max(MinRows of left and right inputs)
+        ///     NonNullable definitions =   
         ///     UnionAll - Columns that are NonNullableDefinitions on both (children) sides
         ///     Except  - Columns that are NonNullableDefinitions on the left child side
         ///     Intersect - Columns that are NonNullableDefinitions on either side
-        /// NonNullableInputDefinitions = default(empty) because cannot be used
+        ///     NonNullableInputDefinitions = default(empty) because cannot be used
         /// </summary>
-        /// <param name="op">The SetOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The SetOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitSetOp(SetOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -815,19 +816,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a ConstrainedSortOp/SortOp.
-        /// Definitions = Definitions of the input Relop
-        /// LocalDefinitions = not allowed
-        /// Keys = Keys of the input Relop
-        /// External References = any external references from the input + any external
-        ///    references from the keys
-        /// RowCount = Input's RowCount
-        /// NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
-        /// NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
+        ///     Computes a NodeInfo for a ConstrainedSortOp/SortOp.
+        ///     Definitions = Definitions of the input Relop
+        ///     LocalDefinitions = not allowed
+        ///     Keys = Keys of the input Relop
+        ///     External References = any external references from the input + any external
+        ///     references from the keys
+        ///     RowCount = Input's RowCount
+        ///     NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
+        ///     NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
         /// </summary>
-        /// <param name="op">The SortOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The SortOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitSortOp(SortBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -869,18 +870,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for Distinct.
-        /// Definitions = OutputVars that are not external references
-        /// LocalDefinitions = None
-        /// Keys = Output Vars 
-        /// External References = any external references from the inputs 
-        /// RowCount = Input's RowCount
-        /// NonNullabeDefinitions : NonNullabeDefinitions of the input RelOp that are outputs
-        /// NonNullableInputDefinitions : default(empty) because cannot be used
+        ///     Computes a NodeInfo for Distinct.
+        ///     Definitions = OutputVars that are not external references
+        ///     LocalDefinitions = None
+        ///     Keys = Output Vars 
+        ///     External References = any external references from the inputs 
+        ///     RowCount = Input's RowCount
+        ///     NonNullabeDefinitions : NonNullabeDefinitions of the input RelOp that are outputs
+        ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
-        /// <param name="op">The DistinctOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The DistinctOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(DistinctOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -914,18 +915,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Compute NodeInfo for a SingleRowOp.
-        /// Definitions = child's definitions
-        /// Keys = child's keys
-        /// Local Definitions = none
-        /// External references = child's external references
-        /// RowCount=(0,1)
-        /// NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
-        /// NonNullableInputDefinitions : default(empty) because cannot be used        
+        ///     Compute NodeInfo for a SingleRowOp.
+        ///     Definitions = child's definitions
+        ///     Keys = child's keys
+        ///     Local Definitions = none
+        ///     External references = child's external references
+        ///     RowCount=(0,1)
+        ///     NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
+        ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
-        /// <param name="op">The SingleRowOp</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>NodeInfo for this node</returns>
+        /// <param name="op"> The SingleRowOp </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> NodeInfo for this node </returns>
         public override NodeInfo Visit(SingleRowOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -939,14 +940,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// SingleRowTableOp
-        /// No definitions, external references, non-nullable definitions
-        /// Keys = empty list (not the same as "no keys")
-        /// RowCount = (1,1)
+        ///     SingleRowTableOp
+        ///     No definitions, external references, non-nullable definitions
+        ///     Keys = empty list (not the same as "no keys")
+        ///     RowCount = (1,1)
         /// </summary>
-        /// <param name="op">the SingleRowTableOp</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>nodeInfo for this subtree</returns>
+        /// <param name="op"> the SingleRowTableOp </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> nodeInfo for this subtree </returns>
         public override NodeInfo Visit(SingleRowTableOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -960,18 +961,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region PhysicalOps
 
         /// <summary>
-        /// Computes a NodeInfo for a PhysicalProjectOp.
-        /// Definitions = OutputVars
-        /// LocalDefinitions = None
-        /// Keys = None
-        /// External References = any external references from the inputs
-        /// RowCount=default
-        /// NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp that are among the definitions
-        /// NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
+        ///     Computes a NodeInfo for a PhysicalProjectOp.
+        ///     Definitions = OutputVars
+        ///     LocalDefinitions = None
+        ///     Keys = None
+        ///     External References = any external references from the inputs
+        ///     RowCount=default
+        ///     NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp that are among the definitions
+        ///     NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
         /// </summary>
-        /// <param name="op">The PhysicalProjectOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The PhysicalProjectOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         public override NodeInfo Visit(PhysicalProjectOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -1007,16 +1008,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Computes a NodeInfo for a NestOp (SingleStream/MultiStream).
-        /// Definitions = OutputVars
-        /// LocalDefinitions = Collection Vars
-        /// Keys = Keys of my child
-        /// External References = any external references from the inputs 
-        /// RowCount=default
+        ///     Computes a NodeInfo for a NestOp (SingleStream/MultiStream).
+        ///     Definitions = OutputVars
+        ///     LocalDefinitions = Collection Vars
+        ///     Keys = Keys of my child
+        ///     External References = any external references from the inputs 
+        ///     RowCount=default
         /// </summary>
-        /// <param name="op">The NestOp</param>
-        /// <param name="n">corresponding Node</param>
-        /// <returns></returns>
+        /// <param name="op"> The NestOp </param>
+        /// <param name="n"> corresponding Node </param>
+        /// <returns> </returns>
         protected override NodeInfo VisitNestOp(NestBaseOp op, Node n)
         {
             var ssnOp = op as SingleStreamNestOp;

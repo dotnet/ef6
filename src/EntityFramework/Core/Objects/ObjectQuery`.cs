@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
@@ -25,23 +26,23 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading.Tasks;
 
     /// <summary>
-    ///   ObjectQuery implements strongly-typed queries at the object-layer.
-    ///   Queries are specified using Entity-SQL strings and may be created by calling
-    ///   the Entity-SQL-based query builder methods declared by ObjectQuery.
+    ///     ObjectQuery implements strongly-typed queries at the object-layer.
+    ///     Queries are specified using Entity-SQL strings and may be created by calling
+    ///     the Entity-SQL-based query builder methods declared by ObjectQuery.
     /// </summary>
-    /// <typeparam name="T">The result type of this ObjectQuery</typeparam>
+    /// <typeparam name="T"> The result type of this ObjectQuery </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectQuery<T> : ObjectQuery, IOrderedQueryable<T>, IEnumerable<T>, IDbAsyncEnumerable<T>
     {
         #region Private Static Members
 
         /// <summary>
-        ///   The default query name, which is used in query-building to refer to an
-        ///   element of the ObjectQuery; e.g., in a call to ObjectQuery.Where(), a predicate of
-        ///   the form "it.Name = 'Foo'" can be specified, where "it" refers to a T.
-        ///   Note that the query name may eventually become a parameter in the command
-        ///   tree, so it must conform to the parameter name restrictions enforced by
-        ///   ObjectParameter.ValidateParameterName(string).
+        ///     The default query name, which is used in query-building to refer to an
+        ///     element of the ObjectQuery; e.g., in a call to ObjectQuery.Where(), a predicate of
+        ///     the form "it.Name = 'Foo'" can be specified, where "it" refers to a T.
+        ///     Note that the query name may eventually become a parameter in the command
+        ///     tree, so it must conform to the parameter name restrictions enforced by
+        ///     ObjectParameter.ValidateParameterName(string).
         /// </summary>
         private const string DefaultName = "it";
 
@@ -55,9 +56,9 @@ namespace System.Data.Entity.Core.Objects
         #region Private Instance Fields
 
         /// <summary>
-        ///   The name of the current sequence, which defaults to "it". Used in query-
-        ///   builder methods that process an Entity-SQL command text fragment to refer to an
-        ///   instance of the return type of this query.
+        ///     The name of the current sequence, which defaults to "it". Used in query-
+        ///     builder methods that process an Entity-SQL command text fragment to refer to an
+        ///     instance of the return type of this query.
         /// </summary>
         private string _name = DefaultName;
 
@@ -66,21 +67,13 @@ namespace System.Data.Entity.Core.Objects
         #region Constructors
 
         /// <summary>
-        ///   This constructor creates a new ObjectQuery instance using the specified Entity-SQL
-        ///   command as the initial query. The context specifies the connection on
-        ///   which to execute the query as well as the metadata and result cache.
+        ///     This constructor creates a new ObjectQuery instance using the specified Entity-SQL
+        ///     command as the initial query. The context specifies the connection on
+        ///     which to execute the query as well as the metadata and result cache.
         /// </summary>
-        /// <param name="commandText">
-        ///   The Entity-SQL query string that initially defines the query.
-        /// </param>
-        /// <param name="context">
-        ///   The ObjectContext containing the metadata workspace the query will
-        ///   be built against, the connection on which to execute the query, and the
-        ///   cache to store the results in.
-        /// </param>
-        /// <returns>
-        ///   A new ObjectQuery instance.
-        /// </returns>
+        /// <param name="commandText"> The Entity-SQL query string that initially defines the query. </param>
+        /// <param name="context"> The ObjectContext containing the metadata workspace the query will be built against, the connection on which to execute the query, and the cache to store the results in. </param>
+        /// <returns> A new ObjectQuery instance. </returns>
         public ObjectQuery(string commandText, ObjectContext context)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
         {
@@ -96,25 +89,15 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This constructor creates a new ObjectQuery instance using the specified Entity-SQL
-        ///   command as the initial query. The context specifies the connection on
-        ///   which to execute the query as well as the metadata and result cache.
-        ///   The merge option specifies how the cache should be populated/updated.
+        ///     This constructor creates a new ObjectQuery instance using the specified Entity-SQL
+        ///     command as the initial query. The context specifies the connection on
+        ///     which to execute the query as well as the metadata and result cache.
+        ///     The merge option specifies how the cache should be populated/updated.
         /// </summary>
-        /// <param name="commandText">
-        ///   The Entity-SQL query string that initially defines the query.
-        /// </param>
-        /// <param name="context">
-        ///   The ObjectContext containing the metadata workspace the query will
-        ///   be built against, the connection on which to execute the query, and the
-        ///   cache to store the results in.
-        /// </param>
-        /// <param name="mergeOption">
-        ///   The MergeOption to use when executing the query.
-        /// </param>
-        /// <returns>
-        ///   A new ObjectQuery instance.
-        /// </returns>
+        /// <param name="commandText"> The Entity-SQL query string that initially defines the query. </param>
+        /// <param name="context"> The ObjectContext containing the metadata workspace the query will be built against, the connection on which to execute the query, and the cache to store the results in. </param>
+        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <returns> A new ObjectQuery instance. </returns>
         public ObjectQuery(string commandText, ObjectContext context, MergeOption mergeOption)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
         {
@@ -133,26 +116,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This method creates a new ObjectQuery instance that represents a scan over
-        ///   the specified <paramref name="entitySet"/>. This ObjectQuery carries the scan as <see cref="DbExpression"/> 
-        ///   and as Entity SQL. This is needed to allow case-sensitive metadata access (provided by the <see cref="DbExpression"/> by default).
-        ///   The context specifies the connection on which to execute the query as well as the metadata and result cache.
-        ///   The merge option specifies how the cache should be populated/updated.
+        ///     This method creates a new ObjectQuery instance that represents a scan over
+        ///     the specified <paramref name="entitySet" />. This ObjectQuery carries the scan as <see cref="DbExpression" /> 
+        ///     and as Entity SQL. This is needed to allow case-sensitive metadata access (provided by the <see cref="DbExpression" /> by default).
+        ///     The context specifies the connection on which to execute the query as well as the metadata and result cache.
+        ///     The merge option specifies how the cache should be populated/updated.
         /// </summary>
-        /// <param name="entitySet">
-        ///   The entity set this query scans.
-        /// </param>
-        /// <param name="context">
-        ///   The ObjectContext containing the metadata workspace the query will
-        ///   be built against, the connection on which to execute the query, and the
-        ///   cache to store the results in.
-        /// </param>
-        /// <param name="mergeOption">
-        ///   The MergeOption to use when executing the query.
-        /// </param>
-        /// <returns>
-        ///   A new ObjectQuery instance.
-        /// </returns>
+        /// <param name="entitySet"> The entity set this query scans. </param>
+        /// <param name="context"> The ObjectContext containing the metadata workspace the query will be built against, the connection on which to execute the query, and the cache to store the results in. </param>
+        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <returns> A new ObjectQuery instance. </returns>
         internal ObjectQuery(EntitySetBase entitySet, ObjectContext context, MergeOption mergeOption)
             : this(new EntitySqlQueryState(typeof(T), BuildScanEntitySetEsql(entitySet), entitySet.Scan(), false, context, null, null))
         {
@@ -190,12 +163,10 @@ namespace System.Data.Entity.Core.Objects
         #region Public Properties
 
         /// <summary>
-        ///   The name of the query, which can be used to identify the current sequence
-        ///   by name in query-builder methods. By default, the value is "it".
+        ///     The name of the query, which can be used to identify the current sequence
+        ///     by name in query-builder methods. By default, the value is "it".
         /// </summary>
-        /// <exception cref="ArgumentException">
-        ///   If the value specified on set is invalid.
-        /// </exception>
+        /// <exception cref="ArgumentException">If the value specified on set is invalid.</exception>
         public string Name
         {
             get { return _name; }
@@ -217,15 +188,11 @@ namespace System.Data.Entity.Core.Objects
         #region Public Methods
 
         /// <summary>
-        ///   This method allows explicit query evaluation with a specified merge
-        ///   option which will override the merge option property.
+        ///     This method allows explicit query evaluation with a specified merge
+        ///     option which will override the merge option property.
         /// </summary>
-        /// <param name="mergeOption">
-        ///   The MergeOption to use when executing the query.
-        /// </param>
-        /// <returns>
-        ///   An enumerable for the ObjectQuery results.
-        /// </returns>
+        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <returns> An enumerable for the ObjectQuery results. </returns>
         public new ObjectResult<T> Execute(MergeOption mergeOption)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
@@ -233,16 +200,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   An asynchronous version of Execute, which
-        ///   allows explicit query evaluation with a specified merge
-        ///   option which will override the merge option property.
+        ///     An asynchronous version of Execute, which
+        ///     allows explicit query evaluation with a specified merge
+        ///     option which will override the merge option property.
         /// </summary>
-        /// <param name="mergeOption">
-        ///   The MergeOption to use when executing the query.
-        /// </param>
-        /// <returns>
-        ///   A Task containing an enumerable for the ObjectQuery results.
-        /// </returns>
+        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <returns> A Task containing an enumerable for the ObjectQuery results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
         {
@@ -250,19 +213,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   An asynchronous version of Execute, which
-        ///   allows explicit query evaluation with a specified merge
-        ///   option which will override the merge option property.
+        ///     An asynchronous version of Execute, which
+        ///     allows explicit query evaluation with a specified merge
+        ///     option which will override the merge option property.
         /// </summary>
-        /// <param name="mergeOption">
-        ///   The MergeOption to use when executing the query.
-        /// </param>
-        /// <param name="cancellationToken">
-        ///   The token to monitor for cancellation requests.
-        /// </param>
-        /// <returns>
-        ///   A Task containing an enumerable for the ObjectQuery results.
-        /// </returns>
+        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing an enumerable for the ObjectQuery results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
@@ -272,10 +229,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   Adds a path to the set of navigation property span paths included in the results of this query
+        ///     Adds a path to the set of navigation property span paths included in the results of this query
         /// </summary>
-        /// <param name="path">The new span path</param>
-        /// <returns>A new ObjectQuery that includes the specified span path</returns>
+        /// <param name="path"> The new span path </param>
+        /// <returns> A new ObjectQuery that includes the specified span path </returns>
         public ObjectQuery<T> Include(string path)
         {
             EntityUtil.CheckStringArgument(path, "path");
@@ -289,12 +246,10 @@ namespace System.Data.Entity.Core.Objects
         // ---------------------
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are the
-        ///   unique results of this query.
+        ///     This query-builder method creates a new query whose results are the
+        ///     unique results of this query.
         /// </summary>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
+        /// <returns> a new ObjectQuery instance. </returns>
         public ObjectQuery<T> Distinct()
         {
             if (IsLinqQuery(this))
@@ -305,19 +260,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are all of
-        ///   the results of this query, except those that are also part of the other
-        ///   query specified.
+        ///     This query-builder method creates a new query whose results are all of
+        ///     the results of this query, except those that are also part of the other
+        ///     query specified.
         /// </summary>
-        /// <param name="query">
-        ///   A query representing the results to exclude.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the query parameter is null.
-        /// </exception>
+        /// <param name="query"> A query representing the results to exclude. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> Except(ObjectQuery<T> query)
         {
             Contract.Requires(query != null);
@@ -331,21 +280,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are the results
-        ///   of this query, grouped by some criteria.
+        ///     This query-builder method creates a new query whose results are the results
+        ///     of this query, grouped by some criteria.
         /// </summary>
-        /// <param name="keys">
-        ///   The group keys.
-        /// </param>
-        /// <param name="projection">
-        ///   The projection list. To project the group, use the keyword "group".
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
+        /// <param name="keys"> The group keys. </param>
+        /// <param name="projection"> The projection list. To project the group, use the keyword "group". </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
         public ObjectQuery<DbDataRecord> GroupBy(string keys, string projection, params ObjectParameter[] parameters)
         {
             Contract.Requires(keys != null);
@@ -366,18 +307,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are those that
-        ///   are both in this query and the other query specified.
+        ///     This query-builder method creates a new query whose results are those that
+        ///     are both in this query and the other query specified.
         /// </summary>
-        /// <param name="query">
-        ///   A query representing the results to intersect with.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the query parameter is null.
-        /// </exception>
+        /// <param name="query"> A query representing the results to intersect with. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> Intersect(ObjectQuery<T> query)
         {
             Contract.Requires(query != null);
@@ -391,15 +326,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are filtered
-        ///   to include only those of the specified type.
+        ///     This query-builder method creates a new query whose results are filtered
+        ///     to include only those of the specified type.
         /// </summary>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="EntitySqlException">
-        ///   If the type specified is invalid.
-        /// </exception>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="EntitySqlException">If the type specified is invalid.</exception>
         public ObjectQuery<TResultType> OfType<TResultType>()
         {
             if (IsLinqQuery(this))
@@ -430,27 +361,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are the
-        ///   results of this query, ordered by some criteria. Note that any relational
-        ///   operations performed after an OrderBy have the potential to "undo" the
-        ///   ordering, so OrderBy should be considered a terminal query-building
-        ///   operation.
+        ///     This query-builder method creates a new query whose results are the
+        ///     results of this query, ordered by some criteria. Note that any relational
+        ///     operations performed after an OrderBy have the potential to "undo" the
+        ///     ordering, so OrderBy should be considered a terminal query-building
+        ///     operation.
         /// </summary>
-        /// <param name="keys">
-        ///   The sort keys.
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If either argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the sort key command text is empty.
-        /// </exception>
+        /// <param name="keys"> The sort keys. </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
+        /// <exception cref="ArgumentException">If the sort key command text is empty.</exception>
         public ObjectQuery<T> OrderBy(string keys, params ObjectParameter[] parameters)
         {
             Contract.Requires(keys != null);
@@ -465,24 +386,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are data
-        ///   records containing selected fields of the results of this query.
+        ///     This query-builder method creates a new query whose results are data
+        ///     records containing selected fields of the results of this query.
         /// </summary>
-        /// <param name="projection">
-        ///   The projection list.
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If either argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the projection list command text is empty.
-        /// </exception>
+        /// <param name="projection"> The projection list. </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
+        /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
         public ObjectQuery<DbDataRecord> Select(string projection, params ObjectParameter[] parameters)
         {
             Contract.Requires(projection != null);
@@ -497,24 +408,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are a sequence
-        ///   of values projected from the results of this query.
+        ///     This query-builder method creates a new query whose results are a sequence
+        ///     of values projected from the results of this query.
         /// </summary>
-        /// <param name="projection">
-        ///   The projection list.
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If either argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the projection list command text is empty.
-        /// </exception>
+        /// <param name="projection"> The projection list. </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
+        /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
         public ObjectQuery<TResultType> SelectValue<TResultType>(string projection, params ObjectParameter[] parameters)
         {
             Contract.Requires(projection != null);
@@ -534,29 +435,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are the
-        ///   results of this query, ordered by some criteria and with the specified
-        ///   number of results 'skipped', or paged-over.
+        ///     This query-builder method creates a new query whose results are the
+        ///     results of this query, ordered by some criteria and with the specified
+        ///     number of results 'skipped', or paged-over.
         /// </summary>
-        /// <param name="keys">
-        ///   The sort keys.
-        /// </param>
-        /// <param name="count">
-        ///   Specifies the number of results to skip. This must be either a constant or
-        ///   a parameter reference.
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If any argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the sort key or skip count command text is empty.
-        /// </exception>
+        /// <param name="keys"> The sort keys. </param>
+        /// <param name="count"> Specifies the number of results to skip. This must be either a constant or a parameter reference. </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If any argument is null.</exception>
+        /// <exception cref="ArgumentException">If the sort key or skip count command text is empty.</exception>
         public ObjectQuery<T> Skip(string keys, string count, params ObjectParameter[] parameters)
         {
             Contract.Requires(keys != null);
@@ -577,25 +465,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are the
-        ///   first 'count' results of this query.
+        ///     This query-builder method creates a new query whose results are the
+        ///     first 'count' results of this query.
         /// </summary>
-        /// <param name="count">
-        ///   Specifies the number of results to return. This must be either a constant or
-        ///   a parameter reference.
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the top count command text is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the top count command text is empty.
-        /// </exception>
+        /// <param name="count"> Specifies the number of results to return. This must be either a constant or a parameter reference. </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If the top count command text is null.</exception>
+        /// <exception cref="ArgumentException">If the top count command text is empty.</exception>
         public ObjectQuery<T> Top(string count, params ObjectParameter[] parameters)
         {
             Contract.Requires(count != null);
@@ -609,19 +486,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are all of
-        ///   the results of this query, plus all of the results of the other query,
-        ///   without duplicates (i.e., results are unique).
+        ///     This query-builder method creates a new query whose results are all of
+        ///     the results of this query, plus all of the results of the other query,
+        ///     without duplicates (i.e., results are unique).
         /// </summary>
-        /// <param name="query">
-        ///   A query representing the results to add.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the query parameter is null.
-        /// </exception>
+        /// <param name="query"> A query representing the results to add. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> Union(ObjectQuery<T> query)
         {
             Contract.Requires(query != null);
@@ -635,19 +506,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are all of
-        ///   the results of this query, plus all of the results of the other query,
-        ///   including any duplicates (i.e., results are not necessarily unique).
+        ///     This query-builder method creates a new query whose results are all of
+        ///     the results of this query, plus all of the results of the other query,
+        ///     including any duplicates (i.e., results are not necessarily unique).
         /// </summary>
-        /// <param name="query">
-        ///   A query representing the results to add.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the query parameter is null.
-        /// </exception>
+        /// <param name="query"> A query representing the results to add. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> UnionAll(ObjectQuery<T> query)
         {
             Contract.Requires(query != null);
@@ -656,24 +521,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This query-builder method creates a new query whose results are the
-        ///   results of this query filtered by some criteria.
+        ///     This query-builder method creates a new query whose results are the
+        ///     results of this query filtered by some criteria.
         /// </summary>
-        /// <param name="predicate">
-        ///   The filter predicate.
-        /// </param>
-        /// <param name="parameters">
-        ///   An optional set of query parameters that should be in scope when parsing.
-        /// </param>
-        /// <returns>
-        ///   a new ObjectQuery instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If either argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the filter predicate command text is empty.
-        /// </exception>
+        /// <param name="predicate"> The filter predicate. </param>
+        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
+        /// <returns> a new ObjectQuery instance. </returns>
+        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
+        /// <exception cref="ArgumentException">If the filter predicate command text is empty.</exception>
         public ObjectQuery<T> Where(string predicate, params ObjectParameter[] parameters)
         {
             Contract.Requires(predicate != null);
@@ -694,29 +549,30 @@ namespace System.Data.Entity.Core.Objects
         #region IEnumerable<T> implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{T}"/> which when enumerated will execute the given SQL query against the database.
+        ///     Returns an <see cref="IEnumerator{T}" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return new LazyEnumerator<T>(() =>
-            {
-                var disposableEnumerable = GetResults(null);
-                try
-                {
-                    var result = disposableEnumerable.GetEnumerator();
-                    return result;
-                }
-                catch
-                {
-                    // if there is a problem creating the enumerator, we should dispose
-                    // the enumerable (if there is no problem, the enumerator will take 
-                    // care of the dispose)
-                    disposableEnumerable.Dispose();
-                    throw;
-                }
-            });
+            return new LazyEnumerator<T>(
+                () =>
+                    {
+                        var disposableEnumerable = GetResults(null);
+                        try
+                        {
+                            var result = disposableEnumerable.GetEnumerator();
+                            return result;
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
         #endregion
@@ -724,75 +580,73 @@ namespace System.Data.Entity.Core.Objects
         #region IDbAsyncEnumerable<T> implementation
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{T}"/> which when enumerated will execute the given SQL query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator{T}" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
         {
-            return new LazyAsyncEnumerator<T>(async () =>
-            {
-                var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None);
-                try
-                {
-                    return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
-                }
-                catch
-                {
-                    // if there is a problem creating the enumerator, we should dispose
-                    // the enumerable (if there is no problem, the enumerator will take 
-                    // care of the dispose)
-                    disposableEnumerable.Dispose();
-                    throw;
-                }
-            });
+            return new LazyAsyncEnumerator<T>(
+                async () =>
+                          {
+                              var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None);
+                              try
+                              {
+                                  return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
+                              }
+                              catch
+                              {
+                                  // if there is a problem creating the enumerator, we should dispose
+                                  // the enumerable (if there is no problem, the enumerator will take 
+                                  // care of the dispose)
+                                  disposableEnumerable.Dispose();
+                                  throw;
+                              }
+                          });
         }
 
         #endregion
 
         #region ObjectQuery Overrides
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         internal override IEnumerator GetEnumeratorInternal()
         {
             return ((IEnumerable<T>)this).GetEnumerator();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         internal override IDbAsyncEnumerator GetAsyncEnumeratorInternal()
         {
             return ((IDbAsyncEnumerable<T>)this).GetAsyncEnumerator();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         internal override IList GetIListSourceListInternal()
         {
             return ((IListSource)GetResults(null)).GetList();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         internal override ObjectResult ExecuteInternal(MergeOption mergeOption)
         {
             return GetResults(mergeOption);
         }
 
-        /// <inheritdoc/>
-        internal async override Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        internal override async Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
             return await GetResultsAsync(mergeOption, cancellationToken);
         }
 
         /// <summary>
-        /// Retrieves the LINQ expression that backs this ObjectQuery for external consumption.
-        /// It is important that the work to wrap the expression in an appropriate MergeAs call
-        /// takes place in this method and NOT in ObjectQueryState.TryGetExpression which allows
-        /// the unmodified expression (that does not include the MergeOption-preserving MergeAs call)
-        /// to be retrieved and processed by the ELinq ExpressionConverter.
+        ///     Retrieves the LINQ expression that backs this ObjectQuery for external consumption.
+        ///     It is important that the work to wrap the expression in an appropriate MergeAs call
+        ///     takes place in this method and NOT in ObjectQueryState.TryGetExpression which allows
+        ///     the unmodified expression (that does not include the MergeOption-preserving MergeAs call)
+        ///     to be retrieved and processed by the ELinq ExpressionConverter.
         /// </summary>
-        /// <returns>
-        ///   The LINQ expression for this ObjectQuery, wrapped in a MergeOption-preserving call
-        ///   to the MergeAs method if the ObjectQuery.MergeOption property has been set.
-        /// </returns>
+        /// <returns> The LINQ expression for this ObjectQuery, wrapped in a MergeOption-preserving call to the MergeAs method if the ObjectQuery.MergeOption property has been set. </returns>
         internal override Expression GetExpression()
         {
             // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),

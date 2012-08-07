@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Resources;
 
     /// <summary>
-    /// Summary description for FilteredSchemaTypes.
+    ///     Summary description for FilteredSchemaTypes.
     /// </summary>
     internal sealed class FilteredSchemaElementLookUpTable<T, S> : IEnumerable<T>, ISchemaElementLookUpTable<T>
         where T : S
@@ -21,34 +22,30 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="lookUpTable"></param>
+        /// <param name="lookUpTable"> </param>
         public FilteredSchemaElementLookUpTable(SchemaElementLookUpTable<S> lookUpTable)
         {
             _lookUpTable = lookUpTable;
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public IEnumerator<T> GetEnumerator()
         {
             return _lookUpTable.GetFilteredEnumerator<T>();
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _lookUpTable.GetFilteredEnumerator<T>();
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public int Count
         {
@@ -67,10 +64,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key"> </param>
+        /// <returns> </returns>
         public bool ContainsKey(string key)
         {
             if (!_lookUpTable.ContainsKey(key))
@@ -81,7 +77,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public T this[string key]
         {
@@ -102,10 +97,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key"> </param>
+        /// <returns> </returns>
         public T LookUpEquivalentKey(string key)
         {
             return _lookUpTable.LookUpEquivalentKey(key) as T;

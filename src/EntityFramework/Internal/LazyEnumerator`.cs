@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     internal class LazyEnumerator<T> : IEnumerator<T>
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        object Collections.IEnumerator.Current
+        object IEnumerator.Current
         {
             get { return Current; }
         }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Collections;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Copied from System.Data.dll
+    ///     Copied from System.Data.dll
     /// </summary>
     internal class DbConnectionOptions
     {
@@ -527,41 +528,41 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             try
             {
 #endif
-            var nextStartPosition = 0;
-            var endPosition = connectionString.Length;
-            while (nextStartPosition < endPosition)
-            {
-                var startPosition = nextStartPosition;
-
-                string keyname, keyvalue;
-                nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
-                if (string.IsNullOrEmpty(keyname))
+                var nextStartPosition = 0;
+                var endPosition = connectionString.Length;
+                while (nextStartPosition < endPosition)
                 {
-                    // if (nextStartPosition != endPosition) { throw; }
-                    break;
-                }
+                    var startPosition = nextStartPosition;
+
+                    string keyname, keyvalue;
+                    nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
+                    if (string.IsNullOrEmpty(keyname))
+                    {
+                        // if (nextStartPosition != endPosition) { throw; }
+                        break;
+                    }
 
 #if DEBUG
                     Debug.Assert(IsKeyNameValid(keyname), "ParseFailure, invalid keyname");
                     Debug.Assert(IsValueValidInternal(keyvalue), "parse failure, invalid keyvalue");
 #endif
-                var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
-                if (!IsKeyNameValid(realkeyname))
-                {
-                    throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
-                }
-                parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
+                    var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
+                    if (!IsKeyNameValid(realkeyname))
+                    {
+                        throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
+                    }
+                    parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
 
-                if (null != localKeychain)
-                {
-                    localKeychain = localKeychain.Next = new NameValuePair();
+                    if (null != localKeychain)
+                    {
+                        localKeychain = localKeychain.Next = new NameValuePair();
+                    }
+                    else
+                    {
+                        // first time only - don't contain modified chain from UDL file
+                        keychain = localKeychain = new NameValuePair();
+                    }
                 }
-                else
-                {
-                    // first time only - don't contain modified chain from UDL file
-                    keychain = localKeychain = new NameValuePair();
-                }
-            }
 #if DEBUG
             }
             catch (ArgumentException e)

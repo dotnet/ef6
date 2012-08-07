@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Edm
 
     // <summary>
     /// Allows the construction and modification of an association type in an Entity Data Model (EDM)
-    /// <see cref = "EdmNamespace" />
+    /// <see cref="EdmNamespace" />
     /// .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
@@ -24,17 +25,18 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmAssociationEnd" /> that defines the source end of the association.
+        ///     Gets or sets the <see cref="EdmAssociationEnd" /> that defines the source end of the association.
         /// </summary>
         public virtual EdmAssociationEnd SourceEnd { get; set; }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmAssociationEnd" /> that defines the target end of the association.
+        ///     Gets or sets the <see cref="EdmAssociationEnd" /> that defines the target end of the association.
         /// </summary>
         public virtual EdmAssociationEnd TargetEnd { get; set; }
 
         /// <summary>
-        ///     Gets or sets the optional constraint that indicates whether the relationship is an independent association (no constraint present) or a foreign key relationship ( <see cref = "EdmAssociationConstraint" /> specified).
+        ///     Gets or sets the optional constraint that indicates whether the relationship is an independent association (no constraint present) or a foreign key relationship ( <see
+        ///      cref="EdmAssociationConstraint" /> specified).
         /// </summary>
         public virtual EdmAssociationConstraint Constraint { get; set; }
 

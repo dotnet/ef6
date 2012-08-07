@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -8,8 +9,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Utility class that tries to produce an equivalent tree to the input tree over 
-    /// a single group aggregate variable and no other external references
+    ///     Utility class that tries to produce an equivalent tree to the input tree over 
+    ///     a single group aggregate variable and no other external references
     /// </summary>
     internal class GroupAggregateVarComputationTranslator : BasicOpVisitorOfNode
     {
@@ -25,10 +26,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Constructor
 
         /// <summary>
-        /// Private constructor 
+        ///     Private constructor
         /// </summary>
-        /// <param name="command"></param>
-        /// <param name="groupAggregateVarInfoManager"></param>
+        /// <param name="command"> </param>
+        /// <param name="groupAggregateVarInfoManager"> </param>
         private GroupAggregateVarComputationTranslator(
             Command command,
             GroupAggregateVarInfoManager groupAggregateVarInfoManager)
@@ -42,20 +43,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region 'Public' Surface
 
         /// <summary>
-        /// Try to produce an equivalent tree to the input subtree, over a single group aggregate variable.
-        /// Such translation can only be produced if all external references of the input subtree are to a 
-        /// single group aggregate var, or to vars that are can be translated over that single group 
-        /// aggregate var
+        ///     Try to produce an equivalent tree to the input subtree, over a single group aggregate variable.
+        ///     Such translation can only be produced if all external references of the input subtree are to a 
+        ///     single group aggregate var, or to vars that are can be translated over that single group 
+        ///     aggregate var
         /// </summary>
-        /// <param name="subtree">The input subtree</param>
-        /// <param name="isVarDefinition"></param>
-        /// <param name="command"></param>
-        /// <param name="groupAggregateVarInfoManager"></param>
-        /// <param name="groupAggregateVarInfo">The groupAggregateVarInfo over which the input subtree can be translated </param>
-        /// <param name="templateNode">A tree that is equvalent to the input tree, but over the group aggregate variable
-        /// represented by the groupAggregetVarInfo</param>
-        /// <param name="isUnnested"></param>
-        /// <returns>True, if the translation can be done, false otherwise</returns>
+        /// <param name="subtree"> The input subtree </param>
+        /// <param name="isVarDefinition"> </param>
+        /// <param name="command"> </param>
+        /// <param name="groupAggregateVarInfoManager"> </param>
+        /// <param name="groupAggregateVarInfo"> The groupAggregateVarInfo over which the input subtree can be translated </param>
+        /// <param name="templateNode"> A tree that is equvalent to the input tree, but over the group aggregate variable represented by the groupAggregetVarInfo </param>
+        /// <param name="isUnnested"> </param>
+        /// <returns> True, if the translation can be done, false otherwise </returns>
         public static bool TryTranslateOverGroupAggregateVar(
             Node subtree,
             bool isVarDefinition,
@@ -128,24 +128,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Methods
 
         /// <summary>
-        /// See <cref="TryTranslateOverGroupAggregateVar"/>
+        ///     See <cref="TryTranslateOverGroupAggregateVar" />
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(VarRefOp op, Node n)
         {
             return TranslateOverGroupAggregateVar(op.Var, null);
         }
 
         /// <summary>
-        /// If the child is VarRef check if the subtree PropertyOp(VarRef) is reference to a 
-        /// group aggregate var. 
-        /// Otherwise do default processing
+        ///     If the child is VarRef check if the subtree PropertyOp(VarRef) is reference to a 
+        ///     group aggregate var. 
+        ///     Otherwise do default processing
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(PropertyOp op, Node n)
         {
             if (n.Child0.Op.OpType
@@ -158,20 +158,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// If the Subtree rooted at the collect is of the following structure:
+        ///     If the Subtree rooted at the collect is of the following structure:
         /// 
-        /// PhysicalProject(outputVar)
-        /// |
-        /// Project(s)
-        /// |
-        /// Unnest
+        ///     PhysicalProject(outputVar)
+        ///     |
+        ///     Project(s)
+        ///     |
+        ///     Unnest
         /// 
-        /// where the unnest is over the group aggregate var and the output var
-        /// is either a reference to the group aggregate var or to a constant, it returns the 
-        /// translation of the ouput var.
+        ///     where the unnest is over the group aggregate var and the output var
+        ///     is either a reference to the group aggregate var or to a constant, it returns the 
+        ///     translation of the ouput var.
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitCollect(Node n)
@@ -247,12 +247,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Determines whether the given Node is a constant subtree
-        /// It only recognizes any of the constant base ops
-        /// and possibly casts over these nodes.
+        ///     Determines whether the given Node is a constant subtree
+        ///     It only recognizes any of the constant base ops
+        ///     and possibly casts over these nodes.
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// <param name="node"> </param>
+        /// <returns> </returns>
         private static bool IsConstant(Node node)
         {
             var currentNode = node;
@@ -265,16 +265,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// (1) If the given var or the given property of the given var are defined over a group aggregate var, 
-        /// (2) and if that group aggregate var matches the var represented by represented by _targetGroupAggregateVarInfo
-        /// if any
+        ///     (1) If the given var or the given property of the given var are defined over a group aggregate var, 
+        ///     (2) and if that group aggregate var matches the var represented by represented by _targetGroupAggregateVarInfo
+        ///     if any
         /// 
-        /// it returns the corresponding translation over the group aggregate var. Also, if _targetGroupAggregateVarInfo
-        /// is not set, it sets it to the group aggregate var representing the referenced var.
+        ///     it returns the corresponding translation over the group aggregate var. Also, if _targetGroupAggregateVarInfo
+        ///     is not set, it sets it to the group aggregate var representing the referenced var.
         /// </summary>
-        /// <param name="var"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
+        /// <param name="var"> </param>
+        /// <param name="property"> </param>
+        /// <returns> </returns>
         private Node TranslateOverGroupAggregateVar(Var var, EdmMember property)
         {
             GroupAggregateVarRefInfo groupAggregateVarRefInfo;
@@ -312,14 +312,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Default processing for nodes. 
-        /// Visits the children and if any child has changed it creates a new node 
-        /// for the parent.
-        /// If the reference of the child node did not change, the child node did not change either,
-        /// this is because a node can only be reused "as is" when building a template.
+        ///     Default processing for nodes. 
+        ///     Visits the children and if any child has changed it creates a new node 
+        ///     for the parent.
+        ///     If the reference of the child node did not change, the child node did not change either,
+        ///     this is because a node can only be reused "as is" when building a template.
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override Node VisitDefault(Node n)
         {
             var newChildren = new List<Node>(n.Children.Count);
@@ -372,11 +372,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// In order to support NewRecordOp we may need to adjust the record type.
+        ///     In order to support NewRecordOp we may need to adjust the record type.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override Node Visit(NewRecordOp op, Node n)
         {
             return null;

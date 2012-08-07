@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -45,7 +46,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _filterAssemblyCacheByAssembly.Evaluate(assembly);
         }
 
-        /// <summary>Is the assembly and its referened assemblies not expected to have any metadata</summary>
+        /// <summary>
+        ///     Is the assembly and its referened assemblies not expected to have any metadata
+        /// </summary>
         private static bool ShouldFilterAssembly(AssemblyName assemblyName)
         {
             return (ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), _ecmaPublicKeyToken) ||

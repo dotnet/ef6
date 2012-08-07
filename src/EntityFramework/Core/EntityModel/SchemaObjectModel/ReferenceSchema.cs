@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for UsingElement.
+    ///     Summary description for UsingElement.
     /// </summary>
     internal class UsingElement : SchemaElement
     {
@@ -17,9 +18,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal UsingElement(Schema parentElement)
             : base(parentElement)
         {
@@ -30,17 +30,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        /// 
         /// </summary>
         public virtual string Alias { get; private set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public virtual string NamespaceName { get; private set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public override string FQName
         {
@@ -52,7 +49,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Properties
 
         /// <summary>
-        /// 
         /// </summary>
         protected override bool ProhibitAttribute(string namespaceUri, string localName)
         {
@@ -94,9 +90,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleNamespaceAttribute(XmlReader reader)
         {
             Debug.Assert(String.IsNullOrEmpty(NamespaceName), "Alias must be set only once");
@@ -108,9 +103,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleAliasAttribute(XmlReader reader)
         {
             Debug.Assert(String.IsNullOrEmpty(Alias), "Alias must be set only once");

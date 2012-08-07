@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification of an entity container in an Entity Data Model (EDM) <see cref = "EdmModel" /> .
+    ///     Allows the construction and modification of an entity container in an Entity Data Model (EDM) <see cref="EdmModel" /> .
     /// </summary>
     internal class EdmEntityContainer
         : EdmNamedMetadataItem
@@ -25,7 +26,8 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets all <see cref = "EdmEntityContainerItem" /> s declared within the namspace. Includes <see cref = "EdmAssociationSet" /> s and <see cref = "EdmEntitySet" /> s.
+        ///     Gets all <see cref="EdmEntityContainerItem" /> s declared within the namspace. Includes <see cref="EdmAssociationSet" /> s and <see
+        ///      cref="EdmEntitySet" /> s.
         /// </summary>
         public IEnumerable<EdmEntityContainerItem> ContainerItems
         {
@@ -37,7 +39,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmAssociationSet" /> s that specifies the association sets within the container.
+        ///     Gets or sets the collection of <see cref="EdmAssociationSet" /> s that specifies the association sets within the container.
         /// </summary>
         public virtual IList<EdmAssociationSet> AssociationSets
         {
@@ -51,7 +53,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmEntitySet" /> s that specifies the entity sets within the container.
+        ///     Gets or sets the collection of <see cref="EdmEntitySet" /> s that specifies the entity sets within the container.
         /// </summary>
         public virtual IList<EdmEntitySet> EntitySets
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Returns the edges of the graph
+        ///     Returns the edges of the graph
         /// </summary>
         internal IEnumerable<KeyValuePair<TVertex, TVertex>> Edges
         {

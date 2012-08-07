@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
@@ -7,50 +8,50 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Mapping metadata for Entity type.
-    /// If an EntitySet represents entities of more than one type, than we will have
-    /// more than one EntityTypeMapping for an EntitySet( For ex : if
-    /// PersonSet Entity extent represents entities of types Person and Customer,
-    /// than we will have two EntityType Mappings under mapping for PersonSet).
+    ///     Mapping metadata for Entity type.
+    ///     If an EntitySet represents entities of more than one type, than we will have
+    ///     more than one EntityTypeMapping for an EntitySet( For ex : if
+    ///     PersonSet Entity extent represents entities of types Person and Customer,
+    ///     than we will have two EntityType Mappings under mapping for PersonSet).
     /// </summary>
     /// <example>
-    /// For Example if conceptually you could represent the CS MSL file as following
-    /// --Mapping 
-    ///   --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    ///     For Example if conceptually you could represent the CS MSL file as following
+    ///     --Mapping 
+    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap
-    ///           --ScalarPropertyMap
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap
-    ///           --ComplexPropertyMap
-    ///             --ScalarPropertyMap
-    ///             --ScalarProperyMap
-    ///           --ScalarPropertyMap
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap
+    ///     --ScalarPropertyMap
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap
+    ///     --ComplexPropertyMap
+    ///     --ScalarPropertyMap
+    ///     --ScalarProperyMap
+    ///     --ScalarPropertyMap
     ///     --AssociationSetMapping 
-    ///       --AssociationTypeMapping
-    ///         --MappingFragment
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap
-    ///             --ScalarProperyMap
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap
-    /// This class represents the metadata for all entity Type map elements in the 
-    /// above example. Users can access the table mapping fragments under the 
-    /// entity type mapping through this class.
+    ///     --AssociationTypeMapping
+    ///     --MappingFragment
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap
+    ///     --ScalarProperyMap
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap
+    ///     This class represents the metadata for all entity Type map elements in the 
+    ///     above example. Users can access the table mapping fragments under the 
+    ///     entity type mapping through this class.
     /// </example>
     internal class StorageEntityTypeMapping : StorageTypeMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Construct the new EntityTypeMapping object.
+        ///     Construct the new EntityTypeMapping object.
         /// </summary>
-        /// <param name="setMapping">Set Mapping that contains this Type mapping </param>
+        /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
         internal StorageEntityTypeMapping(StorageSetMapping setMapping)
             : base(setMapping)
         {
@@ -61,12 +62,12 @@ namespace System.Data.Entity.Core.Mapping
         #region Fields
 
         /// <summary>
-        /// Types for which the mapping holds true for.
+        ///     Types for which the mapping holds true for.
         /// </summary>
         private readonly Dictionary<string, EdmType> m_entityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
 
         /// <summary>
-        /// Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
+        ///     Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
         /// </summary>
         private readonly Dictionary<string, EdmType> m_isOfEntityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
 
@@ -75,7 +76,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Properties
 
         /// <summary>
-        /// a list of TypeMetadata that this mapping holds true for.
+        ///     a list of TypeMetadata that this mapping holds true for.
         /// </summary>
         internal override ReadOnlyCollection<EdmType> Types
         {
@@ -83,8 +84,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// a list of TypeMetadatas for which the mapping holds true for
-        /// not only the type specified but the sub-types of that type as well.        
+        ///     a list of TypeMetadatas for which the mapping holds true for
+        ///     not only the type specified but the sub-types of that type as well.
         /// </summary>
         internal override ReadOnlyCollection<EdmType> IsOfTypes
         {
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
         /// <summary>
-        /// Add a Type to the list of types that this mapping is valid for
+        ///     Add a Type to the list of types that this mapping is valid for
         /// </summary>
         internal void AddType(EdmType type)
         {
@@ -104,7 +105,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Add a Type to the list of Is-Of types that this mapping is valid for
+        ///     Add a Type to the list of Is-Of types that this mapping is valid for
         /// </summary>
         internal void AddIsOfType(EdmType type)
         {
@@ -132,11 +133,11 @@ namespace System.Data.Entity.Core.Mapping
         }
 
 #if DEBUG
-    /// <summary>
-    /// This method is primarily for debugging purposes.
-    /// Will be removed shortly.
-    /// </summary>
-    /// <param name="index"></param>
+        /// <summary>
+        ///     This method is primarily for debugging purposes.
+        ///     Will be removed shortly.
+        /// </summary>
+        /// <param name="index"> </param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

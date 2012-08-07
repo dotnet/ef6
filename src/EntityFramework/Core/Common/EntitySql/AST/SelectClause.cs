@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents select clause.
+    ///     Represents select clause.
     /// </summary>
     internal sealed class SelectClause : Node
     {
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly uint _methodCallCount;
 
         /// <summary>
-        /// Initialize SelectKind.SelectRow clause.
+        ///     Initialize SelectKind.SelectRow clause.
         /// </summary>
         internal SelectClause(
             NodeList<AliasedExpr> items, SelectKind selectKind, DistinctKind distinctKind, Node topExpr, uint methodCallCount)
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Projection list.
+        ///     Projection list.
         /// </summary>
         internal NodeList<AliasedExpr> Items
         {
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Select kind (row or value).
+        ///     Select kind (row or value).
         /// </summary>
         internal SelectKind SelectKind
         {
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Distinct kind (none,all,distinct).
+        ///     Distinct kind (none,all,distinct).
         /// </summary>
         internal DistinctKind DistinctKind
         {
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Optional top expression.
+        ///     Optional top expression.
         /// </summary>
         internal Node TopExpr
         {
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// True if select list has method calls.
+        ///     True if select list has method calls.
         /// </summary>
         internal bool HasMethodCall
         {

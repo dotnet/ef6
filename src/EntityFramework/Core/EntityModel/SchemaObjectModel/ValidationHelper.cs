@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,16 +7,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Diagnostics;
 
     /// <summary>
-    /// Helper methods used for Schema Object Model (validation) validation.
+    ///     Helper methods used for Schema Object Model (validation) validation.
     /// </summary>
     internal static class ValidationHelper
     {
         /// <summary>
-        /// Validates whether facets are declared correctly.
+        ///     Validates whether facets are declared correctly.
         /// </summary>
-        /// <param name="element">Schema element being validated. Must not be null.</param>
-        /// <param name="type">Resolved type (from declaration on the element). Possibly null.</param>
-        /// <param name="typeUsageBuilder">TypeUsageBuilder for the current element. Must not be null.</param>
+        /// <param name="element"> Schema element being validated. Must not be null. </param>
+        /// <param name="type"> Resolved type (from declaration on the element). Possibly null. </param>
+        /// <param name="typeUsageBuilder"> TypeUsageBuilder for the current element. Must not be null. </param>
         internal static void ValidateFacets(SchemaElement element, SchemaType type, TypeUsageBuilder typeUsageBuilder)
         {
             Debug.Assert(element != null);
@@ -50,14 +51,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Validated whether a type is declared correctly. 
+        ///     Validated whether a type is declared correctly.
         /// </summary>
-        /// <param name="element">Schema element being validated. Must not be null.</param>
-        /// <param name="type">Resolved type (from declaration on the element). Possibly null.</param>
-        /// <param name="typeSubElement">Child schema element. Possibly null.</param>
+        /// <param name="element"> Schema element being validated. Must not be null. </param>
+        /// <param name="type"> Resolved type (from declaration on the element). Possibly null. </param>
+        /// <param name="typeSubElement"> Child schema element. Possibly null. </param>
         /// <remarks>
-        /// For some elements (e.g. ReturnType) we allow the type to be defined inline in an attribute on the element itself or 
-        /// by using nested elements. These definitions are mutually exclusive.
+        ///     For some elements (e.g. ReturnType) we allow the type to be defined inline in an attribute on the element itself or 
+        ///     by using nested elements. These definitions are mutually exclusive.
         /// </remarks>
         internal static void ValidateTypeDeclaration(SchemaElement element, SchemaType type, SchemaElement typeSubElement)
         {
@@ -80,10 +81,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Validate that reference type is an entity type.
+        ///     Validate that reference type is an entity type.
         /// </summary>
-        /// <param name="element">Schema element being validated. Must not be null.</param>
-        /// <param name="type">Resolved type (from declaration on the element). Possibly null.</param>
+        /// <param name="element"> Schema element being validated. Must not be null. </param>
+        /// <param name="type"> Resolved type (from declaration on the element). Possibly null. </param>
         internal static void ValidateRefType(SchemaElement element, SchemaType type)
         {
             Debug.Assert(element != null);

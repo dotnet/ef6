@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Implements a Composite pattern for <see cref="IDbDependencyResolver"/> such that if the first
-    /// resolver can't resolve the dependency then the second resolver will be used.
+    ///     Implements a Composite pattern for <see cref="IDbDependencyResolver" /> such that if the first
+    ///     resolver can't resolve the dependency then the second resolver will be used.
     /// </summary>
     internal class CompositeResolver<TFirst, TSecond> : IDbDependencyResolver
         where TFirst : IDbDependencyResolver

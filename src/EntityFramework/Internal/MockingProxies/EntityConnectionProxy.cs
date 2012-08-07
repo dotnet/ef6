@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.MockingProxies
 {
     using System.Data.Common;
@@ -7,9 +8,9 @@ namespace System.Data.Entity.Internal.MockingProxies
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Acts as a proxy for <see cref="EntityConnection"/> that for the most part just passes calls
-    /// through to the real object but uses virtual methods/properties such that uses of the object
-    /// can be mocked.
+    ///     Acts as a proxy for <see cref="EntityConnection" /> that for the most part just passes calls
+    ///     through to the real object but uses virtual methods/properties such that uses of the object
+    ///     can be mocked.
     /// </summary>
     internal class EntityConnectionProxy
     {

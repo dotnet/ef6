@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Runtime.Serialization;
@@ -6,45 +7,44 @@ namespace System.Data.Entity.Core
     using System.Security.Permissions;
 
     /// <summary>
-    /// Property constraint exception class. Note that this class has state - so if you change even
-    /// its internals, it can be a breaking change
+    ///     Property constraint exception class. Note that this class has state - so if you change even
+    ///     its internals, it can be a breaking change
     /// </summary>
-    /// 
     [Serializable]
     public sealed class PropertyConstraintException : ConstraintException
     {
         private readonly string _propertyName;
 
         /// <summary>
-        /// constructor with default message
+        ///     constructor with default message
         /// </summary>
         public PropertyConstraintException() // required ctor
         {
         }
 
         /// <summary>
-        /// costructor with supplied message
+        ///     costructor with supplied message
         /// </summary>
-        /// <param name="message">localized error message</param>
+        /// <param name="message"> localized error message </param>
         public PropertyConstraintException(string message) // required ctor
             : base(message)
         {
         }
 
         /// <summary>
-        /// costructor with supplied message and inner exception
+        ///     costructor with supplied message and inner exception
         /// </summary>
-        /// <param name="message">localized error message</param>
-        /// <param name="innerException">inner exception</param>
+        /// <param name="message"> localized error message </param>
+        /// <param name="innerException"> inner exception </param>
         public PropertyConstraintException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// default constructor
+        ///     default constructor
         /// </summary>
-        /// <param name="message">localized error message</param>
+        /// <param name="message"> localized error message </param>
         public PropertyConstraintException(string message, string propertyName) // required ctor
             : base(message)
         {
@@ -53,10 +53,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// constructor
+        ///     constructor
         /// </summary>
-        /// <param name="message">localized error message</param>
-        /// <param name="innerException">inner exception</param>
+        /// <param name="message"> localized error message </param>
+        /// <param name="innerException"> inner exception </param>
         public PropertyConstraintException(string message, string propertyName, Exception innerException) // required ctor
             : base(message, innerException)
         {
@@ -65,10 +65,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// constructor for deserialization
+        ///     constructor for deserialization
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
+        /// <param name="info"> </param>
+        /// <param name="context"> </param>
         private PropertyConstraintException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -79,13 +79,11 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// sets the System.Runtime.Serialization.SerializationInfo
-        /// with information about the exception.
+        ///     sets the System.Runtime.Serialization.SerializationInfo
+        ///     with information about the exception.
         /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized
-        /// object data about the exception being thrown.
-        /// </param>
-        /// <param name="context"></param>
+        /// <param name="info"> The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown. </param>
+        /// <param name="context"> </param>
         [SecurityCritical]
         [PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -95,7 +93,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Gets the name of the property that violated the constraint.
+        ///     Gets the name of the property that violated the constraint.
         /// </summary>
         public string PropertyName
         {

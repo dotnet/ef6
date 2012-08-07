@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Diagnostics;
@@ -6,8 +7,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Security.Cryptography;
 
     /// <summary>
-    /// This class keeps recomputing the hash and adding it to the front of the 
-    /// builder when the length of the string gets too long
+    ///     This class keeps recomputing the hash and adding it to the front of the 
+    ///     builder when the length of the string gets too long
     /// </summary>
     internal class CompressingHashBuilder : StringHashBuilder
     {
@@ -40,9 +41,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// add string like "typename Instance#1"
+        ///     add string like "typename Instance#1"
         /// </summary>
-        /// <param name="objectIndex"></param>
+        /// <param name="objectIndex"> </param>
         internal void AppendObjectStartDump(object o, int objectIndex)
         {
             base.Append(string.Empty.PadLeft(SpacesPerIndent * _indent, ' '));

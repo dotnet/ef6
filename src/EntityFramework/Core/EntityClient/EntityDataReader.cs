@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Collections;
@@ -9,12 +10,11 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// A data reader class for the entity client provider
+    ///     A data reader class for the entity client provider
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -31,9 +31,9 @@ namespace System.Data.Entity.Core.EntityClient
         private readonly IExtendedDataRecord _storeExtendedDataRecord;
 
         /// <summary>
-        /// The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
-        /// DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
-        /// of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
+        ///     The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
+        ///     DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
+        ///     of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
         /// </summary>
         internal EntityDataReader(EntityCommand command, DbDataReader storeDataReader, CommandBehavior behavior)
         {
@@ -46,14 +46,14 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// For test purposes only.
+        ///     For test purposes only.
         /// </summary>
         internal EntityDataReader()
         {
         }
 
         /// <summary>
-        /// Get the depth of nesting for the current row
+        ///     Get the depth of nesting for the current row
         /// </summary>
         public override int Depth
         {
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get the number of columns in the current row
+        ///     Get the number of columns in the current row
         /// </summary>
         public override int FieldCount
         {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get whether the data reader has any rows
+        ///     Get whether the data reader has any rows
         /// </summary>
         public override bool HasRows
         {
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get whether the data reader has been closed
+        ///     Get whether the data reader has been closed
         /// </summary>
         public override bool IsClosed
         {
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get whether the data reader has any rows
+        ///     Get whether the data reader has any rows
         /// </summary>
         public override int RecordsAffected
         {
@@ -93,18 +93,18 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get the value of a column with the given ordinal
+        ///     Get the value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
         public override object this[int ordinal]
         {
             get { return _storeDataReader[ordinal]; }
         }
 
         /// <summary>
-        /// Get the value of a column with the given name
+        ///     Get the value of a column with the given name
         /// </summary>
-        /// <param name="name">The name of the column to retrieve the value</param>
+        /// <param name="name"> The name of the column to retrieve the value </param>
         public override object this[string name]
         {
             get
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get the number of non-hidden fields in the reader
+        ///     Get the number of non-hidden fields in the reader
         /// </summary>
         public override int VisibleFieldCount
         {
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// DataRecordInfo property describing the contents of the record.
+        ///     DataRecordInfo property describing the contents of the record.
         /// </summary>
         public DataRecordInfo DataRecordInfo
         {
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Close this data reader
+        ///     Close this data reader
         /// </summary>
         public override void Close()
         {
@@ -163,9 +163,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Releases the resources used by this data reader 
+        ///     Releases the resources used by this data reader
         /// </summary>
-        /// <param name="disposing">true to release both managed and unmanaged resources, false to release only unmanaged resources</param>
+        /// <param name="disposing"> true to release both managed and unmanaged resources, false to release only unmanaged resources </param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -176,188 +176,188 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get the boolean value of a column with the given ordinal
+        ///     Get the boolean value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The boolean value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The boolean value </returns>
         public override bool GetBoolean(int ordinal)
         {
             return _storeDataReader.GetBoolean(ordinal);
         }
 
         /// <summary>
-        /// Get the byte value of a column with the given ordinal
+        ///     Get the byte value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The byte value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The byte value </returns>
         public override byte GetByte(int ordinal)
         {
             return _storeDataReader.GetByte(ordinal);
         }
 
         /// <summary>
-        /// Get the byte array value of a column with the given ordinal
+        ///     Get the byte array value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <param name="dataOffset">The index within the row to start reading</param>
-        /// <param name="buffer">The buffer to copy into</param>
-        /// <param name="bufferOffset">The index in the buffer indicating where the data is copied into</param>
-        /// <param name="length">The maximum number of bytes to read</param>
-        /// <returns>The actual number of bytes read</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <param name="dataOffset"> The index within the row to start reading </param>
+        /// <param name="buffer"> The buffer to copy into </param>
+        /// <param name="bufferOffset"> The index in the buffer indicating where the data is copied into </param>
+        /// <param name="length"> The maximum number of bytes to read </param>
+        /// <returns> The actual number of bytes read </returns>
         public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
             return _storeDataReader.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
         /// <summary>
-        /// Get the char value of a column with the given ordinal
+        ///     Get the char value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The char value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The char value </returns>
         public override char GetChar(int ordinal)
         {
             return _storeDataReader.GetChar(ordinal);
         }
 
         /// <summary>
-        /// Get the char array value of a column with the given ordinal
+        ///     Get the char array value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <param name="dataOffset">The index within the row to start reading</param>
-        /// <param name="buffer">The buffer to copy into</param>
-        /// <param name="bufferOffset">The index in the buffer indicating where the data is copied into</param>
-        /// <param name="length">The maximum number of bytes to read</param>
-        /// <returns>The actual number of characters read</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <param name="dataOffset"> The index within the row to start reading </param>
+        /// <param name="buffer"> The buffer to copy into </param>
+        /// <param name="bufferOffset"> The index in the buffer indicating where the data is copied into </param>
+        /// <param name="length"> The maximum number of bytes to read </param>
+        /// <returns> The actual number of characters read </returns>
         public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
             return _storeDataReader.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
         /// <summary>
-        /// Get the name of the data type of the column with the given ordinal
+        ///     Get the name of the data type of the column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the name of the data type</param>
-        /// <returns>The name of the data type of the column</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the name of the data type </param>
+        /// <returns> The name of the data type of the column </returns>
         public override string GetDataTypeName(int ordinal)
         {
             return _storeDataReader.GetDataTypeName(ordinal);
         }
 
         /// <summary>
-        /// Get the datetime value of a column with the given ordinal
+        ///     Get the datetime value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The datetime value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The datetime value </returns>
         public override DateTime GetDateTime(int ordinal)
         {
             return _storeDataReader.GetDateTime(ordinal);
         }
 
         /// <summary>
-        /// Get the data reader of a column with the given ordinal
+        ///     Get the data reader of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the reader</param>
-        /// <returns>The data reader</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the reader </param>
+        /// <returns> The data reader </returns>
         protected override DbDataReader GetDbDataReader(int ordinal)
         {
             return _storeDataReader.GetData(ordinal);
         }
 
         /// <summary>
-        /// Get the decimal value of a column with the given ordinal
+        ///     Get the decimal value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The decimal value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The decimal value </returns>
         public override decimal GetDecimal(int ordinal)
         {
             return _storeDataReader.GetDecimal(ordinal);
         }
 
         /// <summary>
-        /// Get the double value of a column with the given ordinal
+        ///     Get the double value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The double value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The double value </returns>
         public override double GetDouble(int ordinal)
         {
             return _storeDataReader.GetDouble(ordinal);
         }
 
         /// <summary>
-        /// Get the data type of the column with the given ordinal
+        ///     Get the data type of the column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the data type</param>
-        /// <returns>The data type of the column</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the data type </param>
+        /// <returns> The data type of the column </returns>
         public override Type GetFieldType(int ordinal)
         {
             return _storeDataReader.GetFieldType(ordinal);
         }
 
         /// <summary>
-        /// Get the float value of a column with the given ordinal
+        ///     Get the float value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The float value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The float value </returns>
         public override float GetFloat(int ordinal)
         {
             return _storeDataReader.GetFloat(ordinal);
         }
 
         /// <summary>
-        /// Get the guid value of a column with the given ordinal
+        ///     Get the guid value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The guid value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The guid value </returns>
         public override Guid GetGuid(int ordinal)
         {
             return _storeDataReader.GetGuid(ordinal);
         }
 
         /// <summary>
-        /// Get the int16 value of a column with the given ordinal
+        ///     Get the int16 value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The int16 value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The int16 value </returns>
         public override short GetInt16(int ordinal)
         {
             return _storeDataReader.GetInt16(ordinal);
         }
 
         /// <summary>
-        /// Get the int32 value of a column with the given ordinal
+        ///     Get the int32 value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The int32 value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The int32 value </returns>
         public override int GetInt32(int ordinal)
         {
             return _storeDataReader.GetInt32(ordinal);
         }
 
         /// <summary>
-        /// Get the int64 value of a column with the given ordinal
+        ///     Get the int64 value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The int64 value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The int64 value </returns>
         public override long GetInt64(int ordinal)
         {
             return _storeDataReader.GetInt64(ordinal);
         }
 
         /// <summary>
-        /// Get the name of a column with the given ordinal
+        ///     Get the name of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the name</param>
-        /// <returns>The name</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the name </param>
+        /// <returns> The name </returns>
         public override string GetName(int ordinal)
         {
             return _storeDataReader.GetName(ordinal);
         }
 
         /// <summary>
-        /// Get the ordinal of a column with the given name
+        ///     Get the ordinal of a column with the given name
         /// </summary>
-        /// <param name="name">The name of the column to retrieve the ordinal</param>
-        /// <returns>The ordinal of the column</returns>
+        /// <param name="name"> The name of the column to retrieve the ordinal </param>
+        /// <returns> The ordinal of the column </returns>
         public override int GetOrdinal(string name)
         {
             DbHelpers.ThrowIfNull(name, "name");
@@ -366,10 +366,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// implementation for DbDataReader.GetProviderSpecificFieldType() method
+        ///     implementation for DbDataReader.GetProviderSpecificFieldType() method
         /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
+        /// <param name="ordinal"> </param>
+        /// <returns> </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override Type GetProviderSpecificFieldType(int ordinal)
         {
@@ -377,10 +377,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// implementation for DbDataReader.GetProviderSpecificValue() method
+        ///     implementation for DbDataReader.GetProviderSpecificValue() method
         /// </summary>
-        /// <param name="ordinal"></param>
-        /// <returns></returns>
+        /// <param name="ordinal"> </param>
+        /// <returns> </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override object GetProviderSpecificValue(int ordinal)
         {
@@ -388,10 +388,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// implementation for DbDataReader.GetProviderSpecificValues() method
+        ///     implementation for DbDataReader.GetProviderSpecificValues() method
         /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
+        /// <param name="values"> </param>
+        /// <returns> </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetProviderSpecificValues(object[] values)
         {
@@ -399,61 +399,58 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Get the DataTable that describes the columns of this data reader
+        ///     Get the DataTable that describes the columns of this data reader
         /// </summary>
-        /// <returns>The DataTable describing the columns</returns>
+        /// <returns> The DataTable describing the columns </returns>
         public override DataTable GetSchemaTable()
         {
             return _storeDataReader.GetSchemaTable();
         }
 
         /// <summary>
-        /// Get the string value of a column with the given ordinal
+        ///     Get the string value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The string value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The string value </returns>
         public override string GetString(int ordinal)
         {
             return _storeDataReader.GetString(ordinal);
         }
 
         /// <summary>
-        /// Get the value of a column with the given ordinal
+        ///     Get the value of a column with the given ordinal
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>The value</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The value </returns>
         public override object GetValue(int ordinal)
         {
             return _storeDataReader.GetValue(ordinal);
         }
 
         /// <summary>
-        /// Get the values for all the columns and for the current row
+        ///     Get the values for all the columns and for the current row
         /// </summary>
-        /// <param name="values">The array where values are copied into</param>
-        /// <returns>The number of System.Object instances in the array</returns>
+        /// <param name="values"> The array where values are copied into </param>
+        /// <returns> The number of System.Object instances in the array </returns>
         public override int GetValues(object[] values)
         {
             return _storeDataReader.GetValues(values);
         }
 
         /// <summary>
-        /// Get whether the value of a column is DBNull
+        ///     Get whether the value of a column is DBNull
         /// </summary>
-        /// <param name="ordinal">The ordinal of the column to retrieve the value</param>
-        /// <returns>true if the column value is DBNull</returns>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> true if the column value is DBNull </returns>
         public override bool IsDBNull(int ordinal)
         {
             return _storeDataReader.IsDBNull(ordinal);
         }
 
         /// <summary>
-        /// Move the reader to the next result set when reading a batch of statements
+        ///     Move the reader to the next result set when reading a batch of statements
         /// </summary>
-        /// <returns>
-        /// true if there are more result sets;
-        /// false otherwise
-        /// </returns>
+        /// <returns> true if there are more result sets; false otherwise </returns>
         public override bool NextResult()
         {
             try
@@ -467,15 +464,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// An asynchronous version of NextResult, which
-        /// moves the reader to the next result set when reading a batch of statements
+        ///     An asynchronous version of NextResult, which
+        ///     moves the reader to the next result set when reading a batch of statements
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
-        /// <returns>
-        /// A Task containing the result of the operation:
-        /// true if there are more result sets;
-        /// false otherwise
-        /// </returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
+        /// <returns> A Task containing the result of the operation: true if there are more result sets; false otherwise </returns>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
             try
@@ -489,43 +482,36 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Move the reader to the next row of the current result set
+        ///     Move the reader to the next row of the current result set
         /// </summary>
-        /// <returns>
-        /// true if there are more rows;
-        /// false otherwise
-        /// </returns>
+        /// <returns> true if there are more rows; false otherwise </returns>
         public override bool Read()
         {
             return _storeDataReader.Read();
         }
 
         /// <summary>
-        /// An asynchronous version of Read, which
-        /// moves the reader to the next row of the current result set
+        ///     An asynchronous version of Read, which
+        ///     moves the reader to the next row of the current result set
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
-        /// <returns>
-        /// A Task containing the result of the operation:
-        /// true if there are more rows;
-        /// false otherwise.
-        /// </returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
+        /// <returns> A Task containing the result of the operation: true if there are more rows; false otherwise. </returns>
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
             return _storeDataReader.ReadAsync(cancellationToken);
         }
 
         /// <summary>
-        /// Get an enumerator for enumerating results over this data reader
+        ///     Get an enumerator for enumerating results over this data reader
         /// </summary>
-        /// <returns>An enumerator for this data reader</returns>
+        /// <returns> An enumerator for this data reader </returns>
         public override IEnumerator GetEnumerator()
         {
             return _storeDataReader.GetEnumerator();
         }
 
         /// <summary>
-        /// Used to return a nested DbDataRecord.
+        ///     Used to return a nested DbDataRecord.
         /// </summary>
         public DbDataRecord GetDataRecord(int i)
         {
@@ -541,7 +527,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Used to return a nested result
+        ///     Used to return a nested result
         /// </summary>
         public DbDataReader GetDataReader(int i)
         {

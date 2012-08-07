@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Resources;
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// metadata exception class
+    ///     metadata exception class
     /// </summary>
-    /// 
     [Serializable]
     public sealed class MetadataException : EntityException
     {
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        /// constructor with default message
+        ///     constructor with default message
         /// </summary>
         public MetadataException() // required ctor
             : base(Strings.Metadata_General_Error)
@@ -25,9 +25,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// default constructor
+        ///     default constructor
         /// </summary>
-        /// <param name="message">localized error message</param>
+        /// <param name="message"> localized error message </param>
         public MetadataException(string message) // required ctor
             : base(message)
         {
@@ -35,10 +35,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// constructor
+        ///     constructor
         /// </summary>
-        /// <param name="message">localized error message</param>
-        /// <param name="innerException">inner exception</param>
+        /// <param name="message"> localized error message </param>
+        /// <param name="innerException"> inner exception </param>
         public MetadataException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
@@ -46,10 +46,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// constructor for deserialization
+        ///     constructor for deserialization
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
+        /// <param name="info"> </param>
+        /// <param name="context"> </param>
         private MetadataException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

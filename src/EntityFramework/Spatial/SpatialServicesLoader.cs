@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Config;
@@ -16,8 +17,8 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        /// Ask for a spatial provider. If one has been registered then we will use it, otherwise we will
-        /// fall back on using the SQL provider and if this is not available then the default provider.
+        ///     Ask for a spatial provider. If one has been registered then we will use it, otherwise we will
+        ///     fall back on using the SQL provider and if this is not available then the default provider.
         /// </summary>
         public virtual DbSpatialServices LoadDefaultServices()
         {

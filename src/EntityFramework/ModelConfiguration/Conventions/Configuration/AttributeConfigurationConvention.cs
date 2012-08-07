@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.ModelConfiguration.Configuration;
@@ -10,9 +11,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Base class for conventions that process CLR attributes found in the model.
     /// </summary>
-    /// <typeparam name = "TMemberInfo">The type of member to look for.</typeparam>
-    /// <typeparam name = "TConfiguration">The type of the configuration to look for.</typeparam>
-    /// <typeparam name = "TAttribute">The type of the attribute to look for.</typeparam>
+    /// <typeparam name="TMemberInfo"> The type of member to look for. </typeparam>
+    /// <typeparam name="TConfiguration"> The type of the configuration to look for. </typeparam>
+    /// <typeparam name="TAttribute"> The type of the attribute to look for. </typeparam>
     [ContractClass(typeof(AttributeConfigurationConventionContracts<,,>))]
     internal abstract class AttributeConfigurationConvention<TMemberInfo, TConfiguration, TAttribute>
         : IConfigurationConvention<TMemberInfo, TConfiguration>

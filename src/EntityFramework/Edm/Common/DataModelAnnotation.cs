@@ -1,14 +1,17 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Common
 {
     /// <summary>
-    ///     Allows the construction and modification of a user-specified annotation (name-value pair) on a <see cref = "DataModelItem" /> instance.
+    ///     Allows the construction and modification of a user-specified annotation (name-value pair) on a <see
+    ///      cref="DataModelItem" /> instance.
     /// </summary>
     internal class DataModelAnnotation
         : INamedDataModelItem
     {
         /// <summary>
-        ///     Gets or sets an optional namespace that can be used to distinguish the annotation from others with the same <see cref = "Name" /> value.
+        ///     Gets or sets an optional namespace that can be used to distinguish the annotation from others with the same <see
+        ///      cref="Name" /> value.
         /// </summary>
         public virtual string Namespace { get; set; }
 

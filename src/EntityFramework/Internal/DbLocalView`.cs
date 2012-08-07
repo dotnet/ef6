@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace System.Data.Entity.Internal
     /// <summary>
     ///     A local (in-memory) view of the entities in a DbSet.
     ///     This view contains Added entities and does not contain Deleted entities.  The view extends
-    ///     from <see cref = "ObservableCollection{T}" /> and hooks up events between the collection and the
+    ///     from <see cref="ObservableCollection{T}" /> and hooks up events between the collection and the
     ///     state manager to keep the view in sync.
     /// </summary>
-    /// <typeparam name = "TEntity">The type of the entity.</typeparam>
+    /// <typeparam name="TEntity"> The type of the entity. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
     internal class DbLocalView<TEntity> : ObservableCollection<TEntity>
@@ -27,10 +28,10 @@ namespace System.Data.Entity.Internal
         private ObservableBackedBindingList<TEntity> _bindingList;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbLocalView{TEntity}" /> class for entities
+        ///     Initializes a new instance of the <see cref="DbLocalView{TEntity}" /> class for entities
         ///     of the given generic type in the given internal context.
         /// </summary>
-        /// <param name = "internalContext">The internal context.</param>
+        /// <param name="internalContext"> The internal context. </param>
         public DbLocalView(InternalContext internalContext)
         {
             Contract.Requires(internalContext != null);
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Returns a cached binding list implementation backed by this ObservableCollection.
         /// </summary>
-        /// <value>The binding list.</value>
+        /// <value> The binding list. </value>
         public ObservableBackedBindingList<TEntity> BindingList
         {
             get { return _bindingList ?? (_bindingList = new ObservableBackedBindingList<TEntity>(this)); }
@@ -73,11 +74,11 @@ namespace System.Data.Entity.Internal
         #region Change handlers
 
         /// <summary>
-        ///     Called by the <see cref = "ObservableCollection{T}" /> base class when the collection changes.
+        ///     Called by the <see cref="ObservableCollection{T}" /> base class when the collection changes.
         ///     This method looks at the change made to the collection and reflects those changes in the
         ///     state manager.
         /// </summary>
-        /// <param name = "e">The <see cref = "System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data.</param>
+        /// <param name="e"> The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data. </param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             Contract.Assert(
@@ -120,8 +121,8 @@ namespace System.Data.Entity.Internal
         ///     Handles events from the state manager for entities entering, leaving, or being marked as deleted.
         ///     The local view is kept in sync with these changes.
         /// </summary>
-        /// <param name = "sender">The sender.</param>
-        /// <param name = "e">The <see cref = "System.ComponentModel.CollectionChangeEventArgs" /> instance containing the event data.</param>
+        /// <param name="sender"> The sender. </param>
+        /// <param name="e"> The <see cref="System.ComponentModel.CollectionChangeEventArgs" /> instance containing the event data. </param>
         private void StateManagerChangedHandler(object sender, CollectionChangeEventArgs e)
         {
             Contract.Assert(
@@ -172,8 +173,8 @@ namespace System.Data.Entity.Internal
         ///     Adds a contains check to the base implementation of InsertItem since we can't support
         ///     duplicate entities in the set.
         /// </summary>
-        /// <param name = "index">The index at which to insert.</param>
-        /// <param name = "item">The item to insert.</param>
+        /// <param name="index"> The index at which to insert. </param>
+        /// <param name="item"> The item to insert. </param>
         protected override void InsertItem(int index, TEntity item)
         {
             if (!Contains(item))

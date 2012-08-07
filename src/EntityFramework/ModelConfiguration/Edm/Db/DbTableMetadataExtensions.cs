@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -21,9 +21,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
             var tableColumn = new DbTableColumnMetadata
-                {
-                    Name = table.Columns.UniquifyName(name)
-                }.Initialize();
+                                  {
+                                      Name = table.Columns.UniquifyName(name)
+                                  }.Initialize();
 
             tableColumn.SetPreferredName(name);
 

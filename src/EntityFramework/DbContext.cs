@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
@@ -21,26 +22,26 @@ namespace System.Data.Entity
     ///     DbContext is conceptually similar to ObjectContext.
     /// </summary>
     /// <remarks>
-    ///     DbContext is usually used with a derived type that contains <see cref = "DbSet{TEntity}" /> properties for
+    ///     DbContext is usually used with a derived type that contains <see cref="DbSet{TEntity}" /> properties for
     ///     the root entities of the model. These sets are automatically initialized when the
     ///     instance of the derived class is created.  This behavior can be modified by applying the
-    ///     <see cref = "SuppressDbSetInitializationAttribute" />  attribute to either the entire derived context
+    ///     <see cref="SuppressDbSetInitializationAttribute" />  attribute to either the entire derived context
     ///     class, or to individual properties on the class.
     /// 
     ///     The Entity Data Model backing the context can be specified in several ways.  When using the Code First
-    ///     approach, the <see cref = "DbSet{TEntity}" /> properties on the derived context are used to build a model
+    ///     approach, the <see cref="DbSet{TEntity}" /> properties on the derived context are used to build a model
     ///     by convention.  The protected OnModelCreating method can be overridden to tweak this model.  More
-    ///     control over the model used for the Model First approach can be obtained by creating a <see cref = "DbCompiledModel" />
-    ///     explicitly from a <see cref = "DbModelBuilder" /> and passing this model to one of the DbContext constructors.
+    ///     control over the model used for the Model First approach can be obtained by creating a <see cref="DbCompiledModel" />
+    ///     explicitly from a <see cref="DbModelBuilder" /> and passing this model to one of the DbContext constructors.
     /// 
     ///     When using the Database First or Model First approach the Entity Data Model can be created using the
     ///     Entity Designer (or manually through creation of an EDMX file) and then this model can be specified using
-    ///     entity connection string or an <see cref = "System.Data.Entity.Core.EntityClient.EntityConnection" /> object.
+    ///     entity connection string or an <see cref="System.Data.Entity.Core.EntityClient.EntityConnection" /> object.
     /// 
     ///     The connection to the database (including the name of the database) can be specified in several ways.
     ///     If the parameterless DbContext constructor is called from a derived context, then the name of the derived context
     ///     is used to find a connection string in the app.config or web.config file.  If no connection string is found, then
-    ///     the name is passed to the DefaultConnectionFactory registered on the <see cref = "Entity.Database" /> class.  The connection
+    ///     the name is passed to the DefaultConnectionFactory registered on the <see cref="Entity.Database" /> class.  The connection
     ///     factory then uses the context name as the database name in a default connection string.  (This default connection
     ///     string points to .\SQLEXPRESS on the local machine unless a different DefaultConnectionFactory is registered.)
     /// 
@@ -55,7 +56,7 @@ namespace System.Data.Entity
     /// 
     ///     An existing or explicitly created DbConnection can also be used instead of the database/connection name.
     /// 
-    ///     A <see cref = "DbModelBuilderVersionAttribute" /> can be applied to a class derived from DbContext to set the
+    ///     A <see cref="DbModelBuilderVersionAttribute" /> can be applied to a class derived from DbContext to set the
     ///     version of conventions used by the context when it creates a model. If no attribute is applied then the
     ///     latest version of conventions will be used.
     /// </remarks>
@@ -84,7 +85,7 @@ namespace System.Data.Entity
         ///     The by-convention name is the full name (namespace + class name) of the derived context class.
         ///     See the class remarks for how this is used to create a connection.
         /// </summary>
-        /// <param name = "model">The model that will back this context.</param>
+        /// <param name="model"> The model that will back this context. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected DbContext(DbCompiledModel model)
         {
@@ -98,7 +99,7 @@ namespace System.Data.Entity
         ///     database to which a connection will be made.
         ///     See the class remarks for how this is used to create a connection.
         /// </summary>
-        /// <param name = "nameOrConnectionString">Either the database name or a connection string.</param>
+        /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(string nameOrConnectionString)
         {
@@ -112,8 +113,8 @@ namespace System.Data.Entity
         ///     database to which a connection will be made, and initializes it from the given model.
         ///     See the class remarks for how this is used to create a connection.
         /// </summary>
-        /// <param name = "nameOrConnectionString">Either the database name or a connection string.</param>
-        /// <param name = "model">The model that will back this context.</param>
+        /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
+        /// <param name="model"> The model that will back this context. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(string nameOrConnectionString, DbCompiledModel model)
         {
@@ -125,12 +126,11 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Constructs a new context instance using the existing connection to connect to a database.
-        ///     The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection"/>
+        ///     The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection" />
         ///     is <c>false</c>.
         /// </summary>
-        /// <param name = "existingConnection">An existing connection to use for the new context.</param>
-        /// <param name = "contextOwnsConnection">If set to <c>true</c> the connection is disposed when
-        ///     the context is disposed, otherwise the caller must dispose the connection.</param>
+        /// <param name="existingConnection"> An existing connection to use for the new context. </param>
+        /// <param name="contextOwnsConnection"> If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, bool contextOwnsConnection)
         {
@@ -142,12 +142,11 @@ namespace System.Data.Entity
         /// <summary>
         ///     Constructs a new context instance using the existing connection to connect to a database,
         ///     and initializes it from the given model.
-        ///     The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection"/>
+        ///     The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection" />
         ///     is <c>false</c>.
-        ///     <param name = "existingConnection">An existing connection to use for the new context.</param>
-        ///     <param name = "model">The model that will back this context.</param>
-        ///     <param name = "contextOwnsConnection">If set to <c>true</c> the connection is disposed when
-        ///         the context is disposed, otherwise the caller must dispose the connection.</param>
+        ///     <param name="existingConnection"> An existing connection to use for the new context. </param>
+        ///     <param name="model"> The model that will back this context. </param>
+        ///     <param name="contextOwnsConnection"> If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection. </param>
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
@@ -160,9 +159,8 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Constructs a new context instance around an existing ObjectContext.
-        ///     <param name = "objectContext">An existing ObjectContext to wrap with the new context.</param>
-        ///     <param name = "dbContextOwnsObjectContext">If set to <c>true</c> the ObjectContext is disposed when
-        ///         the DbContext is disposed, otherwise the caller must dispose the connection.</param>
+        ///     <param name="objectContext"> An existing ObjectContext to wrap with the new context. </param>
+        ///     <param name="dbContextOwnsObjectContext"> If set to <c>true</c> the ObjectContext is disposed when the DbContext is disposed, otherwise the caller must dispose the connection. </param>
         /// </summary>
         public DbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
         {
@@ -211,7 +209,7 @@ namespace System.Data.Entity
         ///     More control over caching is provided through use of the DbModelBuilder and DbContextFactory
         ///     classes directly.
         /// </remarks>
-        /// <param name = "modelBuilder">The builder that defines the model for the context being created.</param>
+        /// <param name="modelBuilder"> The builder that defines the model for the context being created. </param>
         protected virtual void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }
@@ -219,7 +217,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Internal method used to make the call to the real OnModelCreating method.
         /// </summary>
-        /// <param name = "modelBuilder">The model builder.</param>
+        /// <param name="modelBuilder"> The model builder. </param>
         internal void CallOnModelCreating(DbModelBuilder modelBuilder)
         {
             OnModelCreating(modelBuilder);
@@ -249,8 +247,8 @@ namespace System.Data.Entity
         /// <remarks>
         ///     See the DbSet class for more details.
         /// </remarks>
-        /// <typeparam name = "TEntity">The type entity for which a set should be returned.</typeparam>
-        /// <returns>A set for the given entity type.</returns>
+        /// <typeparam name="TEntity"> The type entity for which a set should be returned. </typeparam>
+        /// <returns> A set for the given entity type. </returns>
         public DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             return (DbSet<TEntity>)InternalContext.Set<TEntity>();
@@ -260,8 +258,8 @@ namespace System.Data.Entity
         ///     Returns a non-generic DbSet instance for access to entities of the given type in the context,
         ///     the ObjectStateManager, and the underlying store.
         /// </summary>
-        /// <param name = "entityType">The type of entity for which a set should be returned.</param>
-        /// <returns>A set for the given entity type.</returns>
+        /// <param name="entityType"> The type of entity for which a set should be returned. </param>
+        /// <returns> A set for the given entity type. </returns>
         /// <remarks>
         ///     See the DbSet class for more details.
         /// </remarks>
@@ -275,8 +273,8 @@ namespace System.Data.Entity
         /// <summary>
         ///     Saves all changes made in this context to the underlying database.
         /// </summary>
-        /// <returns>The number of objects written to the underlying database.</returns>
-        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <returns> The number of objects written to the underlying database. </returns>
+        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         public virtual int SaveChanges()
         {
             return InternalContext.SaveChanges();
@@ -285,8 +283,8 @@ namespace System.Data.Entity
         /// <summary>
         ///     Saves all changes made in this context to the underlying database asynchronously.
         /// </summary>
-        /// <returns>The number of objects written to the underlying database.</returns>
-        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <returns> The number of objects written to the underlying database. </returns>
+        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         public Task<int> SaveChangesAsync()
         {
             return SaveChangesAsync(CancellationToken.None);
@@ -296,9 +294,9 @@ namespace System.Data.Entity
         ///     An asynchronous version of SaveChanges, which
         ///     saves all changes made in this context to the underlying database.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task that contains the number of objects written to the underlying database.</returns>
-        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task that contains the number of objects written to the underlying database. </returns>
+        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
@@ -308,7 +306,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Returns the Entity Framework ObjectContext that is underlying this context.
         /// </summary>
-        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         ObjectContext IObjectContextAdapter.ObjectContext
         {
@@ -324,12 +322,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Validates tracked entities and returns a Collection of <see cref = "DbEntityValidationResult" /> containing validation results.
+        ///     Validates tracked entities and returns a Collection of <see cref="DbEntityValidationResult" /> containing validation results.
         /// </summary>
-        /// <returns>
-        ///     Collection of validation results for invalid entities. The collection is never null and must not contain null 
-        ///     values or results for valid entities.
-        /// </returns>
+        /// <returns> Collection of validation results for invalid entities. The collection is never null and must not contain null values or results for valid entities. </returns>
         /// <remarks>
         ///     1. This method calls DetectChanges() to determine states of the tracked entities unless 
         ///     DbContextConfiguration.AutoDetectChangesEnabled is set to false.
@@ -367,8 +362,8 @@ namespace System.Data.Entity
         ///     Extension point allowing the user to override the default behavior of validating only
         ///     added and modified entities.
         /// </summary>
-        /// <param name = "entityEntry">DbEntityEntry instance that is supposed to be validated.</param>
-        /// <returns>true to proceed with validation; false otherwise.</returns>
+        /// <param name="entityEntry"> DbEntityEntry instance that is supposed to be validated. </param>
+        /// <returns> true to proceed with validation; false otherwise. </returns>
         protected virtual bool ShouldValidateEntity(DbEntityEntry entityEntry)
         {
             Contract.Requires(entityEntry != null);
@@ -378,14 +373,13 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Extension point allowing the user to customize validation of an entity or filter out validation results.
-        ///     Called by <see cref = "GetValidationErrors" />.
+        ///     Called by <see cref="GetValidationErrors" />.
         /// </summary>
-        /// <param name = "entityEntry">DbEntityEntry instance to be validated.</param>
-        /// <param name = "items">User-defined dictionary containing additional info for custom validation.
-        ///     It will be passed to <see cref = "System.ComponentModel.DataAnnotations.ValidationContext" />
-        ///     and will be exposed as <see cref = "System.ComponentModel.DataAnnotations.ValidationContext.Items" />.
-        ///     This parameter is optional and can be null.</param>
-        /// <returns>Entity validation result. Possibly null when overridden.</returns>
+        /// <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
+        /// <param name="items"> User-defined dictionary containing additional info for custom validation. It will be passed to <see
+        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext" /> and will be exposed as <see
+        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" /> . This parameter is optional and can be null. </param>
+        /// <returns> Entity validation result. Possibly null when overridden. </returns>
         protected virtual DbEntityValidationResult ValidateEntity(
             DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
@@ -397,12 +391,11 @@ namespace System.Data.Entity
         /// <summary>
         ///     Internal method that calls the protected ValidateEntity method.
         /// </summary>
-        /// <param name = "entityEntry">DbEntityEntry instance to be validated.</param>
-        /// <param name = "items">User-defined dictionary containing additional info for custom validation.
-        ///     It will be passed to <see cref = "System.ComponentModel.DataAnnotations.ValidationContext" />
-        ///     and will be exposed as <see cref = "System.ComponentModel.DataAnnotations.ValidationContext.Items" />.
-        ///     This parameter is optional and can be null.</param>
-        /// <returns>Entity validation result. Possibly null when ValidateEntity is overridden.</returns>
+        /// <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
+        /// <param name="items"> User-defined dictionary containing additional info for custom validation. It will be passed to <see
+        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext" /> and will be exposed as <see
+        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" /> . This parameter is optional and can be null. </param>
+        /// <returns> Entity validation result. Possibly null when ValidateEntity is overridden. </returns>
         internal virtual DbEntityValidationResult CallValidateEntity(DbEntityEntry entityEntry)
         {
             return ValidateEntity(entityEntry, new Dictionary<object, object>());
@@ -413,12 +406,12 @@ namespace System.Data.Entity
         #region Entity entries
 
         /// <summary>
-        ///     Gets a <see cref = "DbEntityEntry{T}" /> object for the given entity providing access to
+        ///     Gets a <see cref="DbEntityEntry{T}" /> object for the given entity providing access to
         ///     information about the entity and the ability to perform actions on the entity.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-        /// <param name = "entity">The entity.</param>
-        /// <returns>An entry for the entity.</returns>
+        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+        /// <param name="entity"> The entity. </param>
+        /// <returns> An entry for the entity. </returns>
         public DbEntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class
         {
             Contract.Requires(entity != null);
@@ -427,11 +420,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets a <see cref = "DbEntityEntry" /> object for the given entity providing access to
+        ///     Gets a <see cref="DbEntityEntry" /> object for the given entity providing access to
         ///     information about the entity and the ability to perform actions on the entity.
         /// </summary>
-        /// <param name = "entity">The entity.</param>
-        /// <returns>An entry for the entity.</returns>
+        /// <param name="entity"> The entity. </param>
+        /// <returns> An entry for the entity. </returns>
         public DbEntityEntry Entry(object entity)
         {
             Contract.Requires(entity != null);
@@ -440,13 +433,13 @@ namespace System.Data.Entity
         }
 
         #endregion
-        
+
         #region ChangeTracker and Configuration
 
         /// <summary>
         ///     Provides access to features of the context that deal with change tracking of entities.
         /// </summary>
-        /// <value>An object used to access features that deal with change tracking.</value>
+        /// <value> An object used to access features that deal with change tracking. </value>
         public DbChangeTracker ChangeTracker
         {
             get { return new DbChangeTracker(InternalContext); }
@@ -455,7 +448,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Provides access to configuration options for the context.
         /// </summary>
-        /// <value>An object used to access configuration options.</value>
+        /// <value> An object used to access configuration options. </value>
         public DbContextConfiguration Configuration
         {
             get { return new DbContextConfiguration(InternalContext); }
@@ -477,12 +470,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Disposes the context. The underlying <see cref = "ObjectContext" /> is also disposed if it was created
+        ///     Disposes the context. The underlying <see cref="ObjectContext" /> is also disposed if it was created
         ///     is by this context or ownership was passed to this context when this context was created.
-        ///     The connection to the database (<see cref = "DbConnection" /> object) is also disposed if it was created
+        ///     The connection to the database (<see cref="DbConnection" /> object) is also disposed if it was created
         ///     is by this context or ownership was passed to this context when this context was created.
         /// </summary>
-        /// <param name = "disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <param name="disposing"> <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources. </param>
         protected virtual void Dispose(bool disposing)
         {
             InternalContext.Dispose();

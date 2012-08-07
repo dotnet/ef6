@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// The VarRemapper is a utility class that can be used to "remap" Var references
-    /// in a node, or a subtree. 
+    ///     The VarRemapper is a utility class that can be used to "remap" Var references
+    ///     in a node, or a subtree.
     /// </summary>
     internal class VarRemapper : BasicOpVisitor
     {
@@ -20,19 +21,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Constructors
 
         /// <summary>
-        /// Internal constructor
+        ///     Internal constructor
         /// </summary>
-        /// <param name="command">Current iqt command</param>
+        /// <param name="command"> Current iqt command </param>
         internal VarRemapper(Command command)
             : this(command, new Dictionary<Var, Var>())
         {
         }
 
         /// <summary>
-        /// Internal constructor
+        ///     Internal constructor
         /// </summary>
-        /// <param name="command">Current iqt command</param>
-        /// <param name="varMap">Var map to be used</param>
+        /// <param name="command"> Current iqt command </param>
+        /// <param name="varMap"> Var map to be used </param>
         internal VarRemapper(Command command, Dictionary<Var, Var> varMap)
         {
             m_command = command;
@@ -44,22 +45,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Public surface
 
         /// <summary>
-        /// Add a mapping for "oldVar" - when the replace methods are invoked, they
-        /// will replace all references to "oldVar" by "newVar"
+        ///     Add a mapping for "oldVar" - when the replace methods are invoked, they
+        ///     will replace all references to "oldVar" by "newVar"
         /// </summary>
-        /// <param name="oldVar">var to replace</param>
-        /// <param name="newVar">the replacement var</param>
+        /// <param name="oldVar"> var to replace </param>
+        /// <param name="newVar"> the replacement var </param>
         internal void AddMapping(Var oldVar, Var newVar)
         {
             m_varMap[oldVar] = newVar;
         }
 
         /// <summary>
-        /// Update vars in just this node (and not the entire subtree) 
-        /// Does *not* recompute the nodeinfo - there are at least some consumers of this
-        /// function that do not want the recomputation - transformation rules, for example
+        ///     Update vars in just this node (and not the entire subtree) 
+        ///     Does *not* recompute the nodeinfo - there are at least some consumers of this
+        ///     function that do not want the recomputation - transformation rules, for example
         /// </summary>
-        /// <param name="node">current node</param>
+        /// <param name="node"> current node </param>
         internal virtual void RemapNode(Node node)
         {
             if (m_varMap.Count == 0)
@@ -70,9 +71,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Update vars in this subtree. Recompute the nodeinfo along the way
+        ///     Update vars in this subtree. Recompute the nodeinfo along the way
         /// </summary>
-        /// <param name="subTree">subtree to "remap"</param>
+        /// <param name="subTree"> subtree to "remap" </param>
         internal virtual void RemapSubtree(Node subTree)
         {
             if (m_varMap.Count == 0)
@@ -90,21 +91,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Produce a a new remapped varList
+        ///     Produce a a new remapped varList
         /// </summary>
-        /// <param name="varList"></param>
-        /// <returns>remapped varList</returns>
+        /// <param name="varList"> </param>
+        /// <returns> remapped varList </returns>
         internal VarList RemapVarList(VarList varList)
         {
             return Command.CreateVarList(MapVars(varList));
         }
 
         /// <summary>
-        /// Remap the given varList using the given varMap
+        ///     Remap the given varList using the given varMap
         /// </summary>
-        /// <param name="command"></param>
-        /// <param name="varMap"></param>
-        /// <param name="varList"></param>
+        /// <param name="command"> </param>
+        /// <param name="varMap"> </param>
+        /// <param name="varList"> </param>
         internal static VarList RemapVarList(Command command, Dictionary<Var, Var> varMap, VarList varList)
         {
             var varRemapper = new VarRemapper(command, varMap);
@@ -116,10 +117,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Private methods
 
         /// <summary>
-        /// Get the mapping for a Var - returns the var itself, mapping was found
+        ///     Get the mapping for a Var - returns the var itself, mapping was found
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v"> </param>
+        /// <returns> </returns>
         private Var Map(Var v)
         {
             Var newVar;
@@ -210,11 +211,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region VisitorMethods
 
         /// <summary>
-        ///  Default visitor for a node - does not visit the children 
-        /// The reason we have this method is because the default VisitDefault
-        /// actually visits the children, and we don't want to do that
+        ///     Default visitor for a node - does not visit the children 
+        ///     The reason we have this method is because the default VisitDefault
+        ///     actually visits the children, and we don't want to do that
         /// </summary>
-        /// <param name="n"></param>
+        /// <param name="n"> </param>
         protected override void VisitDefault(Node n)
         {
             // Do nothing. 

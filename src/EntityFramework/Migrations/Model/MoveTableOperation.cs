@@ -17,12 +17,9 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the MoveTableOperation class.
         /// </summary>
-        /// <param name = "name">Name of the table to be moved.</param>
-        /// <param name = "newSchema">Name of the schema to move the table to.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="name"> Name of the table to be moved. </param>
+        /// <param name="newSchema"> Name of the schema to move the table to. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public MoveTableOperation(string name, string newSchema, object anonymousArguments = null)
             : base(anonymousArguments)

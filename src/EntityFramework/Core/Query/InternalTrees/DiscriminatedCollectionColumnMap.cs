@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,10 +7,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    /// Represents a "discriminated" collection column.
-    /// This represents a scenario when multiple collections are represented
-    /// at the same level of the container row, and there is a need to distinguish
-    /// between these collections
+    ///     Represents a "discriminated" collection column.
+    ///     This represents a scenario when multiple collections are represented
+    ///     at the same level of the container row, and there is a need to distinguish
+    ///     between these collections
     /// </summary>
     internal class DiscriminatedCollectionColumnMap : CollectionColumnMap
     {
@@ -17,15 +18,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly object m_discriminatorValue;
 
         /// <summary>
-        /// Internal constructor
+        ///     Internal constructor
         /// </summary>
-        /// <param name="type">Column datatype</param>
-        /// <param name="name">column name</param>
-        /// <param name="elementMap">column map for collection element</param>
-        /// <param name="keys">Keys for the collection</param>
-        /// <param name="foreignKeys">Foreign keys for the collection</param>
-        /// <param name="discriminator">Discriminator column map</param>
-        /// <param name="discriminatorValue">Discriminator value</param>
+        /// <param name="type"> Column datatype </param>
+        /// <param name="name"> column name </param>
+        /// <param name="elementMap"> column map for collection element </param>
+        /// <param name="keys"> Keys for the collection </param>
+        /// <param name="foreignKeys"> Foreign keys for the collection </param>
+        /// <param name="discriminator"> Discriminator column map </param>
+        /// <param name="discriminatorValue"> Discriminator value </param>
         internal DiscriminatedCollectionColumnMap(
             TypeUsage type, string name,
             ColumnMap elementMap,
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the column that describes the discriminator
+        ///     Get the column that describes the discriminator
         /// </summary>
         internal SimpleColumnMap Discriminator
         {
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the discriminator value
+        ///     Get the discriminator value
         /// </summary>
         internal object DiscriminatorValue
         {
@@ -58,11 +59,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
@@ -70,12 +71,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"></typeparam>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
+        /// <typeparam name="TResultType"> </typeparam>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -84,9 +85,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Debugging support
+        ///     Debugging support
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override string ToString()
         {
             var str = String.Format(CultureInfo.InvariantCulture, "M{{{0}}}", Element);

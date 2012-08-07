@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Text;
 
     /// <summary>
-    ///   This class represents a collection of query parameters at the object layer.
+    ///     This class represents a collection of query parameters at the object layer.
     /// </summary>
     public sealed class ObjectParameterCollection : ICollection<ObjectParameter>
     {
@@ -27,8 +28,8 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameterCollection (ClrPerspective)
 
         /// <summary>
-        ///   This internal constructor creates a new query parameter collection and
-        ///   initializes the internal parameter storage.
+        ///     This internal constructor creates a new query parameter collection and
+        ///     initializes the internal parameter storage.
         /// </summary>
         internal ObjectParameterCollection(ClrPerspective perspective)
         {
@@ -58,18 +59,18 @@ namespace System.Data.Entity.Core.Objects
         private bool _locked;
 
         /// <summary>
-        ///   The internal storage for the query parameters in the collection.
+        ///     The internal storage for the query parameters in the collection.
         /// </summary>
         private readonly List<ObjectParameter> _parameters;
 
         /// <summary>
-        ///   A CLR perspective necessary to do type-checking on parameters as they 
-        ///   are added to the collection.
+        ///     A CLR perspective necessary to do type-checking on parameters as they 
+        ///     are added to the collection.
         /// </summary>
         private readonly ClrPerspective _perspective;
 
         /// <summary>
-        /// A string that can be used to represent the current state of this parameter collection in an ObjectQuery cache key.
+        ///     A string that can be used to represent the current state of this parameter collection in an ObjectQuery cache key.
         /// </summary>
         private string _cacheKey;
 
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Core.Objects
         // -----------------
 
         /// <summary>
-        ///   The number of parameters currently in the collection.
+        ///     The number of parameters currently in the collection.
         /// </summary>
         public int Count
         {
@@ -90,10 +91,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   This collection is read-write - parameters may be added, removed
-        ///   and [somewhat] modified at will (value only) - provided that the
-        ///   implementation the collection belongs to has not locked its parameters
-        ///   because it's command definition has been prepared.
+        ///     This collection is read-write - parameters may be added, removed
+        ///     and [somewhat] modified at will (value only) - provided that the
+        ///     implementation the collection belongs to has not locked its parameters
+        ///     because it's command definition has been prepared.
         /// </summary>
         bool ICollection<ObjectParameter>.IsReadOnly
         {
@@ -109,19 +110,13 @@ namespace System.Data.Entity.Core.Objects
         // ---------------
 
         /// <summary>
-        ///   This indexer allows callers to retrieve parameters by name. If no
-        ///   parameter by the given name exists, an exception is thrown. For
-        ///   safe existence-checking, use the Contains method instead.
+        ///     This indexer allows callers to retrieve parameters by name. If no
+        ///     parameter by the given name exists, an exception is thrown. For
+        ///     safe existence-checking, use the Contains method instead.
         /// </summary>
-        /// <param name="name">
-        ///   The name of the parameter to find.
-        /// </param>
-        /// <returns>
-        ///   The parameter object with the specified name.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   If no parameter with the specified name is found in the collection.
-        /// </exception>
+        /// <param name="name"> The name of the parameter to find. </param>
+        /// <returns> The parameter object with the specified name. </returns>
+        /// <exception cref="ArgumentOutOfRangeException">If no parameter with the specified name is found in the collection.</exception>
         public ObjectParameter this[string name]
         {
             get
@@ -148,31 +143,21 @@ namespace System.Data.Entity.Core.Objects
         #region Add
 
         /// <summary>
-        ///   This method adds the specified parameter object to the collection. If
-        ///   the parameter object already exists in the collection, an exception is 
-        ///   thrown.
+        ///     This method adds the specified parameter object to the collection. If
+        ///     the parameter object already exists in the collection, an exception is 
+        ///     thrown.
         /// </summary>
-        /// <param name="item">
-        ///   The parameter object to add to the collection.
-        /// </param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the value of the parameter argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If the parameter argument already exists in the collection. This 
-        ///   behavior differs from that of most collections which allow duplicate
-        ///   entries.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///   If another parameter with the same name as the parameter argument
-        ///   already exists in the collection. Note that the lookup is case-
-        ///   insensitive. This behavior differs from that of most collections,  
-        ///   and is more like that of a Dictionary.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   If the type of the specified parameter is invalid. 
-        /// </exception>
+        /// <param name="item"> The parameter object to add to the collection. </param>
+        /// <returns> </returns>
+        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
+        /// <exception cref="ArgumentException">If the parameter argument already exists in the collection. This 
+        ///     behavior differs from that of most collections which allow duplicate
+        ///     entries.</exception>
+        /// <exception cref="ArgumentException">If another parameter with the same name as the parameter argument
+        ///     already exists in the collection. Note that the lookup is case-
+        ///     insensitive. This behavior differs from that of most collections,  
+        ///     and is more like that of a Dictionary.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the type of the specified parameter is invalid.</exception>
         public void Add(ObjectParameter item)
         {
             DbHelpers.ThrowIfNull(item, "item");
@@ -203,9 +188,9 @@ namespace System.Data.Entity.Core.Objects
         #region Clear
 
         /// <summary>
-        ///   This method empties the entire parameter collection.
+        ///     This method empties the entire parameter collection.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public void Clear()
         {
             CheckUnlocked();
@@ -218,21 +203,12 @@ namespace System.Data.Entity.Core.Objects
         #region Contains (ObjectParameter)
 
         /// <summary>
-        ///   This methods checks for the existence of a given parameter object in the
-        ///   collection by reference.
+        ///     This methods checks for the existence of a given parameter object in the
+        ///     collection by reference.
         /// </summary>
-        /// <param name="item">
-        ///   The parameter object to look for in the collection.
-        /// </param>
-        /// <returns>
-        ///   True if the parameter object was found in the collection, false otherwise.
-        ///   Note that this is a reference-based lookup, which means that if the para-
-        ///   meter argument has the same name as a parameter object in the collection,
-        ///   this method will only return true if it's the same object. 
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the value of the parameter argument is null.
-        /// </exception>
+        /// <param name="item"> The parameter object to look for in the collection. </param>
+        /// <returns> True if the parameter object was found in the collection, false otherwise. Note that this is a reference-based lookup, which means that if the para- meter argument has the same name as a parameter object in the collection, this method will only return true if it's the same object. </returns>
+        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
         public bool Contains(ObjectParameter item)
         {
             DbHelpers.ThrowIfNull(item, "item");
@@ -245,19 +221,12 @@ namespace System.Data.Entity.Core.Objects
         #region Contains (string)
 
         /// <summary>
-        ///   This method checks for the existence of a given parameter in the collection
-        ///   by name. 
+        ///     This method checks for the existence of a given parameter in the collection
+        ///     by name.
         /// </summary>
-        /// <param name="name">
-        ///   The name of the parameter to look for in the collection.
-        /// </param>
-        /// <returns>
-        ///   True if a parameter with the specified name was found in the collection,
-        ///   false otherwise. Note that the lookup is case-insensitive.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the value of the parameter argument is null.
-        /// </exception>
+        /// <param name="name"> The name of the parameter to look for in the collection. </param>
+        /// <returns> True if a parameter with the specified name was found in the collection, false otherwise. Note that the lookup is case-insensitive. </returns>
+        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
         public bool Contains(string name)
         {
             Contract.Requires(name != null);
@@ -276,16 +245,12 @@ namespace System.Data.Entity.Core.Objects
         #region CopyTo
 
         /// <summary>
-        ///   This method allows the parameters in the collection to be copied into a
-        ///   supplied array, beginning at the specified index therein.
+        ///     This method allows the parameters in the collection to be copied into a
+        ///     supplied array, beginning at the specified index therein.
         /// </summary>
-        /// <param name="array">
-        ///   The array into which to copy the parameters.
-        /// </param>
-        /// <param name="arrayIndex">
-        ///   The index in the array at which to start copying the parameters.
-        /// </param>
-        /// <returns></returns>
+        /// <param name="array"> The array into which to copy the parameters. </param>
+        /// <param name="arrayIndex"> The index in the array at which to start copying the parameters. </param>
+        /// <returns> </returns>
         public void CopyTo(ObjectParameter[] array, int arrayIndex)
         {
             _parameters.CopyTo(array, arrayIndex);
@@ -296,23 +261,14 @@ namespace System.Data.Entity.Core.Objects
         #region Remove
 
         /// <summary>
-        ///   This method removes an instance of a parameter from the collection by 
-        ///   reference if it exists in the collection.  To remove a parameter by name, 
-        ///   first use the Contains(name) method or this[name] indexer to retrieve
-        ///   the parameter instance, then remove it using this method.
+        ///     This method removes an instance of a parameter from the collection by 
+        ///     reference if it exists in the collection.  To remove a parameter by name, 
+        ///     first use the Contains(name) method or this[name] indexer to retrieve
+        ///     the parameter instance, then remove it using this method.
         /// </summary>
-        /// <param name="item">
-        ///   The parameter object to remove from the collection.
-        /// </param>
-        /// <returns>
-        ///   True if the parameter object was found and removed from the collection,
-        ///   false otherwise. Note that this is a reference-based lookup, which means 
-        ///   that if the parameter argument has the same name as a parameter object 
-        ///   in the collection, this method will remove it only if it's the same object.  
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the value of the parameter argument is null.
-        /// </exception>
+        /// <param name="item"> The parameter object to remove from the collection. </param>
+        /// <returns> True if the parameter object was found and removed from the collection, false otherwise. Note that this is a reference-based lookup, which means that if the parameter argument has the same name as a parameter object in the collection, this method will remove it only if it's the same object. </returns>
+        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
         public bool Remove(ObjectParameter item)
         {
             DbHelpers.ThrowIfNull(item, "item");
@@ -338,8 +294,8 @@ namespace System.Data.Entity.Core.Objects
         #region GetEnumerator
 
         /// <summary>
-        ///   These methods return enumerator instances, which allow the collection to
-        ///   be iterated through and traversed.
+        ///     These methods return enumerator instances, which allow the collection to
+        ///     be iterated through and traversed.
         /// </summary>
         IEnumerator<ObjectParameter> IEnumerable<ObjectParameter>.GetEnumerator()
         {
@@ -362,11 +318,11 @@ namespace System.Data.Entity.Core.Objects
         // ---------------
 
         /// <summary>
-        /// Retrieves a string that may be used to represent this parameter collection in an ObjectQuery cache key.
-        /// If this collection has not changed since the last call to this method, the same string instance is returned.
-        /// Note that this string is used by various ObjectQueryImplementations to version the parameter collection.
+        ///     Retrieves a string that may be used to represent this parameter collection in an ObjectQuery cache key.
+        ///     If this collection has not changed since the last call to this method, the same string instance is returned.
+        ///     Note that this string is used by various ObjectQueryImplementations to version the parameter collection.
         /// </summary>
-        /// <returns>A string that may be used to represent this parameter collection in an ObjectQuery cache key.</returns>
+        /// <returns> A string that may be used to represent this parameter collection in an ObjectQuery cache key. </returns>
         internal string GetCacheKey()
         {
             if (null == _cacheKey)
@@ -411,21 +367,22 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Locks or unlocks this parameter collection, allowing its contents to be added to, removed from, or cleared.
-        /// Calling this method consecutively with the same value has no effect but does not throw an exception.
+        ///     Locks or unlocks this parameter collection, allowing its contents to be added to, removed from, or cleared.
+        ///     Calling this method consecutively with the same value has no effect but does not throw an exception.
         /// </summary>
-        /// <param name="isReadOnly">If <c>true</c>, this parameter collection is now locked; otherwise it is unlocked</param>
+        /// <param name="isReadOnly"> If <c>true</c> , this parameter collection is now locked; otherwise it is unlocked </param>
         internal void SetReadOnly(bool isReadOnly)
         {
             _locked = isReadOnly;
         }
 
         /// <summary>
-        /// Creates a new copy of the specified parameter collection containing copies of its element <see cref="ObjectParameter"/>s.
-        /// If the specified argument is <c>null</c>, then <c>null</c> is returned.
+        ///     Creates a new copy of the specified parameter collection containing copies of its element <see cref="ObjectParameter" />s.
+        ///     If the specified argument is <c>null</c>, then <c>null</c> is returned.
         /// </summary>
-        /// <param name="copyParams">The parameter collection to copy</param>
-        /// <returns>The new collection containing copies of <paramref name="copyParams"/> parameters, if <paramref name="copyParams"/> is non-null; otherwise <c>null</c>.</returns>
+        /// <param name="copyParams"> The parameter collection to copy </param>
+        /// <returns> The new collection containing copies of <paramref name="copyParams" /> parameters, if <paramref
+        ///      name="copyParams" /> is non-null; otherwise <c>null</c> . </returns>
         internal static ObjectParameterCollection DeepCopy(ObjectParameterCollection copyParams)
         {
             if (null == copyParams)
@@ -451,9 +408,9 @@ namespace System.Data.Entity.Core.Objects
         // ---------------
 
         /// <summary>
-        ///   This private method checks for the existence of a given parameter object
-        ///   by name by iterating through the list and comparing each parameter name 
-        ///   to the specified name. This is a case-insensitive lookup.
+        ///     This private method checks for the existence of a given parameter object
+        ///     by name by iterating through the list and comparing each parameter name 
+        ///     to the specified name. This is a case-insensitive lookup.
         /// </summary>
         private int IndexOf(string name)
         {
@@ -474,7 +431,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     This method successfully returns only if the parameter collection is not considered 'locked';
-        ///     otherwise an <see cref="InvalidOperationException"/> is thrown.
+        ///     otherwise an <see cref="InvalidOperationException" /> is thrown.
         /// </summary>
         private void CheckUnlocked()
         {

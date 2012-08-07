@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     Adapted from <see cref = "System.Lazy{T}" /> to allow the initializer to take an input object and
+    ///     Adapted from <see cref="System.Lazy{T}" /> to allow the initializer to take an input object and
     ///     to do one-time initialization that only has side-effects and doesn't return a value.
     /// </summary>
-    /// <typeparam name = "TInput">The type of the input.</typeparam>
+    /// <typeparam name="TInput"> The type of the input. </typeparam>
     internal class RetryAction<TInput>
     {
         #region Fields and constructors
@@ -17,9 +18,9 @@ namespace System.Data.Entity.Internal
         private Action<TInput> _action;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "RetryAction&lt;TInput&gt;" /> class.
+        ///     Initializes a new instance of the <see cref="RetryAction&lt;TInput&gt;" /> class.
         /// </summary>
-        /// <param name = "action">The action.</param>
+        /// <param name="action"> The action. </param>
         public RetryAction(Action<TInput> action)
         {
             Contract.Requires(action != null);
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Performs the action unless it has already been successfully performed before.
         /// </summary>
-        /// <param name = "input">The input to the action; ignored if the action has already succeeded.</param>
+        /// <param name="input"> The input to the action; ignored if the action has already succeeded. </param>
         [DebuggerStepThrough]
         public void PerformAction(TInput input)
         {

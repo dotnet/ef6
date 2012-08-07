@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Validation
 {
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Validation
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Exception thrown from <see cref = "DbContext.SaveChanges()" /> when validating entities fails.
+    ///     Exception thrown from <see cref="DbContext.SaveChanges()" /> when validating entities fails.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Validation
         /// <summary>
         ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
-        /// <param name = "message">The exception message.</param>
+        /// <param name="message"> The exception message. </param>
         public DbEntityValidationException(string message)
             : this(message, Enumerable.Empty<DbEntityValidationResult>())
         {
@@ -39,8 +40,8 @@ namespace System.Data.Entity.Validation
         /// <summary>
         ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
-        /// <param name = "message">The exception message.</param>
-        /// <param name = "entityValidationResults">Validation results.</param>
+        /// <param name="message"> The exception message. </param>
+        /// <param name="entityValidationResults"> Validation results. </param>
         public DbEntityValidationException(
             string message, IEnumerable<DbEntityValidationResult> entityValidationResults)
             : base(message)
@@ -55,8 +56,8 @@ namespace System.Data.Entity.Validation
         /// <summary>
         ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
-        /// <param name = "message">The exception message.</param>
-        /// <param name = "innerException">The inner exception.</param>
+        /// <param name="message"> The exception message. </param>
+        /// <param name="innerException"> The inner exception. </param>
         public DbEntityValidationException(string message, Exception innerException)
             : this(message, Enumerable.Empty<DbEntityValidationResult>(), innerException)
         {
@@ -65,9 +66,9 @@ namespace System.Data.Entity.Validation
         /// <summary>
         ///     Initializes a new instance of DbEntityValidationException.
         /// </summary>
-        /// <param name = "message">The exception message.</param>
-        /// <param name = "entityValidationResults">Validation results.</param>
-        /// <param name = "innerException">The inner exception.</param>
+        /// <param name="message"> The exception message. </param>
+        /// <param name="entityValidationResults"> Validation results. </param>
+        /// <param name="innerException"> The inner exception. </param>
         public DbEntityValidationException(
             string message, IEnumerable<DbEntityValidationResult> entityValidationResults, Exception innerException)
             : base(message, innerException)
@@ -124,7 +125,7 @@ namespace System.Data.Entity.Validation
             /// <summary>
             ///     Completes the deserialization.
             /// </summary>
-            /// <param name = "deserialized">The deserialized object.</param>
+            /// <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)
             {
                 ((DbEntityValidationException)deserialized)._state = this;

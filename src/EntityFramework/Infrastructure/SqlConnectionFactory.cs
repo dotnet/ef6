@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
@@ -15,7 +16,7 @@ namespace System.Data.Entity.Infrastructure
     ///     string when constructing a factory instance.
     /// </summary>
     /// <remarks>
-    ///     An instance of this class can be set on the <see cref = "Database" /> class to
+    ///     An instance of this class can be set on the <see cref="Database" /> class to
     ///     cause all DbContexts created with no connection information or just a database
     ///     name or connection string to use SQL Server by default.
     ///     This class is immutable since multiple threads may access instances simultaneously
@@ -42,10 +43,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Creates a new connection factory with the given BaseConnectionString property.
         /// </summary>
-        /// <param name = "baseConnectionString">
-        ///     The connection string to use for options to the database other than the 'Initial Catalog'. The 'Initial Catalog' will
-        ///     be prepended to this string based on the database name when CreateConnection is called.
-        /// </param>
+        /// <param name="baseConnectionString"> The connection string to use for options to the database other than the 'Initial Catalog'. The 'Initial Catalog' will be prepended to this string based on the database name when CreateConnection is called. </param>
         public SqlConnectionFactory(string baseConnectionString)
         {
             Contract.Requires(baseConnectionString != null);
@@ -91,8 +89,8 @@ namespace System.Data.Entity.Infrastructure
         ///     If the given string contains an '=' character then it is treated as a full connection string,
         ///     otherwise it is treated as a database name only.
         /// </summary>
-        /// <param name = "nameOrConnectionString">The database name or connection string.</param>
-        /// <returns>An initialized DbConnection.</returns>
+        /// <param name="nameOrConnectionString"> The database name or connection string. </param>
+        /// <returns> An initialized DbConnection. </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public DbConnection CreateConnection(string nameOrConnectionString)
         {

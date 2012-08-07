@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Entity SQL Parser result information.
+    ///     Entity SQL Parser result information.
     /// </summary>
     public sealed class ParseResult
     {
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// A command tree produced during parsing.
+        ///     A command tree produced during parsing.
         /// </summary>
         public DbCommandTree CommandTree
         {
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// List of <see cref="FunctionDefinition"/> objects describing query inline function definitions.
+        ///     List of <see cref="FunctionDefinition" /> objects describing query inline function definitions.
         /// </summary>
         public ReadOnlyCollection<FunctionDefinition> FunctionDefinitions
         {

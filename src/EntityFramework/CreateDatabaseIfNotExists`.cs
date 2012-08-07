@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
@@ -11,7 +12,7 @@ namespace System.Data.Entity
     ///     database only if the database does not exist.
     ///     To seed the database, create a derived class and override the Seed method.
     /// </summary>
-    /// <typeparam name = "TContext">The type of the context.</typeparam>
+    /// <typeparam name="TContext"> The type of the context. </typeparam>
     public class CreateDatabaseIfNotExists<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
@@ -25,7 +26,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Executes the strategy to initialize the database for the given context.
         /// </summary>
-        /// <param name = "context">The context.</param>
+        /// <param name="context"> The context. </param>
         public void InitializeDatabase(TContext context)
         {
             bool databaseExists;
@@ -60,7 +61,7 @@ namespace System.Data.Entity
         ///     A method that should be overridden to actually add data to the context for seeding. 
         ///     The default implementation does nothing.
         /// </summary>
-        /// <param name = "context">The context to seed.</param>
+        /// <param name="context"> The context to seed. </param>
         protected virtual void Seed(TContext context)
         {
         }

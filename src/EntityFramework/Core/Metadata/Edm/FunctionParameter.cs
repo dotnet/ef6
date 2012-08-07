@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    /// Class representing a function parameter
+    ///     Class representing a function parameter
     /// </summary>
     public sealed class FunctionParameter : MetadataItem
     {
@@ -11,11 +12,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Constructors
 
         /// <summary>
-        /// The constructor for FunctionParameter taking in a name and a TypeUsage object
+        ///     The constructor for FunctionParameter taking in a name and a TypeUsage object
         /// </summary>
-        /// <param name="name">The name of this FunctionParameter</param>
-        /// <param name="typeUsage">The TypeUsage describing the type of this FunctionParameter</param>
-        /// <param name="parameterMode">Mode of the parameter</param>
+        /// <param name="name"> The name of this FunctionParameter </param>
+        /// <param name="typeUsage"> The TypeUsage describing the type of this FunctionParameter </param>
+        /// <param name="parameterMode"> Mode of the parameter </param>
         /// <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
         /// <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
         internal FunctionParameter(string name, TypeUsage typeUsage, ParameterMode parameterMode)
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the mode of this parameter
+        ///     Gets/Sets the mode of this parameter
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the FunctionParameter instance is in ReadOnly state</exception>
@@ -59,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the identity of the member
+        ///     Returns the identity of the member
         /// </summary>
         internal override string Identity
         {
@@ -67,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the name of the member
+        ///     Returns the name of the member
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
@@ -76,8 +77,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the TypeUsage object containing the type information and facets
-        /// about the type
+        ///     Returns the TypeUsage object containing the type information and facets
+        ///     about the type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the declaring function of this parameter
+        ///     Returns the declaring function of this parameter
         /// </summary>
         public EdmFunction DeclaringFunction
         {
@@ -98,8 +99,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation 
-        /// for this type.
+        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     for this type.
         /// </summary>
         public override string ToString()
         {
@@ -107,8 +108,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Sets the member to read only mode. Once this is done, there are no changes
-        /// that can be done to this class
+        ///     Sets the member to read only mode. Once this is done, there are no changes
+        ///     that can be done to this class
         /// </summary>
         internal override void SetReadOnly()
         {

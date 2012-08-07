@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -66,10 +67,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Return all assemblies loaded in the current AppDomain that are not signed
-        /// with the Microsoft Key.
+        ///     Return all assemblies loaded in the current AppDomain that are not signed
+        ///     with the Microsoft Key.
         /// </summary>
-        /// <returns>A list of assemblies</returns>
+        /// <returns> A list of assemblies </returns>
         private static IEnumerable<Assembly> GetAlreadyLoadedNonSystemAssemblies()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -77,13 +78,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// This method returns a list of assemblies whose contents depend on whether we
-        /// are running in an ASP.NET environment. If we are indeed in a Web/ASP.NET
-        /// scenario, we pick up the assemblies that all page compilations need to
-        /// reference. If not, then we simply get the list of assemblies referenced by
-        /// the entry assembly.
+        ///     This method returns a list of assemblies whose contents depend on whether we
+        ///     are running in an ASP.NET environment. If we are indeed in a Web/ASP.NET
+        ///     scenario, we pick up the assemblies that all page compilations need to
+        ///     reference. If not, then we simply get the list of assemblies referenced by
+        ///     the entry assembly.
         /// </summary>
-        /// <returns>A list of assemblies</returns>
+        /// <returns> A list of assemblies </returns>
         private static IEnumerable<Assembly> GetAllDiscoverableAssemblies()
         {
             var assembly = Assembly.GetEntryAssembly();
@@ -149,15 +150,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            /// if two assemblies have the same full name, we will consider them as the same.
-            /// for example,
-            /// both of x and y have the full name as "{RES, Version=3.5.0.0, Culture=neutral, PublicKeyToken=null}",
-            /// although they are different instances since the ReflectionOnly field in them are different, we sitll 
-            /// consider them as the same.
+            ///     if two assemblies have the same full name, we will consider them as the same.
+            ///     for example,
+            ///     both of x and y have the full name as "{RES, Version=3.5.0.0, Culture=neutral, PublicKeyToken=null}",
+            ///     although they are different instances since the ReflectionOnly field in them are different, we sitll 
+            ///     consider them as the same.
             /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <returns></returns>
+            /// <param name="x"> </param>
+            /// <param name="y"> </param>
+            /// <returns> </returns>
             public bool Equals(Assembly x, Assembly y)
             {
                 var xname = new AssemblyName(x.FullName);

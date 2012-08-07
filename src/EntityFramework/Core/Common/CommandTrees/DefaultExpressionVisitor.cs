@@ -12,8 +12,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using CqtBuilder = System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.DbExpressionBuilder;
 
     /// <summary>
-    /// Visits each element of an expression tree from a given root expression. If any element changes, the tree is
-    /// rebuilt back to the root and the new root expression is returned; otherwise the original root expression is returned.
+    ///     Visits each element of an expression tree from a given root expression. If any element changes, the tree is
+    ///     rebuilt back to the root and the new root expression is returned; otherwise the original root expression is returned.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class DefaultExpressionVisitor : DbExpressionVisitor<DbExpression>
@@ -187,17 +187,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             var result = lambda;
             var newFormals = VisitList(
                 lambda.Variables, varRef =>
-                    {
-                        var newVarType = VisitTypeUsage(varRef.ResultType);
-                        if (!ReferenceEquals(varRef.ResultType, newVarType))
-                        {
-                            return CqtBuilder.Variable(newVarType, varRef.VariableName);
-                        }
-                        else
-                        {
-                            return varRef;
-                        }
-                    }
+                                      {
+                                          var newVarType = VisitTypeUsage(varRef.ResultType);
+                                          if (!ReferenceEquals(varRef.ResultType, newVarType))
+                                          {
+                                              return CqtBuilder.Variable(newVarType, varRef.VariableName);
+                                          }
+                                          else
+                                          {
+                                              return varRef;
+                                          }
+                                      }
                 );
             EnterScope(newFormals.ToArray()); // ToArray: Don't pass the List instance directly to OnEnterScope
             var newBody = VisitExpression(lambda.Body);

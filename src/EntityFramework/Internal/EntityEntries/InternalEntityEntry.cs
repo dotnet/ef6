@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace System.Data.Entity.Internal
     using System.Text;
 
     /// <summary>
-    ///     The internal class used to implement <see cref = "System.Data.Entity.Infrastructure.DbEntityEntry" />
-    ///     and <see cref = "System.Data.Entity.Infrastructure.DbEntityEntry{T}" />.
+    ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbEntityEntry" />
+    ///     and <see cref="System.Data.Entity.Infrastructure.DbEntityEntry{T}" />.
     ///     This internal class contains all the common implementation between the generic and non-generic
     ///     entry classes and also allows for a clean internal factoring without compromising the public API.
     /// </summary>
@@ -30,10 +31,10 @@ namespace System.Data.Entity.Internal
         private EntityType _edmEntityType;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalEntityEntry" /> class.
+        ///     Initializes a new instance of the <see cref="InternalEntityEntry" /> class.
         /// </summary>
-        /// <param name = "internalContext">The internal context.</param>
-        /// <param name = "stateEntry">The state entry.</param>
+        /// <param name="internalContext"> The internal context. </param>
+        /// <param name="stateEntry"> The state entry. </param>
         public InternalEntityEntry(InternalContext internalContext, IEntityStateEntry stateEntry)
         {
             Contract.Requires(internalContext != null);
@@ -47,11 +48,11 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalEntityEntry" /> class for an
+        ///     Initializes a new instance of the <see cref="InternalEntityEntry" /> class for an
         ///     entity which may or may not be attached to the context.
         /// </summary>
-        /// <param name = "internalContext">The internal context.</param>
-        /// <param name = "entity">The entity.</param>
+        /// <param name="internalContext"> The internal context. </param>
+        /// <param name="entity"> The entity. </param>
         public InternalEntityEntry(InternalContext internalContext, object entity)
         {
             Contract.Requires(internalContext != null);
@@ -78,7 +79,7 @@ namespace System.Data.Entity.Internal
         ///     Gets the tracked entity.
         ///     This property is virtual to allow mocking.
         /// </summary>
-        /// <value>The entity.</value>
+        /// <value> The entity. </value>
         public virtual object Entity
         {
             get { return _entity; }
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets or sets the state of the entity.
         /// </summary>
-        /// <value>The state.</value>
+        /// <value> The state. </value>
         public EntityState State
         {
             get { return IsDetached ? EntityState.Detached : _stateEntry.State; }
@@ -141,7 +142,7 @@ namespace System.Data.Entity.Internal
         ///     Gets the current property values for the tracked entity represented by this object.
         ///     This property is virtual to allow mocking.
         /// </summary>
-        /// <value>The current values.</value>
+        /// <value> The current values. </value>
         public virtual InternalPropertyValues CurrentValues
         {
             get
@@ -159,7 +160,7 @@ namespace System.Data.Entity.Internal
         ///     the database.
         ///     This property is virtual to allow mocking.
         /// </summary>
-        /// <value>The original values.</value>
+        /// <value> The original values. </value>
         public virtual InternalPropertyValues OriginalValues
         {
             get
@@ -174,7 +175,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Queries the database for copies of the values of the tracked entity as they currently exist in the database.
         /// </summary>
-        /// <returns>The store values.</returns>
+        /// <returns> The store values. </returns>
         public InternalPropertyValues GetDatabaseValues()
         {
             ValidateStateToGetValues("GetDatabaseValues", EntityState.Added);
@@ -240,9 +241,9 @@ namespace System.Data.Entity.Internal
         ///     build the eSQL query.  This method may be called recursively to query for all the sub-properties of
         ///     a complex property.
         /// </summary>
-        /// <param name = "queryBuilder">The query builder.</param>
-        /// <param name = "prefix">The qualifier with which to prefix each property name.</param>
-        /// <param name = "templateValues">The dictionary that acts as a template for the properties to query.</param>
+        /// <param name="queryBuilder"> The query builder. </param>
+        /// <param name="prefix"> The qualifier with which to prefix each property name. </param>
+        /// <param name="templateValues"> The dictionary that acts as a template for the properties to query. </param>
         private void AppendEntitySqlRow(
             StringBuilder queryBuilder, string prefix, InternalPropertyValues templateValues)
         {
@@ -288,8 +289,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Validates that a dictionary can be obtained for the state of the entity represented by this entry.
         /// </summary>
-        /// <param name = "method">The method name being used to request a dictionary.</param>
-        /// <param name = "invalidState">The state that is invalid for the request being processed.</param>
+        /// <param name="method"> The method name being used to request a dictionary. </param>
+        /// <param name="invalidState"> The state that is invalid for the request being processed. </param>
         private void ValidateStateToGetValues(string method, EntityState invalidState)
         {
             ValidateNotDetachedAndInitializeRelatedEnd(method);
@@ -318,9 +319,9 @@ namespace System.Data.Entity.Internal
         ///     Gets an internal object representing a reference navigation property.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "navigationProperty">The navigation property.</param>
-        /// <param name = "requestedType">The type of entity requested, which may be 'object' or null if any type can be accepted.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="navigationProperty"> The navigation property. </param>
+        /// <param name="requestedType"> The type of entity requested, which may be 'object' or null if any type can be accepted. </param>
+        /// <returns> The entry. </returns>
         public virtual InternalReferenceEntry Reference(string navigationProperty, Type requestedType = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
@@ -336,9 +337,9 @@ namespace System.Data.Entity.Internal
         ///     Gets an internal object representing a collection navigation property.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "navigationProperty">The navigation property.</param>
-        /// <param name = "requestedType">The type of entity requested, which may be 'object' or null f any type can be accepted.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="navigationProperty"> The navigation property. </param>
+        /// <param name="requestedType"> The type of entity requested, which may be 'object' or null f any type can be accepted. </param>
+        /// <returns> The entry. </returns>
         public virtual InternalCollectionEntry Collection(string navigationProperty, Type requestedType = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
@@ -354,9 +355,9 @@ namespace System.Data.Entity.Internal
         ///     Gets an internal object representing a navigation, scalar, or complex property.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "propertyName">Name of the property.</param>
-        /// <param name = "requestedType">The type of entity requested, which may be 'object' if any type can be accepted.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="propertyName"> Name of the property. </param>
+        /// <param name="requestedType"> The type of entity requested, which may be 'object' if any type can be accepted. </param>
+        /// <returns> The entry. </returns>
         public virtual InternalMemberEntry Member(string propertyName, Type requestedType = null)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
@@ -399,10 +400,10 @@ namespace System.Data.Entity.Internal
         ///     Gets an internal object representing a scalar or complex property.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "property">The property.</param>
-        /// <param name = "requestedType">The type of object requested, which may be null or 'object' if any type can be accepted.</param>
-        /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="property"> The property. </param>
+        /// <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
+        /// <param name="requireComplex"> if set to <c>true</c> then the found property must be a complex property. </param>
+        /// <returns> The entry. </returns>
         public virtual InternalPropertyEntry Property(
             string property, Type requestedType = null, bool requireComplex = false)
         {
@@ -413,13 +414,13 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets an internal object representing a scalar or complex property.
-        ///     The property may be a nested property on the given <see cref = "InternalPropertyEntry" />.
+        ///     The property may be a nested property on the given <see cref="InternalPropertyEntry" />.
         /// </summary>
-        /// <param name = "parentProperty">The parent property entry, or null if this is a property directly on the entity.</param>
-        /// <param name = "propertyName">Name of the property.</param>
-        /// <param name = "requestedType">The type of object requested, which may be null or 'object' if any type can be accepted.</param>
-        /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="parentProperty"> The parent property entry, or null if this is a property directly on the entity. </param>
+        /// <param name="propertyName"> Name of the property. </param>
+        /// <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
+        /// <param name="requireComplex"> if set to <c>true</c> then the found property must be a complex property. </param>
+        /// <returns> The entry. </returns>
         public InternalPropertyEntry Property(
             InternalPropertyEntry parentProperty, string propertyName, Type requestedType, bool requireComplex)
         {
@@ -428,14 +429,14 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets an internal object representing a scalar or complex property.
-        ///     The property may be a nested property on the given <see cref = "InternalPropertyEntry" />.
+        ///     The property may be a nested property on the given <see cref="InternalPropertyEntry" />.
         /// </summary>
-        /// <param name = "parentProperty">The parent property entry, or null if this is a property directly on the entity.</param>
-        /// <param name = "propertyName">Name of the property.</param>
-        /// <param name = "properties">The property split out into its parts.</param>
-        /// <param name = "requestedType">The type of object requested, which may be null or 'object' if any type can be accepted.</param>
-        /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="parentProperty"> The parent property entry, or null if this is a property directly on the entity. </param>
+        /// <param name="propertyName"> Name of the property. </param>
+        /// <param name="properties"> The property split out into its parts. </param>
+        /// <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
+        /// <param name="requireComplex"> if set to <c>true</c> then the found property must be a complex property. </param>
+        /// <returns> The entry. </returns>
         private InternalPropertyEntry Property(
             InternalPropertyEntry parentProperty, string propertyName, IList<string> properties, Type requestedType,
             bool requireComplex)
@@ -511,8 +512,8 @@ namespace System.Data.Entity.Internal
         ///     Gets metadata for the given property if that property is a navigation property or returns null
         ///     if it is not a navigation property.
         /// </summary>
-        /// <param name = "propertyName">Name of the property.</param>
-        /// <returns>Navigation property metadata or null.</returns>
+        /// <param name="propertyName"> Name of the property. </param>
+        /// <returns> Navigation property metadata or null. </returns>
         public virtual NavigationEntryMetadata GetNavigationMetadata(string propertyName)
         {
             EdmMember member;
@@ -531,8 +532,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the type of entity or entities at the target end of the given navigation property.
         /// </summary>
-        /// <param name = "navigationProperty">The navigation property.</param>
-        /// <returns>The CLR type of the entity or entities at the other end.</returns>
+        /// <param name="navigationProperty"> The navigation property. </param>
+        /// <returns> The CLR type of the entity or entities at the other end. </returns>
         private Type GetNavigationTargetType(NavigationProperty navigationProperty)
         {
             var metadataWorkspace = _internalContext.ObjectContext.MetadataWorkspace;
@@ -550,8 +551,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the related end for the navigation property with the given name.
         /// </summary>
-        /// <param name = "navigationProperty">The navigation property.</param>
-        /// <returns></returns>
+        /// <param name="navigationProperty"> The navigation property. </param>
+        /// <returns> </returns>
         public virtual IRelatedEnd GetRelatedEnd(string navigationProperty)
         {
             EdmMember member;
@@ -571,10 +572,10 @@ namespace System.Data.Entity.Internal
         ///     complex property or exists in the CLR type.
         ///     This method is public and virtual so that it can be mocked.
         /// </summary>
-        /// <param name = "propertyName">The property name.</param>
-        /// <param name = "declaringType">The type on which the property is declared.</param>
-        /// <param name = "requestedType">The type of object requested, which may be 'object' if any type can be accepted.</param>
-        /// <returns>Metadata for the property.</returns>
+        /// <param name="propertyName"> The property name. </param>
+        /// <param name="declaringType"> The type on which the property is declared. </param>
+        /// <param name="requestedType"> The type of object requested, which may be 'object' if any type can be accepted. </param>
+        /// <returns> Metadata for the property. </returns>
         public virtual PropertyEntryMetadata ValidateAndGetPropertyMetadata(
             string propertyName, Type declaringType, Type requestedType)
         {
@@ -585,8 +586,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Splits the given property name into parts delimited by dots.
         /// </summary>
-        /// <param name = "propertyName">Name of the property.</param>
-        /// <returns>The parts of the name.</returns>
+        /// <param name="propertyName"> Name of the property. </param>
+        /// <returns> The parts of the name. </returns>
         private static IList<string> SplitName(string propertyName)
         {
             Contract.Requires(propertyName != null);
@@ -599,7 +600,7 @@ namespace System.Data.Entity.Internal
         #region Handling entries for detached entities
 
         /// <summary>
-        ///     Validates that this entry is associated with an underlying <see cref = "ObjectStateEntry" /> and
+        ///     Validates that this entry is associated with an underlying <see cref="ObjectStateEntry" /> and
         ///     is not just wrapping a non-attached entity.
         /// </summary>
         private void ValidateNotDetachedAndInitializeRelatedEnd(string method)
@@ -611,7 +612,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Checks whether or not this entry is associated with an underlying <see cref = "ObjectStateEntry" /> or
+        ///     Checks whether or not this entry is associated with an underlying <see cref="ObjectStateEntry" /> or
         ///     is just wrapping a non-attached entity.
         /// </summary>
         public virtual bool IsDetached
@@ -638,7 +639,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the type of the entity being tracked.
         /// </summary>
-        /// <value>The type of the entity.</value>
+        /// <value> The type of the entity. </value>
         public virtual Type EntityType
         {
             get { return _entityType; }
@@ -678,7 +679,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the internal context.
         /// </summary>
-        /// <value>The internal context.</value>
+        /// <value> The internal context. </value>
         public InternalContext InternalContext
         {
             get { return _internalContext; }
@@ -692,8 +693,8 @@ namespace System.Data.Entity.Internal
         ///     Validates entity represented by this entity entry.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "items">User defined dictionary containing additional info for custom validation. This parameter is optional and can be null.</param>
-        /// <returns><see cref = "DbEntityValidationResult" /> containing validation result. Never null.</returns>
+        /// <param name="items"> User defined dictionary containing additional info for custom validation. This parameter is optional and can be null. </param>
+        /// <returns> <see cref="DbEntityValidationResult" /> containing validation result. Never null. </returns>
         public virtual DbEntityValidationResult GetValidationResult(IDictionary<object, object> items)
         {
             var entityValidator = InternalContext.ValidationProvider.GetEntityValidator(this);
@@ -721,14 +722,12 @@ namespace System.Data.Entity.Internal
         #region Equals\GetHashCode implementation
 
         /// <summary>
-        ///     Determines whether the specified <see cref = "System.Object" /> is equal to this instance.
-        ///     Two <see cref = "InternalEntityEntry" /> instances are considered equal if they are both entries for
-        ///     the same entity on the same <see cref = "DbContext" />.
+        ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        ///     Two <see cref="InternalEntityEntry" /> instances are considered equal if they are both entries for
+        ///     the same entity on the same <see cref="DbContext" />.
         /// </summary>
-        /// <param name = "obj">The <see cref = "System.Object" /> to compare with this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="obj"> The <see cref="System.Object" /> to compare with this instance. </param>
+        /// <returns> <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c> . </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)
@@ -741,14 +740,12 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref = "InternalEntityEntry" /> is equal to this instance.
-        ///     Two <see cref = "InternalEntityEntry" /> instances are considered equal if they are both entries for
-        ///     the same entity on the same <see cref = "DbContext" />.
+        ///     Determines whether the specified <see cref="InternalEntityEntry" /> is equal to this instance.
+        ///     Two <see cref="InternalEntityEntry" /> instances are considered equal if they are both entries for
+        ///     the same entity on the same <see cref="DbContext" />.
         /// </summary>
-        /// <param name = "other">The <see cref = "InternalEntityEntry" /> to compare with this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified <see cref = "InternalEntityEntry" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="other"> The <see cref="InternalEntityEntry" /> to compare with this instance. </param>
+        /// <returns> <c>true</c> if the specified <see cref="InternalEntityEntry" /> is equal to this instance; otherwise, <c>false</c> . </returns>
         public bool Equals(InternalEntityEntry other)
         {
             if (ReferenceEquals(this, other))
@@ -764,9 +761,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
-        /// <returns>
-        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
+        /// <returns> A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. </returns>
         public override int GetHashCode()
         {
             return _entity.GetHashCode();

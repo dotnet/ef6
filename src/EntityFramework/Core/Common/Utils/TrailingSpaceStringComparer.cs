@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// Typed version of TrailingSpaceComparer.
+    ///     Typed version of TrailingSpaceComparer.
     /// </summary>
     internal class TrailingSpaceStringComparer : IEqualityComparer<string>
     {

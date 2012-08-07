@@ -1,20 +1,21 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Linq;
 
     /// <summary>
-    ///     A concrete implementation of <see cref = "InternalPropertyEntry" /> used for properties of entities.
+    ///     A concrete implementation of <see cref="InternalPropertyEntry" /> used for properties of entities.
     /// </summary>
     internal class InternalEntityPropertyEntry : InternalPropertyEntry
     {
         #region Fields and constructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalEntityPropertyEntry" /> class.
+        ///     Initializes a new instance of the <see cref="InternalEntityPropertyEntry" /> class.
         /// </summary>
-        /// <param name = "internalEntityEntry">The internal entry.</param>
-        /// <param name = "propertyMetadata">The property info.</param>
+        /// <param name="internalEntityEntry"> The internal entry. </param>
+        /// <param name="propertyMetadata"> The property info. </param>
         public InternalEntityPropertyEntry(
             InternalEntityEntry internalEntityEntry, PropertyEntryMetadata propertyMetadata)
             : base(internalEntityEntry, propertyMetadata)
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Internal
         ///     Gets the current values of the parent entity.
         ///     That is, the current values that contains the value for this property.
         /// </summary>
-        /// <value>The parent current values.</value>
+        /// <value> The parent current values. </value>
         public override InternalPropertyValues ParentCurrentValues
         {
             get { return InternalEntityEntry.CurrentValues; }
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Internal
         ///     Gets the original values of the parent entity.
         ///     That is, the original values that contains the value for this property.
         /// </summary>
-        /// <value>The parent original values.</value>
+        /// <value> The parent original values. </value>
         public override InternalPropertyValues ParentOriginalValues
         {
             get { return InternalEntityEntry.OriginalValues; }
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Creates a delegate that will get the value of this property.
         /// </summary>
-        /// <returns>The delegate.</returns>
+        /// <returns> The delegate. </returns>
         protected override Func<object, object> CreateGetter()
         {
             Func<object, object> getter;
@@ -71,7 +72,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Creates a delegate that will set the value of this property.
         /// </summary>
-        /// <returns>The delegate.</returns>
+        /// <returns> The delegate. </returns>
         protected override Action<object, object> CreateSetter()
         {
             Action<object, object> setter;
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Internal
         ///     of is set as modified.  Since this is a property of an entity this method returns
         ///     true if the property is modified.
         /// </summary>
-        /// <returns>True if the entity property is modified.</returns>
+        /// <returns> True if the entity property is modified. </returns>
         public override bool EntityPropertyIsModified()
         {
             return InternalEntityEntry.ObjectStateEntry.GetModifiedProperties().Contains(Name);
@@ -100,7 +101,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Rejects changes to this property.
+        ///     Rejects changes to this property.
         /// </summary>
         public override void RejectEntityPropertyChanges()
         {
@@ -108,10 +109,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Walks the tree from a property of a complex property back up to the top-level
-        /// complex property and then checks whether or not DetectChanges still considers
-        /// the complex property to be modified. If it does not, then the complex property
-        /// is marked as Unchanged.
+        ///     Walks the tree from a property of a complex property back up to the top-level
+        ///     complex property and then checks whether or not DetectChanges still considers
+        ///     the complex property to be modified. If it does not, then the complex property
+        ///     is marked as Unchanged.
         /// </summary>
         public override void UpdateComplexPropertyState()
         {

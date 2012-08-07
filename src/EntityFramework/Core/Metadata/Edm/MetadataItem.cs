@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -8,15 +9,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    /// Represents the base item class for all the metadata
+    ///     Represents the base item class for all the metadata
     /// </summary>
     public abstract partial class MetadataItem
     {
         #region Constructors
 
         /// <summary>
-        /// Implementing this internal constructor so that this class can't be derived
-        /// outside this assembly
+        ///     Implementing this internal constructor so that this class can't be derived
+        ///     outside this assembly
         /// </summary>
         internal MetadataItem()
         {
@@ -68,12 +69,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public abstract BuiltInTypeKind BuiltInTypeKind { get; }
 
         /// <summary>
-        /// List of item attributes on this type
+        ///     List of item attributes on this type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.MetadataProperty, true)]
         public virtual ReadOnlyMetadataCollection<MetadataProperty> MetadataProperties
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// List of item attributes on this type
+        ///     List of item attributes on this type
         /// </summary>
         internal MetadataCollection<MetadataProperty> RawMetadataProperties
         {
@@ -103,20 +104,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// List of item attributes on this type
+        ///     List of item attributes on this type
         /// </summary>
         public Documentation Documentation { get; set; }
 
         /// <summary>
-        /// Identity of the item
+        ///     Identity of the item
         /// </summary>
         internal abstract String Identity { get; }
 
         /// <summary>
-        /// Just checks for identities to be equal
+        ///     Just checks for identities to be equal
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item"> </param>
+        /// <returns> </returns>
         internal virtual bool EdmEquals(MetadataItem item)
         {
             return ((null != item) &&
@@ -126,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns true if this item is not-changeable. Otherwise returns false.
+        ///     Returns true if this item is not-changeable. Otherwise returns false.
         /// </summary>
         internal bool IsReadOnly
         {
@@ -138,8 +139,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
-        /// it can never be changed. 
+        ///     Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
+        ///     it can never be changed.
         /// </summary>
         internal virtual void SetReadOnly()
         {
@@ -154,18 +155,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Builds identity string for this item. By default, the method calls the identity property.
+        ///     Builds identity string for this item. By default, the method calls the identity property.
         /// </summary>
-        /// <param name="builder"></param>
+        /// <param name="builder"> </param>
         internal virtual void BuildIdentity(StringBuilder builder)
         {
             builder.Append(Identity);
         }
 
         /// <summary>
-        /// Adds the given metadata property to the metadata property collection
+        ///     Adds the given metadata property to the metadata property collection
         /// </summary>
-        /// <param name="metadataProperty"></param>
+        /// <param name="metadataProperty"> </param>
         internal void AddMetadataProperties(List<MetadataProperty> metadataProperties)
         {
             MetadataProperties.Source.AtomicAddRange(metadataProperties);

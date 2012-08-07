@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections;
@@ -15,7 +16,7 @@ namespace System.Data.Entity
     ///     An IDbSet represents the collection of all entities in the context, or that can be queried from the
     ///     database, of a given type.  DbSet is a concrete implementation of IDbSet.
     /// </summary>
-    /// <typeparam name = "TEntity">The type that defines the set.</typeparam>
+    /// <typeparam name="TEntity"> The type that defines the set. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
     [ContractClass(typeof(IDbSetContracts<>))]
@@ -34,8 +35,8 @@ namespace System.Data.Entity
         ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
         ///     the designer, by the Code First fluent API, or by the DataMember attribute.
         /// </remarks>
-        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
-        /// <returns>The entity found, or null.</returns>
+        /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
+        /// <returns> The entity found, or null. </returns>
         TEntity Find(params object[] keyValues);
 
         /// <summary>
@@ -51,17 +52,17 @@ namespace System.Data.Entity
         ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
         ///     the designer, by the Code First fluent API, or by the DataMember attribute.
         /// </remarks>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <param name = "keyValues">The values of the primary key for the entity to be found.</param>
-        /// <returns>A Task containing the entity found, or null.</returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
+        /// <returns> A Task containing the entity found, or null. </returns>
         Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
 
         /// <summary>
         ///     Adds the given entity to the context underlying the set in the Added state such that it will
         ///     be inserted into the database when SaveChanges is called.
         /// </summary>
-        /// <param name = "entity">The entity to add.</param>
-        /// <returns>The entity.</returns>
+        /// <param name="entity"> The entity to add. </param>
+        /// <returns> The entity. </returns>
         /// <remarks>
         ///     Note that entities that are already in the context in some other state will have their state set
         ///     to Added.  Add is a no-op if the entity is already in the context in the Added state.
@@ -73,8 +74,8 @@ namespace System.Data.Entity
         ///     is called.  Note that the entity must exist in the context in some other state before this method
         ///     is called.
         /// </summary>
-        /// <param name = "entity">The entity to remove.</param>
-        /// <returns>The entity.</returns>
+        /// <param name="entity"> The entity to remove. </param>
+        /// <returns> The entity. </returns>
         /// <remarks>
         ///     Note that if the entity exists in the context in the Added state, then this method
         ///     will cause it to be detached from the context.  This is because an Added entity is assumed not to
@@ -86,8 +87,8 @@ namespace System.Data.Entity
         ///     Attaches the given entity to the context underlying the set.  That is, the entity is placed
         ///     into the context in the Unchanged state, just as if it had been read from the database.
         /// </summary>
-        /// <param name = "entity">The entity to attach.</param>
-        /// <returns>The entity.</returns>
+        /// <param name="entity"> The entity to attach. </param>
+        /// <returns> The entity. </returns>
         /// <remarks>
         ///     Attach is used to repopulate a context with an entity that is known to already exist in the database.
         ///     SaveChanges will therefore not attempt to insert an attached entity into the database because
@@ -98,7 +99,7 @@ namespace System.Data.Entity
         TEntity Attach(TEntity entity);
 
         /// <summary>
-        ///     Gets an <see cref = "ObservableCollection{T}" /> that represents a local view of all Added, Unchanged,
+        ///     Gets an <see cref="ObservableCollection{T}" /> that represents a local view of all Added, Unchanged,
         ///     and Modified entities in this set.  This local view will stay in sync as entities are added or
         ///     removed from the context.  Likewise, entities added to or removed from the local view will automatically
         ///     be added to or removed from the context.
@@ -108,7 +109,7 @@ namespace System.Data.Entity
         ///     extension method, and then binding to the local data through this property.  For WPF bind to this property
         ///     directly.  For Windows Forms bind to the result of calling ToBindingList on this property
         /// </remarks>
-        /// <value>The local view.</value>
+        /// <value> The local view. </value>
         ObservableCollection<TEntity> Local { get; }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace System.Data.Entity
         ///     The instance returned will be a proxy if the underlying context is configured to create
         ///     proxies and the entity type meets the requirements for creating a proxy.
         /// </summary>
-        /// <returns>The entity instance, which may be a proxy.</returns>
+        /// <returns> The entity instance, which may be a proxy. </returns>
         TEntity Create();
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace System.Data.Entity
         ///     The instance returned will be a proxy if the underlying context is configured to create
         ///     proxies and the entity type meets the requirements for creating a proxy.
         /// </summary>
-        /// <typeparam name = "TDerivedEntity">The type of entity to create.</typeparam>
+        /// <typeparam name="TDerivedEntity"> The type of entity to create. </typeparam>
         /// <returns> The entity instance, which may be a proxy. </returns>
         TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity;
     }

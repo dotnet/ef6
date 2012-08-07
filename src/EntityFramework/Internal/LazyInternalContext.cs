@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
@@ -15,8 +16,8 @@ namespace System.Data.Entity.Internal
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A <see cref = "LazyInternalContext" /> is a concrete <see cref = "InternalContext" /> type that will lazily create the
-    ///     underlying <see cref = "ObjectContext" /> when needed. The <see cref = "ObjectContext" /> created is owned by the
+    ///     A <see cref="LazyInternalContext" /> is a concrete <see cref="InternalContext" /> type that will lazily create the
+    ///     underlying <see cref="ObjectContext" /> when needed. The <see cref="ObjectContext" /> created is owned by the
     ///     internal context and will be disposed when the internal context is disposed.
     /// </summary>
     internal class LazyInternalContext : InternalContext
@@ -73,12 +74,12 @@ namespace System.Data.Entity.Internal
         private readonly IDbModelCacheKeyFactory _cacheKeyFactory;
 
         /// <summary>
-        ///     Constructs a <see cref = "LazyInternalContext" /> for the given <see cref = "DbContext" /> owner that will be initialized
+        ///     Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
         ///     on first use.
         /// </summary>
-        /// <param name = "owner">The owner <see cref = "DbContext" />.</param>
-        /// <param name = "internalConnection">Responsible for creating a connection lazily when the context is used for the first time.</param>
-        /// <param name = "model">The model, or null if it will be created by convention</param>
+        /// <param name="owner"> The owner <see cref="DbContext" /> . </param>
+        /// <param name="internalConnection"> Responsible for creating a connection lazily when the context is used for the first time. </param>
+        /// <param name="model"> The model, or null if it will be created by convention </param>
         public LazyInternalContext(
             DbContext owner,
             IInternalConnection internalConnection,
@@ -100,7 +101,7 @@ namespace System.Data.Entity.Internal
         #region ObjectContext and model
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" />.
+        ///     Returns the underlying <see cref="ObjectContext" />.
         /// </summary>
         public override ObjectContext ObjectContext
         {
@@ -112,10 +113,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// The compiled model created from the Code First pipeline, or null if Code First was
-        /// not used to create this context.
-        /// Causes the Code First pipeline to be run to create the model if it has not already been
-        /// created.
+        ///     The compiled model created from the Code First pipeline, or null if Code First was
+        ///     not used to create this context.
+        ///     Causes the Code First pipeline to be run to create the model if it has not already been
+        ///     created.
         /// </summary>
         public override DbCompiledModel CodeFirstModel
         {
@@ -127,7 +128,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" /> without causing the underlying database to be created
+        ///     Returns the underlying <see cref="ObjectContext" /> without causing the underlying database to be created
         ///     or the database initialization strategy to be executed.
         ///     This is used to get a context that can then be used for database creation/initialization.
         /// </summary>
@@ -138,7 +139,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The <see cref = "ObjectContext" /> actually being used, which may be the
+        ///     The <see cref="ObjectContext" /> actually being used, which may be the
         ///     temp context for initialization or the real context.
         /// </summary>
         private ObjectContext ObjectContextInUse
@@ -156,7 +157,7 @@ namespace System.Data.Entity.Internal
         ///     method does nothing because there is nothing to do; in particular, it does not
         ///     cause the context to be initialized.
         /// </summary>
-        /// <returns>The number of objects written to the underlying database.</returns>
+        /// <returns> The number of objects written to the underlying database. </returns>
         public override int SaveChanges()
         {
             return ObjectContextInUse == null ? 0 : base.SaveChanges();
@@ -172,8 +173,8 @@ namespace System.Data.Entity.Internal
         #region Dispose
 
         /// <summary>
-        ///     Disposes the context. The underlying <see cref = "ObjectContext" /> is also disposed.
-        ///     The connection to the database (<see cref = "DbConnection" /> object) is also disposed if it was created by
+        ///     Disposes the context. The underlying <see cref="ObjectContext" /> is also disposed.
+        ///     The connection to the database (<see cref="DbConnection" /> object) is also disposed if it was created by
         ///     the context, otherwise it is not disposed.
         /// </summary>
         public override void DisposeContext()
@@ -216,8 +217,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// The connection string as originally applied to the context. This is used to perform operations
-        /// that need the connection string in a non-mutated form, such as with security info still intact.
+        ///     The connection string as originally applied to the context. This is used to perform operations
+        ///     that need the connection string in a non-mutated form, such as with security info still intact.
         /// </summary>
         public override string OriginalConnectionString
         {
@@ -284,7 +285,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override string ProviderName
         {
             get { return _internalConnection.ProviderName; }
@@ -309,7 +310,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void OverrideConnection(IInternalConnection connection)
         {
             // Connection should not be changed once context is initialized
@@ -336,7 +337,7 @@ namespace System.Data.Entity.Internal
         #region Initialization
 
         /// <summary>
-        ///     Initializes the underlying <see cref = "ObjectContext" />.
+        ///     Initializes the underlying <see cref="ObjectContext" />.
         /// </summary>
         protected override void InitializeContext()
         {
@@ -414,10 +415,10 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Creates an immutable, cacheable representation of the model defined by this builder.
-        ///     This model can be used to create an <see cref = "ObjectContext" /> or can be passed to a <see cref = "DbContext" />
-        ///     constructor to create a <see cref = "DbContext" /> for this model.
+        ///     This model can be used to create an <see cref="ObjectContext" /> or can be passed to a <see cref="DbContext" />
+        ///     constructor to create a <see cref="DbContext" /> for this model.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public static DbCompiledModel CreateModel(LazyInternalContext internalContext)
         {
             var modelBuilder = internalContext.CreateModelBuilder();
@@ -431,10 +432,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates and configures the <see cref = "DbModelBuilder" /> instance that will be used to build the
-        ///     <see cref = "DbCompiledModel" />.
+        ///     Creates and configures the <see cref="DbModelBuilder" /> instance that will be used to build the
+        ///     <see cref="DbCompiledModel" />.
         /// </summary>
-        /// <returns>The builder.</returns>
+        /// <returns> The builder. </returns>
         public DbModelBuilder CreateModelBuilder()
         {
             var versionAttribute = new AttributeProvider().GetAttributes(Owner.GetType())
@@ -469,8 +470,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Marks the database as having not been initialized. This is called when the app calls Database.Delete so
-        /// that the database if the app attempts to then use the database again it will be re-initialized automatically.
+        ///     Marks the database as having not been initialized. This is called when the app calls Database.Delete so
+        ///     that the database if the app attempts to then use the database again it will be re-initialized automatically.
         /// </summary>
         public override void MarkDatabaseNotInitialized()
         {
@@ -482,7 +483,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Marks the database as having been initialized without actually running the <see cref = "IDatabaseInitializer{TContext}" />.
+        ///     Marks the database as having been initialized without actually running the <see cref="IDatabaseInitializer{TContext}" />.
         /// </summary>
         public override void MarkDatabaseInitialized()
         {
@@ -491,7 +492,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Runs the <see cref = "IDatabaseInitializer{TContext}" /> unless it has already been run or there
+        ///     Runs the <see cref="IDatabaseInitializer{TContext}" /> unless it has already been run or there
         ///     is no initializer for this context type in which case this method does nothing.
         /// </summary>
         protected override void InitializeDatabase()
@@ -504,7 +505,7 @@ namespace System.Data.Entity.Internal
         ///     once for the model and connection in this app domain, unless it fails by throwing an exception,
         ///     in which case it will be re-tried next time the context is initialized.
         /// </summary>
-        /// <param name = "action">The action.</param>
+        /// <param name="action"> The action. </param>
         private void InitializeDatabaseAction(Action<InternalContext> action)
         {
             if (!_inDatabaseInitialization)
@@ -536,10 +537,10 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets the default database initializer to use for this context if no other has been registered.
-        ///     For code first this property returns a <see cref = "CreateDatabaseIfNotExists{TContext}" /> instance.
+        ///     For code first this property returns a <see cref="CreateDatabaseIfNotExists{TContext}" /> instance.
         ///     For database/model first, this property returns null.
         /// </summary>
-        /// <value>The default initializer.</value>
+        /// <value> The default initializer. </value>
         public override IDatabaseInitializer<DbContext> DefaultInitializer
         {
             get { return _model != null ? _defaultCodeFirstInitializer : null; }
@@ -551,10 +552,10 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets or sets a value indicating whether lazy loading is enabled.
-        ///     If the <see cref = "ObjectContext" /> exists, then this property acts as a wrapper over the flag stored there.
-        ///     If the <see cref = "ObjectContext" /> has not been created yet, then we store the value given so we can later
-        ///     use it when we create the <see cref = "ObjectContext" />.  This allows the flag to be changed, for example in
-        ///     a DbContext constructor, without it causing the <see cref = "ObjectContext" /> to be created.
+        ///     If the <see cref="ObjectContext" /> exists, then this property acts as a wrapper over the flag stored there.
+        ///     If the <see cref="ObjectContext" /> has not been created yet, then we store the value given so we can later
+        ///     use it when we create the <see cref="ObjectContext" />.  This allows the flag to be changed, for example in
+        ///     a DbContext constructor, without it causing the <see cref="ObjectContext" /> to be created.
         /// </summary>
         public override bool LazyLoadingEnabled
         {

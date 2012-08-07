@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Common
     using System.Xml;
 
     /// <summary>
-    /// A specialization of the ProviderManifest that accepts an XmlReader
+    ///     A specialization of the ProviderManifest that accepts an XmlReader
     /// </summary>
     public abstract class DbXmlEnabledProviderManifest : DbProviderManifest
     {
@@ -57,10 +58,10 @@ namespace System.Data.Entity.Core.Common
         #endregion
 
         /// <summary>
-        /// Returns all the FacetDescriptions for a particular edmType
+        ///     Returns all the FacetDescriptions for a particular edmType
         /// </summary>
-        /// <param name="edmType">the edmType to return FacetDescriptions for.</param>
-        /// <returns>The FacetDescriptions for the edmType given.</returns>
+        /// <param name="edmType"> the edmType to return FacetDescriptions for. </param>
+        /// <returns> The FacetDescriptions for the edmType given. </returns>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
         {
             Debug.Assert(edmType is PrimitiveType, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
@@ -73,9 +74,9 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Returns all the edm functions supported by the provider manifest.
+        ///     Returns all the edm functions supported by the provider manifest.
         /// </summary>
-        /// <returns>A collection of edm functions.</returns>
+        /// <returns> A collection of edm functions. </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             return _functions;

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 {
     using System.Collections.Generic;
@@ -801,11 +802,11 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             // [cs]h and ss that take es as plural form
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord, new List<string>
-                    {
-                        "ch",
-                        "sh",
-                        "ss"
-                    }, (s) => s + "es", Culture, out newSuffixWord))
+                                {
+                                    "ch",
+                                    "sh",
+                                    "ss"
+                                }, (s) => s + "es", Culture, out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }
@@ -1260,9 +1261,9 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         ///     captalize the return word if the parameter is capitalized
         ///     if word is "Table", then return "Tables"
         /// </summary>
-        /// <param name = "word"></param>
-        /// <param name = "action"></param>
-        /// <returns></returns>
+        /// <param name="word"> </param>
+        /// <param name="action"> </param>
+        /// <returns> </returns>
         private static string Capitalize(string word, Func<string, string> action)
         {
             var result = action(word);
@@ -1289,9 +1290,9 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         /// <summary>
         ///     separate one combine word in to two parts, prefix word and the last word(suffix word)
         /// </summary>
-        /// <param name = "word"></param>
-        /// <param name = "prefixWord"></param>
-        /// <returns></returns>
+        /// <param name="word"> </param>
+        /// <param name="prefixWord"> </param>
+        /// <returns> </returns>
         private static string GetSuffixWord(string word, out string prefixWord)
         {
             // use the last space to separate the words
@@ -1344,8 +1345,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         ///     return true when the word is "[\s]*" or leading or tailing with spaces
         ///     or contains non alphabetical characters
         /// </summary>
-        /// <param name = "word"></param>
-        /// <returns></returns>
+        /// <param name="word"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private bool IsNoOpWord(string word)
         {
@@ -1370,8 +1371,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         ///     This method allow you to add word to internal PluralizationService of English.
         ///     If the singluar or the plural value was already added by this method, then an ArgumentException will be thrown.
         /// </summary>
-        /// <param name = "singular"></param>
-        /// <param name = "plural"></param>
+        /// <param name="singular"> </param>
+        /// <param name="plural"> </param>
         public void AddWord(string singular, string plural)
         {
             if (_userDictionary.ExistsInSecond(plural))

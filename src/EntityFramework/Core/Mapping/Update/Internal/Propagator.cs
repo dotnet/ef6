@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -9,41 +10,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// <para>
-    /// Comments assume there is a map between the CDM and store. Other maps are possible, but
-    /// for simplicity, we discuss the 'from' portion of the map as the C-Space and the 'to' portion
-    /// of the map as the S-Space.
-    /// </para>
-    /// <para>
-    /// This class translates C-Space change requests into S-Space change requests given a C-Space change
-    /// request, an update view loader, and a target table. It has precisely one entry
-    /// point, the static <see cref="Propagate"/> method. It performs the translation by evaluating an update
-    /// mapping view w.r.t. change requests (propagating a change request through the view).
-    /// </para>
+    ///     <para> Comments assume there is a map between the CDM and store. Other maps are possible, but for simplicity, we discuss the 'from' portion of the map as the C-Space and the 'to' portion of the map as the S-Space. </para>
+    ///     <para> This class translates C-Space change requests into S-Space change requests given a C-Space change request, an update view loader, and a target table. It has precisely one entry point, the static <see
+    ///      cref="Propagate" /> method. It performs the translation by evaluating an update mapping view w.r.t. change requests (propagating a change request through the view). </para>
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// This class implements propagation rules for the following relational operators in the update mapping 
-    /// view:
-    /// </para>
-    /// <list>
-    /// <item>Projection</item>
-    /// <item>Selection (filter)</item>
-    /// <item>Union all</item>
-    /// <item>Inner equijoin</item>
-    /// <item>Left outer equijoin</item>
-    /// </list>
+    ///     <para> This class implements propagation rules for the following relational operators in the update mapping view: </para>
+    ///     <list>
+    ///         <item>Projection</item>
+    ///         <item>Selection (filter)</item>
+    ///         <item>Union all</item>
+    ///         <item>Inner equijoin</item>
+    ///         <item>Left outer equijoin</item>
+    ///     </list>
     /// </remarks>
     internal partial class Propagator : UpdateExpressionVisitor<ChangeNode>
     {
         #region Constructors
 
         /// <summary>
-        /// Construct a new propagator.
+        ///     Construct a new propagator.
         /// </summary>
-        /// <param name="parent">UpdateTranslator supporting retrieval of changes for C-Space
-        /// extents referenced in the update mapping view.</param>
-        /// <param name="table">Table for which updates are being produced.</param>
+        /// <param name="parent"> UpdateTranslator supporting retrieval of changes for C-Space extents referenced in the update mapping view. </param>
+        /// <param name="table"> Table for which updates are being produced. </param>
         private Propagator(UpdateTranslator parent, EntitySet table)
         {
             // Initialize propagator state.
@@ -67,7 +56,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Properties
 
         /// <summary>
-        /// Gets context for updates performed by this propagator.
+        ///     Gets context for updates performed by this propagator.
         /// </summary>
         internal UpdateTranslator UpdateTranslator
         {
@@ -84,16 +73,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Methods
 
         /// <summary>
-        /// Propagate changes from C-Space (contained in <paramref name="parent" /> to the S-Space.
+        ///     Propagate changes from C-Space (contained in <paramref name="parent" /> to the S-Space.
         /// </summary>
         /// <remarks>
-        /// See Walker class for an explanation of this coding pattern.
+        ///     See Walker class for an explanation of this coding pattern.
         /// </remarks>
-        /// <param name="parent">Grouper supporting retrieval of changes for C-Space
-        /// extents referenced in the update mapping view.</param>
-        /// <param name="table">Table for which updates are being produced.</param>
-        /// <param name="umView">Update mapping view to propagate.</param>
-        /// <returns>Changes in S-Space.</returns>
+        /// <param name="parent"> Grouper supporting retrieval of changes for C-Space extents referenced in the update mapping view. </param>
+        /// <param name="table"> Table for which updates are being produced. </param>
+        /// <param name="umView"> Update mapping view to propagate. </param>
+        /// <returns> Changes in S-Space. </returns>
         internal static ChangeNode Propagate(UpdateTranslator parent, EntitySet table, DbQueryCommandTree umView)
         {
             // Construct a new instance of a propagator, which implements a visitor interface
@@ -108,10 +96,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Utility method constructs a new empty change node.
+        ///     Utility method constructs a new empty change node.
         /// </summary>
-        /// <param name="node">Update mapping view node associated with the change.</param>
-        /// <returns>Empty change node with the appropriate type for the view node.</returns>
+        /// <param name="node"> Update mapping view node associated with the change. </param>
+        /// <returns> Empty change node with the appropriate type for the view node. </returns>
         private static ChangeNode BuildChangeNode(DbExpression node)
         {
             var nodeType = node.ResultType;
@@ -127,12 +115,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Propagates changes across a join expression node by implementing progation rules w.r.t. inputs
-        /// from the left- and right- hand sides of the join. The work is actually performed
-        /// by the <see cref="JoinPropagator" />.
+        ///     Propagates changes across a join expression node by implementing progation rules w.r.t. inputs
+        ///     from the left- and right- hand sides of the join. The work is actually performed
+        ///     by the <see cref="JoinPropagator" />.
         /// </summary>
-        /// <param name="node">A join expression node.</param>
-        /// <returns>Results propagated to the given join expression node.</returns>
+        /// <param name="node"> A join expression node. </param>
+        /// <returns> Results propagated to the given join expression node. </returns>
         public override ChangeNode Visit(DbJoinExpression node)
         {
             if (DbExpressionKind.InnerJoin != node.ExpressionKind
@@ -160,18 +148,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Given the results returned for the left and right inputs to a union, propagates changes
-        /// through the union.
+        ///     Given the results returned for the left and right inputs to a union, propagates changes
+        ///     through the union.
         /// 
-        /// Propagation rule (U = union node, L = left input, R = right input, D(x) = deleted rows
-        /// in x, I(x) = inserted rows in x)
+        ///     Propagation rule (U = union node, L = left input, R = right input, D(x) = deleted rows
+        ///     in x, I(x) = inserted rows in x)
         /// 
-        /// U = L union R
-        /// D(U) = D(L) union D(R)
-        /// I(U) = I(L) union I(R)
+        ///     U = L union R
+        ///     D(U) = D(L) union D(R)
+        ///     I(U) = I(L) union I(R)
         /// </summary>
-        /// <param name="node">Union expression node in the update mapping view.</param>
-        /// <returns>Result of propagating changes to this union all node.</returns>
+        /// <param name="node"> Union expression node in the update mapping view. </param>
+        /// <returns> Result of propagating changes to this union all node. </returns>
         public override ChangeNode Visit(DbUnionAllExpression node)
         {
             // Initialize an empty change node result for the union all node
@@ -197,17 +185,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Propagate projection.
+        ///     Propagate projection.
         /// 
-        /// Propagation rule (P = projection node, S = projection input, D(x) = deleted rows in x,
-        /// I(x) = inserted rows in x)
+        ///     Propagation rule (P = projection node, S = projection input, D(x) = deleted rows in x,
+        ///     I(x) = inserted rows in x)
         /// 
-        /// P = Proj_f S
-        /// D(P) = Proj_f D(S)
-        /// I(P) = Proj_f I(S)
+        ///     P = Proj_f S
+        ///     D(P) = Proj_f D(S)
+        ///     I(P) = Proj_f I(S)
         /// </summary>
-        /// <param name="node">Projection expression node.</param>
-        /// <returns>Result of propagating changes to the projection expression node.</returns>
+        /// <param name="node"> Projection expression node. </param>
+        /// <returns> Result of propagating changes to the projection expression node. </returns>
         public override ChangeNode Visit(DbProjectExpression node)
         {
             // Initialize an empty change node result for the projection node.
@@ -236,13 +224,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Performs projection for a single row. Evaluates each projection argument against the specified 
-        /// row, returning a result with the specified type.
+        ///     Performs projection for a single row. Evaluates each projection argument against the specified 
+        ///     row, returning a result with the specified type.
         /// </summary>
-        /// <param name="node">Projection expression.</param>
-        /// <param name="row">Row to project.</param>
-        /// <param name="resultType">Type of the projected row.</param>
-        /// <returns>Projected row.</returns>
+        /// <param name="node"> Projection expression. </param>
+        /// <param name="row"> Row to project. </param>
+        /// <param name="resultType"> Type of the projected row. </param>
+        /// <returns> Projected row. </returns>
         private static PropagatorResult Project(DbProjectExpression node, PropagatorResult row, TypeUsage resultType)
         {
             Contract.Requires(node != null);
@@ -272,15 +260,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Propagation rule (F = filter node, S = input to filter, I(x) = rows inserted
-        /// into x, D(x) = rows deleted from x, Sigma_p = filter predicate)
+        ///     Propagation rule (F = filter node, S = input to filter, I(x) = rows inserted
+        ///     into x, D(x) = rows deleted from x, Sigma_p = filter predicate)
         /// 
-        /// F = Sigma_p S
-        /// D(F) = Sigma_p D(S)
-        /// I(F) = Sigma_p I(S)
+        ///     F = Sigma_p S
+        ///     D(F) = Sigma_p D(S)
+        ///     I(F) = Sigma_p I(S)
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// <param name="node"> </param>
+        /// <returns> </returns>
         public override ChangeNode Visit(DbFilterExpression node)
         {
             // Initialize an empty change node for this filter node.
@@ -303,11 +291,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Handles extent expressions (these are the terminal nodes in update mapping views). This handler
-        /// retrieves the changes from the grouper.
+        ///     Handles extent expressions (these are the terminal nodes in update mapping views). This handler
+        ///     retrieves the changes from the grouper.
         /// </summary>
-        /// <param name="node">Extent expression node</param>
-        /// <returns></returns>
+        /// <param name="node"> Extent expression node </param>
+        /// <returns> </returns>
         public override ChangeNode Visit(DbScanExpression node)
         {
             // Gets modifications requested for this extent from the grouper.

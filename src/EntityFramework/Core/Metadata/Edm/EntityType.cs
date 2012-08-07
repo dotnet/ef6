@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    /// concrete Representation the Entity Type
+    ///     concrete Representation the Entity Type
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class EntityType : EntityTypeBase
@@ -19,24 +20,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of Entity Type
+        ///     Initializes a new instance of Entity Type
         /// </summary>
-        /// <param name="name">name of the entity type</param>
-        /// <param name="namespaceName">namespace of the entity type</param>
-        /// <param name="version">version of the entity type</param>
-        /// <param name="dataSpace">dataspace in which the EntityType belongs to</param>
+        /// <param name="name"> name of the entity type </param>
+        /// <param name="namespaceName"> namespace of the entity type </param>
+        /// <param name="version"> version of the entity type </param>
+        /// <param name="dataSpace"> dataspace in which the EntityType belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityType(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
         }
 
-        /// <param name="name">name of the entity type</param>
-        /// <param name="namespaceName">namespace of the entity type</param>
-        /// <param name="version">version of the entity type</param>
-        /// <param name="dataSpace">dataspace in which the EntityType belongs to</param>
-        /// <param name="members">members of the entity type [property and navigational property]</param>
-        /// <param name="keyMemberNames">key members for the type</param>
+        /// <param name="name"> name of the entity type </param>
+        /// <param name="namespaceName"> namespace of the entity type </param>
+        /// <param name="version"> version of the entity type </param>
+        /// <param name="dataSpace"> dataspace in which the EntityType belongs to </param>
+        /// <param name="members"> members of the entity type [property and navigational property] </param>
+        /// <param name="keyMemberNames"> key members for the type </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityType(
             string name,
@@ -63,7 +64,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         #region Fields
 
-        /// <summary>cached dynamic method to construct a CLR instance</summary>
+        /// <summary>
+        ///     cached dynamic method to construct a CLR instance
+        /// </summary>
         private RefType _referenceType;
 
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
@@ -74,7 +77,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -82,11 +85,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Validates a EdmMember object to determine if it can be added to this type's 
-        /// Members collection. If this method returns without throwing, it is assumed
-        /// the member is valid. 
+        ///     Validates a EdmMember object to determine if it can be added to this type's 
+        ///     Members collection. If this method returns without throwing, it is assumed
+        ///     the member is valid.
         /// </summary>
-        /// <param name="member">The member to validate</param>
+        /// <param name="member"> The member to validate </param>
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
@@ -100,7 +103,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the list of Navigation Properties for this entity type
+        ///     Returns the list of Navigation Properties for this entity type
         /// </summary>
         public ReadOnlyMetadataCollection<NavigationProperty> NavigationProperties
         {
@@ -112,8 +115,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns just the properties from the collection
-        /// of members on this type
+        ///     Returns just the properties from the collection
+        ///     of members on this type
         /// </summary>
         public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
@@ -136,9 +139,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion // Properties
 
         /// <summary>
-        /// Returns the Reference type pointing to this entity type
+        ///     Returns the Reference type pointing to this entity type
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public RefType GetReferenceType()
         {
@@ -164,15 +167,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Attempts to get the property name for the assoication between the two given end
-        /// names.  Note that this property may not exist if a navigation property is defined
-        /// in one direction but not in the other.
+        ///     Attempts to get the property name for the assoication between the two given end
+        ///     names.  Note that this property may not exist if a navigation property is defined
+        ///     in one direction but not in the other.
         /// </summary>
-        /// <param name="relationshipType">the relationship for which a nav property is required</param>
-        /// <param name="fromName">the 'from' end of the association</param>
-        /// <param name="toName">the 'to' end of the association</param>
-        /// <param name="navigationProperty">the property name, or null if none was found</param>
-        /// <returns>true if a property was found, false otherwise</returns>
+        /// <param name="relationshipType"> the relationship for which a nav property is required </param>
+        /// <param name="fromName"> the 'from' end of the association </param>
+        /// <param name="toName"> the 'to' end of the association </param>
+        /// <param name="navigationProperty"> the property name, or null if none was found </param>
+        /// <returns> true if a property was found, false otherwise </returns>
         internal bool TryGetNavigationProperty(
             string relationshipType, string fromName, string toName, out NavigationProperty navigationProperty)
         {

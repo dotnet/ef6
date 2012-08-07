@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.ComponentModel;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     Returned by the Configuration method of <see cref = "DbContext" /> to provide access to configuration
+    ///     Returned by the Configuration method of <see cref="DbContext" /> to provide access to configuration
     ///     options for the context.
     /// </summary>
     public class DbContextConfiguration
@@ -17,9 +18,9 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalContext _internalContext;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbContextConfiguration" /> class.
+        ///     Initializes a new instance of the <see cref="DbContextConfiguration" /> class.
         /// </summary>
-        /// <param name = "internalContext">The internal context.</param>
+        /// <param name="internalContext"> The internal context. </param>
         internal DbContextConfiguration(InternalContext internalContext)
         {
             Contract.Requires(internalContext != null);
@@ -64,7 +65,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets or sets a value indicating whether lazy loading of relationships exposed as
         ///     navigation properties is enabled.  Lazy loading is enabled by default.
         /// </summary>
-        /// <value><c>true</c> if lazy loading is enabled; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if lazy loading is enabled; otherwise, <c>false</c> . </value>
         public bool LazyLoadingEnabled
         {
             get { return _internalContext.LazyLoadingEnabled; }
@@ -78,7 +79,7 @@ namespace System.Data.Entity.Infrastructure
         ///     be created for entity types that meet the requirements for being proxied.
         ///     Proxy creation is enabled by default.
         /// </summary>
-        /// <value><c>true</c> if proxy creation is enabled; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if proxy creation is enabled; otherwise, <c>false</c> . </value>
         public bool ProxyCreationEnabled
         {
             get { return _internalContext.ProxyCreationEnabled; }
@@ -86,11 +87,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the <see cref = "DbContext.ChangeTracker.DetectChanges()" />
-        ///     method is called automatically by methods of <see cref = "DbContext" /> and related classes.
+        ///     Gets or sets a value indicating whether the <see cref="DbContext.ChangeTracker.DetectChanges()" />
+        ///     method is called automatically by methods of <see cref="DbContext" /> and related classes.
         ///     The default value is true.
         /// </summary>
-        /// <value<c>true</c> if should be called automatically; otherwise, <c>false</c>.</value>
+        /// <value <c>true</c> if should be called automatically; otherwise, <c>false</c> . </value>
         public bool AutoDetectChangesEnabled
         {
             get { return _internalContext.AutoDetectChangesEnabled; }
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Gets or sets a value indicating whether tracked entities should be validated automatically when
-        ///     <see cref = "DbContext.SaveChanges()" /> is invoked.
+        ///     <see cref="DbContext.SaveChanges()" /> is invoked.
         ///     The default value is true.
         /// </summary>
         public bool ValidateOnSaveEnabled

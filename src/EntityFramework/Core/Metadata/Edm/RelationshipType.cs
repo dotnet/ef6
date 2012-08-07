@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    /// Represents the Relationship type
+    ///     Represents the Relationship type
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public abstract class RelationshipType : EntityTypeBase
@@ -16,12 +17,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of relationship type
+        ///     Initializes a new instance of relationship type
         /// </summary>
-        /// <param name="name">name of the relationship type</param>
-        /// <param name="namespaceName">namespace of the relationship type</param>
-        /// <param name="version">version of the relationship type</param>
-        /// <param name="dataSpace">dataSpace in which this edmtype belongs to</param>
+        /// <param name="name"> name of the relationship type </param>
+        /// <param name="namespaceName"> namespace of the relationship type </param>
+        /// <param name="version"> version of the relationship type </param>
+        /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal RelationshipType(
             string name,
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the list of ends for this relationship type
+        ///     Returns the list of ends for this relationship type
         /// </summary>
         public ReadOnlyMetadataCollection<RelationshipEndMember> RelationshipEndMembers
         {

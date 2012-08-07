@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     /// <summary>
-    ///     Allows the construction and modification of additional constraints that can be applied to a specific use of a primitive type in an Entity Data Model (EDM) item. See <see cref = "EdmTypeReference" /> .
+    ///     Allows the construction and modification of additional constraints that can be applied to a specific use of a primitive type in an Entity Data Model (EDM) item. See <see
+    ///      cref="EdmTypeReference" /> .
     /// </summary>
     internal class EdmPrimitiveTypeFacets : EdmDataModelItem
     {

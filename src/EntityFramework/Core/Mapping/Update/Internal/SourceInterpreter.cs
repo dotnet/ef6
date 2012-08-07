@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -7,9 +8,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics;
 
     /// <summary>
-    /// This class determines the state entries contributing to an expression
-    /// propagated through an update mapping view (values in propagated expressions
-    /// remember where they come from)
+    ///     This class determines the state entries contributing to an expression
+    ///     propagated through an update mapping view (values in propagated expressions
+    ///     remember where they come from)
     /// </summary>
     internal class SourceInterpreter
     {
@@ -25,12 +26,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly EntitySet m_sourceTable;
 
         /// <summary>
-        /// Finds all markup associated with the given source.
+        ///     Finds all markup associated with the given source.
         /// </summary>
-        /// <param name="source">Source expression. Must not be null.</param>
-        /// <param name="translator">Translator containing session information.</param>
-        /// <param name="sourceTable">Table from which the exception was thrown (must not be null).</param>
-        /// <returns>Markup.</returns>
+        /// <param name="source"> Source expression. Must not be null. </param>
+        /// <param name="translator"> Translator containing session information. </param>
+        /// <param name="sourceTable"> Table from which the exception was thrown (must not be null). </param>
+        /// <returns> Markup. </returns>
         internal static ReadOnlyCollection<IEntityStateEntry> GetAllStateEntries(
             PropagatorResult source, UpdateTranslator translator,
             EntitySet sourceTable)

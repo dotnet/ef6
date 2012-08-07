@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Design
 {
     using System.Diagnostics.CodeAnalysis;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Migrations.Design
     using System.Security;
 
     /// <summary>
-    ///     Represents an exception that occurred while running an operation in another AppDomain in the <see cref = "ToolingFacade" />.
+    ///     Represents an exception that occurred while running an operation in another AppDomain in the <see cref="ToolingFacade" />.
     /// </summary>
     [Serializable]
     public class ToolingException : Exception
@@ -22,9 +23,9 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Exception"/> class with a specified error message.
+        ///     Initializes a new instance of the <see cref="T:System.Exception" /> class with a specified error message.
         /// </summary>
-        /// <param name="message">The message that describes the error. </param>
+        /// <param name="message"> The message that describes the error. </param>
         public ToolingException(string message)
             : base(message)
         {
@@ -33,9 +34,9 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Initializes a new instance of the ToolingException class.
         /// </summary>
-        /// <param name = "message">Error that explains the reason for the exception.</param>
-        /// <param name = "innerType">The type of the exception that was thrown.</param>
-        /// <param name = "innerStackTrace">The stack trace of the exception that was thrown.</param>
+        /// <param name="message"> Error that explains the reason for the exception. </param>
+        /// <param name="innerType"> The type of the exception that was thrown. </param>
+        /// <param name="innerStackTrace"> The stack trace of the exception that was thrown. </param>
         public ToolingException(string message, string innerType, string innerStackTrace)
             : base(message)
         {
@@ -44,10 +45,10 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Exception"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+        ///     Initializes a new instance of the <see cref="T:System.Exception" /> class with a specified error message and a reference to the inner exception that is the cause of this exception.
         /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception. </param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified. </param>
+        /// <param name="message"> The error message that explains the reason for the exception. </param>
+        /// <param name="innerException"> The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified. </param>
         public ToolingException(string message, Exception innerException)
             : base(message, innerException)
         {

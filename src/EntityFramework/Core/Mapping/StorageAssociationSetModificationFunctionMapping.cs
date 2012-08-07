@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Describes modification function mappings for an association set.
+    ///     Describes modification function mappings for an association set.
     /// </summary>
     internal sealed class StorageAssociationSetModificationFunctionMapping
     {
@@ -24,17 +25,17 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Association set these functions handles.
+        ///     Association set these functions handles.
         /// </summary>
         internal readonly AssociationSet AssociationSet;
 
         /// <summary>
-        /// Delete function for this association set.
+        ///     Delete function for this association set.
         /// </summary>
         internal readonly StorageModificationFunctionMapping DeleteFunctionMapping;
 
         /// <summary>
-        /// Insert function for this association set.
+        ///     Insert function for this association set.
         /// </summary>
         internal readonly StorageModificationFunctionMapping InsertFunctionMapping;
 

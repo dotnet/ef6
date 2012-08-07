@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents PropertyRef Element for Entity keys and referential constraints
+    ///     Represents PropertyRef Element for Entity keys and referential constraints
     /// </summary>
     internal sealed class PropertyRefElement : SchemaElement
     {
@@ -17,9 +18,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// construct a KeyProperty object
+        ///     construct a KeyProperty object
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         public PropertyRefElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        /// property chain from KeyedType to Leaf property
+        ///     property chain from KeyedType to Leaf property
         /// </summary>
         public StructuredProperty Property
         {
@@ -47,12 +48,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Since this method can be used in different context, this method does not add any errors
-        /// Please make sure that the caller of this methods handles the error case and add errors 
-        /// appropriately
+        ///     Since this method can be used in different context, this method does not add any errors
+        ///     Please make sure that the caller of this methods handles the error case and add errors 
+        ///     appropriately
         /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
+        /// <param name="entityType"> </param>
+        /// <returns> </returns>
         internal bool ResolveNames(SchemaEntityType entityType)
         {
             if (string.IsNullOrEmpty(Name))

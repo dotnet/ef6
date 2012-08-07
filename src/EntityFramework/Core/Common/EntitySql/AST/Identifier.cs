@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     using System.Data.Entity.Resources;
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents an identifier ast node.
+    ///     Represents an identifier ast node.
     /// </summary>
     internal sealed class Identifier : Node
     {
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly bool _isEscaped;
 
         /// <summary>
-        /// Initializes identifier.
+        ///     Initializes identifier.
         /// </summary>
         internal Identifier(string name, bool isEscaped, string query, int inputPos)
             : base(query, inputPos)
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns identifier name (without escaping chars).
+        ///     Returns identifier name (without escaping chars).
         /// </summary>
         internal string Name
         {
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// True if an identifier is escaped.
+        ///     True if an identifier is escaped.
         /// </summary>
         internal bool IsEscaped
         {

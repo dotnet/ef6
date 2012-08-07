@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Collections.Generic;
@@ -30,8 +31,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Get the related rules given certain DataModelItem
         /// </summary>
-        /// <param name = "itemToValidate"> The <see cref = "DataModelItem" /> to validate </param>
-        /// <returns> A collection of <see cref = "DataModelValidationRule" /> </returns>
+        /// <param name="itemToValidate"> The <see cref="DataModelItem" /> to validate </param>
+        /// <returns> A collection of <see cref="DataModelValidationRule" /> </returns>
         internal IEnumerable<DataModelValidationRule> GetRules(DataModelItem itemToValidate)
         {
             return _rules.Where(r => r.ValidatedType.IsAssignableFrom(itemToValidate.GetType()));

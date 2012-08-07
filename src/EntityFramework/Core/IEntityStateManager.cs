@@ -1,13 +1,14 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    /// Interface allowing an IEntityAdapter to analyze state/change tracking information maintained
-    /// by a state manager in order to perform updates on a backing store (and push back the results
-    /// of those updates).
+    ///     Interface allowing an IEntityAdapter to analyze state/change tracking information maintained
+    ///     by a state manager in order to perform updates on a backing store (and push back the results
+    ///     of those updates).
     /// </summary>
     internal interface IEntityStateManager
     {

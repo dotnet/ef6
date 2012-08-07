@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Linq;
 
     /// <summary>
-    /// Writes a description of a given expression, in a format determined by the specific implementation of a derived type
+    ///     Writes a description of a given expression, in a format determined by the specific implementation of a derived type
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal abstract class ExpressionDumper : DbExpressionVisitor
@@ -20,43 +21,43 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         #region (Pseudo) Public API
 
         /// <summary>
-        /// Begins a new Dump block with the specified name
+        ///     Begins a new Dump block with the specified name
         /// </summary>
-        /// <param name="name">The name of the block</param>
+        /// <param name="name"> The name of the block </param>
         internal void Begin(string name)
         {
             Begin(name, null);
         }
 
         /// <summary>
-        /// Begins a new Dump block with the specified name and specified attributes
+        ///     Begins a new Dump block with the specified name and specified attributes
         /// </summary>
-        /// <param name="name">The name of the block</param>
-        /// <param name="attrs">The named attributes of the block. May be null</param>
+        /// <param name="name"> The name of the block </param>
+        /// <param name="attrs"> The named attributes of the block. May be null </param>
         internal abstract void Begin(string name, Dictionary<string, object> attrs);
 
         /// <summary>
-        /// Ends the Dump block with the specified name. 
-        /// The caller should not assumer that this name will be verified
-        /// against the last name used in a Begin call.
+        ///     Ends the Dump block with the specified name. 
+        ///     The caller should not assumer that this name will be verified
+        ///     against the last name used in a Begin call.
         /// </summary>
-        /// <param name="name">The name of the block</param>
+        /// <param name="name"> The name of the block </param>
         internal abstract void End(string name);
 
         /// <summary>
-        /// Dumps a DbExpression by visiting it.
+        ///     Dumps a DbExpression by visiting it.
         /// </summary>
-        /// <param name="target">The DbExpression to dump</param>
+        /// <param name="target"> The DbExpression to dump </param>
         internal void Dump(DbExpression target)
         {
             target.Accept(this);
         }
 
         /// <summary>
-        /// Dumps a DbExpression with the specified block name preceeding and succeeding (decorating) it.
+        ///     Dumps a DbExpression with the specified block name preceeding and succeeding (decorating) it.
         /// </summary>
-        /// <param name="e">The DbExpression to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="e"> The DbExpression to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(DbExpression e, string name)
         {
             Begin(name);
@@ -65,10 +66,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps a DbExpressionBinding with the specified decoration
+        ///     Dumps a DbExpressionBinding with the specified decoration
         /// </summary>
-        /// <param name="binding">The DbExpressionBinding to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="binding"> The DbExpressionBinding to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(DbExpressionBinding binding, string name)
         {
             Begin(name);
@@ -77,9 +78,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps a DbExpressionBinding including its VariableName and DbExpression
+        ///     Dumps a DbExpressionBinding including its VariableName and DbExpression
         /// </summary>
-        /// <param name="binding">The DbExpressionBinding to dump</param>
+        /// <param name="binding"> The DbExpressionBinding to dump </param>
         internal void Dump(DbExpressionBinding binding)
         {
             Begin("DbExpressionBinding", "VariableName", binding.VariableName);
@@ -90,10 +91,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps a DbGroupExpressionBinding with the specified decoration
+        ///     Dumps a DbGroupExpressionBinding with the specified decoration
         /// </summary>
-        /// <param name="binding">The DbGroupExpressionBinding to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="binding"> The DbGroupExpressionBinding to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(DbGroupExpressionBinding binding, string name)
         {
             Begin(name);
@@ -102,9 +103,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps a DbGroupExpressionBinding including its VariableName, GroupVariableName and DbExpression
+        ///     Dumps a DbGroupExpressionBinding including its VariableName, GroupVariableName and DbExpression
         /// </summary>
-        /// <param name="binding">The DbGroupExpressionBinding to dump</param>
+        /// <param name="binding"> The DbGroupExpressionBinding to dump </param>
         internal void Dump(DbGroupExpressionBinding binding)
         {
             Begin("DbGroupExpressionBinding", "VariableName", binding.VariableName, "GroupVariableName", binding.GroupVariableName);
@@ -115,13 +116,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps each DbExpression in the specified enumerable. The entire output is decorated with the 'pluralName'
-        /// block name while each element DbExpression is decorated with the 'singularName' block name.
-        /// If the list is empty only the pluralName decoration start/end will appear.
+        ///     Dumps each DbExpression in the specified enumerable. The entire output is decorated with the 'pluralName'
+        ///     block name while each element DbExpression is decorated with the 'singularName' block name.
+        ///     If the list is empty only the pluralName decoration start/end will appear.
         /// </summary>
-        /// <param name="exprs">The enumerable list of Expressions to dump</param>
-        /// <param name="pluralName">The overall list decoration block name</param>
-        /// <param name="singularName">The decoration block name that will be applied to each element DbExpression</param>
+        /// <param name="exprs"> The enumerable list of Expressions to dump </param>
+        /// <param name="pluralName"> The overall list decoration block name </param>
+        /// <param name="singularName"> The decoration block name that will be applied to each element DbExpression </param>
         internal void Dump(IEnumerable<DbExpression> exprs, string pluralName, string singularName)
         {
             Begin(pluralName);
@@ -137,11 +138,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps each Parameter metadata in the specified enumerable. The entire output is decorated with the "Parameters"
-        /// block name while each metadata element is decorated with the "Parameter" block name.
-        /// If the list is empty only the "Parameters" decoration start/end will appear.
+        ///     Dumps each Parameter metadata in the specified enumerable. The entire output is decorated with the "Parameters"
+        ///     block name while each metadata element is decorated with the "Parameter" block name.
+        ///     If the list is empty only the "Parameters" decoration start/end will appear.
         /// </summary>
-        /// <param name="paramList">The enumerable list of Parameter metadata to dump</param>
+        /// <param name="paramList"> The enumerable list of Parameter metadata to dump </param>
         internal void Dump(IEnumerable<FunctionParameter> paramList)
         {
             Begin("Parameters");
@@ -155,10 +156,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified Type metadata instance with the specified decoration
+        ///     Dumps the specified Type metadata instance with the specified decoration
         /// </summary>
-        /// <param name="type">The Type metadata to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="type"> The Type metadata to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(TypeUsage type, string name)
         {
             Begin(name);
@@ -167,9 +168,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified Type metadata instance
+        ///     Dumps the specified Type metadata instance
         /// </summary>
-        /// <param name="type">The Type metadata to dump</param>
+        /// <param name="type"> The Type metadata to dump </param>
         internal void Dump(TypeUsage type)
         {
             var facetInfo = new Dictionary<string, object>();
@@ -184,10 +185,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified EDM type metadata instance with the specified decoration
+        ///     Dumps the specified EDM type metadata instance with the specified decoration
         /// </summary>
-        /// <param name="type">The type metadata to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="type"> The type metadata to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(EdmType type, string name)
         {
             Begin(name);
@@ -196,9 +197,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified type metadata instance
+        ///     Dumps the specified type metadata instance
         /// </summary>
-        /// <param name="type">The type metadata to dump</param>
+        /// <param name="type"> The type metadata to dump </param>
         internal void Dump(EdmType type)
         {
             Begin(
@@ -210,10 +211,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified Relation metadata instance with the specified decoration
+        ///     Dumps the specified Relation metadata instance with the specified decoration
         /// </summary>
-        /// <param name="type">The Relation metadata to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="type"> The Relation metadata to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(RelationshipType type, string name)
         {
             Begin(name);
@@ -222,9 +223,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified Relation metadata instance
+        ///     Dumps the specified Relation metadata instance
         /// </summary>
-        /// <param name="type">The Relation metadata to dump</param>
+        /// <param name="type"> The Relation metadata to dump </param>
         internal void Dump(RelationshipType type)
         {
             Begin(
@@ -237,9 +238,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified EdmFunction metadata instance
+        ///     Dumps the specified EdmFunction metadata instance
         /// </summary>
-        /// <param name="function">The EdmFunction metadata to dump.</param>
+        /// <param name="function"> The EdmFunction metadata to dump. </param>
         internal void Dump(EdmFunction function)
         {
             Begin("Function", "Name", function.Name, "Namespace", function.NamespaceName);
@@ -261,9 +262,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified EdmProperty metadata instance
+        ///     Dumps the specified EdmProperty metadata instance
         /// </summary>
-        /// <param name="prop">The EdmProperty metadata to dump</param>
+        /// <param name="prop"> The EdmProperty metadata to dump </param>
         internal void Dump(EdmProperty prop)
         {
             Begin("Property", "Name", prop.Name, "Nullable", prop.Nullable);
@@ -273,10 +274,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified Relation End EdmMember metadata instance with the specified decoration
+        ///     Dumps the specified Relation End EdmMember metadata instance with the specified decoration
         /// </summary>
-        /// <param name="end">The Relation End metadata to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="end"> The Relation End metadata to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(RelationshipEndMember end, string name)
         {
             Begin(name);
@@ -293,10 +294,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified Navigation Property EdmMember metadata instance with the specified decoration
+        ///     Dumps the specified Navigation Property EdmMember metadata instance with the specified decoration
         /// </summary>
-        /// <param name="navProp">The Navigation Property metadata to dump</param>
-        /// <param name="name">The decorating block name</param>
+        /// <param name="navProp"> The Navigation Property metadata to dump </param>
+        /// <param name="name"> The decorating block name </param>
         internal void Dump(NavigationProperty navProp, string name)
         {
             Begin(name);
@@ -314,9 +315,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        /// Dumps the specified DbLambda instance
+        ///     Dumps the specified DbLambda instance
         /// </summary>
-        /// <param name="lambda">The DbLambda to dump.</param>
+        /// <param name="lambda"> The DbLambda to dump. </param>
         internal void Dump(DbLambda lambda)
         {
             Begin("DbLambda");

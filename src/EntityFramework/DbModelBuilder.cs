@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
@@ -27,10 +28,11 @@ namespace System.Data.Entity
     ///     This code centric approach to building an Entity Data Model (EDM) model is known as 'Code First'.
     /// </summary>
     /// <remarks>
-    ///     DbModelBuilder is typically used to configure a model by overriding <see cref = "DbContext.OnModelCreating(DbModelBuilder)" />. 
+    ///     DbModelBuilder is typically used to configure a model by overriding <see
+    ///      cref="DbContext.OnModelCreating(DbModelBuilder)" />. 
     ///     You can also use DbModelBuilder independently of DbContext to build a model and then construct a 
-    ///     <see cref = "DbContext" /> or <see cref = "T:System.Data.Objects.ObjectContext" />.
-    ///     The recommended approach, however, is to use OnModelCreating in <see cref = "DbContext" /> as
+    ///     <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" />.
+    ///     The recommended approach, however, is to use OnModelCreating in <see cref="DbContext" /> as
     ///     the workflow is more intuitive and takes care of common tasks, such as caching the created model.
     /// 
     ///     Types that form your model are registered with DbModelBuilder and optional configuration can be
@@ -53,7 +55,7 @@ namespace System.Data.Entity
         private readonly object _lock = new object();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbModelBuilder" /> class. 
+        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class. 
         /// 
         ///     The process of discovering the initial model will use the set of conventions included 
         ///     in the most recent version of the Entity Framework installed on your machine.
@@ -70,10 +72,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbModelBuilder" /> class that will use 
+        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class that will use 
         ///     a specific set of conventions to discover the initial model.
         /// </summary>
-        /// <param name = "modelBuilderVersion">The version of conventions to be used.</param>
+        /// <param name="modelBuilderVersion"> The version of conventions to be used. </param>
         public DbModelBuilder(DbModelBuilderVersion modelBuilderVersion)
             : this(new ModelConfiguration.Configuration.ModelConfiguration(), modelBuilderVersion)
         {
@@ -144,8 +146,8 @@ namespace System.Data.Entity
         ///     Excludes a type from the model. This is used to remove types from the model that were added 
         ///     by convention during initial model discovery.
         /// </summary>
-        /// <typeparam name = "T">The type to be excluded.</typeparam>
-        /// <returns>The same DbModelBuilder instance so that multiple calls can be chained.</returns>
+        /// <typeparam name="T"> The type to be excluded. </typeparam>
+        /// <returns> The same DbModelBuilder instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public virtual DbModelBuilder Ignore<T>()
             where T : class
@@ -159,7 +161,7 @@ namespace System.Data.Entity
         ///     Configures the default database schema name. The default database schema name is used
         ///     when resolving database objects that do not have an explicitly configured schema name.
         /// </summary>
-        /// <param name="schema">The name of the default database schema.</param>
+        /// <param name="schema"> The name of the default database schema. </param>
         public virtual void HasDefaultSchema(string schema)
         {
             _modelConfiguration.DefaultSchema = schema;
@@ -169,8 +171,8 @@ namespace System.Data.Entity
         ///     Excludes the specified type(s) from the model. This is used to remove types from the model that were added 
         ///     by convention during initial model discovery.
         /// </summary>
-        /// <param name = "types">The types to be excluded from the model.</param>
-        /// <returns>The same DbModelBuilder instance so that multiple calls can be chained.</returns>
+        /// <param name="types"> The types to be excluded from the model. </param>
+        /// <returns> The same DbModelBuilder instance so that multiple calls can be chained. </returns>
         public virtual DbModelBuilder Ignore(IEnumerable<Type> types)
         {
             Contract.Requires(types != null);
@@ -188,8 +190,8 @@ namespace System.Data.Entity
         ///     configure the entity. This method can be called multiple times for the same entity to
         ///     perform multiple lines of configuration.
         /// </summary>
-        /// <typeparam name = "TEntityType">The type to be registered or configured.</typeparam>
-        /// <returns>The configuration object for the specified entity type.</returns>
+        /// <typeparam name="TEntityType"> The type to be registered or configured. </typeparam>
+        /// <returns> The configuration object for the specified entity type. </returns>
         public virtual EntityTypeConfiguration<TEntityType> Entity<TEntityType>()
             where TEntityType : class
         {
@@ -203,8 +205,8 @@ namespace System.Data.Entity
         ///     configure the entity. This method can be called multiple times for the same type to
         ///     perform multiple lines of configuration.
         /// </summary>
-        /// <param name = "entityType">The type to be registered or configured.</param>
-        /// <returns>The configuration object for the specified entity type.</returns>
+        /// <param name="entityType"> The type to be registered or configured. </param>
+        /// <returns> The configuration object for the specified entity type. </returns>
         internal virtual EntityTypeConfiguration Entity(Type entityType)
         {
             Contract.Requires(entityType != null);
@@ -219,8 +221,8 @@ namespace System.Data.Entity
         ///     configure the complex type. This method can be called multiple times for the same type to
         ///     perform multiple lines of configuration.
         /// </summary>
-        /// <typeparam name = "TComplexType">The type to be registered or configured.</typeparam>
-        /// <returns>The configuration object for the specified complex type.</returns>
+        /// <typeparam name="TComplexType"> The type to be registered or configured. </typeparam>
+        /// <returns> The configuration object for the specified complex type. </returns>
         public virtual ComplexTypeConfiguration<TComplexType> ComplexType<TComplexType>()
             where TComplexType : class
         {
@@ -236,7 +238,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the <see cref = "ConfigurationRegistrar" /> for this DbModelBuilder. 
+        ///     Gets the <see cref="ConfigurationRegistrar" /> for this DbModelBuilder. 
         ///     The registrar allows derived entity and complex type configurations to be registered with this builder.
         /// </summary>
         public virtual ConfigurationRegistrar Configurations
@@ -245,12 +247,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref = "DbModel" /> based on the configuration performed using this builder.
+        ///     Creates a <see cref="DbModel" /> based on the configuration performed using this builder.
         ///     The connection is used to determine the database provider being used as this
         ///     affects the database layer of the generated model.
         /// </summary>
-        /// <param name = "providerConnection">Connection to use to determine provider information.</param>
-        /// <returns>The model that was built.</returns>
+        /// <param name="providerConnection"> Connection to use to determine provider information. </param>
+        /// <returns> The model that was built. </returns>
         public virtual DbModel Build(DbConnection providerConnection)
         {
             Contract.Requires(providerConnection != null);
@@ -262,12 +264,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref = "DbModel" /> based on the configuration performed using this builder.
+        ///     Creates a <see cref="DbModel" /> based on the configuration performed using this builder.
         ///     Provider information must be specified because this affects the database layer of the generated model.
         ///     For SqlClient the invariant name is 'System.Data.SqlClient' and the manifest token is the version year (i.e. '2005', '2008' etc.)
         /// </summary>
-        /// <param name = "providerInfo">The database provider that the model will be used with.</param>
-        /// <returns>The model that was built.</returns>
+        /// <param name="providerInfo"> The database provider that the model will be used with. </param>
+        /// <returns> The model that was built. </returns>
         public virtual DbModel Build(DbProviderInfo providerInfo)
         {
             Contract.Requires(providerInfo != null);

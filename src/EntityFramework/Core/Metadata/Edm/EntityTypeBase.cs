@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents the Entity Type
+    ///     Represents the Entity Type
     /// </summary>
     public abstract class EntityTypeBase : StructuralType
     {
@@ -17,12 +18,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of Entity Type
+        ///     Initializes a new instance of Entity Type
         /// </summary>
-        /// <param name="name">name of the entity type</param>
-        /// <param name="namespaceName">namespace of the entity type</param>
-        /// <param name="version">version of the entity type</param>
-        /// <param name="dataSpace">dataSpace in which this edmtype belongs to</param>
+        /// <param name="name"> name of the entity type </param>
+        /// <param name="namespaceName"> namespace of the entity type </param>
+        /// <param name="version"> version of the entity type </param>
+        /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityTypeBase(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the list of all the key members for this entity type
+        ///     Returns the list of all the key members for this entity type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
         public virtual ReadOnlyMetadataCollection<EdmMember> KeyMembers
@@ -66,8 +67,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the list of the member names that form the key for this entity type
-        /// Perf Bug #529294: To cache the list of member names that form the key for the entity type
+        ///     Returns the list of the member names that form the key for this entity type
+        ///     Perf Bug #529294: To cache the list of member names that form the key for the entity type
         /// </summary>
         internal virtual string[] KeyMemberNames
         {
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Returns the list of all the key members for this entity type
+        ///     Returns the list of all the key members for this entity type
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if member argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the EntityType has a base type of another EntityTypeBase. In this case KeyMembers should be added to the base type</exception>
@@ -116,7 +117,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Makes this property readonly
+        ///     Makes this property readonly
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -128,10 +129,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Checks for each property to be non-null and then adds it to the member collection
+        ///     Checks for each property to be non-null and then adds it to the member collection
         /// </summary>
-        /// <param name="members">members for this type</param>
-        /// <param name="entityType">the membersCollection to which the members should be added</param>
+        /// <param name="members"> members for this type </param>
+        /// <param name="entityType"> the membersCollection to which the members should be added </param>
         internal static void CheckAndAddMembers(
             IEnumerable<EdmMember> members,
             EntityType entityType)
@@ -150,16 +151,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Checks for each key member to be non-null 
-        /// also check for it to be present in the members collection
-        /// and then adds it to the KeyMembers collection.
+        ///     Checks for each key member to be non-null 
+        ///     also check for it to be present in the members collection
+        ///     and then adds it to the KeyMembers collection.
         /// 
-        /// Throw if the key member is not already in the members 
-        /// collection. Cannot do much other than that as the 
-        /// Key members is just an Ienumerable of the names
-        /// of the members.
+        ///     Throw if the key member is not already in the members 
+        ///     collection. Cannot do much other than that as the 
+        ///     Key members is just an Ienumerable of the names
+        ///     of the members.
         /// </summary>
-        /// <param name="keyMembers">the list of keys (member names) to be added for the given type</param>
+        /// <param name="keyMembers"> the list of keys (member names) to be added for the given type </param>
         internal void CheckAndAddKeyMembers(IEnumerable<String> keyMembers)
         {
             foreach (var keyMember in keyMembers)

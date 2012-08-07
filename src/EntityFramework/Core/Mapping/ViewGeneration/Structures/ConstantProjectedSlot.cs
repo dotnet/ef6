@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -7,14 +8,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    /// A constant that can be projected in a cell query.
+    ///     A constant that can be projected in a cell query.
     /// </summary>
     internal sealed class ConstantProjectedSlot : ProjectedSlot
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a slot with constant value being <paramref name="value"/>.
+        ///     Creates a slot with constant value being <paramref name="value" />.
         /// </summary>
         internal ConstantProjectedSlot(Constant value)
         {
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Fields
 
         /// <summary>
-        /// The actual value.
+        ///     The actual value.
         /// </summary>
         private readonly Constant m_constant;
 
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Properties
 
         /// <summary>
-        /// Returns the value stored in this constant.
+        ///     Returns the value stored in this constant.
         /// </summary>
         internal Constant CellConstant
         {

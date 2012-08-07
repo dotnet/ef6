@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// SetOp Transformation Rules
+    ///     SetOp Transformation Rules
     /// </summary>
     internal static class SetOpRules
     {
@@ -20,29 +21,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             new SimpleRule(OpType.Except, ProcessSetOpOverEmptySet);
 
         /// <summary>
-        /// Process a SetOp when one of the inputs is an emptyset. 
+        ///     Process a SetOp when one of the inputs is an emptyset. 
         /// 
-        /// An emptyset is represented by a Filter(X, ConstantPredicate)
-        ///    where the ConstantPredicate has a value of "false"
+        ///     An emptyset is represented by a Filter(X, ConstantPredicate)
+        ///     where the ConstantPredicate has a value of "false"
         /// 
-        /// The general rules are
-        ///    UnionAll(X, EmptySet) => X
-        ///    UnionAll(EmptySet, X) => X
-        ///    Intersect(EmptySet, X) => EmptySet
-        ///    Intersect(X, EmptySet) => EmptySet
-        ///    Except(EmptySet, X) => EmptySet
-        ///    Except(X, EmptySet) => X
+        ///     The general rules are
+        ///     UnionAll(X, EmptySet) => X
+        ///     UnionAll(EmptySet, X) => X
+        ///     Intersect(EmptySet, X) => EmptySet
+        ///     Intersect(X, EmptySet) => EmptySet
+        ///     Except(EmptySet, X) => EmptySet
+        ///     Except(X, EmptySet) => X
         /// 
-        /// These rules then translate into 
-        ///    UnionAll: return the non-empty input
-        ///    Intersect: return the empty input
-        ///    Except: return the "left" input 
+        ///     These rules then translate into 
+        ///     UnionAll: return the non-empty input
+        ///     Intersect: return the empty input
+        ///     Except: return the "left" input
         /// </summary>
-        /// <param name="context">Rule processing context</param>
-        /// <param name="setOpNode">the current setop tree</param>
-        /// <param name="filterNodeIndex">Index of the filter node in the setop</param>
-        /// <param name="newNode">transformed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> Rule processing context </param>
+        /// <param name="setOpNode"> the current setop tree </param>
+        /// <param name="filterNodeIndex"> Index of the filter node in the setop </param>
+        /// <param name="newNode"> transformed subtree </param>
+        /// <returns> transformation status </returns>
         private static bool ProcessSetOpOverEmptySet(RuleProcessingContext context, Node setOpNode, out Node newNode)
         {
             var leftChildIsEmptySet = context.Command.GetExtendedNodeInfo(setOpNode.Child0).MaxRows == RowCount.Zero;
@@ -83,11 +84,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All SetOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-            {
-                Rule_UnionAllOverEmptySet,
-                Rule_IntersectOverEmptySet,
-                Rule_ExceptOverEmptySet,
-            };
+                                                    {
+                                                        Rule_UnionAllOverEmptySet,
+                                                        Rule_IntersectOverEmptySet,
+                                                        Rule_ExceptOverEmptySet,
+                                                    };
 
         #endregion
     }

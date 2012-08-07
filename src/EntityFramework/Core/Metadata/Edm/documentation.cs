@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    /// Class representing the Documentation associated with an item
+    ///     Class representing the Documentation associated with an item
     /// </summary>
     public sealed class Documentation : MetadataItem
     {
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Constructors
 
         /// <summary>
-        /// Default constructor - primarily created for supporting usage of this Documentation class by SOM.
+        ///     Default constructor - primarily created for supporting usage of this Documentation class by SOM.
         /// </summary>
         internal Documentation()
         {
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -35,9 +36,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the Summary for this Documentation instance.
+        ///     Gets the Summary for this Documentation instance.
         /// </summary>
-        /// 
         public string Summary
         {
             get { return _summary; }
@@ -55,9 +55,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the LongDescription for this Documentation instance.
+        ///     Gets the LongDescription for this Documentation instance.
         /// </summary>
-        /// 
         public string LongDescription
         {
             get { return _longDescription; }
@@ -75,8 +74,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// This property is required to be implemented for inheriting from MetadataItem. As there can be atmost one
-        /// instance of a nested-Documentation, return the constant "Documentation" as it's identity.
+        ///     This property is required to be implemented for inheriting from MetadataItem. As there can be atmost one
+        ///     instance of a nested-Documentation, return the constant "Documentation" as it's identity.
         /// </summary>
         internal override string Identity
         {
@@ -84,9 +83,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns true if this Documentation instance contains only null/empty summary and longDescription
+        ///     Returns true if this Documentation instance contains only null/empty summary and longDescription
         /// </summary>
-        /// 
         public bool IsEmpty
         {
             get

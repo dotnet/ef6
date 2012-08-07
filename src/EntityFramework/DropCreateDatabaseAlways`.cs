@@ -9,7 +9,7 @@ namespace System.Data.Entity
     ///     database the first time that a context is used in the app domain.
     ///     To seed the database, create a derived class and override the Seed method.
     /// </summary>
-    /// <typeparam name = "TContext">The type of the context.</typeparam>
+    /// <typeparam name="TContext"> The type of the context. </typeparam>
     public class DropCreateDatabaseAlways<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
@@ -23,10 +23,12 @@ namespace System.Data.Entity
         /// <summary>
         ///     Executes the strategy to initialize the database for the given context.
         /// </summary>
-        /// <param name = "context">The context.</param>
+        /// <param name="context"> The context. </param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="context"/> is <c>null</c>.
-        /// </exception>
+        ///     <paramref name="context" />
+        ///     is
+        ///     <c>null</c>
+        ///     .</exception>
         public void InitializeDatabase(TContext context)
         {
             context.Database.Delete();
@@ -43,7 +45,7 @@ namespace System.Data.Entity
         ///     A method that should be overridden to actually add data to the context for seeding. 
         ///     The default implementation does nothing.
         /// </summary>
-        /// <param name = "context">The context to seed.</param>
+        /// <param name="context"> The context to seed. </param>
         protected virtual void Seed(TContext context)
         {
         }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
@@ -90,7 +91,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        /// Gets a dictionary of string resources to add to the migration resource file.
+        ///     Gets a dictionary of string resources to add to the migration resource file.
         /// </summary>
         public IDictionary<string, object> Resources
         {

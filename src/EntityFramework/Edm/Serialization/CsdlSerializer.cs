@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Data.Entity.Edm.Common;
@@ -10,7 +11,8 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Xml;
 
     /// <summary>
-    ///     Serializes an <see cref = "EdmModel" /> that conforms to the restrictions of a single CSDL schema file to an XML writer. The model to be serialized must contain a single <see cref = "EdmNamespace" /> and a single <see cref = "EdmEntityContainer" /> .
+    ///     Serializes an <see cref="EdmModel" /> that conforms to the restrictions of a single CSDL schema file to an XML writer. The model to be serialized must contain a single <see
+    ///      cref="EdmNamespace" /> and a single <see cref="EdmEntityContainer" /> .
     /// </summary>
     internal class CsdlSerializer
     {
@@ -19,10 +21,11 @@ namespace System.Data.Entity.Edm.Serialization
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
         /// <summary>
-        ///     Serialize the <see cref = "EdmModel" /> to the XmlWriter.
+        ///     Serialize the <see cref="EdmModel" /> to the XmlWriter.
         /// </summary>
-        /// <param name = "model"> The EdmModel to serialize, mut have only one <see cref = "EdmNamespace" /> and one <see cref = "EdmEntityContainer" /> </param>
-        /// <param name = "xmlWriter"> The XmlWriter to serialize to </param>
+        /// <param name="model"> The EdmModel to serialize, mut have only one <see cref="EdmNamespace" /> and one <see
+        ///      cref="EdmEntityContainer" /> </param>
+        /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         public bool Serialize(EdmModel model, XmlWriter xmlWriter)
         {
             Contract.Requires(model != null);

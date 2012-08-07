@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
@@ -6,8 +7,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    /// Class representing a metadata property on an item. Supports
-    /// redirection from MetadataProperty instance to item property value.
+    ///     Class representing a metadata property on an item. Supports
+    ///     redirection from MetadataProperty instance to item property value.
     /// </summary>
     internal sealed class MetadataPropertyValue
     {

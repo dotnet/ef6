@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Exception during save changes to store
+    ///     Exception during save changes to store
     /// </summary>
     [Serializable]
     public class UpdateException : DataException
@@ -18,37 +19,37 @@ namespace System.Data.Entity.Core
         #region constructors
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public UpdateException()
         {
         }
 
         /// <summary>
-        /// Constructor that takes a message
+        ///     Constructor that takes a message
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message"> </param>
         public UpdateException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Constructor that takes a message and an inner exception
+        ///     Constructor that takes a message and an inner exception
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="innerException"></param>
+        /// <param name="message"> </param>
+        /// <param name="innerException"> </param>
         public UpdateException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Constructor that takes a message and an inner exception
+        ///     Constructor that takes a message and an inner exception
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="innerException"></param>
-        /// <param name="stateEntries"></param>
+        /// <param name="message"> </param>
+        /// <param name="innerException"> </param>
+        /// <param name="stateEntries"> </param>
         public UpdateException(string message, Exception innerException, IEnumerable<ObjectStateEntry> stateEntries)
             : base(message, innerException)
         {
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Gets state entries implicated in the error.
+        ///     Gets state entries implicated in the error.
         /// </summary>
         public ReadOnlyCollection<ObjectStateEntry> StateEntries
         {
@@ -65,10 +66,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// The protected constructor for serialization
+        ///     The protected constructor for serialization
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
+        /// <param name="info"> </param>
+        /// <param name="context"> </param>
         protected UpdateException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Validation
 {
     /// <summary>
@@ -18,10 +19,10 @@ namespace System.Data.Entity.Validation
         private readonly string _errorMessage;
 
         /// <summary>
-        ///     Creates an instance of <see cref = "DbValidationError" />.
+        ///     Creates an instance of <see cref="DbValidationError" />.
         /// </summary>
-        /// <param name = "propertyName">Name of the invalid property. Can be null.</param>
-        /// <param name = "errorMessage">Validation error message. Can be null.</param>
+        /// <param name="propertyName"> Name of the invalid property. Can be null. </param>
+        /// <param name="errorMessage"> Validation error message. Can be null. </param>
         public DbValidationError(string propertyName, string errorMessage)
         {
             _propertyName = propertyName;

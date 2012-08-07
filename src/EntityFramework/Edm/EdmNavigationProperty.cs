@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -25,12 +26,12 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmAssociationType" /> that specifies the association over which navigation takes place.
+        ///     Gets or sets the <see cref="EdmAssociationType" /> that specifies the association over which navigation takes place.
         /// </summary>
         public virtual EdmAssociationType Association { get; set; }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmAssociationEnd" /> that specifies which association end is the 'destination' end of the navigation and produces the navigation property result.
+        ///     Gets or sets the <see cref="EdmAssociationEnd" /> that specifies which association end is the 'destination' end of the navigation and produces the navigation property result.
         /// </summary>
         public virtual EdmAssociationEnd ResultEnd { get; set; }
     }

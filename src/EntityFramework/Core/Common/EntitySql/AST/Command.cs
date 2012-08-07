@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents eSQL command as node. 
+    ///     Represents eSQL command as node.
     /// </summary>
     internal sealed class Command : Node
     {
@@ -10,10 +11,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Statement _statement;
 
         /// <summary>
-        /// Initializes eSQL command.
+        ///     Initializes eSQL command.
         /// </summary>
-        /// <param name="nsDeclList">optional namespace imports</param>
-        /// <param name="statement">command statement</param>
+        /// <param name="nsDeclList"> optional namespace imports </param>
+        /// <param name="statement"> command statement </param>
         internal Command(NodeList<NamespaceImport> nsImportList, Statement statement)
         {
             _namespaceImportList = nsImportList;
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns optional namespace imports. May be null.
+        ///     Returns optional namespace imports. May be null.
         /// </summary>
         internal NodeList<NamespaceImport> NamespaceImportList
         {
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns command statement.
+        ///     Returns command statement.
         /// </summary>
         internal Statement Statement
         {

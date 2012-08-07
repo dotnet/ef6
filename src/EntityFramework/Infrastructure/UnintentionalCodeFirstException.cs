@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Resources;
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Thrown when a context is generated from the <see cref = "DbContext" /> templates in Database First or Model
+    ///     Thrown when a context is generated from the <see cref="DbContext" /> templates in Database First or Model
     ///     First mode and is then used in Code First mode.
     /// </summary>
     /// <remarks>
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Infrastructure
         #region Constructors and fields
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "UnintentionalCodeFirstException" /> class.
+        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
         public UnintentionalCodeFirstException()
             : base(Strings.UnintentionalCodeFirstException_Message)
@@ -28,29 +29,29 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "UnintentionalCodeFirstException" /> class.
+        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
-        /// <param name = "info">The object that holds the serialized object data.</param>
-        /// <param name = "context">The contextual information about the source or destination.</param>
+        /// <param name="info"> The object that holds the serialized object data. </param>
+        /// <param name="context"> The contextual information about the source or destination. </param>
         protected UnintentionalCodeFirstException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "UnintentionalCodeFirstException" /> class.
+        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
-        /// <param name = "message">The message.</param>
+        /// <param name="message"> The message. </param>
         public UnintentionalCodeFirstException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "UnintentionalCodeFirstException" /> class.
+        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
-        /// <param name = "message">The message.</param>
-        /// <param name = "innerException">The inner exception.</param>
+        /// <param name="message"> The message. </param>
+        /// <param name="innerException"> The inner exception. </param>
         public UnintentionalCodeFirstException(string message, Exception innerException)
             : base(message, innerException)
         {

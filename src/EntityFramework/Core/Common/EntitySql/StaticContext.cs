@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents a projection item definition scope entry.
+    ///     Represents a projection item definition scope entry.
     /// </summary>
     internal sealed class ProjectionItemDefinitionScopeEntry : ScopeEntry
     {
@@ -26,8 +27,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
     }
 
     /// <summary>
-    /// Represents a free variable scope entry. 
-    /// Example: parameters of an inline function definition are free variables in the scope of the function definition.
+    ///     Represents a free variable scope entry. 
+    ///     Example: parameters of an inline function definition are free variables in the scope of the function definition.
     /// </summary>
     internal sealed class FreeVariableScopeEntry : ScopeEntry
     {
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     }
 
     /// <summary>
-    /// Represents a generic list of scopes.
+    ///     Represents a generic list of scopes.
     /// </summary>
     internal sealed class ScopeManager
     {
@@ -54,7 +55,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly List<Scope> _scopes = new List<Scope>();
 
         /// <summary>
-        /// Initialize scope manager using given key-string comparer.
+        ///     Initialize scope manager using given key-string comparer.
         /// </summary>
         internal ScopeManager(IEqualityComparer<string> keyComparer)
         {
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Enter a new scope.
+        ///     Enter a new scope.
         /// </summary>
         internal void EnterScope()
         {
@@ -70,7 +71,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Leave the current scope.
+        ///     Leave the current scope.
         /// </summary>
         internal void LeaveScope()
         {
@@ -79,8 +80,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Return current scope index.
-        /// Outer scopes have smaller index values than inner scopes.
+        ///     Return current scope index.
+        ///     Outer scopes have smaller index values than inner scopes.
         /// </summary>
         internal int CurrentScopeIndex
         {
@@ -88,7 +89,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Return current scope.
+        ///     Return current scope.
         /// </summary>
         internal Scope CurrentScope
         {
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Get a scope by the index.
+        ///     Get a scope by the index.
         /// </summary>
         internal Scope GetScopeByIndex(int scopeIndex)
         {
@@ -112,7 +113,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Rollback all scopes to the scope at the index.
+        ///     Rollback all scopes to the scope at the index.
         /// </summary>
         internal void RollbackToScope(int scopeIndex)
         {
@@ -144,7 +145,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// True if key exists in current scope.
+        ///     True if key exists in current scope.
         /// </summary>
         internal bool IsInCurrentScope(string key)
         {

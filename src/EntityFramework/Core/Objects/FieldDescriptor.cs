@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
@@ -19,25 +20,21 @@ namespace System.Data.Entity.Core.Objects
         private readonly bool _isReadOnly;
 
         /// <summary>
-        /// For testing purpuses only.
+        ///     For testing purpuses only.
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="propertyName"> </param>
         internal FieldDescriptor(string propertyName)
             : base(propertyName, null)
         {
         }
 
         /// <summary>
-        /// Construct a new instance of the FieldDescriptor class that describes a property
-        /// on items of the supplied type.
+        ///     Construct a new instance of the FieldDescriptor class that describes a property
+        ///     on items of the supplied type.
         /// </summary>
-        /// <param name="itemType">Type of object whose property is described by this FieldDescriptor.</param>
-        /// <param name="isReadOnly">
-        /// <b>True</b> if property value on item can be modified; otherwise <b>false</b>.
-        /// </param>
-        /// <param name="property">
-        /// EdmProperty that describes the property on the item.
-        /// </param>
+        /// <param name="itemType"> Type of object whose property is described by this FieldDescriptor. </param>
+        /// <param name="isReadOnly"> <b>True</b> if property value on item can be modified; otherwise <b>false</b> . </param>
+        /// <param name="property"> EdmProperty that describes the property on the item. </param>
         internal FieldDescriptor(Type itemType, bool isReadOnly, EdmProperty property)
             : base(property.Name, null)
         {
@@ -49,10 +46,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Determine a CLR Type to use a property descriptro form an EDM TypeUsage
+        ///     Determine a CLR Type to use a property descriptro form an EDM TypeUsage
         /// </summary>
-        /// <param name="typeUsage">The EDM TypeUsage containing metadata about the type</param>
-        /// <returns>A CLR type that represents that EDM type</returns>
+        /// <param name="typeUsage"> The EDM TypeUsage containing metadata about the type </param>
+        /// <returns> A CLR type that represents that EDM type </returns>
         private Type DetermineClrType(TypeUsage typeUsage)
         {
             Type result = null;
@@ -104,12 +101,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Get <see cref="EdmProperty"/> instance associated with this field descriptor.
+        ///     Get <see cref="EdmProperty" /> instance associated with this field descriptor.
         /// </summary>
-        /// <value>
-        /// The <see cref="EdmProperty"/> instance associated with this field descriptor,
-        /// or null if there is no EDM property association.
-        /// </value>
+        /// <value> The <see cref="EdmProperty" /> instance associated with this field descriptor, or null if there is no EDM property association. </value>
         internal EdmProperty EdmProperty
         {
             get { return _property; }

@@ -1,208 +1,209 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    /// List of all the built in types
+    ///     List of all the built in types
     /// </summary>
     public enum BuiltInTypeKind
     {
         /// <summary>
-        /// Association Type Kind
+        ///     Association Type Kind
         /// </summary>
         AssociationEndMember = 0,
 
         /// <summary>
-        /// AssociationSetEnd Kind
+        ///     AssociationSetEnd Kind
         /// </summary>
         AssociationSetEnd,
 
         /// <summary>
-        /// AssociationSet Kind
+        ///     AssociationSet Kind
         /// </summary>
         AssociationSet,
 
         /// <summary>
-        /// Association Type Kind
+        ///     Association Type Kind
         /// </summary>
         AssociationType,
 
         /// <summary>
-        /// EntitySetBase Kind
+        ///     EntitySetBase Kind
         /// </summary>
         EntitySetBase,
 
         /// <summary>
-        /// Entity Type Base Kind
+        ///     Entity Type Base Kind
         /// </summary>
         EntityTypeBase,
 
         /// <summary>
-        /// Collection Type Kind
+        ///     Collection Type Kind
         /// </summary>
         CollectionType,
 
         /// <summary>
-        /// Collection Kind
+        ///     Collection Kind
         /// </summary>
         CollectionKind,
 
         /// <summary>
-        /// Complex Type Kind
+        ///     Complex Type Kind
         /// </summary>
         ComplexType,
 
         /// <summary>
-        /// Documentation Kind
+        ///     Documentation Kind
         /// </summary>
         Documentation,
 
         /// <summary>
-        /// DeleteAction Type Kind
+        ///     DeleteAction Type Kind
         /// </summary>
         OperationAction,
 
         /// <summary>
-        /// Edm Type Kind
+        ///     Edm Type Kind
         /// </summary>
         EdmType,
 
         /// <summary>
-        /// Entity Container Kind
+        ///     Entity Container Kind
         /// </summary>
         EntityContainer,
 
         /// <summary>
-        /// Entity Set Kind
+        ///     Entity Set Kind
         /// </summary>
         EntitySet,
 
         /// <summary>
-        /// Entity Type Kind
+        ///     Entity Type Kind
         /// </summary>
         EntityType,
 
         /// <summary>
-        /// Enumeration Type Kind
+        ///     Enumeration Type Kind
         /// </summary>
         EnumType,
 
         /// <summary>
-        /// Enum Member Kind
+        ///     Enum Member Kind
         /// </summary>
         EnumMember,
 
         /// <summary>
-        /// Facet Kind
+        ///     Facet Kind
         /// </summary>
         Facet,
 
         /// <summary>
-        /// EdmFunction Kind
+        ///     EdmFunction Kind
         /// </summary>
         EdmFunction,
 
         /// <summary>
-        /// Function Parameter Kind
+        ///     Function Parameter Kind
         /// </summary>
         FunctionParameter,
 
         /// <summary>
-        /// Global Item Type Kind
+        ///     Global Item Type Kind
         /// </summary>
         GlobalItem,
 
         /// <summary>
-        /// Metadata Property Kind
+        ///     Metadata Property Kind
         /// </summary>
         MetadataProperty,
 
         /// <summary>
-        /// Navigation Property Kind
+        ///     Navigation Property Kind
         /// </summary>
         NavigationProperty,
 
         /// <summary>
-        /// Metadata Item Type Kind
+        ///     Metadata Item Type Kind
         /// </summary>
         MetadataItem,
 
         /// <summary>
-        /// EdmMember Type Kind
+        ///     EdmMember Type Kind
         /// </summary>
         EdmMember,
 
         /// <summary>
-        /// Parameter Mode Kind
+        ///     Parameter Mode Kind
         /// </summary>
         ParameterMode,
 
         /// <summary>
-        /// Primitive Type Kind
+        ///     Primitive Type Kind
         /// </summary>
         PrimitiveType,
 
         /// <summary>
-        /// Primitive Type Kind Kind
+        ///     Primitive Type Kind Kind
         /// </summary>
         PrimitiveTypeKind,
 
         /// <summary>
-        /// EdmProperty Type Kind
+        ///     EdmProperty Type Kind
         /// </summary>
         EdmProperty,
 
         /// <summary>
-        /// ProviderManifest Type Kind
+        ///     ProviderManifest Type Kind
         /// </summary>
         ProviderManifest,
 
         /// <summary>
-        /// Referential Constraint Type Kind
+        ///     Referential Constraint Type Kind
         /// </summary>
         ReferentialConstraint,
 
         /// <summary>
-        /// Ref Type Kind
+        ///     Ref Type Kind
         /// </summary>
         RefType,
 
         /// <summary>
-        /// RelationshipEnd Type Kind
+        ///     RelationshipEnd Type Kind
         /// </summary>
         RelationshipEndMember,
 
         /// <summary>
-        /// Relationship Multiplicity Type Kind
+        ///     Relationship Multiplicity Type Kind
         /// </summary>
         RelationshipMultiplicity,
 
         /// <summary>
-        /// Relationship Set Type Kind
+        ///     Relationship Set Type Kind
         /// </summary>
         RelationshipSet,
 
         /// <summary>
-        /// Relationship Type
+        ///     Relationship Type
         /// </summary>
         RelationshipType,
 
         /// <summary>
-        /// Row Type Kind
+        ///     Row Type Kind
         /// </summary>
         RowType,
 
         /// <summary>
-        /// Simple Type Kind
+        ///     Simple Type Kind
         /// </summary>
         SimpleType,
 
         /// <summary>
-        /// Structural Type Kind
+        ///     Structural Type Kind
         /// </summary>
         StructuralType,
 
         /// <summary>
-        /// Type Information Kind
+        ///     Type Information Kind
         /// </summary>
         TypeUsage,
 

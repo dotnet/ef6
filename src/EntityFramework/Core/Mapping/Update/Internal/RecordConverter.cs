@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Resources;
@@ -6,22 +7,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Converts records to new instance expressions. Assumes that all inputs come from a single data reader (because
-    /// it caches record layout). If multiple readers are used, multiple converters must be constructed in case
-    /// the different readers return different layouts for types.
+    ///     Converts records to new instance expressions. Assumes that all inputs come from a single data reader (because
+    ///     it caches record layout). If multiple readers are used, multiple converters must be constructed in case
+    ///     the different readers return different layouts for types.
     /// </summary>
     /// <remarks>
-    /// Conventions for modifiedProperties enumeration: null means all properties are modified, empty means none,
-    /// non-empty means some.
+    ///     Conventions for modifiedProperties enumeration: null means all properties are modified, empty means none,
+    ///     non-empty means some.
     /// </remarks>
     internal class RecordConverter
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new converter given a command tree context. Initializes a new record layout cache.
+        ///     Initializes a new converter given a command tree context. Initializes a new record layout cache.
         /// </summary>
-        /// <param name="updateTranslator">Sets <see cref="m_updateTranslator" /></param>
+        /// <param name="updateTranslator"> Sets <see cref="m_updateTranslator" /> </param>
         internal RecordConverter(UpdateTranslator updateTranslator)
         {
             m_updateTranslator = updateTranslator;
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Fields
 
         /// <summary>
-        /// Context used to produce expressions.
+        ///     Context used to produce expressions.
         /// </summary>
         private readonly UpdateTranslator m_updateTranslator;
 
@@ -41,15 +42,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Methods
 
         /// <summary>
-        /// Converts original values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
-        /// a relationship set instance.
+        ///     Converts original values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
+        ///     a relationship set instance.
         /// </summary>
         /// <remarks>
-        /// This method is not thread safe.
+        ///     This method is not thread safe.
         /// </remarks>
-        /// <param name="stateEntry">Gets state entry this record is associated with.</param>
-        /// <param name="modifiedPropertiesBehavior">Indicates how to determine whether a property is modified.</param>
-        /// <returns>New instance expression.</returns>
+        /// <param name="stateEntry"> Gets state entry this record is associated with. </param>
+        /// <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
+        /// <returns> New instance expression. </returns>
         internal PropagatorResult ConvertOriginalValuesToPropagatorResult(
             IEntityStateEntry stateEntry, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
@@ -58,15 +59,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Converts current values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
-        /// a relationship set instance.
+        ///     Converts current values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
+        ///     a relationship set instance.
         /// </summary>
         /// <remarks>
-        /// This method is not thread safe.
+        ///     This method is not thread safe.
         /// </remarks>
-        /// <param name="stateEntry">Gets state entry this record is associated with.</param>
-        /// <param name="modifiedPropertiesBehavior">Indicates how to determine whether a property is modified.</param>
-        /// <returns>New instance expression.</returns>
+        /// <param name="stateEntry"> Gets state entry this record is associated with. </param>
+        /// <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
+        /// <returns> New instance expression. </returns>
         internal PropagatorResult ConvertCurrentValuesToPropagatorResult(
             IEntityStateEntry stateEntry, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {

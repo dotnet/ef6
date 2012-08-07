@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections;
@@ -19,10 +20,10 @@ namespace System.Data.Entity.Internal
         private readonly object[] _parameters;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalSqlQuery" /> class.
+        ///     Initializes a new instance of the <see cref="InternalSqlQuery" /> class.
         /// </summary>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name = "parameters">The parameters.</param>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="parameters"> The parameters. </param>
         internal InternalSqlQuery(string sql, object[] parameters)
         {
             Contract.Requires(sql != null);
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the SQL query string,
         /// </summary>
-        /// <value>The SQL query.</value>
+        /// <value> The SQL query. </value>
         public string Sql
         {
             get { return _sql; }
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the parameters.
         /// </summary>
-        /// <value>The parameters.</value>
+        /// <value> The parameters. </value>
         public object[] Parameters
         {
             get { return _parameters; }
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Internal
         ///     If the query is tracking entities, then this method returns a new query that will
         ///     not track entities.
         /// </summary>
-        /// <returns>A no-tracking query.</returns>
+        /// <returns> A no-tracking query. </returns>
         public abstract InternalSqlQuery AsNoTracking();
 
         #endregion
@@ -70,9 +71,9 @@ namespace System.Data.Entity.Internal
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the database.
+        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         public abstract IEnumerator GetEnumerator();
 
         #endregion
@@ -80,9 +81,9 @@ namespace System.Data.Entity.Internal
         #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         public abstract IDbAsyncEnumerator GetAsyncEnumerator();
 
         #endregion
@@ -92,7 +93,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Returns <c>false</c>.
         /// </summary>
-        /// <returns><c>false</c>.</returns>
+        /// <returns> <c>false</c> . </returns>
         public bool ContainsListCollection
         {
             get { return false; }
@@ -101,9 +102,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Throws an exception indicating that binding directly to a store query is not supported.
         /// </summary>
-        /// <returns>
-        ///     Never returns; always throws.
-        /// </returns>
+        /// <returns> Never returns; always throws. </returns>
         public IList GetList()
         {
             throw Error.DbQuery_BindingToDbQueryNotSupported();
@@ -114,12 +113,10 @@ namespace System.Data.Entity.Internal
         #region ToString
 
         /// <summary>
-        ///     Returns a <see cref = "System.String" /> that contains the SQL string that was set
+        ///     Returns a <see cref="System.String" /> that contains the SQL string that was set
         ///     when the query was created.  The parameters are not included.
         /// </summary>
-        /// <returns>
-        ///     A <see cref = "System.String" /> that represents this instance.
-        /// </returns>
+        /// <returns> A <see cref="System.String" /> that represents this instance. </returns>
         public override string ToString()
         {
             return Sql;

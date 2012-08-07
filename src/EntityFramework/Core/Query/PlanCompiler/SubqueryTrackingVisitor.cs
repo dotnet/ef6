@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -6,8 +7,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// The SubqueryTracking Visitor serves as a base class for the visitors that may turn 
-    /// scalar subqueryies into outer-apply subqueries.
+    ///     The SubqueryTracking Visitor serves as a base class for the visitors that may turn 
+    ///     scalar subqueryies into outer-apply subqueries.
     /// </summary>
     internal abstract class SubqueryTrackingVisitor : BasicOpVisitorOfNode
     {
@@ -38,10 +39,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Subquery Handling
 
         /// <summary>
-        /// Adds a subquery to the list of subqueries for the relOpNode
+        ///     Adds a subquery to the list of subqueries for the relOpNode
         /// </summary>
-        /// <param name="relOpNode">the RelOp node</param>
-        /// <param name="subquery">the subquery</param>
+        /// <param name="relOpNode"> the RelOp node </param>
+        /// <param name="subquery"> the subquery </param>
         protected void AddSubqueryToRelOpNode(Node relOpNode, Node subquery)
         {
             List<Node> nestedSubqueries;
@@ -57,11 +58,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Add a subquery to the "parent" relop node
+        ///     Add a subquery to the "parent" relop node
         /// </summary>
-        /// <param name="outputVar">the output var to be used - at the current location - in lieu of the subquery</param>
-        /// <param name="subquery">the subquery to move</param>
-        /// <returns>a var ref node for the var returned from the subquery</returns>
+        /// <param name="outputVar"> the output var to be used - at the current location - in lieu of the subquery </param>
+        /// <param name="subquery"> the subquery to move </param>
+        /// <returns> a var ref node for the var returned from the subquery </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         protected Node AddSubqueryToParentRelOp(Var outputVar, Node subquery)
@@ -75,10 +76,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Find the first RelOp node that is in my ancestral path.
-        /// If I see a PhysicalOp, then I don't have a RelOp parent
+        ///     Find the first RelOp node that is in my ancestral path.
+        ///     If I see a PhysicalOp, then I don't have a RelOp parent
         /// </summary>
-        /// <returns>the first RelOp node</returns>
+        /// <returns> the first RelOp node </returns>
         protected Node FindRelOpAncestor()
         {
             foreach (var n in m_ancestors)
@@ -100,11 +101,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Helpers
 
         /// <summary>
-        /// Extends the base class implementation of VisitChildren.
-        /// Wraps the call to visitchildren() by first adding the current node
-        /// to the stack of "ancestors", and then popping back the node at the end
+        ///     Extends the base class implementation of VisitChildren.
+        ///     Wraps the call to visitchildren() by first adding the current node
+        ///     to the stack of "ancestors", and then popping back the node at the end
         /// </summary>
-        /// <param name="n">Current node</param>
+        /// <param name="n"> Current node </param>
         protected override void VisitChildren(Node n)
         {
             // Push the current node onto the stack
@@ -125,15 +126,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOps
 
         /// <summary>
-        /// Augments a node with a number of OuterApply's - one for each subquery
-        /// If S1, S2, ... are the list of subqueries for the node, and D is the 
-        /// original (driver) input, we convert D into
-        ///    OuterApply(OuterApply(D, S1), S2), ... 
+        ///     Augments a node with a number of OuterApply's - one for each subquery
+        ///     If S1, S2, ... are the list of subqueries for the node, and D is the 
+        ///     original (driver) input, we convert D into
+        ///     OuterApply(OuterApply(D, S1), S2), ...
         /// </summary>
-        /// <param name="input">the input (driver) node</param>
-        /// <param name="subqueries">List of subqueries</param>
-        /// <param name="inputFirst">should the input node be first in the apply chain, or the last?</param>
-        /// <returns>The resulting node tree</returns>
+        /// <param name="input"> the input (driver) node </param>
+        /// <param name="subqueries"> List of subqueries </param>
+        /// <param name="inputFirst"> should the input node be first in the apply chain, or the last? </param>
+        /// <returns> The resulting node tree </returns>
         private Node AugmentWithSubqueries(Node input, List<Node> subqueries, bool inputFirst)
         {
             Node newNode;
@@ -167,21 +168,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Default processing for RelOps. 
-        /// - First, we mark the current node as its own ancestor (so that any 
-        ///   subqueries that we detect internally will be added to this node's list)
-        /// - then, visit each child
-        /// - finally, accumulate all nested subqueries.
-        /// - if the current RelOp has only one input, then add the nested subqueries via
-        ///   Outer apply nodes to this input. 
+        ///     Default processing for RelOps. 
+        ///     - First, we mark the current node as its own ancestor (so that any 
+        ///     subqueries that we detect internally will be added to this node's list)
+        ///     - then, visit each child
+        ///     - finally, accumulate all nested subqueries.
+        ///     - if the current RelOp has only one input, then add the nested subqueries via
+        ///     Outer apply nodes to this input. 
         /// 
-        /// The interesting RelOps are 
-        ///   Project, Filter, GroupBy, Sort,  
-        /// Should we break this out into separate functions instead?
+        ///     The interesting RelOps are 
+        ///     Project, Filter, GroupBy, Sort,  
+        ///     Should we break this out into separate functions instead?
         /// </summary>
-        /// <param name="op">Current RelOp</param>
-        /// <param name="n">Node to process</param>
-        /// <returns>Current subtree</returns> 
+        /// <param name="op"> Current RelOp </param>
+        /// <param name="n"> Node to process </param>
+        /// <returns> Current subtree </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VisitRelOpDefault")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -210,10 +211,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Processing for all JoinOps
+        ///     Processing for all JoinOps
         /// </summary>
-        /// <param name="n">Current subtree</param>
-        /// <returns>Whether the node was modified</returns>
+        /// <param name="n"> Current subtree </param>
+        /// <returns> Whether the node was modified </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "JoinOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -249,14 +250,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Visitor for UnnestOp. If the child has any subqueries, we need to convert this
-        /// into an 
-        ///    OuterApply(S, Unnest)
-        /// unlike the other cases where the OuterApply will appear as the input of the node
+        ///     Visitor for UnnestOp. If the child has any subqueries, we need to convert this
+        ///     into an 
+        ///     OuterApply(S, Unnest)
+        ///     unlike the other cases where the OuterApply will appear as the input of the node
         /// </summary>
-        /// <param name="op">the unnestOp</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>modified subtree</returns>
+        /// <param name="op"> the unnestOp </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> modified subtree </returns>
         public override Node Visit(UnnestOp op, Node n)
         {
             VisitChildren(n); // visit all my children first

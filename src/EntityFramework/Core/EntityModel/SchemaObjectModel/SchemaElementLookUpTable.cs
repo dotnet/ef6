@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Diagnostics;
 
     /// <summary>
-    /// Summary description for SchemaElementLookUpTable.
+    ///     Summary description for SchemaElementLookUpTable.
     /// </summary>
     internal sealed class SchemaElementLookUpTable<T> : IEnumerable<T>, ISchemaElementLookUpTable<T>
         where T : SchemaElement
@@ -23,7 +24,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
         public int Count
         {
@@ -31,20 +31,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key"> </param>
+        /// <returns> </returns>
         public bool ContainsKey(string key)
         {
             return KeyToType.ContainsKey(KeyFromName(key));
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key"> </param>
+        /// <returns> </returns>
         public T LookUpEquivalentKey(string key)
         {
             key = KeyFromName(key);
@@ -59,7 +57,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public T this[string key]
         {
@@ -67,7 +64,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public T GetElementAt(int index)
         {
@@ -75,9 +71,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public IEnumerator<T> GetEnumerator()
         {
             return new SchemaElementLookUpTableEnumerator<T, T>(KeyToType, _keysInDefOrder);
@@ -89,9 +84,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public IEnumerator<S> GetFilteredEnumerator<S>()
             where S : T
         {
@@ -99,9 +93,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Add the given type to the schema look up table. If there is an error, it
-        /// adds the error and returns false. otherwise, it adds the type to the lookuptable
-        /// and returns true
+        ///     Add the given type to the schema look up table. If there is an error, it
+        ///     adds the error and returns false. otherwise, it adds the type to the lookuptable
+        ///     and returns true
         /// </summary>
         public AddErrorKind TryAdd(T type)
         {
@@ -163,20 +157,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type"> </param>
+        /// <returns> </returns>
         private static string KeyFromElement(T type)
         {
             return KeyFromName(type.Identity);
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="unnormalizedKey"></param>
-        /// <returns></returns>
+        /// <param name="unnormalizedKey"> </param>
+        /// <returns> </returns>
         private static string KeyFromName(string unnormalizedKey)
         {
             Debug.Assert(!String.IsNullOrEmpty(unnormalizedKey), "unnormalizedKey parameter is null or empty");
@@ -189,7 +181,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Properties
 
         /// <summary>
-        /// 
         /// </summary>
         private Dictionary<string, T> KeyToType
         {

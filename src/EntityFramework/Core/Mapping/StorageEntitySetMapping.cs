@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
@@ -7,32 +8,32 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Represents the Mapping metadata for an EnitytSet in CS space.
+    ///     Represents the Mapping metadata for an EnitytSet in CS space.
     /// </summary>
     /// <example>
-    /// For Example if conceptually you could represent the CS MSL file as following
-    /// --Mapping 
-    ///   --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    ///     For Example if conceptually you could represent the CS MSL file as following
+    ///     --Mapping 
+    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
     ///     --AssociationSetMapping 
-    ///       --AssociationTypeMapping
-    ///         --MappingFragment
-    /// This class represents the metadata for the EntitySetMapping elements in the
-    /// above example. And it is possible to access the EntityTypeMaps underneath it.
+    ///     --AssociationTypeMapping
+    ///     --MappingFragment
+    ///     This class represents the metadata for the EntitySetMapping elements in the
+    ///     above example. And it is possible to access the EntityTypeMaps underneath it.
     /// </example>
     internal class StorageEntitySetMapping : StorageSetMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Construct a EntitySet mapping object
+        ///     Construct a EntitySet mapping object
         /// </summary>
-        /// <param name="extent">EntitySet metadata object</param>
-        /// <param name="entityContainerMapping">The entity Container Mapping that contains this Set mapping</param>
+        /// <param name="extent"> EntitySet metadata object </param>
+        /// <param name="entityContainerMapping"> The entity Container Mapping that contains this Set mapping </param>
         internal StorageEntitySetMapping(EntitySet extent, StorageEntityContainerMapping entityContainerMapping)
             : base(extent, entityContainerMapping)
         {
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Properties
 
         /// <summary>
-        /// Gets all function mappings for this entity set.
+        ///     Gets all function mappings for this entity set.
         /// </summary>
         internal IList<StorageEntityTypeModificationFunctionMapping> ModificationFunctionMappings
         {
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets all association sets that are implicitly "covered" through function mappings.
+        ///     Gets all association sets that are implicitly "covered" through function mappings.
         /// </summary>
         internal IList<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
         {
@@ -68,8 +69,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Whether the EntitySetMapping has empty content
-        /// Returns true if there are no Function Maps and no table Mapping fragments
+        ///     Whether the EntitySetMapping has empty content
+        ///     Returns true if there are no Function Maps and no table Mapping fragments
         /// </summary>
         internal override bool HasNoContent
         {
@@ -88,10 +89,10 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
 #if DEBUG
-    /// <summary>
-    /// This method is primarily for debugging purposes.
-    /// Will be removed shortly.
-    /// </summary>
+        /// <summary>
+        ///     This method is primarily for debugging purposes.
+        ///     Will be removed shortly.
+        /// </summary>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);
@@ -119,12 +120,12 @@ namespace System.Data.Entity.Core.Mapping
 #endif
 
         /// <summary>
-        /// Requires:
-        /// - Function mapping refers to a sub-type of this entity set's element type
-        /// - Function mappings for types are not redundantly specified
-        /// Adds a new function mapping for this class.
+        ///     Requires:
+        ///     - Function mapping refers to a sub-type of this entity set's element type
+        ///     - Function mappings for types are not redundantly specified
+        ///     Adds a new function mapping for this class.
         /// </summary>
-        /// <param name="modificationFunctionMapping">Function mapping to add. May not be null.</param>
+        /// <param name="modificationFunctionMapping"> Function mapping to add. May not be null. </param>
         internal void AddModificationFunctionMapping(StorageEntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
             AssertModificationFunctionMappingInvariants(modificationFunctionMapping);

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for Item.
+    ///     Summary description for Item.
     /// </summary>
     [DebuggerDisplay("Name={Name}, BaseType={BaseType.FQName}, HasKeys={HasKeys}")]
     internal sealed class SchemaEntityType : StructuredType
@@ -25,9 +26,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         public SchemaEntityType(Schema parentElement)
             : base(parentElement)
         {
@@ -43,7 +43,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Methods
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -120,7 +119,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public IList<PropertyRefElement> DeclaredKeyProperties
         {
@@ -135,9 +133,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         public IList<PropertyRefElement> KeyProperties
         {
             get
@@ -157,7 +154,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public ISchemaElementLookUpTable<NavigationProperty> NavigationProperties
         {
@@ -176,7 +172,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Methods
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void Validate()
         {
@@ -231,9 +226,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleNavigationPropertyElement(XmlReader reader)
         {
             var navigationProperty = new NavigationProperty(this);
@@ -242,9 +236,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleKeyElement(XmlReader reader)
         {
             _keyElement = new EntityKeyElement(this);

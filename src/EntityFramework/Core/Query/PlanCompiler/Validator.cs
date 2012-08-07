@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -8,9 +9,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
     /// <summary>
-    /// The Validator class extends the BasicValidator and enforces that the ITree is valid
-    /// through varying stages of the plan compilation process. At each stage, certain operators
-    /// are illegal - and this validator is largely intended to tackle that
+    ///     The Validator class extends the BasicValidator and enforces that the ITree is valid
+    ///     through varying stages of the plan compilation process. At each stage, certain operators
+    ///     are illegal - and this validator is largely intended to tackle that
     /// </summary>
     internal class Validator : BasicValidator
     {
@@ -285,30 +286,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private readonly PlanCompiler m_compilerState;
 
-        private static readonly PlanCompilerPhase[] _planCompilerPhases = {
-            PlanCompilerPhase.PreProcessor,
-            PlanCompilerPhase.AggregatePushdown,
-            PlanCompilerPhase.Normalization,
-            PlanCompilerPhase.NTE,
-            PlanCompilerPhase.ProjectionPruning,
-            PlanCompilerPhase.NestPullup,
-            PlanCompilerPhase.Transformations,
-            PlanCompilerPhase.JoinElimination,
-            PlanCompilerPhase.CodeGen,
-            PlanCompilerPhase.PostCodeGen
-        };
+        private static readonly PlanCompilerPhase[] _planCompilerPhases =
+            {
+                PlanCompilerPhase.PreProcessor,
+                PlanCompilerPhase.AggregatePushdown,
+                PlanCompilerPhase.Normalization,
+                PlanCompilerPhase.NTE,
+                PlanCompilerPhase.ProjectionPruning,
+                PlanCompilerPhase.NestPullup,
+                PlanCompilerPhase.Transformations,
+                PlanCompilerPhase.JoinElimination,
+                PlanCompilerPhase.CodeGen,
+                PlanCompilerPhase.PostCodeGen
+            };
 
         private static BitVec s_ValidOpTypes = InitializeOpTypes();
 
         #endregion
 
         /// <summary>
-        /// BitVector helper class; used to keep track of the used columns
-        /// in the result assembly.
+        ///     BitVector helper class; used to keep track of the used columns
+        ///     in the result assembly.
         /// </summary>
         /// <remarks>
-        /// BitVec can be a struct because it contains a readonly reference to an int[].
-        /// This code is a copy of System.Collections.BitArray so that we can have an efficient implementation of Minus.
+        ///     BitVec can be a struct because it contains a readonly reference to an int[].
+        ///     This code is a copy of System.Collections.BitArray so that we can have an efficient implementation of Minus.
         /// </remarks>
         internal struct BitVec
         {

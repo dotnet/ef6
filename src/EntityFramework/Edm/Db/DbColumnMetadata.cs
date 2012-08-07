@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db
 {
     /// <summary>
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Edm.Db
         public virtual bool IsNullable { get; set; }
 
         /// <summary>
-        ///     Gets or sets an optional <see cref = "DbPrimitiveTypeFacets" /> instance that applies additional constraints to the referenced database-specific type of the column.
+        ///     Gets or sets an optional <see cref="DbPrimitiveTypeFacets" /> instance that applies additional constraints to the referenced database-specific type of the column.
         /// </summary>
         public virtual DbPrimitiveTypeFacets Facets { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.ObjectModel;
@@ -9,8 +10,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using Util = System.Data.Entity.Core.Common.Internal.Materialization.Util;
 
     /// <summary>
-    /// Supports materialization of complex type instances from records. Used
-    /// by the ObjectStateManager.
+    ///     Supports materialization of complex type instances from records. Used
+    ///     by the ObjectStateManager.
     /// </summary>
     internal class ComplexTypeMaterializer
     {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Diagnostics.CodeAnalysis;
@@ -14,10 +15,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the DropIndexOperation class.
         /// </summary>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropIndexOperation(object anonymousArguments = null)
             : base(anonymousArguments)
@@ -27,11 +25,8 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the DropIndexOperation class.
         /// </summary>
-        /// <param name = "inverse">The operation that represents reverting dropping the index.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="inverse"> The operation that represents reverting dropping the index. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropIndexOperation(CreateIndexOperation inverse, object anonymousArguments = null)
             : base(anonymousArguments)

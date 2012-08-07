@@ -1,17 +1,18 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents the Structural Type
+    ///     Represents the Structural Type
     /// </summary>
     public abstract class StructuralType : EdmType
     {
         #region Constructors
 
         /// <summary>
-        /// Internal parameterless constructor for bootstrapping edmtypes
+        ///     Internal parameterless constructor for bootstrapping edmtypes
         /// </summary>
         internal StructuralType()
         {
@@ -20,12 +21,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of Structural Type with the given members
+        ///     Initializes a new instance of Structural Type with the given members
         /// </summary>
-        /// <param name="name">name of the structural type</param>
-        /// <param name="namespaceName">namespace of the structural type</param>
-        /// <param name="version">version of the structural type</param>
-        /// <param name="dataSpace">dataSpace in which this edmtype belongs to</param>
+        /// <param name="name"> name of the structural type </param>
+        /// <param name="namespaceName"> namespace of the structural type </param>
+        /// <param name="version"> version of the structural type </param>
+        /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal StructuralType(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the collection of members. 
+        ///     Returns the collection of members.
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
         public ReadOnlyMetadataCollection<EdmMember> Members
@@ -59,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Get the declared only members of a particular type
+        ///     Get the declared only members of a particular type
         /// </summary>
         internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>() where T : EdmMember
         {
@@ -67,8 +68,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
-        /// it can never be changed. 
+        ///     Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
+        ///     it can never be changed.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -80,17 +81,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Validates a EdmMember object to determine if it can be added to this type's 
-        /// Members collection. If this method returns without throwing, it is assumed
-        /// the member is valid.
+        ///     Validates a EdmMember object to determine if it can be added to this type's 
+        ///     Members collection. If this method returns without throwing, it is assumed
+        ///     the member is valid.
         /// </summary>
-        /// <param name="member">The member to validate</param>
+        /// <param name="member"> The member to validate </param>
         internal abstract void ValidateMemberForAdd(EdmMember member);
 
         /// <summary>
-        /// Adds a member to this type
+        ///     Adds a member to this type
         /// </summary>
-        /// <param name="member">The member to add</param>
+        /// <param name="member"> The member to add </param>
         internal void AddMember(EdmMember member)
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");

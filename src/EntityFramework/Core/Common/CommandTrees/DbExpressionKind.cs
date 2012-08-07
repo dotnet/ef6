@@ -1,301 +1,302 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Describes the different "kinds" (classes) of expressions
+    ///     Describes the different "kinds" (classes) of expressions
     /// </summary>
     public enum DbExpressionKind
     {
         /// <summary>
-        /// True for all.
+        ///     True for all.
         /// </summary>
         All = 0,
 
         /// <summary>
-        /// Logical And.
+        ///     Logical And.
         /// </summary>
         And = 1,
 
         /// <summary>
-        /// True for any.
+        ///     True for any.
         /// </summary>
         Any = 2,
 
         /// <summary>
-        /// Conditional case statement.
+        ///     Conditional case statement.
         /// </summary>
         Case = 3,
 
         /// <summary>
-        /// Polymorphic type cast.
+        ///     Polymorphic type cast.
         /// </summary>
         Cast = 4,
 
         /// <summary>
-        /// A constant value.
+        ///     A constant value.
         /// </summary>
         Constant = 5,
 
         /// <summary>
-        /// Cross apply
+        ///     Cross apply
         /// </summary>
         CrossApply = 6,
 
         /// <summary>
-        /// Cross join
+        ///     Cross join
         /// </summary>
         CrossJoin = 7,
 
         /// <summary>
-        /// Dereference.
+        ///     Dereference.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
         Deref = 8,
 
         /// <summary>
-        /// Duplicate removal.
+        ///     Duplicate removal.
         /// </summary>
         Distinct = 9,
 
         /// <summary>
-        /// Division.
+        ///     Division.
         /// </summary>
         Divide = 10,
 
         /// <summary>
-        /// Set to singleton conversion.
+        ///     Set to singleton conversion.
         /// </summary>
         Element = 11,
 
         /// <summary>
-        /// Entity ref value retrieval.
+        ///     Entity ref value retrieval.
         /// </summary>
         EntityRef = 12,
 
         /// <summary>
-        /// Equality
+        ///     Equality
         /// </summary>
         Equals = 13,
 
         /// <summary>
-        /// Set subtraction
+        ///     Set subtraction
         /// </summary>
         Except = 14,
 
         /// <summary>
-        /// Restriction.
+        ///     Restriction.
         /// </summary>
         Filter = 15,
 
         /// <summary>
-        /// Full outer join
+        ///     Full outer join
         /// </summary>
         FullOuterJoin = 16,
 
         /// <summary>
-        /// Invocation of a stand-alone function
+        ///     Invocation of a stand-alone function
         /// </summary>
         Function = 17,
 
         /// <summary>
-        /// Greater than.
+        ///     Greater than.
         /// </summary>
         GreaterThan = 18,
 
         /// <summary>
-        /// Greater than or equal.
+        ///     Greater than or equal.
         /// </summary>
         GreaterThanOrEquals = 19,
 
         /// <summary>
-        /// Grouping.
+        ///     Grouping.
         /// </summary>
         GroupBy = 20,
 
         /// <summary>
-        /// Inner join
+        ///     Inner join
         /// </summary>
         InnerJoin = 21,
 
         /// <summary>
-        /// Set intersection.
+        ///     Set intersection.
         /// </summary>
         Intersect = 22,
 
         /// <summary>
-        /// Empty set determination.
+        ///     Empty set determination.
         /// </summary>
         IsEmpty = 23,
 
         /// <summary>
-        /// Null determination.
+        ///     Null determination.
         /// </summary>
         IsNull = 24,
 
         /// <summary>
-        /// Type comparison (specified Type or Subtype).
+        ///     Type comparison (specified Type or Subtype).
         /// </summary>
         IsOf = 25,
 
         /// <summary>
-        /// Type comparison (specified Type only).
+        ///     Type comparison (specified Type only).
         /// </summary>
         IsOfOnly = 26,
 
         /// <summary>
-        /// Application of a lambda function
+        ///     Application of a lambda function
         /// </summary>
         Lambda = 57,
 
         /// <summary>
-        /// Left outer join
+        ///     Left outer join
         /// </summary>
         LeftOuterJoin = 27,
 
         /// <summary>
-        /// Less than.
+        ///     Less than.
         /// </summary>
         LessThan = 28,
 
         /// <summary>
-        /// Less than or equal.
+        ///     Less than or equal.
         /// </summary>
         LessThanOrEquals = 29,
 
         /// <summary>
-        /// String comparison.
+        ///     String comparison.
         /// </summary>
         Like = 30,
 
         /// <summary>
-        /// Result count restriction (TOP n).
+        ///     Result count restriction (TOP n).
         /// </summary>
         Limit = 31,
 
         /// <summary>
-        /// Subtraction.
+        ///     Subtraction.
         /// </summary>
         Minus = 32,
 
         /// <summary>
-        /// Modulo.
+        ///     Modulo.
         /// </summary>
         Modulo = 33,
 
         /// <summary>
-        /// Multiplication.
+        ///     Multiplication.
         /// </summary>
         Multiply = 34,
 
         /// <summary>
-        /// Instance, row, and set construction.
+        ///     Instance, row, and set construction.
         /// </summary>
         NewInstance = 35,
 
         /// <summary>
-        /// Logical Not.
+        ///     Logical Not.
         /// </summary>
         Not = 36,
 
         /// <summary>
-        /// Inequality.
+        ///     Inequality.
         /// </summary>
         NotEquals = 37,
 
         /// <summary>
-        /// Null.
+        ///     Null.
         /// </summary>
         Null = 38,
 
         /// <summary>
-        /// Set members by type (or subtype).
+        ///     Set members by type (or subtype).
         /// </summary>
         OfType = 39,
 
         /// <summary>
-        /// Set members by (exact) type.
+        ///     Set members by (exact) type.
         /// </summary>
         OfTypeOnly = 40,
 
         /// <summary>
-        /// Logical Or.
+        ///     Logical Or.
         /// </summary>
         Or = 41,
 
         /// <summary>
-        /// Outer apply.
+        ///     Outer apply.
         /// </summary>
         OuterApply = 42,
 
         /// <summary>
-        /// A reference to a parameter.
+        ///     A reference to a parameter.
         /// </summary>
         ParameterReference = 43,
 
         /// <summary>
-        /// Addition.
+        ///     Addition.
         /// </summary>
         Plus = 44,
 
         /// <summary>
-        /// Projection.
+        ///     Projection.
         /// </summary>
         Project = 45,
 
         /// <summary>
-        /// Retrieval of a static or instance property.
+        ///     Retrieval of a static or instance property.
         /// </summary>
         Property = 46,
 
         /// <summary>
-        /// Reference.
+        ///     Reference.
         /// </summary>
         Ref = 47,
 
         /// <summary>
-        /// Ref key value retrieval.
+        ///     Ref key value retrieval.
         /// </summary>
         RefKey = 48,
 
         /// <summary>
-        /// Navigation of a (composition or association) relationship.
+        ///     Navigation of a (composition or association) relationship.
         /// </summary>
         RelationshipNavigation = 49,
 
         /// <summary>
-        /// Entity or relationship set scan.
+        ///     Entity or relationship set scan.
         /// </summary>
         Scan = 50,
 
         /// <summary>
-        /// Skip elements of an ordered collection.
+        ///     Skip elements of an ordered collection.
         /// </summary>
         Skip = 51,
 
         /// <summary>
-        /// Sorting.
+        ///     Sorting.
         /// </summary>
         Sort = 52,
 
         /// <summary>
-        /// Type conversion.
+        ///     Type conversion.
         /// </summary>
         Treat = 53,
 
         /// <summary>
-        /// Negation.
+        ///     Negation.
         /// </summary>
         UnaryMinus = 54,
 
         /// <summary>
-        /// Set union (with duplicates).
+        ///     Set union (with duplicates).
         /// </summary>
         UnionAll = 55,
 
         /// <summary>
-        /// A reference to a variable.
+        ///     A reference to a variable.
         /// </summary>
         VariableReference = 56
     }

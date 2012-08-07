@@ -33,13 +33,13 @@ namespace System.Data.Entity.Internal
     using SaveOptions = System.Data.Entity.Core.Objects.SaveOptions;
 
     /// <summary>
-    ///     An <see cref = "InternalContext" /> underlies every instance of <see cref = "DbContext" /> and wraps an
-    ///     <see cref = "ObjectContext" /> instance.
-    ///     The <see cref = "InternalContext" /> also acts to expose necessary information to other parts of the design in a
-    ///     controlled manner without adding a lot of internal methods and properties to the <see cref = "DbContext" />
+    ///     An <see cref="InternalContext" /> underlies every instance of <see cref="DbContext" /> and wraps an
+    ///     <see cref="ObjectContext" /> instance.
+    ///     The <see cref="InternalContext" /> also acts to expose necessary information to other parts of the design in a
+    ///     controlled manner without adding a lot of internal methods and properties to the <see cref="DbContext" />
     ///     class itself.
-    ///     Two concrete classes derive from this abstract class - <see cref = "LazyInternalContext" /> and
-    ///     <see cref = "EagerInternalContext" />.
+    ///     Two concrete classes derive from this abstract class - <see cref="LazyInternalContext" /> and
+    ///     <see cref="EagerInternalContext" />.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -110,9 +110,9 @@ namespace System.Data.Entity.Internal
         public event EventHandler<EventArgs> OnDisposing;
 
         /// <summary>
-        ///     Initializes the <see cref = "InternalContext" /> object with its <see cref = "DbContext" /> owner.
+        ///     Initializes the <see cref="InternalContext" /> object with its <see cref="DbContext" /> owner.
         /// </summary>
-        /// <param name = "owner">The owner <see cref = "DbContext" />.</param>
+        /// <param name="owner"> The owner <see cref="DbContext" /> . </param>
         protected InternalContext(DbContext owner)
         {
             Contract.Requires(owner != null);
@@ -139,19 +139,19 @@ namespace System.Data.Entity.Internal
         #region ObjectContext and model
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" />.
+        ///     Returns the underlying <see cref="ObjectContext" />.
         /// </summary>
         public abstract ObjectContext ObjectContext { get; }
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" /> without causing the underlying database to be created
+        ///     Returns the underlying <see cref="ObjectContext" /> without causing the underlying database to be created
         ///     or the database initialization strategy to be executed.
         ///     This is used to get a context that can then be used for database creation/initialization.
         /// </summary>
         public abstract ObjectContext GetObjectContextWithoutDatabaseInitialization();
 
         /// <summary>
-        ///     Returns the underlying <see cref = "ObjectContext" /> without causing the underlying database to be created
+        ///     Returns the underlying <see cref="ObjectContext" /> without causing the underlying database to be created
         ///     or the database initialization strategy to be executed.
         ///     This is used to get a context that can then be used for database creation/initialization.
         /// </summary>
@@ -168,18 +168,18 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the temp object context, or null if none has been set.
         /// </summary>
-        /// <value>The temp object context.</value>
+        /// <value> The temp object context. </value>
         protected ObjectContext TempObjectContext
         {
             get { return _tempObjectContext == null ? null : _tempObjectContext.ObjectContext; }
         }
 
         /// <summary>
-        ///     Creates a new temporary <see cref = "ObjectContext" /> based on the same metadata and connection as the real
-        ///     <see cref = "ObjectContext" /> and sets it as the context to use DisposeTempObjectContext is called.
+        ///     Creates a new temporary <see cref="ObjectContext" /> based on the same metadata and connection as the real
+        ///     <see cref="ObjectContext" /> and sets it as the context to use DisposeTempObjectContext is called.
         ///     This allows this internal context and its DbContext to be used for transient operations
         ///     such as initializing and seeding the database, after which it can be thrown away.
-        ///     This isolates the real <see cref = "ObjectContext" /> from any changes made and and saves performed.
+        ///     This isolates the real <see cref="ObjectContext" /> from any changes made and and saves performed.
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual void UseTempObjectContext()
@@ -215,10 +215,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// The compiled model created from the Code First pipeline, or null if Code First was
-        /// not used to create this context.
-        /// Causes the Code First pipeline to be run to create the model if it has not already been
-        /// created.
+        ///     The compiled model created from the Code First pipeline, or null if Code First was
+        ///     not used to create this context.
+        ///     Causes the Code First pipeline to be run to create the model if it has not already been
+        ///     created.
         /// </summary>
         public virtual DbCompiledModel CodeFirstModel
         {
@@ -226,10 +226,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Called by methods of <see cref="Database"/> to create a database either using the Migrations pipeline
-        /// if possible and the core provider otherwise.
+        ///     Called by methods of <see cref="Database" /> to create a database either using the Migrations pipeline
+        ///     if possible and the core provider otherwise.
         /// </summary>
-        /// <param name="objectContext">The context to use for core provider calls.</param>
+        /// <param name="objectContext"> The context to use for core provider calls. </param>
         public virtual void CreateDatabase(ObjectContext objectContext)
         {
             // objectContext may be null when testing.
@@ -238,9 +238,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Internal implementation of <see cref="Database.CompatibleWithModel(bool)"/>.
+        ///     Internal implementation of <see cref="Database.CompatibleWithModel(bool)" />.
         /// </summary>
-        /// <returns> True if the model hash in the context and the database match; false otherwise.</returns>
+        /// <returns> True if the model hash in the context and the database match; false otherwise. </returns>
         public virtual bool CompatibleWithModel(bool throwIfNoMetadata)
         {
             return new ModelCompatibilityChecker().CompatibleWithModel(
@@ -248,7 +248,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Checks whether the given model (an EDMX document) matches the current model.
+        ///     Checks whether the given model (an EDMX document) matches the current model.
         /// </summary>
         public virtual bool ModelMatches(XDocument model)
         {
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Internal
         ///     Queries the database for a model hash and returns it if found or returns null if the table
         ///     or the row doesn't exist in the database.
         /// </summary>
-        /// <returns>The model hash, or null if not found.</returns>
+        /// <returns> The model hash, or null if not found. </returns>
         public virtual string QueryForModelHash()
         {
             return new EdmMetadataRepository(
@@ -270,8 +270,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Queries the database for a model stored in the MigrationHistory table and returns it as an EDMX, or returns
-        /// null if the database does not contain a model.
+        ///     Queries the database for a model stored in the MigrationHistory table and returns it as an EDMX, or returns
+        ///     null if the database does not contain a model.
         /// </summary>
         public virtual XDocument QueryForModel()
         {
@@ -294,16 +294,16 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Set to true when a database initializer is performing some actions, such as creating or deleting
-        /// a database, or seeding the database.
+        ///     Set to true when a database initializer is performing some actions, such as creating or deleting
+        ///     a database, or seeding the database.
         /// </summary>
         protected bool InInitializationAction { get; set; }
 
         /// <summary>
-        ///     Performs the initialization action that may result in a <see cref = "DbUpdateException" /> and
+        ///     Performs the initialization action that may result in a <see cref="DbUpdateException" /> and
         ///     handle the exception to provide more meaning to the user.
         /// </summary>
-        /// <param name = "action">The action.</param>
+        /// <param name="action"> The action. </param>
         public void PerformInitializationAction(Action action)
         {
             if (InInitializationAction)
@@ -336,7 +336,7 @@ namespace System.Data.Entity.Internal
         ///     Registers for the ObjectStateManagerChanged event on the underlying ObjectStateManager.
         ///     This is a virtual method on this class so that it can be mocked.
         /// </summary>
-        /// <param name = "handler">The event handler.</param>
+        /// <param name="handler"> The event handler. </param>
         public virtual void RegisterObjectStateManagerChangedEvent(CollectionChangeEventHandler handler)
         {
             ObjectContext.ObjectStateManager.ObjectStateManagerChanged += handler;
@@ -346,8 +346,8 @@ namespace System.Data.Entity.Internal
         ///     Checks whether or not the given object is in the context in any state other than Deleted.
         ///     This is a virtual method on this class so that it can be mocked.
         /// </summary>
-        /// <param name = "entity">The entity.</param>
-        /// <returns><c>true</c> if the entity is in the context and not deleted; otherwise <c>false</c>.</returns>
+        /// <param name="entity"> The entity. </param>
+        /// <returns> <c>true</c> if the entity is in the context and not deleted; otherwise <c>false</c> . </returns>
         public virtual bool EntityInContextAndNotDeleted(object entity)
         {
             ObjectStateEntry stateEntry;
@@ -362,7 +362,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Saves all changes made in this context to the underlying database.
         /// </summary>
-        /// <returns>The number of objects written to the underlying database.</returns>
+        /// <returns> The number of objects written to the underlying database. </returns>
         public virtual int SaveChanges()
         {
             try
@@ -433,24 +433,24 @@ namespace System.Data.Entity.Internal
         protected abstract void InitializeContext();
 
         /// <summary>
-        /// Marks the database as having not been initialized. This is called when the app calls Database.Delete so
-        /// that the database if the app attempts to then use the database again it will be re-initialized automatically.
+        ///     Marks the database as having not been initialized. This is called when the app calls Database.Delete so
+        ///     that the database if the app attempts to then use the database again it will be re-initialized automatically.
         /// </summary>
         public abstract void MarkDatabaseNotInitialized();
 
         /// <summary>
-        ///     Runs the <see cref = "IDatabaseInitializer{TContext}" /> unless it has already been run or there
+        ///     Runs the <see cref="IDatabaseInitializer{TContext}" /> unless it has already been run or there
         ///     is no initializer for this context type in which case this method does nothing.
         /// </summary>
         protected abstract void InitializeDatabase();
 
         /// <summary>
-        ///     Marks the database as having been initialized without actually running the <see cref = "IDatabaseInitializer{TContext}" />.
+        ///     Marks the database as having been initialized without actually running the <see cref="IDatabaseInitializer{TContext}" />.
         /// </summary>
         public abstract void MarkDatabaseInitialized();
 
         /// <summary>
-        ///     Runs the <see cref = "IDatabaseInitializer{TContext}" /> if one has been set for this context type.
+        ///     Runs the <see cref="IDatabaseInitializer{TContext}" /> if one has been set for this context type.
         ///     Calling this method will always cause the initializer to run even if the database is marked
         ///     as initialized.
         /// </summary>
@@ -484,10 +484,10 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets the default database initializer to use for this context if no other has been registered.
-        ///     For code first this property returns a <see cref = "CreateDatabaseIfNotExists{TContext}" /> instance.
+        ///     For code first this property returns a <see cref="CreateDatabaseIfNotExists{TContext}" /> instance.
         ///     For database/model first, this property returns null.
         /// </summary>
-        /// <value>The default initializer.</value>
+        /// <value> The default initializer. </value>
         public abstract IDatabaseInitializer<DbContext> DefaultInitializer { get; }
 
         #endregion
@@ -510,7 +510,7 @@ namespace System.Data.Entity.Internal
         public bool AutoDetectChangesEnabled { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether to validate entities when <see cref = "DbContext.SaveChanges()" /> is called.
+        ///     Gets or sets a value indicating whether to validate entities when <see cref="DbContext.SaveChanges()" /> is called.
         /// </summary>
         public bool ValidateOnSaveEnabled { get; set; }
 
@@ -551,10 +551,10 @@ namespace System.Data.Entity.Internal
         #region DetectChanges
 
         /// <summary>
-        ///     Calls DetectChanges on the underlying <see cref = "ObjectContext" /> if AutoDetectChangesEnabled is
+        ///     Calls DetectChanges on the underlying <see cref="ObjectContext" /> if AutoDetectChangesEnabled is
         ///     true or if force is set to true.
         /// </summary>
-        /// <param name = "force">if set to <c>true</c> then DetectChanges is called regardless of the value of AutoDetectChangesEnabled.</param>
+        /// <param name="force"> if set to <c>true</c> then DetectChanges is called regardless of the value of AutoDetectChangesEnabled. </param>
         public virtual void DetectChanges(bool force = false)
         {
             if (AutoDetectChangesEnabled || force)
@@ -569,10 +569,10 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Returns the DbSet instance for the given entity type.
-        ///     This property is virtual and returns <see cref = "IDbSet{T}" /> to that it can be mocked.
+        ///     This property is virtual and returns <see cref="IDbSet{T}" /> to that it can be mocked.
         /// </summary>
-        /// <typeparam name = "TEntity">The entity type for which a set should be returned.</typeparam>
-        /// <returns>A set for the given entity type.</returns>
+        /// <typeparam name="TEntity"> The entity type for which a set should be returned. </typeparam>
+        /// <returns> A set for the given entity type. </returns>
         public virtual IDbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             if (typeof(TEntity)
@@ -596,11 +596,11 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns the non-generic <see cref = "DbSet" /> instance for the given entity type.
-        ///     This property is virtual and returns <see cref = "IInternalSetAdapter" /> to that it can be mocked.
+        ///     Returns the non-generic <see cref="DbSet" /> instance for the given entity type.
+        ///     This property is virtual and returns <see cref="IInternalSetAdapter" /> to that it can be mocked.
         /// </summary>
-        /// <param name = "entityType">The entity type for which a set should be returned.</param>
-        /// <returns>A set for the given entity type.</returns>
+        /// <param name="entityType"> The entity type for which a set should be returned. </param>
+        /// <returns> A set for the given entity type. </returns>
         public virtual IInternalSetAdapter Set(Type entityType)
         {
             entityType = ObjectContextTypeCache.GetObjectType(entityType);
@@ -621,8 +621,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Creates an internal set using an app domain cached delegate.
         /// </summary>
-        /// <param name = "entityType">Type of the entity.</param>
-        /// <returns>The set.</returns>
+        /// <param name="entityType"> Type of the entity. </param>
+        /// <returns> The set. </returns>
         private IInternalSetAdapter CreateInternalSet(Type entityType, IInternalSet internalSet)
         {
             Func<InternalContext, IInternalSet, IInternalSetAdapter> factory;
@@ -651,8 +651,8 @@ namespace System.Data.Entity.Internal
         ///     Returns the entity set and the base type for that entity set for the given type.
         ///     This method does o-space loading if required and throws if the type is not in the model.
         /// </summary>
-        /// <param name = "entityType">The entity type to lookup.</param>
-        /// <returns>The entity set and base type pair.</returns>
+        /// <param name="entityType"> The entity type to lookup. </param>
+        /// <returns> The entity set and base type pair. </returns>
         public virtual EntitySetTypePair GetEntitySetAndBaseTypeForType(Type entityType)
         {
             Contract.Assert(entityType != null);
@@ -671,8 +671,8 @@ namespace System.Data.Entity.Internal
         ///     type is mapped in the model, otherwise returns null.
         ///     This method does o-space loading if required.
         /// </summary>
-        /// <param name = "entityType">The entity type to lookup.</param>
-        /// <returns>The entity set and base type pair, or null if not found.</returns>
+        /// <param name="entityType"> The entity type to lookup. </param>
+        /// <returns> The entity set and base type pair, or null if not found. </returns>
         public virtual EntitySetTypePair TryGetEntitySetAndBaseTypeForType(Type entityType)
         {
             Contract.Assert(entityType != null);
@@ -688,8 +688,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Checks whether or not the given entity type is mapped in the model.
         /// </summary>
-        /// <param name = "entityType">The entity type to lookup.</param>
-        /// <returns>True if the type is mapped as an entity; false otherwise.</returns>
+        /// <param name="entityType"> The entity type to lookup. </param>
+        /// <returns> True if the type is mapped as an entity; false otherwise. </returns>
         public virtual bool IsEntityTypeMapped(Type entityType)
         {
             Contract.Assert(entityType != null);
@@ -710,8 +710,8 @@ namespace System.Data.Entity.Internal
         ///     Gets the local entities of the type specified from the state manager.  That is, all
         ///     Added, Modified, and Unchanged entities of the given type.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of entity to get.</typeparam>
-        /// <returns>The entities.</returns>
+        /// <typeparam name="TEntity"> The type of entity to get. </typeparam>
+        /// <returns> The entities. </returns>
         public virtual IEnumerable<TEntity> GetLocalEntities<TEntity>()
         {
             const EntityState StatesToInclude = EntityState.Added | EntityState.Modified | EntityState.Unchanged;
@@ -727,13 +727,13 @@ namespace System.Data.Entity.Internal
         #region Raw SQL query
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the given SQL query against the
+        ///     Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
-        /// <typeparam name = "TElement">The type of the element.</typeparam>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name = "parameters">The parameters.</param>
-        /// <returns>The query results.</returns>
+        /// <typeparam name="TElement"> The type of the element. </typeparam>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="parameters"> The parameters. </param>
+        /// <returns> The query results. </returns>
         public virtual IEnumerator<TElement> ExecuteSqlQuery<TElement>(string sql, object[] parameters)
         {
             Contract.Requires(sql != null);
@@ -763,13 +763,13 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the given SQL query against the
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
-        /// <typeparam name = "TElement">The type of the element.</typeparam>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name = "parameters">The parameters.</param>
-        /// <returns>Task containing the query results.</returns>
+        /// <typeparam name="TElement"> The type of the element. </typeparam>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="parameters"> The parameters. </param>
+        /// <returns> Task containing the query results. </returns>
         public virtual IDbAsyncEnumerator<TElement> ExecuteSqlQueryAsync<TElement>(string sql, object[] parameters)
         {
             Contract.Requires(sql != null);
@@ -778,36 +778,36 @@ namespace System.Data.Entity.Internal
 
             return new LazyAsyncEnumerator<TElement>(
                 async () =>
-                    {
-                        //Not initializing asynchronously as it's not expected to be done frequently
-                        Initialize();
+                          {
+                              //Not initializing asynchronously as it's not expected to be done frequently
+                              Initialize();
 
-                        var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                            sql, CancellationToken.None, parameters);
+                              var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                                  sql, CancellationToken.None, parameters);
 
-                        try
-                        {
-                            return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+                              try
+                              {
+                                  return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
+                              }
+                              catch
+                              {
+                                  // if there is a problem creating the enumerator, we should dispose
+                                  // the enumerable (if there is no problem, the enumerator will take 
+                                  // care of the dispose)
+                                  disposableEnumerable.Dispose();
+                                  throw;
+                              }
+                          });
         }
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
-        /// <param name = "elementType">Type of the element.</param>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name = "parameters">The parameters.</param>
-        /// <returns>The query results.</returns>
+        /// <param name="elementType"> Type of the element. </param>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="parameters"> The parameters. </param>
+        /// <returns> The query results. </returns>
         public virtual IEnumerator ExecuteSqlQuery(Type elementType, string sql, object[] parameters)
         {
             // There is no non-generic ExecuteStoreQuery method on ObjectContext so we are
@@ -836,14 +836,14 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
-        /// <param name = "elementType">Type of the element.</param>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <param name = "parameters">The parameters.</param>
-        /// <returns>The query results.</returns>
+        /// <param name="elementType"> Type of the element. </param>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="parameters"> The parameters. </param>
+        /// <returns> The query results. </returns>
         public virtual IDbAsyncEnumerator ExecuteSqlQueryAsync(Type elementType, string sql, object[] parameters)
         {
             // There is no non-generic ExecuteStoreQuery method on ObjectContext so we are
@@ -875,9 +875,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Executes the given SQL command against the database backing this context.
         /// </summary>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name = "parameters">The parameters.</param>
-        /// <returns>The return value from the database.</returns>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="parameters"> The parameters. </param>
+        /// <returns> The return value from the database. </returns>
         public virtual int ExecuteSqlCommand(string sql, object[] parameters)
         {
             Contract.Requires(sql != null);
@@ -892,10 +892,10 @@ namespace System.Data.Entity.Internal
         ///     An asynchronous version of ExecuteSqlCommand, which
         ///     executes the given SQL command against the database backing this context.
         /// </summary>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <param name = "parameters">The parameters.</param>
-        /// <returns>A Task containing the return value from the database.</returns>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="parameters"> The parameters. </param>
+        /// <returns> A Task containing the return value from the database. </returns>
         public virtual Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, object[] parameters)
         {
             Contract.Requires(sql != null);
@@ -912,11 +912,11 @@ namespace System.Data.Entity.Internal
         #region Entity entries
 
         /// <summary>
-        ///     Gets the underlying <see cref = "ObjectStateEntry" /> for the given entity, or returns null if the entity isn't tracked by this context.
+        ///     Gets the underlying <see cref="ObjectStateEntry" /> for the given entity, or returns null if the entity isn't tracked by this context.
         ///     This method is virtual so that it can be mocked.
         /// </summary>
-        /// <param name = "entity">The entity.</param>
-        /// <returns>The state entry or null.</returns>
+        /// <param name="entity"> The entity. </param>
+        /// <returns> The state entry or null. </returns>
         public virtual IEntityStateEntry GetStateEntry(object entity)
         {
             Contract.Requires(entity != null);
@@ -932,30 +932,30 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the underlying <see cref = "ObjectStateEntry" /> objects for all entities tracked by
+        ///     Gets the underlying <see cref="ObjectStateEntry" /> objects for all entities tracked by
         ///     this context.
         ///     This method is virtual so that it can be mocked.
         /// </summary>
-        /// <returns>State entries for all tracked entities.</returns>
+        /// <returns> State entries for all tracked entities. </returns>
         public virtual IEnumerable<IEntityStateEntry> GetStateEntries()
         {
             return GetStateEntries(e => e.Entity != null);
         }
 
         /// <summary>
-        ///     Gets the underlying <see cref = "ObjectStateEntry" /> objects for all entities of the given
+        ///     Gets the underlying <see cref="ObjectStateEntry" /> objects for all entities of the given
         ///     type tracked by this context.
         ///     This method is virtual so that it can be mocked.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-        /// <returns>State entries for all tracked entities of the given type.</returns>
+        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+        /// <returns> State entries for all tracked entities of the given type. </returns>
         public virtual IEnumerable<IEntityStateEntry> GetStateEntries<TEntity>() where TEntity : class
         {
             return GetStateEntries(e => e.Entity is TEntity);
         }
 
         /// <summary>
-        ///     Helper method that gets the underlying <see cref = "ObjectStateEntry" /> objects for all entities that
+        ///     Helper method that gets the underlying <see cref="ObjectStateEntry" /> objects for all entities that
         ///     match the given predicate.
         /// </summary>
         private IEnumerable<IEntityStateEntry> GetStateEntries(Func<ObjectStateEntry, bool> predicate)
@@ -968,12 +968,12 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Wraps the given <see cref = "UpdateException" /> in either a <see cref = "DbUpdateException" /> or
-        ///     a <see cref = "DbUpdateConcurrencyException" /> depending on the actual exception type and the state
+        ///     Wraps the given <see cref="UpdateException" /> in either a <see cref="DbUpdateException" /> or
+        ///     a <see cref="DbUpdateConcurrencyException" /> depending on the actual exception type and the state
         ///     entries involved.
         /// </summary>
-        /// <param name = "updateException">The update exception.</param>
-        /// <returns>A new exception wrapping the given exception.</returns>
+        /// <param name="updateException"> The update exception. </param>
+        /// <returns> A new exception wrapping the given exception. </returns>
         public virtual Exception WrapUpdateException(UpdateException updateException)
         {
             Contract.Requires(updateException != null);
@@ -1000,8 +1000,8 @@ namespace System.Data.Entity.Internal
         ///     to create proxies and the entity is suitable then a proxy instance will be returned.
         ///     This method is virtual so that it can be mocked.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-        /// <returns>The new entity instance.</returns>
+        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+        /// <returns> The new entity instance. </returns>
         public virtual TEntity CreateObject<TEntity>() where TEntity : class
         {
             return ObjectContext.CreateObject<TEntity>();
@@ -1012,8 +1012,8 @@ namespace System.Data.Entity.Internal
         ///     to create proxies and the entity is suitable then a proxy instance will be returned.
         ///     This method is virtual so that it can be mocked.
         /// </summary>
-        /// <param name = "type">The type of entity to create.</param>
-        /// <returns>The new entity instance.</returns>
+        /// <param name="type"> The type of entity to create. </param>
+        /// <returns> The new entity instance. </returns>
         public virtual object CreateObject(Type type)
         {
             Func<InternalContext, object> entityFactory;
@@ -1048,8 +1048,8 @@ namespace System.Data.Entity.Internal
         public abstract DbConnection Connection { get; }
 
         /// <summary>
-        /// The connection string as originally applied to the context. This is used to perform operations
-        /// that need the connection string in a non-mutated form, such as with security info still intact.
+        ///     The connection string as originally applied to the context. This is used to perform operations
+        ///     that need the connection string in a non-mutated form, such as with security info still intact.
         /// </summary>
         public abstract string OriginalConnectionString { get; }
 
@@ -1062,7 +1062,7 @@ namespace System.Data.Entity.Internal
         ///     Replaces the connection that will be used by this context.
         ///     The connection can only be changed before the context is initialized.
         /// </summary>
-        /// <param name="connection">The new connection.</param>
+        /// <param name="connection"> The new connection. </param>
         public abstract void OverrideConnection(IInternalConnection connection);
 
         /// <summary>
@@ -1101,8 +1101,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Gets the provider name bsing used either using a cached value or getting it from
-        /// the DbConnection in use.
+        ///     Gets the provider name bsing used either using a cached value or getting it from
+        ///     the DbConnection in use.
         /// </summary>
         public virtual string ProviderName
         {
@@ -1213,7 +1213,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Performs o-space loading for the type and throws if the type is not in the model.
         /// </summary>
-        /// <param name = "entityType">Type of the entity.</param>
+        /// <param name="entityType"> Type of the entity. </param>
         private void UpdateEntitySetMappingsForType(Type entityType)
         {
             Contract.Assert(
@@ -1317,7 +1317,7 @@ namespace System.Data.Entity.Internal
         #region Validation
 
         /// <summary>
-        ///     Gets <see cref = "ValidationProvider" /> instance used to create validators and validation contexts.
+        ///     Gets <see cref="ValidationProvider" /> instance used to create validators and validation contexts.
         ///     This property is virtual to allow mocking.
         /// </summary>
         public virtual ValidationProvider ValidationProvider

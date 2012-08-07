@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Configures a condition used to discriminate between types in an inheritance hierarchy based on the values assigned to a property.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref = "DbModelBuilder" />.
+    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class NotNullConditionConfiguration
     {
@@ -90,11 +91,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             // Make the property required
             var newConfiguration = new Properties.Primitive.PrimitivePropertyConfiguration
-                {
-                    IsNullable = false,
-                    OverridableConfigurationParts =
-                        OverridableConfigurationParts.OverridableInSSpace
-                };
+                                       {
+                                           IsNullable = false,
+                                           OverridableConfigurationParts =
+                                               OverridableConfigurationParts.OverridableInSSpace
+                                       };
 
             newConfiguration.Configure(edmPropertyPath.Single().Last());
 

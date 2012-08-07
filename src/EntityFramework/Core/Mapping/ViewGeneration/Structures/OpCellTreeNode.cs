@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -659,7 +660,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region String methods
 
         /// <summary>
-        /// Given the <paramref name="opType"/>, returns eSQL string corresponding to the op.
+        ///     Given the <paramref name="opType" />, returns eSQL string corresponding to the op.
         /// </summary>
         internal static string OpToEsql(CellTreeOpType opType)
         {

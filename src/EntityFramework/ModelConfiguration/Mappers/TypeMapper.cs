@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Collections.Generic;
@@ -63,10 +64,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 Enum.GetNames(type)
                     .Zip(
                         Enum.GetValues(type).Cast<object>(), (n, v) => new
-                            {
-                                n,
-                                v
-                            })
+                                                                           {
+                                                                               n,
+                                                                               v
+                                                                           })
                     .Each(m => enumType.AddMember(m.n, Convert.ToInt64(m.v, CultureInfo.InvariantCulture)));
             }
             else if (type != enumType.GetClrType())

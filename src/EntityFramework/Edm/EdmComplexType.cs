@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification of a complex type in an Entity Data Model (EDM) <see cref = "EdmNamespace" /> .
+    ///     Allows the construction and modification of a complex type in an Entity Data Model (EDM) <see cref="EdmNamespace" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmComplexType
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the optional <see cref = "EdmComplexType" /> that indicates the base complex type of the complex type.
+        ///     Gets or sets the optional <see cref="EdmComplexType" /> that indicates the base complex type of the complex type.
         /// </summary>
         public new virtual EdmComplexType BaseType
         {
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmProperty" /> instances that describe the (scalar or complex) properties of the complex type.
+        ///     Gets or sets the collection of <see cref="EdmProperty" /> instances that describe the (scalar or complex) properties of the complex type.
         /// </summary>
         public virtual IList<EdmProperty> DeclaredProperties
         {

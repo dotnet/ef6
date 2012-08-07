@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// <summary>
     ///     Configures an required relationship from an entity type.
     /// </summary>
-    /// <typeparam name = "TEntityType">The entity type that the relationship originates from.</typeparam>
-    /// <typeparam name = "TTargetEntityType">The entity type that the relationship targets.</typeparam>
+    /// <typeparam name="TEntityType"> The entity type that the relationship originates from. </typeparam>
+    /// <typeparam name="TTargetEntityType"> The entity type that the relationship targets. </typeparam>
     public class RequiredNavigationPropertyConfiguration<TEntityType, TTargetEntityType>
         where TEntityType : class
         where TTargetEntityType : class
@@ -35,12 +36,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the relationship to be required:many with a navigation property on the other side of the relationship.
         /// </summary>
-        /// <param name = "navigationPropertyExpression">
-        ///     An lambda expression representing the navigation property on the other end of the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <param name="navigationPropertyExpression"> An lambda expression representing the navigation property on the other end of the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public DependentNavigationPropertyConfiguration<TEntityType> WithMany(
@@ -57,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the relationship to be required:many without a navigation property on the other side of the relationship.
         /// </summary>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public DependentNavigationPropertyConfiguration<TEntityType> WithMany()
         {
             _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Many;
@@ -68,12 +65,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the relationship to be required:optional with a navigation property on the other side of the relationship.
         /// </summary>
-        /// <param name = "navigationPropertyExpression">
-        ///     An lambda expression representing the navigation property on the other end of the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <param name="navigationPropertyExpression"> An lambda expression representing the navigation property on the other end of the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ForeignKeyNavigationPropertyConfiguration WithOptional(
@@ -90,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the relationship to be required:optional without a navigation property on the other side of the relationship.
         /// </summary>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ForeignKeyNavigationPropertyConfiguration WithOptional()
         {
             _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Optional;
@@ -103,12 +96,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The entity type being configured will be the dependent and contain a foreign key to the principal. 
         ///     The entity type that the relationship targets will be the principal in the relationship.
         /// </summary>
-        /// <param name = "navigationPropertyExpression">
-        ///     An lambda expression representing the navigation property on the other end of the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <param name="navigationPropertyExpression"> An lambda expression representing the navigation property on the other end of the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ForeignKeyNavigationPropertyConfiguration WithRequiredDependent(
@@ -127,7 +116,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The entity type being configured will be the dependent and contain a foreign key to the principal. 
         ///     The entity type that the relationship targets will be the principal in the relationship.
         /// </summary>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ForeignKeyNavigationPropertyConfiguration WithRequiredDependent()
         {
             _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Required;
@@ -142,12 +131,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The entity type being configured will be the principal in the relationship. 
         ///     The entity type that the relationship targets will be the dependent and contain a foreign key to the principal.
         /// </summary>
-        /// <param name = "navigationPropertyExpression">
-        ///     An lambda expression representing the navigation property on the other end of the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <param name="navigationPropertyExpression"> An lambda expression representing the navigation property on the other end of the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ForeignKeyNavigationPropertyConfiguration WithRequiredPrincipal(
@@ -166,7 +151,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The entity type being configured will be the principal in the relationship. 
         ///     The entity type that the relationship targets will be the dependent and contain a foreign key to the principal.
         /// </summary>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ForeignKeyNavigationPropertyConfiguration WithRequiredPrincipal()
         {
             _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Required;

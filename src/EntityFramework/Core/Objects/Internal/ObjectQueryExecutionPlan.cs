@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
@@ -14,7 +15,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see cref="ObjectQuery"/>
+    ///     Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see
+    ///      cref="ObjectQuery" />
     /// </summary>
     internal class ObjectQueryExecutionPlan
     {
@@ -24,11 +26,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal readonly MergeOption MergeOption;
         internal readonly IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> CompiledQueryParameters;
 
-        /// <summary>If the query yields entities from a single entity set, the value is stored here.</summary>
+        /// <summary>
+        ///     If the query yields entities from a single entity set, the value is stored here.
+        /// </summary>
         private readonly EntitySet _singleEntitySet;
 
         /// <summary>
-        /// For testing purposes only. For anything else call <see cref="ObjectQueryExecutionPlanFactory.Prepare"/>.
+        ///     For testing purposes only. For anything else call <see cref="ObjectQueryExecutionPlanFactory.Prepare" />.
         /// </summary>
         public ObjectQueryExecutionPlan(
             DbCommandDefinition commandDefinition, ShaperFactory resultShaperFactory, TypeUsage resultType, MergeOption mergeOption,
@@ -91,7 +95,8 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
 
-                if (ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+                if (ResultType.EdmType.BuiltInTypeKind
+                    == BuiltInTypeKind.CollectionType)
                 {
                     resultItemEdmType = ((CollectionType)ResultType.EdmType).TypeUsage;
                 }
@@ -114,7 +119,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        internal async virtual Task<ObjectResult<TResultType>> ExecuteAsync<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues,
+        internal virtual async Task<ObjectResult<TResultType>> ExecuteAsync<TResultType>(
+            ObjectContext context, ObjectParameterCollection parameterValues,
             CancellationToken cancellationToken)
         {
             DbDataReader storeReader = null;

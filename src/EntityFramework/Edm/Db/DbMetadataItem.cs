@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Edm.Db
     using System.Data.Entity.Edm.Internal;
 
     /// <summary>
-    ///     The base for all all Database Metadata types that support annotation using <see cref = "DataModelAnnotation" /> .
+    ///     The base for all all Database Metadata types that support annotation using <see cref="DataModelAnnotation" /> .
     /// </summary>
     internal abstract class DbMetadataItem
         : DbDataModelItem, IAnnotatedDataModelItem

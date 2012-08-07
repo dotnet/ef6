@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
@@ -13,12 +13,13 @@ namespace System.Data.Entity.Infrastructure
     public static class IDbAsyncEnumerableExtensions
     {
         /// <summary>
-        ///     Executes the provided action on each element of the <see cref = "IDbAsyncEnumerable" />.
+        ///     Executes the provided action on each element of the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
-        /// <param name="action">The action to be executed.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        internal async static Task ForEachAsync(this IDbAsyncEnumerable enumerable, Action<object> action, CancellationToken cancellationToken)
+        /// <param name="action"> The action to be executed. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
+        internal static async Task ForEachAsync(
+            this IDbAsyncEnumerable enumerable, Action<object> action, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(enumerable != null);
@@ -35,18 +36,20 @@ namespace System.Data.Entity.Infrastructure
                         var current = enumerator.Current;
                         moveNextTask = enumerator.MoveNextAsync(cancellationToken);
                         action(current);
-                    } while (await moveNextTask);
+                    }
+                    while (await moveNextTask);
                 }
             }
         }
 
         /// <summary>
-        ///     Executes the provided action on each element of the <see cref = "IDbAsyncEnumerable{T}" />.
+        ///     Executes the provided action on each element of the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
-        /// <param name="action">The action to be executed.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        internal async static Task ForEachAsync<T>(this IDbAsyncEnumerable<T> enumerable, Action<T> action, CancellationToken cancellationToken)
+        /// <param name="action"> The action to be executed. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
+        internal static async Task ForEachAsync<T>(
+            this IDbAsyncEnumerable<T> enumerable, Action<T> action, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(enumerable != null);
@@ -63,16 +66,17 @@ namespace System.Data.Entity.Infrastructure
                         var current = enumerator.Current;
                         moveNextTask = enumerator.MoveNextAsync(cancellationToken);
                         action(current);
-                    } while (await moveNextTask);
+                    }
+                    while (await moveNextTask);
                 }
             }
         }
 
         /// <summary>
-        ///     Creates a <see cref = "List{T}" /> from the <see cref = "IDbAsyncEnumerable{T}" />.
+        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{T}" /> that contains elements from the input sequence.</returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> enumerable)
         {
@@ -83,12 +87,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref = "List{T}" /> from the <see cref = "IDbAsyncEnumerable{T}" />.
+        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{T}" /> that contains elements from the input sequence.</returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        internal async static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> enumerable, CancellationToken cancellationToken)
+        internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> enumerable, CancellationToken cancellationToken)
         {
             Contract.Requires(enumerable != null);
             Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
@@ -105,14 +109,18 @@ namespace System.Data.Entity.Infrastructure
             return source.FirstAsync(CancellationToken.None);
         }
 
-        internal async static Task<TSource> FirstAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
+        internal static async Task<TSource> FirstAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
 
-            using (IDbAsyncEnumerator<TSource> e = source.GetAsyncEnumerator())
+            using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken)) return e.Current;
+                if (await e.MoveNextAsync(cancellationToken))
+                {
+                    return e.Current;
+                }
             }
 
             throw Error.EmptySequence();
@@ -125,14 +133,18 @@ namespace System.Data.Entity.Infrastructure
             return source.FirstOrDefaultAsync(CancellationToken.None);
         }
 
-        internal async static Task<TSource> FirstOrDefaultAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
+        internal static async Task<TSource> FirstOrDefaultAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
 
-            using (IDbAsyncEnumerator<TSource> e = source.GetAsyncEnumerator())
+            using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken)) return e.Current;
+                if (await e.MoveNextAsync(cancellationToken))
+                {
+                    return e.Current;
+                }
             }
 
             return default(TSource);
@@ -145,18 +157,19 @@ namespace System.Data.Entity.Infrastructure
             return source.SingleAsync(CancellationToken.None);
         }
 
-        internal async static Task<TSource> SingleAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
+        internal static async Task<TSource> SingleAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
 
-            using (IDbAsyncEnumerator<TSource> e = source.GetAsyncEnumerator())
+            using (var e = source.GetAsyncEnumerator())
             {
                 if (!await e.MoveNextAsync(cancellationToken))
                 {
                     throw Error.EmptySequence();
                 }
-                TSource result = e.Current;
+                var result = e.Current;
                 if (!await e.MoveNextAsync(cancellationToken))
                 {
                     return result;
@@ -173,18 +186,19 @@ namespace System.Data.Entity.Infrastructure
             return source.SingleOrDefaultAsync(CancellationToken.None);
         }
 
-        internal async static Task<TSource> SingleOrDefaultAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
+        internal static async Task<TSource> SingleOrDefaultAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
 
-            using (IDbAsyncEnumerator<TSource> e = source.GetAsyncEnumerator())
+            using (var e = source.GetAsyncEnumerator())
             {
                 if (!await e.MoveNextAsync(cancellationToken))
                 {
                     return default(TSource);
                 }
-                TSource result = e.Current;
+                var result = e.Current;
                 if (!await e.MoveNextAsync(cancellationToken))
                 {
                     return result;

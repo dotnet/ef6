@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Data.Entity.Edm;
@@ -28,10 +29,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
 
             var enumTypeMember = new EdmEnumTypeMember
-                {
-                    Name = name,
-                    Value = value
-                };
+                                     {
+                                         Name = name,
+                                         Value = value
+                                     };
 
             enumType.Members.Add(enumTypeMember);
 

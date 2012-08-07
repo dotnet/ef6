@@ -7,9 +7,9 @@ namespace System.Data.Entity.Config
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// This resolver is always the last resolver in the internal resolver chain and is
-    /// responsible for providing the default service for each dependency or throwing an
-    /// exception if there is no reasonable default service.
+    ///     This resolver is always the last resolver in the internal resolver chain and is
+    ///     responsible for providing the default service for each dependency or throwing an
+    ///     exception if there is no reasonable default service.
     /// </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
@@ -44,13 +44,13 @@ namespace System.Data.Entity.Config
             get { return _databaseInitializerResolver; }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual object GetService(Type type, string name)
         {
             return _resolvers.GetService(type, name);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void Release(object service)
         {
             _resolvers.Release(service);

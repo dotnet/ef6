@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Collections;
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Class representing a connection string builder for the entity client provider
+    ///     Class representing a connection string builder for the entity client provider
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "EntityConnectionStringBuilder follows the naming convention of DbConnectionStringBuilder.")]
@@ -26,12 +27,12 @@ namespace System.Data.Entity.Core.EntityClient
 
         // An array to hold the keywords
         private static readonly string[] _validKeywords = new[]
-            {
-                NameParameterName,
-                MetadataParameterName,
-                ProviderParameterName,
-                ProviderConnectionStringParameterName
-            };
+                                                              {
+                                                                  NameParameterName,
+                                                                  MetadataParameterName,
+                                                                  ProviderParameterName,
+                                                                  ProviderConnectionStringParameterName
+                                                              };
 
         private static Hashtable _synonyms;
 
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.EntityClient
         private string _storeProviderConnectionString;
 
         /// <summary>
-        /// Constructs the EntityConnectionStringBuilder object
+        ///     Constructs the EntityConnectionStringBuilder object
         /// </summary>
         public EntityConnectionStringBuilder()
         {
@@ -50,16 +51,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Constructs the EntityConnectionStringBuilder object with a connection string
+        ///     Constructs the EntityConnectionStringBuilder object with a connection string
         /// </summary>
-        /// <param name="connectionString">The connection string to initialize this builder</param>
+        /// <param name="connectionString"> The connection string to initialize this builder </param>
         public EntityConnectionStringBuilder(string connectionString)
         {
             ConnectionString = connectionString;
         }
 
         /// <summary>
-        /// Gets or sets the named connection name in the connection string
+        ///     Gets or sets the named connection name in the connection string
         /// </summary>
         [DisplayName("Name")]
         [EntityResCategory(EntityRes.EntityDataCategory_NamedConnectionString)]
@@ -76,7 +77,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets or sets the name of the underlying .NET Framework data provider in the connection string
+        ///     Gets or sets the name of the underlying .NET Framework data provider in the connection string
         /// </summary>
         [DisplayName("Provider")]
         [EntityResCategory(EntityRes.EntityDataCategory_Source)]
@@ -93,8 +94,8 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets or sets the metadata locations in the connection string, which is a pipe-separated sequence
-        /// of paths to folders and individual files
+        ///     Gets or sets the metadata locations in the connection string, which is a pipe-separated sequence
+        ///     of paths to folders and individual files
         /// </summary>
         [DisplayName("Metadata")]
         [EntityResCategory(EntityRes.EntityDataCategory_Context)]
@@ -111,7 +112,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets or sets the inner connection string in the connection string
+        ///     Gets or sets the inner connection string in the connection string
         /// </summary>
         [DisplayName("Provider Connection String")]
         [EntityResCategory(EntityRes.EntityDataCategory_Source)]
@@ -128,7 +129,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets whether the EntityConnectionStringBuilder has a fixed size
+        ///     Gets whether the EntityConnectionStringBuilder has a fixed size
         /// </summary>
         public override bool IsFixedSize
         {
@@ -136,7 +137,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets a collection of all keywords used by EntityConnectionStringBuilder
+        ///     Gets a collection of all keywords used by EntityConnectionStringBuilder
         /// </summary>
         public override ICollection Keys
         {
@@ -144,8 +145,8 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Returns a hash table object containing all the valid keywords. This is really the same as the Keys
-        /// property, it's just that the returned object is a hash table.
+        ///     Returns a hash table object containing all the valid keywords. This is really the same as the Keys
+        ///     property, it's just that the returned object is a hash table.
         /// </summary>
         internal static Hashtable Synonyms
         {
@@ -166,7 +167,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets or sets the value associated with the keyword
+        ///     Gets or sets the value associated with the keyword
         /// </summary>
         public override object this[string keyword]
         {
@@ -239,7 +240,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Clear all the parameters in the connection string
+        ///     Clear all the parameters in the connection string
         /// </summary>
         public override void Clear()
         {
@@ -251,10 +252,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Determine if this connection string builder contains a specific key
+        ///     Determine if this connection string builder contains a specific key
         /// </summary>
-        /// <param name="keyword">The keyword to find in this connection string builder</param>
-        /// <returns>True if this connections string builder contains the specific key</returns>
+        /// <param name="keyword"> The keyword to find in this connection string builder </param>
+        /// <returns> True if this connections string builder contains the specific key </returns>
         public override bool ContainsKey(string keyword)
         {
             DbHelpers.ThrowIfNull(keyword, "keyword");
@@ -271,11 +272,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets the value of the given keyword, returns false if there isn't a value with the given keyword
+        ///     Gets the value of the given keyword, returns false if there isn't a value with the given keyword
         /// </summary>
-        /// <param name="keyword">The keyword specifying the name of the parameter to retrieve</param>
-        /// <param name="value">The value retrieved</param>
-        /// <returns>True if the value is retrieved</returns>
+        /// <param name="keyword"> The keyword specifying the name of the parameter to retrieve </param>
+        /// <param name="value"> The value retrieved </param>
+        /// <returns> True if the value is retrieved </returns>
         public override bool TryGetValue(string keyword, out object value)
         {
             if (ContainsKey(keyword))
@@ -289,10 +290,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Removes a parameter from the builder
+        ///     Removes a parameter from the builder
         /// </summary>
-        /// <param name="keyword">The keyword specifying the name of the parameter to remove</param>
-        /// <returns>True if the parameter is removed</returns>
+        /// <param name="keyword"> The keyword specifying the name of the parameter to remove </param>
+        /// <returns> True if the parameter is removed </returns>
         public override bool Remove(string keyword)
         {
             // Convert the given object into a string

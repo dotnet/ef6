@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
     using System.Collections.Generic;
@@ -14,19 +15,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     using System.Text;
 
     /// <summary>
-    /// Uses query rewriting to determine the case statements, top-level WHERE clause, and the "used views"
-    /// for a given type to be generated.
+    ///     Uses query rewriting to determine the case statements, top-level WHERE clause, and the "used views"
+    ///     for a given type to be generated.
     /// 
-    /// Step 1: Method "EnsureIsFullyMapped" goes through the (C) schema metadata and checks whether the query for each
-    ///         entity shape can be rewritten from the C fragment queries.
-    ///         This step tracks the "used views" which will later be passed to "basic view generation" (i.e., creation of the FOJ/LOJ/IJ/Union relational expressions)
-    /// Step 2: GetCaseStatements constructs the required case statements and the top-level WHERE clause.
-    ///         This may add some extra views to "used views".
-    ///         Now we know what views are used overall.
-    /// Step 3: We remap _from variables to new _from variables that are renumbered for used views.
-    ///         This is done to comply with the numbering scheme in the old algorithm - and to produce more readable views.
-    /// Step 4: From the constructed relational expression (OpCellTree), we can tell whether a top-level WHERE clause is needed or not.
-    ///         (Usually, it's needed only in certain cases for OfType() views.)
+    ///     Step 1: Method "EnsureIsFullyMapped" goes through the (C) schema metadata and checks whether the query for each
+    ///     entity shape can be rewritten from the C fragment queries.
+    ///     This step tracks the "used views" which will later be passed to "basic view generation" (i.e., creation of the FOJ/LOJ/IJ/Union relational expressions)
+    ///     Step 2: GetCaseStatements constructs the required case statements and the top-level WHERE clause.
+    ///     This may add some extra views to "used views".
+    ///     Now we know what views are used overall.
+    ///     Step 3: We remap _from variables to new _from variables that are renumbered for used views.
+    ///     This is done to comply with the numbering scheme in the old algorithm - and to produce more readable views.
+    ///     Step 4: From the constructed relational expression (OpCellTree), we can tell whether a top-level WHERE clause is needed or not.
+    ///     (Usually, it's needed only in certain cases for OfType() views.)
     /// </summary>
     internal class QueryRewriter
     {

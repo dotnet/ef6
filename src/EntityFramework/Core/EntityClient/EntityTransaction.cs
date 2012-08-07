@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Class representing a transaction for the conceptual layer
+    ///     Class representing a transaction for the conceptual layer
     /// </summary>
     public class EntityTransaction : DbTransaction
     {
@@ -20,10 +21,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Constructs the EntityTransaction object with an associated connection and the underlying store transaction
+        ///     Constructs the EntityTransaction object with an associated connection and the underlying store transaction
         /// </summary>
-        /// <param name="connection">The EntityConnetion object owning this transaction</param>
-        /// <param name="storeTransaction">The underlying transaction object</param>
+        /// <param name="connection"> The EntityConnetion object owning this transaction </param>
+        /// <param name="storeTransaction"> The underlying transaction object </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         internal EntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The connection object owning this transaction object
+        ///     The connection object owning this transaction object
         /// </summary>
         public new virtual EntityConnection Connection
         {
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The connection object owning this transaction object
+        ///     The connection object owning this transaction object
         /// </summary>
         protected override DbConnection DbConnection
         {
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// The isolation level of this transaction
+        ///     The isolation level of this transaction
         /// </summary>
         public override IsolationLevel IsolationLevel
         {
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets the DbTransaction for the underlying provider transaction
+        ///     Gets the DbTransaction for the underlying provider transaction
         /// </summary>
         internal virtual DbTransaction StoreTransaction
         {
@@ -76,7 +77,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Commits the transaction
+        ///     Commits the transaction
         /// </summary>
         public override void Commit()
         {
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Rolls back the transaction
+        ///     Rolls back the transaction
         /// </summary>
         public override void Rollback()
         {
@@ -120,9 +121,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Cleans up this transaction object
+        ///     Cleans up this transaction object
         /// </summary>
-        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources</param>
+        /// <param name="disposing"> true to release both managed and unmanaged resources; false to release only unmanaged resources </param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -134,7 +135,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Helper method to wrap EntityConnection.ClearCurrentTransaction()
+        ///     Helper method to wrap EntityConnection.ClearCurrentTransaction()
         /// </summary>
         private void ClearCurrentTransaction()
         {

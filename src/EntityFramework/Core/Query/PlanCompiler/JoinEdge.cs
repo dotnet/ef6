@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -6,9 +7,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Represents an "edge" in the join graph.
-    /// A JoinEdge is a directed equijoin between the left and the right table. The equijoin
-    /// columns are represented by the LeftVars and the RightVars properties
+    ///     Represents an "edge" in the join graph.
+    ///     A JoinEdge is a directed equijoin between the left and the right table. The equijoin
+    ///     columns are represented by the LeftVars and the RightVars properties
     /// </summary>
     internal class JoinEdge
     {
@@ -25,14 +26,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructors
 
         /// <summary>
-        /// Internal constructor
+        ///     Internal constructor
         /// </summary>
-        /// <param name="left">the left table</param>
-        /// <param name="right">the right table</param>
-        /// <param name="joinNode">the owner join node</param>
-        /// <param name="joinKind">the Join Kind</param>
-        /// <param name="leftVars">list of equijoin columns of the left table</param>
-        /// <param name="rightVars">equijoin columns of the right table</param>
+        /// <param name="left"> the left table </param>
+        /// <param name="right"> the right table </param>
+        /// <param name="joinNode"> the owner join node </param>
+        /// <param name="joinKind"> the Join Kind </param>
+        /// <param name="leftVars"> list of equijoin columns of the left table </param>
+        /// <param name="rightVars"> equijoin columns of the right table </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private JoinEdge(
@@ -54,7 +55,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public apis
 
         /// <summary>
-        /// The left table
+        ///     The left table
         /// </summary>
         internal AugmentedTableNode Left
         {
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// The right table of the join
+        ///     The right table of the join
         /// </summary>
         internal AugmentedTableNode Right
         {
@@ -70,20 +71,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// The underlying join node, may be null
-        /// </summary>     
+        ///     The underlying join node, may be null
+        /// </summary>
         internal AugmentedJoinNode JoinNode
         {
             get { return m_joinNode; }
         }
 
         /// <summary>
-        /// The join kind
+        ///     The join kind
         /// </summary>
         internal JoinKind JoinKind { get; set; }
 
         /// <summary>
-        /// Equijoin columns of the left table
+        ///     Equijoin columns of the left table
         /// </summary>
         internal List<ColumnVar> LeftVars
         {
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Equijoin columns of the right table
+        ///     Equijoin columns of the right table
         /// </summary>
         internal List<ColumnVar> RightVars
         {
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Is this join edge useless?
+        ///     Is this join edge useless?
         /// </summary>
         internal bool IsEliminated
         {
@@ -107,14 +108,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Factory method
+        ///     Factory method
         /// </summary>
-        /// <param name="left">left table</param>
-        /// <param name="right">right table</param>
-        /// <param name="joinNode">the owner join node</param>
-        /// <param name="leftVar">equijoin column of the left table</param>
-        /// <param name="rightVar">equijoin column of the right table</param>
-        /// <returns>the new join edge</returns>
+        /// <param name="left"> left table </param>
+        /// <param name="right"> right table </param>
+        /// <param name="joinNode"> the owner join node </param>
+        /// <param name="leftVar"> equijoin column of the left table </param>
+        /// <param name="rightVar"> equijoin column of the right table </param>
+        /// <returns> the new join edge </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static JoinEdge CreateJoinEdge(
@@ -139,14 +140,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Creates a transitively generated join edge
+        ///     Creates a transitively generated join edge
         /// </summary>
-        /// <param name="left">the left table</param>
-        /// <param name="right">the right table</param>
-        /// <param name="joinKind">the join kind</param>
-        /// <param name="leftVars">left equijoin vars</param>
-        /// <param name="rightVars">right equijoin vars</param>
-        /// <returns>the join edge</returns>
+        /// <param name="left"> the left table </param>
+        /// <param name="right"> the right table </param>
+        /// <param name="joinKind"> the join kind </param>
+        /// <param name="leftVars"> left equijoin vars </param>
+        /// <param name="rightVars"> right equijoin vars </param>
+        /// <returns> the join edge </returns>
         internal static JoinEdge CreateTransitiveJoinEdge(
             AugmentedTableNode left, AugmentedTableNode right, JoinKind joinKind,
             List<ColumnVar> leftVars, List<ColumnVar> rightVars)
@@ -156,12 +157,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Add a new "equi-join" condition to this edge
+        ///     Add a new "equi-join" condition to this edge
         /// </summary>
-        /// <param name="joinNode">join node producing this condition</param>
-        /// <param name="leftVar">the left-side column</param>
-        /// <param name="rightVar">the right-side column</param>
-        /// <returns>true, if this condition can be added</returns>
+        /// <param name="joinNode"> join node producing this condition </param>
+        /// <param name="leftVar"> the left-side column </param>
+        /// <param name="rightVar"> the right-side column </param>
+        /// <returns> true, if this condition can be added </returns>
         internal bool AddCondition(AugmentedJoinNode joinNode, ColumnVar leftVar, ColumnVar rightVar)
         {
             if (joinNode != m_joinNode)

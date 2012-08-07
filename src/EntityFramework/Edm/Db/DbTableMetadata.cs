@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Edm.Db
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification a table in a <see cref = "DbSchemaMetadata" /> database schema.
+    ///     Allows the construction and modification a table in a <see cref="DbSchemaMetadata" /> database schema.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Edm.Db
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "DbTableColumnMetadata" /> instances that specifies the columns present within the table.
+        ///     Gets or sets the collection of <see cref="DbTableColumnMetadata" /> instances that specifies the columns present within the table.
         /// </summary>
         public virtual IList<DbTableColumnMetadata> Columns
         {
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Edm.Db
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "DbTableColumnMetadata" /> instances from the <see cref = "Columns" /> collection of the table that are part of the primary key.
+        ///     Gets or sets the collection of <see cref="DbTableColumnMetadata" /> instances from the <see cref="Columns" /> collection of the table that are part of the primary key.
         /// </summary>
         public IEnumerable<DbTableColumnMetadata> KeyColumns
         {
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Edm.Db
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "DbForeignKeyConstraintMetadata" /> instances that defines the foreign key constraints sourced from the table.
+        ///     Gets or sets the collection of <see cref="DbForeignKeyConstraintMetadata" /> instances that defines the foreign key constraints sourced from the table.
         /// </summary>
         public virtual IList<DbForeignKeyConstraintMetadata> ForeignKeyConstraints
         {

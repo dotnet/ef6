@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Sql
 {
     using System.Data.Common;
@@ -6,7 +7,6 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Globalization;
-    using System.Linq;
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands 

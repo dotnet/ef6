@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using ReadOnlyModificationClauses =
     System.Collections.ObjectModel.ReadOnlyCollection<System.Data.Entity.Core.Common.CommandTrees.DbModificationClause>;
 
@@ -12,9 +13,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Represents a single row insert operation expressed as a canonical command tree.
-    /// When the <see cref="Returning"/> property is set, the command returns a reader; otherwise,
-    /// it returns a scalar value indicating the number of rows affected.
+    ///     Represents a single row insert operation expressed as a canonical command tree.
+    ///     When the <see cref="Returning" /> property is set, the command returns a reader; otherwise,
+    ///     it returns a scalar value indicating the number of rows affected.
     /// </summary>
     public class DbInsertCommandTree : DbModificationCommandTree
     {
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets set clauses determining values of columns in the inserted row.
+        ///     Gets set clauses determining values of columns in the inserted row.
         /// </summary>
         public IList<DbModificationClause> SetClauses
         {
@@ -46,15 +47,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets an <see cref="DbExpression"/> that specifies a projection of results to be returned based on the modified rows.
-        /// If null, indicates no results should be returned from this command.
+        ///     Gets an <see cref="DbExpression" /> that specifies a projection of results to be returned based on the modified rows.
+        ///     If null, indicates no results should be returned from this command.
         /// </summary>
         /// <remarks>
-        /// The returning projection includes only the following elements:
-        /// <list>
-        /// <item>NewInstance expression</item>
-        /// <item>Property expression</item>
-        /// </list>
+        ///     The returning projection includes only the following elements:
+        ///     <list>
+        ///         <item>NewInstance expression</item>
+        ///         <item>Property expression</item>
+        ///     </list>
         /// </remarks>
         public DbExpression Returning
         {

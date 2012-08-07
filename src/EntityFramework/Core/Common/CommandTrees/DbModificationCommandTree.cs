@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Linq;
 
     /// <summary>
-    /// Represents a DML operation expressed as a canonical command tree
+    ///     Represents a DML operation expressed as a canonical command tree
     /// </summary>
     public abstract class DbModificationCommandTree : DbCommandTree
     {
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets the <see cref="DbExpressionBinding"/> that specifies the target table for the DML operation.
+        ///     Gets the <see cref="DbExpressionBinding" /> that specifies the target table for the DML operation.
         /// </summary>
         public DbExpressionBinding Target
         {
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Returns true if this modification command returns a reader (for instance, to return server generated values)
+        ///     Returns true if this modification command returns a reader (for instance, to return server generated values)
         /// </summary>
         internal abstract bool HasReader { get; }
 

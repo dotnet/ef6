@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
@@ -69,9 +70,9 @@ namespace System.Data.Entity.Utilities
             if (propertyType.IsPrimitiveType(out primitiveType))
             {
                 var property = new EdmProperty
-                    {
-                        Name = propertyInfo.Name
-                    }.AsPrimitive();
+                                   {
+                                       Name = propertyInfo.Name
+                                   }.AsPrimitive();
 
                 property.PropertyType.EdmType = primitiveType;
                 property.PropertyType.IsNullable = isNullable;

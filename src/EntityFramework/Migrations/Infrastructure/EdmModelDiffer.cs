@@ -184,9 +184,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                        new MoveTableOperation(
                        GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
                        es2.SchemaAttribute())
-                       {
-                           IsSystem = es2.IsSystemAttribute().EqualsIgnoreCase("true")
-                       };
+                           {
+                               IsSystem = es2.IsSystemAttribute().EqualsIgnoreCase("true")
+                           };
         }
 
         private IEnumerable<DropTableOperation> FindRemovedTables(IEnumerable<RenameTableOperation> renamedTables)

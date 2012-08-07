@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification of an entity type in an Entity Data Model (EDM) <see cref = "EdmNamespace" /> .
+    ///     Allows the construction and modification of an entity type in an Entity Data Model (EDM) <see cref="EdmNamespace" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the optional <see cref = "EdmEntityType" /> that indicates the base entity type of the entity type.
+        ///     Gets or sets the optional <see cref="EdmEntityType" /> that indicates the base entity type of the entity type.
         /// </summary>
         public new virtual EdmEntityType BaseType
         {
@@ -70,7 +71,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmProperty" /> s that specifies the properties declared by the entity type.
+        ///     Gets or sets the collection of <see cref="EdmProperty" /> s that specifies the properties declared by the entity type.
         /// </summary>
         public virtual IList<EdmProperty> DeclaredProperties
         {
@@ -98,7 +99,8 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmProperty" /> s that indicates which properties from the <see cref = "DeclaredProperties" /> collection are part of the entity key.
+        ///     Gets or sets the collection of <see cref="EdmProperty" /> s that indicates which properties from the <see
+        ///      cref="DeclaredProperties" /> collection are part of the entity key.
         /// </summary>
         public virtual IList<EdmProperty> DeclaredKeyProperties
         {
@@ -112,7 +114,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the optional collection of <see cref = "EdmNavigationProperty" /> s that specifies the navigation properties declared by the entity type.
+        ///     Gets or sets the optional collection of <see cref="EdmNavigationProperty" /> s that specifies the navigation properties declared by the entity type.
         /// </summary>
         public virtual IList<EdmNavigationProperty> DeclaredNavigationProperties
         {

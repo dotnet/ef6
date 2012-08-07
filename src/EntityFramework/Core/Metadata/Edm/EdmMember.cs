@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    /// Represents the edm member class
+    ///     Represents the edm member class
     /// </summary>
     public abstract class EdmMember : MetadataItem
     {
@@ -11,10 +12,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of EdmMember class
+        ///     Initializes a new instance of EdmMember class
         /// </summary>
-        /// <param name="name">name of the member</param>
-        /// <param name="memberTypeUsage">type information containing info about member's type and its facet</param>
+        /// <param name="name"> name of the member </param>
+        /// <param name="memberTypeUsage"> type information containing info about member's type and its facet </param>
         internal EdmMember(string name, TypeUsage memberTypeUsage)
         {
             EntityUtil.CheckStringArgument(name, "name");
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private StructuralType _declaringType;
 
         /// <summary>
-        /// Returns the identity of the member
+        ///     Returns the identity of the member
         /// </summary>
         internal override string Identity
         {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the name of the member
+        ///     Returns the name of the member
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual String Name
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the declaring type of the member
+        ///     Returns the declaring type of the member
         /// </summary>
         public virtual StructuralType DeclaringType
         {
@@ -53,8 +54,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the TypeUsage object containing the type information and facets
-        /// about the type
+        ///     Returns the TypeUsage object containing the type information and facets
+        ///     about the type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
@@ -63,8 +64,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation 
-        /// for this type.
+        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     for this type.
         /// </summary>
         public override string ToString()
         {
@@ -72,8 +73,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Sets the member to read only mode. Once this is done, there are no changes
-        /// that can be done to this class
+        ///     Sets the member to read only mode. Once this is done, there are no changes
+        ///     that can be done to this class
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Change the declaring type without doing fixup in the member collection
+        ///     Change the declaring type without doing fixup in the member collection
         /// </summary>
         internal void ChangeDeclaringTypeWithoutCollectionFixup(StructuralType newDeclaringType)
         {
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Tells whether this member is marked as a Computed member in the EDM definition
+        ///     Tells whether this member is marked as a Computed member in the EDM definition
         /// </summary>
         internal bool IsStoreGeneratedComputed
         {
@@ -110,7 +111,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Tells whether this member's Store generated pattern is marked as Identity in the EDM definition
+        ///     Tells whether this member's Store generated pattern is marked as Identity in the EDM definition
         /// </summary>
         internal bool IsStoreGeneratedIdentity
         {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Internal
         ///     metadata specifying the model, or instead is a store connection, in which case it contains no
         ///     model info.
         /// </summary>
-        /// <value><c>true</c> if the connection contains model info; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if the connection contains model info; otherwise, <c>false</c> . </value>
         bool ConnectionHasModel { get; }
 
         /// <summary>
@@ -57,10 +58,10 @@ namespace System.Data.Entity.Internal
         string OriginalConnectionString { get; }
 
         /// <summary>
-        ///     Creates an <see cref = "ObjectContext" /> from metadata in the connection.  This method must
+        ///     Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
         ///     only be called if ConnectionHasModel returns true.
         /// </summary>
-        /// <returns>The newly created context.</returns>
+        /// <returns> The newly created context. </returns>
         ObjectContext CreateObjectContextFromConnectionModel();
     }
 }

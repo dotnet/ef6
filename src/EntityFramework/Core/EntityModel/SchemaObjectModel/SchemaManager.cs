@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal delegate DbProviderManifest ProviderManifestNeeded(Action<string, ErrorCode, EdmSchemaErrorSeverity> addError);
 
     /// <summary>
-    /// Class responsible for parsing,validating a collection of schema
+    ///     Class responsible for parsing,validating a collection of schema
     /// </summary>
     [DebuggerDisplay("DataModel={DataModel}")]
     internal class SchemaManager
@@ -305,7 +306,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Add the namespace of the given schema to the namespace lookup table
+        ///     Add the namespace of the given schema to the namespace lookup table
         /// </summary>
         public void AddSchema(Schema schema)
         {
@@ -327,9 +328,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Resolve the type - if the type is not found, return appropriate error
+        ///     Resolve the type - if the type is not found, return appropriate error
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public bool TryResolveType(string namespaceName, string typeName, out SchemaType schemaType)
         {
             // For resolving entity container names, namespace can be null
@@ -345,7 +346,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Returns true if this is a valid namespace name or else returns false
+        ///     Returns true if this is a valid namespace name or else returns false
         /// </summary>
         public bool IsValidNamespaceName(string namespaceName)
         {
@@ -357,10 +358,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// Checks if the xml reader has base uri. If it doesn't have, it adds error, other
-        /// returns the location from the base uri
+        ///     Checks if the xml reader has base uri. If it doesn't have, it adds error, other
+        ///     returns the location from the base uri
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         internal static bool TryGetBaseUri(XmlReader xmlReader, out string location)
         {
             var baseUri = xmlReader.BaseURI;
@@ -382,11 +383,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Add the given list of newErrors to the error collection. If there is a error in the new errors,
-        /// it sets the errorEncountered to true. Returns true if the number of errors encountered is more 
-        /// than max errors
+        ///     Add the given list of newErrors to the error collection. If there is a error in the new errors,
+        ///     it sets the errorEncountered to true. Returns true if the number of errors encountered is more 
+        ///     than max errors
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         private static bool UpdateErrorCollectionAndCheckForMaxErrors(
             List<EdmSchemaError> errorCollection,
             IList<EdmSchemaError> newErrors, ref bool errorEncountered)

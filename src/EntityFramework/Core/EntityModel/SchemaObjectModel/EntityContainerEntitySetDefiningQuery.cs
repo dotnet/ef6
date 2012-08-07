@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,16 +7,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an DefiningQuery element.
+    ///     Represents an DefiningQuery element.
     /// </summary>
     internal sealed class EntityContainerEntitySetDefiningQuery : SchemaElement
     {
         private string _query;
 
         /// <summary>
-        /// Constructs an EntityContainerEntitySet
+        ///     Constructs an EntityContainerEntitySet
         /// </summary>
-        /// <param name="parentElement">Reference to the schema element.</param>
+        /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerEntitySetDefiningQuery(EntityContainerEntitySet parentElement)
             : base(parentElement)
         {

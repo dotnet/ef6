@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Generic;
@@ -9,18 +10,17 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// EntityRecordInfo class providing a simple way to access both the type information and the column information.
+    ///     EntityRecordInfo class providing a simple way to access both the type information and the column information.
     /// </summary>
     public class EntityRecordInfo : DataRecordInfo
     {
         private readonly EntityKey _entityKey;
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="metadata"></param>
-        /// <param name="memberInfo"></param>
-        /// <param name="entityKey"></param>
+        /// <param name="metadata"> </param>
+        /// <param name="memberInfo"> </param>
+        /// <param name="entityKey"> </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityRecordInfo(EntityType metadata, IEnumerable<EdmMember> memberInfo, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata), memberInfo)
@@ -33,10 +33,9 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="metadata"></param>
-        /// <param name="entityKey"></param>
+        /// <param name="metadata"> </param>
+        /// <param name="entityKey"> </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(EntityType metadata, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata))
@@ -58,8 +57,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
-        /// but with a different EntityKey instance.
+        ///     Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
+        ///     but with a different EntityKey instance.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(DataRecordInfo info, EntityKey entityKey, EntitySet entitySet)
@@ -80,7 +79,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// the EntityKey
+        ///     the EntityKey
         /// </summary>
         public EntityKey EntityKey
         {

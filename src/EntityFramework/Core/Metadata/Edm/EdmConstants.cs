@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     internal static class EdmConstants
@@ -194,7 +195,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string StoreFunctionNameAttribute = "StoreFunctionNameAttribute";
 
         /// <summary>
-        /// Used to denote application home directory in a Web/ASP.NET context
+        ///     Used to denote application home directory in a Web/ASP.NET context
         /// </summary>
         internal const string WebHomeSymbol = "~";
 

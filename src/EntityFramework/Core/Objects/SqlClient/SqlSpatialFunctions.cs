@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.SqlClient
 {
     using System.Data.Entity.Resources;
@@ -6,12 +7,12 @@ namespace System.Data.Entity.Core.Objects.SqlClient
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Contains function stubs that expose SqlServer methods in Linq to Entities.
+    ///     Contains function stubs that expose SqlServer methods in Linq to Entities.
     /// </summary>
     public static class SqlSpatialFunctions
     {
         /// <summary>
-        /// Proxy for the function SqlServer.POINTGEOGRAPHY
+        ///     Proxy for the function SqlServer.POINTGEOGRAPHY
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "latitude")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "spatialReferenceId")]
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.ASTEXTZM
+        ///     Proxy for the function SqlServer.ASTEXTZM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [DbFunction("SqlServer", "ASTEXTZM")]
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.BUFFERWITHTOLERANCE
+        ///     Proxy for the function SqlServer.BUFFERWITHTOLERANCE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "distance")]
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.ENVELOPEANGLE
+        ///     Proxy for the function SqlServer.ENVELOPEANGLE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [DbFunction("SqlServer", "ENVELOPEANGLE")]
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.ENVELOPECENTER
+        ///     Proxy for the function SqlServer.ENVELOPECENTER
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [DbFunction("SqlServer", "ENVELOPECENTER")]
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.FILTER
+        ///     Proxy for the function SqlServer.FILTER
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyOther")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.INSTANCEOF
+        ///     Proxy for the function SqlServer.INSTANCEOF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryTypeName")]
@@ -88,7 +89,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.NUMRINGS
+        ///     Proxy for the function SqlServer.NUMRINGS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [DbFunction("SqlServer", "NUMRINGS")]
@@ -100,7 +101,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.REDUCE
+        ///     Proxy for the function SqlServer.REDUCE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "tolerance")]
@@ -111,7 +112,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.RINGN
+        ///     Proxy for the function SqlServer.RINGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geographyValue")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "index")]
@@ -122,7 +123,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.POINTGEOMETRY
+        ///     Proxy for the function SqlServer.POINTGEOMETRY
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "xCoordinate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "spatialReferenceId")]
@@ -138,7 +139,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.ASTEXTZM
+        ///     Proxy for the function SqlServer.ASTEXTZM
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryValue")]
         [DbFunction("SqlServer", "ASTEXTZM")]
@@ -148,7 +149,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.BUFFERWITHTOLERANCE
+        ///     Proxy for the function SqlServer.BUFFERWITHTOLERANCE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "relative")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "distance")]
@@ -161,7 +162,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.INSTANCEOF
+        ///     Proxy for the function SqlServer.INSTANCEOF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryTypeName")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryValue")]
@@ -172,7 +173,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.FILTER
+        ///     Proxy for the function SqlServer.FILTER
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryOther")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryValue")]
@@ -183,7 +184,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.MAKEVALID
+        ///     Proxy for the function SqlServer.MAKEVALID
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryValue")]
         [DbFunction("SqlServer", "MAKEVALID")]
@@ -193,7 +194,7 @@ namespace System.Data.Entity.Core.Objects.SqlClient
         }
 
         /// <summary>
-        /// Proxy for the function SqlServer.REDUCE
+        ///     Proxy for the function SqlServer.REDUCE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "tolerance")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "geometryValue")]

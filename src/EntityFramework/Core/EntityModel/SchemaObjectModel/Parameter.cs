@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using Som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
 
     /// <summary>
-    /// Summary description for StructuredProperty.
+    ///     Summary description for StructuredProperty.
     /// </summary>
     internal class Parameter : FacetEnabledSchemaElement
     {
@@ -27,9 +28,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region constructor
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal Parameter(Function parentElement)
             : base(parentElement)
         {

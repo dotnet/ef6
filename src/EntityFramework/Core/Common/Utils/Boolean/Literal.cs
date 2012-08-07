@@ -1,18 +1,19 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents a literal in a normal form expression of the form:
+    ///     Represents a literal in a normal form expression of the form:
     /// 
-    ///         Term
+    ///     Term
     /// 
-    /// or
+    ///     or
     /// 
-    ///         !Term
+    ///     !Term
     /// </summary>
-    /// <typeparam name="T_Identifier"></typeparam>
+    /// <typeparam name="T_Identifier"> </typeparam>
     internal sealed class Literal<T_Identifier> : NormalFormNode<T_Identifier>,
                                                   IEquatable<Literal<T_Identifier>>
     {
@@ -20,10 +21,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly bool _isTermPositive;
 
         /// <summary>
-        /// Initialize a new literal.
+        ///     Initialize a new literal.
         /// </summary>
-        /// <param name="term">Term</param>
-        /// <param name="isTermPositive">Sign of term</param>
+        /// <param name="term"> Term </param>
+        /// <param name="isTermPositive"> Sign of term </param>
         internal Literal(TermExpr<T_Identifier> term, bool isTermPositive)
             : base(isTermPositive ? term : (BoolExpr<T_Identifier>)new NotExpr<T_Identifier>(term))
         {
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        /// Gets literal term.
+        ///     Gets literal term.
         /// </summary>
         internal TermExpr<T_Identifier> Term
         {
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        /// Gets sign of term.
+        ///     Gets sign of term.
         /// </summary>
         internal bool IsTermPositive
         {
@@ -49,9 +50,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        /// Creates a negated version of this literal.
+        ///     Creates a negated version of this literal.
         /// </summary>
-        /// <returns>!this</returns>
+        /// <returns> !this </returns>
         internal Literal<T_Identifier> MakeNegated()
         {
             return IdentifierService<T_Identifier>.Instance.NegateLiteral(this);

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 {
     using System.Diagnostics.CodeAnalysis;
@@ -20,8 +21,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         ///     Please set the PluralizationService on the System.Data.Entity.Design.EntityModelSchemaGenerator
         ///     to extend the service to other locales.
         /// </summary>
-        /// <param name = "culture">CultureInfo</param>
-        /// <returns>PluralizationService</returns>
+        /// <param name="culture"> CultureInfo </param>
+        /// <returns> PluralizationService </returns>
         public static PluralizationService CreateService(CultureInfo culture)
         {
             Contract.Requires(culture != null);

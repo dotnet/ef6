@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Threading;
 
     /// <summary>
-    /// Retrieves update mapping views and dependency information for update mapping views. Acts as a wrapper around
-    /// the metadata workspace (and allows direct definition of update mapping views for test purposes).
+    ///     Retrieves update mapping views and dependency information for update mapping views. Acts as a wrapper around
+    ///     the metadata workspace (and allows direct definition of update mapping views for test purposes).
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal class ViewLoader
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Constructors 
 
         /// <summary>
-        /// Constructor specifying a metadata workspace to use for mapping views.
+        ///     Constructor specifying a metadata workspace to use for mapping views.
         /// </summary>
         internal ViewLoader(StorageMappingItemCollection mappingCollection)
         {
@@ -52,30 +53,30 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Methods
 
         /// <summary>
-        /// For a given extent, returns the function mapping translator.
+        ///     For a given extent, returns the function mapping translator.
         /// </summary>
-        /// <param name="extent">Association set or entity set for which to retrieve a translator</param>
-        /// <returns>Function translator or null if none exists for this extent</returns>
+        /// <param name="extent"> Association set or entity set for which to retrieve a translator </param>
+        /// <returns> Function translator or null if none exists for this extent </returns>
         internal ModificationFunctionMappingTranslator GetFunctionMappingTranslator(EntitySetBase extent, MetadataWorkspace workspace)
         {
             return SyncGetValue(extent, workspace, m_functionMappingTranslators, extent);
         }
 
         /// <summary>
-        /// Returns store tables affected by modifications to a particular C-layer extent. Although this
-        /// information can be inferred from the update view, we want to avoid compiling or loading 
-        /// views when not required. This information can be directly determined from mapping metadata.
+        ///     Returns store tables affected by modifications to a particular C-layer extent. Although this
+        ///     information can be inferred from the update view, we want to avoid compiling or loading 
+        ///     views when not required. This information can be directly determined from mapping metadata.
         /// </summary>
-        /// <param name="extent">C-layer extent.</param>
-        /// <returns>Affected store tables.</returns>
+        /// <param name="extent"> C-layer extent. </param>
+        /// <returns> Affected store tables. </returns>
         internal Set<EntitySet> GetAffectedTables(EntitySetBase extent, MetadataWorkspace workspace)
         {
             return SyncGetValue(extent, workspace, m_affectedTables, extent);
         }
 
         /// <summary>
-        /// Gets information relevant to the processing of an AssociationSet in the update pipeline.
-        /// Caches information on first retrieval.
+        ///     Gets information relevant to the processing of an AssociationSet in the update pipeline.
+        ///     Caches information on first retrieval.
         /// </summary>
         internal AssociationSetMetadata GetAssociationSetMetadata(AssociationSet associationSet, MetadataWorkspace workspace)
         {
@@ -83,22 +84,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Determines whether the given member maps to a server-generated column in the store.
-        /// Requires: InitializeExtentInformation has been called for the extent being persisted.
+        ///     Determines whether the given member maps to a server-generated column in the store.
+        ///     Requires: InitializeExtentInformation has been called for the extent being persisted.
         /// </summary>
-        /// <param name="entitySetBase">Entity set containing member.</param>
-        /// <param name="member">Member to lookup</param>
-        /// <returns>Whether the member is server generated in some context</returns>
+        /// <param name="entitySetBase"> Entity set containing member. </param>
+        /// <param name="member"> Member to lookup </param>
+        /// <returns> Whether the member is server generated in some context </returns>
         internal bool IsServerGen(EntitySetBase entitySetBase, MetadataWorkspace workspace, EdmMember member)
         {
             return SyncContains(entitySetBase, workspace, m_serverGenProperties, member);
         }
 
         /// <summary>
-        /// Determines whether the given member maps to a column participating in an isnull
-        /// condition. Useful to determine if a nullability constraint violation is going to
-        /// cause roundtripping problems (e.g. if type is based on nullability of a 'non-nullable'
-        /// property of a derived entity type)
+        ///     Determines whether the given member maps to a column participating in an isnull
+        ///     condition. Useful to determine if a nullability constraint violation is going to
+        ///     cause roundtripping problems (e.g. if type is based on nullability of a 'non-nullable'
+        ///     property of a derived entity type)
         /// </summary>
         internal bool IsNullConditionMember(EntitySetBase entitySetBase, MetadataWorkspace workspace, EdmMember member)
         {
@@ -106,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Utility method reading value from dictionary within read lock.
+        ///     Utility method reading value from dictionary within read lock.
         /// </summary>
         private T_Value SyncGetValue<T_Key, T_Value>(
             EntitySetBase entitySetBase, MetadataWorkspace workspace, Dictionary<T_Key, T_Value> dictionary, T_Key key)
@@ -115,7 +116,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Utility method checking for membership of element in set within read lock.
+        ///     Utility method checking for membership of element in set within read lock.
         /// </summary>
         private bool SyncContains<T_Element>(
             EntitySetBase entitySetBase, MetadataWorkspace workspace, Set<T_Element> set, T_Element element)
@@ -124,10 +125,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Initializes all information relevant to the entity set.
+        ///     Initializes all information relevant to the entity set.
         /// </summary>
-        /// <param name="entitySetBase">Association set or entity set to load.</param>
-        /// <param name="evaluate">Function to evaluate to produce a result.</param>
+        /// <param name="entitySetBase"> Association set or entity set to load. </param>
+        /// <param name="evaluate"> Function to evaluate to produce a result. </param>
         private TResult SyncInitializeEntitySet<TArg, TResult>(
             EntitySetBase entitySetBase, MetadataWorkspace workspace, Func<TArg, TResult> evaluate, TArg arg)
         {
@@ -245,10 +246,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Yields all members appearing in function mapping result bindings.
+        ///     Yields all members appearing in function mapping result bindings.
         /// </summary>
-        /// <param name="entitySetMapping">Set mapping to examine</param>
-        /// <returns>All result bindings</returns>
+        /// <param name="entitySetMapping"> Set mapping to examine </param>
+        /// <returns> All result bindings </returns>
         private IEnumerable<EdmMember> GetMembersWithResultBinding(StorageEntitySetMapping entitySetMapping)
         {
             foreach (var typeFunctionMapping in entitySetMapping.ModificationFunctionMappings)
@@ -351,7 +352,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gets all model properties mapped to server generated columns.
+        ///     Gets all model properties mapped to server generated columns.
         /// </summary>
         private static IEnumerable<EdmMember> FindServerGenMembers(StorageMappingFragment mappingFragment)
         {
@@ -367,7 +368,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gets all store columns participating in is null conditions.
+        ///     Gets all store columns participating in is null conditions.
         /// </summary>
         private static IEnumerable<EdmMember> FindIsNullConditionColumns(StorageMappingFragment mappingFragment)
         {
@@ -384,7 +385,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Gets all model properties mapped to given columns.
+        ///     Gets all model properties mapped to given columns.
         /// </summary>
         private static IEnumerable<EdmMember> FindPropertiesMappedToColumns(Set<EdmMember> columns, StorageMappingFragment mappingFragment)
         {
@@ -399,7 +400,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Enumerates all mapping fragments in given set mapping.
+        ///     Enumerates all mapping fragments in given set mapping.
         /// </summary>
         private static IEnumerable<StorageMappingFragment> GetMappingFragments(StorageSetMapping setMapping)
         {
@@ -415,8 +416,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Returns all bottom-level mappings (e.g. conditions and scalar property mappings but not complex property mappings
-        /// whose components are returned)
+        ///     Returns all bottom-level mappings (e.g. conditions and scalar property mappings but not complex property mappings
+        ///     whose components are returned)
         /// </summary>
         private static IEnumerable<StoragePropertyMapping> FlattenPropertyMappings(
             ReadOnlyCollection<StoragePropertyMapping> propertyMappings)

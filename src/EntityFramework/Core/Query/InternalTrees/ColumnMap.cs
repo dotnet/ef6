@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 using mp = System.Data.Entity.Core.Mapping;
 
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents a column
+    ///     Represents a column
     /// </summary>
     internal abstract class ColumnMap
     {
@@ -64,17 +65,17 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private string m_name; // name of the column
 
         /// <summary>
-        /// Default Column Name; should not be set until CodeGen once we're done 
-        /// with all our transformations that might give us a good name, but put 
-        /// here for ease of finding it.
+        ///     Default Column Name; should not be set until CodeGen once we're done 
+        ///     with all our transformations that might give us a good name, but put 
+        ///     here for ease of finding it.
         /// </summary>
         internal const string DefaultColumnName = "Value";
 
         /// <summary>
-        /// Simple constructor - just needs the name and type of the column
+        ///     Simple constructor - just needs the name and type of the column
         /// </summary>
-        /// <param name="type">column type</param>
-        /// <param name="name">column name</param>
+        /// <param name="type"> column type </param>
+        /// <param name="name"> column name </param>
         internal ColumnMap(md.TypeUsage type, string name)
         {
             Debug.Assert(type != null, "Unspecified type");
@@ -83,7 +84,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the column's datatype
+        ///     Get the column's datatype
         /// </summary>
         internal md.TypeUsage Type
         {
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the column name
+        ///     Get the column name
         /// </summary>
         internal string Name
         {
@@ -104,7 +105,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Returns whether the column already has a name;
+        ///     Returns whether the column already has a name;
         /// </summary>
         internal bool IsNamed
         {
@@ -112,23 +113,23 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
-        /// <returns></returns>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
+        /// <returns> </returns>
         [DebuggerNonUserCode]
         internal abstract void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg);
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"></typeparam>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
-        /// <returns></returns>
+        /// <typeparam name="TResultType"> </typeparam>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
+        /// <returns> </returns>
         [DebuggerNonUserCode]
         internal abstract TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg);

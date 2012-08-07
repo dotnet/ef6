@@ -1,22 +1,23 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents a "simple" collection map.
+    ///     Represents a "simple" collection map.
     /// </summary>
     internal class SimpleCollectionColumnMap : CollectionColumnMap
     {
         /// <summary>
-        /// Basic constructor
+        ///     Basic constructor
         /// </summary>
-        /// <param name="type">Column datatype</param>
-        /// <param name="name">column name</param>
-        /// <param name="elementMap">column map for the element of the collection</param>
-        /// <param name="keys">list of key columns</param>
-        /// <param name="foreignKeys">list of foreign key columns</param>
+        /// <param name="type"> Column datatype </param>
+        /// <param name="name"> column name </param>
+        /// <param name="elementMap"> column map for the element of the collection </param>
+        /// <param name="keys"> list of key columns </param>
+        /// <param name="foreignKeys"> list of foreign key columns </param>
         internal SimpleCollectionColumnMap(
             TypeUsage type, string name,
             ColumnMap elementMap,
@@ -27,11 +28,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
@@ -39,12 +40,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"></typeparam>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
+        /// <typeparam name="TResultType"> </typeparam>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)

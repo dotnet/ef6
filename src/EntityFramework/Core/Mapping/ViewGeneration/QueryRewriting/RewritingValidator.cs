@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
     using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     using System.Text;
 
     /// <summary>
-    /// Validates each mapping fragment/cell (Qc = Qs)
-    /// by unfolding update views in Qs and checking query equivalence
+    ///     Validates each mapping fragment/cell (Qc = Qs)
+    ///     by unfolding update views in Qs and checking query equivalence
     /// </summary>
     internal class RewritingValidator
     {
@@ -323,8 +324,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         #endregion
 
         /// <summary>
-        /// Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
-        /// appended to Cquery of c-side member that column m is mapped to
+        ///     Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
+        ///     appended to Cquery of c-side member that column m is mapped to
         /// </summary>
         private static FragmentQuery AddNullConditionOnCSideFragment(LeftCellWrapper wrapper, MemberPath member, MemberMaps memberMaps)
         {
@@ -348,8 +349,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         /// <summary>
-        /// Checks whether non nullable S-side members are mapped to nullable C-query.
-        /// It is possible that C-side attribute is nullable but the fragment's C-query is not
+        ///     Checks whether non nullable S-side members are mapped to nullable C-query.
+        ///     It is possible that C-side attribute is nullable but the fragment's C-query is not
         /// </summary>
         private void CheckConstraintsOnNonNullableMembers(LeftCellWrapper wrapper)
         {

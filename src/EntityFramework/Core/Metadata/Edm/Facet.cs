@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
@@ -6,9 +7,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Globalization;
 
     /// <summary>
-    /// Class for representing a Facet object
-    /// This object is Immutable (not just set to readonly) and 
-    /// some parts of the system are depending on that behavior
+    ///     Class for representing a Facet object
+    ///     This object is Immutable (not just set to readonly) and 
+    ///     some parts of the system are depending on that behavior
     /// </summary>
     [DebuggerDisplay("{Name,nq}={Value}")]
     public class Facet : MetadataItem
@@ -20,10 +21,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing a Facet object with the facet description and a value
+        ///     The constructor for constructing a Facet object with the facet description and a value
         /// </summary>
-        /// <param name="facetDescription">The object describing this facet</param>
-        /// <param name="value">The value of the facet</param>
+        /// <param name="facetDescription"> The object describing this facet </param>
+        /// <param name="value"> The value of the facet </param>
         /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         private Facet(FacetDescription facetDescription, object value)
             : base(MetadataFlags.Readonly)
@@ -35,11 +36,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a Facet instance with the specified value for the given 
-        /// facet description.
+        ///     Creates a Facet instance with the specified value for the given 
+        ///     facet description.
         /// </summary>
-        /// <param name="facetDescription">The object describing this facet</param>
-        /// <param name="value">The value of the facet</param>
+        /// <param name="facetDescription"> The object describing this facet </param>
+        /// <param name="value"> The value of the facet </param>
         /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         internal static Facet Create(FacetDescription facetDescription, object value)
         {
@@ -47,12 +48,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a Facet instance with the specified value for the given 
-        /// facet description.
+        ///     Creates a Facet instance with the specified value for the given 
+        ///     facet description.
         /// </summary>
-        /// <param name="facetDescription">The object describing this facet</param>
-        /// <param name="value">The value of the facet</param>
-        /// <param name="bypassKnownValues">true to bypass caching and known values; false otherwise.</param>
+        /// <param name="facetDescription"> The object describing this facet </param>
+        /// <param name="value"> The value of the facet </param>
+        /// <param name="bypassKnownValues"> true to bypass caching and known values; false otherwise. </param>
         /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         internal static Facet Create(FacetDescription facetDescription, object value, bool bypassKnownValues)
         {
@@ -103,10 +104,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         #region Fields
 
-        /// <summary>The object describing this facet.</summary>
+        /// <summary>
+        ///     The object describing this facet.
+        /// </summary>
         private readonly FacetDescription _facetDescription;
 
-        /// <summary>The value assigned to this facet.</summary>
+        /// <summary>
+        ///     The value assigned to this facet.
+        /// </summary>
         private readonly object _value;
 
         #endregion
@@ -114,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -122,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the description object for describing the facet
+        ///     Gets the description object for describing the facet
         /// </summary>
         public FacetDescription Description
         {
@@ -130,7 +135,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the name of the facet
+        ///     Gets/Sets the name of the facet
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual String Name
@@ -139,7 +144,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the type of the facet
+        ///     Gets/Sets the type of the facet
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public EdmType FacetType
@@ -148,7 +153,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the value of the facet
+        ///     Gets/Sets the value of the facet
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the Facet instance is in ReadOnly state</exception>
         [MetadataProperty(typeof(Object), false)]
@@ -158,7 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the identity for this item as a string
+        ///     Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
@@ -166,7 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Indicates whether the value of the facet is unbounded
+        ///     Indicates whether the value of the facet is unbounded
         /// </summary>
         public bool IsUnbounded
         {
@@ -178,8 +183,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation 
-        /// for this type.
+        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     for this type.
         /// </summary>
         public override string ToString()
         {

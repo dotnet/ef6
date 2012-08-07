@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    /// Represents a function import column map.
+    ///     Represents a function import column map.
     /// </summary>
     internal class MultipleDiscriminatorPolymorphicColumnMap : TypedColumnMap
     {
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly Func<object[], EntityType> m_discriminate;
 
         /// <summary>
-        /// Internal constructor
+        ///     Internal constructor
         /// </summary>
         internal MultipleDiscriminatorPolymorphicColumnMap(
             TypeUsage type,
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the type discriminator column
+        ///     Get the type discriminator column
         /// </summary>
         internal SimpleColumnMap[] TypeDiscriminators
         {
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the type mapping
+        ///     Get the type mapping
         /// </summary>
         internal Dictionary<EntityType, TypedColumnMap> TypeChoices
         {
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Gets discriminator delegate
+        ///     Gets discriminator delegate
         /// </summary>
         internal Func<object[], EntityType> Discriminate
         {
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Debugging support
+        ///     Debugging support
         /// </summary>
         public override string ToString()
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -6,8 +7,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// A Node describes a node in a query tree. Each node has an operator, and
-    /// a list of zero or more children of that operator.
+    ///     A Node describes a node in a query tree. Each node has an operator, and
+    ///     a list of zero or more children of that operator.
     /// </summary>
     internal class Node
     {
@@ -24,14 +25,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        /// Basic constructor. 
+        ///     Basic constructor. 
         /// 
-        /// NEVER call this routine directly - you should always use the Command.CreateNode
-        /// factory methods.
+        ///     NEVER call this routine directly - you should always use the Command.CreateNode
+        ///     factory methods.
         /// </summary>
-        /// <param name="nodeId">id for the node</param>
-        /// <param name="op">The operator</param>
-        /// <param name="children">List of child nodes</param>
+        /// <param name="nodeId"> id for the node </param>
+        /// <param name="op"> The operator </param>
+        /// <param name="children"> List of child nodes </param>
         internal Node(int nodeId, Op op, List<Node> children)
         {
             m_id = nodeId;
@@ -40,11 +41,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// This routine is only used for building up rule patterns. 
-        /// NEVER use this routine for building up nodes in a user command tree.
+        ///     This routine is only used for building up rule patterns. 
+        ///     NEVER use this routine for building up nodes in a user command tree.
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="children"></param>
+        /// <param name="op"> </param>
+        /// <param name="children"> </param>
         internal Node(Op op, params Node[] children)
             : this(-1, op, new List<Node>(children))
         {
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 #endif
 
         /// <summary>
-        /// Get the list of children
+        ///     Get the list of children
         /// </summary>
         internal List<Node> Children
         {
@@ -70,12 +71,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Gets or sets the node's operator
+        ///     Gets or sets the node's operator
         /// </summary>
         internal Op Op { get; set; }
 
         /// <summary>
-        /// Simpler (?) getter/setter routines
+        ///     Simpler (?) getter/setter routines
         /// </summary>
         internal Node Child0
         {
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Do I have a zeroth child?
+        ///     Do I have a zeroth child?
         /// </summary>
         internal bool HasChild0
         {
@@ -92,7 +93,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get/set first child
+        ///     Get/set first child
         /// </summary>
         internal Node Child1
         {
@@ -101,7 +102,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Do I have a child1?
+        ///     Do I have a child1?
         /// </summary>
         internal bool HasChild1
         {
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// get/set second child
+        ///     get/set second child
         /// </summary>
         internal Node Child2
         {
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// get/set second child
+        ///     get/set second child
         /// </summary>
         internal Node Child3
         {
@@ -127,7 +128,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Do I have a child2 (third child really)
+        ///     Do I have a child2 (third child really)
         /// </summary>
         internal bool HasChild2
         {
@@ -135,7 +136,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Do I have a child3 (fourth child really)
+        ///     Do I have a child3 (fourth child really)
         /// </summary>
         internal bool HasChild3
         {
@@ -145,10 +146,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region equivalence functions
 
         /// <summary>
-        /// Is this subtree equivalent to another subtree
+        ///     Is this subtree equivalent to another subtree
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
+        /// <param name="other"> </param>
+        /// <returns> </returns>
         internal bool IsEquivalent(Node other)
         {
             if (Children.Count
@@ -176,7 +177,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region NodeInfo methods and properties
 
         /// <summary>
-        /// Has the node info been initialized, i.e. previously computed
+        ///     Has the node info been initialized, i.e. previously computed
         /// </summary>
         internal bool IsNodeInfoInitialized
         {
@@ -184,10 +185,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the nodeInfo for a node. Initializes it, if it has not yet been initialized
+        ///     Get the nodeInfo for a node. Initializes it, if it has not yet been initialized
         /// </summary>
-        /// <param name="command">Current command object</param>
-        /// <returns>NodeInfo for this node</returns>
+        /// <param name="command"> Current command object </param>
+        /// <returns> NodeInfo for this node </returns>
         internal NodeInfo GetNodeInfo(Command command)
         {
             if (m_nodeInfo == null)
@@ -198,10 +199,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Gets the "extended" nodeinfo for a node; if it has not yet been initialized, then it will be
+        ///     Gets the "extended" nodeinfo for a node; if it has not yet been initialized, then it will be
         /// </summary>
-        /// <param name="command">current command object</param>
-        /// <returns>extended nodeinfo for this node</returns>
+        /// <param name="command"> current command object </param>
+        /// <returns> extended nodeinfo for this node </returns>
         internal ExtendedNodeInfo GetExtendedNodeInfo(Command command)
         {
             if (m_nodeInfo == null)

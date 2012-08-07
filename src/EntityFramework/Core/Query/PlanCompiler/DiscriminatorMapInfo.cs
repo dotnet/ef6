@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -18,17 +19,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Merge the discriminatorMap info we just found with what we've already found.
+        ///     Merge the discriminatorMap info we just found with what we've already found.
         /// 
-        /// In practice, if either the current or the new map is from an OfTypeOnly view, we
-        /// have to avoid the optimizations.
+        ///     In practice, if either the current or the new map is from an OfTypeOnly view, we
+        ///     have to avoid the optimizations.
         /// 
-        /// If we have a new map that is a superset of the current map, then we can just swap
-        /// the new map for the current one.
+        ///     If we have a new map that is a superset of the current map, then we can just swap
+        ///     the new map for the current one.
         /// 
-        /// If the current map is tha super set of the new one ther's nothing to do.
+        ///     If the current map is tha super set of the new one ther's nothing to do.
         /// 
-        /// (Of course, if neither has changed, then we really don't need to look)
+        ///     (Of course, if neither has changed, then we really don't need to look)
         /// </summary>
         internal void Merge(EntityTypeBase neededRootEntityType, bool includesSubtypes, ExplicitDiscriminatorMap discriminatorMap)
         {

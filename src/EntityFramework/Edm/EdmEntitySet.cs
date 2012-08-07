@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification of an entity set in an Entity Data Model (EDM) <see cref = "EdmEntityContainer" /> .
+    ///     Allows the construction and modification of an entity set in an Entity Data Model (EDM) <see cref="EdmEntityContainer" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmEntitySet
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmEntityType" /> that specifies the entity type for the set.
+        ///     Gets or sets the <see cref="EdmEntityType" /> that specifies the entity type for the set.
         /// </summary>
         public virtual EdmEntityType ElementType { get; set; }
     }

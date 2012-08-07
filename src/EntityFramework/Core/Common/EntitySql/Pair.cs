@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents a pair of types to avoid uncessary enumerations to split kvp elements
+    ///     Represents a pair of types to avoid uncessary enumerations to split kvp elements
     /// </summary>
     internal sealed class Pair<L, R>
     {

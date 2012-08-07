@@ -26,7 +26,7 @@ namespace System.Data.Entity.Migrations
     /// <summary>
     ///     DbMigrator is used to apply existing migrations to a database. 
     ///     DbMigrator can be used to upgrade and downgrade to any given migration.
-    ///     To scaffold migrations based on changes to your model use <see cref = "Design.MigrationScaffolder" />
+    ///     To scaffold migrations based on changes to your model use <see cref="Design.MigrationScaffolder" />
     /// </summary>
     public class DbMigrator : MigratorBase
     {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Initializes a new instance of the DbMigrator class.
         /// </summary>
-        /// <param name = "configuration">Configuration to be used for the migration process.</param>
+        /// <param name="configuration"> Configuration to be used for the migration process. </param>
         public DbMigrator(DbMigrationsConfiguration configuration)
             : this(configuration, null)
         {
@@ -338,7 +338,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Updates the target database to a given migration.
         /// </summary>
-        /// <param name = "targetMigration">The migration to upgrade/downgrade to.</param>
+        /// <param name="targetMigration"> The migration to upgrade/downgrade to. </param>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override void Update(string targetMigration)
         {

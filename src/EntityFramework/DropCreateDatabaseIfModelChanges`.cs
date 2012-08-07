@@ -6,13 +6,13 @@ namespace System.Data.Entity
     using System.Transactions;
 
     /// <summary>
-    /// An implementation of IDatabaseInitializer that will <b>DELETE</b>, recreate, and optionally re-seed the
-    /// database only if the model has changed since the database was created.
+    ///     An implementation of IDatabaseInitializer that will <b>DELETE</b>, recreate, and optionally re-seed the
+    ///     database only if the model has changed since the database was created.
     /// </summary>
     /// <remarks>
-    /// Whether or not the model has changed is determined by the <see cref="Database.CompatibleWithModel(bool)"/>
-    /// method.
-    /// To seed the database create a derived class and override the Seed method.
+    ///     Whether or not the model has changed is determined by the <see cref="Database.CompatibleWithModel(bool)" />
+    ///     method.
+    ///     To seed the database create a derived class and override the Seed method.
     /// </remarks>
     public class DropCreateDatabaseIfModelChanges<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
@@ -27,10 +27,12 @@ namespace System.Data.Entity
         /// <summary>
         ///     Executes the strategy to initialize the database for the given context.
         /// </summary>
-        /// <param name = "context">The context.</param>
+        /// <param name="context"> The context. </param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="context"/> is <c>null</c>.
-        /// </exception>
+        ///     <paramref name="context" />
+        ///     is
+        ///     <c>null</c>
+        ///     .</exception>
         public void InitializeDatabase(TContext context)
         {
             bool databaseExists;
@@ -64,7 +66,7 @@ namespace System.Data.Entity
         ///     A method that should be overridden to actually add data to the context for seeding. 
         ///     The default implementation does nothing.
         /// </summary>
-        /// <param name = "context">The context to seed.</param>
+        /// <param name="context"> The context to seed. </param>
         protected virtual void Seed(TContext context)
         {
         }

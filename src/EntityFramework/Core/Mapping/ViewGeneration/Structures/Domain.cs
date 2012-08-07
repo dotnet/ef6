@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -102,7 +103,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Yields the set of all values in the domain.
+        ///     Yields the set of all values in the domain.
         /// </summary>
         internal IEnumerable<Constant> Values
         {
@@ -241,7 +242,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Returns true if the domain contains the given Cell Constant
+        ///     Returns true if the domain contains the given Cell Constant
         /// </summary>
         internal bool Contains(Constant constant)
         {

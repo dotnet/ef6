@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Resources;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Class for representing an entity container
+    ///     Class for representing an entity container
     /// </summary>
     public class EntityContainer : GlobalItem
     {
@@ -18,10 +19,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
+        ///     The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
         /// </summary>
-        /// <param name="name">The name of this entity container</param>
-        /// <param name="dataSpace">dataSpace in which this entity container belongs to</param>
+        /// <param name="name"> The name of this entity container </param>
+        /// <param name="dataSpace"> dataSpace in which this entity container belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the name argument is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is empty string</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the identity for this item as a string
+        ///     Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
@@ -64,7 +65,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get the name of this EntityContainer object
+        ///     Get the name of this EntityContainer object
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual String Name
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the collection of entity sets
+        ///     Gets the collection of entity sets
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySetBase, true)]
         public ReadOnlyMetadataCollection<EntitySetBase> BaseEntitySets
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the collection of function imports for this entity container
+        ///     Gets the collection of function imports for this entity container
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmFunction, true)]
         public ReadOnlyMetadataCollection<EdmFunction> FunctionImports
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
+        ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -108,11 +109,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get the entity set with the given name
+        ///     Get the entity set with the given name
         /// </summary>
-        /// <param name="name">name of the entity set to look up for</param>
-        /// <param name="ignoreCase">true if you want to do a case-insensitive lookup</param>
-        /// <returns></returns>
+        /// <param name="name"> name of the entity set to look up for </param>
+        /// <param name="ignoreCase"> true if you want to do a case-insensitive lookup </param>
+        /// <returns> </returns>
         public EntitySet GetEntitySetByName(string name, bool ignoreCase)
         {
             var entitySet = (BaseEntitySets.GetValue(name, ignoreCase) as EntitySet);
@@ -124,12 +125,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get the entity set with the given name or return null if not found
+        ///     Get the entity set with the given name or return null if not found
         /// </summary>
-        /// <param name="name">name of the entity set to look up for</param>
-        /// <param name="ignoreCase">true if you want to do a case-insensitive lookup</param>
-        /// <param name="entitySet">out parameter that will contain the result</param>
-        /// <returns></returns>
+        /// <param name="name"> name of the entity set to look up for </param>
+        /// <param name="ignoreCase"> true if you want to do a case-insensitive lookup </param>
+        /// <param name="entitySet"> out parameter that will contain the result </param>
+        /// <returns> </returns>
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntitySetByName(string name, bool ignoreCase, out EntitySet entitySet)
         {
@@ -148,11 +149,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get the relationship set with the given name
+        ///     Get the relationship set with the given name
         /// </summary>
-        /// <param name="name">name of the relationship set to look up for</param>
-        /// <param name="ignoreCase">true if you want to do a case-insensitive lookup</param>
-        /// <returns></returns>
+        /// <param name="name"> name of the relationship set to look up for </param>
+        /// <param name="ignoreCase"> true if you want to do a case-insensitive lookup </param>
+        /// <returns> </returns>
         public RelationshipSet GetRelationshipSetByName(string name, bool ignoreCase)
         {
             RelationshipSet relationshipSet;
@@ -164,12 +165,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get the relationship set with the given name
+        ///     Get the relationship set with the given name
         /// </summary>
-        /// <param name="name">name of the relationship set to look up for</param>
-        /// <param name="ignoreCase">true if you want to do a case-insensitive lookup</param>
-        /// <param name="relationshipSet">out parameter that will have the result</param>
-        /// <returns></returns>
+        /// <param name="name"> name of the relationship set to look up for </param>
+        /// <param name="ignoreCase"> true if you want to do a case-insensitive lookup </param>
+        /// <param name="relationshipSet"> out parameter that will have the result </param>
+        /// <returns> </returns>
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetRelationshipSetByName(string name, bool ignoreCase, out RelationshipSet relationshipSet)
         {
@@ -188,8 +189,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation 
-        /// for this type.
+        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     for this type.
         /// </summary>
         public override string ToString()
         {

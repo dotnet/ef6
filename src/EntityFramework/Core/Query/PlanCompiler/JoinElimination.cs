@@ -1,18 +1,19 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// The JoinElimination module is intended to do just that - eliminate unnecessary joins. 
-    /// This module deals with the following kinds of joins
-    ///    * Self-joins: The join can be eliminated, and either of the table instances can be 
-    ///                  used instead
-    ///    * Implied self-joins: Same as above
-    ///    * PK-FK joins: (More generally, UniqueKey-FK joins): Eliminate the join, and use just the FK table, if no 
-    ///       column of the PK table is used (other than the join condition)
-    ///    * PK-PK joins: Eliminate the right side table, if we have a left-outer join
+    ///     The JoinElimination module is intended to do just that - eliminate unnecessary joins. 
+    ///     This module deals with the following kinds of joins
+    ///     * Self-joins: The join can be eliminated, and either of the table instances can be 
+    ///     used instead
+    ///     * Implied self-joins: Same as above
+    ///     * PK-FK joins: (More generally, UniqueKey-FK joins): Eliminate the join, and use just the FK table, if no 
+    ///     column of the PK table is used (other than the join condition)
+    ///     * PK-PK joins: Eliminate the right side table, if we have a left-outer join
     /// </summary>
     internal class JoinElimination : BasicOpVisitorOfNode
     {
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         /// <summary>
-        /// Invokes the visitor
+        ///     Invokes the visitor
         /// </summary>
         private void Process()
         {
@@ -74,21 +75,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Building JoinGraphs
 
         /// <summary>
-        /// Do we need to build a join graph for this node - returns false, if we've already
-        /// processed this
+        ///     Do we need to build a join graph for this node - returns false, if we've already
+        ///     processed this
         /// </summary>
-        /// <param name="joinNode"></param>
-        /// <returns></returns>
+        /// <param name="joinNode"> </param>
+        /// <returns> </returns>
         private bool NeedsJoinGraph(Node joinNode)
         {
             return !m_joinGraphUnnecessaryMap.ContainsKey(joinNode);
         }
 
         /// <summary>
-        /// Do the real processing of the join graph. 
+        ///     Do the real processing of the join graph.
         /// </summary>
-        /// <param name="joinNode">current join node</param>
-        /// <returns>modified join node</returns>
+        /// <param name="joinNode"> current join node </param>
+        /// <returns> modified join node </returns>
         private Node ProcessJoinGraph(Node joinNode)
         {
             // Build the join graph
@@ -114,11 +115,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Default handler for a node. Simply visits the children, then handles any var
-        /// remapping, and then recomputes the node info
+        ///     Default handler for a node. Simply visits the children, then handles any var
+        ///     remapping, and then recomputes the node info
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         private Node VisitDefaultForAllNodes(Node n)
         {
             VisitChildren(n);
@@ -134,10 +135,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor overrides
 
         /// <summary>
-        /// Invokes default handling for a node and adds the child-parent tracking info to the VarRefManager.
+        ///     Invokes default handling for a node and adds the child-parent tracking info to the VarRefManager.
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override Node VisitDefault(Node n)
         {
             m_varRefManager.AddChildren(n);
@@ -149,11 +150,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region JoinOps
 
         /// <summary>
-        /// Build a join graph for this node for this node if necessary, and process it
+        ///     Build a join graph for this node for this node if necessary, and process it
         /// </summary>
-        /// <param name="op">current join op</param>
-        /// <param name="joinNode">current join node</param>
-        /// <returns></returns>
+        /// <param name="op"> current join op </param>
+        /// <param name="joinNode"> current join node </param>
+        /// <returns> </returns>
         protected override Node VisitJoinOp(JoinBaseOp op, Node joinNode)
         {
             Node newNode;

@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.QueryCache
 {
     /// <summary>
-    /// represents an abstract cache key
+    ///     represents an abstract cache key
     /// </summary>
     internal abstract class QueryCacheKey
     {
@@ -15,12 +16,12 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Fields
 
         /// <summary>
-        /// entry hit counter
+        ///     entry hit counter
         /// </summary>
         private uint _hitCount;
 
         /// <summary>
-        /// default string comparison kind - Ordinal
+        ///     default string comparison kind - Ordinal
         /// </summary>
         protected static StringComparison _stringComparison = StringComparison.Ordinal;
 
@@ -38,17 +39,17 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Abstract Methods
 
         /// <summary>
-        /// Determines whether two instances of QueryCacheContext are equal. 
-        /// Equality is value based.
+        ///     Determines whether two instances of QueryCacheContext are equal. 
+        ///     Equality is value based.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj"> </param>
+        /// <returns> </returns>
         public abstract override bool Equals(object obj);
 
         /// <summary>
-        /// Returns QueryCacheContext instance HashCode
+        ///     Returns QueryCacheContext instance HashCode
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public abstract override int GetHashCode();
 
         #endregion
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Internal API
 
         /// <summary>
-        /// Cache entry hit count
+        ///     Cache entry hit count
         /// </summary>
         internal uint HitCount
         {
@@ -66,12 +67,12 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        /// Gets/Sets Aging index for cache entry
+        ///     Gets/Sets Aging index for cache entry
         /// </summary>
         internal int AgingIndex { get; set; }
 
         /// <summary>
-        /// Updates hit count
+        ///     Updates hit count
         /// </summary>
         internal void UpdateHit()
         {
@@ -85,11 +86,11 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        /// default string comparer
+        ///     default string comparer
         /// </summary>
-        /// <param name="s"></param>
-        /// <param name="t"></param>
-        /// <returns></returns>
+        /// <param name="s"> </param>
+        /// <param name="t"> </param>
+        /// <returns> </returns>
         protected virtual bool Equals(string s, string t)
         {
             return String.Equals(s, t, _stringComparison);

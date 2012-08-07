@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.Mapping
         private readonly Collection<FunctionImportReturnTypeStructuralTypeColumn> _columnListForIsTypeOfType;
 
         /// <summary>
-        /// Null if default mapping is not allowed.
+        ///     Null if default mapping is not allowed.
         /// </summary>
         private readonly string _defaultMemberName;
 
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// <see cref="GetRename(EdmType, out IXmlLineInfo)"/> for more info.
+        ///     <see cref="GetRename(EdmType, out IXmlLineInfo)" /> for more info.
         /// </summary>
         internal string GetRename(EdmType type)
         {
@@ -41,13 +42,13 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// A default mapping (property "Foo" maps by convention to column "Foo"), if allowed, has the lowest precedence.
-        /// A mapping for a specific type (EntityType="Bar") takes precedence over a mapping for a hierarchy (EntityType="IsTypeOf(Bar)"))
-        /// If there are two hierarchy mappings, the most specific mapping takes precedence. 
-        /// For instance, given the types Base, Derived1 : Base, and Derived2 : Derived1, 
-        /// w.r.t. Derived1 "IsTypeOf(Derived1)" takes precedence over "IsTypeOf(Base)" when you ask for the rename of Derived1
+        ///     A default mapping (property "Foo" maps by convention to column "Foo"), if allowed, has the lowest precedence.
+        ///     A mapping for a specific type (EntityType="Bar") takes precedence over a mapping for a hierarchy (EntityType="IsTypeOf(Bar)"))
+        ///     If there are two hierarchy mappings, the most specific mapping takes precedence. 
+        ///     For instance, given the types Base, Derived1 : Base, and Derived2 : Derived1, 
+        ///     w.r.t. Derived1 "IsTypeOf(Derived1)" takes precedence over "IsTypeOf(Base)" when you ask for the rename of Derived1
         /// </summary>
-        /// <param name="lineInfo">Empty for default rename mapping.</param>
+        /// <param name="lineInfo"> Empty for default rename mapping. </param>
         internal string GetRename(EdmType type, out IXmlLineInfo lineInfo)
         {
             Contract.Requires(type != null);

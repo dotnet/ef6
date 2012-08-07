@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections;
@@ -10,9 +11,9 @@ namespace System.Data.Entity.Internal.Linq
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     An interface implemented by <see cref = "InternalQuery{TElement}" />.
+    ///     An interface implemented by <see cref="InternalQuery{TElement}" />.
     /// </summary>
-    /// <typeparam name = "TElement">The type of the element.</typeparam>
+    /// <typeparam name="TElement"> The type of the element. </typeparam>
     [ContractClass(typeof(IInternalQueryContracts<>))]
     internal interface IInternalQuery<TElement> : IInternalQuery
     {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Infrastructure
     ///     It is necessary to provide the provider invariant name of the SQL Server Compact
     ///     Edition to use when creating an instance of this class.  This is because different
     ///     versions of SQL Server Compact Editions use different invariant names.
-    ///     An instance of this class can be set on the <see cref = "Database" /> class to
+    ///     An instance of this class can be set on the <see cref="Database" /> class to
     ///     cause all DbContexts created with no connection information or just a database
     ///     name or connection string to use SQL Server Compact Edition by default.
     ///     This class is immutable since multiple threads may access instances simultaneously
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Creates a new connection factory with empty (default) DatabaseDirectory and BaseConnectionString
         ///     properties.
         /// </summary>
-        /// <param name = "providerInvariantName">The provider invariant name that specifies the version of SQL Server Compact Edition that should be used.</param>
+        /// <param name="providerInvariantName"> The provider invariant name that specifies the version of SQL Server Compact Edition that should be used. </param>
         public SqlCeConnectionFactory(string providerInvariantName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
@@ -48,18 +49,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Creates a new connection factory with the given DatabaseDirectory and BaseConnectionString properties.
         /// </summary>
-        /// <param name = "providerInvariantName">
-        ///     The provider invariant name that specifies the version of SQL Server Compact Edition that should be used.
-        /// </param>
-        /// <param name = "databaseDirectory">
-        ///     The path to prepend to the database name that will form the file name used by SQL Server Compact Edition
-        ///     when it creates or reads the database file. An empty string means that SQL Server Compact Edition will use
-        ///     its default for the database file location.
-        /// </param>
-        /// <param name = "baseConnectionString">
-        ///     The connection string to use for options to the database other than the 'Data Source'. The Data Source will
-        ///     be prepended to this string based on the database name when CreateConnection is called.
-        /// </param>
+        /// <param name="providerInvariantName"> The provider invariant name that specifies the version of SQL Server Compact Edition that should be used. </param>
+        /// <param name="databaseDirectory"> The path to prepend to the database name that will form the file name used by SQL Server Compact Edition when it creates or reads the database file. An empty string means that SQL Server Compact Edition will use its default for the database file location. </param>
+        /// <param name="baseConnectionString"> The connection string to use for options to the database other than the 'Data Source'. The Data Source will be prepended to this string based on the database name when CreateConnection is called. </param>
         public SqlCeConnectionFactory(
             string providerInvariantName, string databaseDirectory, string baseConnectionString)
         {
@@ -116,8 +108,8 @@ namespace System.Data.Entity.Infrastructure
         ///     If the given string contains an '=' character then it is treated as a full connection string,
         ///     otherwise it is treated as a database name only.
         /// </summary>
-        /// <param name = "nameOrConnectionString">The database name or connection string.</param>
-        /// <returns>An initialized DbConnection.</returns>
+        /// <param name="nameOrConnectionString"> The database name or connection string. </param>
+        /// <returns> An initialized DbConnection. </returns>
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
             var factory = DbProviderFactories.GetFactory(ProviderInvariantName);

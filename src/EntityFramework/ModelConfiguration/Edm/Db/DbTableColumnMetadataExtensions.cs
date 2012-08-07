@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Edm.Db;
@@ -27,15 +28,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             Contract.Requires(tableColumn != null);
 
             return new DbTableColumnMetadata
-                {
-                    Name = tableColumn.Name,
-                    TypeName = tableColumn.TypeName,
-                    IsNullable = tableColumn.IsNullable,
-                    IsPrimaryKeyColumn = tableColumn.IsPrimaryKeyColumn,
-                    StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
-                    Facets = tableColumn.Facets.Clone(),
-                    Annotations = tableColumn.Annotations.ToList()
-                };
+                       {
+                           Name = tableColumn.Name,
+                           TypeName = tableColumn.TypeName,
+                           IsNullable = tableColumn.IsNullable,
+                           IsPrimaryKeyColumn = tableColumn.IsPrimaryKeyColumn,
+                           StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
+                           Facets = tableColumn.Facets.Clone(),
+                           Annotations = tableColumn.Annotations.ToList()
+                       };
         }
 
         public static int? GetOrder(this DbTableColumnMetadata tableColumn)

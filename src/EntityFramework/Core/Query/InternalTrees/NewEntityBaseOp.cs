@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    /// Base class for DiscriminatedNewEntityOp and NewEntityOp
+    ///     Base class for DiscriminatedNewEntityOp and NewEntityOp
     /// </summary>
     internal abstract class NewEntityBaseOp : ScalarOp
     {
@@ -40,8 +41,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public APIs
 
         /// <summary>
-        /// True if the entity constructor is scoped to a particular entity set or null (scoped as "unscoped").
-        /// False if the scope is not yet known. Scope is determined in PreProcessor.
+        ///     True if the entity constructor is scoped to a particular entity set or null (scoped as "unscoped").
+        ///     False if the scope is not yet known. Scope is determined in PreProcessor.
         /// </summary>
         internal bool Scoped
         {
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the entityset (if any) associated with this constructor
+        ///     Get the entityset (if any) associated with this constructor
         /// </summary>
         internal EntitySet EntitySet
         {
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// get the list of relationship properties (if any) specified for this constructor
+        ///     get the list of relationship properties (if any) specified for this constructor
         /// </summary>
         internal List<RelProperty> RelationshipProperties
         {

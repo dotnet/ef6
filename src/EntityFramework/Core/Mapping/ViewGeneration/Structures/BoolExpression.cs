@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -268,7 +269,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Whether the boolean expression contains only OneOFTypeConst variables.
+        ///     Whether the boolean expression contains only OneOFTypeConst variables.
         /// </summary>
         internal bool RepresentsAllTypeConditions
         {
@@ -299,7 +300,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Given the <paramref name="blockAlias"/> for the block in which the expression resides, converts the expression into eSQL.
+        ///     Given the <paramref name="blockAlias" /> for the block in which the expression resides, converts the expression into eSQL.
         /// </summary>
         internal StringBuilder AsEsql(StringBuilder builder, string blockAlias)
         {
@@ -307,7 +308,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Given the <paramref name="row"/> for the input, converts the expression into CQT.
+        ///     Given the <paramref name="row" /> for the input, converts the expression into CQT.
         /// </summary>
         internal DbExpression AsCqt(DbExpression row)
         {

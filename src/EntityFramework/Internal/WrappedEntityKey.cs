@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
@@ -25,10 +26,10 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Creates a new WrappedEntityKey instance.
         /// </summary>
-        /// <param name = "entitySet">The entity set that the key belongs to.</param>
-        /// <param name = "entitySetName">The fully qualified name of the given entity set.</param>
-        /// <param name = "keyValues">The key values, which may be null or contain null values.</param>
-        /// <param name = "keyValuesParamName">The name of the parameter passed for keyValue by the user, which is used when throwing exceptions.</param>
+        /// <param name="entitySet"> The entity set that the key belongs to. </param>
+        /// <param name="entitySetName"> The fully qualified name of the given entity set. </param>
+        /// <param name="keyValues"> The key values, which may be null or contain null values. </param>
+        /// <param name="keyValuesParamName"> The name of the parameter passed for keyValue by the user, which is used when throwing exceptions. </param>
         public WrappedEntityKey(
             EntitySet entitySet, string entitySetName, object[] keyValues, string keyValuesParamName)
         {

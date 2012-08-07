@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
@@ -10,10 +11,9 @@ namespace System.Data.Entity.Internal
         private readonly Lazy<Task<IDbAsyncEnumerator<T>>> _lazyAsyncEnumerator;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="LazyAsyncEnumerator{T}"/>
+        ///     Initializes a new instance of <see cref="LazyAsyncEnumerator{T}" />
         /// </summary>
-        /// <param name="getEnumeratorAsync">Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}"/>.
-        /// Should not return null.</param>
+        /// <param name="getEnumeratorAsync"> Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null. </param>
         // TODO: Currently we are not accepting a CancellationToken parameter because we are relying on Lazy<T>
         // which doesn't support TAP
         public LazyAsyncEnumerator(Func<Task<IDbAsyncEnumerator<T>>> getEnumeratorAsync)

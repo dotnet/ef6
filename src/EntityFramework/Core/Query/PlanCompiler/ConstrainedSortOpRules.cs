@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// Transformation Rules for ConstrainedSortOp
+    ///     Transformation Rules for ConstrainedSortOp
     /// </summary>
     internal static class ConstrainedSortOpRules
     {
@@ -14,13 +15,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.ConstrainedSort, ProcessConstrainedSortOpOverEmptySet);
 
         /// <summary>
-        /// If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completly:
-        ///    CSort(EmptySet) => EmptySet
+        ///     If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completly:
+        ///     CSort(EmptySet) => EmptySet
         /// </summary>
-        /// <param name="context">Rule processing context</param>
-        /// <param name="n">current subtree</param>
-        /// <param name="newNode">transformed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> Rule processing context </param>
+        /// <param name="n"> current subtree </param>
+        /// <param name="newNode"> transformed subtree </param>
+        /// <returns> transformation status </returns>
         private static bool ProcessConstrainedSortOpOverEmptySet(RuleProcessingContext context, Node n, out Node newNode)
         {
             var nodeInfo = (context).Command.GetExtendedNodeInfo(n.Child0);
@@ -42,9 +43,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All ConstrainedSortOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-            {
-                Rule_ConstrainedSortOpOverEmptySet,
-            };
+                                                    {
+                                                        Rule_ConstrainedSortOpOverEmptySet,
+                                                    };
 
         #endregion
     }

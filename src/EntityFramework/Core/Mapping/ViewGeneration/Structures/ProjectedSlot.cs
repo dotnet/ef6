@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -6,12 +7,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
-    /// This class represents the constants or members that that can be referenced in a C or S Cell query.
-    /// In addition to fields, may represent constants such as types of fields, booleans, etc.
+    ///     This class represents the constants or members that that can be referenced in a C or S Cell query.
+    ///     In addition to fields, may represent constants such as types of fields, booleans, etc.
     /// </summary>
     internal abstract class ProjectedSlot : InternalBase, IEquatable<ProjectedSlot>
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Virtual members
 
         /// <summary>
-        /// Returns true if this is semantically equivalent to <paramref name="right"/>.
+        ///     Returns true if this is semantically equivalent to <paramref name="right" />.
         /// </summary>
         protected virtual bool IsEqualTo(ProjectedSlot right)
         {
@@ -53,9 +53,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Creates new <see cref="ProjectedSlot"/> that is qualified with <paramref name="block"/>.CqlAlias.
-        /// If current slot is composite (such as <see cref="CaseStatementProjectedSlot"/>, then this method recursively qualifies all parts
-        /// and returns a new deeply qualified slot (as opposed to <see cref="CqlBlock.QualifySlotWithBlockAlias"/>).
+        ///     Creates new <see cref="ProjectedSlot" /> that is qualified with <paramref name="block" />.CqlAlias.
+        ///     If current slot is composite (such as <see cref="CaseStatementProjectedSlot" />, then this method recursively qualifies all parts
+        ///     and returns a new deeply qualified slot (as opposed to <see cref="CqlBlock.QualifySlotWithBlockAlias" />).
         /// </summary>
         internal virtual ProjectedSlot DeepQualify(CqlBlock block)
         {
@@ -64,8 +64,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Returns the alias corresponding to the slot based on the <paramref name="outputMember"/>, e.g., "CPerson1_pid".
-        /// Derived classes may override this behavior and produce aliases that don't depend on <paramref name="outputMember"/>.
+        ///     Returns the alias corresponding to the slot based on the <paramref name="outputMember" />, e.g., "CPerson1_pid".
+        ///     Derived classes may override this behavior and produce aliases that don't depend on <paramref name="outputMember" />.
         /// </summary>
         internal virtual string GetCqlFieldAlias(MemberPath outputMember)
         {
@@ -73,15 +73,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Given the slot and the <paramref name="blockAlias"/>, generates eSQL corresponding to the slot.
-        /// If slot is a qualified slot, <paramref name="blockAlias"/> is ignored. Returns the modified <paramref name="builder"/>.
+        ///     Given the slot and the <paramref name="blockAlias" />, generates eSQL corresponding to the slot.
+        ///     If slot is a qualified slot, <paramref name="blockAlias" /> is ignored. Returns the modified <paramref name="builder" />.
         /// </summary>
-        /// <param name="outputMember">outputMember is non-null if this slot is not a constant slot</param>
-        /// <param name="indentLevel">indicates the appropriate indentation level (method can ignore it)</param>
+        /// <param name="outputMember"> outputMember is non-null if this slot is not a constant slot </param>
+        /// <param name="indentLevel"> indicates the appropriate indentation level (method can ignore it) </param>
         internal abstract StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias, int indentLevel);
 
         /// <summary>
-        /// Given the slot and the input <paramref name="row"/>, generates CQT corresponding to the slot.
+        ///     Given the slot and the input <paramref name="row" />, generates CQT corresponding to the slot.
         /// </summary>
         internal abstract DbExpression AsCqt(DbExpression row, MemberPath outputMember);
 
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Other Methods
 
         /// <summary>
-        /// Given fields in <paramref name="slots1"/> and <paramref name="slots2"/>, remap and merge them.
+        ///     Given fields in <paramref name="slots1" /> and <paramref name="slots2" />, remap and merge them.
         /// </summary>
         internal static bool TryMergeRemapSlots(ProjectedSlot[] slots1, ProjectedSlot[] slots2, out ProjectedSlot[] result)
         {
@@ -107,8 +107,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Given two lists <paramref name="slots1"/> and <paramref name="slots2"/>, merge them and returnthe resulting slots, 
-        /// i.e., empty slots from one are overridden by the slots from the other.
+        ///     Given two lists <paramref name="slots1" /> and <paramref name="slots2" />, merge them and returnthe resulting slots, 
+        ///     i.e., empty slots from one are overridden by the slots from the other.
         /// </summary>
         private static bool TryMergeSlots(ProjectedSlot[] slots1, ProjectedSlot[] slots2, out ProjectedSlot[] slots)
         {
@@ -157,12 +157,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Comparer class
 
         /// <summary>
-        /// A class that can compare slots based on their contents.
+        ///     A class that can compare slots based on their contents.
         /// </summary>
         private sealed class Comparer : IEqualityComparer<ProjectedSlot>
         {
             /// <summary>
-            /// Returns true if <paramref name="left"/> and <paramref name="right"/> are semantically equivalent.
+            ///     Returns true if <paramref name="left" /> and <paramref name="right" /> are semantically equivalent.
             /// </summary>
             public bool Equals(ProjectedSlot left, ProjectedSlot right)
             {

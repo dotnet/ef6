@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
@@ -8,8 +9,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to apply column ordering specified via <see cref = "T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
-    ///     or the <see cref = "DbModelBuilder" /> API.
+    ///     Convention to apply column ordering specified via <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
+    ///     or the <see cref="DbModelBuilder" /> API.
     /// </summary>
     internal class ColumnOrderingConvention : IDbConvention<DbTableMetadata>
     {
@@ -30,10 +31,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var columnOrders
                 = from c in columns
                   select new
-                      {
-                          Column = c,
-                          Order = c.GetOrder() ?? int.MaxValue
-                      };
+                             {
+                                 Column = c,
+                                 Order = c.GetOrder() ?? int.MaxValue
+                             };
 
             return columnOrders
                 .OrderBy(c => c.Order)

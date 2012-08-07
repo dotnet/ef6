@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// Comparer that treats two strings as equivalent if they differ only by trailing
-    /// spaces, e.g. 'A' eq 'A   '. Useful when determining if a set of values is unique
-    /// even given the possibility of padding (consider SQL Server char and nchar columns)
-    /// or to lookup values when the set of values is known to honor this uniqueness constraint.
+    ///     Comparer that treats two strings as equivalent if they differ only by trailing
+    ///     spaces, e.g. 'A' eq 'A   '. Useful when determining if a set of values is unique
+    ///     even given the possibility of padding (consider SQL Server char and nchar columns)
+    ///     or to lookup values when the set of values is known to honor this uniqueness constraint.
     /// </summary>
     internal class TrailingSpaceComparer : IEqualityComparer<object>
     {

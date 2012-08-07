@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -6,29 +7,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents information about a primitive typed Var and how it can be replaced. 
+    ///     Represents information about a primitive typed Var and how it can be replaced.
     /// </summary>
     internal class PrimitiveTypeVarInfo : VarInfo
     {
         private readonly List<Var> m_newVars; // always a singleton list
 
         /// <summary>
-        /// Initializes a new instance of <see cref="PrimitiveTypeVarInfo"/> class.
+        ///     Initializes a new instance of <see cref="PrimitiveTypeVarInfo" /> class.
         /// </summary>
-        /// <param name="newVar">
-        /// New <see cref="Var"/> that replaces current <see cref="Var"/>.
-        /// </param>
+        /// <param name="newVar"> New <see cref="Var" /> that replaces current <see cref="Var" /> . </param>
         internal PrimitiveTypeVarInfo(Var newVar)
         {
             Debug.Assert(newVar != null, "newVar != null");
             m_newVars = new List<Var>
-                {
-                    newVar
-                };
+                            {
+                                newVar
+                            };
         }
 
         /// <summary>
-        /// Gets the newVar.
+        ///     Gets the newVar.
         /// </summary>
         internal Var NewVar
         {
@@ -36,7 +35,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Gets <see cref="VarInfoKind"/> for this <see cref="VarInfo"/>. Always <see cref="VarInfoKind.CollectionVarInfo"/>.
+        ///     Gets <see cref="VarInfoKind" /> for this <see cref="VarInfo" />. Always <see cref="VarInfoKind.CollectionVarInfo" />.
         /// </summary>
         internal override VarInfoKind Kind
         {
@@ -44,7 +43,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Gets the list of all NewVars. The list contains always just one element.
+        ///     Gets the list of all NewVars. The list contains always just one element.
         /// </summary>
         internal override List<Var> NewVars
         {

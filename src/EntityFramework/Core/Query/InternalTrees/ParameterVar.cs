@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    /// Describes a query parameter
+    ///     Describes a query parameter
     /// </summary>
     internal sealed class ParameterVar : Var
     {
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Name of the parameter
+        ///     Name of the parameter
         /// </summary>
         internal string ParameterName
         {
@@ -25,10 +26,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the name of this Var
+        ///     Get the name of this Var
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name"> </param>
+        /// <returns> </returns>
         internal override bool TryGetName(out string name)
         {
             name = ParameterName;

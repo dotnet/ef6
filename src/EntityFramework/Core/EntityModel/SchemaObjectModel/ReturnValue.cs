@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     /// <summary>
-    /// Summary description for ReturnValue.
+    ///     Summary description for ReturnValue.
     /// </summary>
     internal sealed class ReturnValue<T>
     {
@@ -14,7 +15,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #endregion
 
         /// <summary>
-        /// 
         /// </summary>
         internal bool Succeeded
         {
@@ -22,7 +22,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         internal T Value
         {

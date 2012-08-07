@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Config
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Config
     using System.Linq;
 
     /// <summary>
-    /// Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration"/>.
+    ///     Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration" />.
     /// </summary>
     internal class DbConfigurationFinder
     {

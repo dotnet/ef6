@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents an ast node for a property definition (name/type)
+    ///     Represents an ast node for a property definition (name/type)
     /// </summary>
     internal sealed class PropDefinition : Node
     {
@@ -10,9 +11,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _typeDefExpr;
 
         /// <summary>
-        /// Initializes property definition using the name and the type definition.
+        ///     Initializes property definition using the name and the type definition.
         /// </summary>
-        /// <param name="identifier"></param>
+        /// <param name="identifier"> </param>
         internal PropDefinition(Identifier name, Node typeDefExpr)
         {
             _name = name;
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns property name.
+        ///     Returns property name.
         /// </summary>
         internal Identifier Name
         {
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns property type.
+        ///     Returns property type.
         /// </summary>
         internal Node Type
         {

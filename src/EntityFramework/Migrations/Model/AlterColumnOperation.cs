@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Diagnostics.CodeAnalysis;
@@ -17,13 +18,10 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the AlterColumnOperation class.
         /// </summary>
-        /// <param name = "table">The name of the table that the column belongs to.</param>
-        /// <param name = "column">Details of what the column should be altered to.</param>
-        /// <param name = "isDestructiveChange">Value indicating if this change will result in data loss.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="table"> The name of the table that the column belongs to. </param>
+        /// <param name="column"> Details of what the column should be altered to. </param>
+        /// <param name="isDestructiveChange"> Value indicating if this change will result in data loss. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public AlterColumnOperation(
             string table, ColumnModel column, bool isDestructiveChange, object anonymousArguments = null)
@@ -40,14 +38,11 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the AlterColumnOperation class.
         /// </summary>
-        /// <param name = "table">The name of the table that the column belongs to.</param>
-        /// <param name = "column">Details of what the column should be altered to.</param>
-        /// <param name = "isDestructiveChange">Value indicating if this change will result in data loss.</param>
-        /// <param name = "inverse">An operation to revert this alteration of the column.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="table"> The name of the table that the column belongs to. </param>
+        /// <param name="column"> Details of what the column should be altered to. </param>
+        /// <param name="isDestructiveChange"> Value indicating if this change will result in data loss. </param>
+        /// <param name="inverse"> An operation to revert this alteration of the column. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public AlterColumnOperation(
             string table, ColumnModel column, bool isDestructiveChange, AlterColumnOperation inverse,

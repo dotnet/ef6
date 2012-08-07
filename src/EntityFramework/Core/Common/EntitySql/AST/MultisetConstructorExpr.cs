@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents multiset constructor expression.
+    ///     Represents multiset constructor expression.
     /// </summary>
     internal sealed class MultisetConstructorExpr : Node
     {
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns list of elements as alias expressions.
+        ///     Returns list of elements as alias expressions.
         /// </summary>
         internal NodeList<Node> ExprList
         {

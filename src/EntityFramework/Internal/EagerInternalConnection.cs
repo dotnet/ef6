@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
@@ -17,8 +18,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Creates a new EagerInternalConnection that wraps an existing DbConnection.
         /// </summary>
-        /// <param name = "existingConnection">An existing connection.</param>
-        /// <param name = "connectionOwned">If set to <c>true</c> then the underlying connection should be disposed when this object is disposed.</param>
+        /// <param name="existingConnection"> An existing connection. </param>
+        /// <param name="connectionOwned"> If set to <c>true</c> then the underlying connection should be disposed when this object is disposed. </param>
         public EagerInternalConnection(DbConnection existingConnection, bool connectionOwned)
         {
             Contract.Requires(existingConnection != null);

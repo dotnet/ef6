@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Data.Entity.Edm;
@@ -72,9 +73,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(entityTypeMappping != null);
 
             var clone = new DbEntityTypeMapping
-                {
-                    EntityType = entityTypeMappping.EntityType
-                };
+                            {
+                                EntityType = entityTypeMappping.EntityType
+                            };
             entityTypeMappping.Annotations.Copy(clone.Annotations);
 
             return clone;

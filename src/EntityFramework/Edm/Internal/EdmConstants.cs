@@ -1,10 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Internal
 {
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
 
     /// <summary>
-    ///     Contains constant values that apply to the EDM model, regardless of source (for CSDL specific constants see <see cref = "CsdlConstants" /> ).
+    ///     Contains constant values that apply to the EDM model, regardless of source (for CSDL specific constants see <see
+    ///      cref="CsdlConstants" /> ).
     /// </summary>
     internal static class EdmConstants
     {

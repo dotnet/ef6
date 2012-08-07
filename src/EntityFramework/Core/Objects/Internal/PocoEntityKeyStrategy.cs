@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     /// <summary>
-    /// Implementor of IEntityKeyStrategy for getting and setting a key on an entity that does not
-    /// implement IEntityWithKey.  The key is stored in the strategy object.
+    ///     Implementor of IEntityKeyStrategy for getting and setting a key on an entity that does not
+    ///     implement IEntityWithKey.  The key is stored in the strategy object.
     /// </summary>
     internal sealed class PocoEntityKeyStrategy : IEntityKeyStrategy
     {

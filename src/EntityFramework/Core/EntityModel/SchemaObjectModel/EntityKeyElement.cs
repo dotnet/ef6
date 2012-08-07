@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -8,16 +9,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an Key element in an EntityType element.
+    ///     Represents an Key element in an EntityType element.
     /// </summary>
     internal sealed class EntityKeyElement : SchemaElement
     {
         private List<PropertyRefElement> _keyProperties;
 
         /// <summary>
-        /// Constructs an EntityContainerAssociationSetEnd
+        ///     Constructs an EntityContainerAssociationSetEnd
         /// </summary>
-        /// <param name="parentElement">Reference to the schema element.</param>
+        /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityKeyElement(SchemaEntityType parentElement)
             : base(parentElement)
         {
@@ -56,9 +57,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandlePropertyRefElement(XmlReader reader)
         {
             var property = new PropertyRefElement(ParentElement);
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
+        ///     Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Validate all the key properties
+        ///     Validate all the key properties
         /// </summary>
         internal override void Validate()
         {

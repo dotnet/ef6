@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Collections.Generic;
@@ -107,9 +108,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             using (var xmlWriter = XmlWriter.Create(
                 stringBuilder, new XmlWriterSettings
-                    {
-                        Indent = true
-                    }))
+                                   {
+                                       Indent = true
+                                   }))
             {
                 model.ValidateAndSerializeCsdl(xmlWriter);
             }
@@ -236,9 +237,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Namespaces.Count == 1);
 
             var entityType = new EdmEntityType
-                {
-                    Name = name
-                };
+                                 {
+                                     Name = name
+                                 };
 
             model.Namespaces.Single().EntityTypes.Add(entityType);
 
@@ -280,10 +281,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Containers.Count == 1);
 
             var entitySet = new EdmEntitySet
-                {
-                    Name = name,
-                    ElementType = elementType
-                };
+                                {
+                                    Name = name,
+                                    ElementType = elementType
+                                };
 
             model.Containers.Single().EntitySets.Add(entitySet);
 
@@ -297,9 +298,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Namespaces.Count == 1);
 
             var complexType = new EdmComplexType
-                {
-                    Name = name
-                };
+                                  {
+                                      Name = name
+                                  };
 
             model.Namespaces.Single().ComplexTypes.Add(complexType);
 
@@ -313,9 +314,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Namespaces.Count == 1);
 
             var enumType = new EdmEnumType
-                {
-                    Name = name
-                };
+                               {
+                                   Name = name
+                               };
 
             model.Namespaces.Single().EnumTypes.Add(enumType);
 
@@ -475,12 +476,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Containers.Count == 1);
 
             var associationSet = new EdmAssociationSet
-                {
-                    Name = name,
-                    ElementType = associationType,
-                    SourceSet = model.GetEntitySet(associationType.SourceEnd.EntityType),
-                    TargetSet = model.GetEntitySet(associationType.TargetEnd.EntityType)
-                };
+                                     {
+                                         Name = name,
+                                         ElementType = associationType,
+                                         SourceSet = model.GetEntitySet(associationType.SourceEnd.EntityType),
+                                         TargetSet = model.GetEntitySet(associationType.TargetEnd.EntityType)
+                                     };
 
             model.Containers.Single().AssociationSets.Add(associationSet);
 

@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// Rules for SingleRowOp
+    ///     Rules for SingleRowOp
     /// </summary>
     internal static class SingleRowOpRules
     {
@@ -16,14 +17,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessSingleRowOpOverAnything);
 
         /// <summary>
-        /// Convert a 
-        ///    SingleRowOp(X) => X
-        /// if X produces at most one row
+        ///     Convert a 
+        ///     SingleRowOp(X) => X
+        ///     if X produces at most one row
         /// </summary>
-        /// <param name="context">Rule Processing context</param>
-        /// <param name="singleRowNode">Current subtree</param>
-        /// <param name="newNode">transformed subtree</param>
-        /// <returns>Transformation status</returns>
+        /// <param name="context"> Rule Processing context </param>
+        /// <param name="singleRowNode"> Current subtree </param>
+        /// <param name="newNode"> transformed subtree </param>
+        /// <returns> Transformation status </returns>
         private static bool ProcessSingleRowOpOverAnything(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;
@@ -69,13 +70,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessSingleRowOpOverProject);
 
         /// <summary>
-        /// Convert 
-        ///    SingleRowOp(Project) => Project(SingleRowOp)
+        ///     Convert 
+        ///     SingleRowOp(Project) => Project(SingleRowOp)
         /// </summary>
-        /// <param name="context">Rule Processing context</param>
-        /// <param name="singleRowNode">current subtree</param>
-        /// <param name="newNode">transformeed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> Rule Processing context </param>
+        /// <param name="singleRowNode"> current subtree </param>
+        /// <param name="newNode"> transformeed subtree </param>
+        /// <returns> transformation status </returns>
         private static bool ProcessSingleRowOpOverProject(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;
@@ -94,10 +95,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All SingleRowOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-            {
-                Rule_SingleRowOpOverAnything,
-                Rule_SingleRowOpOverProject,
-            };
+                                                    {
+                                                        Rule_SingleRowOpOverAnything,
+                                                        Rule_SingleRowOpOverProject,
+                                                    };
 
         #endregion
     }

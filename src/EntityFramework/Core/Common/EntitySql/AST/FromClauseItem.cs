@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents single from clause item.
+    ///     Represents single from clause item.
     /// </summary>
     internal sealed class FromClauseItem : Node
     {
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly FromClauseItemKind _fromClauseItemKind;
 
         /// <summary>
-        /// Initializes as 'simple' aliased expression.
+        ///     Initializes as 'simple' aliased expression.
         /// </summary>
         internal FromClauseItem(AliasedExpr aliasExpr)
         {
@@ -19,7 +20,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Initializes as join clause item.
+        ///     Initializes as join clause item.
         /// </summary>
         internal FromClauseItem(JoinClauseItem joinClauseItem)
         {
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Initializes as apply clause item.
+        ///     Initializes as apply clause item.
         /// </summary>
         internal FromClauseItem(ApplyClauseItem applyClauseItem)
         {
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// From clause item expression.
+        ///     From clause item expression.
         /// </summary>
         internal Node FromExpr
         {
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// From clause item kind (alias,join,apply).
+        ///     From clause item kind (alias,join,apply).
         /// </summary>
         internal FromClauseItemKind FromClauseItemKind
         {

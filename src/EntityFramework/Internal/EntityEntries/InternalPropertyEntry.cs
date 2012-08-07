@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
@@ -6,8 +7,8 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     The internal class used to implement <see cref = "System.Data.Entity.Infrastructure.DbPropertyEntry" /> and 
-    ///     <see cref = "System.Data.Entity.Infrastructure.DbPropertyEntry{TEntity, TProperty}" />.
+    ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry" /> and 
+    ///     <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry{TEntity, TProperty}" />.
     ///     This internal class contains all the common implementation between the generic and non-generic
     ///     entry classes and also allows for a clean internal factoring without compromising the public API.
     /// </summary>
@@ -21,10 +22,10 @@ namespace System.Data.Entity.Internal
         private Action<object, object> _setter;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalPropertyEntry" /> class.
+        ///     Initializes a new instance of the <see cref="InternalPropertyEntry" /> class.
         /// </summary>
-        /// <param name = "internalEntityEntry">The internal entry.</param>
-        /// <param name = "propertyMetadata">The property info.</param>
+        /// <param name="internalEntityEntry"> The internal entry. </param>
+        /// <param name="propertyMetadata"> The property info. </param>
         protected InternalPropertyEntry(InternalEntityEntry internalEntityEntry, PropertyEntryMetadata propertyMetadata)
             : base(internalEntityEntry, propertyMetadata)
         {
@@ -48,26 +49,26 @@ namespace System.Data.Entity.Internal
         ///     Gets the current values of the parent entity or complex property.
         ///     That is, the current values that contains the value for this property.
         /// </summary>
-        /// <value>The parent current values.</value>
+        /// <value> The parent current values. </value>
         public abstract InternalPropertyValues ParentCurrentValues { get; }
 
         /// <summary>
         ///     Gets the original values of the parent entity or complex property.
         ///     That is, the original values that contains the value for this property.
         /// </summary>
-        /// <value>The parent original values.</value>
+        /// <value> The parent original values. </value>
         public abstract InternalPropertyValues ParentOriginalValues { get; }
 
         /// <summary>
         ///     Creates a delegate that will get the value of this property.
         /// </summary>
-        /// <returns>The delegate.</returns>
+        /// <returns> The delegate. </returns>
         protected abstract Func<object, object> CreateGetter();
 
         /// <summary>
         ///     Creates a delegate that will set the value of this property.
         /// </summary>
-        /// <returns>The delegate.</returns>
+        /// <returns> The delegate. </returns>
         protected abstract Action<object, object> CreateSetter();
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace System.Data.Entity.Internal
         ///     true if the property is modified.  If this is a property of a complex object, then
         ///     this method returns true if the top-level complex property on the entity is modified.
         /// </summary>
-        /// <returns>True if the entity property is modified.</returns>
+        /// <returns> True if the entity property is modified. </returns>
         public abstract bool EntityPropertyIsModified();
 
         /// <summary>
@@ -88,17 +89,17 @@ namespace System.Data.Entity.Internal
         public abstract void SetEntityPropertyModified();
 
         /// <summary>
-        /// Rejects changes to this property.
-        /// If this is a property of a complex object, then this method rejects changes to the top-level
-        /// complex property.
+        ///     Rejects changes to this property.
+        ///     If this is a property of a complex object, then this method rejects changes to the top-level
+        ///     complex property.
         /// </summary>
         public abstract void RejectEntityPropertyChanges();
 
         /// <summary>
-        /// Walks the tree from a property of a complex property back up to the top-level
-        /// complex property and then checks whether or not DetectChanges still considers
-        /// the complex property to be modified. If it does not, then the complex property
-        /// is marked as Unchanged.
+        ///     Walks the tree from a property of a complex property back up to the top-level
+        ///     complex property and then checks whether or not DetectChanges still considers
+        ///     the complex property to be modified. If it does not, then the complex property
+        ///     is marked as Unchanged.
         /// </summary>
         public abstract void UpdateComplexPropertyState();
 
@@ -186,7 +187,7 @@ namespace System.Data.Entity.Internal
         ///     Also, for complex properties, the object returned is the actual complex object from the entity
         ///     and setting the complex object causes the actual object passed to be set onto the entity.
         /// </summary>
-        /// <value>The current value.</value>
+        /// <value> The current value. </value>
         public override object CurrentValue
         {
             get
@@ -258,7 +259,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Throws if the user attempts to set a complex property to null.
         /// </summary>
-        /// <param name = "value">The value.</param>
+        /// <param name="value"> The value. </param>
         private void CheckNotSettingComplexPropertyToNull(object value)
         {
             if (value == null
@@ -271,8 +272,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Sets the given value directly onto the underlying entity object.
         /// </summary>
-        /// <param name = "value">The value.</param>
-        /// <returns>True if the property had a setter that we could attempt to call; false if no setter was available.</returns>
+        /// <param name="value"> The value. </param>
+        /// <returns> True if the property had a setter that we could attempt to call; false if no setter was available. </returns>
         private bool SetCurrentValueOnClrObject(object value)
         {
             if (Setter == null)
@@ -299,7 +300,7 @@ namespace System.Data.Entity.Internal
         ///     Sets the property value, potentially by setting individual nested values for a complex
         ///     property.
         /// </summary>
-        /// <param name = "value">The value.</param>
+        /// <param name="value"> The value. </param>
         private void SetPropertyValueUsingValues(InternalPropertyValues internalValues, object value)
         {
             Contract.Assert(internalValues != null, "Expected to throw before calling this method.");
@@ -333,10 +334,10 @@ namespace System.Data.Entity.Internal
         ///     which must be a mapped complex property.
         ///     This method is virtual to allow mocking.
         /// </summary>
-        /// <param name = "property">The property.</param>
-        /// <param name = "requestedType">The type of object requested, which may be null or 'object' if any type can be accepted.</param>
-        /// <param name = "requireComplex">if set to <c>true</c> then the found property must be a complex property.</param>
-        /// <returns>The entry.</returns>
+        /// <param name="property"> The property. </param>
+        /// <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
+        /// <param name="requireComplex"> if set to <c>true</c> then the found property must be a complex property. </param>
+        /// <returns> The entry. </returns>
         public virtual InternalPropertyEntry Property(
             string property, Type requestedType = null, bool requireComplex = false)
         {
@@ -392,7 +393,8 @@ namespace System.Data.Entity.Internal
         #region Handling entries for detached entities
 
         /// <summary>
-        ///     Validates that the owning entity entry is associated with an underlying <see cref = "System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
+        ///     Validates that the owning entity entry is associated with an underlying <see
+        ///      cref="System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
         ///     is not just wrapping a non-attached entity.
         /// </summary>
         private void ValidateNotDetachedAndInModel(string method)
@@ -417,7 +419,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the property metadata.
         /// </summary>
-        /// <value>The property metadata.</value>
+        /// <value> The property metadata. </value>
         public new PropertyEntryMetadata EntryMetadata
         {
             get { return (PropertyEntryMetadata)base.EntryMetadata; }
@@ -428,22 +430,22 @@ namespace System.Data.Entity.Internal
         #region DbMemberEntry factory methods
 
         /// <summary>
-        ///     Creates a new non-generic <see cref = "DbMemberEntry" /> backed by this internal entry.
-        ///     The runtime type of the DbMemberEntry created will be <see cref = "DbPropertyEntry" /> or a subtype of it.
+        ///     Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
+        ///     The runtime type of the DbMemberEntry created will be <see cref="DbPropertyEntry" /> or a subtype of it.
         /// </summary>
-        /// <returns>The new entry.</returns>
+        /// <returns> The new entry. </returns>
         public override DbMemberEntry CreateDbMemberEntry()
         {
             return EntryMetadata.IsComplex ? new DbComplexPropertyEntry(this) : new DbPropertyEntry(this);
         }
 
         /// <summary>
-        ///     Creates a new generic <see cref = "DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
-        ///     The runtime type of the DbMemberEntry created will be <see cref = "DbPropertyEntry{TEntity,TProperty}" /> or a subtype of it.
+        ///     Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
+        ///     The runtime type of the DbMemberEntry created will be <see cref="DbPropertyEntry{TEntity,TProperty}" /> or a subtype of it.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-        /// <typeparam name = "TProperty">The type of the property.</typeparam>
-        /// <returns>The new entry.</returns>
+        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+        /// <typeparam name="TProperty"> The type of the property. </typeparam>
+        /// <returns> The new entry. </returns>
         public override DbMemberEntry<TEntity, TProperty> CreateDbMemberEntry<TEntity, TProperty>()
         {
             return EntryMetadata.IsComplex

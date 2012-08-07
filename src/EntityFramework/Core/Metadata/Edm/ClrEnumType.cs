@@ -1,26 +1,29 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Represents an enumeration type that has a reference to the backing CLR type.
+    ///     Represents an enumeration type that has a reference to the backing CLR type.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrEnumType : EnumType
     {
-        /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>
+        /// <summary>
+        ///     cached CLR type handle, allowing the Type reference to be GC'd
+        /// </summary>
         private readonly RuntimeTypeHandle _type;
 
         private readonly string _cspaceTypeName;
 
         /// <summary>
-        /// Initializes a new instance of ClrEnumType class with properties from the CLR type.
+        ///     Initializes a new instance of ClrEnumType class with properties from the CLR type.
         /// </summary>
-        /// <param name="clrType">The CLR type to construct from.</param>
-        /// <param name="cspaceNamespaceName">CSpace namespace name.</param>
-        /// <param name="cspaceTypeName">CSpace type name.</param>
+        /// <param name="clrType"> The CLR type to construct from. </param>
+        /// <param name="cspaceNamespaceName"> CSpace namespace name. </param>
+        /// <param name="cspaceTypeName"> CSpace type name. </param>
         internal ClrEnumType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
             : base(clrType)
         {
@@ -35,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the clr type backing this enum type.
+        ///     Gets the clr type backing this enum type.
         /// </summary>
         internal override Type ClrType
         {
@@ -43,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get the full CSpaceTypeName for this enum type.
+        ///     Get the full CSpaceTypeName for this enum type.
         /// </summary>
         internal string CSpaceTypeName
         {

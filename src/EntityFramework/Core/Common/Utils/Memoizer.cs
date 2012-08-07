@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
@@ -8,11 +9,11 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Threading;
 
     /// <summary>
-    /// Remembers the result of evaluating an expensive function so that subsequent
-    /// evaluations are faster. Thread-safe.
+    ///     Remembers the result of evaluating an expensive function so that subsequent
+    ///     evaluations are faster. Thread-safe.
     /// </summary>
-    /// <typeparam name="TArg">Type of the argument to the function.</typeparam>
-    /// <typeparam name="TResult">Type of the function result.</typeparam>
+    /// <typeparam name="TArg"> Type of the argument to the function. </typeparam>
+    /// <typeparam name="TResult"> Type of the function result. </typeparam>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal sealed class Memoizer<TArg, TResult>
     {
@@ -21,11 +22,10 @@ namespace System.Data.Entity.Core.Common.Utils
         private readonly ReaderWriterLockSlim _lock;
 
         /// <summary>
-        /// Constructs
+        ///     Constructs
         /// </summary>
-        /// <param name="function">Required. Function whose values are being cached.</param>
-        /// <param name="argComparer">Optional. Comparer used to determine if two functions arguments
-        /// are the same.</param>
+        /// <param name="function"> Required. Function whose values are being cached. </param>
+        /// <param name="argComparer"> Optional. Comparer used to determine if two functions arguments are the same. </param>
         internal Memoizer(Func<TArg, TResult> function, IEqualityComparer<TArg> argComparer)
         {
             Contract.Requires(function != null);
@@ -36,12 +36,12 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Evaluates the wrapped function for the given argument. If the function has already
-        /// been evaluated for the given argument, returns cached value. Otherwise, the value
-        /// is computed and returned.
+        ///     Evaluates the wrapped function for the given argument. If the function has already
+        ///     been evaluated for the given argument, returns cached value. Otherwise, the value
+        ///     is computed and returned.
         /// </summary>
-        /// <param name="arg">Function argument.</param>
-        /// <returns>Function result.</returns>
+        /// <param name="arg"> Function argument. </param>
+        /// <returns> Function result. </returns>
         internal TResult Evaluate(TArg arg)
         {
             Result result;
@@ -100,8 +100,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Encapsulates a 'deferred' result. The result is constructed with a delegate (must not 
-        /// be null) and when the user requests a value the delegate is invoked and stored.
+        ///     Encapsulates a 'deferred' result. The result is constructed with a delegate (must not 
+        ///     be null) and when the user requests a value the delegate is invoked and stored.
         /// </summary>
         private class Result
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Diagnostics.CodeAnalysis;
@@ -16,12 +17,9 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the DropColumnOperation class.
         /// </summary>
-        /// <param name = "table">The name of the table the column should be dropped from.</param>
-        /// <param name = "name">The name of the column to be dropped.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="table"> The name of the table the column should be dropped from. </param>
+        /// <param name="name"> The name of the column to be dropped. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropColumnOperation(string table, string name, object anonymousArguments = null)
             : this(table, name, null, anonymousArguments)
@@ -31,13 +29,10 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the DropColumnOperation class.
         /// </summary>
-        /// <param name = "table">The name of the table the column should be dropped from.</param>
-        /// <param name = "name">The name of the column to be dropped.</param>
-        /// <param name = "inverse">The operation that represents reverting the drop operation.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="table"> The name of the table the column should be dropped from. </param>
+        /// <param name="name"> The name of the column to be dropped. </param>
+        /// <param name="inverse"> The operation that represents reverting the drop operation. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public DropColumnOperation(
             string table, string name, AddColumnOperation inverse, object anonymousArguments = null)

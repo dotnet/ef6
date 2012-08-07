@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace System.Data.Entity.Core.Common.Utils
     internal static class MetadataHelper
     {
         /// <summary>
-        /// Returns an element type of the collection returned by the function import.
-        /// Returns false, if element type cannot be determined.
+        ///     Returns an element type of the collection returned by the function import.
+        ///     Returns false, if element type cannot be determined.
         /// </summary>
         internal static bool TryGetFunctionImportReturnType<T>(EdmFunction functionImport, int resultSetIndex, out T returnType)
             where T : EdmType
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// effects: determines if the given function import returns collection type, and if so returns the type
+        ///     effects: determines if the given function import returns collection type, and if so returns the type
         /// </summary>
         internal static bool TryGetFunctionImportReturnCollectionType(
             EdmFunction functionImport, int resultSetIndex, out CollectionType collectionType)
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Gets the resultSetIndexth return parameter for functionImport, or null if resultSetIndex is out of range
+        ///     Gets the resultSetIndexth return parameter for functionImport, or null if resultSetIndex is out of range
         /// </summary>
         internal static FunctionParameter GetReturnParameter(EdmFunction functionImport, int resultSetIndex)
         {
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Gets the resultSetIndexth result edm type, and ensure that it is consistent with EntityType.
+        ///     Gets the resultSetIndexth result edm type, and ensure that it is consistent with EntityType.
         /// </summary>
         internal static EdmType GetAndCheckFunctionImportReturnType<TElement>(
             EdmFunction functionImport, int resultSetIndex, MetadataWorkspace workspace)
@@ -107,7 +108,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// check that the type TElement and function metadata are consistent
+        ///     check that the type TElement and function metadata are consistent
         /// </summary>
         internal static void CheckFunctionImportReturnType<TElement>(EdmType expectedEdmType, MetadataWorkspace workspace)
         {
@@ -170,7 +171,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Returns true iff member's is a simple non-structures scalar such as primitive or enum.
+        ///     Returns true iff member's is a simple non-structures scalar such as primitive or enum.
         /// </summary>
         internal static bool IsNonRefSimpleMember(EdmMember member)
         {
@@ -299,7 +300,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Given a table EntitySet this function finds out all C-side EntitySets that are mapped to the table.
+        ///     Given a table EntitySet this function finds out all C-side EntitySets that are mapped to the table.
         /// </summary>
         internal static IEnumerable<EntitySet> GetInfluencingEntitySetsForTable(EntitySet table, MetadataWorkspace workspace)
         {
@@ -403,11 +404,11 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Builds an undirected graph (represented as a directional graph with reciprocal navigation edges) of the all the types in the workspace.
-        /// This is used to traverse inheritance hierarchy up and down.
-        /// O(n), where n=number of types
+        ///     Builds an undirected graph (represented as a directional graph with reciprocal navigation edges) of the all the types in the workspace.
+        ///     This is used to traverse inheritance hierarchy up and down.
+        ///     O(n), where n=number of types
         /// </summary>
-        /// <returns>A dictionary of type t -> set of types {s}, such that there is an edge between t and elem(s) iff t and s are related DIRECTLY via inheritance (child or parent type) </returns>
+        /// <returns> A dictionary of type t -> set of types {s}, such that there is an edge between t and elem(s) iff t and s are related DIRECTLY via inheritance (child or parent type) </returns>
         internal static Dictionary<EntityType, Set<EntityType>> BuildUndirectedGraphOfTypes(EdmItemCollection edmItemCollection)
         {
             var graph = new Dictionary<EntityType, Set<EntityType>>();
@@ -431,7 +432,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// is A parent of b?
+        ///     is A parent of b?
         /// </summary>
         internal static bool IsParentOf(EntityType a, EntityType b)
         {
@@ -452,9 +453,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Add and Edge a --> b
-        /// Assumes edge does not exist
-        /// O(1)
+        ///     Add and Edge a --> b
+        ///     Assumes edge does not exist
+        ///     O(1)
         /// </summary>
         private static void AddDirectedEdgeBetweenEntityTypes(Dictionary<EntityType, Set<EntityType>> graph, EntityType a, EntityType b)
         {
@@ -474,9 +475,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Checks wither the given AssociationEnd's keys are sufficient for identifying a unique tuple in the AssociationSet.
-        /// This is possible because refconstraints make certain Keys redundant. We subtract such redundant key sof "other" ends
-        /// and see if what is left is contributed only from the given end's keys.
+        ///     Checks wither the given AssociationEnd's keys are sufficient for identifying a unique tuple in the AssociationSet.
+        ///     This is possible because refconstraints make certain Keys redundant. We subtract such redundant key sof "other" ends
+        ///     and see if what is left is contributed only from the given end's keys.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode",
             Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
@@ -772,10 +773,10 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
+        ///     Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
         /// </summary>
-        /// <param name="schemaErrors"></param>
-        /// <returns></returns>
+        /// <param name="schemaErrors"> </param>
+        /// <returns> </returns>
         internal static bool CheckIfAllErrorsAreWarnings(IList<EdmSchemaError> schemaErrors)
         {
             var length = schemaErrors.Count;
@@ -792,10 +793,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="dictionaryExtentViews"></param>
-        /// <returns></returns>
+        /// <param name="dictionaryExtentViews"> </param>
+        /// <returns> </returns>
         internal static string GenerateHashForAllExtentViewsContent(
             double schemaVersion, IEnumerable<KeyValuePair<string, string>> extentViews)
         {

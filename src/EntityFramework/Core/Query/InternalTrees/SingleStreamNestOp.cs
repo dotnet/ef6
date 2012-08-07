@@ -1,19 +1,20 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
-    /// Single-stream nest aggregation Op. 
-    /// (Somewhat similar to a group-by op - should we merge these?)
+    ///     Single-stream nest aggregation Op. 
+    ///     (Somewhat similar to a group-by op - should we merge these?)
     /// </summary>
     internal class SingleStreamNestOp : NestBaseOp
     {
         #region publics
 
         /// <summary>
-        /// 1 child - the input
+        ///     1 child - the input
         /// </summary>
         internal override int Arity
         {
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// The discriminator Var (when there are multiple collections)
+        ///     The discriminator Var (when there are multiple collections)
         /// </summary>
         internal Var Discriminator
         {
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// List of postfix sort keys (mostly to deal with multi-level nested collections)
+        ///     List of postfix sort keys (mostly to deal with multi-level nested collections)
         /// </summary>
         internal List<SortKey> PostfixSortKeys
         {
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Set of keys for this nest operation
+        ///     Set of keys for this nest operation
         /// </summary>
         internal VarVec Keys
         {
@@ -45,10 +46,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method
+        ///     Visitor pattern method
         /// </summary>
-        /// <param name="v">The BasicOpVisitor that is visiting this Op</param>
-        /// <param name="n">The Node that references this Op</param>
+        /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
+        /// <param name="n"> The Node that references this Op </param>
         [DebuggerNonUserCode]
         internal override void Accept(BasicOpVisitor v, Node n)
         {
@@ -56,11 +57,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method for visitors with a return value
+        ///     Visitor pattern method for visitors with a return value
         /// </summary>
-        /// <param name="v">The visitor</param>
-        /// <param name="n">The node in question</param>
-        /// <returns>An instance of TResultType</returns>
+        /// <param name="v"> The visitor </param>
+        /// <param name="n"> The node in question </param>
+        /// <returns> An instance of TResultType </returns>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType>(BasicOpVisitorOfT<TResultType> v, Node n)
         {

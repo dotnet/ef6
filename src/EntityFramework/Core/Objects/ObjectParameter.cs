@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -8,9 +9,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
-    /// <summary> 
-    ///   This class represents a query parameter at the object layer, which consists
-    ///   of a Name, a Type and a Value.
+    /// <summary>
+    ///     This class represents a query parameter at the object layer, which consists
+    ///     of a Name, a Type and a Value.
     /// </summary>
     public sealed class ObjectParameter
     {
@@ -23,9 +24,9 @@ namespace System.Data.Entity.Core.Objects
         #region ValidateParameterName
 
         /// <summary>
-        ///   This internal method uses regular expression matching to ensure that the
-        ///   specified parameter name is valid. Parameter names must start with a letter,
-        ///   and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
+        ///     This internal method uses regular expression matching to ensure that the
+        ///     specified parameter name is valid. Parameter names must start with a letter,
+        ///     and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
         /// </summary>
         internal static bool ValidateParameterName(string name)
         {
@@ -47,27 +48,17 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameter (string, Type)
 
         /// <summary>
-        ///   This constructor creates an unbound (i.e., value-less) parameter from the
-        ///   specified name and type. The value can be set at any time through the 
-        ///   public 'Value' property.
+        ///     This constructor creates an unbound (i.e., value-less) parameter from the
+        ///     specified name and type. The value can be set at any time through the 
+        ///     public 'Value' property.
         /// </summary>
-        /// <param name="name">
-        ///   The parameter name.
-        /// </param>
-        /// <param name="type">
-        ///   The CLR type of the parameter.
-        /// </param>
-        /// <returns>
-        ///   A new unbound ObjectParameter instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the value of either argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   If the value of the name argument is invalid. Parameter names must start
-        ///   with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
-        ///   underscores (_).
-        /// </exception>
+        /// <param name="name"> The parameter name. </param>
+        /// <param name="type"> The CLR type of the parameter. </param>
+        /// <returns> A new unbound ObjectParameter instance. </returns>
+        /// <exception cref="ArgumentNullException">If the value of either argument is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value of the name argument is invalid. Parameter names must start
+        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
+        ///     underscores (_).</exception>
         public ObjectParameter(string name, Type type)
         {
             Contract.Requires(name != null);
@@ -91,27 +82,17 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameter (string, object)
 
         /// <summary>
-        ///   This constructor creates a fully-bound (i.e., valued) parameter from the
-        ///   specified name and value. The type is inferred from the initial value, but
-        ///   the value can be changed at any time through the public 'Value' property.
+        ///     This constructor creates a fully-bound (i.e., valued) parameter from the
+        ///     specified name and value. The type is inferred from the initial value, but
+        ///     the value can be changed at any time through the public 'Value' property.
         /// </summary>
-        /// <param name="name">
-        ///   The parameter name.
-        /// </param>
-        /// <param name="value">
-        ///   The initial value (and inherently, type) of the parameter.
-        /// </param>
-        /// <returns>
-        ///   A new fully-bound ObjectParameter instance.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///   If the value of either argument is null.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///   If the value of the name argument is invalid. Parameter names must start
-        ///   with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
-        ///   underscores (_).
-        /// </exception>
+        /// <param name="name"> The parameter name. </param>
+        /// <param name="value"> The initial value (and inherently, type) of the parameter. </param>
+        /// <returns> A new fully-bound ObjectParameter instance. </returns>
+        /// <exception cref="ArgumentNullException">If the value of either argument is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value of the name argument is invalid. Parameter names must start
+        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
+        ///     underscores (_).</exception>
         public ObjectParameter(string name, object value)
         {
             Contract.Requires(name != null);
@@ -142,15 +123,11 @@ namespace System.Data.Entity.Core.Objects
         // -------------------
 
         /// <summary>
-        ///   This constructor is used by <see cref="ShallowCopy"/> to create a new ObjectParameter
-        ///   with field values taken from the field values of an existing ObjectParameter.
+        ///     This constructor is used by <see cref="ShallowCopy" /> to create a new ObjectParameter
+        ///     with field values taken from the field values of an existing ObjectParameter.
         /// </summary>
-        /// <param name="template">
-        ///   The existing ObjectParameter instance from which field values should be taken.
-        /// </param>
-        /// <returns>
-        ///   A new ObjectParameter instance with the same field values as the specified ObjectParameter
-        /// </returns>
+        /// <param name="template"> The existing ObjectParameter instance from which field values should be taken. </param>
+        /// <returns> A new ObjectParameter instance with the same field values as the specified ObjectParameter </returns>
         private ObjectParameter(ObjectParameter template)
         {
             Debug.Assert(template != null, "Template ObjectParameter cannot be null");
@@ -171,32 +148,32 @@ namespace System.Data.Entity.Core.Objects
         // --------------
 
         /// <summary>
-        ///   The name of the parameter. Cannot be null and is immutable.
+        ///     The name of the parameter. Cannot be null and is immutable.
         /// </summary>
         private readonly string _name;
 
         /// <summary>
-        ///   The CLR type of the parameter. Cannot be null and is immutable.
+        ///     The CLR type of the parameter. Cannot be null and is immutable.
         /// </summary>
         private readonly Type _type;
 
         /// <summary>
-        ///   The mappable CLR type of the parameter. Unless the parameter type is
-        ///   Nullable, this type is equal to the parameter type. In the case of
-        ///   Nullable parameters, this type is the underlying Nullable argument
-        ///   type. Cannot be null and is immutable.
+        ///     The mappable CLR type of the parameter. Unless the parameter type is
+        ///     Nullable, this type is equal to the parameter type. In the case of
+        ///     Nullable parameters, this type is the underlying Nullable argument
+        ///     type. Cannot be null and is immutable.
         /// </summary>
         private readonly Type _mappableType;
 
         /// <summary>
         ///     Used to specify the exact metadata type of this parameter.
-        ///     Typically null, can only be set using the internal <see cref="TypeUsage"/> property.
+        ///     Typically null, can only be set using the internal <see cref="TypeUsage" /> property.
         /// </summary>
         private TypeUsage _effectiveType;
 
         /// <summary>
-        ///   The value of the parameter. Does not need to be bound until execution
-        ///   time and can be modified at any time.
+        ///     The value of the parameter. Does not need to be bound until execution
+        ///     time and can be modified at any time.
         /// </summary>
         private object _value;
 
@@ -209,7 +186,7 @@ namespace System.Data.Entity.Core.Objects
         // -----------------
 
         /// <summary>
-        ///   The parameter name, which can only be set through a constructor.
+        ///     The parameter name, which can only be set through a constructor.
         /// </summary>
         public string Name
         {
@@ -217,7 +194,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   The parameter type, which can only be set through a constructor.
+        ///     The parameter type, which can only be set through a constructor.
         /// </summary>
         public Type ParameterType
         {
@@ -225,11 +202,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   The parameter value, which can be set at any time (and subsequently 
-        ///   changed) before query execution. Note that type-checking is not 
-        ///   enforced between the declared parameter type and the type of the 
-        ///   specified value; such validation is left up to the underlying 
-        ///   provider(s) at execution time.
+        ///     The parameter value, which can be set at any time (and subsequently 
+        ///     changed) before query execution. Note that type-checking is not 
+        ///     enforced between the declared parameter type and the type of the 
+        ///     specified value; such validation is left up to the underlying 
+        ///     provider(s) at execution time.
         /// </summary>
         public object Value
         {
@@ -247,7 +224,7 @@ namespace System.Data.Entity.Core.Objects
         // -------------------
 
         /// <summary>
-        ///     Gets or sets a <see cref="TypeUsage"/> that specifies the exact
+        ///     Gets or sets a <see cref="TypeUsage" /> that specifies the exact
         ///     type of which the parameter value is considered an instance.
         /// </summary>
         internal TypeUsage TypeUsage
@@ -262,9 +239,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///   The mappable parameter type; this is primarily used to handle the case of 
-        ///   Nullable parameter types. For example, metadata knows nothing about 'int?', 
-        ///   only 'Int32'. For internal use only.
+        ///     The mappable parameter type; this is primarily used to handle the case of 
+        ///     Nullable parameter types. For example, metadata knows nothing about 'int?', 
+        ///     only 'Int32'. For internal use only.
         /// </summary>
         internal Type MappableType
         {
@@ -280,18 +257,18 @@ namespace System.Data.Entity.Core.Objects
         // ----------------
 
         /// <summary>
-        /// Creates a new ObjectParameter instance with identical field values to this instance.
+        ///     Creates a new ObjectParameter instance with identical field values to this instance.
         /// </summary>
-        /// <returns>The new ObjectParameter instance</returns>
+        /// <returns> The new ObjectParameter instance </returns>
         internal ObjectParameter ShallowCopy()
         {
             return new ObjectParameter(this);
         }
 
         /// <summary>
-        ///   This internal method ensures that the specified type is a scalar
-        ///   type supported by the underlying provider by ensuring that scalar 
-        ///   metadata for this type is retrievable.
+        ///     This internal method ensures that the specified type is a scalar
+        ///     type supported by the underlying provider by ensuring that scalar 
+        ///     metadata for this type is retrievable.
         /// </summary>
         internal bool ValidateParameterType(ClrPerspective perspective)
         {

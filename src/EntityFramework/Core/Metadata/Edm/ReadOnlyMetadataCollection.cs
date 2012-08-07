@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
@@ -7,9 +8,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Class representing a read-only wrapper around MetadataCollection
+    ///     Class representing a read-only wrapper around MetadataCollection
     /// </summary>
-    /// <typeparam name="T">The type of items in this collection</typeparam>
+    /// <typeparam name="T"> The type of items in this collection </typeparam>
     public class ReadOnlyMetadataCollection<T> : ReadOnlyCollection<T>
         where T : MetadataItem
     {
@@ -21,9 +22,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
+        ///     The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>
-        /// <param name="collection">The metadata collection to wrap</param>
+        /// <param name="collection"> The metadata collection to wrap </param>
         /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
         internal ReadOnlyMetadataCollection(IList<T> collection)
             : base(collection)
@@ -37,15 +38,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // On the surface, this Enumerator doesn't do anything but delegating to the underlying enumerator
 
         /// <summary>
-        /// The enumerator for MetadataCollection
+        ///     The enumerator for MetadataCollection
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         public struct Enumerator : IEnumerator<T>
         {
             /// <summary>
-            /// Constructor for the enumerator
+            ///     Constructor for the enumerator
             /// </summary>
-            /// <param name="collection">The collection that this enumerator should enumerate on</param>
+            /// <param name="collection"> The collection that this enumerator should enumerate on </param>
             internal Enumerator(IList<T> collection)
             {
                 _parent = collection;
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private T _current;
 
             /// <summary>
-            /// Gets the member at the current position
+            ///     Gets the member at the current position
             /// </summary>
             public T Current
             {
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            /// Gets the member at the current position
+            ///     Gets the member at the current position
             /// </summary>
             object IEnumerator.Current
             {
@@ -74,16 +75,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            /// Dispose this enumerator
+            ///     Dispose this enumerator
             /// </summary>
             public void Dispose()
             {
             }
 
             /// <summary>
-            /// Move to the next member in the collection
+            ///     Move to the next member in the collection
             /// </summary>
-            /// <returns>True if the enumerator is moved</returns>
+            /// <returns> True if the enumerator is moved </returns>
             public bool MoveNext()
             {
                 if ((uint)_nextIndex
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            /// Sets the enumerator to the initial position before the first member
+            ///     Sets the enumerator to the initial position before the first member
             /// </summary>
             public void Reset()
             {
@@ -113,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Gets whether the collection is a readonly collection
+        ///     Gets whether the collection is a readonly collection
         /// </summary>
         public bool IsReadOnly
         {
@@ -121,10 +122,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets an item from the collection with the given identity
+        ///     Gets an item from the collection with the given identity
         /// </summary>
-        /// <param name="identity">The identity of the item to search for</param>
-        /// <returns>An item from the collection</returns>
+        /// <param name="identity"> The identity of the item to search for </param>
+        /// <returns> An item from the collection </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
         /// <exception cref="System.NotSupportedException">Thrown if setter is called</exception>
         public virtual T this[string identity]
@@ -133,7 +134,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the metadata collection over which this collection is the view
+        ///     Returns the metadata collection over which this collection is the view
         /// </summary>
         internal MetadataCollection<T> Source
         {
@@ -145,11 +146,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Gets an item from the collection with the given identity
+        ///     Gets an item from the collection with the given identity
         /// </summary>
-        /// <param name="identity">The identity of the item to search for</param>
-        /// <param name="ignoreCase">Whether case is ignore in the search</param>
-        /// <returns>An item from the collection</returns>
+        /// <param name="identity"> The identity of the item to search for </param>
+        /// <param name="ignoreCase"> Whether case is ignore in the search </param>
+        /// <returns> An item from the collection </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
         public virtual T GetValue(string identity, bool ignoreCase)
@@ -158,10 +159,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Determines if this collection contains an item of the given identity
+        ///     Determines if this collection contains an item of the given identity
         /// </summary>
-        /// <param name="identity">The identity of the item to check for</param>
-        /// <returns>True if the collection contains the item with the given identity</returns>
+        /// <param name="identity"> The identity of the item to check for </param>
+        /// <returns> True if the collection contains the item with the given identity </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if identity argument passed in is empty string</exception>
         public virtual bool Contains(string identity)
@@ -170,12 +171,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets an item from the collection with the given identity
+        ///     Gets an item from the collection with the given identity
         /// </summary>
-        /// <param name="identity">The identity of the item to search for</param>
-        /// <param name="ignoreCase">Whether case is ignored in the search</param>
-        /// <param name="item">An item from the collection, null if the item is not found</param>
-        /// <returns>True an item is retrieved</returns>
+        /// <param name="identity"> The identity of the item to search for </param>
+        /// <param name="ignoreCase"> Whether case is ignored in the search </param>
+        /// <param name="item"> An item from the collection, null if the item is not found </param>
+        /// <returns> True an item is retrieved </returns>
         /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
         public virtual bool TryGetValue(string identity, bool ignoreCase, out T item)
         {
@@ -183,19 +184,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the enumerator over this collection
+        ///     Gets the enumerator over this collection
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public new Enumerator GetEnumerator()
         {
             return new Enumerator(Items);
         }
 
         /// <summary>
-        /// Workaround for bug 
+        ///     Workaround for bug
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value"> </param>
+        /// <returns> </returns>
         public new virtual int IndexOf(T value)
         {
             return base.IndexOf(value);

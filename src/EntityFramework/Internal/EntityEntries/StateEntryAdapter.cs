@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
@@ -8,9 +9,9 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     This is a temporary adapter class that wraps an <see cref = "ObjectStateEntry" /> and
-    ///     presents it as an <see cref = "IEntityStateEntry" />.  This class will be removed once
-    ///     we roll into the System.Data.Entity assembly.  See <see cref = "IEntityStateEntry" />
+    ///     This is a temporary adapter class that wraps an <see cref="ObjectStateEntry" /> and
+    ///     presents it as an <see cref="IEntityStateEntry" />.  This class will be removed once
+    ///     we roll into the System.Data.Entity assembly.  See <see cref="IEntityStateEntry" />
     ///     for more details.
     /// </summary>
     internal class StateEntryAdapter : IEntityStateEntry

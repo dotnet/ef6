@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -10,15 +11,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    /// Class representing a primitive type
+    ///     Class representing a primitive type
     /// </summary>
     public class PrimitiveType : SimpleType
     {
         #region constructors
 
         /// <summary>
-        /// Initializes a new instance of PrimitiveType
-        /// </summary>      
+        ///     Initializes a new instance of PrimitiveType
+        /// </summary>
         internal PrimitiveType()
         {
             // No initialization of item attributes in here, it's used as a pass thru in the case for delay population
@@ -26,14 +27,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for PrimitiveType.  It takes the required information to identify this type.
+        ///     The constructor for PrimitiveType.  It takes the required information to identify this type.
         /// </summary>
-        /// <param name="name">The name of this type</param>
-        /// <param name="namespaceName">The namespace name of this type</param>
-        /// <param name="version">The version of this type</param>
-        /// <param name="dataSpace">dataSpace in which this primitive type belongs to</param>
-        /// <param name="baseType">The primitive type that this type is derived from</param>
-        /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
+        /// <param name="name"> The name of this type </param>
+        /// <param name="namespaceName"> The namespace name of this type </param>
+        /// <param name="version"> The version of this type </param>
+        /// <param name="dataSpace"> dataSpace in which this primitive type belongs to </param>
+        /// <param name="baseType"> The primitive type that this type is derived from </param>
+        /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
         /// <exception cref="System.ArgumentNullException">Thrown if name, namespaceName, version, baseType or providerManifest arguments are null</exception>
         internal PrimitiveType(
             string name,
@@ -52,11 +53,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for PrimitiveType, it takes in a CLR type containing the identity information
+        ///     The constructor for PrimitiveType, it takes in a CLR type containing the identity information
         /// </summary>
-        /// <param name="clrType">The CLR type object for this primitive type</param>
-        /// <param name="baseType">The base type for this primitive type</param>
-        /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
+        /// <param name="clrType"> The CLR type object for this primitive type </param>
+        /// <param name="baseType"> The base type for this primitive type </param>
+        /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
         internal PrimitiveType(
             Type clrType,
             PrimitiveType baseType,
@@ -79,7 +80,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -94,9 +95,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the PrimitiveTypeKind enumeration value indicating what kind of primitive type this is
+        ///     Returns the PrimitiveTypeKind enumeration value indicating what kind of primitive type this is
         /// </summary>
-        /// <returns>A PrimitiveTypeKind value</returns>
+        /// <returns> A PrimitiveTypeKind value </returns>
         [MetadataProperty(BuiltInTypeKind.PrimitiveTypeKind, false)]
         public virtual PrimitiveTypeKind PrimitiveTypeKind
         {
@@ -105,9 +106,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the ProviderManifest giving access to the Manifest that this type came from
+        ///     Returns the ProviderManifest giving access to the Manifest that this type came from
         /// </summary>
-        /// <returns>The types ProviderManifest value</returns>
+        /// <returns> The types ProviderManifest value </returns>
         internal DbProviderManifest ProviderManifest
         {
             get
@@ -124,16 +125,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the FacetDescriptions for this type
+        ///     Gets the FacetDescriptions for this type
         /// </summary>
-        /// <returns>The FacetDescritions for this type.</returns>
+        /// <returns> The FacetDescritions for this type. </returns>
         public virtual ReadOnlyCollection<FacetDescription> FacetDescriptions
         {
             get { return ProviderManifest.GetFacetDescriptions(this); }
         }
 
         /// <summary>
-        /// Returns an equivalent CLR type representing this primitive type
+        ///     Returns an equivalent CLR type representing this primitive type
         /// </summary>
         public Type ClrEquivalentType
         {
@@ -206,11 +207,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Perform initialization that's common across all constructors
+        ///     Perform initialization that's common across all constructors
         /// </summary>
-        /// <param name="primitiveType">The primitive type to initialize</param>
-        /// <param name="primitiveTypeKind">The primitive type kind of this primitive type</param>
-        /// <param name="providerManifest">The ProviderManifest of the provider of this type</param>
+        /// <param name="primitiveType"> The primitive type to initialize </param>
+        /// <param name="primitiveTypeKind"> The primitive type kind of this primitive type </param>
+        /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
         internal static void Initialize(
             PrimitiveType primitiveType,
             PrimitiveTypeKind primitiveTypeKind,
@@ -221,20 +222,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// return the model equivalent type for this type,
-        /// for example if this instance is nvarchar and it's
-        /// base type is Edm String then the return type is Edm String.
-        /// If the type is actually already a model type then the 
-        /// return type is "this".
+        ///     return the model equivalent type for this type,
+        ///     for example if this instance is nvarchar and it's
+        ///     base type is Edm String then the return type is Edm String.
+        ///     If the type is actually already a model type then the 
+        ///     return type is "this".
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public EdmType GetEdmPrimitiveType()
         {
             return EdmProviderManifest.GetPrimitiveType(PrimitiveTypeKind);
         }
 
         /// <summary>
-        /// Returns the list of EDM primitive types
+        ///     Returns the list of EDM primitive types
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static ReadOnlyCollection<PrimitiveType> GetEdmPrimitiveTypes()

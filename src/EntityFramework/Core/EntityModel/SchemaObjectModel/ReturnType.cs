@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -23,9 +24,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region constructor
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal ReturnType(Function parentElement)
             : base(parentElement)
         {
@@ -142,9 +142,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);

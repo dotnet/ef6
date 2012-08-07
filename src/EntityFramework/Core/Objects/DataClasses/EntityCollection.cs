@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections;
@@ -6,8 +7,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -17,9 +18,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Collection of entities modeling a particular EDM construct
-    /// which can either be all entities of a particular type or
-    /// entities participating in a particular relationship.
+    ///     Collection of entities modeling a particular EDM construct
+    ///     which can either be all entities of a particular type or
+    ///     entities participating in a particular relationship.
     /// </summary>
     [Serializable]
     public class EntityCollection<TEntity> : RelatedEnd, ICollection<TEntity>, IListSource
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        /// Creates an empty EntityCollection.
+        ///     Creates an empty EntityCollection.
         /// </summary>
         public EntityCollection()
         {
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ---------
 
         /// <summary>
-        /// internal Event to notify changes in the collection.
+        ///     internal Event to notify changes in the collection.
         /// </summary>
         // Dev notes -2
         // following statement is valid on current existing CLR: 
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------------------
 
         /// <summary>
-        /// Count of entities in the collection.
+        ///     Count of entities in the collection.
         /// </summary>
         public int Count
         {
@@ -119,7 +120,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Whether or not the collection is read-only.
+        ///     Whether or not the collection is read-only.
         /// </summary>
         public bool IsReadOnly
         {
@@ -130,9 +131,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // IListSource  Properties
         // ----------------------
         /// <summary>
-        ///   IListSource.ContainsListCollection implementation. Always returns false.
-        ///   This means that the IList we return is the one which contains our actual data,
-        ///   it is not a list of collections.
+        ///     IListSource.ContainsListCollection implementation. Always returns false.
+        ///     This means that the IList we return is the one which contains our actual data,
+        ///     it is not a list of collections.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
@@ -164,11 +165,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // IListSource  method
         // ----------------------
         /// <summary>
-        ///   IListSource.GetList implementation
+        ///     IListSource.GetList implementation
         /// </summary>
-        /// <returns>
-        ///   IList interface over the data to bind
-        /// </returns>
+        /// <returns> IList interface over the data to bind </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
@@ -201,7 +200,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return ObjectViewFactory.CreateViewForEntityCollection(rootEntityType, this);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void Load(MergeOption mergeOption)
         {
             CheckOwnerNull();
@@ -213,7 +212,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // API that call (Internal void Load(IEnumerable<T>))
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
             CheckOwnerNull();
@@ -226,18 +225,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Loads related entities into the local collection. If the collection is already filled
-        /// or partially filled, merges existing entities with the given entities. The given
-        /// entities are not assumed to be the complete set of related entities.
+        ///     Loads related entities into the local collection. If the collection is already filled
+        ///     or partially filled, merges existing entities with the given entities. The given
+        ///     entities are not assumed to be the complete set of related entities.
         /// 
-        /// Owner and all entities passed in must be in Unchanged or Modified state. We allow 
-        /// deleted elements only when the state manager is already tracking the relationship
-        /// instance.
+        ///     Owner and all entities passed in must be in Unchanged or Modified state. We allow 
+        ///     deleted elements only when the state manager is already tracking the relationship
+        ///     instance.
         /// </summary>
-        /// <param name="entities">Result of query returning related entities</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="entities"/> is null.</exception>
+        /// <param name="entities"> Result of query returning related entities </param>
+        /// <exception cref="ArgumentNullException">Thrown when
+        ///     <paramref name="entities" />
+        ///     is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when an entity in the given
-        /// collection cannot be related via the current relationship end.</exception>
+        ///     collection cannot be related via the current relationship end.</exception>
         public void Attach(IEnumerable<TEntity> entities)
         {
             Contract.Requires(entities != null);
@@ -251,16 +252,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Attaches an entity to the EntityCollection. If the EntityCollection is already filled
-        /// or partially filled, this merges the existing entities with the given entity. The given
-        /// entity is not assumed to be the complete set of related entities.
+        ///     Attaches an entity to the EntityCollection. If the EntityCollection is already filled
+        ///     or partially filled, this merges the existing entities with the given entity. The given
+        ///     entity is not assumed to be the complete set of related entities.
         /// 
-        /// Owner and all entities passed in must be in Unchanged or Modified state. 
-        /// Deleted elements are allowed only when the state manager is already tracking the relationship
-        /// instance.
+        ///     Owner and all entities passed in must be in Unchanged or Modified state. 
+        ///     Deleted elements are allowed only when the state manager is already tracking the relationship
+        ///     instance.
         /// </summary>
-        /// <param name="entity">The entity to attach to the EntityCollection</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
+        /// <param name="entity"> The entity to attach to the EntityCollection </param>
+        /// <exception cref="ArgumentNullException">Thrown when
+        ///     <paramref name="entity" />
+        ///     is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
@@ -269,12 +272,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Requires: collection is null or contains related entities.
-        /// Loads related entities into the local collection.
+        ///     Requires: collection is null or contains related entities.
+        ///     Loads related entities into the local collection.
         /// </summary>
-        /// <param name="collection">If null, retrieves entities from the server through a query;
-        /// otherwise, loads the given collection
-        /// </param>
+        /// <param name="collection"> If null, retrieves entities from the server through a query; otherwise, loads the given collection </param>
         internal virtual void Load(List<IEntityWrapper> collection, MergeOption mergeOption)
         {
             // Validate that the Load is possible
@@ -358,9 +359,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Add the item to the underlying collection
+        ///     Add the item to the underlying collection
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entity"> </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
             // Validate that the incoming entity is also detached
@@ -378,10 +379,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Remove the item from the underlying collection
+        ///     Remove the item from the underlying collection
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="applyConstraints"></param>
+        /// <param name="entity"> </param>
+        /// <param name="applyConstraints"> </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
             // Validate that the incoming entity is also detached
@@ -398,14 +399,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///   Removes an entity from the EntityCollection.  If the owner is
-        ///   attached to a context, Remove marks the relationship for deletion and if
-        ///   the relationship is composition also marks the entity for deletion.
+        ///     Removes an entity from the EntityCollection.  If the owner is
+        ///     attached to a context, Remove marks the relationship for deletion and if
+        ///     the relationship is composition also marks the entity for deletion.
         /// </summary>
-        /// <param name="entity">
-        ///   Entity instance to remove from the EntityCollection
-        /// </param>
-        /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
+        /// <param name="entity"> Entity instance to remove from the EntityCollection </param>
+        /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
         public bool Remove(TEntity item)
         {
             DbHelpers.ThrowIfNull(item, "item");
@@ -536,11 +535,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="relationshipAlreadyExists"></param>
-        /// <returns>True if the verify succeeded, False if the Add should no-op</returns>
+        /// <param name="entity"> </param>
+        /// <param name="relationshipAlreadyExists"> </param>
+        /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
             if (!relationshipAlreadyExists
@@ -569,11 +567,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Remove from the RelatedEnd
+        ///     Remove from the RelatedEnd
         /// </summary>
-        /// <param name="wrappedEntity"></param>
-        /// <param name="resetIsLoaded"></param>
-        /// <returns></returns>
+        /// <param name="wrappedEntity"> </param>
+        /// <param name="resetIsLoaded"> </param>
+        /// <returns> </returns>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
             if (_wrappedRelatedEntities != null
@@ -589,10 +587,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Remove from the POCO collection
+        ///     Remove from the POCO collection
         /// </summary>
-        /// <param name="wrappedEntity"></param>
-        /// <returns></returns>
+        /// <param name="wrappedEntity"> </param>
+        /// <returns> </returns>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
             // For POCO entities - remove the object from the CLR collection
@@ -644,7 +642,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------------------
 
         /// <summary>
-        ///   Get an enumerator for the collection.
+        ///     Get an enumerator for the collection.
         /// </summary>
         public new IEnumerator<TEntity> GetEnumerator()
         {
@@ -669,8 +667,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Removes all entities from the locally cached collection.  Also removes
-        /// relationships related to this entities from the ObjectStateManager.
+        ///     Removes all entities from the locally cached collection.  Also removes
+        ///     relationships related to this entities from the ObjectStateManager.
         /// </summary>
         public void Clear()
         {
@@ -728,10 +726,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Determine if the collection contains a specific object by reference.
+        ///     Determine if the collection contains a specific object by reference.
         /// </summary>
         /// <return>true if the collection contains the object by reference;
-        /// otherwise, false</return>
+        ///     otherwise, false</return>
         public bool Contains(TEntity item)
         {
             DeferredLoad();
@@ -739,8 +737,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Copies the contents of the collection to an array,
-        /// starting at a particular array index.
+        ///     Copies the contents of the collection to an array,
+        ///     starting at a particular array index.
         /// </summary>
         public void CopyTo(TEntity[] array, int arrayIndex)
         {

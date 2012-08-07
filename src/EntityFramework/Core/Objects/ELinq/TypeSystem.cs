@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    /// Static utility class. Replica of query\DLinq\TypeSystem.cs
+    ///     Static utility class. Replica of query\DLinq\TypeSystem.cs
     /// </summary>
     internal static class TypeSystem
     {
@@ -133,12 +134,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Resolves MemberInfo to a property or field.
+        ///     Resolves MemberInfo to a property or field.
         /// </summary>
-        /// <param name="member">Member to test.</param>
-        /// <param name="name">Name of member.</param>
-        /// <param name="type">Type of member.</param>
-        /// <returns>Given member normalized as a property or field.</returns>
+        /// <param name="member"> Member to test. </param>
+        /// <param name="name"> Name of member. </param>
+        /// <param name="type"> Type of member. </param>
+        /// <returns> Given member normalized as a property or field. </returns>
         internal static MemberInfo PropertyOrField(MemberInfo member, out string name, out Type type)
         {
             name = null;

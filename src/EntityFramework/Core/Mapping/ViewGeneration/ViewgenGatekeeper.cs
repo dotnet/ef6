@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
     using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     internal abstract class ViewgenGatekeeper : InternalBase
     {
         /// <summary>
-        /// Entry point for View Generation
+        ///     Entry point for View Generation
         /// </summary>
-        /// <param name="containerMapping"></param>
-        /// <param name="workSpace"></param>
-        /// <param name="config"></param>
-        /// <returns>Generated Views for EntitySets</returns>
+        /// <param name="containerMapping"> </param>
+        /// <param name="workSpace"> </param>
+        /// <param name="config"> </param>
+        /// <returns> Generated Views for EntitySets </returns>
         internal static ViewGenResults GenerateViewsFromMapping(StorageEntityContainerMapping containerMapping, ConfigViewGenerator config)
         {
             Contract.Requires(containerMapping != null);
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        /// Entry point for Type specific generation of Query Views
+        ///     Entry point for Type specific generation of Query Views
         /// </summary>
         internal static ViewGenResults GenerateTypeSpecificQueryView(
             StorageEntityContainerMapping containerMapping,

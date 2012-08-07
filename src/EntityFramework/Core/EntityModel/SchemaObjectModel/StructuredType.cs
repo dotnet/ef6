@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for StructuredType.
+    ///     Summary description for StructuredType.
     /// </summary>
     internal abstract class StructuredType : SchemaType
     {
@@ -25,13 +26,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        /// 
         /// </summary>
         public StructuredType BaseType { get; private set; }
 
         /// <summary>
-        /// 
-        /// 
         /// </summary>
         public ISchemaElementLookUpTable<StructuredProperty> Properties
         {
@@ -46,8 +44,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
-        /// 
         /// </summary>
         protected SchemaElementLookUpTable<SchemaElement> NamedMembers
         {
@@ -62,7 +58,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public virtual bool IsTypeHierarchyRoot
         {
@@ -79,7 +74,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public bool IsAbstract
         {
@@ -91,10 +85,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region More Public Methods
 
         /// <summary>
-        /// Find a property by name in the type hierarchy
+        ///     Find a property by name in the type hierarchy
         /// </summary>
-        /// <param name="name">simple property name</param>
-        /// <returns>the StructuredProperty object if name exists, null otherwise</returns>
+        /// <param name="name"> simple property name </param>
+        /// <returns> the StructuredProperty object if name exists, null otherwise </returns>
         public StructuredProperty FindProperty(string name)
         {
             var property = Properties.LookUpEquivalentKey(name);
@@ -112,11 +106,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Determines whether this type is of the same type as baseType, 
-        /// or is derived from baseType.
+        ///     Determines whether this type is of the same type as baseType, 
+        ///     or is derived from baseType.
         /// </summary>
-        /// <param name="baseType"></param>
-        /// <returns>true if this type is of the baseType, false otherwise</returns>
+        /// <param name="baseType"> </param>
+        /// <returns> true if this type is of the baseType, false otherwise </returns>
         public bool IsOfType(StructuredType baseType)
         {
             var type = this;
@@ -135,7 +129,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Methods
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -150,9 +143,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         internal override void Validate()
         {
             base.Validate();
@@ -180,18 +172,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         protected StructuredType(Schema parentElement)
             : base(parentElement)
         {
         }
 
         /// <summary>
-        /// Add a member to the type
+        ///     Add a member to the type
         /// </summary>
-        /// <param name="newMember">the member being added</param>
+        /// <param name="newMember"> the member being added </param>
         protected void AddMember(SchemaElement newMember)
         {
             Debug.Assert(newMember != null, "newMember parameter is null");
@@ -215,12 +206,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// See if a name is a member in a type or any of its base types
+        ///     See if a name is a member in a type or any of its base types
         /// </summary>
-        /// <param name="name">name to look for</param>
-        /// <param name="definingType">if defined, the type that defines it</param>
-        /// <param name="definingMember">if defined, the member that defines it</param>
-        /// <returns>how name was defined</returns>
+        /// <param name="name"> name to look for </param>
+        /// <param name="definingType"> if defined, the type that defines it </param>
+        /// <param name="definingMember"> if defined, the member that defines it </param>
+        /// <returns> how name was defined </returns>
         private HowDefined DefinesMemberName(string name, out StructuredType definingType, out SchemaElement definingMember)
         {
             if (NamedMembers.ContainsKey(name))
@@ -248,7 +239,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Properties
 
         /// <summary>
-        /// 
         /// </summary>
         protected string UnresolvedBaseType
         {
@@ -295,7 +285,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
         private bool TryResolveBaseType()
         {
@@ -351,9 +340,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleBaseTypeAttribute(XmlReader reader)
         {
             Debug.Assert(UnresolvedBaseType == null, string.Format(CultureInfo.CurrentCulture, "{0} is already defined", reader.Name));
@@ -368,18 +356,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleAbstractAttribute(XmlReader reader)
         {
             HandleBoolAttribute(reader, ref _isAbstract);
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandlePropertyElement(XmlReader reader)
         {
             var property = new StructuredProperty(this);
@@ -390,10 +376,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Determine if a cycle exists in the type hierarchy: use two pointers to
-        /// walk the chain, if one catches up with the other, we have a cycle.
+        ///     Determine if a cycle exists in the type hierarchy: use two pointers to
+        ///     walk the chain, if one catches up with the other, we have a cycle.
         /// </summary>
-        /// <returns>true if a cycle exists in the type hierarchy, false otherwise</returns>
+        /// <returns> true if a cycle exists in the type hierarchy, false otherwise </returns>
         private bool CheckForInheritanceCycle()
         {
             var baseType = BaseType;

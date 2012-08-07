@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
@@ -16,10 +17,7 @@ namespace System.Data.Entity.Migrations.Model
         ///     Initializes a new instance of the AddForeignKeyOperation class.
         ///     The PrincipalTable, PrincipalColumns, DependentTable and DependentColumns properties should also be populated.
         /// </summary>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public AddForeignKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
@@ -42,14 +40,14 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Gets an operation to create an index on the foreign key column(s).
         /// </summary>
-        /// <returns>An operation to add the index.</returns>
+        /// <returns> An operation to add the index. </returns>
         public virtual CreateIndexOperation CreateCreateIndexOperation()
         {
             var createIndexOperation
                 = new CreateIndexOperation
-                    {
-                        Table = DependentTable
-                    };
+                      {
+                          Table = DependentTable
+                      };
 
             DependentColumns.Each(c => createIndexOperation.Columns.Add(c));
 
@@ -64,11 +62,11 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 var dropForeignKeyOperation = new DropForeignKeyOperation
-                    {
-                        Name = Name,
-                        PrincipalTable = PrincipalTable,
-                        DependentTable = DependentTable,
-                    };
+                                                  {
+                                                      Name = Name,
+                                                      PrincipalTable = PrincipalTable,
+                                                      DependentTable = DependentTable,
+                                                  };
 
                 DependentColumns.Each(c => dropForeignKeyOperation.DependentColumns.Add(c));
 

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Data.Entity.Edm;
@@ -20,9 +21,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(targetComplexType != null);
 
             var property = new EdmProperty
-                {
-                    Name = name
-                }.AsComplex(targetComplexType);
+                               {
+                                   Name = name
+                               }.AsComplex(targetComplexType);
 
             complexType.DeclaredProperties.Add(property);
 

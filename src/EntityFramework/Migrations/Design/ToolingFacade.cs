@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
@@ -53,26 +54,12 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Initializes a new instance of the ToolingFacade class.
         /// </summary>
-        /// <param name = "assemblyName">
-        ///     The name of the assembly that contains the migrations configuration to be used.
-        /// </param>
-        /// <param name = "configurationTypeName">
-        ///     The namespace qualified name of migrations configuration to be used.
-        /// </param>
-        /// <param name = "workingDirectory">
-        ///     The working directory containing the compiled assemblies.
-        /// </param>
-        /// <param name = "configurationFilePath">
-        ///     The path of the config file from the startup project.
-        /// </param>
-        /// <param name = "dataDirectory">
-        ///     The path of the application data directory from the startup project.
-        ///     Typically the App_Data directory for web applications or the working directory for executables.
-        /// </param>
-        /// <param name = "connectionStringInfo">
-        ///     The connection to the database to be migrated.
-        ///     If null is supplied, the default connection for the context will be used.
-        /// </param>
+        /// <param name="assemblyName"> The name of the assembly that contains the migrations configuration to be used. </param>
+        /// <param name="configurationTypeName"> The namespace qualified name of migrations configuration to be used. </param>
+        /// <param name="workingDirectory"> The working directory containing the compiled assemblies. </param>
+        /// <param name="configurationFilePath"> The path of the config file from the startup project. </param>
+        /// <param name="dataDirectory"> The path of the application data directory from the startup project. Typically the App_Data directory for web applications or the working directory for executables. </param>
+        /// <param name="connectionStringInfo"> The connection to the database to be migrated. If null is supplied, the default connection for the context will be used. </param>
         [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
         public ToolingFacade(
             string assemblyName,
@@ -89,9 +76,9 @@ namespace System.Data.Entity.Migrations.Design
             _connectionStringInfo = connectionStringInfo;
 
             var info = new AppDomainSetup
-                {
-                    ShadowCopyFiles = "true"
-                };
+                           {
+                               ShadowCopyFiles = "true"
+                           };
 
             if (!string.IsNullOrWhiteSpace(workingDirectory))
             {
@@ -120,9 +107,9 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets the fully qualified name of all types deriving from <see cref = "DbContext" />.
+        ///     Gets the fully qualified name of all types deriving from <see cref="DbContext" />.
         /// </summary>
-        /// <returns>All context types found.</returns>
+        /// <returns> All context types found. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<string> GetContextTypes()
         {
@@ -135,16 +122,16 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        /// Gets the fully qualified name of a type deriving from <see cref="DbContext" />.
+        ///     Gets the fully qualified name of a type deriving from <see cref="DbContext" />.
         /// </summary>
-        /// <param name="contextTypeName">The name of the context type. If null, the single context type found in the assembly will be returned.</param>
-        /// <returns>The context type found.</returns>
+        /// <param name="contextTypeName"> The name of the context type. If null, the single context type found in the assembly will be returned. </param>
+        /// <returns> The context type found. </returns>
         public string GetContextType(string contextTypeName)
         {
             var runner = new GetContextTypeRunner
-                {
-                    ContextTypeName = contextTypeName
-                };
+                             {
+                                 ContextTypeName = contextTypeName
+                             };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -155,7 +142,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Gets a list of all migrations that have been applied to the database.
         /// </summary>
-        /// <returns>Ids of applied migrations.</returns>
+        /// <returns> Ids of applied migrations. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<string> GetDatabaseMigrations()
         {
@@ -170,7 +157,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Gets a list of all migrations that have not been applied to the database.
         /// </summary>
-        /// <returns>Ids of pending migrations.</returns>
+        /// <returns> Ids of pending migrations. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<string> GetPendingMigrations()
         {
@@ -185,18 +172,15 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Updates the database to the specified migration.
         /// </summary>
-        /// <param name = "targetMigration">
-        ///     The Id of the migration to migrate to.
-        ///     If null is supplied, the database will be updated to the latest migration.
-        /// </param>
-        /// <param name = "force">Value indicating if data loss during automatic migration is acceptable.</param>
+        /// <param name="targetMigration"> The Id of the migration to migrate to. If null is supplied, the database will be updated to the latest migration. </param>
+        /// <param name="force"> Value indicating if data loss during automatic migration is acceptable. </param>
         public void Update(string targetMigration, bool force)
         {
             var runner = new UpdateRunner
-                {
-                    TargetMigration = targetMigration,
-                    Force = force
-                };
+                             {
+                                 TargetMigration = targetMigration,
+                                 Force = force
+                             };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -205,25 +189,19 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Generates a SQL script to migrate between two migrations.
         /// </summary>
-        /// <param name = "sourceMigration">
-        ///     The migration to update from. 
-        ///     If null is supplied, a script to update the current database will be produced.
-        /// </param>
-        /// <param name = "targetMigration">
-        ///     The migration to update to.
-        ///     If null is supplied, a script to update to the latest migration will be produced.
-        /// </param>
-        /// <param name = "force">Value indicating if data loss during automatic migration is acceptable.</param>
-        /// <returns>The generated SQL script.</returns>
+        /// <param name="sourceMigration"> The migration to update from. If null is supplied, a script to update the current database will be produced. </param>
+        /// <param name="targetMigration"> The migration to update to. If null is supplied, a script to update to the latest migration will be produced. </param>
+        /// <param name="force"> Value indicating if data loss during automatic migration is acceptable. </param>
+        /// <returns> The generated SQL script. </returns>
         public string ScriptUpdate(string sourceMigration, string targetMigration, bool force)
         {
             var runner
                 = new ScriptUpdateRunner
-                    {
-                        SourceMigration = sourceMigration,
-                        TargetMigration = targetMigration,
-                        Force = force
-                    };
+                      {
+                          SourceMigration = sourceMigration,
+                          TargetMigration = targetMigration,
+                          Force = force
+                      };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -234,22 +212,22 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Scaffolds a code-based migration to apply any pending model changes.
         /// </summary>
-        /// <param name = "migrationName">The name for the generated migration.</param>
-        /// <param name = "language">The programming language of the generated migration.</param>
-        /// <param name = "rootNamespace">The root namespace of the project the migration will be added to.</param>
-        /// <param name = "ignoreChanges">Whether or not to include model changes.</param>
-        /// <returns>The scaffolded migration.</returns>
+        /// <param name="migrationName"> The name for the generated migration. </param>
+        /// <param name="language"> The programming language of the generated migration. </param>
+        /// <param name="rootNamespace"> The root namespace of the project the migration will be added to. </param>
+        /// <param name="ignoreChanges"> Whether or not to include model changes. </param>
+        /// <returns> The scaffolded migration. </returns>
         public ScaffoldedMigration Scaffold(
             string migrationName, string language, string rootNamespace, bool ignoreChanges)
         {
             var runner
                 = new ScaffoldRunner
-                    {
-                        MigrationName = migrationName,
-                        Language = language,
-                        RootNamespace = rootNamespace,
-                        IgnoreChanges = ignoreChanges
-                    };
+                      {
+                          MigrationName = migrationName,
+                          Language = language,
+                          RootNamespace = rootNamespace,
+                          IgnoreChanges = ignoreChanges
+                      };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -260,17 +238,17 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Scaffolds the initial code-based migration corresponding to a previously run database initializer.
         /// </summary>
-        /// <param name = "language">The programming language of the generated migration.</param>
-        /// <param name = "rootNamespace">The root namespace of the project the migration will be added to.</param>
-        /// <returns>The scaffolded migration.</returns>
+        /// <param name="language"> The programming language of the generated migration. </param>
+        /// <param name="rootNamespace"> The root namespace of the project the migration will be added to. </param>
+        /// <returns> The scaffolded migration. </returns>
         public ScaffoldedMigration ScaffoldInitialCreate(string language, string rootNamespace)
         {
             var runner
                 = new InitialCreateScaffoldRunner
-                    {
-                        Language = language,
-                        RootNamespace = rootNamespace
-                    };
+                      {
+                          Language = language,
+                          RootNamespace = rootNamespace
+                      };
 
             ConfigureRunner(runner);
 
@@ -289,9 +267,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Releases all resources used by the facade.
         /// </summary>
-        /// <param name = "disposing">
-        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
-        /// </param>
+        /// <param name="disposing"> <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources. </param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && _appDomain != null)

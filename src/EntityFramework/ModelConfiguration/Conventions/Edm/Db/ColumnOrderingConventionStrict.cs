@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm.Db;
@@ -7,8 +8,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to apply column ordering specified via <see cref = "T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
-    ///     or the <see cref = "DbModelBuilder" /> API. This convention throws if a duplicate configured column order
+    ///     Convention to apply column ordering specified via <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
+    ///     or the <see cref="DbModelBuilder" /> API. This convention throws if a duplicate configured column order
     ///     is detected.
     /// </summary>
     internal sealed class ColumnOrderingConventionStrict : ColumnOrderingConvention

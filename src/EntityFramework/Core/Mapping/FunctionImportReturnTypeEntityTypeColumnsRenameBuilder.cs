@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
@@ -8,12 +9,12 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    /// extract the column rename info from polymorphic entity type mappings
+    ///     extract the column rename info from polymorphic entity type mappings
     /// </summary>
     internal sealed class FunctionImportReturnTypeEntityTypeColumnsRenameBuilder
     {
         /// <summary>
-        /// CMember -> SMember*
+        ///     CMember -> SMember*
         /// </summary>
         internal Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> ColumnRenameMapping;
 
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Set the column mappings for each defaultMemberName.
+        ///     Set the column mappings for each defaultMemberName.
         /// </summary>
         private void SetStructuralTypeColumnsRename(
             EntityType entityType,

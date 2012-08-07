@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,12 +7,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Encapsulates the result (represented as a Ref to the resulting Entity) of navigating from
-    /// the specified source end of a relationship to the specified target end. This class is intended
-    /// for use only with <see cref="DbNewInstanceExpression"/>, where an 'owning' instance of that class
-    /// represents the source Entity involved in the relationship navigation.
-    /// Instances of DbRelatedEntityRef may be specified when creating a <see cref="DbNewInstanceExpression"/> that
-    /// constructs an Entity, allowing information about Entities that are related to the newly constructed Entity to be captured.
+    ///     Encapsulates the result (represented as a Ref to the resulting Entity) of navigating from
+    ///     the specified source end of a relationship to the specified target end. This class is intended
+    ///     for use only with <see cref="DbNewInstanceExpression" />, where an 'owning' instance of that class
+    ///     represents the source Entity involved in the relationship navigation.
+    ///     Instances of DbRelatedEntityRef may be specified when creating a <see cref="DbNewInstanceExpression" /> that
+    ///     constructs an Entity, allowing information about Entities that are related to the newly constructed Entity to be captured.
     /// </summary>
     internal sealed class DbRelatedEntityRef
     {
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Retrieves the 'source' end of the relationship navigation satisfied by this related entity Ref
+        ///     Retrieves the 'source' end of the relationship navigation satisfied by this related entity Ref
         /// </summary>
         internal RelationshipEndMember SourceEnd
         {
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Retrieves the 'target' end of the relationship navigation satisfied by this related entity Ref
+        ///     Retrieves the 'target' end of the relationship navigation satisfied by this related entity Ref
         /// </summary>
         internal RelationshipEndMember TargetEnd
         {
@@ -90,7 +91,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Retrieves the entity Ref that is the result of navigating from the source to the target end of this related entity Ref
+        ///     Retrieves the entity Ref that is the result of navigating from the source to the target end of this related entity Ref
         /// </summary>
         internal DbExpression TargetEntityReference
         {

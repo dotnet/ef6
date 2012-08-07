@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Security.Permissions;
 
     /// <summary>
-    /// This class determines if the proxied type implements ISerializable with the special serialization constructor.
-    /// If it does, it adds the appropriate members to the proxy type.
+    ///     This class determines if the proxied type implements ISerializable with the special serialization constructor.
+    ///     If it does, it adds the appropriate members to the proxy type.
     /// </summary>
     internal sealed class SerializableImplementor
     {

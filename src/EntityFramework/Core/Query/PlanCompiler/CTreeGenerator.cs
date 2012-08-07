@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -19,23 +20,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Nested Types
 
         /// <summary>
-        /// The VarInfo class tracks how a single IQT Var should be referenced in terms of CQT Expressions.
-        /// The tracked Var must have been introduced by an IQT RelOp that was converted to a DbExpression that
-        /// is subsequently used in a DbExpressionBinding, otherwise the Var is either a ParameterVar or a locally
-        /// defined Var, which are tracked by the parameters collection of the Command and the VarDefScope
-        /// class, respectively.
-        /// An IQT Var that is tracked by a VarInfo instance is reachable in the following way:
-        /// 1. By a DbVariableReferenceExpression that references the Variable of the DbExpressionBinding that contains the DbExpression that logically publishes the IQT Var.
+        ///     The VarInfo class tracks how a single IQT Var should be referenced in terms of CQT Expressions.
+        ///     The tracked Var must have been introduced by an IQT RelOp that was converted to a DbExpression that
+        ///     is subsequently used in a DbExpressionBinding, otherwise the Var is either a ParameterVar or a locally
+        ///     defined Var, which are tracked by the parameters collection of the Command and the VarDefScope
+        ///     class, respectively.
+        ///     An IQT Var that is tracked by a VarInfo instance is reachable in the following way:
+        ///     1. By a DbVariableReferenceExpression that references the Variable of the DbExpressionBinding that contains the DbExpression that logically publishes the IQT Var.
         ///     This is tracked by the PublisherName property of the RelOpInfo class, which is used to track Vars brought into scope by a DbExpressionBinding.
         ///     Without an enclosing RelOpInfo, the VarInfo is unbound and cannot be used to instantiate a CQT expression tree that is the equivalent of a VarRef of the IQT Var)
-        /// 2. By zero or more PropertyRefExpressions starting with a property of the DbVariableReferenceExpression created in step 1.
+        ///     2. By zero or more PropertyRefExpressions starting with a property of the DbVariableReferenceExpression created in step 1.
         ///     These PropertyRefExpressions are introduced on top of the DbVariableReferenceExpression because of Join or ApplyExpressions that
         ///     occur in the CQT between the expression that publishes the Var and the expression higher in the tree that contains a VarRefOp
         ///     to the IQT Var that must be resolved to a CQT DbExpression. In such cases the DbExpression that logically publishes
         ///     the IQT Var will have a record return Type.
         ///     The required property names are tracked, in order, in the PropertyPath property of this class.
-        /// The PrependProperty method is used to update the DbPropertyExpression path required to reach
-        /// the DbVariableReferenceExpression when the referenced Variable becomes part of such a record-typed output.
+        ///     The PrependProperty method is used to update the DbPropertyExpression path required to reach
+        ///     the DbVariableReferenceExpression when the referenced Variable becomes part of such a record-typed output.
         /// </summary>
         private class VarInfo
         {
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             #endregion
 
             /// <summary>
-            /// Gets the Var tracked by this VarInfo instance
+            ///     Gets the Var tracked by this VarInfo instance
             /// </summary>
             internal Var Var
             {
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Gets the names, in order of use, that should be used to build DbPropertyExpression around an initial DbVariableReferenceExpression in order to build a DbExpression subtree that correctly references the tracked IQT Var
+            ///     Gets the names, in order of use, that should be used to build DbPropertyExpression around an initial DbVariableReferenceExpression in order to build a DbExpression subtree that correctly references the tracked IQT Var
             /// </summary>
             internal List<string> PropertyPath
             {
@@ -63,24 +64,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Constructs a new VarInfo instance that tracks the specified Var.
+            ///     Constructs a new VarInfo instance that tracks the specified Var.
             /// </summary>
-            /// <param name="target">The IQT Var that this VarInfo instance should track.</param>
+            /// <param name="target"> The IQT Var that this VarInfo instance should track. </param>
             internal VarInfo(Var target)
             {
                 _var = target;
             }
 
             /// <summary>
-            /// Adds a property name to the beginning of the property path for this VarInfo instance.
-            /// Each time a new record structure is constructed on top of the expression that logically
-            /// publishes this var, another DbPropertyExpression is required around the DbVariableReferenceExpression used
-            /// to reach the Var in the CQT. Each new DbPropertyExpression must be added immediately around the
-            /// DbVariableReferenceExpression, with previous PropertyExpressions now referring to the new DbPropertyExpression.
-            /// Therefore the new property name added by this method is inserted at the start of the property path.
-            /// See the Visit methods for the Join/ApplyOps for examples of using this method to adjust the property path.
+            ///     Adds a property name to the beginning of the property path for this VarInfo instance.
+            ///     Each time a new record structure is constructed on top of the expression that logically
+            ///     publishes this var, another DbPropertyExpression is required around the DbVariableReferenceExpression used
+            ///     to reach the Var in the CQT. Each new DbPropertyExpression must be added immediately around the
+            ///     DbVariableReferenceExpression, with previous PropertyExpressions now referring to the new DbPropertyExpression.
+            ///     Therefore the new property name added by this method is inserted at the start of the property path.
+            ///     See the Visit methods for the Join/ApplyOps for examples of using this method to adjust the property path.
             /// </summary>
-            /// <param name="propName">The new property name to insert at the start of the property path for the Var tracked by this VarInfo instance</param>
+            /// <param name="propName"> The new property name to insert at the start of the property path for the Var tracked by this VarInfo instance </param>
             internal void PrependProperty(string propName)
             {
                 _propertyChain.Insert(0, propName);
@@ -88,31 +89,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Groups a set of VarInfo instances together and allows certain operations (Bind/Unbind/PrependProperty)
-        /// to be performed on all instances in the VarInfoList with a single call.
+        ///     Groups a set of VarInfo instances together and allows certain operations (Bind/Unbind/PrependProperty)
+        ///     to be performed on all instances in the VarInfoList with a single call.
         /// </summary>
         private class VarInfoList : List<VarInfo>
         {
             /// <summary>
-            /// Constructs a new, empty VarInfoList.
+            ///     Constructs a new, empty VarInfoList.
             /// </summary>
             internal VarInfoList()
             {
             }
 
             /// <summary>
-            /// Constructs a new VarInfoList that contains the specified VarInfo instances.
+            ///     Constructs a new VarInfoList that contains the specified VarInfo instances.
             /// </summary>
-            /// <param name="elements"></param>
+            /// <param name="elements"> </param>
             internal VarInfoList(IEnumerable<VarInfo> elements)
                 : base(elements)
             {
             }
 
             /// <summary>
-            /// Prepends the specified property name to the property path of all VarInfo instances in this list.
+            ///     Prepends the specified property name to the property path of all VarInfo instances in this list.
             /// </summary>
-            /// <param name="propName"></param>
+            /// <param name="propName"> </param>
             internal void PrependProperty(string propName)
             {
                 foreach (var vInf in this)
@@ -122,11 +123,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Attempts to retrieve the VarInfo instance that tracks the specified IQT Var, if it is contained by this VarInfoList.
+            ///     Attempts to retrieve the VarInfo instance that tracks the specified IQT Var, if it is contained by this VarInfoList.
             /// </summary>
-            /// <param name="targetVar">The required IQT Var</param>
-            /// <param name="varInfo">Contains the VarInfo instance that tracks the specified Var if this method returns true</param>
-            /// <returns>True if this list contains a VarInfo instance that tracks the specified Var; otherwise false</returns>
+            /// <param name="targetVar"> The required IQT Var </param>
+            /// <param name="varInfo"> Contains the VarInfo instance that tracks the specified Var if this method returns true </param>
+            /// <returns> True if this list contains a VarInfo instance that tracks the specified Var; otherwise false </returns>
             internal bool TryGetInfo(Var targetVar, out VarInfo varInfo)
             {
                 varInfo = null;
@@ -144,16 +145,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// IqtVarScope is used to represent one or more IQT Vars that are currently in scope and can be mapped to a corresponding CQT DbExpression subtree.
+        ///     IqtVarScope is used to represent one or more IQT Vars that are currently in scope and can be mapped to a corresponding CQT DbExpression subtree.
         /// </summary>
         private abstract class IqtVarScope
         {
             /// <summary>
-            /// Attempts to resolve the specified IQT Var by building or mapping to a CQT DbExpression subtree. Overridden in derived classes.
+            ///     Attempts to resolve the specified IQT Var by building or mapping to a CQT DbExpression subtree. Overridden in derived classes.
             /// </summary>
-            /// <param name="targetVar">The IQT Var to resolve</param>
-            /// <param name="resultExpr">If the methods returns true, the DbExpression to which the Var was resolved; otherwise null</param>
-            /// <returns>True if the specified Var was successfully resolved; otherwise false</returns>
+            /// <param name="targetVar"> The IQT Var to resolve </param>
+            /// <param name="resultExpr"> If the methods returns true, the DbExpression to which the Var was resolved; otherwise null </param>
+            /// <returns> True if the specified Var was successfully resolved; otherwise false </returns>
             internal abstract bool TryResolveVar(Var targetVar, out DbExpression resultExpr);
         }
 
@@ -167,7 +168,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Information (current binding name, property path) about the Vars logically published by the Publisher expression
+            ///     Information (current binding name, property path) about the Vars logically published by the Publisher expression
             /// </summary>
             internal VarInfoList PublishedVars
             {
@@ -175,11 +176,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Implements the abstract IqtVarScope.TryResolveVar method. If the specified Var was published by this scope's DbExpression, it is mapped to a CQT DbExpression by calling CreateExpression on the VarInfo used to track it.
+            ///     Implements the abstract IqtVarScope.TryResolveVar method. If the specified Var was published by this scope's DbExpression, it is mapped to a CQT DbExpression by calling CreateExpression on the VarInfo used to track it.
             /// </summary>
-            /// <param name="targetVar">The Var to resolve</param>
-            /// <param name="resultExpr">If the method returns true, the DbExpression to which the Var was resolved; otherwise null</param>
-            /// <returns>True if the specified Var was successfully resolved; otherwise false</returns>
+            /// <param name="targetVar"> The Var to resolve </param>
+            /// <param name="resultExpr"> If the method returns true, the DbExpression to which the Var was resolved; otherwise null </param>
+            /// <returns> True if the specified Var was successfully resolved; otherwise false </returns>
             internal override bool TryResolveVar(Var targetVar, out DbExpression resultExpr)
             {
                 resultExpr = null;
@@ -202,7 +203,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Represents a collection of IQT Vars that were brought into scope by a DbExpression used in a DbExpressionBinding. This class is also used to associate those Vars with that DbExpression, which is considered the logical 'publisher' of the Vars.
+        ///     Represents a collection of IQT Vars that were brought into scope by a DbExpression used in a DbExpressionBinding. This class is also used to associate those Vars with that DbExpression, which is considered the logical 'publisher' of the Vars.
         /// </summary>
         private class RelOpInfo : BindingScope
         {
@@ -219,7 +220,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// The unique name assigned to the CQT DbExpression that logically publishes the PublishedVars. Used primarily in ExpressionBindings that contain that DbExpression
+            ///     The unique name assigned to the CQT DbExpression that logically publishes the PublishedVars. Used primarily in ExpressionBindings that contain that DbExpression
             /// </summary>
             internal string PublisherName
             {
@@ -227,7 +228,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// The CQT DbExpression that logically publishes the PublishedVars
+            ///     The CQT DbExpression that logically publishes the PublishedVars
             /// </summary>
             internal DbExpression Publisher
             {
@@ -235,9 +236,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Creates a new DbExpressionBinding that binds the publisher DbExpression under the binding name
+            ///     Creates a new DbExpressionBinding that binds the publisher DbExpression under the binding name
             /// </summary>
-            /// <returns>The new DbExpressionBinding</returns>
+            /// <returns> The new DbExpressionBinding </returns>
             internal DbExpressionBinding CreateBinding()
             {
                 return _binding;
@@ -250,7 +251,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Represents a collection of IQT Vars that were brought into scope by a DbExpression used in a DbGroupExpressionBinding. 
+        ///     Represents a collection of IQT Vars that were brought into scope by a DbExpression used in a DbGroupExpressionBinding.
         /// </summary>
         private class GroupByScope : BindingScope
         {
@@ -264,9 +265,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Returns the DbGroupExpressionBinding that backs this group-by scope
+            ///     Returns the DbGroupExpressionBinding that backs this group-by scope
             /// </summary>
-            /// <returns>The new DbExpressionBinding</returns>
+            /// <returns> The new DbExpressionBinding </returns>
             internal DbGroupExpressionBinding Binding
             {
                 get { return _binding; }
@@ -289,7 +290,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Represents a collection of IQT Vars that are in scope because they are defined locally (by VarDefOps) to an IQT Op that is being visited.
+        ///     Represents a collection of IQT Vars that are in scope because they are defined locally (by VarDefOps) to an IQT Op that is being visited.
         /// </summary>
         private class VarDefScope : IqtVarScope
         {
@@ -301,11 +302,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            /// Implements the abstract IqtVarScope.TryResolveVar method. If the specified Var exists in this scope, it is resolved by mapping it to the DbExpression that was produced by converting the IQT child Node of the VarDefOp that defines it to a CQT DbExpression subtree.
+            ///     Implements the abstract IqtVarScope.TryResolveVar method. If the specified Var exists in this scope, it is resolved by mapping it to the DbExpression that was produced by converting the IQT child Node of the VarDefOp that defines it to a CQT DbExpression subtree.
             /// </summary>
-            /// <param name="targetVar">The Var to resolve</param>
-            /// <param name="resultExpr">If the method returns true, the DbExpression to which the Var was resolved; otherwise null</param>
-            /// <returns>True if the specified Var was successfully resolved; otherwise false</returns>
+            /// <param name="targetVar"> The Var to resolve </param>
+            /// <param name="resultExpr"> If the method returns true, the DbExpression to which the Var was resolved; otherwise null </param>
+            /// <returns> True if the specified Var was successfully resolved; otherwise false </returns>
             internal override bool TryResolveVar(Var targetVar, out DbExpression resultExpr)
             {
                 resultExpr = null;
@@ -376,9 +377,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOp Helpers and PublishedVar State Maintenance
 
         /// <summary>
-        /// Asserts that the specified DbExpression is a 'RelOp' DbExpression, i.e. it is considered the publisher of one or more (IQT) RelVars.
+        ///     Asserts that the specified DbExpression is a 'RelOp' DbExpression, i.e. it is considered the publisher of one or more (IQT) RelVars.
         /// </summary>
-        /// <param name="expr">The DbExpression on which to Assert</param>
+        /// <param name="expr"> The DbExpression on which to Assert </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "relOp")]
@@ -388,13 +389,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Update the DbExpression to RelOpInfo map to indicate that the specified DbExpression logically publishes the Vars
-        /// tracked in VarInfoList and that they should be bound under the specified name.
+        ///     Update the DbExpression to RelOpInfo map to indicate that the specified DbExpression logically publishes the Vars
+        ///     tracked in VarInfoList and that they should be bound under the specified name.
         /// </summary>
-        /// <param name="name">The name under which the Vars tracked in VarInfoList are initially considered bound. This will be a unique name based on what kind of RelOp the specified DbExpression (the publisher) corresponds to</param>
-        /// <param name="expr">The DbExpression that is considered the logical publisher of the Vars tracked in publishedVars</param>
-        /// <param name="publishedVars">A VarInfoList that contains VarInfo instances that track the IQT Vars that are logically published by the specified DbExpression</param>
-        /// <returns>A new RelOpInfo instance that associates the given binding name and published Vars with the specified DbExpression. This RelOpInfo is also added to the DbExpression to RelOpInfo map</returns>
+        /// <param name="name"> The name under which the Vars tracked in VarInfoList are initially considered bound. This will be a unique name based on what kind of RelOp the specified DbExpression (the publisher) corresponds to </param>
+        /// <param name="expr"> The DbExpression that is considered the logical publisher of the Vars tracked in publishedVars </param>
+        /// <param name="publishedVars"> A VarInfoList that contains VarInfo instances that track the IQT Vars that are logically published by the specified DbExpression </param>
+        /// <returns> A new RelOpInfo instance that associates the given binding name and published Vars with the specified DbExpression. This RelOpInfo is also added to the DbExpression to RelOpInfo map </returns>
         private RelOpInfo PublishRelOp(string name, DbExpression expr, VarInfoList publishedVars)
         {
             var retInfo = new RelOpInfo(name, expr, publishedVars);
@@ -403,10 +404,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Removes an entry in the DbExpression to RelOpInfo map, 'consuming' it so that it is not visible higher in the converted CQT.
+        ///     Removes an entry in the DbExpression to RelOpInfo map, 'consuming' it so that it is not visible higher in the converted CQT.
         /// </summary>
-        /// <param name="expr">The DbExpression for which the corresponding RelOpEntry should be removed</param>
-        /// <returns>The RelOpInfo that was removed from the DbExpression to RelOpInfo map</returns>
+        /// <param name="expr"> The DbExpression for which the corresponding RelOpEntry should be removed </param>
+        /// <returns> The RelOpInfo that was removed from the DbExpression to RelOpInfo map </returns>
         private RelOpInfo ConsumeRelOp(DbExpression expr)
         {
             AssertRelOp(expr);
@@ -456,12 +457,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Visit a Node that will be used as the basis of a DbExpressionBinding, optionally pushing the
-        /// Vars that are logically published by the DbExpression produced from the Node's Op onto the expression binding scopes stack.
+        ///     Visit a Node that will be used as the basis of a DbExpressionBinding, optionally pushing the
+        ///     Vars that are logically published by the DbExpression produced from the Node's Op onto the expression binding scopes stack.
         /// </summary>
-        /// <param name="inputNode">The Node to Visit</param>
-        /// <param name="pushScope">Indicates whether or not the Vars published by the converted form of the Node's Op should be brought into scope before this method returns</param>
-        /// <returns>The RelOpInfo that corresponds to the given Node, which details the DbExpression it was converted to, the Vars that are logically published by that DbExpression, and the unique name under which those Vars should be bound</returns>
+        /// <param name="inputNode"> The Node to Visit </param>
+        /// <param name="pushScope"> Indicates whether or not the Vars published by the converted form of the Node's Op should be brought into scope before this method returns </param>
+        /// <returns> The RelOpInfo that corresponds to the given Node, which details the DbExpression it was converted to, the Vars that are logically published by that DbExpression, and the unique name under which those Vars should be bound </returns>
         private RelOpInfo EnterExpressionBindingScope(Node inputNode, bool pushScope)
         {
             var inputInfo = VisitAsRelOp(inputNode);
@@ -540,10 +541,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Converts a list of VarDefOp Nodes into Expressions, builds a map of Var to DbExpression for each
-        /// defined Var, and pushes a new VarDefScope containing the map onto the stack of 'in scope' Vars.
+        ///     Converts a list of VarDefOp Nodes into Expressions, builds a map of Var to DbExpression for each
+        ///     defined Var, and pushes a new VarDefScope containing the map onto the stack of 'in scope' Vars.
         /// </summary>
-        /// <param name="varDefNodes">A list of Nodes. Each Node in the list must reference a VarDefOp</param>
+        /// <param name="varDefNodes"> A list of Nodes. Each Node in the list must reference a VarDefOp </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefListOp")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-VarDefOp")]
@@ -581,9 +582,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// A convenience method to create a new VarDefScope from the specified VarDefListOp Node
+        ///     A convenience method to create a new VarDefScope from the specified VarDefListOp Node
         /// </summary>
-        /// <param name="varDefListNode">The Node that references the VarDefListOp. Its children will be used as the basis of the new VarDefScope</param>
+        /// <param name="varDefListNode"> The Node that references the VarDefListOp. Its children will be used as the basis of the new VarDefScope </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EnterVarDefListScope")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-VarDefListOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -595,7 +596,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Asserts that the top of the scope stack is actually a VarDefScope, and then pops it to remove the locally defined Vars from scope.
+        ///     Asserts that the top of the scope stack is actually a VarDefScope, and then pops it to remove the locally defined Vars from scope.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ExitVarDefScope")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefScope")]
@@ -608,22 +609,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Resolves an IQT Var to a CQT DbExpression.
-        /// There are 3 possible ways for an IQT Var to resolve to a valid reference expressed as a CQT DbExpression:
-        /// 1. The specified Var is a valid ParameterVar in the IQT Command being converted:
+        ///     Resolves an IQT Var to a CQT DbExpression.
+        ///     There are 3 possible ways for an IQT Var to resolve to a valid reference expressed as a CQT DbExpression:
+        ///     1. The specified Var is a valid ParameterVar in the IQT Command being converted:
         ///     This resolves simply to ParameterRefExpression. A Parameter that corresponds to the ParameterVar
         ///     is declared on the CQT DbCommandTree is this has not already been done.
-        /// 2. The specified Var is a ComputedVar that is defined locally to the Op being visited. In this case
+        ///     2. The specified Var is a ComputedVar that is defined locally to the Op being visited. In this case
         ///     The DbExpression produced by converting the VarDefOp that defines the Var is returned.
-        /// 3. Otherwise, the Var must have been brought into scope because the DbExpression that logically produces it is
+        ///     3. Otherwise, the Var must have been brought into scope because the DbExpression that logically produces it is
         ///     being used in a DbExpressionBinding which is currently in scope. Each RelOpInfo on the ExpressionBindingScopes stack
         ///     is asked to resolve the Var, if one of the RelOpInfo scopes is tracking the Var it will construct an appropriate combination
         ///     of DbVariableReferenceExpression and PropertyRefExpressions that are sufficient to logically reference the Var.
-        /// If none of the 3 above conditions are satisfied then the Var is unresolvable in the CQT being constructed and
-        /// the original IQT Command must be considered invalid for the purposes of this conversion.
+        ///     If none of the 3 above conditions are satisfied then the Var is unresolvable in the CQT being constructed and
+        ///     the original IQT Command must be considered invalid for the purposes of this conversion.
         /// </summary>
-        /// <param name="referencedVar">The IQT Var to resolve</param>
-        /// <returns>The CQT DbExpression to which the specified Var resolves</returns>
+        /// <param name="referencedVar"> The IQT Var to resolve </param>
+        /// <returns> The CQT DbExpression to which the specified Var resolves </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarType")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -695,9 +696,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Helpers
 
         /// <summary>
-        /// Asserts that the specified Node has exactly 2 child Nodes
+        ///     Asserts that the specified Node has exactly 2 child Nodes
         /// </summary>
-        /// <param name="n">The Node on which to Assert</param>
+        /// <param name="n"> The Node on which to Assert </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static void AssertBinary(Node n)
@@ -1132,12 +1133,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// A SoftCastOp is intended to be used only for promotion (and/or equivalence)
-        /// and should be ignored in the CTree
+        ///     A SoftCastOp is intended to be used only for promotion (and/or equivalence)
+        ///     and should be ignored in the CTree
         /// </summary>
-        /// <param name="op">the softcast Op</param>
-        /// <param name="n">the node</param>
-        /// <returns></returns>
+        /// <param name="op"> the softcast Op </param>
+        /// <param name="n"> the node </param>
+        /// <returns> </returns>
         public override DbExpression Visit(SoftCastOp op, Node n)
         {
             // Aconrad 9/21/06 - temporarily removing check here 
@@ -1215,16 +1216,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOp Conversions
 
         /// <summary>
-        /// Generates a name for the specified Var.
-        /// If the Var has a name (TryGetName), then we use the name to look up
-        /// the right alias generator, and get a column name from the alias generator
-        /// Otherwise, we simply get a name from the default alias generator
+        ///     Generates a name for the specified Var.
+        ///     If the Var has a name (TryGetName), then we use the name to look up
+        ///     the right alias generator, and get a column name from the alias generator
+        ///     Otherwise, we simply get a name from the default alias generator
         /// </summary>
-        /// <param name="projectedVar">the var in question</param>
-        /// <param name="aliasMap">map to identify the appropriate alias generator</param>
-        /// <param name="defaultAliasGenerator">the default alias generator</param>
-        /// <param name="alreadyUsedNames">list of already used names</param>
-        /// <returns></returns>
+        /// <param name="projectedVar"> the var in question </param>
+        /// <param name="aliasMap"> map to identify the appropriate alias generator </param>
+        /// <param name="defaultAliasGenerator"> the default alias generator </param>
+        /// <param name="alreadyUsedNames"> list of already used names </param>
+        /// <returns> </returns>
         private static string GenerateNameForVar(
             Var projectedVar, Dictionary<string, AliasGenerator> aliasMap,
             AliasGenerator defaultAliasGenerator, Dictionary<string, string> alreadyUsedNames)
@@ -1272,20 +1273,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Called by both Visit(ProjectOp) and VisitSetOpArgument to create a DbProjectExpression
-        /// based on the RelOpInfo of the projection input and the set of projected Vars.
-        /// Note:
-        /// The projected Vars must have already been brought into scope (by one of the
-        /// methods such as EnterExpressionBinding, EnterVarDefScope, etc) before this method
-        /// is called, or the projected Vars will not be successfully resolved.
-        /// Both Visit(ProjectOp) and VisitSetOpArgument do this"
-        /// 1. Visit(ProjectOp) takes both DbExpressionBinding and VarDef based Vars into account
-        /// 2. The Vars produced by a SetOpArgument projection are only allowed to be DbExpressionBinding
-        ///    based and are brought into scope when the original SetOp argument Node is visited.
+        ///     Called by both Visit(ProjectOp) and VisitSetOpArgument to create a DbProjectExpression
+        ///     based on the RelOpInfo of the projection input and the set of projected Vars.
+        ///     Note:
+        ///     The projected Vars must have already been brought into scope (by one of the
+        ///     methods such as EnterExpressionBinding, EnterVarDefScope, etc) before this method
+        ///     is called, or the projected Vars will not be successfully resolved.
+        ///     Both Visit(ProjectOp) and VisitSetOpArgument do this"
+        ///     1. Visit(ProjectOp) takes both DbExpressionBinding and VarDef based Vars into account
+        ///     2. The Vars produced by a SetOpArgument projection are only allowed to be DbExpressionBinding
+        ///     based and are brought into scope when the original SetOp argument Node is visited.
         /// </summary>
-        /// <param name="sourceInfo"></param>
-        /// <param name="outputVars"></param>
-        /// <returns></returns>
+        /// <param name="sourceInfo"> </param>
+        /// <param name="outputVars"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1309:UseOrdinalStringComparison",
             MessageId =
                 "System.Collections.Generic.Dictionary`2<System.String,System.String>.#ctor(System.Collections.Generic.IEqualityComparer`1<System.String>)"
@@ -1343,13 +1344,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Called by both ScanTableOp and UnnestOp Visitor pattern methods to determine
-        /// the shape of the output of the converted form of those Ops, in terms of the
-        /// IQT Vars that are published by the resulting DbExpression and how those Vars should
-        /// be reached.
+        ///     Called by both ScanTableOp and UnnestOp Visitor pattern methods to determine
+        ///     the shape of the output of the converted form of those Ops, in terms of the
+        ///     IQT Vars that are published by the resulting DbExpression and how those Vars should
+        ///     be reached.
         /// </summary>
-        /// <param name="targetTable">The table that is logically produced by the Op. For non-record sourceTypes, this should consist of a single column that logically constitutes the entire 'table'</param>
-        /// <returns>A VarInfoList containing VarInfo instances that correctly track the Var or Vars produced by the targetTable, in accordance with the shape of the sourceType</returns>
+        /// <param name="targetTable"> The table that is logically produced by the Op. For non-record sourceTypes, this should consist of a single column that logically constitutes the entire 'table' </param>
+        /// <returns> A VarInfoList containing VarInfo instances that correctly track the Var or Vars produced by the targetTable, in accordance with the shape of the sourceType </returns>
         private static VarInfoList GetTableVars(Table targetTable)
         {
             var outputVars = new VarInfoList();
@@ -1422,8 +1423,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Translate UnnestOp which is assumed (at this stage) to wrap a native ScalarOp
-        /// that returns a collection (e.g. a table-valued function node).
+        ///     Translate UnnestOp which is assumed (at this stage) to wrap a native ScalarOp
+        ///     that returns a collection (e.g. a table-valued function node).
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1455,13 +1456,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Builds up an "empty" projection over the input node. Well, in reality, we build
-        /// up a dummy projection node - which simply selects out some constant (which
-        /// is never used). This is useful in scenarios where the outputs are
-        /// uninteresting, but the input row count is
+        ///     Builds up an "empty" projection over the input node. Well, in reality, we build
+        ///     up a dummy projection node - which simply selects out some constant (which
+        ///     is never used). This is useful in scenarios where the outputs are
+        ///     uninteresting, but the input row count is
         /// </summary>
-        /// <param name="relOpNode">the relOp node</param>
-        /// <returns></returns>
+        /// <param name="relOpNode"> the relOp node </param>
+        /// <returns> </returns>
         private RelOpInfo BuildEmptyProjection(Node relOpNode)
         {
             //
@@ -1503,17 +1504,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Build up a Project Op with exactly the Vars that we want. If the input is 
-        /// a Project already, piggyback on it, and get the Vars we want. Otherwise, 
-        /// create a new ProjectOp, and define the specified Vars
+        ///     Build up a Project Op with exactly the Vars that we want. If the input is 
+        ///     a Project already, piggyback on it, and get the Vars we want. Otherwise, 
+        ///     create a new ProjectOp, and define the specified Vars
         /// 
-        /// Note that the ProjectOp's output (element) type will be a record with the fields
-        /// in exactly the order specified by the projectionVars argument
-        /// 
+        ///     Note that the ProjectOp's output (element) type will be a record with the fields
+        ///     in exactly the order specified by the projectionVars argument
         /// </summary>
-        /// <param name="relOpNode">the input relOpNode to cap with a Project</param>
-        /// <param name="projectionVars">List of vars we are interested in</param>
-        /// <returns>A ProjectOp that produces the right set of Vars</returns>
+        /// <param name="relOpNode"> the input relOpNode to cap with a Project </param>
+        /// <param name="projectionVars"> List of vars we are interested in </param>
+        /// <returns> A ProjectOp that produces the right set of Vars </returns>
         private RelOpInfo BuildProjection(Node relOpNode, IEnumerable<Var> projectionVars)
         {
             DbExpression retExpr = null;
@@ -1958,18 +1958,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region JoinOp Conversions - CrossJoinOp, InnerJoinOp, FullOuterJoinOp, LeftOuterJoinOp
 
         /// <summary>
-        /// Massages the input to a join node.
+        ///     Massages the input to a join node.
         /// 
-        /// If the input is a Filter(ScanTable), we throw in a dummy project over
-        /// this input. This projectOp simply looks at the "referenced" columns of
-        /// the table, and uses those as the projection Vars
-        /// Otherwise, sqlgen does not really know which columns are referenced, and
-        /// ends up adding a projection with all columns of the table.
+        ///     If the input is a Filter(ScanTable), we throw in a dummy project over
+        ///     this input. This projectOp simply looks at the "referenced" columns of
+        ///     the table, and uses those as the projection Vars
+        ///     Otherwise, sqlgen does not really know which columns are referenced, and
+        ///     ends up adding a projection with all columns of the table.
         /// 
-        /// NOTE: We may want to do this for Apply as well
+        ///     NOTE: We may want to do this for Apply as well
         /// </summary>
-        /// <param name="joinInputNode">one of the inputs to the join node</param>
-        /// <returns>RelopInfo for the transformed input</returns>
+        /// <param name="joinInputNode"> one of the inputs to the join node </param>
+        /// <returns> RelopInfo for the transformed input </returns>
         private RelOpInfo VisitJoinInput(Node joinInputNode)
         {
             RelOpInfo relOpInfo;
@@ -1999,11 +1999,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Called by all Visitor pattern method that handle binary JoinOps (Inner, FullOuter, LeftOuter)
+        ///     Called by all Visitor pattern method that handle binary JoinOps (Inner, FullOuter, LeftOuter)
         /// </summary>
-        /// <param name="joinNode">The IQT Node that references the JoinOp</param>
-        /// <param name="joinKind">The CQT DbExpressionKind that represents the type of join to create</param>
-        /// <returns></returns>
+        /// <param name="joinNode"> The IQT Node that references the JoinOp </param>
+        /// <param name="joinKind"> The CQT DbExpressionKind that represents the type of join to create </param>
+        /// <returns> </returns>
         private DbExpression VisitBinaryJoin(Node joinNode, DbExpressionKind joinKind)
         {
             //
@@ -2145,11 +2145,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ApplyOp Conversions - CrossApplyOp, OuterApplyOp
 
         /// <summary>
-        /// Called by both CrossApply and OuterApply visitor pattern methods - command handling of both types of Apply operation
+        ///     Called by both CrossApply and OuterApply visitor pattern methods - command handling of both types of Apply operation
         /// </summary>
-        /// <param name="applyNode">The Node that references the ApplyOp</param>
-        /// <param name="applyKind">The CQT DbExpressionKind that corresponds to the ApplyOp (DbExpressionKind.CrossApply for CrossApplyOp, DbExpressionKind.OuterApply for OuterApplyOp)</param>
-        /// <returns>A new CqtResult containing a DbApplyExpression with the correct ApplyType</returns>
+        /// <param name="applyNode"> The Node that references the ApplyOp </param>
+        /// <param name="applyKind"> The CQT DbExpressionKind that corresponds to the ApplyOp (DbExpressionKind.CrossApply for CrossApplyOp, DbExpressionKind.OuterApply for OuterApplyOp) </param>
+        /// <returns> A new CqtResult containing a DbApplyExpression with the correct ApplyType </returns>
         private DbExpression VisitApply(Node applyNode, DbExpressionKind applyKind)
         {
             //
@@ -2214,27 +2214,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region SetOp Conversions - ExceptOp, IntersectOp, UnionAllOp
 
         /// <summary>
-        /// Called by VisitSetOp to convert each argument.
-        /// Determines whether a column-reordering projection should be applied to
-        /// the argument, and applies that projection if necessary during conversion
-        /// to a DbExpression. A different projection is applied if no Nodes higher in
-        /// the IQT consume the vars produced by the SetOp argument.
+        ///     Called by VisitSetOp to convert each argument.
+        ///     Determines whether a column-reordering projection should be applied to
+        ///     the argument, and applies that projection if necessary during conversion
+        ///     to a DbExpression. A different projection is applied if no Nodes higher in
+        ///     the IQT consume the vars produced by the SetOp argument.
         /// </summary>
-        /// <param name="argNode">
-        /// A Node that provides one of the arguments to the SetOp
-        /// </param>
-        /// <param name="outputVars">
-        /// Defines the expected order of the Output Vars of the SetOp
-        /// </param>
-        /// <param name="argVars">
-        /// The VarMap for the SetOp argument represented by the node.
-        /// This specifies the Output (SetOp-produced) Var to Input (Argument-produced)
-        /// Var mappings for the Vars in the outputVars enumerable.
-        /// </param>
-        /// <returns>
-        /// A DbExpression that is the converted form of the argument
-        /// (with an appropriate column-reording projection applied if necessary)
-        /// </returns>
+        /// <param name="argNode"> A Node that provides one of the arguments to the SetOp </param>
+        /// <param name="outputVars"> Defines the expected order of the Output Vars of the SetOp </param>
+        /// <param name="argVars"> The VarMap for the SetOp argument represented by the node. This specifies the Output (SetOp-produced) Var to Input (Argument-produced) Var mappings for the Vars in the outputVars enumerable. </param>
+        /// <returns> A DbExpression that is the converted form of the argument (with an appropriate column-reording projection applied if necessary) </returns>
         private DbExpression VisitSetOpArgument(Node argNode, VarVec outputVars, VarMap argVars)
         {
             RelOpInfo sourceInfo;
@@ -2271,13 +2260,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Called by UnionAll, Intersect and Except (SetOp) visitor pattern methods
+        ///     Called by UnionAll, Intersect and Except (SetOp) visitor pattern methods
         /// </summary>
-        /// <param name="op">The visited SetOp</param>
-        /// <param name="n">The Node that references the SetOp</param>
-        /// <param name="alias">Alias to use when publishing the SetOp's Vars</param>
-        /// <param name="setOpBuilder">Callback to construct the SetOp DbExpression from the left and right arguments</param>
-        /// <returns>The DbExpression equivalent of the SetOp</returns>
+        /// <param name="op"> The visited SetOp </param>
+        /// <param name="n"> The Node that references the SetOp </param>
+        /// <param name="alias"> Alias to use when publishing the SetOp's Vars </param>
+        /// <param name="setOpBuilder"> Callback to construct the SetOp DbExpression from the left and right arguments </param>
+        /// <returns> The DbExpression equivalent of the SetOp </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "vars")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2384,13 +2373,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Convert SRO(e) => NewMultiset(Element(e'))
-        ///   where e' is the CTree version of e
-        /// Add a Project over e, if it does not already have a ProjectOp
+        ///     Convert SRO(e) => NewMultiset(Element(e'))
+        ///     where e' is the CTree version of e
+        ///     Add a Project over e, if it does not already have a ProjectOp
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         public override DbExpression Visit(SingleRowOp op, Node n)
         {
             RelOpInfo inputInfo;
@@ -2433,12 +2422,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Convert SingleRowTableOp into NewMultisetOp(1) - a single element
-        /// collection. The element type of the collection doesn't really matter
+        ///     Convert SingleRowTableOp into NewMultisetOp(1) - a single element
+        ///     collection. The element type of the collection doesn't really matter
         /// </summary>
-        /// <param name="op">SingleRowTableOp</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>CQT expression</returns>
+        /// <param name="op"> SingleRowTableOp </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> CQT expression </returns>
         public override DbExpression Visit(SingleRowTableOp op, Node n)
         {
             var collectionExpr = DbExpressionBuilder.NewCollection(new[] { DbExpressionBuilder.Constant(1) });
@@ -2480,19 +2469,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region PhysicalOps
 
-        /// <summary>
-        /// Translates the PhysicalProjectOp. Handles two cases. If the child is a ProjectOp,
-        /// then we simply piggyback on the ProjectOp method, but with our list of Vars.
+        ///<summary>
+        ///    Translates the PhysicalProjectOp. Handles two cases. If the child is a ProjectOp,
+        ///    then we simply piggyback on the ProjectOp method, but with our list of Vars.
         ///
-        /// Otherwise, we visit the child, and then create a DbProjectExpression above it.
+        ///    Otherwise, we visit the child, and then create a DbProjectExpression above it.
         ///
-        /// The reason we special case the first scenario is because we do not want to add
-        /// an extra Project over a Project-over-Sort expression tree. This causes bad
-        /// problems later down the line
-        /// </summary>
-        /// <param name="op">the PhysicalProjectOp</param>
-        /// <param name="n">current subtree</param>
-        /// <returns>the CQT expression corresponding to this subtree</returns>
+        ///    The reason we special case the first scenario is because we do not want to add
+        ///    an extra Project over a Project-over-Sort expression tree. This causes bad
+        ///    problems later down the line
+        ///</summary>
+        ///<param name="op"> the PhysicalProjectOp </param>
+        ///<param name="n"> current subtree </param>
+        ///<returns> the CQT expression corresponding to this subtree </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProjectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

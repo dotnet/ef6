@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Edm
 {
     using System.Collections.Generic;
@@ -213,10 +214,10 @@ namespace System.Data.Entity.Migrations.Edm
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
                 return new List<XName>
-                    {
-                        _csdlNamespaceV3 + elementName,
-                        _csdlNamespaceV2 + elementName
-                    };
+                           {
+                               _csdlNamespaceV3 + elementName,
+                               _csdlNamespaceV2 + elementName
+                           };
             }
         }
 
@@ -242,10 +243,10 @@ namespace System.Data.Entity.Migrations.Edm
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
                 return new List<XName>
-                    {
-                        _mslNamespaceV3 + elementName,
-                        _mslNamespaceV2 + elementName
-                    };
+                           {
+                               _mslNamespaceV3 + elementName,
+                               _mslNamespaceV2 + elementName
+                           };
             }
         }
 
@@ -269,10 +270,10 @@ namespace System.Data.Entity.Migrations.Edm
                 Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
 
                 return new List<XName>
-                    {
-                        _ssdlNamespaceV3 + elementName,
-                        _ssdlNamespaceV2 + elementName
-                    };
+                           {
+                               _ssdlNamespaceV3 + elementName,
+                               _ssdlNamespaceV2 + elementName
+                           };
             }
         }
     }

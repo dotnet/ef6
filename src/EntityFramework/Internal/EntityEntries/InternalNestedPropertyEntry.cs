@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Resources;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     A concrete implementation of <see cref = "InternalPropertyEntry" /> used for properties of complex objects.
+    ///     A concrete implementation of <see cref="InternalPropertyEntry" /> used for properties of complex objects.
     /// </summary>
     internal class InternalNestedPropertyEntry : InternalPropertyEntry
     {
@@ -15,10 +16,10 @@ namespace System.Data.Entity.Internal
         private readonly InternalPropertyEntry _parentPropertyEntry;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalNestedPropertyEntry" /> class.
+        ///     Initializes a new instance of the <see cref="InternalNestedPropertyEntry" /> class.
         /// </summary>
-        /// <param name = "parentPropertyEntry">The parent property entry.</param>
-        /// <param name = "propertyMetadata">The property metadata.</param>
+        /// <param name="parentPropertyEntry"> The parent property entry. </param>
+        /// <param name="propertyMetadata"> The property metadata. </param>
         public InternalNestedPropertyEntry(
             InternalPropertyEntry parentPropertyEntry, PropertyEntryMetadata propertyMetadata)
             : base(parentPropertyEntry.InternalEntityEntry, propertyMetadata)
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Internal
         ///     Gets the current values of the parent complex property.
         ///     That is, the current values that contains the value for this property.
         /// </summary>
-        /// <value>The parent current values.</value>
+        /// <value> The parent current values. </value>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         public override InternalPropertyValues ParentCurrentValues
         {
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Internal
         ///     Gets the original values of the parent complex property.
         ///     That is, the original values that contains the value for this property.
         /// </summary>
-        /// <value>The parent original values.</value>
+        /// <value> The parent original values. </value>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         public override InternalPropertyValues ParentOriginalValues
         {
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Creates a delegate that will get the value of this property.
         /// </summary>
-        /// <returns>The delegate.</returns>
+        /// <returns> The delegate. </returns>
         protected override Func<object, object> CreateGetter()
         {
             var parentGetter = _parentPropertyEntry.Getter;
@@ -105,16 +106,16 @@ namespace System.Data.Entity.Internal
             }
 
             return o =>
-                {
-                    var parent = parentGetter(o);
-                    return parent == null ? null : getter(parent);
-                };
+                       {
+                           var parent = parentGetter(o);
+                           return parent == null ? null : getter(parent);
+                       };
         }
 
         /// <summary>
         ///     Creates a delegate that will set the value of this property.
         /// </summary>
-        /// <returns>The delegate.</returns>
+        /// <returns> The delegate. </returns>
         protected override Action<object, object> CreateSetter()
         {
             var parentGetter = _parentPropertyEntry.Getter;
@@ -130,15 +131,15 @@ namespace System.Data.Entity.Internal
             }
 
             return (o, v) =>
-                {
-                    var parent = parentGetter(o);
-                    if (parent == null)
-                    {
-                        throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(
-                            Name, ParentPropertyEntry.Name);
-                    }
-                    setter(parentGetter(o), v);
-                };
+                       {
+                           var parent = parentGetter(o);
+                           if (parent == null)
+                           {
+                               throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(
+                                   Name, ParentPropertyEntry.Name);
+                           }
+                           setter(parentGetter(o), v);
+                       };
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace System.Data.Entity.Internal
         ///     of is set as modified.  Since this is a property of a complex object
         ///     this method returns true if the top-level complex property on the entity is modified.
         /// </summary>
-        /// <returns>True if the entity property is modified.</returns>
+        /// <returns> True if the entity property is modified. </returns>
         public override bool EntityPropertyIsModified()
         {
             return _parentPropertyEntry.EntityPropertyIsModified();
@@ -163,9 +164,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Rejects changes to this property.
-        /// Since this is a property of a complex object this method rejects changes to the top-level
-        /// complex property.
+        ///     Rejects changes to this property.
+        ///     Since this is a property of a complex object this method rejects changes to the top-level
+        ///     complex property.
         /// </summary>
         public override void RejectEntityPropertyChanges()
         {
@@ -174,10 +175,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Walks the tree from a property of a complex property back up to the top-level
-        /// complex property and then checks whether or not DetectChanges still considers
-        /// the complex property to be modified. If it does not, then the complex property
-        /// is marked as Unchanged.
+        ///     Walks the tree from a property of a complex property back up to the top-level
+        ///     complex property and then checks whether or not DetectChanges still considers
+        ///     the complex property to be modified. If it does not, then the complex property
+        ///     is marked as Unchanged.
         /// </summary>
         public override void UpdateComplexPropertyState()
         {

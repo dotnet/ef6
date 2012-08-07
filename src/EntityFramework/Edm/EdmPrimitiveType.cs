@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -83,39 +84,39 @@ namespace System.Data.Entity.Edm
 
         private static readonly Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType> _typeKindToTypeMap
             = new Dictionary<EdmPrimitiveTypeKind, EdmPrimitiveType>
-                {
-                    { EdmPrimitiveTypeKind.Binary, _binaryType },
-                    { EdmPrimitiveTypeKind.Boolean, _booleanType },
-                    { EdmPrimitiveTypeKind.Byte, _byteType },
-                    { EdmPrimitiveTypeKind.DateTime, _dateTimeType },
-                    { EdmPrimitiveTypeKind.DateTimeOffset, _dateTimeOffsetType },
-                    { EdmPrimitiveTypeKind.Decimal, _decimalType },
-                    { EdmPrimitiveTypeKind.Double, _doubleType },
-                    { EdmPrimitiveTypeKind.Guid, _guidType },
-                    { EdmPrimitiveTypeKind.Int16, _int16Type },
-                    { EdmPrimitiveTypeKind.Int32, _int32Type },
-                    { EdmPrimitiveTypeKind.Int64, _int64Type },
-                    { EdmPrimitiveTypeKind.SByte, _sbyteType },
-                    { EdmPrimitiveTypeKind.Single, _singleType },
-                    { EdmPrimitiveTypeKind.String, _stringType },
-                    { EdmPrimitiveTypeKind.Time, _timeType },
-                    { EdmPrimitiveTypeKind.Geometry, _geometryType },
-                    { EdmPrimitiveTypeKind.GeometricPoint, _geometricPointType },
-                    { EdmPrimitiveTypeKind.GeometricLinestring, _geometricLinestringType },
-                    { EdmPrimitiveTypeKind.GeometricPolygon, _geometricPolygonType },
-                    { EdmPrimitiveTypeKind.GeometricMultiPoint, _geometricMultiPointType },
-                    { EdmPrimitiveTypeKind.GeometricMultiLinestring, _geometricMultiLinestringType },
-                    { EdmPrimitiveTypeKind.GeometricMultiPolygon, _geometricMultiPolygonType },
-                    { EdmPrimitiveTypeKind.GeometryCollection, _geometryCollectionType },
-                    { EdmPrimitiveTypeKind.Geography, _geographyType },
-                    { EdmPrimitiveTypeKind.GeographicPoint, _geographicPointType },
-                    { EdmPrimitiveTypeKind.GeographicLinestring, _geographicLinestringType },
-                    { EdmPrimitiveTypeKind.GeographicPolygon, _geographicPolygonType },
-                    { EdmPrimitiveTypeKind.GeographicMultiPoint, _geographicMultiPointType },
-                    { EdmPrimitiveTypeKind.GeographicMultiLinestring, _geographicMultiLinestringType },
-                    { EdmPrimitiveTypeKind.GeographicMultiPolygon, _geographicMultiPolygonType },
-                    { EdmPrimitiveTypeKind.GeographyCollection, _geographyCollectionType }
-                };
+                  {
+                      { EdmPrimitiveTypeKind.Binary, _binaryType },
+                      { EdmPrimitiveTypeKind.Boolean, _booleanType },
+                      { EdmPrimitiveTypeKind.Byte, _byteType },
+                      { EdmPrimitiveTypeKind.DateTime, _dateTimeType },
+                      { EdmPrimitiveTypeKind.DateTimeOffset, _dateTimeOffsetType },
+                      { EdmPrimitiveTypeKind.Decimal, _decimalType },
+                      { EdmPrimitiveTypeKind.Double, _doubleType },
+                      { EdmPrimitiveTypeKind.Guid, _guidType },
+                      { EdmPrimitiveTypeKind.Int16, _int16Type },
+                      { EdmPrimitiveTypeKind.Int32, _int32Type },
+                      { EdmPrimitiveTypeKind.Int64, _int64Type },
+                      { EdmPrimitiveTypeKind.SByte, _sbyteType },
+                      { EdmPrimitiveTypeKind.Single, _singleType },
+                      { EdmPrimitiveTypeKind.String, _stringType },
+                      { EdmPrimitiveTypeKind.Time, _timeType },
+                      { EdmPrimitiveTypeKind.Geometry, _geometryType },
+                      { EdmPrimitiveTypeKind.GeometricPoint, _geometricPointType },
+                      { EdmPrimitiveTypeKind.GeometricLinestring, _geometricLinestringType },
+                      { EdmPrimitiveTypeKind.GeometricPolygon, _geometricPolygonType },
+                      { EdmPrimitiveTypeKind.GeometricMultiPoint, _geometricMultiPointType },
+                      { EdmPrimitiveTypeKind.GeometricMultiLinestring, _geometricMultiLinestringType },
+                      { EdmPrimitiveTypeKind.GeometricMultiPolygon, _geometricMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeometryCollection, _geometryCollectionType },
+                      { EdmPrimitiveTypeKind.Geography, _geographyType },
+                      { EdmPrimitiveTypeKind.GeographicPoint, _geographicPointType },
+                      { EdmPrimitiveTypeKind.GeographicLinestring, _geographicLinestringType },
+                      { EdmPrimitiveTypeKind.GeographicPolygon, _geographicPolygonType },
+                      { EdmPrimitiveTypeKind.GeographicMultiPoint, _geographicMultiPointType },
+                      { EdmPrimitiveTypeKind.GeographicMultiLinestring, _geographicMultiLinestringType },
+                      { EdmPrimitiveTypeKind.GeographicMultiPolygon, _geographicMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeographyCollection, _geographyCollectionType }
+                  };
 
         private readonly EdmPrimitiveTypeKind typeKind;
 
@@ -126,7 +127,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Binary" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Binary" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -136,7 +137,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Boolean" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Boolean" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -146,7 +147,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Byte" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Byte" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -156,7 +157,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.DateTime" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.DateTime" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -166,7 +167,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.DateTimeOffset" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.DateTimeOffset" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -176,7 +177,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Decimal" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Decimal" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -186,7 +187,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Double" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Double" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -196,7 +197,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Guid" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Guid" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -206,7 +207,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Int16" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Int16" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -216,7 +217,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Int32" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Int32" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -226,7 +227,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Int64" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Int64" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -236,7 +237,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.SByte" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.SByte" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -246,7 +247,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Single" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Single" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -256,7 +257,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.String" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.String" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -266,7 +267,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the EdmPrimitiveType instance that represents the <see cref = "EdmPrimitiveTypeKind.Time" /> primitive type.
+        ///     Gets the EdmPrimitiveType instance that represents the <see cref="EdmPrimitiveTypeKind.Time" /> primitive type.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -276,10 +277,11 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Retrieves the EdmPrimitiveType instance with the <see cref = "EdmPrimitiveTypeKind" /> corresponding to the specified <paramref name = "primitiveTypeName" /> value, if any.
+        ///     Retrieves the EdmPrimitiveType instance with the <see cref="EdmPrimitiveTypeKind" /> corresponding to the specified <paramref
+        ///      name="primitiveTypeName" /> value, if any.
         /// </summary>
-        /// <param name = "primitiveTypeName"> The name of the primitive type instance to retrieve </param>
-        /// <param name = "primitiveType"> The EdmPrimitiveType with the specified name, if successful; otherwise <c>null</c> . </param>
+        /// <param name="primitiveTypeName"> The name of the primitive type instance to retrieve </param>
+        /// <param name="primitiveType"> The EdmPrimitiveType with the specified name, if successful; otherwise <c>null</c> . </param>
         /// <returns> <c>true</c> if the given name corresponds to an EDM primitive type name; otherwise <c>false</c> . </returns>
         public static bool TryGetByName(string primitiveTypeName, out EdmPrimitiveType primitiveType)
         {
@@ -297,7 +299,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets an <see cref = "EdmPrimitiveTypeKind" /> value that indicates which Entity Data Model (EDM) primitive type this type represents.
+        ///     Gets an <see cref="EdmPrimitiveTypeKind" /> value that indicates which Entity Data Model (EDM) primitive type this type represents.
         /// </summary>
         public EdmPrimitiveTypeKind PrimitiveTypeKind
         {

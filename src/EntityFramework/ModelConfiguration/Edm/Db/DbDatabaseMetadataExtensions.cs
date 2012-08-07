@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -53,9 +54,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
             using (var xmlWriter = XmlWriter.Create(
                 stringBuilder, new XmlWriterSettings
-                    {
-                        Indent = true
-                    }))
+                                   {
+                                       Indent = true
+                                   }))
             {
                 new SsdlSerializer().Serialize(
                     database, providerInfo.ProviderInvariantName, providerInfo.ProviderManifestToken, xmlWriter);
@@ -79,10 +80,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             var uniqueIdentifier = schema.Tables.UniquifyName(name);
 
             var table = new DbTableMetadata
-                {
-                    Name = uniqueIdentifier,
-                    DatabaseIdentifier = uniqueIdentifier
-                };
+                            {
+                                Name = uniqueIdentifier,
+                                DatabaseIdentifier = uniqueIdentifier
+                            };
 
             schema.Tables.Add(table);
 

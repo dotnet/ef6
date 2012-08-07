@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Edm
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     The base for all all Entity Data Model (EDM) types that support annotation using <see cref = "DataModelAnnotation" /> .
+    ///     The base for all all Entity Data Model (EDM) types that support annotation using <see cref="DataModelAnnotation" /> .
     /// </summary>
     internal abstract class EdmMetadataItem
         : EdmDataModelItem, IAnnotatedDataModelItem

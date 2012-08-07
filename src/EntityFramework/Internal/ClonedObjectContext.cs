@@ -10,25 +10,25 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    /// Encapsulates a cloned <see cref="ObjectContext"/> and store <see cref="DbConnection"/>. Note that these
-    /// objects are disposable and should be used in a using block to ensure both the cloned context and the
-    /// cloned connection are disposed.
+    ///     Encapsulates a cloned <see cref="ObjectContext" /> and store <see cref="DbConnection" />. Note that these
+    ///     objects are disposable and should be used in a using block to ensure both the cloned context and the
+    ///     cloned connection are disposed.
     /// </summary>
     internal class ClonedObjectContext : IDisposable
     {
         private ObjectContextProxy _objectContext;
 
         /// <summary>
-        /// For mocking.
+        ///     For mocking.
         /// </summary>
         protected ClonedObjectContext()
         {
         }
 
         /// <summary>
-        /// Creates a clone of the given <see cref="ObjectContext"/>. The underlying <see cref="DbConnection"/> of
-        /// the context is also cloned and the given connection string is used for the connection string of
-        /// the cloned connection.
+        ///     Creates a clone of the given <see cref="ObjectContext" />. The underlying <see cref="DbConnection" /> of
+        ///     the context is also cloned and the given connection string is used for the connection string of
+        ///     the cloned connection.
         /// </summary>
         public ClonedObjectContext(
             ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// The cloned context.
+        ///     The cloned context.
         /// </summary>
         public ObjectContextProxy ObjectContext
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// This is always the store connection of the underlying ObjectContext.
+        ///     This is always the store connection of the underlying ObjectContext.
         /// </summary>
         public DbConnection Connection
         {
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Disposes both the underlying ObjectContext and its store connection.
+        ///     Disposes both the underlying ObjectContext and its store connection.
         /// </summary>
         public void Dispose()
         {

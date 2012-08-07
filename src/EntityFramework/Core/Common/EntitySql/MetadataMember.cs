@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    /// Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember"/>.
+    ///     Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember" />.
     /// </summary>
     internal abstract class MetadataMember : ExpressionResolution
     {
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal readonly string Name;
 
         /// <summary>
-        /// Return the name of the <see cref="MetadataMemberClass"/> for error messages.
+        ///     Return the name of the <see cref="MetadataMemberClass" /> for error messages.
         /// </summary>
         internal abstract string MetadataMemberClassName { get; }
 

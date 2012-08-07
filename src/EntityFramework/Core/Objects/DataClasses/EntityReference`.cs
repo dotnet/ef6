@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Xml.Serialization;
 
     /// <summary>
-    /// Models a relationship end with multiplicity 1.
+    ///     Models a relationship end with multiplicity 1.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
@@ -46,9 +47,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        /// The default constructor is required for some serialization scenarios. It should not be used to 
-        /// create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
-        /// class instead.
+        ///     The default constructor is required for some serialization scenarios. It should not be used to 
+        ///     create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
+        ///     class instead.
         /// </summary>
         public EntityReference()
         {
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------
 
         /// <summary>
-        /// Stub only please replace with actual implementation
+        ///     Stub only please replace with actual implementation
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
@@ -160,8 +161,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------
 
         /// <summary>
-        /// Loads the related entity or entities into the local related end using the supplied MergeOption.        
-        /// </summary>        
+        ///     Loads the related entity or entities into the local related end using the supplied MergeOption.
+        /// </summary>
         public override void Load(MergeOption mergeOption)
         {
             CheckOwnerNull();
@@ -193,12 +194,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// An asynchronous version of Load, which
-        /// loads the related entity or entities into the related end using the specified merge option.
+        ///     An asynchronous version of Load, which
+        ///     loads the related entity or entities into the related end using the specified merge option.
         /// </summary>
-        /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public override async Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
             CheckOwnerNull();
@@ -270,9 +271,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// This operation is not allowed if the owner is null
+        ///     This operation is not allowed if the owner is null
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         internal override IEnumerable GetInternalEnumerable()
         {
             // This shouldn't be converted to an iterator method because then the check for a null owner
@@ -295,15 +296,17 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Attaches an entity to the EntityReference. The given
-        /// entity is not assumed to be the complete set of related entities.
+        ///     Attaches an entity to the EntityReference. The given
+        ///     entity is not assumed to be the complete set of related entities.
         /// 
-        /// Owner and all entities passed in must be in Unchanged or Modified state. 
-        /// Deleted elements are allowed only when the state manager is already tracking the relationship
-        /// instance.
+        ///     Owner and all entities passed in must be in Unchanged or Modified state. 
+        ///     Deleted elements are allowed only when the state manager is already tracking the relationship
+        ///     instance.
         /// </summary>
-        /// <param name="entity">The entity to attach to the EntityCollection</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
+        /// <param name="entity"> The entity to attach to the EntityCollection </param>
+        /// <exception cref="ArgumentNullException">Thrown when
+        ///     <paramref name="entity" />
+        ///     is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
@@ -579,11 +582,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="relationshipAlreadyExists"></param>
-        /// <returns>True if the verify succeeded, False if the Add should no-op</returns>
+        /// <param name="entity"> </param>
+        /// <param name="relationshipAlreadyExists"> </param>
+        /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
             if (!relationshipAlreadyExists
@@ -612,18 +614,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Disconnected adds are not supported for an EntityReference so we should report this as an error.
+        ///     Disconnected adds are not supported for an EntityReference so we should report this as an error.
         /// </summary>
-        /// <param name="entity">The entity to add to the related end in a disconnected state.</param>
+        /// <param name="entity"> The entity to add to the related end in a disconnected state. </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
             CheckOwnerNull();
         }
 
         /// <summary>
-        /// Disconnected removes are not supported for an EntityReference so we should report this as an error.
+        ///     Disconnected removes are not supported for an EntityReference so we should report this as an error.
         /// </summary>
-        /// <param name="entity">The entity to remove from the related end in a disconnected state.</param>
+        /// <param name="entity"> The entity to remove from the related end in a disconnected state. </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
             CheckOwnerNull();
@@ -631,11 +633,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Remove from the RelatedEnd
+        ///     Remove from the RelatedEnd
         /// </summary>
-        /// <param name="wrappedEntity"></param>
-        /// <param name="resetIsLoaded"></param>
-        /// <returns></returns>
+        /// <param name="wrappedEntity"> </param>
+        /// <param name="resetIsLoaded"> </param>
+        /// <returns> </returns>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
             Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
@@ -661,10 +663,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Remove from the POCO collection
+        ///     Remove from the POCO collection
         /// </summary>
-        /// <param name="wrappedEntity"></param>
-        /// <returns></returns>
+        /// <param name="wrappedEntity"> </param>
+        /// <returns> </returns>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
             Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
@@ -779,10 +781,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //End identical code
 
         /// <summary>
-        /// Take any values in the incoming RelatedEnd and sets them onto the values 
-        /// that currently exist in this RelatedEnd
+        ///     Take any values in the incoming RelatedEnd and sets them onto the values 
+        ///     that currently exist in this RelatedEnd
         /// </summary>
-        /// <param name="rhs"></param>
+        /// <param name="rhs"> </param>
         internal void InitializeWithValue(RelatedEnd relatedEnd)
         {
             Debug.Assert(_wrappedCachedValue.Entity == null, "The EntityReference already has a value.");
@@ -853,10 +855,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region Add
 
         /// <summary>
-        /// AddToLocalEnd is used by both APIs a) RelatedEnd.Add b) Value property setter.
-        /// ApplyConstraints is true in case of RelatedEnd.Add because one cannot add entity to ref it its already set
-        /// however applyConstraints is false in case of Value property setter because value can be set to a new value
-        /// even if its non null.
+        ///     AddToLocalEnd is used by both APIs a) RelatedEnd.Add b) Value property setter.
+        ///     ApplyConstraints is true in case of RelatedEnd.Add because one cannot add entity to ref it its already set
+        ///     however applyConstraints is false in case of Value property setter because value can be set to a new value
+        ///     even if its non null.
         /// </summary>
         internal override void AddToLocalCache(IEntityWrapper wrappedEntity, bool applyConstraints)
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Diagnostics;
 
     /// <summary>
-    /// Summary description for SchemaElementLookUpTableEnumerator.
+    ///     Summary description for SchemaElementLookUpTableEnumerator.
     /// </summary>
     internal sealed class SchemaElementLookUpTableEnumerator<T, S> : IEnumerator<T>
         where T : S
@@ -22,10 +23,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="keysInOrder"></param>
+        /// <param name="data"> </param>
+        /// <param name="keysInOrder"> </param>
         public SchemaElementLookUpTableEnumerator(Dictionary<string, S> data, List<string> keysInOrder)
         {
             Debug.Assert(data != null, "data parameter is null");
@@ -40,7 +40,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region IEnumerator Members
 
         /// <summary>
-        /// 
         /// </summary>
         public void Reset()
         {
@@ -49,7 +48,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public T Current
         {
@@ -70,9 +68,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public bool MoveNext()
         {
             while (_enumerator.MoveNext())
@@ -90,7 +87,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region IDisposable Members
 
         /// <summary>
-        /// 
         /// </summary>
         public void Dispose()
         {

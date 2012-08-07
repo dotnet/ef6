@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -7,23 +8,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// Utility class for the methods shared among the classes comprising the plan compiler
+    ///     Utility class for the methods shared among the classes comprising the plan compiler
     /// </summary>
     internal static class PlanCompilerUtil
     {
         /// <summary>
-        /// Utility method that determines whether a given CaseOp subtree can be optimized.
-        /// Called by both PreProcessor and NominalTypeEliminator.
+        ///     Utility method that determines whether a given CaseOp subtree can be optimized.
+        ///     Called by both PreProcessor and NominalTypeEliminator.
         /// 
-        /// If the case statement is of the shape:
+        ///     If the case statement is of the shape:
         ///     case when X then NULL else Y, or
         ///     case when X then Y else NULL,
-        /// where Y is of row type, and the types of the input CaseOp, the NULL and Y are the same,
-        /// return true
+        ///     where Y is of row type, and the types of the input CaseOp, the NULL and Y are the same,
+        ///     return true
         /// </summary>
-        /// <param name="op"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="op"> </param>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         internal static bool IsRowTypeCaseOpWithNullability(CaseOp op, Node n, out bool thenClauseIsNull)
         {
             thenClauseIsNull = false; //any default value will do
@@ -62,14 +63,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Is this function a collection aggregate function. It is, if
-        ///   - it has exactly one child
-        ///   - that child is a collection type
-        ///   - and the function has been marked with the aggregate attribute
+        ///     Is this function a collection aggregate function. It is, if
+        ///     - it has exactly one child
+        ///     - that child is a collection type
+        ///     - and the function has been marked with the aggregate attribute
         /// </summary>
-        /// <param name="op">the function op</param>
-        /// <param name="n">the current subtree</param>
-        /// <returns>true, if this was a collection aggregate function</returns>
+        /// <param name="op"> the function op </param>
+        /// <param name="n"> the current subtree </param>
+        /// <returns> true, if this was a collection aggregate function </returns>
         internal static bool IsCollectionAggregateFunction(FunctionOp op, Node n)
         {
             return ((n.Children.Count == 1) &&
@@ -78,10 +79,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Is the given op one of the ConstantBaseOp-s
+        ///     Is the given op one of the ConstantBaseOp-s
         /// </summary>
-        /// <param name="opType"></param>
-        /// <returns></returns>
+        /// <param name="opType"> </param>
+        /// <returns> </returns>
         internal static bool IsConstantBaseOp(OpType opType)
         {
             return opType == OpType.Constant ||
@@ -91,19 +92,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Combine two predicates by trying to avoid the predicate parts of the 
-        /// second one that are already present in the first one.
+        ///     Combine two predicates by trying to avoid the predicate parts of the 
+        ///     second one that are already present in the first one.
         /// 
-        /// In particular, given two nodes, predicate1 and predicate2, 
-        /// it creates a combined predicate logically equivalent to 
+        ///     In particular, given two nodes, predicate1 and predicate2, 
+        ///     it creates a combined predicate logically equivalent to 
         ///     predicate1 AND predicate2,
-        /// but it does not include any AND parts of predicate2 that are present
-        /// in predicate1.
+        ///     but it does not include any AND parts of predicate2 that are present
+        ///     in predicate1.
         /// </summary>
-        /// <param name="predicate1"></param>
-        /// <param name="predicate2"></param>
-        /// <param name="command"></param>
-        /// <returns></returns>
+        /// <param name="predicate1"> </param>
+        /// <param name="predicate2"> </param>
+        /// <param name="command"> </param>
+        /// <returns> </returns>
         internal static Node CombinePredicates(Node predicate1, Node predicate2, Command command)
         {
             var andParts1 = BreakIntoAndParts(predicate1);
@@ -131,15 +132,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Create a list of AND parts for a given predicate. 
-        /// For example, if the predicate is of the shape:
-        /// ((p1 and p2) and (p3 and p4)) the list is p1, p2, p3, p4
-        /// The predicates p1,p2, p3, p4 may be roots of subtrees that 
-        /// have nodes with AND ops, but 
-        /// would not be broken unless they are the AND nodes themselves.
+        ///     Create a list of AND parts for a given predicate. 
+        ///     For example, if the predicate is of the shape:
+        ///     ((p1 and p2) and (p3 and p4)) the list is p1, p2, p3, p4
+        ///     The predicates p1,p2, p3, p4 may be roots of subtrees that 
+        ///     have nodes with AND ops, but 
+        ///     would not be broken unless they are the AND nodes themselves.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <param name="andParts"></param>
+        /// <param name="predicate"> </param>
+        /// <param name="andParts"> </param>
         private static IEnumerable<Node> BreakIntoAndParts(Node predicate)
         {
             return Helpers.GetLeafNodes(

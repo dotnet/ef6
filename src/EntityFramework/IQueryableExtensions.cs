@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
@@ -20,479 +21,479 @@ namespace System.Data.Entity
 
         private static readonly MethodInfo _first = GetMethod(
             "First", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                {
+                                    typeof(IQueryable<>).MakeGenericType(T)
+                                });
 
         private static readonly MethodInfo _first_Predicate = GetMethod(
             "First", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                {
+                                    typeof(IQueryable<>).MakeGenericType(T),
+                                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                });
 
         private static readonly MethodInfo _firstOrDefault = GetMethod(
             "FirstOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                         {
+                                             typeof(IQueryable<>).MakeGenericType(T)
+                                         });
 
         private static readonly MethodInfo _firstOrDefault_Predicate = GetMethod(
             "FirstOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                         {
+                                             typeof(IQueryable<>).MakeGenericType(T),
+                                             typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                         });
 
         private static readonly MethodInfo _last = GetMethod(
             "Last", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                               {
+                                   typeof(IQueryable<>).MakeGenericType(T)
+                               });
 
         private static readonly MethodInfo _last_Predicate = GetMethod(
             "Last", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                               {
+                                   typeof(IQueryable<>).MakeGenericType(T),
+                                   typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                               });
 
         private static readonly MethodInfo _lastOrDefault = GetMethod(
             "LastOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                        {
+                                            typeof(IQueryable<>).MakeGenericType(T)
+                                        });
 
         private static readonly MethodInfo _lastOrDefault_Predicate = GetMethod(
             "LastOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                        {
+                                            typeof(IQueryable<>).MakeGenericType(T),
+                                            typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                        });
 
         private static readonly MethodInfo _single = GetMethod(
             "Single", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                 {
+                                     typeof(IQueryable<>).MakeGenericType(T)
+                                 });
 
         private static readonly MethodInfo _single_Predicate = GetMethod(
             "Single", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                 {
+                                     typeof(IQueryable<>).MakeGenericType(T),
+                                     typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                 });
 
         private static readonly MethodInfo _singleOrDefault = GetMethod(
             "SingleOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                          {
+                                              typeof(IQueryable<>).MakeGenericType(T)
+                                          });
 
         private static readonly MethodInfo _singleOrDefault_Predicate = GetMethod(
             "SingleOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                          {
+                                              typeof(IQueryable<>).MakeGenericType(T),
+                                              typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                          });
 
         private static readonly MethodInfo _elementAt = GetMethod(
             "ElementAt", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T), typeof(int)
-                });
+                                    {
+                                        typeof(IQueryable<>).MakeGenericType(T), typeof(int)
+                                    });
 
         private static readonly MethodInfo _elementAtOrDefault = GetMethod(
             "ElementAtOrDefault", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T), typeof(int)
-                });
+                                             {
+                                                 typeof(IQueryable<>).MakeGenericType(T), typeof(int)
+                                             });
 
         private static readonly MethodInfo _contains = GetMethod(
             "Contains", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    T
-                });
+                                   {
+                                       typeof(IQueryable<>).MakeGenericType(T),
+                                       T
+                                   });
 
         private static readonly MethodInfo _contains_Comparer = GetMethod(
             "Contains", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    T,
-                    typeof(IEqualityComparer<>).MakeGenericType(T)
-                });
+                                   {
+                                       typeof(IQueryable<>).MakeGenericType(T),
+                                       T,
+                                       typeof(IEqualityComparer<>).MakeGenericType(T)
+                                   });
 
         private static readonly MethodInfo _sequenceEqual = GetMethod(
             "SequenceEqual", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(IEnumerable<>).MakeGenericType(T)
-                });
+                                        {
+                                            typeof(IQueryable<>).MakeGenericType(T),
+                                            typeof(IEnumerable<>).MakeGenericType(T)
+                                        });
 
         private static readonly MethodInfo _sequenceEqual_Comparer = GetMethod(
             "SequenceEqual", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(IEnumerable<>).MakeGenericType(T),
-                    typeof(IEqualityComparer<>).MakeGenericType(T)
-                });
+                                        {
+                                            typeof(IQueryable<>).MakeGenericType(T),
+                                            typeof(IEnumerable<>).MakeGenericType(T),
+                                            typeof(IEqualityComparer<>).MakeGenericType(T)
+                                        });
 
         private static readonly MethodInfo _any = GetMethod(
             "Any", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T)
+                              });
 
         private static readonly MethodInfo _any_Predicate = GetMethod(
             "Any", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                              });
 
         private static readonly MethodInfo _all_Predicate = GetMethod(
             "All", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                              });
 
         private static readonly MethodInfo _count = GetMethod(
             "Count", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                {
+                                    typeof(IQueryable<>).MakeGenericType(T)
+                                });
 
         private static readonly MethodInfo _count_Predicate = GetMethod(
             "Count", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                {
+                                    typeof(IQueryable<>).MakeGenericType(T),
+                                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                });
 
         private static readonly MethodInfo _longCount = GetMethod(
             "LongCount", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                                    {
+                                        typeof(IQueryable<>).MakeGenericType(T)
+                                    });
 
         private static readonly MethodInfo _longCount_Predicate = GetMethod(
             "LongCount", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                });
+                                    {
+                                        typeof(IQueryable<>).MakeGenericType(T),
+                                        typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                                    });
 
         private static readonly MethodInfo _min = GetMethod(
             "Min", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T)
+                              });
 
         private static readonly MethodInfo _min_Selector = GetMethod(
             "Min", (T, U) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
-                });
+                                 {
+                                     typeof(IQueryable<>).MakeGenericType(T),
+                                     typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
+                                 });
 
         private static readonly MethodInfo _max = GetMethod(
             "Max", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T)
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T)
+                              });
 
         private static readonly MethodInfo _max_Selector = GetMethod(
             "Max", (T, U) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
-                });
+                                 {
+                                     typeof(IQueryable<>).MakeGenericType(T),
+                                     typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
+                                 });
 
         private static readonly MethodInfo _sum_Int = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<int>)
-                });
+                             {
+                                 typeof(IQueryable<int>)
+                             });
 
         private static readonly MethodInfo _sum_IntNullable = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<int?>)
-                });
+                             {
+                                 typeof(IQueryable<int?>)
+                             });
 
         private static readonly MethodInfo _sum_Long = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<long>)
-                });
+                             {
+                                 typeof(IQueryable<long>)
+                             });
 
         private static readonly MethodInfo _sum_LongNullable = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<long?>)
-                });
+                             {
+                                 typeof(IQueryable<long?>)
+                             });
 
         private static readonly MethodInfo _sum_Float = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<float>)
-                });
+                             {
+                                 typeof(IQueryable<float>)
+                             });
 
         private static readonly MethodInfo _sum_FloatNullable = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<float?>)
-                });
+                             {
+                                 typeof(IQueryable<float?>)
+                             });
 
         private static readonly MethodInfo _sum_Double = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<double>)
-                });
+                             {
+                                 typeof(IQueryable<double>)
+                             });
 
         private static readonly MethodInfo _sum_DoubleNullable = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<double?>)
-                });
+                             {
+                                 typeof(IQueryable<double?>)
+                             });
 
         private static readonly MethodInfo _sum_Decimal = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<decimal>)
-                });
+                             {
+                                 typeof(IQueryable<decimal>)
+                             });
 
         private static readonly MethodInfo _sum_DecimalNullable = GetMethod(
             "Sum", () => new[]
-                {
-                    typeof(IQueryable<decimal?>)
-                });
+                             {
+                                 typeof(IQueryable<decimal?>)
+                             });
 
         private static readonly MethodInfo _sum_Int_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
+                              });
 
         private static readonly MethodInfo _sum_IntNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
+                              });
 
         private static readonly MethodInfo _sum_Long_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
+                              });
 
         private static readonly MethodInfo _sum_LongNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
+                              });
 
         private static readonly MethodInfo _sum_Float_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
+                              });
 
         private static readonly MethodInfo _sum_FloatNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
+                              });
 
         private static readonly MethodInfo _sum_Double_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
+                              });
 
         private static readonly MethodInfo _sum_DoubleNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
+                              });
 
         private static readonly MethodInfo _sum_Decimal_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
+                              });
 
         private static readonly MethodInfo _sum_DecimalNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
-                });
+                              {
+                                  typeof(IQueryable<>).MakeGenericType(T),
+                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
+                              });
 
         private static readonly MethodInfo _average_Int = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<int>)
-                });
+                                 {
+                                     typeof(IQueryable<int>)
+                                 });
 
         private static readonly MethodInfo _average_IntNullable = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<int?>)
-                });
+                                 {
+                                     typeof(IQueryable<int?>)
+                                 });
 
         private static readonly MethodInfo _average_Long = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<long>)
-                });
+                                 {
+                                     typeof(IQueryable<long>)
+                                 });
 
         private static readonly MethodInfo _average_LongNullable = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<long?>)
-                });
+                                 {
+                                     typeof(IQueryable<long?>)
+                                 });
 
         private static readonly MethodInfo _average_Float = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<float>)
-                });
+                                 {
+                                     typeof(IQueryable<float>)
+                                 });
 
         private static readonly MethodInfo _average_FloatNullable = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<float?>)
-                });
+                                 {
+                                     typeof(IQueryable<float?>)
+                                 });
 
         private static readonly MethodInfo _average_Double = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<double>)
-                });
+                                 {
+                                     typeof(IQueryable<double>)
+                                 });
 
         private static readonly MethodInfo _average_DoubleNullable = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<double?>)
-                });
+                                 {
+                                     typeof(IQueryable<double?>)
+                                 });
 
         private static readonly MethodInfo _average_Decimal = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<decimal>)
-                });
+                                 {
+                                     typeof(IQueryable<decimal>)
+                                 });
 
         private static readonly MethodInfo _average_DecimalNullable = GetMethod(
             "Average", () => new[]
-                {
-                    typeof(IQueryable<decimal?>)
-                });
+                                 {
+                                     typeof(IQueryable<decimal?>)
+                                 });
 
         private static readonly MethodInfo _average_Int_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
+                                  });
 
         private static readonly MethodInfo _average_IntNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
+                                  });
 
         private static readonly MethodInfo _average_Long_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
+                                  });
 
         private static readonly MethodInfo _average_LongNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
+                                  });
 
         private static readonly MethodInfo _average_Float_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
+                                  });
 
         private static readonly MethodInfo _average_FloatNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
+                                  });
 
         private static readonly MethodInfo _average_Double_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
+                                  });
 
         private static readonly MethodInfo _average_DoubleNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
+                                  });
 
         private static readonly MethodInfo _average_Decimal_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
+                                  });
 
         private static readonly MethodInfo _average_DecimalNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
-                });
+                                  {
+                                      typeof(IQueryable<>).MakeGenericType(T),
+                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
+                                  });
 
         private static readonly MethodInfo _aggregate = GetMethod(
             "Aggregate", (T) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(T, T, T))
-                });
+                                    {
+                                        typeof(IQueryable<>).MakeGenericType(T),
+                                        typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(T, T, T))
+                                    });
 
         private static readonly MethodInfo _aggregate_Seed = GetMethod(
             "Aggregate", (T, U) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    U,
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U))
-                });
+                                       {
+                                           typeof(IQueryable<>).MakeGenericType(T),
+                                           U,
+                                           typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U))
+                                       });
 
         private static readonly MethodInfo _aggregate_Seed_Selector = GetMethod(
             "Aggregate", (T, U, V) => new[]
-                {
-                    typeof(IQueryable<>).MakeGenericType(T),
-                    U,
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U)),
-                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(U, V))
-                });
+                                          {
+                                              typeof(IQueryable<>).MakeGenericType(T),
+                                              U,
+                                              typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U)),
+                                              typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(U, V))
+                                          });
 
         #endregion
 
@@ -509,14 +510,16 @@ namespace System.Data.Entity
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the IQueryable<T>. Other instances of IQueryable<T> and the object context itself are not affected.
-        ///     Because the Include method returns the query object, you can call this method multiple times on an IQueryable<T> to
-        ///     specify multiple paths for the query.
+        ///     the returned instance of the IQueryable<T>. Other instances of IQueryable
+        ///                                                <T>and the object context itself are not affected.
+        ///                                                    Because the Include method returns the query object, you can call this method multiple times on an IQueryable
+        ///                                                    <T>to
+        ///                                                        specify multiple paths for the query.
         /// </remarks>
-        /// <typeparam name = "T">The type of entity being queried.</typeparam>
-        /// <param name = "source">The source IQueryable on which to call Include.</param>
-        /// <param name = "path">The dot-separated list of related objects to return in the query results.</param>
-        /// <returns>A new IQueryable<T> with the defined query path.</returns>
+        /// <typeparam name="T"> The type of entity being queried. </typeparam>
+        /// <param name="source"> The source IQueryable on which to call Include. </param>
+        /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
+        /// <returns> A new IQueryable <T>with the defined query path. </returns>
         public static IQueryable<T> Include<T>(this IQueryable<T> source, string path) where T : class
         {
             Contract.Requires(source != null);
@@ -554,13 +557,15 @@ namespace System.Data.Entity
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the IQueryable<T>. Other instances of IQueryable<T> and the object context itself are not affected.
-        ///     Because the Include method returns the query object, you can call this method multiple times on an IQueryable<T> to
-        ///     specify multiple paths for the query.
+        ///     the returned instance of the IQueryable<T>. Other instances of IQueryable
+        ///                                                <T>and the object context itself are not affected.
+        ///                                                    Because the Include method returns the query object, you can call this method multiple times on an IQueryable
+        ///                                                    <T>to
+        ///                                                        specify multiple paths for the query.
         /// </remarks>
-        /// <param name = "source">The source IQueryable on which to call Include.</param>
-        /// <param name = "path">The dot-separated list of related objects to return in the query results.</param>
-        /// <returns>A new IQueryable with the defined query path.</returns>
+        /// <param name="source"> The source IQueryable on which to call Include. </param>
+        /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
+        /// <returns> A new IQueryable with the defined query path. </returns>
         public static IQueryable Include(this IQueryable source, string path)
         {
             Contract.Requires(source != null);
@@ -615,14 +620,16 @@ namespace System.Data.Entity
         ///     If the source IQueryable does not have a matching method, then this method does nothing.
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
         ///     When you call the Include method, the query path is only valid on the returned instance of the IQueryable<T>. Other
-        ///     instances of IQueryable<T> and the object context itself are not affected.  Because the Include method returns the
-        ///     query object, you can call this method multiple times on an IQueryable<T> to specify multiple paths for the query.
+        ///                                                                                                                  instances of IQueryable
+        ///                                                                                                                  <T>and the object context itself are not affected.  Because the Include method returns the
+        ///                                                                                                                      query object, you can call this method multiple times on an IQueryable
+        ///                                                                                                                      <T>to specify multiple paths for the query.
         /// </remarks>
-        /// <typeparam name = "T">The type of entity being queried.</typeparam>
-        /// <typeparam name = "TProperty">The type of navigation property being included.</typeparam>
-        /// <param name = "source">The source IQueryable on which to call Include.</param>
-        /// <param name = "path">A lambda expression representing the path to include.</param>
-        /// <returns>A new IQueryable<T> with the defined query path.</returns>
+        /// <typeparam name="T"> The type of entity being queried. </typeparam>
+        /// <typeparam name="TProperty"> The type of navigation property being included. </typeparam>
+        /// <param name="source"> The source IQueryable on which to call Include. </param>
+        /// <param name="path"> A lambda expression representing the path to include. </param>
+        /// <returns> A new IQueryable <T>with the defined query path. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static IQueryable<T> Include<T, TProperty>(
@@ -646,14 +653,14 @@ namespace System.Data.Entity
         #region AsNoTracking
 
         /// <summary>
-        ///     Returns a new query where the entities returned will not be cached in the <see cref = "DbContext" />
-        ///     or <see cref = "ObjectContext" />.  This method works by calling the AsNoTracking method of the
+        ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />
+        ///     or <see cref="ObjectContext" />.  This method works by calling the AsNoTracking method of the
         ///     underlying query object.  If the underlying query object does not have a AsNoTracking method,
         ///     then calling this method will have no affect.
         /// </summary>
-        /// <typeparam name = "T">The element type.</typeparam>
-        /// <param name = "source">The source query.</param>
-        /// <returns>A new query with NoTracking applied, or the source query if NoTracking is not supported.</returns>
+        /// <typeparam name="T"> The element type. </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A new query with NoTracking applied, or the source query if NoTracking is not supported. </returns>
         public static IQueryable<T> AsNoTracking<T>(this IQueryable<T> source) where T : class
         {
             Contract.Requires(source != null);
@@ -663,13 +670,13 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a new query where the entities returned will not be cached in the <see cref = "DbContext" />
-        ///     or <see cref = "ObjectContext" />.  This method works by calling the AsNoTracking method of the
+        ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />
+        ///     or <see cref="ObjectContext" />.  This method works by calling the AsNoTracking method of the
         ///     underlying query object.  If the underlying query object does not have a AsNoTracking method,
         ///     then calling this method will have no affect.
         /// </summary>
-        /// <param name = "source">The source query.</param>
-        /// <returns>A new query with NoTracking applied, or the source query if NoTracking is not supported.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A new query with NoTracking applied, or the source query if NoTracking is not supported. </returns>
         public static IQueryable AsNoTracking(this IQueryable source)
         {
             Contract.Requires(source != null);
@@ -706,12 +713,13 @@ namespace System.Data.Entity
         #region Load
 
         /// <summary>
-        ///     Enumerates the query such that for server queries such as those of <see cref = "DbSet{T}" />, <see cref = "ObjectSet{T}" />,
-        ///     <see cref = "ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see cref = "DbContext" />,
-        ///     <see cref = "ObjectContext" /> or other cache on the client.
+        ///     Enumerates the query such that for server queries such as those of <see cref="DbSet{T}" />, <see cref="ObjectSet{T}" />,
+        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see
+        ///      cref="DbContext" />,
+        ///     <see cref="ObjectContext" /> or other cache on the client.
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
-        /// <param name = "source">The source query.</param>
+        /// <param name="source"> The source query. </param>
         public static void Load(this IQueryable source)
         {
             Contract.Requires(source != null);
@@ -734,13 +742,15 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref = "DbSet{T}" />, <see cref = "ObjectSet{T}" />,
-        ///     <see cref = "ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see cref = "DbContext" />,
-        ///     <see cref = "ObjectContext" /> or other cache on the client.
+        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />, <see
+        ///      cref="ObjectSet{T}" />,
+        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see
+        ///      cref="DbContext" />,
+        ///     <see cref="ObjectContext" /> or other cache on the client.
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
-        /// <param name = "source">The source query.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public static Task LoadAsync(this IQueryable source)
         {
             Contract.Requires(source != null);
@@ -750,14 +760,16 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref = "DbSet{T}" />, <see cref = "ObjectSet{T}" />,
-        ///     <see cref = "ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see cref = "DbContext" />,
-        ///     <see cref = "ObjectContext" /> or other cache on the client.
+        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />, <see
+        ///      cref="ObjectSet{T}" />,
+        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see
+        ///      cref="DbContext" />,
+        ///     <see cref="ObjectContext" /> or other cache on the client.
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
-        /// <param name = "source">The source query.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public static Task LoadAsync(this IQueryable source, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
@@ -771,12 +783,12 @@ namespace System.Data.Entity
         #region ForEachAsync
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <param name="source">The source query.</param>
-        /// <param name="action">The action to be executed.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <param name="action"> The action to be executed. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public static Task ForEachAsync(this IQueryable source, Action<object> action)
         {
             Contract.Requires(source != null);
@@ -787,13 +799,13 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <param name="source">The source query.</param>
-        /// <param name="action">The action to be executed.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <param name="action"> The action to be executed. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public static Task ForEachAsync(this IQueryable source, Action<object> action, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
@@ -813,13 +825,13 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name = "T">The type of entity being queried.</typeparam>
-        /// <param name="source">The source query.</param>
-        /// <param name="action">The action to be executed.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <typeparam name="T"> The type of entity being queried. </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <param name="action"> The action to be executed. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action)
         {
             Contract.Requires(source != null);
@@ -830,14 +842,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Enumerates the <see cref = "IQueryable" /> asynchronously and executes the provided action on each element.
+        ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name = "T">The type of entity being queried.</typeparam>
-        /// <param name="source">The source query.</param>
-        /// <param name="action">The action to be executed.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <typeparam name="T"> The type of entity being queried. </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <param name="action"> The action to be executed. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
@@ -860,11 +872,11 @@ namespace System.Data.Entity
         #region Async equivalents of IEnumerable extension methods
 
         /// <summary>
-        ///     Creates a <see cref = "List{Object}" /> from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <param name="source">The source query.</param>
-        /// <returns>A Task containing a <see cref = "List{Object}" /> that contains elements from the input sequence.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A Task containing a <see cref="List{Object}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<object>> ToListAsync(this IQueryable source)
         {
@@ -875,12 +887,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref = "List{Object}" /> from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <param name="source">The source query.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{Object}" /> that contains elements from the input sequence.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="List{Object}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<List<object>> ToListAsync(this IQueryable source, CancellationToken cancellationToken)
         {
@@ -895,12 +907,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <param name="source">The source query.</param>
-        /// <returns>A Task containing a <see cref = "List{T}" /> that contains elements from the input sequence.</returns>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
@@ -911,13 +923,13 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref = "List{T}" /> from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <param name="source">The source query.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a <see cref = "List{T}" /> that contains elements from the input sequence.</returns>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {
@@ -932,11 +944,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a object[] from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     Creates a object[] from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <param name="source">The source query.</param>
-        /// <returns>A Task containing a object[] that contains elements from the input sequence.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<object[]> ToArrayAsync(this IQueryable source)
         {
@@ -947,12 +959,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a object[] from an <see cref = "IQueryable" /> by enumerating it asynchronously.
+        ///     Creates a object[] from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <param name="source">The source query.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a object[] that contains elements from the input sequence.</returns>
+        /// <param name="source"> The source query. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
         public static async Task<object[]> ToArrayAsync(this IQueryable source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
@@ -965,12 +977,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a T[] from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     Creates a T[] from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <param name="source">The source query.</param>
-        /// <returns>A Task containing a T[] that contains elements from the input sequence.</returns>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A Task containing a T[] that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<T[]> ToArrayAsync<T>(this IQueryable<T> source)
         {
@@ -981,13 +993,13 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a T[] from an <see cref = "IQueryable{T}" /> by enumerating it asynchronously.
+        ///     Creates a T[] from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <param name="source">The source query.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task containing a T[] that contains elements from the input sequence.</returns>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a T[] that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<T[]> ToArrayAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {
@@ -1001,16 +1013,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector function.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector)
@@ -1023,17 +1033,15 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector function.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellationToken)
@@ -1046,17 +1054,15 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector function and a comparer.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
@@ -1069,18 +1075,16 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector function and a comparer.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TSource}"/> that contains selected keys and values.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer,
@@ -1094,20 +1098,18 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector and an element selector function.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
-        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
-        /// <typeparamref name="TElement"/> selected from the input sequence.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
@@ -1121,20 +1123,18 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector and an element selector function.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
-        /// <typeparamref name="TElement"/> selected from the input sequence.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
@@ -1149,20 +1149,18 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector function, a comparer, and an element selector function.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
-        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
-        /// <typeparamref name="TElement"/> selected from the input sequence.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
@@ -1177,21 +1175,19 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IQueryable{TSource}"/> by enumerating it asynchronously
-        /// according to a specified key selector function, a comparer, and an element selector function.
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
+        ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>
-        /// <param name="source">An <see cref="IQueryable{TSource}"/> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <param name="elementSelector">A transform function to produce a result element value from each element.</param>
-        /// <param name="comparer">An <see cref="IEqualityComparer{TKey}"/> to compare keys.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// A Task containing a <see cref="Dictionary{TKey, TElement}"/> that contains values of type
-        /// <typeparamref name="TElement"/> selected from the input sequence.
-        /// </returns>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <param name="keySelector"> A function to extract a key from each element. </param>
+        /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,

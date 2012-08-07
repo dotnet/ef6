@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -22,12 +23,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Used during relationship fixup when the source end of the relationship is not
-        /// yet in the relationships list, and needs to be created
+        ///     Used during relationship fixup when the source end of the relationship is not
+        ///     yet in the relationships list, and needs to be created
         /// </summary>
-        /// <param name="navigation">RelationshipNavigation to be set on new RelatedEnd</param>
-        /// <param name="relationshipManager">RelationshipManager to use for creating the new end</param>
-        /// <returns>Reference to the new collection or reference on the other end of the relationship</returns>
+        /// <param name="navigation"> RelationshipNavigation to be set on new RelatedEnd </param>
+        /// <param name="relationshipManager"> RelationshipManager to use for creating the new end </param>
+        /// <returns> Reference to the new collection or reference on the other end of the relationship </returns>
         RelatedEnd IRelationshipFixer.CreateSourceEnd(RelationshipNavigation navigation, RelationshipManager relationshipManager)
         {
             return relationshipManager.CreateRelatedEnd<TTargetEntity, TSourceEntity>(

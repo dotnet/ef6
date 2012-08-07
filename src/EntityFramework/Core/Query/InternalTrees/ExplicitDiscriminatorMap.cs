@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -8,13 +9,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Linq;
 
     /// <summary>
-    /// Describes user-defined discriminator metadata (e.g. for a basic TPH mapping). Encapsulates
-    /// relevant data from System.Data.Entity.Core.Mapping.ViewGenerabetion.DiscriminatorMap (that is to say,
-    /// data relevant to the PlanCompiler). This separate class accomplishes two things:
+    ///     Describes user-defined discriminator metadata (e.g. for a basic TPH mapping). Encapsulates
+    ///     relevant data from System.Data.Entity.Core.Mapping.ViewGenerabetion.DiscriminatorMap (that is to say,
+    ///     data relevant to the PlanCompiler). This separate class accomplishes two things:
     /// 
-    /// 1. Maintain separation of ViewGen and PlanCompiler
-    /// 2. Avoid holding references to CQT expressions in ITree ops (which the ViewGen.DiscriminatorMap
-    /// holds a few CQT references)
+    ///     1. Maintain separation of ViewGen and PlanCompiler
+    ///     2. Avoid holding references to CQT expressions in ITree ops (which the ViewGen.DiscriminatorMap
+    ///     holds a few CQT references)
     /// </summary>
     internal class ExplicitDiscriminatorMap
     {
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Maps from discriminator value to type.
+        ///     Maps from discriminator value to type.
         /// </summary>
         internal ReadOnlyCollection<KeyValuePair<object, EntityType>> TypeMap
         {
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Gets property containing discriminator value.
+        ///     Gets property containing discriminator value.
         /// </summary>
         internal EdmMember DiscriminatorProperty
         {
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// All properties for the type hierarchy.
+        ///     All properties for the type hierarchy.
         /// </summary>
         internal ReadOnlyCollection<EdmProperty> Properties
         {
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Returns the type id for the given entity type, or null if non exists.
+        ///     Returns the type id for the given entity type, or null if non exists.
         /// </summary>
         internal object GetTypeId(EntityType entityType)
         {

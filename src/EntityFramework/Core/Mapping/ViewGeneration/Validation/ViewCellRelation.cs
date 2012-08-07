@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 {
     using System.Collections.Generic;
@@ -6,10 +7,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     using System.Text;
 
     /// <summary>
-    /// Represents a relation signature that lists all projected
-    /// slots of two cell queries in a cell after projection. So if
-    /// SPerson1.Disc is present in the cellquery (and part of the where
-    /// clause) but not in the projected slots, it is missing from a ViewCellRelation
+    ///     Represents a relation signature that lists all projected
+    ///     slots of two cell queries in a cell after projection. So if
+    ///     SPerson1.Disc is present in the cellquery (and part of the where
+    ///     clause) but not in the projected slots, it is missing from a ViewCellRelation
     /// </summary>
     internal class ViewCellRelation : CellRelation
     {

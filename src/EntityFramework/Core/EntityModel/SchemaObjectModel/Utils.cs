@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.CodeDom.Compiler;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml.Schema;
 
     /// <summary>
-    /// Summary description for Utils.
+    ///     Summary description for Utils.
     /// </summary>
     // make class internal when friend assemblies are available
     internal static class Utils
@@ -89,12 +90,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="reader"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="schema"> </param>
+        /// <param name="reader"> </param>
+        /// <param name="value"> </param>
+        /// <returns> </returns>
         public static bool GetString(Schema schema, XmlReader reader, out string value)
         {
             Debug.Assert(schema != null, "schema parameter is null");
@@ -121,12 +121,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="reader"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="schema"> </param>
+        /// <param name="reader"> </param>
+        /// <param name="name"> </param>
+        /// <returns> </returns>
         public static bool GetDottedName(Schema schema, XmlReader reader, out string name)
         {
             if (!GetString(schema, reader, out name))
@@ -164,12 +163,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="reader"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="schema"> </param>
+        /// <param name="reader"> </param>
+        /// <param name="name"> </param>
+        /// <returns> </returns>
         public static bool GetUndottedName(Schema schema, XmlReader reader, out string name)
         {
             Debug.Assert(schema != null, "schema parameter is null");
@@ -210,10 +208,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name"> </param>
+        /// <returns> </returns>
         internal static bool ValidUndottedName(string name)
         {
             // CodeGenerator.IsValidLanguageIndependentIdentifier does demand a FullTrust Link
@@ -230,12 +227,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="reader"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="schema"> </param>
+        /// <param name="reader"> </param>
+        /// <param name="value"> </param>
+        /// <returns> </returns>
         public static bool GetBool(Schema schema, XmlReader reader, out bool value)
         {
             Debug.Assert(schema != null, "schema parameter is null");
@@ -325,11 +321,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="lhsName"></param>
-        /// <param name="rhsName"></param>
-        /// <returns></returns>
+        /// <param name="lhsName"> </param>
+        /// <param name="rhsName"> </param>
+        /// <returns> </returns>
         public static int CompareNames(string lhsName, string rhsName)
         {
             return string.Compare(lhsName, rhsName, StringComparison.Ordinal);

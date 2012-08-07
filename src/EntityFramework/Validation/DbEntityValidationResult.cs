@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Validation
 {
     using System.Collections.Generic;
@@ -20,19 +21,15 @@ namespace System.Data.Entity.Validation
         private readonly InternalEntityEntry _entry;
 
         /// <summary>
-        ///     List of <see cref = "DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
+        ///     List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
         /// </summary>
         private readonly List<DbValidationError> _validationErrors;
 
         /// <summary>
-        ///     Creates an instance of <see cref = "DbEntityValidationResult" /> class.
+        ///     Creates an instance of <see cref="DbEntityValidationResult" /> class.
         /// </summary>
-        /// <param name = "entry">
-        ///     Entity entry the results applies to. Never null.
-        /// </param>
-        /// <param name = "validationErrors">
-        ///     List of <see cref = "DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
-        /// </param>
+        /// <param name="entry"> Entity entry the results applies to. Never null. </param>
+        /// <param name="validationErrors"> List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid. </param>
         public DbEntityValidationResult(DbEntityEntry entry, IEnumerable<DbValidationError> validationErrors)
         {
             Contract.Requires(entry != null);
@@ -43,14 +40,10 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Creates an instance of <see cref = "DbEntityValidationResult" /> class.
+        ///     Creates an instance of <see cref="DbEntityValidationResult" /> class.
         /// </summary>
-        /// <param name = "entry">
-        ///     Entity entry the results applies to. Never null.
-        /// </param>
-        /// <param name = "validationErrors">
-        ///     List of <see cref = "DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
-        /// </param>
+        /// <param name="entry"> Entity entry the results applies to. Never null. </param>
+        /// <param name="validationErrors"> List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid. </param>
         internal DbEntityValidationResult(InternalEntityEntry entry, IEnumerable<DbValidationError> validationErrors)
         {
             Contract.Requires(entry != null);
@@ -61,7 +54,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Gets an instance of <see cref = "DbEntityEntry" /> the results applies to.
+        ///     Gets an instance of <see cref="DbEntityEntry" /> the results applies to.
         /// </summary>
         public DbEntityEntry Entry
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Builders
 {
     using System.ComponentModel;
@@ -15,15 +16,15 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Binary data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "maxLength">The maximum allowable length of the array data.</param>
-        /// <param name = "fixedLength">Value indicating whether or not all data should be padded to the maximum length.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "timestamp">Value indicating whether or not this column should be configured as a timestamp.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="maxLength"> The maximum allowable length of the array data. </param>
+        /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="timestamp"> Value indicating whether or not this column should be configured as a timestamp. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Binary(
@@ -51,12 +52,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Boolean data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Boolean(
@@ -78,13 +79,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Byte data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Byte(
@@ -108,13 +109,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store DateTime data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "precision">The precision of the column.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="precision"> The precision of the column. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel DateTime(
@@ -138,15 +139,15 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Decimal data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "precision">The numeric precision of the column.</param>
-        /// <param name = "scale">The numeric scale of the column.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="precision"> The numeric precision of the column. </param>
+        /// <param name="scale"> The numeric scale of the column. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Decimal(
@@ -174,12 +175,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Double data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Double(
@@ -201,13 +202,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store GUID data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Guid(
@@ -231,12 +232,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Single data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Single(
@@ -258,13 +259,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Short data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Short(
@@ -288,13 +289,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Integer data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Int(
@@ -318,13 +319,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Long data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "identity">Value indicating whether or not the database will generate values for this column during insert.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Long(
@@ -348,15 +349,15 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store String data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "maxLength">The maximum allowable length of the string data.</param>
-        /// <param name = "fixedLength">Value indicating whether or not all data should be padded to the maximum length.</param>
-        /// <param name = "unicode">Value indicating whether or not the column supports Unicode content.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="maxLength"> The maximum allowable length of the string data. </param>
+        /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
+        /// <param name="unicode"> Value indicating whether or not the column supports Unicode content. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel String(
@@ -384,13 +385,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store Time data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "precision">The precision of the column.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="precision"> The precision of the column. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Time(
@@ -414,13 +415,13 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store DateTimeOffset data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "precision">The precision of the column.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="precision"> The precision of the column. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel DateTimeOffset(
@@ -444,12 +445,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store geography data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Geography(
@@ -471,12 +472,12 @@ namespace System.Data.Entity.Migrations.Builders
         /// <summary>
         ///     Creates a new column definition to store geometry data.
         /// </summary>
-        /// <param name = "nullable">Value indicating whether or not the column allows null values.</param>
-        /// <param name = "defaultValue">Constant value to use as the default value for this column.</param>
-        /// <param name = "defaultValueSql">SQL expression used as the default value for this column.</param>
-        /// <param name = "name">The name of the column.</param>
-        /// <param name = "storeType">Provider specific data type to use for this column.</param>
-        /// <returns>The newly constructed column definition.</returns>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <returns> The newly constructed column definition. </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ColumnModel Geometry(
@@ -512,20 +513,20 @@ namespace System.Data.Entity.Migrations.Builders
         {
             var column
                 = new ColumnModel(primitiveTypeKind)
-                    {
-                        IsNullable = nullable,
-                        MaxLength = maxLength,
-                        Precision = precision,
-                        Scale = scale,
-                        IsUnicode = unicode,
-                        IsFixedLength = fixedLength,
-                        IsIdentity = identity,
-                        DefaultValue = defaultValue,
-                        DefaultValueSql = defaultValueSql,
-                        IsTimestamp = timestamp,
-                        Name = name,
-                        StoreType = storeType
-                    };
+                      {
+                          IsNullable = nullable,
+                          MaxLength = maxLength,
+                          Precision = precision,
+                          Scale = scale,
+                          IsUnicode = unicode,
+                          IsFixedLength = fixedLength,
+                          IsIdentity = identity,
+                          DefaultValue = defaultValue,
+                          DefaultValueSql = defaultValueSql,
+                          IsTimestamp = timestamp,
+                          Name = name,
+                          StoreType = storeType
+                      };
 
             return column;
         }

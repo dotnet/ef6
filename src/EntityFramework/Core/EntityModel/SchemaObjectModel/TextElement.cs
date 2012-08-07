@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Xml;
 
     /// <summary>
-    /// Summary description for Documentation.
+    ///     Summary description for Documentation.
     /// </summary>
     internal sealed class TextElement : SchemaElement
     {
@@ -15,9 +16,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         public TextElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -28,7 +28,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        /// 
         /// </summary>
         public string Value { get; private set; }
 
@@ -47,9 +46,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void TextElementTextHandler(XmlReader reader)
         {
             var text = reader.Value;

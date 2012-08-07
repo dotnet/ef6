@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Collections.Generic;
@@ -34,15 +35,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
             var entityTypeMappingFragment = new DbEntityTypeMappingFragment
-                {
-                    Table = table
-                };
+                                                {
+                                                    Table = table
+                                                };
 
             var entityTypeMapping = new DbEntityTypeMapping
-                {
-                    EntityType = entityType,
-                    IsHierarchyMapping = false
-                };
+                                        {
+                                            EntityType = entityType,
+                                            IsHierarchyMapping = false
+                                        };
             entityTypeMapping.TypeMappingFragments.Add(entityTypeMappingFragment);
             entityTypeMapping.SetClrType(entityType.GetClrType());
 

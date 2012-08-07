@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Transformation rules for JoinOps
+    ///     Transformation rules for JoinOps
     /// </summary>
     internal static class JoinOpRules
     {
@@ -71,14 +72,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessJoinOverProject);
 
         /// <summary>
-        /// CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
-        /// InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
-        /// LeftOuterJoin(Project(A), B, p) => Project(LeftOuterJoin(A, B, p'), modifiedvars)
+        ///     CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
+        ///     InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
+        ///     LeftOuterJoin(Project(A), B, p) => Project(LeftOuterJoin(A, B, p'), modifiedvars)
         /// </summary>
-        /// <param name="context">Rule processing context</param>
-        /// <param name="joinNode">Current JoinOp tree to process</param>
-        /// <param name="newNode">Transformed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> Rule processing context </param>
+        /// <param name="joinNode"> Current JoinOp tree to process </param>
+        /// <param name="newNode"> Transformed subtree </param>
+        /// <returns> transformation status </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-LeftOuterJoin")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -254,22 +255,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessJoinOverFilter);
 
         /// <summary>
-        /// CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
-        /// CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
+        ///     CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
+        ///     CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
         /// 
-        /// InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
-        /// InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
+        ///     InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
+        ///     InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
         /// 
-        /// LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
+        ///     LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
         /// 
-        /// Note that the predicate on the right table in a left-outer-join cannot be pulled
-        /// up above the join.
-        /// 
+        ///     Note that the predicate on the right table in a left-outer-join cannot be pulled
+        ///     up above the join.
         /// </summary>
-        /// <param name="context">Rule processing context</param>
-        /// <param name="joinNode">Current JoinOp tree to process</param>
-        /// <param name="newNode">transformed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> Rule processing context </param>
+        /// <param name="joinNode"> Current JoinOp tree to process </param>
+        /// <param name="newNode"> transformed subtree </param>
+        /// <returns> transformation status </returns>
         private static bool ProcessJoinOverFilter(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;
@@ -368,13 +368,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessJoinOverSingleRowTable);
 
         /// <summary>
-        /// Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
-        ///    into just "X"
+        ///     Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
+        ///     into just "X"
         /// </summary>
-        /// <param name="context">rule processing context</param>
-        /// <param name="joinNode">the join node</param>
-        /// <param name="newNode">transformed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> rule processing context </param>
+        /// <param name="joinNode"> the join node </param>
+        /// <param name="newNode"> transformed subtree </param>
+        /// <returns> transformation status </returns>
         private static bool ProcessJoinOverSingleRowTable(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;
@@ -400,21 +400,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All JoinOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-            {
-                Rule_CrossJoinOverProject1,
-                Rule_CrossJoinOverProject2,
-                Rule_InnerJoinOverProject1,
-                Rule_InnerJoinOverProject2,
-                Rule_OuterJoinOverProject2,
-                Rule_CrossJoinOverFilter1,
-                Rule_CrossJoinOverFilter2,
-                Rule_InnerJoinOverFilter1,
-                Rule_InnerJoinOverFilter2,
-                Rule_OuterJoinOverFilter2,
-                Rule_CrossJoinOverSingleRowTable1,
-                Rule_CrossJoinOverSingleRowTable2,
-                Rule_LeftOuterJoinOverSingleRowTable,
-            };
+                                                    {
+                                                        Rule_CrossJoinOverProject1,
+                                                        Rule_CrossJoinOverProject2,
+                                                        Rule_InnerJoinOverProject1,
+                                                        Rule_InnerJoinOverProject2,
+                                                        Rule_OuterJoinOverProject2,
+                                                        Rule_CrossJoinOverFilter1,
+                                                        Rule_CrossJoinOverFilter2,
+                                                        Rule_InnerJoinOverFilter1,
+                                                        Rule_InnerJoinOverFilter2,
+                                                        Rule_OuterJoinOverFilter2,
+                                                        Rule_CrossJoinOverSingleRowTable1,
+                                                        Rule_CrossJoinOverSingleRowTable2,
+                                                        Rule_LeftOuterJoinOverSingleRowTable,
+                                                    };
 
         #endregion
     }

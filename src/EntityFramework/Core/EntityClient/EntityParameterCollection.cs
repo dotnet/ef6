@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
 
     /// <summary>
-    /// Class representing a parameter collection used in EntityCommand
+    ///     Class representing a parameter collection used in EntityCommand
     /// </summary>
     public sealed partial class EntityParameterCollection : DbParameterCollection
     {
@@ -12,17 +13,17 @@ namespace System.Data.Entity.Core.EntityClient
         private bool _isDirty;
 
         /// <summary>
-        /// Constructs the EntityParameterCollection object
+        ///     Constructs the EntityParameterCollection object
         /// </summary>
         internal EntityParameterCollection()
         {
         }
 
         /// <summary>
-        /// Gets the parameter from the collection at the specified index
+        ///     Gets the parameter from the collection at the specified index
         /// </summary>
-        /// <param name="index">The index of the parameter to retrieved</param>
-        /// <returns>The parameter at the index</returns>
+        /// <param name="index"> The index of the parameter to retrieved </param>
+        /// <returns> The parameter at the index </returns>
         public new EntityParameter this[int index]
         {
             get { return (EntityParameter)GetParameter(index); }
@@ -30,10 +31,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets the parameter with the given name from the collection
+        ///     Gets the parameter with the given name from the collection
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to retrieved</param>
-        /// <returns>The parameter with the given name</returns>
+        /// <param name="parameterName"> The name of the parameter to retrieved </param>
+        /// <returns> The parameter with the given name </returns>
         public new EntityParameter this[string parameterName]
         {
             get { return (EntityParameter)GetParameter(parameterName); }
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets whether this collection has been changes since the last reset
+        ///     Gets whether this collection has been changes since the last reset
         /// </summary>
         internal bool IsDirty
         {
@@ -66,10 +67,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Add a EntityParameter to the collection
+        ///     Add a EntityParameter to the collection
         /// </summary>
-        /// <param name="value">The parameter to add to the collection</param>
-        /// <returns>The index of the new parameter within the collection</returns>
+        /// <param name="value"> The parameter to add to the collection </param>
+        /// <returns> The index of the new parameter within the collection </returns>
         public EntityParameter Add(EntityParameter value)
         {
             Add((object)value);
@@ -77,11 +78,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Add a EntityParameter with the given name and value to the collection
+        ///     Add a EntityParameter with the given name and value to the collection
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to add</param>
-        /// <param name="value">The value of the parameter to add</param>
-        /// <returns>The index of the new parameter within the collection</returns>
+        /// <param name="parameterName"> The name of the parameter to add </param>
+        /// <param name="value"> The value of the parameter to add </param>
+        /// <returns> The index of the new parameter within the collection </returns>
         public EntityParameter AddWithValue(string parameterName, object value)
         {
             var param = new EntityParameter();
@@ -91,79 +92,79 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Adds a EntityParameter with the given name and type to the collection
+        ///     Adds a EntityParameter with the given name and type to the collection
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to add</param>
-        /// <param name="dbType">The type of the parameter</param>
-        /// <returns>The index of the new parameter within the collection</returns>
+        /// <param name="parameterName"> The name of the parameter to add </param>
+        /// <param name="dbType"> The type of the parameter </param>
+        /// <returns> The index of the new parameter within the collection </returns>
         public EntityParameter Add(string parameterName, DbType dbType)
         {
             return Add(new EntityParameter(parameterName, dbType));
         }
 
         /// <summary>
-        /// Add a EntityParameter with the given name, type, and size to the collection
+        ///     Add a EntityParameter with the given name, type, and size to the collection
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to add</param>
-        /// <param name="dbType">The type of the parameter</param>
-        /// <param name="size">The size of the parameter</param>
-        /// <returns>The index of the new parameter within the collection</returns>
+        /// <param name="parameterName"> The name of the parameter to add </param>
+        /// <param name="dbType"> The type of the parameter </param>
+        /// <param name="size"> The size of the parameter </param>
+        /// <returns> The index of the new parameter within the collection </returns>
         public EntityParameter Add(string parameterName, DbType dbType, int size)
         {
             return Add(new EntityParameter(parameterName, dbType, size));
         }
 
         /// <summary>
-        /// Adds a range of EntityParameter objects to this collection
+        ///     Adds a range of EntityParameter objects to this collection
         /// </summary>
-        /// <param name="values">The arary of EntityParameter objects to add</param>
+        /// <param name="values"> The arary of EntityParameter objects to add </param>
         public void AddRange(EntityParameter[] values)
         {
             AddRange((Array)values);
         }
 
         /// <summary>
-        /// Check if the collection has a parameter with the given parameter name
+        ///     Check if the collection has a parameter with the given parameter name
         /// </summary>
-        /// <param name="parameterName">The parameter name to look for</param>
-        /// <returns>True if the collection has a parameter with the given name</returns>
+        /// <param name="parameterName"> The parameter name to look for </param>
+        /// <returns> True if the collection has a parameter with the given name </returns>
         public override bool Contains(string parameterName)
         {
             return IndexOf(parameterName) != -1;
         }
 
         /// <summary>
-        /// Copies the given array of parameters into this collection
+        ///     Copies the given array of parameters into this collection
         /// </summary>
-        /// <param name="array">The array to copy into</param>
-        /// <param name="index">The index in the array where the copy starts</param>
+        /// <param name="array"> The array to copy into </param>
+        /// <param name="index"> The index in the array where the copy starts </param>
         public void CopyTo(EntityParameter[] array, int index)
         {
             CopyTo((Array)array, index);
         }
 
         /// <summary>
-        /// Finds the index in the collection of the given parameter object
+        ///     Finds the index in the collection of the given parameter object
         /// </summary>
-        /// <param name="value">The parameter to search for</param>
-        /// <returns>The index of the parameter, -1 if not found</returns>
+        /// <param name="value"> The parameter to search for </param>
+        /// <returns> The index of the parameter, -1 if not found </returns>
         public int IndexOf(EntityParameter value)
         {
             return IndexOf((object)value);
         }
 
         /// <summary>
-        /// Add a EntityParameter with the given value to the collection at a location indicated by the index
+        ///     Add a EntityParameter with the given value to the collection at a location indicated by the index
         /// </summary>
-        /// <param name="index">The index at which the parameter is to be inserted</param>
-        /// <param name="value">The value of the parameter</param>
+        /// <param name="index"> The index at which the parameter is to be inserted </param>
+        /// <param name="value"> The value of the parameter </param>
         public void Insert(int index, EntityParameter value)
         {
             Insert(index, (object)value);
         }
 
         /// <summary>
-        /// Marks that this collection has been changed
+        ///     Marks that this collection has been changed
         /// </summary>
         private void OnChange()
         {
@@ -171,16 +172,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Remove a EntityParameter with the given value from the collection
+        ///     Remove a EntityParameter with the given value from the collection
         /// </summary>
-        /// <param name="value">The parameter to remove</param>
+        /// <param name="value"> The parameter to remove </param>
         public void Remove(EntityParameter value)
         {
             Remove((object)value);
         }
 
         /// <summary>
-        /// Reset the dirty flag on the collection
+        ///     Reset the dirty flag on the collection
         /// </summary>
         internal void ResetIsDirty()
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Configures a relationship that can only support foreign key properties that are not exposed in the object model.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref = "DbModelBuilder" />.
+    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class ForeignKeyNavigationPropertyConfiguration : CascadableNavigationPropertyConfiguration
     {
@@ -25,10 +26,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     If foreign key properties are exposed in the object model then use the HasForeignKey method.
         ///     Not all relationships support exposing foreign key properties in the object model.
         /// </summary>
-        /// <param name = "configurationAction">Action that configures the foreign key column(s) and table.</param>
-        /// <returns>
-        ///     A configuration object that can be used to further configure the relationship.
-        /// </returns>
+        /// <param name="configurationAction"> Action that configures the foreign key column(s) and table. </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public CascadableNavigationPropertyConfiguration Map(
             Action<ForeignKeyAssociationMappingConfiguration> configurationAction)
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    /// A class to denote a part of the WITH RELATIONSHIP clause.
+    ///     A class to denote a part of the WITH RELATIONSHIP clause.
     /// </summary>
     internal sealed class WithRelationship : InternalBase
     {
@@ -101,7 +102,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Not supported in this class.
+        ///     Not supported in this class.
         /// </summary>
         internal override void ToCompactString(StringBuilder builder)
         {

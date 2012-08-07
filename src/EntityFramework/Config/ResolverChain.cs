@@ -9,7 +9,7 @@ namespace System.Data.Entity.Config
     using System.Linq;
 
     /// <summary>
-    /// Chain-of-Responsibility implementation for <see cref="IDbDependencyResolver"/> instances.
+    ///     Chain-of-Responsibility implementation for <see cref="IDbDependencyResolver" /> instances.
     /// </summary>
     internal class ResolverChain : IDbDependencyResolver
     {

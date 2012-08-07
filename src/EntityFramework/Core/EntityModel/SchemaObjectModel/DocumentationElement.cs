@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Common.Utils;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for Documentation.
+    ///     Summary description for Documentation.
     /// </summary>
     internal sealed class DocumentationElement : SchemaElement
     {
@@ -20,9 +21,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         public DocumentationElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        /// Returns the wrapped metaDocumentation instance
+        ///     Returns the wrapped metaDocumentation instance
         /// </summary>
         public Documentation MetadataDocumentation
         {
@@ -82,9 +82,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleSummaryElement(XmlReader reader)
         {
             var text = new TextElement(this);
@@ -95,9 +94,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleLongDescriptionElement(XmlReader reader)
         {
             var text = new TextElement(this);

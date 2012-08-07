@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    /// A Sortkey
+    ///     A Sortkey
     /// </summary>
     internal class SortKey
     {
@@ -27,12 +28,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        /// The Var being sorted
+        ///     The Var being sorted
         /// </summary>
         internal Var Var { get; set; }
 
         /// <summary>
-        /// Is this a sort asc, or a sort desc
+        ///     Is this a sort asc, or a sort desc
         /// </summary>
         internal bool AscendingSort
         {
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// An optional collation (only for string types)
+        ///     An optional collation (only for string types)
         /// </summary>
         internal string Collation
         {

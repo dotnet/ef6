@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     /// <summary>
-    /// Indicates that the given method is a proxy for an EDM function.
+    ///     Indicates that the given method is a proxy for an EDM function.
     /// </summary>
     /// <remarks>
-    /// Note that this class was called EdmFunctionAttribute in some previous versions of Entity Framework.
+    ///     Note that this class was called EdmFunctionAttribute in some previous versions of Entity Framework.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public sealed class DbFunctionAttribute : Attribute
@@ -14,10 +15,10 @@ namespace System.Data.Entity
         private readonly string _functionName;
 
         /// <summary>
-        /// Creates a new DbFunctionAttribute instance.
+        ///     Creates a new DbFunctionAttribute instance.
         /// </summary>
-        /// <param name="namespaceName">The namespace name of the EDM function represented by the attributed method.</param>
-        /// <param name="functionName">The function name of the EDM function represented by the attributed method.</param>
+        /// <param name="namespaceName"> The namespace name of the EDM function represented by the attributed method. </param>
+        /// <param name="functionName"> The function name of the EDM function represented by the attributed method. </param>
         public DbFunctionAttribute(string namespaceName, string functionName)
         {
             _namespaceName = namespaceName;
@@ -25,7 +26,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// The namespace name of the EDM function represented by the attributed method.
+        ///     The namespace name of the EDM function represented by the attributed method.
         /// </summary>
         public string NamespaceName
         {
@@ -33,7 +34,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// The function name of the EDM function represented by the attributed method.
+        ///     The function name of the EDM function represented by the attributed method.
         /// </summary>
         public string FunctionName
         {

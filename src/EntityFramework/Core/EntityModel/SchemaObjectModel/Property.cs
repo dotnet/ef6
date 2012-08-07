@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -7,16 +8,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     internal abstract class Property : SchemaElement
     {
         /// <summary>
-        /// Creates a Property object
+        ///     Creates a Property object
         /// </summary>
-        /// <param name="parentElement">The parent element</param>
+        /// <param name="parentElement"> The parent element </param>
         internal Property(StructuredType parentElement)
             : base(parentElement)
         {
         }
 
         /// <summary>
-        /// Gets the Type of the property
+        ///     Gets the Type of the property
         /// </summary>
         public abstract SchemaType Type { get; }
 

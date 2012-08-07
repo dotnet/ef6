@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
@@ -8,56 +9,56 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Represents the metadata for mapping fragment.
-    /// A set of mapping fragments makes up the Set mappings( EntitySet, AssociationSet or CompositionSet )
-    /// Each MappingFragment provides mapping for those properties of a type that map to a single table.
+    ///     Represents the metadata for mapping fragment.
+    ///     A set of mapping fragments makes up the Set mappings( EntitySet, AssociationSet or CompositionSet )
+    ///     Each MappingFragment provides mapping for those properties of a type that map to a single table.
     /// </summary>
     /// <example>
-    /// For Example if conceptually you could represent the CS MSL file as following
-    /// --Mapping
-    ///   --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    ///     For Example if conceptually you could represent the CS MSL file as following
+    ///     --Mapping
+    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ComplexPropertyMap
-    ///             --ComplexTypeMapping
-    ///               --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///             --ComplexTypeMapping
-    ///               --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///           --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ComplexPropertyMap
+    ///     --ComplexTypeMapping
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    ///     --ComplexTypeMapping
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --AssociationSetMapping 
-    ///       --AssociationTypeMapping
-    ///         --MappingFragment
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///             --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// This class represents the metadata for all the mapping fragment elements in the 
-    /// above example. Users can access all the top level constructs of 
-    /// MappingFragment element like EntityKey map, Property Maps, Discriminator
-    /// property through this mapping fragment class.
+    ///     --AssociationTypeMapping
+    ///     --MappingFragment
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     This class represents the metadata for all the mapping fragment elements in the 
+    ///     above example. Users can access all the top level constructs of 
+    ///     MappingFragment element like EntityKey map, Property Maps, Discriminator
+    ///     property through this mapping fragment class.
     /// </example>
     internal class StorageMappingFragment
     {
         #region Constructors
 
         /// <summary>
-        /// Construct a new Mapping Fragment object
+        ///     Construct a new Mapping Fragment object
         /// </summary>
-        /// <param name="tableExtent"></param>
-        /// <param name="typeMapping"></param>
+        /// <param name="tableExtent"> </param>
+        /// <param name="typeMapping"> </param>
         internal StorageMappingFragment(EntitySet tableExtent, StorageTypeMapping typeMapping, bool distinctFlag)
         {
             Debug.Assert(tableExtent != null, "Table should not be null when constructing a Mapping Fragment");
@@ -72,23 +73,23 @@ namespace System.Data.Entity.Core.Mapping
         #region Fields
 
         /// <summary>
-        /// Table extent from which the properties are mapped under this fragment.
+        ///     Table extent from which the properties are mapped under this fragment.
         /// </summary>
         private readonly EntitySet m_tableExtent;
 
         /// <summary>
-        /// Type mapping under which this mapping fragment exists.
+        ///     Type mapping under which this mapping fragment exists.
         /// </summary>
         private readonly StorageTypeMapping m_typeMapping;
 
         /// <summary>
-        /// Condition property mappings for this mapping fragment.
+        ///     Condition property mappings for this mapping fragment.
         /// </summary>
         private readonly Dictionary<EdmProperty, StoragePropertyMapping> m_conditionProperties =
             new Dictionary<EdmProperty, StoragePropertyMapping>(EqualityComparer<EdmProperty>.Default);
 
         /// <summary>
-        /// All the other properties .
+        ///     All the other properties .
         /// </summary>
         private readonly List<StoragePropertyMapping> m_properties = new List<StoragePropertyMapping>();
 
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Properties
 
         /// <summary>
-        /// The table from which the properties are mapped in this fragment
+        ///     The table from which the properties are mapped in this fragment
         /// </summary>
         internal EntitySet TableSet
         {
@@ -112,8 +113,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Returns all the property mappings defined in the complex type mapping
-        /// including Properties and Condition Properties
+        ///     Returns all the property mappings defined in the complex type mapping
+        ///     including Properties and Condition Properties
         /// </summary>
         internal ReadOnlyCollection<StoragePropertyMapping> AllProperties
         {
@@ -127,8 +128,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Returns all the property mappings defined in the complex type mapping
-        /// including Properties and Condition Properties
+        ///     Returns all the property mappings defined in the complex type mapping
+        ///     including Properties and Condition Properties
         /// </summary>
         internal ReadOnlyCollection<StoragePropertyMapping> Properties
         {
@@ -136,17 +137,17 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Line Number in MSL file where the Mapping Fragment Element's Start Tag is present.
+        ///     Line Number in MSL file where the Mapping Fragment Element's Start Tag is present.
         /// </summary>
         internal int StartLineNumber { get; set; }
 
         /// <summary>
-        /// Line Position in MSL file where the Mapping Fragment Element's Start Tag is present.
+        ///     Line Position in MSL file where the Mapping Fragment Element's Start Tag is present.
         /// </summary>
         internal int StartLinePosition { get; set; }
 
         /// <summary>
-        /// File URI of the MSL file
+        ///     File URI of the MSL file
         /// </summary>
         //This should not be stored on the Fragment. Probably it should go on schema.
         //But this requires some thinking before we can finally decide where it should go.
@@ -160,19 +161,19 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
         /// <summary>
-        /// Add a property mapping as a child of this mapping fragment
+        ///     Add a property mapping as a child of this mapping fragment
         /// </summary>
-        /// <param name="prop">child property mapping to be added</param>
+        /// <param name="prop"> child property mapping to be added </param>
         internal void AddProperty(StoragePropertyMapping prop)
         {
             m_properties.Add(prop);
         }
 
         /// <summary>
-        /// Add a condition property mapping as a child of this complex property mapping
-        /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
+        ///     Add a condition property mapping as a child of this complex property mapping
+        ///     Condition Property Mapping specifies a Condition either on the C side property or S side property.
         /// </summary>
-        /// <param name="conditionPropertyMap">The mapping that needs to be added</param>
+        /// <param name="conditionPropertyMap"> The mapping that needs to be added </param>
         internal void AddConditionProperty(
             StorageConditionPropertyMapping conditionPropertyMap, Action<EdmMember> duplicateMemberConditionError)
         {
@@ -193,11 +194,11 @@ namespace System.Data.Entity.Core.Mapping
         }
 
 #if DEBUG
-    /// <summary>
-    /// This method is primarily for debugging purposes.
-    /// Will be removed shortly.
-    /// </summary>
-    /// <param name="index"></param>
+        /// <summary>
+        ///     This method is primarily for debugging purposes.
+        ///     Will be removed shortly.
+        /// </summary>
+        /// <param name="index"> </param>
         internal virtual void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

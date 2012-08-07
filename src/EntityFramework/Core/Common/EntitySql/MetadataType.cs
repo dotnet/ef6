@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.Type"/>.
+    ///     Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.Type" />.
     /// </summary>
     internal sealed class MetadataType : MetadataMember
     {

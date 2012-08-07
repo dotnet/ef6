@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
-    /// Base type for SortOp and ConstrainedSortOp
+    ///     Base type for SortOp and ConstrainedSortOp
     /// </summary>
     internal abstract class SortBaseOp : RelOp
     {
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         /// <summary>
-        /// Sort keys
+        ///     Sort keys
         /// </summary>
         internal List<SortKey> Keys
         {

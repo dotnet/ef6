@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// class representing the Schema element in the schema
+    ///     class representing the Schema element in the schema
     /// </summary>
     internal class Function : SchemaType
     {
@@ -45,10 +46,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             @"^(?<modifier>((Collection)|(Ref)))\s*\(\s*(?<typeName>\S*)\s*\)$", RegexOptions.Compiled);
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type"> </param>
+        /// <returns> </returns>
         internal static void RemoveTypeModifier(ref string type, out TypeModifier typeModifier, out bool isRefType)
         {
             isRefType = false;
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// ctor for a schema function
+        ///     ctor for a schema function
         /// </summary>
         public Function(Schema parentElement)
             : base(parentElement)
@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Perform local validation on function definition.
+        ///     Perform local validation on function definition.
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Validate()
@@ -559,9 +559,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Internal Properties
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         internal string UnresolvedReturnType
         {
             get { return _unresolvedType; }
@@ -573,9 +572,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// The method that is called when a DbSchema attribute is encountered.
+        ///     The method that is called when a DbSchema attribute is encountered.
         /// </summary>
-        /// <param name="reader">An XmlReader positioned at the Type attribute.</param>
+        /// <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleDbSchemaAttribute(XmlReader reader)
         {
             Debug.Assert(
@@ -586,9 +585,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the Version attribute
+        ///     Handler for the Version attribute
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at Version attribute</param>
+        /// <param name="reader"> xml reader currently positioned at Version attribute </param>
         private void HandleAggregateAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -598,9 +597,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the Namespace attribute
+        ///     Handler for the Namespace attribute
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at Namespace attribute</param>
+        /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleBuiltInAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -610,9 +609,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the Alias attribute
+        ///     Handler for the Alias attribute
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at Alias attribute</param>
+        /// <param name="reader"> xml reader currently positioned at Alias attribute </param>
         private void HandleStoreFunctionNameAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -625,9 +624,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the NiladicFunctionAttribute attribute
+        ///     Handler for the NiladicFunctionAttribute attribute
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at Namespace attribute</param>
+        /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleNiladicFunctionAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -637,9 +636,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the IsComposableAttribute attribute
+        ///     Handler for the IsComposableAttribute attribute
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at Namespace attribute</param>
+        /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleIsComposableAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -693,9 +692,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the Parameter Element
+        ///     Handler for the Parameter Element
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at Parameter Element</param>
+        /// <param name="reader"> xml reader currently positioned at Parameter Element </param>
         protected void HandleParameterElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -708,9 +707,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handler for the ReturnType element
+        ///     Handler for the ReturnType element
         /// </summary>
-        /// <param name="reader">xml reader currently positioned at ReturnType element</param>
+        /// <param name="reader"> xml reader currently positioned at ReturnType element </param>
         protected void HandleReturnTypeElement(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -727,9 +726,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handles ParameterTypeSemantics attribute
+        ///     Handles ParameterTypeSemantics attribute
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleParameterTypeSemanticsAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);

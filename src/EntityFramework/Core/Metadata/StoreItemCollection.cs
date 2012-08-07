@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    /// Class for representing a collection of items in Store space.
+    ///     Class for representing a collection of items in Store space.
     /// </summary>
     [CLSCompliant(false)]
     public partial class StoreItemCollection : ItemCollection
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Constructors
 
         /// <summary>
-        /// For testing purposes only.
+        ///     For testing purposes only.
         /// </summary>
         internal StoreItemCollection()
             : base(DataSpace.SSpace)
@@ -70,13 +71,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        /// encountered during load as the out parameter errors.
+        ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        ///     encountered during load as the out parameter errors.
         /// 
-        /// Publicly available from System.Data.Entity.Desgin.dll
+        ///     Publicly available from System.Data.Entity.Desgin.dll
         /// </summary>
-        /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
-        /// <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
+        /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
+        /// <param name="filePaths"> the paths where the files can be found that match the xml readers collection </param>
         internal StoreItemCollection(
             IEnumerable<XmlReader> xmlReaders,
             IEnumerable<string> filePaths)
@@ -94,10 +95,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Public constructor that loads the metadata files from the specified xmlReaders.
-        /// Throws when encounter errors.
+        ///     Public constructor that loads the metadata files from the specified xmlReaders.
+        ///     Throws when encounter errors.
         /// </summary>
-        /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
+        /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
         public StoreItemCollection(IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.SSpace)
         {
@@ -115,11 +116,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Constructs the new instance of StoreItemCollection
-        /// with the list of CDM files provided.
+        ///     Constructs the new instance of StoreItemCollection
+        ///     with the list of CDM files provided.
         /// </summary>
-        /// <param name="filePaths">paths where the CDM schemas are loaded</param>
-        /// <exception cref="ArgumentException"> Thrown if path name is not valid</exception>
+        /// <param name="filePaths"> paths where the CDM schemas are loaded </param>
+        /// <exception cref="ArgumentException">Thrown if path name is not valid</exception>
         /// <exception cref="System.ArgumentNullException">thrown if paths argument is null</exception>
         /// <exception cref="System.Data.Entity.Core.MetadataException">For errors related to invalid schemas.</exception>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
@@ -203,7 +204,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the query cache manager
+        ///     Returns the query cache manager
         /// </summary>
         internal QueryCacheManager QueryCacheManager
         {
@@ -226,7 +227,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Version of this StoreItemCollection represents.
+        ///     Version of this StoreItemCollection represents.
         /// </summary>
         public Double StoreSchemaVersion
         {
@@ -239,9 +240,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Get the list of primitive types for the given space
+        ///     Get the list of primitive types for the given space
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
         {
@@ -249,10 +250,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
-        /// <param name="primitiveTypeKind">canonical primitive type</param>
-        /// <returns>The mapped scalar type</returns>
+        /// <param name="primitiveTypeKind"> canonical primitive type </param>
+        /// <returns> The mapped scalar type </returns>
         internal override PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             PrimitiveType type = null;
@@ -261,11 +262,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// checks if the schemaKey refers to the provider manifest schema key 
-        /// and if true, loads the provider manifest
+        ///     checks if the schemaKey refers to the provider manifest schema key 
+        ///     and if true, loads the provider manifest
         /// </summary>
-        /// <param name="connection">The connection where the store manifest is loaded from</param>
-        /// <returns>The provider manifest object that was loaded</returns>
+        /// <param name="connection"> The connection where the store manifest is loaded from </param>
+        /// <returns> The provider manifest object that was loaded </returns>
         private void LoadProviderManifest(DbProviderManifest storeManifest)
         {
             foreach (var primitiveType in storeManifest.GetStoreTypes())
@@ -284,11 +285,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #endregion
 
         /// <summary>
-        /// Get all the overloads of the function with the given name, this method is used for internal perspective
+        ///     Get all the overloads of the function with the given name, this method is used for internal perspective
         /// </summary>
-        /// <param name="functionName">The full name of the function</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <returns>A collection of all the functions with the given name in the given data space</returns>
+        /// <param name="functionName"> The full name of the function </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <returns> A collection of all the functions with the given name in the given data space </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
         internal ReadOnlyCollection<EdmFunction> GetCTypeFunctions(string functionName, bool ignoreCase)
         {
@@ -325,7 +326,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Convert the S type function parameters and returnType to C types.
+        ///     Convert the S type function parameters and returnType to C types.
         /// </summary>
         private EdmFunction ConvertFunctionSignatureToCType(EdmFunction sTypeFunction)
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    /// An ordered list of Vars. Use this when you need an ordering.
+    ///     An ordered list of Vars. Use this when you need an ordering.
     /// </summary>
     [DebuggerDisplay("{{{ToString()}}}")]
     internal class VarList : List<Var>
@@ -15,16 +16,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        /// Trivial constructor
+        ///     Trivial constructor
         /// </summary>
         internal VarList()
         {
         }
 
         /// <summary>
-        /// Not so trivial constructor
+        ///     Not so trivial constructor
         /// </summary>
-        /// <param name="vars"></param>
+        /// <param name="vars"> </param>
         internal VarList(IEnumerable<Var> vars)
             : base(vars)
         {
@@ -35,9 +36,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        /// Debugging support
-        /// provide a string representation for debugging.
-        /// <returns></returns>
+        ///     Debugging support
+        ///     provide a string representation for debugging.
+        ///     <returns> </returns>
         /// </summary>
         public override string ToString()
         {

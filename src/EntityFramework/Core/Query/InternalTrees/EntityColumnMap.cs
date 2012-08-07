@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,19 +7,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    /// Represents a column map for a specific entity type
+    ///     Represents a column map for a specific entity type
     /// </summary>
     internal class EntityColumnMap : TypedColumnMap
     {
         private readonly EntityIdentity m_entityIdentity;
 
         /// <summary>
-        /// constructor
+        ///     constructor
         /// </summary>
-        /// <param name="type">column datatype</param>
-        /// <param name="name">column name</param>
-        /// <param name="entityIdentity">entity identity information</param>
-        /// <param name="properties">list of properties</param>
+        /// <param name="type"> column datatype </param>
+        /// <param name="name"> column name </param>
+        /// <param name="entityIdentity"> entity identity information </param>
+        /// <param name="properties"> list of properties </param>
         internal EntityColumnMap(TypeUsage type, string name, ColumnMap[] properties, EntityIdentity entityIdentity)
             : base(type, name, properties)
         {
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the entity identity information
+        ///     Get the entity identity information
         /// </summary>
         internal EntityIdentity EntityIdentity
         {
@@ -35,11 +36,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
@@ -47,12 +48,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor Design Pattern
+        ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"></typeparam>
-        /// <typeparam name="TArgType"></typeparam>
-        /// <param name="visitor"></param>
-        /// <param name="arg"></param>
+        /// <typeparam name="TResultType"> </typeparam>
+        /// <typeparam name="TArgType"> </typeparam>
+        /// <param name="visitor"> </param>
+        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -61,9 +62,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Debugging support
+        ///     Debugging support
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override string ToString()
         {
             var str = String.Format(CultureInfo.InvariantCulture, "E{0}", base.ToString());

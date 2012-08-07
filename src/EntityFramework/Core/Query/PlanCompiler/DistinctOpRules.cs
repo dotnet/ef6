@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    /// Transformation Rules for DistinctOp
+    ///     Transformation Rules for DistinctOp
     /// </summary>
     internal static class DistinctOpRules
     {
@@ -13,13 +14,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly SimpleRule Rule_DistinctOpOfKeys = new SimpleRule(OpType.Distinct, ProcessDistinctOpOfKeys);
 
         /// <summary>
-        /// If the DistinctOp includes all all the keys of the input, than it is unnecessary.
-        /// Distinct (X, distinct_keys) -> Project( X, distinct_keys) where distinct_keys includes all keys of X.
+        ///     If the DistinctOp includes all all the keys of the input, than it is unnecessary.
+        ///     Distinct (X, distinct_keys) -> Project( X, distinct_keys) where distinct_keys includes all keys of X.
         /// </summary>
-        /// <param name="context">Rule processing context</param>
-        /// <param name="n">current subtree</param>
-        /// <param name="newNode">transformed subtree</param>
-        /// <returns>transformation status</returns>
+        /// <param name="context"> Rule processing context </param>
+        /// <param name="n"> current subtree </param>
+        /// <param name="newNode"> transformed subtree </param>
+        /// <returns> transformation status </returns>
         private static bool ProcessDistinctOpOfKeys(RuleProcessingContext context, Node n, out Node newNode)
         {
             var command = context.Command;
@@ -52,9 +53,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All DistinctOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-            {
-                Rule_DistinctOpOfKeys,
-            };
+                                                    {
+                                                        Rule_DistinctOpOfKeys,
+                                                    };
 
         #endregion
     }

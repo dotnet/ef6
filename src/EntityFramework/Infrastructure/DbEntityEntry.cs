@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A non-generic version of the <see cref = "DbEntityEntry{T}" /> class.
+    ///     A non-generic version of the <see cref="DbEntityEntry{T}" /> class.
     /// </summary>
     public class DbEntityEntry
     {
@@ -21,9 +22,9 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalEntityEntry _internalEntityEntry;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbEntityEntry" /> class.
+        ///     Initializes a new instance of the <see cref="DbEntityEntry" /> class.
         /// </summary>
-        /// <param name = "internalEntityEntry">The internal entry.</param>
+        /// <param name="internalEntityEntry"> The internal entry. </param>
         internal DbEntityEntry(InternalEntityEntry internalEntityEntry)
         {
             Contract.Requires(internalEntityEntry != null);
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets the entity.
         /// </summary>
-        /// <value>The entity.</value>
+        /// <value> The entity. </value>
         public object Entity
         {
             get { return _internalEntityEntry.Entity; }
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets or sets the state of the entity.
         /// </summary>
-        /// <value>The state.</value>
+        /// <value> The state. </value>
         public EntityState State
         {
             get { return _internalEntityEntry.State; }
@@ -65,7 +66,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets the current property values for the tracked entity represented by this object.
         /// </summary>
-        /// <value>The current values.</value>
+        /// <value> The current values. </value>
         public DbPropertyValues CurrentValues
         {
             get { return new DbPropertyValues(_internalEntityEntry.CurrentValues); }
@@ -76,7 +77,7 @@ namespace System.Data.Entity.Infrastructure
         ///     The original values are usually the entity's property values as they were when last queried from
         ///     the database.
         /// </summary>
-        /// <value>The original values.</value>
+        /// <value> The original values. </value>
         public DbPropertyValues OriginalValues
         {
             get { return new DbPropertyValues(_internalEntityEntry.OriginalValues); }
@@ -87,7 +88,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <returns>The store values.</returns>
+        /// <returns> The store values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbPropertyValues GetDatabaseValues()
         {
@@ -101,7 +102,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <returns>A Task that contains the store values.</returns>
+        /// <returns> A Task that contains the store values. </returns>
         public Task<DbPropertyValues> GetDatabaseValuesAsync()
         {
             return GetDatabaseValuesAsync(CancellationToken.None);
@@ -113,8 +114,8 @@ namespace System.Data.Entity.Infrastructure
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task that contains the store values.</returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task that contains the store values. </returns>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
@@ -139,8 +140,8 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets an object that represents the reference (i.e. non-collection) navigation property from this
         ///     entity to another entity.
         /// </summary>
-        /// <param name = "navigationProperty">The name of the navigation property.</param>
-        /// <returns>An object representing the navigation property.</returns>
+        /// <param name="navigationProperty"> The name of the navigation property. </param>
+        /// <returns> An object representing the navigation property. </returns>
         public DbReferenceEntry Reference(string navigationProperty)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
@@ -152,8 +153,8 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets an object that represents the collection navigation property from this
         ///     entity to a collection of related entities.
         /// </summary>
-        /// <param name = "navigationProperty">The name of the navigation property.</param>
-        /// <returns>An object representing the navigation property.</returns>
+        /// <param name="navigationProperty"> The name of the navigation property. </param>
+        /// <returns> An object representing the navigation property. </returns>
         public DbCollectionEntry Collection(string navigationProperty)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
@@ -164,8 +165,8 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets an object that represents a scalar or complex property of this entity.
         /// </summary>
-        /// <param name = "propertyName">The name of the property.</param>
-        /// <returns>An object representing the property.</returns>
+        /// <param name="propertyName"> The name of the property. </param>
+        /// <returns> An object representing the property. </returns>
         public DbPropertyEntry Property(string propertyName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
@@ -176,8 +177,8 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets an object that represents a complex property of this entity.
         /// </summary>
-        /// <param name = "propertyName">The name of the complex property.</param>
-        /// <returns>An object representing the complex property.</returns>
+        /// <param name="propertyName"> The name of the complex property. </param>
+        /// <returns> An object representing the complex property. </returns>
         public DbComplexPropertyEntry ComplexProperty(string propertyName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
@@ -190,13 +191,13 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets an object that represents a member of the entity.  The runtime type of the returned object will
         ///     vary depending on what kind of member is asked for.  The currently supported member types and their return
         ///     types are:
-        ///     Reference navigation property: <see cref = "DbReferenceEntry" />.
-        ///     Collection navigation property: <see cref = "DbCollectionEntry" />.
-        ///     Primitive/scalar property: <see cref = "DbPropertyEntry" />.
-        ///     Complex property: <see cref = "DbComplexPropertyEntry" />.
+        ///     Reference navigation property: <see cref="DbReferenceEntry" />.
+        ///     Collection navigation property: <see cref="DbCollectionEntry" />.
+        ///     Primitive/scalar property: <see cref="DbPropertyEntry" />.
+        ///     Complex property: <see cref="DbComplexPropertyEntry" />.
         /// </summary>
-        /// <param name = "propertyName">The name of the member.</param>
-        /// <returns>An object representing the member.</returns>
+        /// <param name="propertyName"> The name of the member. </param>
+        /// <returns> An object representing the member. </returns>
         public DbMemberEntry Member(string propertyName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
@@ -209,13 +210,13 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to generic
 
         /// <summary>
-        ///     Returns a new instance of the generic <see cref = "DbEntityEntry{T}" /> class for the given
+        ///     Returns a new instance of the generic <see cref="DbEntityEntry{T}" /> class for the given
         ///     generic type for the tracked entity represented by this object.
         ///     Note that the type of the tracked entity must be compatible with the generic type or
         ///     an exception will be thrown.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-        /// <returns>A generic version.</returns>
+        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+        /// <returns> A generic version. </returns>
         public DbEntityEntry<TEntity> Cast<TEntity>() where TEntity : class
         {
             if (!typeof(TEntity).IsAssignableFrom(_internalEntityEntry.EntityType))
@@ -232,12 +233,10 @@ namespace System.Data.Entity.Infrastructure
         #region Validation
 
         /// <summary>
-        ///     Validates this <see cref = "DbEntityEntry" /> instance and returns validation result.
+        ///     Validates this <see cref="DbEntityEntry" /> instance and returns validation result.
         /// </summary>
-        /// <returns>
-        ///     Entity validation result. Possibly null if 
-        ///     <see cref = "DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" /> method is overridden.
-        /// </returns>
+        /// <returns> Entity validation result. Possibly null if <see
+        ///      cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" /> method is overridden. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbEntityValidationResult GetValidationResult()
         {
@@ -263,14 +262,12 @@ namespace System.Data.Entity.Infrastructure
         #region Equals\GetHashCode implementation
 
         /// <summary>
-        ///     Determines whether the specified <see cref = "System.Object" /> is equal to this instance.
-        ///     Two <see cref = "DbEntityEntry" /> instances are considered equal if they are both entries for
-        ///     the same entity on the same <see cref = "DbContext" />.
+        ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        ///     Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
+        ///     the same entity on the same <see cref="DbContext" />.
         /// </summary>
-        /// <param name = "obj">The <see cref = "System.Object" /> to compare with this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="obj"> The <see cref="System.Object" /> to compare with this instance. </param>
+        /// <returns> <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c> . </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
         public override bool Equals(object obj)
@@ -285,14 +282,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref = "DbEntityEntry" /> is equal to this instance.
-        ///     Two <see cref = "DbEntityEntry" /> instances are considered equal if they are both entries for
-        ///     the same entity on the same <see cref = "DbContext" />.
+        ///     Determines whether the specified <see cref="DbEntityEntry" /> is equal to this instance.
+        ///     Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
+        ///     the same entity on the same <see cref="DbContext" />.
         /// </summary>
-        /// <param name = "other">The <see cref = "DbEntityEntry" /> to compare with this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified <see cref = "DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="other"> The <see cref="DbEntityEntry" /> to compare with this instance. </param>
+        /// <returns> <c>true</c> if the specified <see cref="DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c> . </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
         public bool Equals(DbEntityEntry other)
@@ -308,9 +303,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
-        /// <returns>
-        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
+        /// <returns> A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
         public override int GetHashCode()

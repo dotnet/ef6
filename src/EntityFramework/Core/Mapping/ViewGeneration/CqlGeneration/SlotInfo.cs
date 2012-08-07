@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 {
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -9,16 +10,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Text;
 
     /// <summary>
-    /// A class that keeps track of slot information in a <see cref="CqlBlock"/>.
+    ///     A class that keeps track of slot information in a <see cref="CqlBlock" />.
     /// </summary>
     internal sealed class SlotInfo : InternalBase
     {
         #region Constructor
 
         /// <summary>
-        /// Creates a <see cref="SlotInfo"/> for a <see cref="CqlBlock"/> X with information about whether this slot is needed by X's parent
-        /// (<paramref name="isRequiredByParent"/>), whether X projects it (<paramref name="isProjected"/>) along with the slot value (<paramref name="slotValue"/>) and 
-        /// the output member path (<paramref name="outputMember"/> (for regular/non-boolean slots) for the slot.
+        ///     Creates a <see cref="SlotInfo" /> for a <see cref="CqlBlock" /> X with information about whether this slot is needed by X's parent
+        ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (<paramref
+        ///     name="slotValue" />) and 
+        ///     the output member path (<paramref name="outputMember" /> (for regular/non-boolean slots) for the slot.
         /// </summary>
         internal SlotInfo(bool isRequiredByParent, bool isProjected, ProjectedSlot slotValue, MemberPath outputMember)
             : this(isRequiredByParent, isProjected, slotValue, outputMember, false /* enforceNotNull */)
@@ -26,13 +28,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Creates a <see cref="SlotInfo"/> for a <see cref="CqlBlock"/> X with information about whether this slot is needed by X's parent
-        /// (<paramref name="isRequiredByParent"/>), whether X projects it (<paramref name="isProjected"/>) along with the slot value (<paramref name="slotValue"/>) and 
-        /// the output member path (<paramref name="outputMember"/> (for regular/non-boolean slots) for the slot.
+        ///     Creates a <see cref="SlotInfo" /> for a <see cref="CqlBlock" /> X with information about whether this slot is needed by X's parent
+        ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (<paramref
+        ///     name="slotValue" />) and 
+        ///     the output member path (<paramref name="outputMember" /> (for regular/non-boolean slots) for the slot.
         /// </summary>
-        /// <param name="enforceNotNull">We need to ensure that _from variables are never null since view generation uses 2-valued boolean logic.
-        /// If <paramref name="enforceNotNull"/>=true, the generated Cql adds a condition (AND <paramref name="slotValue"/> NOT NULL).
-        /// This flag is used only for boolean slots.</param>
+        /// <param name="enforceNotNull"> We need to ensure that _from variables are never null since view generation uses 2-valued boolean logic. If <paramref
+        ///      name="enforceNotNull" /> =true, the generated Cql adds a condition (AND <paramref name="slotValue" /> NOT NULL). This flag is used only for boolean slots. </param>
         internal SlotInfo(bool isRequiredByParent, bool isProjected, ProjectedSlot slotValue, MemberPath outputMember, bool enforceNotNull)
         {
             m_isRequiredByParent = isRequiredByParent;
@@ -53,27 +55,27 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         #region Fields
 
         /// <summary>
-        /// If slot is required by the parent. Can be reset to false in <see cref="ResetIsRequiredByParent"/> method.
+        ///     If slot is required by the parent. Can be reset to false in <see cref="ResetIsRequiredByParent" /> method.
         /// </summary>
         private bool m_isRequiredByParent;
 
         /// <summary>
-        /// If the node is capable of projecting this slot.
+        ///     If the node is capable of projecting this slot.
         /// </summary>
         private readonly bool m_isProjected;
 
         /// <summary>
-        /// The slot represented by this <see cref="SlotInfo"/>.
+        ///     The slot represented by this <see cref="SlotInfo" />.
         /// </summary>
         private readonly ProjectedSlot m_slotValue;
 
         /// <summary>
-        /// The output member path of this slot.
+        ///     The output member path of this slot.
         /// </summary>
         private readonly MemberPath m_outputMember;
 
         /// <summary>
-        /// Whether to add AND NOT NULL to Cql.
+        ///     Whether to add AND NOT NULL to Cql.
         /// </summary>
         private readonly bool m_enforceNotNull;
 
@@ -82,8 +84,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         #region Properties
 
         /// <summary>
-        /// Returns true iff this slot is required by the <see cref="CqlBlock"/>'s parent.
-        /// Can be reset to false by calling <see cref="ResetIsRequiredByParent"/> method.
+        ///     Returns true iff this slot is required by the <see cref="CqlBlock" />'s parent.
+        ///     Can be reset to false by calling <see cref="ResetIsRequiredByParent" /> method.
         /// </summary>
         internal bool IsRequiredByParent
         {
@@ -91,7 +93,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Returns true iff this slot is projected by this <see cref="CqlBlock"/>.
+        ///     Returns true iff this slot is projected by this <see cref="CqlBlock" />.
         /// </summary>
         internal bool IsProjected
         {
@@ -99,7 +101,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Returns the output memberpath of this slot
+        ///     Returns the output memberpath of this slot
         /// </summary>
         internal MemberPath OutputMember
         {
@@ -107,7 +109,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Returns the slot value corresponfing to this object.
+        ///     Returns the slot value corresponfing to this object.
         /// </summary>
         internal ProjectedSlot SlotValue
         {
@@ -115,7 +117,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Returns the Cql alias for this slot, e.g., "CPerson1_Pid", "_from0", etc
+        ///     Returns the Cql alias for this slot, e.g., "CPerson1_Pid", "_from0", etc
         /// </summary>
         internal string CqlFieldAlias
         {
@@ -123,7 +125,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Returns true if Cql generated for the slot needs to have an extra AND IS NOT NULL condition.
+        ///     Returns true if Cql generated for the slot needs to have an extra AND IS NOT NULL condition.
         /// </summary>
         internal bool IsEnforcedNotNull
         {
@@ -135,8 +137,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         #region Methods
 
         /// <summary>
-        /// Sets the <see cref="IsRequiredByParent"/> to false.
-        /// Note we don't have a setter because we don't want people to set this field to true after the object has been created.
+        ///     Sets the <see cref="IsRequiredByParent" /> to false.
+        ///     Note we don't have a setter because we don't want people to set this field to true after the object has been created.
         /// </summary>
         internal void ResetIsRequiredByParent()
         {
@@ -144,7 +146,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Generates eSQL representation of the slot. For different slots, the result is different, e.g., "_from0", "CPerson1.pid", "TREAT(....)".
+        ///     Generates eSQL representation of the slot. For different slots, the result is different, e.g., "_from0", "CPerson1.pid", "TREAT(....)".
         /// </summary>
         internal StringBuilder AsEsql(StringBuilder builder, string blockAlias, int indentLevel)
         {
@@ -164,7 +166,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        /// Generates CQT representation of the slot.
+        ///     Generates CQT representation of the slot.
         /// </summary>
         internal DbExpression AsCqt(DbExpression row)
         {

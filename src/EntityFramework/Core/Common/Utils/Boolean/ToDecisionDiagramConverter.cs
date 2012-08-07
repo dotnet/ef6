@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
-    /// Converts a BoolExpr to a Vertex within a solver.
+    ///     Converts a BoolExpr to a Vertex within a solver.
     /// </summary>
     internal class ToDecisionDiagramConverter<T_Identifier> : Visitor<T_Identifier, Vertex>
     {

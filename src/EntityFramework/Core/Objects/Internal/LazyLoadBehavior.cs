@@ -1,36 +1,26 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
     /// <summary>
-    /// Defines and injects behavior into proxy class Type definitions
-    /// to allow navigation properties to lazily load their references or collection elements.
+    ///     Defines and injects behavior into proxy class Type definitions
+    ///     to allow navigation properties to lazily load their references or collection elements.
     /// </summary>
     internal sealed class LazyLoadBehavior
     {
         /// <summary>
-        /// Return an expression tree that represents the actions required to load the related end
-        /// associated with the intercepted proxy member.
+        ///     Return an expression tree that represents the actions required to load the related end
+        ///     associated with the intercepted proxy member.
         /// </summary>
-        /// <param name="member">
-        /// EdmMember that specifies the member to be intercepted.
-        /// </param>
-        /// <param name="property">
-        /// PropertyInfo that specifies the CLR property to be intercepted.
-        /// </param>
-        /// <param name="proxyParameter">
-        /// ParameterExpression that represents the proxy object.
-        /// </param>
-        /// <param name="itemParameter">
-        /// ParameterExpression that represents the proxied property value.
-        /// </param>
-        /// <param name="getEntityWrapperDelegate">The Func that retrieves the wrapper from a proxy</param>
-        /// <returns>
-        /// Expression tree that encapsulates lazy loading behavior for the supplied member,
-        /// or null if the expression tree could not be constructed.
-        /// </returns>
+        /// <param name="member"> EdmMember that specifies the member to be intercepted. </param>
+        /// <param name="property"> PropertyInfo that specifies the CLR property to be intercepted. </param>
+        /// <param name="proxyParameter"> ParameterExpression that represents the proxy object. </param>
+        /// <param name="itemParameter"> ParameterExpression that represents the proxied property value. </param>
+        /// <param name="getEntityWrapperDelegate"> The Func that retrieves the wrapper from a proxy </param>
+        /// <returns> Expression tree that encapsulates lazy loading behavior for the supplied member, or null if the expression tree could not be constructed. </returns>
         internal static Func<TProxy, TItem, bool> GetInterceptorDelegate<TProxy, TItem>(
             EdmMember member, Func<object, object> getEntityWrapperDelegate)
             where TProxy : class
@@ -80,23 +70,17 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Determine if the specified member is compatible with lazy loading.
+        ///     Determine if the specified member is compatible with lazy loading.
         /// </summary>
-        /// <param name="ospaceEntityType">
-        /// OSpace EntityType representing a type that may be proxied.
-        /// </param>
-        /// <param name="member">
-        /// Member of the <paramref name="ospaceEntityType" /> to be examined.
-        /// </param>
-        /// <returns>
-        /// True if the member is compatible with lazy loading; otherwise false.
-        /// </returns>
+        /// <param name="ospaceEntityType"> OSpace EntityType representing a type that may be proxied. </param>
+        /// <param name="member"> Member of the <paramref name="ospaceEntityType" /> to be examined. </param>
+        /// <returns> True if the member is compatible with lazy loading; otherwise false. </returns>
         /// <remarks>
-        /// To be compatible with lazy loading, 
-        /// a member must meet the criteria for being able to be proxied (defined elsewhere),
-        /// and must be a navigation property.
-        /// In addition, for relationships with a multiplicity of Many,
-        /// the property type must be an implementation of ICollection&lt;T&gt;.
+        ///     To be compatible with lazy loading, 
+        ///     a member must meet the criteria for being able to be proxied (defined elsewhere),
+        ///     and must be a navigation property.
+        ///     In addition, for relationships with a multiplicity of Many,
+        ///     the property type must be an implementation of ICollection&lt;T&gt;.
         /// </remarks>
         internal static bool IsLazyLoadCandidate(EntityType ospaceEntityType, EdmMember member)
         {
@@ -131,17 +115,15 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Method called by proxy interceptor delegate to provide lazy loading behavior for navigation properties.
+        ///     Method called by proxy interceptor delegate to provide lazy loading behavior for navigation properties.
         /// </summary>
-        /// <typeparam name="TItem">property type</typeparam>
-        /// <param name="propertyValue">The property value whose associated relationship is to be loaded.</param>
-        /// <param name="relationshipName">String name of the relationship.</param>
-        /// <param name="targetRoleName">String name of the related end to be loaded for the relationship specified by <paramref name="relationshipName"/>.</param>
-        /// <param name="wrapperObject">Entity wrapper object used to retrieve RelationshipManager for the proxied entity.</param>
-        /// <returns>
-        /// True if the value instance was mutated and can be returned
-        /// False if the class should refetch the value because the instance has changed
-        /// </returns>
+        /// <typeparam name="TItem"> property type </typeparam>
+        /// <param name="propertyValue"> The property value whose associated relationship is to be loaded. </param>
+        /// <param name="relationshipName"> String name of the relationship. </param>
+        /// <param name="targetRoleName"> String name of the related end to be loaded for the relationship specified by <paramref
+        ///      name="relationshipName" /> . </param>
+        /// <param name="wrapperObject"> Entity wrapper object used to retrieve RelationshipManager for the proxied entity. </param>
+        /// <returns> True if the value instance was mutated and can be returned False if the class should refetch the value because the instance has changed </returns>
         private static bool LoadProperty<TItem>(
             TItem propertyValue, string relationshipName, string targetRoleName, bool mustBeNull, object wrapperObject) where TItem : class
         {

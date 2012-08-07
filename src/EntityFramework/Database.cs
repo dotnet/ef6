@@ -15,7 +15,7 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An instance of this class is obtained from an <see cref = "DbContext" /> object and can be used
+    ///     An instance of this class is obtained from an <see cref="DbContext" /> object and can be used
     ///     to manage the actual database backing a DbContext or connection.
     ///     This includes creating, deleting, and checking for the existence of a database.
     ///     Note that deletion and checking for existence of a database can be performed using just a
@@ -54,7 +54,7 @@ namespace System.Data.Entity
         ///     Returns the connection being used by this context.  This may cause the
         ///     connection to be created if it does not already exist.
         /// </summary>
-        /// <exception cref = "InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         public DbConnection Connection
         {
             get { return _internalContext.Connection; }
@@ -65,14 +65,15 @@ namespace System.Data.Entity
         #region Database creation strategy and seed data
 
         /// <summary>
-        ///     Gets or sets the database initialization strategy.  The database initialization strategy is called when <see cref = "DbContext" /> instance
-        ///     is initialized from a <see cref = "DbCompiledModel" />.  The strategy can optionally check for database existence, create a new database, and
+        ///     Gets or sets the database initialization strategy.  The database initialization strategy is called when <see
+        ///      cref="DbContext" /> instance
+        ///     is initialized from a <see cref="DbCompiledModel" />.  The strategy can optionally check for database existence, create a new database, and
         ///     seed the database with data.
-        ///     The default strategy is an instance of <see cref = "CreateDatabaseIfNotExists{TContext}" />.
+        ///     The default strategy is an instance of <see cref="CreateDatabaseIfNotExists{TContext}" />.
         /// </summary>
-        /// <typeparam name = "TContext">The type of the context.</typeparam>
-        /// <param name = "strategy">The strategy.</param>
-        /// <value>The database creation strategy.</value>
+        /// <typeparam name="TContext"> The type of the context. </typeparam>
+        /// <param name="strategy"> The strategy. </param>
+        /// <value> The database creation strategy. </value>
         public static void SetInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
@@ -82,7 +83,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Runs the the registered <see cref = "IDatabaseInitializer{TContext}" /> on this context.
+        ///     Runs the the registered <see cref="IDatabaseInitializer{TContext}" /> on this context.
         /// 
         ///     If "force" is set to true, then the initializer is run regardless of whether or not it
         ///     has been run before.  This can be useful if a database is deleted while an app is running
@@ -94,7 +95,7 @@ namespace System.Data.Entity
         ///     before starting some operation where doing so lazily will cause issues, such as when the
         ///     operation is part of a transaction.
         /// </summary>
-        /// <param name = "force">If set to <c>true</c> the initializer is run even if it has already been run.</param>
+        /// <param name="force"> If set to <c>true</c> the initializer is run even if it has already been run. </param>
         public void Initialize(bool force)
         {
             if (force)
@@ -109,28 +110,23 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Checks whether or not the database is compatible with the the current Code First model.
+        ///     Checks whether or not the database is compatible with the the current Code First model.
         /// </summary>
         /// <remarks>
-        /// Model compatibility currently uses the following rules.
+        ///     Model compatibility currently uses the following rules.
         /// 
-        /// If the context was created using either the Model First or Database First approach then the
-        /// model is assumed to be compatible with the database and this method returns true.
+        ///     If the context was created using either the Model First or Database First approach then the
+        ///     model is assumed to be compatible with the database and this method returns true.
         /// 
-        /// For Code First the model is considered compatible if the model is stored in the database
-        /// in the Migrations history table and that model has no differences from the current model as
-        /// determined by Migrations model differ.
+        ///     For Code First the model is considered compatible if the model is stored in the database
+        ///     in the Migrations history table and that model has no differences from the current model as
+        ///     determined by Migrations model differ.
         /// 
-        /// If the model is not stored in the database but an EF 4.1/4.2 model hash is found instead,
-        /// then this is used to check for compatibility.
+        ///     If the model is not stored in the database but an EF 4.1/4.2 model hash is found instead,
+        ///     then this is used to check for compatibility.
         /// </remarks>
-        /// <param name = "throwIfNoMetadata">
-        /// If set to <c>true</c> then an exception will be thrown if no model metadata is found in
-        /// the database. If set to <c>false</c> then this method will return <c>true</c> if metadata
-        /// is not found.</param>
-        /// <returns>
-        /// True if the model hash in the context and the database match; false otherwise.
-        /// </returns>
+        /// <param name="throwIfNoMetadata"> If set to <c>true</c> then an exception will be thrown if no model metadata is found in the database. If set to <c>false</c> then this method will return <c>true</c> if metadata is not found. </param>
+        /// <returns> True if the model hash in the context and the database match; false otherwise. </returns>
         public bool CompatibleWithModel(bool throwIfNoMetadata)
         {
             return _internalContext.CompatibleWithModel(throwIfNoMetadata);
@@ -167,7 +163,7 @@ namespace System.Data.Entity
         ///     Creates a new database on the database server for the model defined in the backing context, but only
         ///     if a database with the same name does not already exist on the server.
         /// </summary>
-        /// <returns>True if the database did not exist and was created; false otherwise.</returns>
+        /// <returns> True if the database did not exist and was created; false otherwise. </returns>
         public bool CreateIfNotExists()
         {
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
@@ -184,7 +180,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Checks whether or not the database exists on the server.
         /// </summary>
-        /// <returns>True if the database exists; false otherwise.</returns>
+        /// <returns> True if the database exists; false otherwise. </returns>
         public bool Exists()
         {
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
@@ -200,7 +196,7 @@ namespace System.Data.Entity
         ///     after it has been deleted, then any initializer set will run again and, usually, will
         ///     try to create the database again automatically.
         /// </summary>
-        /// <returns>True if the database did exist and was deleted; false otherwise.</returns>
+        /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
         public bool Delete()
         {
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
@@ -223,10 +219,10 @@ namespace System.Data.Entity
         /// <summary>
         ///     Checks whether or not the database exists on the server.
         ///     The connection to the database is created using the given database name or connection string
-        ///     in the same way as is described in the documentation for the <see cref = "DbContext" /> class.
+        ///     in the same way as is described in the documentation for the <see cref="DbContext" /> class.
         /// </summary>
-        /// <param name = "nameOrConnectionString">The database name or a connection string to the database.</param>
-        /// <returns>True if the database exists; false otherwise.</returns>
+        /// <param name="nameOrConnectionString"> The database name or a connection string to the database. </param>
+        /// <returns> True if the database exists; false otherwise. </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static bool Exists(string nameOrConnectionString)
         {
@@ -239,10 +235,10 @@ namespace System.Data.Entity
         /// <summary>
         ///     Deletes the database on the database server if it exists, otherwise does nothing.
         ///     The connection to the database is created using the given database name or connection string
-        ///     in the same way as is described in the documentation for the <see cref = "DbContext" /> class.
+        ///     in the same way as is described in the documentation for the <see cref="DbContext" /> class.
         /// </summary>
-        /// <param name = "nameOrConnectionString">The database name or a connection string to the database.</param>
-        /// <returns>True if the database did exist and was deleted; false otherwise.</returns>
+        /// <param name="nameOrConnectionString"> The database name or a connection string to the database. </param>
+        /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static bool Delete(string nameOrConnectionString)
         {
@@ -255,8 +251,8 @@ namespace System.Data.Entity
         /// <summary>
         ///     Checks whether or not the database exists on the server.
         /// </summary>
-        /// <param name = "existingConnection">An existing connection to the database.</param>
-        /// <returns>True if the database exists; false otherwise.</returns>
+        /// <param name="existingConnection"> An existing connection to the database. </param>
+        /// <returns> True if the database exists; false otherwise. </returns>
         public static bool Exists(DbConnection existingConnection)
         {
             Contract.Requires(existingConnection != null);
@@ -267,8 +263,8 @@ namespace System.Data.Entity
         /// <summary>
         ///     Deletes the database on the database server if it exists, otherwise does nothing.
         /// </summary>
-        /// <param name = "existingConnection">An existing connection to the database.</param>
-        /// <returns>True if the database did exist and was deleted; false otherwise.</returns>
+        /// <param name="existingConnection"> An existing connection to the database. </param>
+        /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
         public static bool Delete(DbConnection existingConnection)
         {
             Contract.Requires(existingConnection != null);
@@ -281,16 +277,16 @@ namespace System.Data.Entity
         #region Connection conventions
 
         /// <summary>
-        ///     The connection factory to use when creating a <see cref = "DbConnection" /> from just
+        ///     The connection factory to use when creating a <see cref="DbConnection" /> from just
         ///     a database name or a connection string.
         /// </summary>
         /// <remarks>
-        ///     This is used when just a database name or connection string is given to <see cref = "DbContext" /> or when
+        ///     This is used when just a database name or connection string is given to <see cref="DbContext" /> or when
         ///     the no database name or connection is given to DbContext in which case the name of
         ///     the context class is passed to this factory in order to generate a DbConnection.
-        ///     By default, the <see cref = "IDbConnectionFactory" /> instance to use is read from the application's .config
+        ///     By default, the <see cref="IDbConnectionFactory" /> instance to use is read from the application's .config
         ///     file from the "EntityFramework DefaultConnectionFactory" entry in appSettings. If no entry is found in
-        ///     the config file then <see cref = "SqlConnectionFactory" /> is used. Setting this property in code
+        ///     the config file then <see cref="SqlConnectionFactory" /> is used. Setting this property in code
         ///     always overrides whatever value is found in the config file.
         /// </remarks>
         [Obsolete(
@@ -332,9 +328,9 @@ namespace System.Data.Entity
         ///     Performs the operation defined by the given delegate using the given lazy connection, ensuring
         ///     that the lazy connection is disposed after use.
         /// </summary>
-        /// <param name = "lazyConnection">Information used to create a DbConnection.</param>
-        /// <param name = "operation">The operation to perform.</param>
-        /// <returns>The return value of the operation.</returns>
+        /// <param name="lazyConnection"> Information used to create a DbConnection. </param>
+        /// <param name="operation"> The operation to perform. </param>
+        /// <returns> The return value of the operation. </returns>
         private static bool PerformDatabaseOp(
             LazyInternalConnection lazyConnection, Func<ObjectContext, bool> operation)
         {
@@ -349,9 +345,9 @@ namespace System.Data.Entity
         ///     is either the connection accessed from the context backing this object, or is obtained from
         ///     the connection information passed to one of the static methods.
         /// </summary>
-        /// <param name = "connection">The connection to use.</param>
-        /// <param name = "operation">The operation to perform.</param>
-        /// <returns>The return value of the operation.</returns>
+        /// <param name="connection"> The connection to use. </param>
+        /// <param name="operation"> The operation to perform. </param>
+        /// <returns> The return value of the operation. </returns>
         private static bool PerformDatabaseOp(DbConnection connection, Func<ObjectContext, bool> operation)
         {
             using (var context = CreateEmptyObjectContext(connection))
@@ -363,8 +359,8 @@ namespace System.Data.Entity
         /// <summary>
         ///     Returns an empty ObjectContext that can be used to perform delete/exists operations.
         /// </summary>
-        /// <param name = "connection">The connection for which to create an ObjectContext.</param>
-        /// <returns>The empty context.</returns>
+        /// <param name="connection"> The connection for which to create an ObjectContext. </param>
+        /// <returns> The empty context. </returns>
         private static ObjectContext CreateEmptyObjectContext(DbConnection connection)
         {
             // Unfortunately, we need to spin up an ObjectContext to do operations on the database
@@ -383,13 +379,13 @@ namespace System.Data.Entity
         ///     The type can be any type that has properties that match the names of the columns returned
         ///     from the query, or can be a simple primitive type.  The type does not have to be an
         ///     entity type. The results of this query are never tracked by the context even if the
-        ///     type of object returned is an entity type.  Use the <see cref = "DbSet{TEntity}.SqlQuery" />
+        ///     type of object returned is an entity type.  Use the <see cref="DbSet{TEntity}.SqlQuery" />
         ///     method to return entities that are tracked by the context.
         /// </summary>
-        /// <typeparam name = "TElement">The type of object returned by the query.</typeparam>
-        /// <param name = "sql">The SQL query string.</param>
-        /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbRawSqlQuery{TElement}" /> object that will execute the query when it is enumerated.</returns>
+        /// <typeparam name="TElement"> The type of object returned by the query. </typeparam>
+        /// <param name="sql"> The SQL query string. </param>
+        /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
+        /// <returns> A <see cref="DbRawSqlQuery{TElement}" /> object that will execute the query when it is enumerated. </returns>
         public DbRawSqlQuery<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
@@ -403,13 +399,13 @@ namespace System.Data.Entity
         ///     The type can be any type that has properties that match the names of the columns returned
         ///     from the query, or can be a simple primitive type.  The type does not have to be an
         ///     entity type. The results of this query are never tracked by the context even if the
-        ///     type of object returned is an entity type.  Use the <see cref = "DbSet.SqlQuery" />
+        ///     type of object returned is an entity type.  Use the <see cref="DbSet.SqlQuery" />
         ///     method to return entities that are tracked by the context.
         /// </summary>
-        /// <param name = "elementType">The type of object returned by the query.</param>
-        /// <param name = "sql">The SQL query string.</param>
-        /// <param name = "parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>A <see cref = "DbRawSqlQuery" /> object that will execute the query when it is enumerated.</returns>
+        /// <param name="elementType"> The type of object returned by the query. </param>
+        /// <param name="sql"> The SQL query string. </param>
+        /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
+        /// <returns> A <see cref="DbRawSqlQuery" /> object that will execute the query when it is enumerated. </returns>
         public DbRawSqlQuery SqlQuery(Type elementType, string sql, params object[] parameters)
         {
             Contract.Requires(elementType != null);
@@ -422,9 +418,9 @@ namespace System.Data.Entity
         /// <summary>
         ///     Executes the given DDL/DML command against the database.
         /// </summary>
-        /// <param name = "sql">The command string.</param>
-        /// <param name = "parameters">The parameters to apply to the command string.</param>
-        /// <returns>The result returned by the database after executing the command.</returns>
+        /// <param name="sql"> The command string. </param>
+        /// <param name="parameters"> The parameters to apply to the command string. </param>
+        /// <returns> The result returned by the database after executing the command. </returns>
         public int ExecuteSqlCommand(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
@@ -437,9 +433,9 @@ namespace System.Data.Entity
         ///     An asynchronous version of ExecuteSqlCommand, which
         ///     executes the given DDL/DML command against the database.
         /// </summary>
-        /// <param name = "sql">The command string.</param>
-        /// <param name = "parameters">The parameters to apply to the command string.</param>
-        /// <returns>A Task containing the result returned by the database after executing the command.</returns>
+        /// <param name="sql"> The command string. </param>
+        /// <param name="parameters"> The parameters to apply to the command string. </param>
+        /// <returns> A Task containing the result returned by the database after executing the command. </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(sql));
@@ -452,10 +448,10 @@ namespace System.Data.Entity
         ///     An asynchronous version of ExecuteSqlCommand, which
         ///     executes the given DDL/DML command against the database.
         /// </summary>
-        /// <param name = "sql">The command string.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <param name = "parameters">The parameters to apply to the command string.</param>
-        /// <returns>A Task containing the result returned by the database after executing the command.</returns>
+        /// <param name="sql"> The command string. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="parameters"> The parameters to apply to the command string. </param>
+        /// <returns> A Task containing the result returned by the database after executing the command. </returns>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {

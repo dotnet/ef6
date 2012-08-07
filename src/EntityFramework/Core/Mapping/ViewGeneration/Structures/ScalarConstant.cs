@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Data.Entity.Core.Common;
@@ -11,14 +12,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    /// A class that denotes a constant value that can be stored in a multiconstant or in a projected slot of a <see cref="CellQuery"/>.
+    ///     A class that denotes a constant value that can be stored in a multiconstant or in a projected slot of a <see
+    ///      cref="CellQuery" />.
     /// </summary>
     internal sealed class ScalarConstant : Constant
     {
         #region Constructor
 
         /// <summary>
-        /// Creates a scalar constant corresponding to the <paramref name="value"/>.
+        ///     Creates a scalar constant corresponding to the <paramref name="value" />.
         /// </summary>
         internal ScalarConstant(object value)
         {
@@ -31,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Fields
 
         /// <summary>
-        /// The actual value of the scalar.
+        ///     The actual value of the scalar.
         /// </summary>
         private readonly object m_scalar;
 

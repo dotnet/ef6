@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Migrations
     /// <summary>
     ///     Configuration relating to the use of migrations for a given model.
     ///     You will typically create a configuration class that derives
-    ///     from <see cref = "DbMigrationsConfiguration{TContext}" /> rather than 
+    ///     from <see cref="DbMigrationsConfiguration{TContext}" /> rather than 
     ///     using this class.
     /// </summary>
     public class DbMigrationsConfiguration
@@ -62,8 +63,8 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Adds a new SQL generator to be used for a given database provider.
         /// </summary>
-        /// <param name = "providerInvariantName">Name of the database provider to set the SQL generator for.</param>
-        /// <param name = "migrationSqlGenerator">The SQL generator to be used.</param>
+        /// <param name="providerInvariantName"> Name of the database provider to set the SQL generator for. </param>
+        /// <param name="migrationSqlGenerator"> The SQL generator to be used. </param>
         public void SetSqlGenerator(string providerInvariantName, MigrationSqlGenerator migrationSqlGenerator)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
@@ -75,8 +76,8 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Gets the SQL generator that is set to be used with a given database provider.
         /// </summary>
-        /// <param name = "providerInvariantName">Name of the database provider to get the SQL generator for.</param>
-        /// <returns>The SQL generator that is set for the database provider.</returns>
+        /// <param name="providerInvariantName"> Name of the database provider to get the SQL generator for. </param>
+        /// <returns> The SQL generator that is set for the database provider. </returns>
         public MigrationSqlGenerator GetSqlGenerator(string providerInvariantName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
@@ -173,9 +174,9 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        /// Gets or sets the timeout value used for the individual commands within a
-        /// migration. A null value indicates that the default value of the underlying
-        /// provider will be used.
+        ///     Gets or sets the timeout value used for the individual commands within a
+        ///     migration. A null value indicates that the default value of the underlying
+        ///     provider will be used.
         /// </summary>
         public int? CommandTimeout { get; set; }
 

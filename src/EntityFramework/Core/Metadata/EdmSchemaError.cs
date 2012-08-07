@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Resources;
     using System.Globalization;
 
     /// <summary>
-    /// This class encapsulates the error information for a schema error that was encountered.
+    ///     This class encapsulates the error information for a schema error that was encountered.
     /// </summary>
     [Serializable]
     public sealed class EdmSchemaError : EdmError
@@ -24,11 +25,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Public Methods
 
         /// <summary>
-        /// Constructs a EdmSchemaError object.
+        ///     Constructs a EdmSchemaError object.
         /// </summary>
-        /// <param name="message">The explanation of the error.</param>
-        /// <param name="errorCode">The code associated with this error.</param>
-        /// <param name="severity">The severity of the error.</param>
+        /// <param name="message"> The explanation of the error. </param>
+        /// <param name="errorCode"> The code associated with this error. </param>
+        /// <param name="severity"> The severity of the error. </param>
         internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity)
             :
                 this(message, errorCode, severity, null)
@@ -36,12 +37,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Constructs a EdmSchemaError object.
+        ///     Constructs a EdmSchemaError object.
         /// </summary>
-        /// <param name="message">The explanation of the error.</param>
-        /// <param name="errorCode">The code associated with this error.</param>
-        /// <param name="severity">The severity of the error.</param>
-        /// <param name="exception">The exception that caused the error to be filed.</param>
+        /// <param name="message"> The explanation of the error. </param>
+        /// <param name="errorCode"> The code associated with this error. </param>
+        /// <param name="severity"> The severity of the error. </param>
+        /// <param name="exception"> The exception that caused the error to be filed. </param>
         internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity, Exception exception)
             : base(message)
         {
@@ -49,29 +50,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Constructs a EdmSchemaError object.
+        ///     Constructs a EdmSchemaError object.
         /// </summary>
-        /// <param name="message">The explanation of the error.</param>
-        /// <param name="errorCode">The code associated with this error.</param>
-        /// <param name="severity">The severity of the error.</param>
-        /// <param name="sourceUri"></param>
-        /// <param name="lineNumber"></param>
-        /// <param name="sourceColumn"></param>
+        /// <param name="message"> The explanation of the error. </param>
+        /// <param name="errorCode"> The code associated with this error. </param>
+        /// <param name="severity"> The severity of the error. </param>
+        /// <param name="sourceUri"> </param>
+        /// <param name="lineNumber"> </param>
+        /// <param name="sourceColumn"> </param>
         internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column)
             : this(message, errorCode, severity, schemaLocation, line, column, null)
         {
         }
 
         /// <summary>
-        /// Constructs a EdmSchemaError object.
+        ///     Constructs a EdmSchemaError object.
         /// </summary>
-        /// <param name="message">The explanation of the error.</param>
-        /// <param name="errorCode">The code associated with this error.</param>
-        /// <param name="severity">The severity of the error.</param>
-        /// <param name="sourceUri"></param>
-        /// <param name="lineNumber"></param>
-        /// <param name="sourceColumn"></param>
-        /// <param name="exception">The exception that caused the error to be filed.</param>
+        /// <param name="message"> The explanation of the error. </param>
+        /// <param name="errorCode"> The code associated with this error. </param>
+        /// <param name="severity"> The severity of the error. </param>
+        /// <param name="sourceUri"> </param>
+        /// <param name="lineNumber"> </param>
+        /// <param name="sourceColumn"> </param>
+        /// <param name="exception"> The exception that caused the error to be filed. </param>
         internal EdmSchemaError(
             string message, int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column, Exception exception)
             : base(message)
@@ -105,7 +106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a string representation of the error.
+        ///     Creates a string representation of the error.
         /// </summary>
         public override string ToString()
         {
@@ -154,7 +155,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Public Properties
 
         /// <summary>
-        /// Gets the ErrorCode.
+        ///     Gets the ErrorCode.
         /// </summary>
         public int ErrorCode
         {
@@ -162,7 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the Severity of the error.
+        ///     Gets the Severity of the error.
         /// </summary>
         public EdmSchemaErrorSeverity Severity
         {
@@ -171,7 +172,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the LineNumber that the error occured on.
+        ///     Gets the LineNumber that the error occured on.
         /// </summary>
         public int Line
         {
@@ -179,7 +180,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the column that the error occured in.
+        ///     Gets the column that the error occured in.
         /// </summary>
         public int Column
         {
@@ -187,7 +188,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the of the schema that contains the error.
+        ///     Gets the of the schema that contains the error.
         /// </summary>
         public string SchemaLocation
         {
@@ -195,7 +196,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the of the schema that contains the error.
+        ///     Gets the of the schema that contains the error.
         /// </summary>
         public string SchemaName
         {
@@ -203,9 +204,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the stack trace of when the error occured.
+        ///     Gets the stack trace of when the error occured.
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         public string StackTrace
         {
             get { return _stackTrace; }

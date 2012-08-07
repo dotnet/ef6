@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 //using System.Diagnostics; // Please use PlanCompiler.Assert instead of Debug.Assert in this class...
@@ -27,19 +28,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
 
     /// <summary>
-    /// Keeps track of all foreign key relationships
+    ///     Keeps track of all foreign key relationships
     /// </summary>
     internal class ConstraintManager
     {
         #region public methods
 
         /// <summary>
-        /// Is there a parent child relationship between table1 and table2 ?
+        ///     Is there a parent child relationship between table1 and table2 ?
         /// </summary>
-        /// <param name="table1">parent table ?</param>
-        /// <param name="table2">child table ?</param>
-        /// <param name="constraints">list of constraints ?</param>
-        /// <returns>true if there is at least one constraint</returns>
+        /// <param name="table1"> parent table ? </param>
+        /// <param name="table2"> child table ? </param>
+        /// <param name="constraints"> list of constraints ? </param>
+        /// <returns> true if there is at least one constraint </returns>
         internal bool IsParentChildRelationship(
             md.EntitySetBase table1, md.EntitySetBase table2,
             out List<ForeignKeyConstraint> constraints)
@@ -52,9 +53,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Load all relationships in this entity container
+        ///     Load all relationships in this entity container
         /// </summary>
-        /// <param name="entityContainer"></param>
+        /// <param name="entityContainer"> </param>
         internal void LoadRelationships(md.EntityContainer entityContainer)
         {
             // Check to see if I've already loaded information for this entity container
@@ -128,12 +129,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         /// <summary>
-        /// Is this relationship a binary relationship (ie) does it have exactly 2 end points?
+        ///     Is this relationship a binary relationship (ie) does it have exactly 2 end points?
         /// 
-        /// This should ideally be a method supported by RelationType itself
+        ///     This should ideally be a method supported by RelationType itself
         /// </summary>
-        /// <param name="relationshipType"></param>
-        /// <returns>true, if this is a binary relationship</returns>
+        /// <param name="relationshipType"> </param>
+        /// <returns> true, if this is a binary relationship </returns>
         private static bool IsBinary(md.RelationshipType relationshipType)
         {
             var endCount = 0;

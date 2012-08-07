@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
     using EdmModel = System.Data.Entity.Edm.EdmModel;
@@ -9,10 +10,10 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     internal static class EdmModelValidator
     {
         /// <summary>
-        ///     validate the <see cref = "EdmModel" /> from the root with the context
+        ///     validate the <see cref="EdmModel" /> from the root with the context
         /// </summary>
-        /// <param name = "validateRoot"> The root to validate from </param>
-        /// <param name = "context"> The validation context </param>
+        /// <param name="validateRoot"> The root to validate from </param>
+        /// <param name="context"> The validation context </param>
         internal static void Validate(EdmModel validateRoot, EdmModelValidationContext context)
         {
             // build up the rule set and the visitor

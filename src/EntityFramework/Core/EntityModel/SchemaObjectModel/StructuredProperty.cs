@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for StructuredProperty.
+    ///     Summary description for StructuredProperty.
     /// </summary>
     internal class StructuredProperty : Property
     {
@@ -33,9 +34,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal StructuredProperty(StructuredType parentElement)
             : base(parentElement)
         {
@@ -47,7 +47,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        /// 
         /// </summary>
         public override SchemaType Type
         {
@@ -55,7 +54,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Returns a TypeUsage that represent this property. 
+        ///     Returns a TypeUsage that represent this property.
         /// </summary>
         public TypeUsage TypeUsage
         {
@@ -63,7 +62,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The nullablity of this property.
+        ///     The nullablity of this property.
         /// </summary>
         public bool Nullable
         {
@@ -71,7 +70,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public string Default
         {
@@ -79,7 +77,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public object DefaultAsObject
         {
@@ -87,9 +84,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Specifies the type of the Collection. 
-        /// By Default this is Single( i.e. not a Collection.
-        /// And in case of Collections, will be either Bag or List
+        ///     Specifies the type of the Collection. 
+        ///     By Default this is Single( i.e. not a Collection.
+        ///     And in case of Collections, will be either Bag or List
         /// </summary>
         public CollectionKind CollectionKind
         {
@@ -101,7 +98,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Internal Methods
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -132,10 +128,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Resolve the type string to a SchemaType object
+        ///     Resolve the type string to a SchemaType object
         /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
+        /// <param name="typeName"> </param>
+        /// <returns> </returns>
         protected virtual SchemaType ResolveType(string typeName)
         {
             SchemaType element;
@@ -163,9 +159,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Internal Properties
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         internal string UnresolvedType { get; set; }
 
         #endregion
@@ -232,9 +227,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
             if (UnresolvedType != null)
@@ -255,9 +249,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handles the Multiplicity attribute on the property.
+        ///     Handles the Multiplicity attribute on the property.
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleCollectionKindAttribute(XmlReader reader)
         {
             var value = reader.Value;

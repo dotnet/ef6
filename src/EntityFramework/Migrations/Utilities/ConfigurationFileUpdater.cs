@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Data.Entity.Utilities;
@@ -39,8 +40,8 @@ namespace System.Data.Entity.Migrations.Utilities
         ///     This ensures that the user's code can be ran in an AppDomain and the exact
         ///     same version of the assembly will be used for both domains.
         /// </summary>
-        /// <param name = "configurationFile">That path of the user's config file. Can also be null or a path to an non-existent file.</param>
-        /// <returns>The path of the updated config file. It is the caller's responsibility to delete this.</returns>
+        /// <param name="configurationFile"> That path of the user's config file. Can also be null or a path to an non-existent file. </param>
+        /// <returns> The path of the updated config file. It is the caller's responsibility to delete this. </returns>
         public virtual string Update(string configurationFile)
         {
             var fileExists = !string.IsNullOrWhiteSpace(configurationFile) && File.Exists(configurationFile);

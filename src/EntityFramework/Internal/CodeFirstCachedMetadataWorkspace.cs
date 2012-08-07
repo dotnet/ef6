@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Builds and stores the workspace based on the given code first configuration.
         /// </summary>
-        /// <param name = "databaseMapping">The code first EDM model.</param>
+        /// <param name="databaseMapping"> The code first EDM model. </param>
         public CodeFirstCachedMetadataWorkspace(DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
@@ -51,12 +52,12 @@ namespace System.Data.Entity.Internal
         #region ICachedMetadataWorkspace implementation
 
         /// <summary>
-        ///     Gets the <see cref = "MetadataWorkspace" />.
+        ///     Gets the <see cref="MetadataWorkspace" />.
         ///     If the workspace is not compatible with the provider manifest obtained from the given
         ///     connection then an exception is thrown.
         /// </summary>
-        /// <param name = "storeConnection">The connection to use to create or check SSDL provider info.</param>
-        /// <returns>The workspace.</returns>
+        /// <param name="storeConnection"> The connection to use to create or check SSDL provider info. </param>
+        /// <returns> The workspace. </returns>
         public MetadataWorkspace GetMetadataWorkspace(DbConnection connection)
         {
             var providerInvariantName = connection.GetProviderInvariantName();
@@ -87,7 +88,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// The provider info used to construct the workspace.
+        ///     The provider info used to construct the workspace.
         /// </summary>
         public DbProviderInfo ProviderInfo
         {

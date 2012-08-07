@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Core.Common.Utils
         #region Fields
 
         /// <summary>
-        /// Instance of empty set with default comparer.
+        ///     Instance of empty set with default comparer.
         /// </summary>
         internal static readonly Set<TElement> Empty = new Set<TElement>().MakeReadOnly();
 
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Common.Utils
         #region Constructors
 
         /// <summary>
-        /// Initialize set with the same values and comparer as other set.
+        ///     Initialize set with the same values and comparer as other set.
         /// </summary>
         internal Set(Set<TElement> other)
             : this(other._values, other.Comparer)
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Initialize empty set with default comparer.
+        ///     Initialize empty set with default comparer.
         /// </summary>
         internal Set()
             : this(null, null)
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Initialize a set with the given elements and using default comparer.
+        ///     Initialize a set with the given elements and using default comparer.
         /// </summary>
         internal Set(IEnumerable<TElement> elements)
             : this(elements, null)
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Initializes an empty set with the given comparer.
+        ///     Initializes an empty set with the given comparer.
         /// </summary>
         internal Set(IEqualityComparer<TElement> comparer)
             : this(null, comparer)
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Initialize a set with the given elements and comparer.
+        ///     Initialize a set with the given elements and comparer.
         /// </summary>
         internal Set(IEnumerable<TElement> elements, IEqualityComparer<TElement> comparer)
         {
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Common.Utils
         #region Properties
 
         /// <summary>
-        /// Gets the number of elements in this set.
+        ///     Gets the number of elements in this set.
         /// </summary>
         internal int Count
         {
@@ -80,7 +81,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Gets the comparer used to determine equality and hash codes for elements of the set.
+        ///     Gets the comparer used to determine equality and hash codes for elements of the set.
         /// </summary>
         internal IEqualityComparer<TElement> Comparer
         {
@@ -92,7 +93,7 @@ namespace System.Data.Entity.Core.Common.Utils
         #region Methods
 
         /// <summary>
-        /// Determines whether the given element exists in the set.
+        ///     Determines whether the given element exists in the set.
         /// </summary>
         internal bool Contains(TElement element)
         {
@@ -100,9 +101,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Adds given element to the set. If the set already contains
-        /// the element, does nothing.
+        ///     Requires: !IsReadOnly
+        ///     Adds given element to the set. If the set already contains
+        ///     the element, does nothing.
         /// </summary>
         internal void Add(TElement element)
         {
@@ -111,9 +112,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Adds given elements to the set. If the set already contains
-        /// one of the elements, does nothing.
+        ///     Requires: !IsReadOnly
+        ///     Adds given elements to the set. If the set already contains
+        ///     one of the elements, does nothing.
         /// </summary>
         internal void AddRange(IEnumerable<TElement> elements)
         {
@@ -125,9 +126,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Removes given element from the set. If the set does not contain
-        /// the element, does nothing.
+        ///     Requires: !IsReadOnly
+        ///     Removes given element from the set. If the set does not contain
+        ///     the element, does nothing.
         /// </summary>
         internal void Remove(TElement element)
         {
@@ -136,8 +137,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Removes all elements from the set.
+        ///     Requires: !IsReadOnly
+        ///     Removes all elements from the set.
         /// </summary>
         internal void Clear()
         {
@@ -146,7 +147,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Returns an array containing all elements of the set. Order is arbitrary.
+        ///     Returns an array containing all elements of the set. Order is arbitrary.
         /// </summary>
         internal TElement[] ToArray()
         {
@@ -154,8 +155,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: other set must not be null and must have the same comparer.
-        /// Returns true if this set contains the same elements as the other set.
+        ///     Requires: other set must not be null and must have the same comparer.
+        ///     Returns true if this set contains the same elements as the other set.
         /// </summary>
         internal bool SetEquals(Set<TElement> other)
         {
@@ -165,8 +166,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: other set must not be null and must have the same comparer.
-        /// Returns true if all elements in this set are contained in the other set.
+        ///     Requires: other set must not be null and must have the same comparer.
+        ///     Returns true if all elements in this set are contained in the other set.
         /// </summary>
         internal bool IsSubsetOf(Set<TElement> other)
         {
@@ -175,8 +176,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: other set must not be null and must have the same comparer.
-        /// Returns true if this set and other set have some elements in common.
+        ///     Requires: other set must not be null and must have the same comparer.
+        ///     Returns true if this set and other set have some elements in common.
         /// </summary>
         internal bool Overlaps(Set<TElement> other)
         {
@@ -185,9 +186,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Requires: other collection must not be null.
-        /// Subtracts other set from this set, leaving the result in this.
+        ///     Requires: !IsReadOnly
+        ///     Requires: other collection must not be null.
+        ///     Subtracts other set from this set, leaving the result in this.
         /// </summary>
         internal void Subtract(IEnumerable<TElement> other)
         {
@@ -196,8 +197,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: other collection must not be null.
-        /// Subtracts other set from this set, returning result.
+        ///     Requires: other collection must not be null.
+        ///     Subtracts other set from this set, returning result.
         /// </summary>
         internal Set<TElement> Difference(IEnumerable<TElement> other)
         {
@@ -207,9 +208,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Requires: other collection must not be null.
-        /// Unions other set with this set, leaving the result in this set.
+        ///     Requires: !IsReadOnly
+        ///     Requires: other collection must not be null.
+        ///     Unions other set with this set, leaving the result in this set.
         /// </summary>
         internal void Unite(IEnumerable<TElement> other)
         {
@@ -218,8 +219,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: other collection must not be null.
-        /// Unions other set with this set, returning the result.
+        ///     Requires: other collection must not be null.
+        ///     Unions other set with this set, returning the result.
         /// </summary>
         internal Set<TElement> Union(IEnumerable<TElement> other)
         {
@@ -229,9 +230,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Requires: !IsReadOnly
-        /// Requires: other set must not be null and must have the same comparer.
-        /// Intersects this set and other set, leaving the result in this set.
+        ///     Requires: !IsReadOnly
+        ///     Requires: other set must not be null and must have the same comparer.
+        ///     Intersects this set and other set, leaving the result in this set.
         /// </summary>
         internal void Intersect(Set<TElement> other)
         {
@@ -241,7 +242,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Returns a readonly version of this set.
+        ///     Returns a readonly version of this set.
         /// </summary>
         internal Set<TElement> AsReadOnly()
         {
@@ -256,7 +257,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Makes this set readonly and returns this set.
+        ///     Makes this set readonly and returns this set.
         /// </summary>
         internal Set<TElement> MakeReadOnly()
         {
@@ -265,7 +266,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Returns aggregate hash code of all elements in this set.
+        ///     Returns aggregate hash code of all elements in this set.
         /// </summary>
         internal int GetElementsHashCode()
         {
@@ -278,8 +279,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        /// Returns typed enumerator over elements of the set. 
-        /// Uses HashSet&lt;TElement&gt;.Enumerator to avoid boxing struct.
+        ///     Returns typed enumerator over elements of the set. 
+        ///     Uses HashSet&lt;TElement&gt;.Enumerator to avoid boxing struct.
         /// </summary>
         public HashSet<TElement>.Enumerator GetEnumerator()
         {
@@ -350,9 +351,9 @@ namespace System.Data.Entity.Core.Common.Utils
         #region IEnumerable Members
 
         /// <summary>
-        /// Returns an untyped enumeration of elements in the set.
+        ///     Returns an untyped enumeration of elements in the set.
         /// </summary>
-        /// <returns>Enumeration of set members.</returns>
+        /// <returns> Enumeration of set members. </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

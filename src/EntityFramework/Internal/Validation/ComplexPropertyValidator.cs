@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
@@ -25,11 +26,11 @@ namespace System.Data.Entity.Internal.Validation
         }
 
         /// <summary>
-        ///     Creates an instance of <see cref = "ComplexPropertyValidator" /> for a given complex property.
+        ///     Creates an instance of <see cref="ComplexPropertyValidator" /> for a given complex property.
         /// </summary>
-        /// <param name = "propertyName">The complex property name.</param>
-        /// <param name = "propertyValidators">Validators used to validate the given property.</param>
-        /// <param name = "complexTypeValidator">Complex type validator.</param>
+        /// <param name="propertyName"> The complex property name. </param>
+        /// <param name="propertyValidators"> Validators used to validate the given property. </param>
+        /// <param name="complexTypeValidator"> Complex type validator. </param>
         public ComplexPropertyValidator(
             string propertyName,
             IEnumerable<IValidator> propertyValidators,
@@ -42,10 +43,9 @@ namespace System.Data.Entity.Internal.Validation
         /// <summary>
         ///     Validates a complex property.
         /// </summary>
-        /// <param name = "entityValidationContext">Validation context. Never null.</param>
-        /// <param name = "property">Property to validate. Never null.</param>
-        /// <returns>Validation errors as <see cref = "IEnumerable{DbValidationError}" />. Empty if no errors. Never null.
-        /// </returns>
+        /// <param name="entityValidationContext"> Validation context. Never null. </param>
+        /// <param name="property"> Property to validate. Never null. </param>
+        /// <returns> Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null. </returns>
         public override IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {

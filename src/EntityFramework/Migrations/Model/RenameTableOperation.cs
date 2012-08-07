@@ -17,12 +17,9 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the RenameTableOperation class.
         /// </summary>
-        /// <param name = "name">Name of the table to be renamed.</param>
-        /// <param name = "newName">New name for the table.</param>
-        /// <param name = "anonymousArguments">
-        ///     Additional arguments that may be processed by providers. 
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
-        /// </param>
+        /// <param name="name"> Name of the table to be renamed. </param>
+        /// <param name="newName"> New name for the table. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public RenameTableOperation(string name, string newName, object anonymousArguments = null)
             : base(anonymousArguments)

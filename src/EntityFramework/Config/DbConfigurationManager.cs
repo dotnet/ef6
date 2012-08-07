@@ -13,9 +13,9 @@ namespace System.Data.Entity.Config
     using System.Reflection;
 
     /// <summary>
-    /// This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration"/> class.
-    /// This includes loading from config, discovery from the context assembly and pushing/popping configurations
-    /// used by <see cref="DbContextInfo"/>.
+    ///     This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
+    ///     This includes loading from config, discovery from the context assembly and pushing/popping configurations
+    ///     used by <see cref="DbContextInfo" />.
     /// </summary>
     internal class DbConfigurationManager
     {
@@ -92,9 +92,11 @@ namespace System.Data.Entity.Config
 
             _newConfiguration = configuration;
 
-            if (_configuration.Value.GetType() != configuration.GetType())
+            if (_configuration.Value.GetType()
+                != configuration.GetType())
             {
-                if (_configuration.Value.GetType() == typeof(DbConfiguration))
+                if (_configuration.Value.GetType()
+                    == typeof(DbConfiguration))
                 {
                     throw new InvalidOperationException(Strings.DefaultConfigurationUsedBeforeSet(configuration.GetType().Name));
                 }
@@ -141,7 +143,8 @@ namespace System.Data.Entity.Config
                 var foundType = _finder.TryFindConfigurationType(contextType.Assembly.GetAccessibleTypes());
                 if (!typeof(DbNullConfiguration).IsAssignableFrom(foundType))
                 {
-                    if (_configuration.Value.GetType() == typeof(DbConfiguration))
+                    if (_configuration.Value.GetType()
+                        == typeof(DbConfiguration))
                     {
                         if (foundType != null)
                         {

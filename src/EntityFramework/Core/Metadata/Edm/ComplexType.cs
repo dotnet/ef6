@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
@@ -6,19 +7,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    /// Represent the Edm Complex Type
+    ///     Represent the Edm Complex Type
     /// </summary>
     public class ComplexType : StructuralType
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of Complex Type with the given properties
+        ///     Initializes a new instance of Complex Type with the given properties
         /// </summary>
-        /// <param name="name">The name of the complex type</param>
-        /// <param name="namespaceName">The namespace name of the type</param>
-        /// <param name="version">The version of this type</param>
-        /// <param name="dataSpace">dataSpace in which this ComplexType belongs to</param>
+        /// <param name="name"> The name of the complex type </param>
+        /// <param name="namespaceName"> The namespace name of the type </param>
+        /// <param name="version"> The version of this type </param>
+        /// <param name="dataSpace"> dataSpace in which this ComplexType belongs to </param>
         /// <exception cref="System.ArgumentNullException">If either name, namespace or version arguments are null</exception>
         internal ComplexType(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes a new instance of Complex Type - required for bootstraping code
+        ///     Initializes a new instance of Complex Type - required for bootstraping code
         /// </summary>
         internal ComplexType()
         {
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -53,8 +54,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns just the properties from the collection
-        /// of members on this type
+        ///     Returns just the properties from the collection
+        ///     of members on this type
         /// </summary>
         public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
@@ -79,11 +80,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Validates a EdmMember object to determine if it can be added to this type's 
-        /// Members collection. If this method returns without throwing, it is assumed
-        /// the member is valid. 
+        ///     Validates a EdmMember object to determine if it can be added to this type's 
+        ///     Members collection. If this method returns without throwing, it is assumed
+        ///     the member is valid.
         /// </summary>
-        /// <param name="member">The member to validate</param>
+        /// <param name="member"> The member to validate </param>
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
@@ -98,18 +99,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrComplexType : ComplexType
     {
-        /// <summary>cached CLR type handle, allowing the Type reference to be GC'd</summary>
+        /// <summary>
+        ///     cached CLR type handle, allowing the Type reference to be GC'd
+        /// </summary>
         private readonly RuntimeTypeHandle _type;
 
-        /// <summary>cached dynamic method to construct a CLR instance</summary>
+        /// <summary>
+        ///     cached dynamic method to construct a CLR instance
+        /// </summary>
         private Delegate _constructor;
 
         private readonly string _cspaceTypeName;
 
         /// <summary>
-        /// Initializes a new instance of Complex Type with properties from the type.
+        ///     Initializes a new instance of Complex Type with properties from the type.
         /// </summary>
-        /// <param name="clrType">The CLR type to construct from</param>
+        /// <param name="clrType"> The CLR type to construct from </param>
         internal ClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
             : base(EntityUtil.GenericCheckArgumentNull(clrType, "clrType").Name, clrType.Namespace ?? string.Empty,
                 DataSpace.OSpace)
@@ -131,7 +136,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return type;
         }
 
-        /// <summary>cached dynamic method to construct a CLR instance</summary>
+        /// <summary>
+        ///     cached dynamic method to construct a CLR instance
+        /// </summary>
         internal Delegate Constructor
         {
             get { return _constructor; }

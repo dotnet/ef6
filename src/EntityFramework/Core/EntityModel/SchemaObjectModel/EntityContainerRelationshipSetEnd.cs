@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an RelationshipSetEnd element.
+    ///     Represents an RelationshipSetEnd element.
     /// </summary>
     internal class EntityContainerRelationshipSetEnd : SchemaElement
     {
@@ -15,16 +16,16 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private EntityContainerEntitySet _entitySet;
 
         /// <summary>
-        /// Constructs an EntityContainerRelationshipSetEnd
+        ///     Constructs an EntityContainerRelationshipSetEnd
         /// </summary>
-        /// <param name="parentElement">Reference to the schema element.</param>
+        /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerRelationshipSetEnd(EntityContainerRelationshipSet parentElement)
             : base(parentElement)
         {
         }
 
         /// <summary>
-        /// the End in the parent’s Association that this element refers to
+        ///     the End in the parent’s Association that this element refers to
         /// </summary>
         public IRelationshipEnd RelationshipEnd
         {
@@ -69,9 +70,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// This is the method that is called when an EntitySet Attribute is encountered.
+        ///     This is the method that is called when an EntitySet Attribute is encountered.
         /// </summary>
-        /// <param name="reader">The XmlRead positned at the extent attribute.</param>
+        /// <param name="reader"> The XmlRead positned at the extent attribute. </param>
         private void HandleEntitySetAttribute(XmlReader reader)
         {
             if (Schema.DataModel
@@ -88,7 +89,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
+        ///     Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -107,7 +108,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Do all validation for this element here, and delegate to all sub elements
+        ///     Do all validation for this element here, and delegate to all sub elements
         /// </summary>
         internal override void Validate()
         {
@@ -137,7 +138,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The parent element as an EntityContainerProperty
+        ///     The parent element as an EntityContainerProperty
         /// </summary>
         internal new EntityContainerRelationshipSet ParentElement
         {

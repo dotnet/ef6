@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -7,18 +8,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    /// Represents a column map for a structured column
+    ///     Represents a column map for a structured column
     /// </summary>
     internal abstract class StructuredColumnMap : ColumnMap
     {
         private readonly ColumnMap[] m_properties;
 
         /// <summary>
-        /// Structured columnmap constructor
+        ///     Structured columnmap constructor
         /// </summary>
-        /// <param name="type">datatype for this column</param>
-        /// <param name="name">column name</param>
-        /// <param name="properties">list of properties</param>
+        /// <param name="type"> datatype for this column </param>
+        /// <param name="name"> column name </param>
+        /// <param name="properties"> list of properties </param>
         internal StructuredColumnMap(TypeUsage type, string name, ColumnMap[] properties)
             : base(type, name)
         {
@@ -27,8 +28,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the null sentinel column, if any.  Virtual so only derived column map
-        /// types that can have NullSentinel have to provide storage, etc.
+        ///     Get the null sentinel column, if any.  Virtual so only derived column map
+        ///     types that can have NullSentinel have to provide storage, etc.
         /// </summary>
         internal virtual SimpleColumnMap NullSentinel
         {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Get the list of properties that constitute this structured type
+        ///     Get the list of properties that constitute this structured type
         /// </summary>
         internal ColumnMap[] Properties
         {
@@ -44,9 +45,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Debugging support
+        ///     Debugging support
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override string ToString()
         {
             var sb = new StringBuilder();

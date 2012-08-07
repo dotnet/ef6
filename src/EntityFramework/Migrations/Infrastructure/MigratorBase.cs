@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Xml.Linq;
 
     /// <summary>
-    ///     Base class for decorators that wrap the core <see cref = "DbMigrator" />
+    ///     Base class for decorators that wrap the core <see cref="DbMigrator" />
     /// </summary>
     [DebuggerStepThrough]
     public abstract class MigratorBase
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Initializes a new instance of the MigratorBase class.
         /// </summary>
-        /// <param name = "innerMigrator">The migrator that this decorator is wrapping.</param>
+        /// <param name="innerMigrator"> The migrator that this decorator is wrapping. </param>
         protected MigratorBase(MigratorBase innerMigrator)
         {
             if (innerMigrator == null)
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Gets a list of the pending migrations that have not been applied to the database.
         /// </summary>
-        /// <returns>List of migration Ids</returns>
+        /// <returns> List of migration Ids </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual IEnumerable<string> GetPendingMigrations()
         {
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Updates the target database to a given migration.
         /// </summary>
-        /// <param name = "targetMigration">The migration to upgrade/downgrade to.</param>
+        /// <param name="targetMigration"> The migration to upgrade/downgrade to. </param>
         public virtual void Update(string targetMigration)
         {
             _this.Update(targetMigration);
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Gets a list of the migrations that are defined in the assembly.
         /// </summary>
-        /// <returns>List of migration Ids</returns>
+        /// <returns> List of migration Ids </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual IEnumerable<string> GetLocalMigrations()
         {
@@ -101,7 +102,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Gets a list of the migrations that have been applied to the database.
         /// </summary>
-        /// <returns>List of migration Ids</returns>
+        /// <returns> List of migration Ids </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual IEnumerable<string> GetDatabaseMigrations()
         {
@@ -180,7 +181,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             _this.UpgradeHistory(upgradeOperations);
         }
-
 
         internal virtual string TargetDatabase
         {

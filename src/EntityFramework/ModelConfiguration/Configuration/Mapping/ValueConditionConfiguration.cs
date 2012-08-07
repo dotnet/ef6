@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Configures a discriminator column used to differentiate between types in an inheritance hierarchy.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref = "DbModelBuilder" />.
+    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     [DebuggerDisplay("{Discriminator}")]
     public class ValueConditionConfiguration
@@ -78,9 +79,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the discriminator value used to identify the entity type being 
         ///     configured from other types in the inheritance hierarchy.
         /// </summary>
-        /// <typeparam name = "T">Type of the discriminator value.</typeparam>
-        /// <param name = "value">The value to be used to identify the entity type.</param>
-        /// <returns>A configuration object to configure the column used to store discriminator values.</returns>
+        /// <typeparam name="T"> Type of the discriminator value. </typeparam>
+        /// <param name="value"> The value to be used to identify the entity type. </param>
+        /// <returns> A configuration object to configure the column used to store discriminator values. </returns>
         public PrimitiveColumnConfiguration HasValue<T>(T value)
             where T : struct
         {
@@ -96,9 +97,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the discriminator value used to identify the entity type being 
         ///     configured from other types in the inheritance hierarchy.
         /// </summary>
-        /// <typeparam name = "T">Type of the discriminator value.</typeparam>
-        /// <param name = "value">The value to be used to identify the entity type.</param>
-        /// <returns>A configuration object to configure the column used to store discriminator values.</returns>
+        /// <typeparam name="T"> Type of the discriminator value. </typeparam>
+        /// <param name="value"> The value to be used to identify the entity type. </param>
+        /// <returns> A configuration object to configure the column used to store discriminator values. </returns>
         public PrimitiveColumnConfiguration HasValue<T>(T? value)
             where T : struct
         {
@@ -114,8 +115,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the discriminator value used to identify the entity type being 
         ///     configured from other types in the inheritance hierarchy.
         /// </summary>
-        /// <param name = "value">The value to be used to identify the entity type.</param>
-        /// <returns>A configuration object to configure the column used to store discriminator values.</returns>
+        /// <param name="value"> The value to be used to identify the entity type. </param>
+        /// <returns> A configuration object to configure the column used to store discriminator values. </returns>
         public StringColumnConfiguration HasValue(string value)
         {
             Value = value;

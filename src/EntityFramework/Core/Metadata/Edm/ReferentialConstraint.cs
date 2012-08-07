@@ -1,22 +1,23 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// This class describes referential constraint on the relationships
+    ///     This class describes referential constraint on the relationships
     /// </summary>
     public sealed class ReferentialConstraint : MetadataItem
     {
         #region Constructors
 
         /// <summary>
-        /// Constructs a new constraint on the relationship
+        ///     Constructs a new constraint on the relationship
         /// </summary>
-        /// <param name="fromRole">role from which the relationship originates</param>
-        /// <param name="toRole">role to which the relationship is linked/targeted to</param>
-        /// <param name="toProperties">properties on entity type of from role which take part in the constraint</param>
-        /// <param name="fromProperties">properties on entity type of to role which take part in the constraint</param>
+        /// <param name="fromRole"> role from which the relationship originates </param>
+        /// <param name="toRole"> role to which the relationship is linked/targeted to </param>
+        /// <param name="toProperties"> properties on entity type of from role which take part in the constraint </param>
+        /// <param name="fromProperties"> properties on entity type of to role which take part in the constraint </param>
         /// <exception cref="ArgumentNullException">Argument Null exception if any of the arguments is null</exception>
         internal ReferentialConstraint(
             RelationshipEndMember fromRole,
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the identity for this constraint
+        ///     Returns the identity for this constraint
         /// </summary>
         internal override string Identity
         {
@@ -64,7 +65,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the FromRole which takes part in this referential constraint
+        ///     Returns the FromRole which takes part in this referential constraint
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the ReferentialConstraint instance is in ReadOnly state</exception>
@@ -75,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the ToRole which takes part in this referential constraint
+        ///     Returns the ToRole which takes part in this referential constraint
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the ReferentialConstraint instance is in ReadOnly state</exception>
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the collection of properties on the from role on which the constraint is defined on
+        ///     Returns the collection of properties on the from role on which the constraint is defined on
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> FromProperties
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the collection of properties on the ToRole on whose value the constraint is defined on
+        ///     Returns the collection of properties on the ToRole on whose value the constraint is defined on
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> ToProperties
@@ -108,8 +109,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation 
-        /// for this type.
+        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     for this type.
         /// </summary>
         public override string ToString()
         {
@@ -117,7 +118,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Sets this item to be read-only, once this is set, the item will never be writable again.
+        ///     Sets this item to be read-only, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {

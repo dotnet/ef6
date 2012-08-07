@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     /// <summary>
-    ///     Specifies the action to take on a given operation. <seealso cref = "EdmAssociationEnd.DeleteAction" />
+    ///     Specifies the action to take on a given operation. <seealso cref="EdmAssociationEnd.DeleteAction" />
     /// </summary>
     internal enum EdmOperationAction
     {

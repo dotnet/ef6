@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     /// <summary>
-    /// Enumeration of known extension methods
+    ///     Enumeration of known extension methods
     /// </summary>
     internal enum SequenceMethod
     {

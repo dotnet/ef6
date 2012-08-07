@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
@@ -6,7 +7,8 @@ namespace System.Data.Entity.Edm.Db.Mapping
     using System.Data.Entity.Edm.Internal;
 
     /// <summary>
-    ///     DbMappingMetadataItem is the base for all types in the EDM-to-Database Mapping construction and modification API that support annotation using <see cref = "DataModelAnnotation" /> .
+    ///     DbMappingMetadataItem is the base for all types in the EDM-to-Database Mapping construction and modification API that support annotation using <see
+    ///      cref="DataModelAnnotation" /> .
     /// </summary>
     internal abstract class DbMappingMetadataItem
         : DbMappingModelItem, IAnnotatedDataModelItem

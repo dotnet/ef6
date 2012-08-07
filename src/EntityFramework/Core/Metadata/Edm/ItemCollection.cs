@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
@@ -13,9 +14,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    /// Class for representing a collection of items.
-    /// Most of the implementation for actual maintenance of the collection is
-    /// done by MetadataCollection
+    ///     Class for representing a collection of items.
+    ///     Most of the implementation for actual maintenance of the collection is
+    ///     done by MetadataCollection
     /// </summary>
     [CLSCompliant(false)]
     public abstract class ItemCollection : ReadOnlyMetadataCollection<GlobalItem>
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The default constructor for ItemCollection
+        ///     The default constructor for ItemCollection
         /// </summary>
         internal ItemCollection(DataSpace dataspace)
             : base(new MetadataCollection<GlobalItem>())
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Dataspace associated with ItemCollection
+        ///     Dataspace associated with ItemCollection
         /// </summary>
         public DataSpace DataSpace
         {
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Return the function lookUpTable
+        ///     Return the function lookUpTable
         /// </summary>
         internal Dictionary<string, ReadOnlyCollection<EdmFunction>> FunctionLookUpTable
         {
@@ -78,9 +79,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Adds an item to the collection 
+        ///     Adds an item to the collection
         /// </summary>
-        /// <param name="item">The item to add to the list</param>
+        /// <param name="item"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
         /// <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
@@ -93,9 +94,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Adds a collection of items to the collection 
+        ///     Adds a collection of items to the collection
         /// </summary>
-        /// <param name="items">The items to add to the list</param>
+        /// <param name="items"> The items to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
         /// <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool AtomicAddRange(List<GlobalItem> items)
         {
 #if DEBUG
-    // We failed to add, so undo the setting of the ItemCollection reference
+            // We failed to add, so undo the setting of the ItemCollection reference
             foreach (var item in items)
             {
                 Debug.Assert(item.IsReadOnly, "The item is not readonly, it should be by the time it is added to the item collection");
@@ -120,12 +121,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns strongly typed MetadataItem from the collection that has
-        /// the passed in identity.
+        ///     Returns strongly typed MetadataItem from the collection that has
+        ///     the passed in identity.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="identity">Identity of the item to look up for</param>
-        /// <returns>returns the item if a match is found, otherwise throwns an exception</returns>
+        /// <typeparam name="T"> </typeparam>
+        /// <param name="identity"> Identity of the item to look up for </param>
+        /// <returns> returns the item if a match is found, otherwise throwns an exception </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
         public T GetItem<T>(string identity) where T : GlobalItem
@@ -134,14 +135,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns strongly typed MetadataItem from the collection that has
-        /// the passed in identity.
-        /// Returns null if the item is not found.
+        ///     Returns strongly typed MetadataItem from the collection that has
+        ///     the passed in identity.
+        ///     Returns null if the item is not found.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="identity"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <typeparam name="T"> </typeparam>
+        /// <param name="identity"> </param>
+        /// <param name="item"> </param>
+        /// <returns> </returns>
         /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
         public bool TryGetItem<T>(string identity, out T item) where T : GlobalItem
         {
@@ -149,15 +150,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns strongly typed MetadataItem from the collection that has
-        /// the passed in identity.
-        /// Returns null if the item is not found.
+        ///     Returns strongly typed MetadataItem from the collection that has
+        ///     the passed in identity.
+        ///     Returns null if the item is not found.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="identity">identity of the type to look up for</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <param name="item">item with the given identity if a match is found, otherwise returns null</param>
-        /// <returns>returns true if a match is found, otherwise returns false</returns>
+        /// <typeparam name="T"> </typeparam>
+        /// <param name="identity"> identity of the type to look up for </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <param name="item"> item with the given identity if a match is found, otherwise returns null </param>
+        /// <returns> returns true if a match is found, otherwise returns false </returns>
         /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
         public bool TryGetItem<T>(string identity, bool ignoreCase, out T item) where T : GlobalItem
         {
@@ -168,13 +169,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns strongly typed MetadataItem from the collection that has
-        /// the passed in identity with either case sensitive or case insensitive search
+        ///     Returns strongly typed MetadataItem from the collection that has
+        ///     the passed in identity with either case sensitive or case insensitive search
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="identity">identity of the type to look up for</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <returns>returns item if a match is found, otherwise returns throws an argument exception</returns>
+        /// <typeparam name="T"> </typeparam>
+        /// <param name="identity"> identity of the type to look up for </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <returns> returns item if a match is found, otherwise returns throws an argument exception </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if no item is found with the given identity</exception>
         public T GetItem<T>(string identity, bool ignoreCase) where T : GlobalItem
@@ -188,11 +189,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns ReadOnlyCollection of the Items of the given type 
-        /// in the item collection.
+        ///     Returns ReadOnlyCollection of the Items of the given type 
+        ///     in the item collection.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T"> </typeparam>
+        /// <returns> </returns>
         public virtual ReadOnlyCollection<T> GetItems<T>() where T : GlobalItem
         {
             var currentValueForItemCache = _itemsCache;
@@ -240,11 +241,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Search for a type metadata with the specified name and namespace name in the given space.
+        ///     Search for a type metadata with the specified name and namespace name in the given space.
         /// </summary>
-        /// <param name="name">name of the type</param>
-        /// <param name="namespaceName">namespace of the type</param>
-        /// <returns>Returns null if no match found.</returns>
+        /// <param name="name"> name of the type </param>
+        /// <param name="namespaceName"> namespace of the type </param>
+        /// <returns> Returns null if no match found. </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if name or namespaceName arguments passed in are null</exception>
         /// <exception cref="System.ArgumentException">Thrown if the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
         public EdmType GetType(string name, string namespaceName)
@@ -253,12 +254,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Search for a type metadata with the specified name and namespace name in the given space.
+        ///     Search for a type metadata with the specified name and namespace name in the given space.
         /// </summary>
-        /// <param name="name">name of the type</param>
-        /// <param name="namespaceName">namespace of the type</param>
-        /// <param name="type">The type that needs to be filled with the return value</param>
-        /// <returns>Returns null if no match found.</returns>
+        /// <param name="name"> name of the type </param>
+        /// <param name="namespaceName"> namespace of the type </param>
+        /// <param name="type"> The type that needs to be filled with the return value </param>
+        /// <returns> Returns null if no match found. </returns>
         /// <exception cref="System.ArgumentNullException">if name or namespaceName argument is null</exception>
         public bool TryGetType(string name, string namespaceName, out EdmType type)
         {
@@ -266,12 +267,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Search for a type metadata with the specified key.
+        ///     Search for a type metadata with the specified key.
         /// </summary>
-        /// <param name="name">name of the type</param>
-        /// <param name="namespaceName">namespace of the type</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <returns>Returns null if no match found.</returns>
+        /// <param name="name"> name of the type </param>
+        /// <param name="namespaceName"> namespace of the type </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <returns> Returns null if no match found. </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if name or namespaceName arguments passed in are null</exception>
         public EdmType GetType(string name, string namespaceName, bool ignoreCase)
         {
@@ -281,13 +282,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Search for a type metadata with the specified name and namespace name in the given space.
+        ///     Search for a type metadata with the specified name and namespace name in the given space.
         /// </summary>
-        /// <param name="name">name of the type</param>
-        /// <param name="namespaceName">namespace of the type</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <param name="type">The type that needs to be filled with the return value</param>
-        /// <returns>Returns null if no match found.</returns>
+        /// <param name="name"> name of the type </param>
+        /// <param name="namespaceName"> namespace of the type </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <param name="type"> The type that needs to be filled with the return value </param>
+        /// <returns> Returns null if no match found. </returns>
         /// <exception cref="System.ArgumentNullException">if name or namespaceName argument is null</exception>
         public bool TryGetType(string name, string namespaceName, bool ignoreCase, out EdmType type)
         {
@@ -300,10 +301,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get all the overloads of the function with the given name
+        ///     Get all the overloads of the function with the given name
         /// </summary>
-        /// <param name="functionName">The full name of the function</param>
-        /// <returns>A collection of all the functions with the given name in the given data space</returns>
+        /// <param name="functionName"> The full name of the function </param>
+        /// <returns> A collection of all the functions with the given name in the given data space </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
         public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName)
         {
@@ -311,11 +312,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get all the overloads of the function with the given name
+        ///     Get all the overloads of the function with the given name
         /// </summary>
-        /// <param name="functionName">The full name of the function</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <returns>A collection of all the functions with the given name in the given data space</returns>
+        /// <param name="functionName"> The full name of the function </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <returns> A collection of all the functions with the given name in the given data space </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
         public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName, bool ignoreCase)
         {
@@ -323,13 +324,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Look for the functions in the given collection and 
-        /// returns all the functions with the given name
+        ///     Look for the functions in the given collection and 
+        ///     returns all the functions with the given name
         /// </summary>
-        /// <param name="functionCollection"></param>
-        /// <param name="functionName"></param>
-        /// <param name="ignoreCase"></param>
-        /// <returns></returns>
+        /// <param name="functionCollection"> </param>
+        /// <param name="functionName"> </param>
+        /// <param name="ignoreCase"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected static ReadOnlyCollection<EdmFunction> GetFunctions(
             Dictionary<string, ReadOnlyCollection<EdmFunction>> functionCollection,
@@ -378,14 +379,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the function as specified by the function key.
-        /// All parameters are assumed to be <see cref="ParameterMode.In"/>.
+        ///     Gets the function as specified by the function key.
+        ///     All parameters are assumed to be <see cref="ParameterMode.In" />.
         /// </summary>
-        /// <param name="functionName">Name of the function</param>
-        /// <param name="parameterTypes">types of the parameters</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <param name="function">The function that needs to be returned</param>
-        /// <returns> The function as specified in the function key or null</returns>
+        /// <param name="functionName"> Name of the function </param>
+        /// <param name="parameterTypes"> types of the parameters </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <param name="function"> The function that needs to be returned </param>
+        /// <returns> The function as specified in the function key or null </returns>
         /// <exception cref="System.ArgumentNullException">if functionName or parameterTypes argument is null</exception>
         /// <exception cref="System.ArgumentException">if no function is found with the given name or with given input parameters</exception>
         internal bool TryGetFunction(string functionName, TypeUsage[] parameterTypes, bool ignoreCase, out EdmFunction function)
@@ -405,10 +406,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get an entity container based upon the strong name of the container
-        /// If no entity container is found, returns null, else returns the first one/// </summary>
-        /// <param name="name">name of the entity container</param>
-        /// <returns>The EntityContainer</returns>
+        ///     Get an entity container based upon the strong name of the container
+        ///     If no entity container is found, returns null, else returns the first one///
+        /// </summary>
+        /// <param name="name"> name of the entity container </param>
+        /// <returns> The EntityContainer </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if name argument passed in is null</exception>
         public EntityContainer GetEntityContainer(string name)
         {
@@ -417,10 +419,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get an entity container based upon the strong name of the container
-        /// If no entity container is found, returns null, else returns the first one/// </summary>
-        /// <param name="name">name of the entity container</param>
-        /// <param name="entityContainer"></param>
+        ///     Get an entity container based upon the strong name of the container
+        ///     If no entity container is found, returns null, else returns the first one///
+        /// </summary>
+        /// <param name="name"> name of the entity container </param>
+        /// <param name="entityContainer"> </param>
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntityContainer(string name, out EntityContainer entityContainer)
         {
@@ -429,11 +432,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get an entity container based upon the strong name of the container
-        /// If no entity container is found, returns null, else returns the first one/// </summary>
-        /// <param name="name">name of the entity container</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <returns>The EntityContainer</returns>
+        ///     Get an entity container based upon the strong name of the container
+        ///     If no entity container is found, returns null, else returns the first one///
+        /// </summary>
+        /// <param name="name"> name of the entity container </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <returns> The EntityContainer </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if name argument passed in is null</exception>
         /// <exception cref="System.ArgumentException">Thrown if no entity container with the given name is found</exception>
         public EntityContainer GetEntityContainer(string name, bool ignoreCase)
@@ -447,11 +451,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Get an entity container based upon the strong name of the container
-        /// If no entity container is found, returns null, else returns the first one/// </summary>
-        /// <param name="name">name of the entity container</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <param name="entityContainer"></param>
+        ///     Get an entity container based upon the strong name of the container
+        ///     If no entity container is found, returns null, else returns the first one///
+        /// </summary>
+        /// <param name="name"> name of the entity container </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <param name="entityContainer"> </param>
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
@@ -468,10 +473,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
-        /// <param name="primitiveTypeKind">canonical primitive type</param>
-        /// <returns>The mapped scalar type</returns>
+        /// <param name="primitiveTypeKind"> canonical primitive type </param>
+        /// <returns> The mapped scalar type </returns>
         internal virtual PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             //The method needs to be overloaded on methods that support this
@@ -479,13 +484,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Determines whether this item collection is equivalent to another. At present, we look only
-        /// at object reference equivalence. This is a somewhat reasonable approximation when caching
-        /// is enabled, because collections are identical when their source resources (including 
-        /// provider) are known to be identical.
+        ///     Determines whether this item collection is equivalent to another. At present, we look only
+        ///     at object reference equivalence. This is a somewhat reasonable approximation when caching
+        ///     is enabled, because collections are identical when their source resources (including 
+        ///     provider) are known to be identical.
         /// </summary>
-        /// <param name="other">Collection to compare.</param>
-        /// <returns>true if the collections are equivalent; false otherwise</returns>
+        /// <param name="other"> Collection to compare. </param>
+        /// <returns> true if the collections are equivalent; false otherwise </returns>
         internal virtual bool MetadataEquals(ItemCollection other)
         {
             return ReferenceEquals(this, other);

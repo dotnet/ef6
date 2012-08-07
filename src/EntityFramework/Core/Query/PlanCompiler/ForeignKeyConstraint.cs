@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
@@ -7,14 +8,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Information about a foreign-key constraint
+    ///     Information about a foreign-key constraint
     /// </summary>
     internal class ForeignKeyConstraint
     {
         #region public surface
 
         /// <summary>
-        /// Parent key properties
+        ///     Parent key properties
         /// </summary>
         internal List<string> ParentKeys
         {
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Child key properties
+        ///     Child key properties
         /// </summary>
         internal List<string> ChildKeys
         {
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get the parent-child pair
+        ///     Get the parent-child pair
         /// </summary>
         internal ExtentPair Pair
         {
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Return the child rowcount
+        ///     Return the child rowcount
         /// </summary>
         internal RelationshipMultiplicity ChildMultiplicity
         {
@@ -46,11 +47,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Get the corresponding parent (key) property, for a specific child (foreign key) property
+        ///     Get the corresponding parent (key) property, for a specific child (foreign key) property
         /// </summary>
-        /// <param name="childPropertyName">child (foreign key) property name</param>
-        /// <param name="parentPropertyName">corresponding parent property name</param>
-        /// <returns>true, if the parent property was found</returns>
+        /// <param name="childPropertyName"> child (foreign key) property name </param>
+        /// <param name="parentPropertyName"> corresponding parent property name </param>
+        /// <returns> true, if the parent property was found </returns>
         internal bool GetParentProperty(string childPropertyName, out string parentPropertyName)
         {
             BuildKeyMap();
@@ -114,8 +115,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         /// <summary>
-        /// Build up an equivalence map of primary keys and foreign keys (ie) for each
-        /// foreign key column, identify the corresponding primary key property
+        ///     Build up an equivalence map of primary keys and foreign keys (ie) for each
+        ///     foreign key column, identify the corresponding primary key property
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

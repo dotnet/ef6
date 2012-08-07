@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Reflection;
 
     /// <summary>
-    /// Shapes store reader values into EntityClient/ObjectQuery results. Also maintains 
-    /// state used by materializer delegates.
+    ///     Shapes store reader values into EntityClient/ObjectQuery results. Also maintains 
+    ///     state used by materializer delegates.
     /// </summary>
     internal abstract class Shaper
     {
@@ -34,8 +35,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Keeps track of the entities that have been materialized so that we can fire an OnMaterialized
-        /// for them before returning control to the caller.
+        ///     Keeps track of the entities that have been materialized so that we can fire an OnMaterialized
+        ///     for them before returning control to the caller.
         /// </summary>
         private IList<IEntityWrapper> _materializedEntities;
 
@@ -54,46 +55,46 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // running the Shaper.
 
         /// <summary>
-        /// The store data reader we're pulling data from
+        ///     The store data reader we're pulling data from
         /// </summary>
         public readonly DbDataReader Reader;
 
         /// <summary>
-        /// The state slots we use in the coordinator expression.
+        ///     The state slots we use in the coordinator expression.
         /// </summary>
         public readonly object[] State;
 
         /// <summary>
-        /// The context the shaper is performing for.
+        ///     The context the shaper is performing for.
         /// </summary>
         public readonly ObjectContext Context;
 
         /// <summary>
-        /// The workspace we are performing for; yes we could get it from the context, but
-        /// it's much easier to just have it handy.
+        ///     The workspace we are performing for; yes we could get it from the context, but
+        ///     it's much easier to just have it handy.
         /// </summary>
         public readonly MetadataWorkspace Workspace;
 
         /// <summary>
-        /// The merge option this shaper is performing under/for.
+        ///     The merge option this shaper is performing under/for.
         /// </summary>
         public readonly MergeOption MergeOption;
 
         /// <summary>
-        /// A mapping of CSpace AssociationTypes to OSpace AssociationTypes
-        /// Used for faster lookup/retrieval of AssociationTypes during materialization
+        ///     A mapping of CSpace AssociationTypes to OSpace AssociationTypes
+        ///     Used for faster lookup/retrieval of AssociationTypes during materialization
         /// </summary>
         private readonly Dictionary<AssociationType, AssociationType> AssociationSpaceMap;
 
         /// <summary>
-        /// Caches Tuples of EntitySet, AssociationType, and source member name for which RelatedEnds exist.
+        ///     Caches Tuples of EntitySet, AssociationType, and source member name for which RelatedEnds exist.
         /// </summary>
         private HashSet<Tuple<string, string, string>> _relatedEndCache;
 
         /// <summary>
-        /// Utility method used to evaluate a multi-discriminator column map. Takes
-        /// discriminator values and determines the appropriate entity type, then looks up 
-        /// the appropriate handler and invokes it.
+        ///     Utility method used to evaluate a multi-discriminator column map. Takes
+        ///     discriminator values and determines the appropriate entity type, then looks up 
+        ///     the appropriate handler and invokes it.
         /// </summary>
         public TElement Discriminate<TElement>(
             object[] discriminatorValues, Func<object[], EntityType> discriminate,
@@ -119,10 +120,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// REQUIRES:: entity is not null and MergeOption is OverwriteChanges or PreserveChanges
-        /// Handles state management for an entity returned by a query. Where an existing entry
-        /// exists, updates that entry and returns the existing entity. Otherwise, the entity
-        /// passed in is returned.
+        ///     REQUIRES:: entity is not null and MergeOption is OverwriteChanges or PreserveChanges
+        ///     Handles state management for an entity returned by a query. Where an existing entry
+        ///     exists, updates that entry and returns the existing entity. Otherwise, the entity
+        ///     passed in is returned.
         /// </summary>
         public IEntityWrapper HandleEntity<TEntity>(IEntityWrapper wrappedEntity, EntityKey entityKey, EntitySet entitySet)
         {
@@ -165,10 +166,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// REQUIRES:: entity exists; MergeOption is AppendOnly
-        /// Handles state management for an entity with the given key. When the entity already exists  
-        /// in the state manager, it is returned directly. Otherwise, the entityDelegate is invoked and  
-        /// the resulting entity is returned.
+        ///     REQUIRES:: entity exists; MergeOption is AppendOnly
+        ///     Handles state management for an entity with the given key. When the entity already exists  
+        ///     in the state manager, it is returned directly. Otherwise, the entityDelegate is invoked and  
+        ///     the resulting entity is returned.
         /// </summary>
         public IEntityWrapper HandleEntityAppendOnly<TEntity>(
             Func<Shaper, IEntityWrapper> constructEntityDelegate, EntityKey entityKey, EntitySet entitySet)
@@ -233,10 +234,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Call to ensure a collection of full-spanned elements are added
-        /// into the state manager properly.  We registers an action to be called
-        /// when the collection is closed that pulls the collection of full spanned 
-        /// objects into the state manager.
+        ///     Call to ensure a collection of full-spanned elements are added
+        ///     into the state manager properly.  We registers an action to be called
+        ///     when the collection is closed that pulls the collection of full spanned 
+        ///     objects into the state manager.
         /// </summary>
         public IEntityWrapper HandleFullSpanCollection<T_SourceEntity, T_TargetEntity>(
             IEntityWrapper wrappedEntity, Coordinator<T_TargetEntity> coordinator, AssociationEndMember targetMember)
@@ -250,8 +251,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Call to ensure a single full-spanned element is added into 
-        /// the state manager properly.
+        ///     Call to ensure a single full-spanned element is added into 
+        ///     the state manager properly.
         /// </summary>
         public IEntityWrapper HandleFullSpanElement<T_SourceEntity, T_TargetEntity>(
             IEntityWrapper wrappedSource, IEntityWrapper wrappedSpannedEntity, AssociationEndMember targetMember)
@@ -279,8 +280,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Call to ensure a target entities key is added into the state manager 
-        /// properly
+        ///     Call to ensure a target entities key is added into the state manager 
+        ///     properly
         /// </summary>
         public IEntityWrapper HandleRelationshipSpan<T_SourceEntity>(
             IEntityWrapper wrappedEntity, EntityKey targetKey, AssociationEndMember targetMember)
@@ -510,8 +511,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Sets the IsLoaded flag to "true"
-        /// There are also rules for when this can be set based on MergeOption and the current value(s) in the related end.
+        ///     Sets the IsLoaded flag to "true"
+        ///     There are also rules for when this can be set based on MergeOption and the current value(s) in the related end.
         /// </summary>
         private void SetIsLoadedForSpan(RelatedEnd relatedEnd, bool forceToTrue)
         {
@@ -540,10 +541,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// REQUIRES:: entity is not null and MergeOption is OverwriteChanges or PreserveChanges
-        /// Calls through to HandleEntity after retrieving the EntityKey from the given entity.
-        /// Still need this so that the correct key will be used for iPOCOs that implement IEntityWithKey
-        /// in a non-default manner.
+        ///     REQUIRES:: entity is not null and MergeOption is OverwriteChanges or PreserveChanges
+        ///     Calls through to HandleEntity after retrieving the EntityKey from the given entity.
+        ///     Still need this so that the correct key will be used for iPOCOs that implement IEntityWithKey
+        ///     in a non-default manner.
         /// </summary>
         public IEntityWrapper HandleIEntityWithKey<TEntity>(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
@@ -552,7 +553,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Calls through to the specified RecordState to set the value for the specified column ordinal.
+        ///     Calls through to the specified RecordState to set the value for the specified column ordinal.
         /// </summary>
         public bool SetColumnValue(int recordStateSlotNumber, int ordinal, object value)
         {
@@ -562,7 +563,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Calls through to the specified RecordState to set the value for the EntityRecordInfo.
+        ///     Calls through to the specified RecordState to set the value for the EntityRecordInfo.
         /// </summary>
         public bool SetEntityRecordInfo(int recordStateSlotNumber, EntityKey entityKey, EntitySet entitySet)
         {
@@ -572,9 +573,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// REQUIRES:: should be called only by delegate allocating this state.
-        /// Utility method assigning a value to a state slot. Returns an arbitrary value
-        /// allowing the method call to be composed in a ShapeEmitter Expression delegate.
+        ///     REQUIRES:: should be called only by delegate allocating this state.
+        ///     Utility method assigning a value to a state slot. Returns an arbitrary value
+        ///     allowing the method call to be composed in a ShapeEmitter Expression delegate.
         /// </summary>
         public bool SetState<T>(int ordinal, T value)
         {
@@ -583,10 +584,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// REQUIRES:: should be called only by delegate allocating this state.
-        /// Utility method assigning a value to a state slot and return the value, allowing
-        /// the value to be accessed/set in a ShapeEmitter Expression delegate and later 
-        /// retrieved.
+        ///     REQUIRES:: should be called only by delegate allocating this state.
+        ///     Utility method assigning a value to a state slot and return the value, allowing
+        ///     the value to be accessed/set in a ShapeEmitter Expression delegate and later 
+        ///     retrieved.
         /// </summary>
         public T SetStatePassthrough<T>(int ordinal, T value)
         {
@@ -595,10 +596,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Used to retrieve a property value with exception handling. Normally compiled
-        /// delegates directly call typed methods on the DbDataReader (e.g. GetInt32)
-        /// but when an exception occurs we retry using this method to potentially get
-        /// a more useful error message to the user.
+        ///     Used to retrieve a property value with exception handling. Normally compiled
+        ///     delegates directly call typed methods on the DbDataReader (e.g. GetInt32)
+        ///     but when an exception occurs we retry using this method to potentially get
+        ///     a more useful error message to the user.
         /// </summary>
         public TProperty GetPropertyValueWithErrorHandling<TProperty>(int ordinal, string propertyName, string typeName)
         {
@@ -607,10 +608,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Used to retrieve a column value with exception handling. Normally compiled
-        /// delegates directly call typed methods on the DbDataReader (e.g. GetInt32)
-        /// but when an exception occurs we retry using this method to potentially get
-        /// a more useful error message to the user.
+        ///     Used to retrieve a column value with exception handling. Normally compiled
+        ///     delegates directly call typed methods on the DbDataReader (e.g. GetInt32)
+        ///     but when an exception occurs we retry using this method to potentially get
+        ///     a more useful error message to the user.
         /// </summary>
         public TColumn GetColumnValueWithErrorHandling<TColumn>(int ordinal)
         {
@@ -742,8 +743,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        /// Wire's one or more full-spanned entities into the state manager; used by
-        /// both full-spanned collections and full-spanned entities.
+        ///     Wire's one or more full-spanned entities into the state manager; used by
+        ///     both full-spanned collections and full-spanned entities.
         /// </summary>
         private void FullSpanAction<T_TargetEntity>(
             IEntityWrapper wrappedSource, IList<T_TargetEntity> spannedEntities, AssociationEndMember targetMember)
@@ -891,9 +892,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            /// Gets value from reader using the same pattern as the materializer delegate. Avoids
-            /// the need to compile multiple delegates for error handling. If there is a failure
-            /// reading a value
+            ///     Gets value from reader using the same pattern as the materializer delegate. Avoids
+            ///     the need to compile multiple delegates for error handling. If there is a failure
+            ///     reading a value
             /// </summary>
             internal T GetValue(DbDataReader reader, int ordinal)
             {
@@ -940,14 +941,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            /// Creates the exception thrown when the reader returns a null value
-            /// for a non nullable property/column.
+            ///     Creates the exception thrown when the reader returns a null value
+            ///     for a non nullable property/column.
             /// </summary>
             protected abstract Exception CreateNullValueException();
 
             /// <summary>
-            /// Creates the exception thrown when the reader returns a value with
-            /// an incompatible type.
+            ///     Creates the exception thrown when the reader returns a value with
+            ///     an incompatible type.
             /// </summary>
             protected abstract Exception CreateWrongTypeException(Type resultType);
         }

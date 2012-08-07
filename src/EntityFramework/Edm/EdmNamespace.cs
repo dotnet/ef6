@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification of a namespace in an <see cref = "EdmModel" /> .
+    ///     Allows the construction and modification of a namespace in an <see cref="EdmModel" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal class EdmNamespace : EdmQualifiedNameMetadataItem
@@ -28,7 +29,8 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets all <see cref = "EdmNamespaceItem" /> s declared within the namspace. Includes <see cref = "EdmAssociationType" /> s, <see cref = "EdmComplexType" /> s, <see cref = "EdmEntityType" /> s.
+        ///     Gets all <see cref="EdmNamespaceItem" /> s declared within the namspace. Includes <see cref="EdmAssociationType" /> s, <see
+        ///      cref="EdmComplexType" /> s, <see cref="EdmEntityType" /> s.
         /// </summary>
         public IEnumerable<EdmNamespaceItem> NamespaceItems
         {
@@ -42,7 +44,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmAssociationType" /> s declared within the namespace.
+        ///     Gets or sets the <see cref="EdmAssociationType" /> s declared within the namespace.
         /// </summary>
         public virtual IList<EdmAssociationType> AssociationTypes
         {
@@ -56,7 +58,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmComplexType" /> s declared within the namespace.
+        ///     Gets or sets the <see cref="EdmComplexType" /> s declared within the namespace.
         /// </summary>
         public virtual IList<EdmComplexType> ComplexTypes
         {
@@ -70,7 +72,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmEntityType" /> s declared within the namespace.
+        ///     Gets or sets the <see cref="EdmEntityType" /> s declared within the namespace.
         /// </summary>
         public virtual IList<EdmEntityType> EntityTypes
         {

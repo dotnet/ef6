@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    /// Denotes the fact that the key of the current tuple comes from a specific extent, or association role.
+    ///     Denotes the fact that the key of the current tuple comes from a specific extent, or association role.
     /// </summary>
     internal sealed class RoleBoolean : TrueFalseLiteral
     {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region BoolLiteral members
 
         /// <summary>
-        /// Not supported in this class.
+        ///     Not supported in this class.
         /// </summary>
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Not supported in this class.
+        ///     Not supported in this class.
         /// </summary>
         internal override DbExpression AsCqt(DbExpression row, bool skipIsNotNull)
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     internal abstract class ScanTableBaseOp : RelOp
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        /// Get the table instance produced by this Op
+        ///     Get the table instance produced by this Op
         /// </summary>
         internal Table Table
         {

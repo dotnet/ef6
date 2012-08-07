@@ -1,11 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
 
     /// <summary>
-    ///     Allows the construction and modification of the mapping of an EDM entity container ( <see cref = "EdmEntityContainer" /> ) to a database ( <see cref = "DbDatabaseMetadata" /> ).
+    ///     Allows the construction and modification of the mapping of an EDM entity container ( <see cref="EdmEntityContainer" /> ) to a database ( <see
+    ///      cref="DbDatabaseMetadata" /> ).
     /// </summary>
     internal class DbEntityContainerMapping
         : DbMappingMetadataItem
@@ -21,12 +23,12 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets an <see cref = "EdmEntityContainer" /> value representing the entity container that is being mapped.
+        ///     Gets or sets an <see cref="EdmEntityContainer" /> value representing the entity container that is being mapped.
         /// </summary>
         public virtual EdmEntityContainer EntityContainer { get; set; }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "DbEntitySetMapping" /> s that specifies how the container's entity sets are mapped to the database.
+        ///     Gets or sets the collection of <see cref="DbEntitySetMapping" /> s that specifies how the container's entity sets are mapped to the database.
         /// </summary>
         public virtual IList<DbEntitySetMapping> EntitySetMappings
         {
@@ -35,7 +37,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets the collection of <see cref = "DbAssociationSetMapping" /> s that specifies how the container's association sets are mapped to the database.
+        ///     Gets the collection of <see cref="DbAssociationSetMapping" /> s that specifies how the container's association sets are mapped to the database.
         /// </summary>
         public virtual IList<DbAssociationSetMapping> AssociationSetMappings
         {

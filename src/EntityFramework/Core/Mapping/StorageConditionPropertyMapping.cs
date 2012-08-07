@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,51 +7,51 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Mapping metadata for Conditional property mapping on a type.
-    /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
+    ///     Mapping metadata for Conditional property mapping on a type.
+    ///     Condition Property Mapping specifies a Condition either on the C side property or S side property.
     /// </summary>
     /// <example>
-    /// For Example if conceptually you could represent the CS MSL file as following
-    /// --Mapping 
-    ///   --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    ///     For Example if conceptually you could represent the CS MSL file as following
+    ///     --Mapping 
+    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ConditionProperyMap ( constant value-->SMemberMetadata )
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ComplexPropertyMap
-    ///             --ComplexTypeMap
-    ///               --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ConditionProperyMap ( constant value-->SMemberMetadata )
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ConditionProperyMap ( constant value-->SMemberMetadata )
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ComplexPropertyMap
+    ///     --ComplexTypeMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ConditionProperyMap ( constant value-->SMemberMetadata )
     ///     --AssociationSetMapping 
-    ///       --AssociationTypeMapping
-    ///         --MappingFragment
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///             --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// This class represents the metadata for all the condition property map elements in the 
-    /// above example.
+    ///     --AssociationTypeMapping
+    ///     --MappingFragment
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     This class represents the metadata for all the condition property map elements in the 
+    ///     above example.
     /// </example>
     internal class StorageConditionPropertyMapping : StoragePropertyMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Construct a new condition Property mapping object
+        ///     Construct a new condition Property mapping object
         /// </summary>
-        /// <param name="cdmMember"></param>
-        /// <param name="columnMember"></param>
-        /// <param name="value"></param>
-        /// <param name="isNull"></param>
+        /// <param name="cdmMember"> </param>
+        /// <param name="columnMember"> </param>
+        /// <param name="value"> </param>
+        /// <param name="isNull"> </param>
         internal StorageConditionPropertyMapping(
             EdmProperty cdmMember, EdmProperty columnMember
             , object value, bool? isNull)
@@ -72,12 +73,12 @@ namespace System.Data.Entity.Core.Mapping
         #region Fields
 
         /// <summary>
-        /// Column EdmMember for which the condition is specified.
+        ///     Column EdmMember for which the condition is specified.
         /// </summary>
         private readonly EdmProperty m_columnMember;
 
         /// <summary>
-        /// Value for the condition thats being mapped.
+        ///     Value for the condition thats being mapped.
         /// </summary>
         private readonly object m_value;
 
@@ -88,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Properties
 
         /// <summary>
-        /// Value for the condition
+        ///     Value for the condition
         /// </summary>
         internal object Value
         {
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Whether the property is being mapped to Null or NotNull
+        ///     Whether the property is being mapped to Null or NotNull
         /// </summary>
         internal bool? IsNull
         {
@@ -104,7 +105,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// ColumnMember for which the Condition Map is being specified
+        ///     ColumnMember for which the Condition Map is being specified
         /// </summary>
         internal EdmProperty ColumnProperty
         {
@@ -116,11 +117,11 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
 #if DEBUG
-    /// <summary>
-    /// This method is primarily for debugging purposes.
-    /// Will be removed shortly.
-    /// </summary>
-    /// <param name="index"></param>
+        /// <summary>
+        ///     This method is primarily for debugging purposes.
+        ///     Will be removed shortly.
+        /// </summary>
+        /// <param name="index"> </param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

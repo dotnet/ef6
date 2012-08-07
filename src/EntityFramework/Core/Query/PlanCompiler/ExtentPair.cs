@@ -1,17 +1,18 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    /// A simple class that represents a pair of extents
+    ///     A simple class that represents a pair of extents
     /// </summary>
     internal class ExtentPair
     {
         #region public surface
 
         /// <summary>
-        /// Return the left component of the pair
+        ///     Return the left component of the pair
         /// </summary>
         internal EntitySetBase Left
         {
@@ -19,7 +20,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Return the right component of the pair
+        ///     Return the right component of the pair
         /// </summary>
         internal EntitySetBase Right
         {
@@ -27,10 +28,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Equals
+        ///     Equals
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj"> </param>
+        /// <returns> </returns>
         public override bool Equals(object obj)
         {
             var other = obj as ExtentPair;
@@ -38,9 +39,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        /// Hashcode
+        ///     Hashcode
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override int GetHashCode()
         {
             return (Left.GetHashCode() << 4) ^ Right.GetHashCode();

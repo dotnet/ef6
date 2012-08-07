@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to process instances of <see cref = "ForeignKeyAttribute" /> found on navigation properties in the model.
+    ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on navigation properties in the model.
     /// </summary>
     public sealed class ForeignKeyNavigationPropertyAttributeConvention : IEdmConvention<EdmNavigationProperty>
     {
@@ -53,15 +54,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         .Single();
 
                 var constraint = new EdmAssociationConstraint
-                    {
-                        DependentEnd = dependentEnd,
-                        DependentProperties
-                            = GetDependentProperties(
-                                dependentEnd.EntityType,
-                                dependentPropertyNames,
-                                declaringEntityType,
-                                navigationProperty).ToList()
-                    };
+                                     {
+                                         DependentEnd = dependentEnd,
+                                         DependentProperties
+                                             = GetDependentProperties(
+                                                 dependentEnd.EntityType,
+                                                 dependentPropertyNames,
+                                                 declaringEntityType,
+                                                 navigationProperty).ToList()
+                                     };
 
                 var dependentKeyProperties = dependentEnd.EntityType.KeyProperties();
 

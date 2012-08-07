@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
@@ -6,13 +7,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.ModelConfiguration.Conventions;
 
     /// <summary>
-    ///     This <see cref = "DbModelBuilder" /> convention causes DbModelBuilder to include metadata about the model 
-    ///     when it builds the model. When <see cref = "DbContext" /> creates a model by convention it will
+    ///     This <see cref="DbModelBuilder" /> convention causes DbModelBuilder to include metadata about the model 
+    ///     when it builds the model. When <see cref="DbContext" /> creates a model by convention it will
     ///     add this convention to the list of those used by the DbModelBuilder.  This will then result in
     ///     model metadata being written to the database if the DbContext is used to create the database.
     ///     This can then be used as a quick check to see if the model has changed since the last time it was
     ///     used against the database.
-    ///     This convention can be removed from the <see cref = "DbModelBuilder" /> conventions by overriding
+    ///     This convention can be removed from the <see cref="DbModelBuilder" /> conventions by overriding
     ///     the OnModelCreating method on a derived DbContext class.
     /// </summary>
     [Obsolete(
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Adds metadata to the given model configuration.
         /// </summary>
-        /// <param name = "modelConfiguration">The model configuration.</param>
+        /// <param name="modelConfiguration"> The model configuration. </param>
         void IConfigurationConvention.Apply(ModelConfiguration modelConfiguration)
         {
             EdmMetadataContext.ConfigureEdmMetadata(modelConfiguration);

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
@@ -10,12 +11,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Text;
 
     /// <summary>
-    /// Error reporting Helper
+    ///     Error reporting Helper
     /// </summary>
     internal static class CqlErrorHelper
     {
         /// <summary>
-        /// Reports function overload resolution error.
+        ///     Reports function overload resolution error.
         /// </summary>
         internal static void ReportFunctionOverloadError(MethodExpr functionExpr, EdmFunction functionType, List<TypeUsage> argTypes)
         {
@@ -54,11 +55,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// provides error feedback for aliases already used in a given context
+        ///     provides error feedback for aliases already used in a given context
         /// </summary>
-        /// <param name="aliasName"></param>
-        /// <param name="errCtx"></param>
-        /// <param name="contextMessage"></param>
+        /// <param name="aliasName"> </param>
+        /// <param name="errCtx"> </param>
+        /// <param name="contextMessage"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId =
                 "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
@@ -70,11 +71,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Reports incompatible type error
+        ///     Reports incompatible type error
         /// </summary>
-        /// <param name="errCtx"></param>
-        /// <param name="leftType"></param>
-        /// <param name="rightType"></param>
+        /// <param name="errCtx"> </param>
+        /// <param name="leftType"> </param>
+        /// <param name="rightType"> </param>
         internal static void ReportIncompatibleCommonType(ErrorContext errCtx, TypeUsage leftType, TypeUsage rightType)
         {
             //
@@ -89,13 +90,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// navigates through the type structure to find where the incompatibility happens
+        ///     navigates through the type structure to find where the incompatibility happens
         /// </summary>
-        /// <param name="errCtx"></param>
-        /// <param name="rootLeftType"></param>
-        /// <param name="rootRightType"></param>
-        /// <param name="leftType"></param>
-        /// <param name="rightType"></param>
+        /// <param name="errCtx"> </param>
+        /// <param name="rootLeftType"> </param>
+        /// <param name="rootRightType"> </param>
+        /// <param name="leftType"> </param>
+        /// <param name="rightType"> </param>
         private static void ReportIncompatibleCommonType(
             ErrorContext errCtx, TypeUsage rootLeftType, TypeUsage rootRightType, TypeUsage leftType, TypeUsage rightType)
         {

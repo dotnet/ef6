@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Diagnostics;
 
     /// <summary>
-    /// Scans a virtual extent (ie) a transient collection
+    ///     Scans a virtual extent (ie) a transient collection
     /// </summary>
     internal sealed class UnnestOp : RelOp
     {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly UnnestOp Pattern = new UnnestOp();
 
         /// <summary>
-        /// The (collection-typed) Var that's being unnested
+        ///     The (collection-typed) Var that's being unnested
         /// </summary>
         internal Var Var
         {
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// The table instance produced by this Op
+        ///     The table instance produced by this Op
         /// </summary>
         internal Table Table
         {
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Exactly 1 child
+        ///     Exactly 1 child
         /// </summary>
         internal override int Arity
         {
@@ -60,10 +61,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method
+        ///     Visitor pattern method
         /// </summary>
-        /// <param name="v">The BasicOpVisitor that is visiting this Op</param>
-        /// <param name="n">The Node that references this Op</param>
+        /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
+        /// <param name="n"> The Node that references this Op </param>
         [DebuggerNonUserCode]
         internal override void Accept(BasicOpVisitor v, Node n)
         {
@@ -71,11 +72,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method for visitors with a return value
+        ///     Visitor pattern method for visitors with a return value
         /// </summary>
-        /// <param name="v">The visitor</param>
-        /// <param name="n">The node in question</param>
-        /// <returns>An instance of TResultType</returns>
+        /// <param name="v"> The visitor </param>
+        /// <param name="n"> The node in question </param>
+        /// <returns> An instance of TResultType </returns>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType>(BasicOpVisitorOfT<TResultType> v, Node n)
         {

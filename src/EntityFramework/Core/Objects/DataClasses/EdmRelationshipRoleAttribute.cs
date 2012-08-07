@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -19,10 +20,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private readonly bool _isForeignKey;
 
         /// <summary>
-        /// Attribute containing the details for a relationship
-        /// This should match the C-Space relationship information, but having it available in this
-        /// attribute allows us access to this information even in O-Space when there is no context.
-        /// There can be multiple attributes of this type in an assembly.
+        ///     Attribute containing the details for a relationship
+        ///     This should match the C-Space relationship information, but having it available in this
+        ///     attribute allows us access to this information even in O-Space when there is no context.
+        ///     There can be multiple attributes of this type in an assembly.
         /// </summary>
         public EdmRelationshipAttribute(
             string relationshipNamespaceName,
@@ -47,10 +48,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Attribute containing the details for a relationship
-        /// This should match the C-Space relationship information, but having it available in this
-        /// attribute allows us access to this information even in O-Space when there is no context.
-        /// There can be multiple attributes of this type in an assembly.
+        ///     Attribute containing the details for a relationship
+        ///     This should match the C-Space relationship information, but having it available in this
+        ///     attribute allows us access to this information even in O-Space when there is no context.
+        ///     There can be multiple attributes of this type in an assembly.
         /// </summary>
         public EdmRelationshipAttribute(
             string relationshipNamespaceName,
@@ -78,7 +79,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The name of the namespace that the relationship is in
+        ///     The name of the namespace that the relationship is in
         /// </summary>
         public string RelationshipNamespaceName
         {
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The name of a relationship
+        ///     The name of a relationship
         /// </summary>
         public string RelationshipName
         {
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The name of the role
+        ///     The name of the role
         /// </summary>
         public string Role1Name
         {
@@ -102,7 +103,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The multiplicity of the the RoleName in RelationshipName 
+        ///     The multiplicity of the the RoleName in RelationshipName
         /// </summary>
         public RelationshipMultiplicity Role1Multiplicity
         {
@@ -110,7 +111,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The CLR type for the role associated with this relationship
+        ///     The CLR type for the role associated with this relationship
         /// </summary>
         public Type Role1Type
         {
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The name of the role
+        ///     The name of the role
         /// </summary>
         public string Role2Name
         {
@@ -126,7 +127,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The multiplicity of the the RoleName in RelationshipName 
+        ///     The multiplicity of the the RoleName in RelationshipName
         /// </summary>
         public RelationshipMultiplicity Role2Multiplicity
         {
@@ -134,7 +135,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// The CLR type for the role associated with this relationship
+        ///     The CLR type for the role associated with this relationship
         /// </summary>
         public Type Role2Type
         {
@@ -142,7 +143,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Indicates whether this is a common-value (or FK-based) relationship.
+        ///     Indicates whether this is a common-value (or FK-based) relationship.
         /// </summary>
         public bool IsForeignKey
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Internal
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.Common.Internal
     using System.Text;
 
     /// <summary>
-    /// Copied from System.Data.dll
+    ///     Copied from System.Data.dll
     /// </summary>
     internal static class MultipartIdentifier
     {
@@ -40,18 +41,18 @@ namespace System.Data.Entity.Core.Common.Internal
         }
 
         /// <summary>
-        /// Core function  for parsing the multipart identifer string.
-        /// Note:  Left quote strings need to correspond 1 to 1 with the right quote strings
-        /// example: "ab" "cd",  passed in for the left and the right quote
-        /// would set a or b as a starting quote character.  
-        ///  If a is the starting quote char then c would be the ending quote char
-        /// otherwise if b is the starting quote char then d would be the ending quote character.  
+        ///     Core function  for parsing the multipart identifer string.
+        ///     Note:  Left quote strings need to correspond 1 to 1 with the right quote strings
+        ///     example: "ab" "cd",  passed in for the left and the right quote
+        ///     would set a or b as a starting quote character.  
+        ///     If a is the starting quote char then c would be the ending quote char
+        ///     otherwise if b is the starting quote char then d would be the ending quote character.
         /// </summary>
-        /// <param name="name">string to parse</param>
-        /// <param name="leftQuote">set of characters which are valid quoteing characters to initiate a quote</param>
-        /// <param name="rightQuote">set of characters which are valid to stop a quote, array index's correspond to the the leftquote array.</param>
-        /// <param name="separator">separator to use</param>
-        /// <returns></returns>
+        /// <param name="name"> string to parse </param>
+        /// <param name="leftQuote"> set of characters which are valid quoteing characters to initiate a quote </param>
+        /// <param name="rightQuote"> set of characters which are valid to stop a quote, array index's correspond to the the leftquote array. </param>
+        /// <param name="separator"> separator to use </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static List<string> ParseMultipartIdentifier(string name, string leftQuote, string rightQuote, char separator)

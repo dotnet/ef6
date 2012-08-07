@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections;
@@ -17,12 +18,12 @@ namespace System.Data.Entity.Internal
         private readonly Type _elementType;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalSqlNonSetQuery" /> class.
+        ///     Initializes a new instance of the <see cref="InternalSqlNonSetQuery" /> class.
         /// </summary>
-        /// <param name = "internalContext">The internal context.</param>
-        /// <param name = "elementType">Type of the element.</param>
-        /// <param name = "sql">The SQL.</param>
-        /// <param name = "parameters">The parameters.</param>
+        /// <param name="internalContext"> The internal context. </param>
+        /// <param name="elementType"> Type of the element. </param>
+        /// <param name="sql"> The SQL. </param>
+        /// <param name="parameters"> The parameters. </param>
         internal InternalSqlNonSetQuery(
             InternalContext internalContext, Type elementType, string sql, object[] parameters)
             : base(sql, parameters)
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Returns this query since it can never be a tracking query.
         /// </summary>
-        /// <returns>This instance.</returns>
+        /// <returns> This instance. </returns>
         public override InternalSqlQuery AsNoTracking()
         {
             return this;
@@ -52,10 +53,10 @@ namespace System.Data.Entity.Internal
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         public override IEnumerator GetEnumerator()
         {
             return _internalContext.ExecuteSqlQuery(_elementType, Sql, Parameters);
@@ -66,10 +67,10 @@ namespace System.Data.Entity.Internal
         #region IDbAsyncEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the given SQL query against the
+        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         public override IDbAsyncEnumerator GetAsyncEnumerator()
         {
             return _internalContext.ExecuteSqlQueryAsync(_elementType, Sql, Parameters);

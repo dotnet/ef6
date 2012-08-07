@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
     using System.Collections.Generic;
@@ -17,15 +18,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Text;
 
     /// <summary>
-    /// Holds the view generated for a given OFTYPE(Extent, Type) combination.
+    ///     Holds the view generated for a given OFTYPE(Extent, Type) combination.
     /// </summary>
     internal sealed class GeneratedView : InternalBase
     {
         #region Factory
 
         /// <summary>
-        /// Creates generated view object for the combination of the <paramref name="extent"/> and the <paramref name="type"/>. 
-        /// This constructor is used for regular cell-based view generation.
+        ///     Creates generated view object for the combination of the <paramref name="extent" /> and the <paramref name="type" />. 
+        ///     This constructor is used for regular cell-based view generation.
         /// </summary>
         internal static GeneratedView CreateGeneratedView(
             EntitySetBase extent,
@@ -59,8 +60,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        /// Creates generated view object for the combination of the <paramref name="extent"/> and the <paramref name="type"/>. 
-        /// This constructor is used for FK association sets only.
+        ///     Creates generated view object for the combination of the <paramref name="extent" /> and the <paramref name="type" />. 
+        ///     This constructor is used for FK association sets only.
         /// </summary>
         internal static GeneratedView CreateGeneratedViewForFKAssociationSet(
             EntitySetBase extent,
@@ -73,8 +74,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        /// Creates generated view object for the combination of the <paramref name="setMapping"/>.Set and the <paramref name="type"/>. 
-        /// This constructor is used for user-defined query views only.
+        ///     Creates generated view object for the combination of the <paramref name="setMapping" />.Set and the <paramref
+        ///      name="type" />. 
+        ///     This constructor is used for user-defined query views only.
         /// </summary>
         internal static bool TryParseUserSpecifiedView(
             StorageSetMapping setMapping,
@@ -241,10 +243,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        /// Given an extent and its corresponding view, invokes the parser to check if the view definition is syntactically correct.
-        /// Iff parsing succeeds: <paramref name="commandTree"/> and <paramref name="discriminatorMap"/> are set to the parse result and method returns true,
-        /// otherwise if parser has thrown a catchable exception, it is returned via <paramref name="parserException"/> parameter, 
-        /// otherwise exception is re-thrown.
+        ///     Given an extent and its corresponding view, invokes the parser to check if the view definition is syntactically correct.
+        ///     Iff parsing succeeds: <paramref name="commandTree" /> and <paramref name="discriminatorMap" /> are set to the parse result and method returns true,
+        ///     otherwise if parser has thrown a catchable exception, it is returned via <paramref name="parserException" /> parameter, 
+        ///     otherwise exception is re-thrown.
         /// </summary>
         private static bool TryParseView(
             string eSQL,

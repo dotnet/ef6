@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration
 {
     using System.ComponentModel;
@@ -13,10 +14,10 @@ namespace System.Data.Entity.ModelConfiguration
     ///     Allows configuration to be performed for an complex type in a model.
     /// 
     ///     A ComplexTypeConfiguration can be obtained via the ComplexType method on
-    ///     <see cref = "DbModelBuilder" /> or a custom type derived from ComplexTypeConfiguration
-    ///     can be registered via the Configurations property on <see cref = "DbModelBuilder" />.
+    ///     <see cref="DbModelBuilder" /> or a custom type derived from ComplexTypeConfiguration
+    ///     can be registered via the Configurations property on <see cref="DbModelBuilder" />.
     /// </summary>
-    /// <typeparam name = "TComplexType">The complex type to be configured.</typeparam>
+    /// <typeparam name="TComplexType"> The complex type to be configured. </typeparam>
     public class ComplexTypeConfiguration<TComplexType> : StructuralTypeConfiguration<TComplexType>
         where TComplexType : class
     {

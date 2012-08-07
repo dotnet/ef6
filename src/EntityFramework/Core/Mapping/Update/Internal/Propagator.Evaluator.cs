@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -14,45 +15,45 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal partial class Propagator
     {
         /// <summary>
-        /// Helper class supporting the evaluation of highly constrained expressions of the following 
-        /// form:
+        ///     Helper class supporting the evaluation of highly constrained expressions of the following 
+        ///     form:
         /// 
-        /// P := P AND P | P OR P | NOT P | V is of type | V eq V | V
-        /// V := P
-        /// V := Property(V) | Constant | CASE WHEN P THEN V ... ELSE V | Row | new Instance | Null
+        ///     P := P AND P | P OR P | NOT P | V is of type | V eq V | V
+        ///     V := P
+        ///     V := Property(V) | Constant | CASE WHEN P THEN V ... ELSE V | Row | new Instance | Null
         /// 
-        /// The evaluator supports SQL style ternary logic for unknown results (bool? is used, where
-        /// null --> unknown, true --> TRUE and false --> FALSE
+        ///     The evaluator supports SQL style ternary logic for unknown results (bool? is used, where
+        ///     null --> unknown, true --> TRUE and false --> FALSE
         /// </summary>
         /// <remarks>
-        /// Assumptions:
+        ///     Assumptions:
         /// 
-        /// - The node and the row passed in must be type compatible.
+        ///     - The node and the row passed in must be type compatible.
         /// 
-        /// Any var refs in the node must have the same type as the input row. This is a natural
-        /// requirement given the usage of this method in the propagator, since each propagator handler
-        /// produces rows of the correct type for its parent. Keep in mind that every var ref in a CQT is
-        /// bound specifically to the direct child.
+        ///     Any var refs in the node must have the same type as the input row. This is a natural
+        ///     requirement given the usage of this method in the propagator, since each propagator handler
+        ///     produces rows of the correct type for its parent. Keep in mind that every var ref in a CQT is
+        ///     bound specifically to the direct child.
         /// 
-        /// - Equality comparisons are CLR culture invariant. Practically, this introduces the following
-        /// differences from SQL comparisons:
+        ///     - Equality comparisons are CLR culture invariant. Practically, this introduces the following
+        ///     differences from SQL comparisons:
         /// 
         ///     - String comparisons are not collation sensitive
         ///     - The constants we compare come from a fixed repertoire of scalar types implementing IComparable
         /// 
         /// 
-        /// For the purposes of update mapping view evaluation, these assumptions are safe because we
-        /// only support mapping of non-null constants to fields (these constants are non-null discriminators)
-        /// and key comparisons (where the key values are replicated across a reference).
+        ///     For the purposes of update mapping view evaluation, these assumptions are safe because we
+        ///     only support mapping of non-null constants to fields (these constants are non-null discriminators)
+        ///     and key comparisons (where the key values are replicated across a reference).
         /// </remarks>
         private class Evaluator : UpdateExpressionVisitor<PropagatorResult>
         {
             #region Constructors
 
             /// <summary>
-            /// Constructs an evaluator for evaluating expressions for the given row.
+            ///     Constructs an evaluator for evaluating expressions for the given row.
             /// </summary>
-            /// <param name="row">Row to match</param>
+            /// <param name="row"> Row to match </param>
             private Evaluator(PropagatorResult row)
             {
                 Contract.Requires(row != null);
@@ -81,11 +82,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             #region Methods
 
             /// <summary>
-            /// Utility method filtering out a set of rows given a predicate.
+            ///     Utility method filtering out a set of rows given a predicate.
             /// </summary>
-            /// <param name="predicate">Match criteria.</param>
-            /// <param name="rows">Input rows.</param>
-            /// <returns>Input rows matching criteria.</returns>
+            /// <param name="predicate"> Match criteria. </param>
+            /// <param name="rows"> Input rows. </param>
+            /// <returns> Input rows matching criteria. </returns>
             internal static IEnumerable<PropagatorResult> Filter(
                 DbExpression predicate, IEnumerable<PropagatorResult> rows)
             {
@@ -99,14 +100,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Utility method determining whether a row matches a predicate.
+            ///     Utility method determining whether a row matches a predicate.
             /// </summary>
             /// <remarks>
-            /// See Walker class for an explanation of this coding pattern.
+            ///     See Walker class for an explanation of this coding pattern.
             /// </remarks>
-            /// <param name="predicate">Match criteria.</param>
-            /// <param name="row">Input row.</param>
-            /// <returns><c>true</c> if the row matches the criteria; <c>false</c> otherwise</returns>
+            /// <param name="predicate"> Match criteria. </param>
+            /// <param name="row"> Input row. </param>
+            /// <returns> <c>true</c> if the row matches the criteria; <c>false</c> otherwise </returns>
             internal static bool EvaluatePredicate(DbExpression predicate, PropagatorResult row)
             {
                 var evaluator = new Evaluator(row);
@@ -119,11 +120,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates scalar node.
+            ///     Evaluates scalar node.
             /// </summary>
-            /// <param name="node">Sub-query returning a scalar value.</param>
-            /// <param name="row">Row to evaluate.</param>
-            /// <returns>Scalar result.</returns>
+            /// <param name="node"> Sub-query returning a scalar value. </param>
+            /// <param name="row"> Row to evaluate. </param>
+            /// <returns> Scalar result. </returns>
             internal static PropagatorResult Evaluate(DbExpression node, PropagatorResult row)
             {
                 DbExpressionVisitor<PropagatorResult> evaluator = new Evaluator(row);
@@ -131,11 +132,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Given an expression, converts to a (nullable) bool. Only boolean constant and null are
-            /// supported.
+            ///     Given an expression, converts to a (nullable) bool. Only boolean constant and null are
+            ///     supported.
             /// </summary>
-            /// <param name="result">Result to convert</param>
-            /// <returns>true if true constant; false if false constant; null is null constant</returns>
+            /// <param name="result"> Result to convert </param>
+            /// <returns> true if true constant; false if false constant; null is null constant </returns>
             private static bool? ConvertResultToBool(PropagatorResult result)
             {
                 Debug.Assert(null != result && result.IsSimple, "Must be a simple Boolean result");
@@ -152,11 +153,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Converts a (nullable) bool to an expression.
+            ///     Converts a (nullable) bool to an expression.
             /// </summary>
-            /// <param name="booleanValue">Result</param>
-            /// <param name="inputs">Inputs contributing to the result</param>
-            /// <returns>DbExpression</returns>
+            /// <param name="booleanValue"> Result </param>
+            /// <param name="inputs"> Inputs contributing to the result </param>
+            /// <returns> DbExpression </returns>
             private static PropagatorResult ConvertBoolToResult(bool? booleanValue, params PropagatorResult[] inputs)
             {
                 object result;
@@ -176,10 +177,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             #region DbExpressionVisitor implementation
 
             /// <summary>
-            /// Determines whether the argument being evaluated has a given type (declared in the IsOfOnly predicate).
+            ///     Determines whether the argument being evaluated has a given type (declared in the IsOfOnly predicate).
             /// </summary>
-            /// <param name="predicate">IsOfOnly predicate.</param>
-            /// <returns>True if the row being evaluated is of the requested type; false otherwise.</returns>
+            /// <param name="predicate"> IsOfOnly predicate. </param>
+            /// <returns> True if the row being evaluated is of the requested type; false otherwise. </returns>
             public override PropagatorResult Visit(DbIsOfExpression predicate)
             {
                 if (DbExpressionKind.IsOfOnly
@@ -204,10 +205,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Determines whether the row being evaluated has the given type (declared in the IsOf predicate).
+            ///     Determines whether the row being evaluated has the given type (declared in the IsOf predicate).
             /// </summary>
-            /// <param name="predicate">Equals predicate.</param>
-            /// <returns>True if the values being compared are equivalent; false otherwise.</returns>
+            /// <param name="predicate"> Equals predicate. </param>
+            /// <returns> True if the values being compared are equivalent; false otherwise. </returns>
             public override PropagatorResult Visit(DbComparisonExpression predicate)
             {
                 if (DbExpressionKind.Equals
@@ -243,10 +244,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates an 'and' expression given results of evalating its children.
+            ///     Evaluates an 'and' expression given results of evalating its children.
             /// </summary>
-            /// <param name="predicate">And predicate</param>
-            /// <returns>True if both child predicates are satisfied; false otherwise.</returns>
+            /// <param name="predicate"> And predicate </param>
+            /// <returns> True if both child predicates are satisfied; false otherwise. </returns>
             public override PropagatorResult Visit(DbAndExpression predicate)
             {
                 var left = Visit(predicate.Left);
@@ -270,10 +271,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates an 'or' expression given results of evaluating its children.
+            ///     Evaluates an 'or' expression given results of evaluating its children.
             /// </summary>
-            /// <param name="predicate">'Or' predicate</param>
-            /// <returns>True if either child predicate is satisfied; false otherwise.</returns>
+            /// <param name="predicate"> 'Or' predicate </param>
+            /// <returns> True if either child predicate is satisfied; false otherwise. </returns>
             public override PropagatorResult Visit(DbOrExpression predicate)
             {
                 var left = Visit(predicate.Left);
@@ -309,10 +310,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evalutes a 'not' expression given results 
+            ///     Evalutes a 'not' expression given results
             /// </summary>
-            /// <param name="predicate">'Not' predicate</param>
-            /// <returns>True of the argument to the 'not' predicate evaluator to false; false otherwise</returns>
+            /// <param name="predicate"> 'Not' predicate </param>
+            /// <returns> True of the argument to the 'not' predicate evaluator to false; false otherwise </returns>
             public override PropagatorResult Visit(DbNotExpression predicate)
             {
                 var child = Visit(predicate.Argument);
@@ -324,10 +325,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Returns the result of evaluating a case expression.
+            ///     Returns the result of evaluating a case expression.
             /// </summary>
-            /// <param name="node">Case expression node.</param>
-            /// <returns>Result of evaluating case expression over the input row for this visitor.</returns>
+            /// <param name="node"> Case expression node. </param>
+            /// <returns> Result of evaluating case expression over the input row for this visitor. </returns>
             public override PropagatorResult Visit(DbCaseExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -373,12 +374,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates a var ref. In practice, this corresponds to the input row for the visitor (the row is
-            /// a member of the referenced input for a projection or filter).
-            /// We assert that types are consistent here.
+            ///     Evaluates a var ref. In practice, this corresponds to the input row for the visitor (the row is
+            ///     a member of the referenced input for a projection or filter).
+            ///     We assert that types are consistent here.
             /// </summary>
-            /// <param name="node">Var ref expression node</param>
-            /// <returns>Input row for the visitor.</returns>
+            /// <param name="node"> Var ref expression node </param>
+            /// <returns> Input row for the visitor. </returns>
             public override PropagatorResult Visit(DbVariableReferenceExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -387,10 +388,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates a property expression given the result of evaluating the property's instance.
+            ///     Evaluates a property expression given the result of evaluating the property's instance.
             /// </summary>
-            /// <param name="node">Property expression node.</param>
-            /// <returns>DbExpression resulting from the evaluation of property.</returns>
+            /// <param name="node"> Property expression node. </param>
+            /// <returns> DbExpression resulting from the evaluation of property. </returns>
             public override PropagatorResult Visit(DbPropertyExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -415,10 +416,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates a constant expression (trivial: the result is the constant expression)
+            ///     Evaluates a constant expression (trivial: the result is the constant expression)
             /// </summary>
-            /// <param name="node">Constant expression node.</param>
-            /// <returns>Constant expression</returns>
+            /// <param name="node"> Constant expression node. </param>
+            /// <returns> Constant expression </returns>
             public override PropagatorResult Visit(DbConstantExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -430,10 +431,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates a ref key expression based on the result of evaluating the argument to the ref.
+            ///     Evaluates a ref key expression based on the result of evaluating the argument to the ref.
             /// </summary>
-            /// <param name="node">Ref key expression node.</param>
-            /// <returns>The structural key of the ref as a new instance (record).</returns>
+            /// <param name="node"> Ref key expression node. </param>
+            /// <returns> The structural key of the ref as a new instance (record). </returns>
             public override PropagatorResult Visit(DbRefKeyExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -446,10 +447,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates a null expression (trivial: the result is the null expression)
+            ///     Evaluates a null expression (trivial: the result is the null expression)
             /// </summary>
-            /// <param name="node">Null expression node.</param>
-            /// <returns>Null expression</returns>
+            /// <param name="node"> Null expression node. </param>
+            /// <returns> Null expression </returns>
             public override PropagatorResult Visit(DbNullExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -461,10 +462,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluates treat expression given a result for the argument to the treat.
+            ///     Evaluates treat expression given a result for the argument to the treat.
             /// </summary>
-            /// <param name="node">Treat expression</param>
-            /// <returns>Null if the argument is of the given type, the argument otherwise</returns>
+            /// <param name="node"> Treat expression </param>
+            /// <returns> Null if the argument is of the given type, the argument otherwise </returns>
             public override PropagatorResult Visit(DbTreatExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -487,10 +488,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Casts argument to expression.
+            ///     Casts argument to expression.
             /// </summary>
-            /// <param name="node">Cast expression node</param>
-            /// <returns>Result of casting argument</returns>
+            /// <param name="node"> Cast expression node </param>
+            /// <returns> Result of casting argument </returns>
             public override PropagatorResult Visit(DbCastExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -528,11 +529,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Casts an object instance to the specified model type.
+            ///     Casts an object instance to the specified model type.
             /// </summary>
-            /// <param name="value">Value to cast</param>
-            /// <param name="clrPrimitiveType">clr type to which the value is casted to</param>
-            /// <returns>Cast value</returns>
+            /// <param name="value"> Value to cast </param>
+            /// <param name="clrPrimitiveType"> clr type to which the value is casted to </param>
+            /// <returns> Cast value </returns>
             private static object Cast(object value, Type clrPrimitiveType)
             {
                 IFormatProvider formatProvider = CultureInfo.InvariantCulture;
@@ -558,10 +559,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Evaluate a null expression.
+            ///     Evaluate a null expression.
             /// </summary>
-            /// <param name="node">Is null expression</param>
-            /// <returns>A boolean expression describing the result of evaluating the Is Null predicate</returns>
+            /// <param name="node"> Is null expression </param>
+            /// <returns> A boolean expression describing the result of evaluating the Is Null predicate </returns>
             public override PropagatorResult Visit(DbIsNullExpression node)
             {
                 Debug.Assert(null != node, "node is not visited when null");
@@ -575,14 +576,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             #endregion
 
             /// <summary>
-            /// Supports propagation of preserve and unknown values when evaluating expressions. If any input 
-            /// to an expression is marked as unknown, the same is true of the result of evaluating
-            /// that expression. If all inputs to an expression are marked 'preserve', then the result is also
-            /// marked preserve.
+            ///     Supports propagation of preserve and unknown values when evaluating expressions. If any input 
+            ///     to an expression is marked as unknown, the same is true of the result of evaluating
+            ///     that expression. If all inputs to an expression are marked 'preserve', then the result is also
+            ///     marked preserve.
             /// </summary>
-            /// <param name="result">Result to markup</param>
-            /// <param name="inputs">Expressions contributing to the result</param>
-            /// <returns>Marked up result.</returns>
+            /// <param name="result"> Result to markup </param>
+            /// <param name="inputs"> Expressions contributing to the result </param>
+            /// <returns> Marked up result. </returns>
             private static PropagatorFlags PropagateUnknownAndPreserveFlags(PropagatorResult result, IEnumerable<PropagatorResult> inputs)
             {
                 var unknown = false;

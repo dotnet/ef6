@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Allows the construction and modification of a column in a <see cref = "DbTableMetadata" /> table.
+    ///     Allows the construction and modification of a column in a <see cref="DbTableMetadata" /> table.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Edm.Db
         public virtual bool IsPrimaryKeyColumn { get; set; }
 
         /// <summary>
-        ///     Gets or sets a <see cref = "DbStoreGeneratedPattern" /> value indicating if and how the value of the column is automatically generated.
+        ///     Gets or sets a <see cref="DbStoreGeneratedPattern" /> value indicating if and how the value of the column is automatically generated.
         /// </summary>
         public virtual DbStoreGeneratedPattern StoreGeneratedPattern { get; set; }
 

@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// An abstract base type for types that implement the IExpressionVisitor interface to derive from.
+    ///     An abstract base type for types that implement the IExpressionVisitor interface to derive from.
     /// </summary>
     public abstract class BasicCommandTreeVisitor : BasicExpressionVisitor
     {

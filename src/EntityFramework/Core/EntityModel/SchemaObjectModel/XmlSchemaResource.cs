@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -34,9 +35,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         internal XmlSchemaResource[] ImportedSchemas;
 
         /// <summary>
-        /// Builds a dictionary from XmlNamespace to XmlSchemaResource of both C and S space schemas
+        ///     Builds a dictionary from XmlNamespace to XmlSchemaResource of both C and S space schemas
         /// </summary>
-        /// <returns>The built XmlNamespace to XmlSchemaResource dictionary.</returns>
+        /// <returns> The built XmlNamespace to XmlSchemaResource dictionary. </returns>
         internal static Dictionary<string, XmlSchemaResource> GetMetadataSchemaResourceMap(double schemaVersion)
         {
             var schemaResourceMap = new Dictionary<string, XmlSchemaResource>(StringComparer.Ordinal);
@@ -46,16 +47,17 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Adds Store schema resource entries to the given XmlNamespace to XmlSchemaResoure map
+        ///     Adds Store schema resource entries to the given XmlNamespace to XmlSchemaResoure map
         /// </summary>
-        /// <param name="schemaResourceMap">The XmlNamespace to XmlSchemaResource map to add entries to.</param>
+        /// <param name="schemaResourceMap"> The XmlNamespace to XmlSchemaResource map to add entries to. </param>
         internal static void AddStoreSchemaResourceMapEntries(Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
         {
-            XmlSchemaResource[] ssdlImports = {
-                new XmlSchemaResource(
-                    XmlConstants.EntityStoreSchemaGeneratorNamespace,
-                    "System.Data.Resources.EntityStoreSchemaGenerator.xsd")
-            };
+            XmlSchemaResource[] ssdlImports =
+                {
+                    new XmlSchemaResource(
+                        XmlConstants.EntityStoreSchemaGeneratorNamespace,
+                        "System.Data.Resources.EntityStoreSchemaGenerator.xsd")
+                };
 
             var ssdlSchema = new XmlSchemaResource(XmlConstants.TargetNamespace_1, "System.Data.Resources.SSDLSchema.xsd", ssdlImports);
             schemaResourceMap.Add(ssdlSchema.NamespaceUri, ssdlSchema);
@@ -82,9 +84,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Adds Mapping schema resource entries to the given XmlNamespace to XmlSchemaResoure map
+        ///     Adds Mapping schema resource entries to the given XmlNamespace to XmlSchemaResoure map
         /// </summary>
-        /// <param name="schemaResourceMap">The XmlNamespace to XmlSchemaResource map to add entries to.</param>
+        /// <param name="schemaResourceMap"> The XmlNamespace to XmlSchemaResource map to add entries to. </param>
         internal static void AddMappingSchemaResourceMapEntries(
             Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
         {
@@ -106,33 +108,36 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Adds Edm schema resource entries to the given XmlNamespace to XmlSchemaResoure map,
-        /// when calling from SomSchemaSetHelper.ComputeSchemaSet(), all the imported xsd will be included
+        ///     Adds Edm schema resource entries to the given XmlNamespace to XmlSchemaResoure map,
+        ///     when calling from SomSchemaSetHelper.ComputeSchemaSet(), all the imported xsd will be included
         /// </summary>
-        /// <param name="schemaResourceMap">The XmlNamespace to XmlSchemaResource map to add entries to.</param>
+        /// <param name="schemaResourceMap"> The XmlNamespace to XmlSchemaResource map to add entries to. </param>
         internal static void AddEdmSchemaResourceMapEntries(Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
         {
-            XmlSchemaResource[] csdlImports = {
-                new XmlSchemaResource(
-                    XmlConstants.CodeGenerationSchemaNamespace,
-                    "System.Data.Resources.CodeGenerationSchema.xsd")
-            };
+            XmlSchemaResource[] csdlImports =
+                {
+                    new XmlSchemaResource(
+                        XmlConstants.CodeGenerationSchemaNamespace,
+                        "System.Data.Resources.CodeGenerationSchema.xsd")
+                };
 
-            XmlSchemaResource[] csdl2Imports = {
-                new XmlSchemaResource(
-                    XmlConstants.CodeGenerationSchemaNamespace,
-                    "System.Data.Resources.CodeGenerationSchema.xsd"),
-                new XmlSchemaResource(
-                    XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
-            };
+            XmlSchemaResource[] csdl2Imports =
+                {
+                    new XmlSchemaResource(
+                        XmlConstants.CodeGenerationSchemaNamespace,
+                        "System.Data.Resources.CodeGenerationSchema.xsd"),
+                    new XmlSchemaResource(
+                        XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
+                };
 
-            XmlSchemaResource[] csdl3Imports = {
-                new XmlSchemaResource(
-                    XmlConstants.CodeGenerationSchemaNamespace,
-                    "System.Data.Resources.CodeGenerationSchema.xsd"),
-                new XmlSchemaResource(
-                    XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
-            };
+            XmlSchemaResource[] csdl3Imports =
+                {
+                    new XmlSchemaResource(
+                        XmlConstants.CodeGenerationSchemaNamespace,
+                        "System.Data.Resources.CodeGenerationSchema.xsd"),
+                    new XmlSchemaResource(
+                        XmlConstants.AnnotationNamespace, "System.Data.Resources.AnnotationSchema.xsd")
+                };
 
             var csdlSchema_1 = new XmlSchemaResource(XmlConstants.ModelNamespace_1, "System.Data.Resources.CSDLSchema_1.xsd", csdlImports);
             schemaResourceMap.Add(csdlSchema_1.NamespaceUri, csdlSchema_1);

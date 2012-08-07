@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections;
@@ -6,10 +7,10 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Resources;
 
     /// <summary>
-    ///     An implementation of <see cref = "ISet{T}" /> that wraps an existing set but makes
+    ///     An implementation of <see cref="ISet{T}" /> that wraps an existing set but makes
     ///     it read-only.
     /// </summary>
-    /// <typeparam name = "T"></typeparam>
+    /// <typeparam name="T"> </typeparam>
     internal class ReadOnlySet<T> : ISet<T>
     {
         #region Constructors and fields
@@ -17,10 +18,10 @@ namespace System.Data.Entity.Internal
         private readonly ISet<T> _set;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "ReadOnlySet{T}" /> class wrapped around
+        ///     Initializes a new instance of the <see cref="ReadOnlySet{T}" /> class wrapped around
         ///     another existing set.
         /// </summary>
-        /// <param name = "set">The existing set.</param>
+        /// <param name="set"> The existing set. </param>
         public ReadOnlySet(ISet<T> set)
         {
             _set = set;

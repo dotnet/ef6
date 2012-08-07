@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    /// Class representing a type information for an item
+    ///     Class representing a type information for an item
     /// </summary>
     [DebuggerDisplay("EdmType={EdmType}, Facets.Count={Facets.Count}")]
     public class TypeUsage : MetadataItem
@@ -22,9 +23,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for TypeUsage taking in a type
+        ///     The constructor for TypeUsage taking in a type
         /// </summary>
-        /// <param name="edmType">The type which the TypeUsage object describes</param>
+        /// <param name="edmType"> The type which the TypeUsage object describes </param>
         /// <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
         private TypeUsage(EdmType edmType)
             : base(MetadataFlags.Readonly)
@@ -39,10 +40,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for TypeUsage taking in a type and a collection of facets
+        ///     The constructor for TypeUsage taking in a type and a collection of facets
         /// </summary>
-        /// <param name="edmType">The type which the TypeUsage object describes</param>
-        /// <param name="facets">The replacement collection of facets</param>
+        /// <param name="edmType"> The type which the TypeUsage object describes </param>
+        /// <param name="facets"> The replacement collection of facets </param>
         /// <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
         private TypeUsage(EdmType edmType, IEnumerable<Facet> facets)
             : this(edmType)
@@ -57,20 +58,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Factory Methods
 
         /// <summary>
-        /// Factory method for creating a TypeUsage with specified EdmType
+        ///     Factory method for creating a TypeUsage with specified EdmType
         /// </summary>
-        /// <param name="edmType">EdmType for which to create a type usage</param>
-        /// <returns>new TypeUsage instance with default facet values</returns>
+        /// <param name="edmType"> EdmType for which to create a type usage </param>
+        /// <returns> new TypeUsage instance with default facet values </returns>
         internal static TypeUsage Create(EdmType edmType)
         {
             return new TypeUsage(edmType);
         }
 
         /// <summary>
-        /// Factory method for creating a TypeUsage with specified EdmType
+        ///     Factory method for creating a TypeUsage with specified EdmType
         /// </summary>
-        /// <param name="edmType">EdmType for which to create a type usage</param>
-        /// <returns>new TypeUsage instance with default facet values</returns>
+        /// <param name="edmType"> EdmType for which to create a type usage </param>
+        /// <returns> new TypeUsage instance with default facet values </returns>
         internal static TypeUsage Create(EdmType edmType, FacetValues values)
         {
             return new TypeUsage(
@@ -79,11 +80,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a TypeUsage with specified EdmType and facets
+        ///     Factory method for creating a TypeUsage with specified EdmType and facets
         /// </summary>
-        /// <param name="edmType">EdmType for which to create a type usage</param>
-        /// <param name="facets">facets to be copied into the new TypeUsage</param>
-        /// <returns>new TypeUsage instance</returns>
+        /// <param name="edmType"> EdmType for which to create a type usage </param>
+        /// <param name="facets"> facets to be copied into the new TypeUsage </param>
+        /// <returns> new TypeUsage instance </returns>
         public static TypeUsage Create(EdmType edmType, IEnumerable<Facet> facets)
         {
             return new TypeUsage(edmType, facets);
@@ -95,10 +96,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a "readonly" TypeUsage with specified EdmType
+        ///     Factory method for creating a "readonly" TypeUsage with specified EdmType
         /// </summary>
-        /// <param name="edmType">An EdmType for which to create a TypeUsage</param>
-        /// <returns>A TypeUsage instance with default facet values for the specified EdmType</returns>
+        /// <param name="edmType"> An EdmType for which to create a TypeUsage </param>
+        /// <returns> A TypeUsage instance with default facet values for the specified EdmType </returns>
         public static TypeUsage CreateDefaultTypeUsage(EdmType edmType)
         {
             Contract.Requires(edmType != null);
@@ -108,13 +109,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a string TypeUsage object with the specified facets
+        ///     Factory method for creating a string TypeUsage object with the specified facets
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
-        /// <param name="isUnicode">Whether the string type is unicode or not</param>
-        /// <param name="isFixedLength">Whether the string type is fixed length or not</param>
-        /// <param name="maxLength">The max length of the string type</param>
-        /// <returns>A TypeUsage object describing a string type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
+        /// <param name="isUnicode"> Whether the string type is unicode or not </param>
+        /// <param name="isFixedLength"> Whether the string type is fixed length or not </param>
+        /// <param name="maxLength"> The max length of the string type </param>
+        /// <returns> A TypeUsage object describing a string type with the given facet values </returns>
         public static TypeUsage CreateStringTypeUsage(
             PrimitiveType primitiveType,
             bool isUnicode,
@@ -144,14 +145,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a string TypeUsage object with the specified facets and 
-        /// unbounded MaxLength
+        ///     Factory method for creating a string TypeUsage object with the specified facets and 
+        ///     unbounded MaxLength
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
-        /// <param name="isUnicode">Whether the string type is unicode or not</param>
-        /// <param name="isFixedLength">Whether the string type is fixed length or not</param>
-        /// <returns>A TypeUsage object describing a string type with the given facet values
-        /// and unbounded MaxLength</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
+        /// <param name="isUnicode"> Whether the string type is unicode or not </param>
+        /// <param name="isFixedLength"> Whether the string type is fixed length or not </param>
+        /// <returns> A TypeUsage object describing a string type with the given facet values and unbounded MaxLength </returns>
         public static TypeUsage CreateStringTypeUsage(
             PrimitiveType primitiveType,
             bool isUnicode,
@@ -177,12 +177,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a Binary TypeUsage object with the specified facets
+        ///     Factory method for creating a Binary TypeUsage object with the specified facets
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct TypeUsage</param>
-        /// <param name="isFixedLength">Whether the binary type is fixed length or not</param>
-        /// <param name="maxLength">The max length of the binary type</param>
-        /// <returns>A TypeUsage object describing a binary type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct TypeUsage </param>
+        /// <param name="isFixedLength"> Whether the binary type is fixed length or not </param>
+        /// <param name="maxLength"> The max length of the binary type </param>
+        /// <returns> A TypeUsage object describing a binary type with the given facet values </returns>
         public static TypeUsage CreateBinaryTypeUsage(
             PrimitiveType primitiveType,
             bool isFixedLength,
@@ -210,12 +210,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a Binary TypeUsage object with the specified facets and 
-        /// unbounded MaxLength
+        ///     Factory method for creating a Binary TypeUsage object with the specified facets and 
+        ///     unbounded MaxLength
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
-        /// <param name="isFixedLength">Whether the binary type is fixed length or not</param>
-        /// <returns>A TypeUsage object describing a binary type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
+        /// <param name="isFixedLength"> Whether the binary type is fixed length or not </param>
+        /// <returns> A TypeUsage object describing a binary type with the given facet values </returns>
         public static TypeUsage CreateBinaryTypeUsage(PrimitiveType primitiveType, bool isFixedLength)
         {
             Contract.Requires(primitiveType != null);
@@ -237,11 +237,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a DateTime TypeUsage object with the specified facets
+        ///     Factory method for creating a DateTime TypeUsage object with the specified facets
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
-        /// <param name="precision">Precision for seconds</param>
-        /// <returns>A TypeUsage object describing a DateTime type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
+        /// <param name="precision"> Precision for seconds </param>
+        /// <returns> A TypeUsage object describing a DateTime type with the given facet values </returns>
         public static TypeUsage CreateDateTimeTypeUsage(
             PrimitiveType primitiveType,
             byte? precision)
@@ -264,11 +264,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a DateTimeOffset TypeUsage object with the specified facets
+        ///     Factory method for creating a DateTimeOffset TypeUsage object with the specified facets
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
-        /// <param name="precision">Precision for seconds</param>
-        /// <returns>A TypeUsage object describing a DateTime type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
+        /// <param name="precision"> Precision for seconds </param>
+        /// <returns> A TypeUsage object describing a DateTime type with the given facet values </returns>
         public static TypeUsage CreateDateTimeOffsetTypeUsage(
             PrimitiveType primitiveType,
             byte? precision)
@@ -292,11 +292,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a Time TypeUsage object with the specified facets
+        ///     Factory method for creating a Time TypeUsage object with the specified facets
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct the TypeUsage</param>
-        /// <param name="precision">Precision for seconds</param>
-        /// <returns>A TypeUsage object describing a Time type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
+        /// <param name="precision"> Precision for seconds </param>
+        /// <returns> A TypeUsage object describing a Time type with the given facet values </returns>
         public static TypeUsage CreateTimeTypeUsage(
             PrimitiveType primitiveType,
             byte? precision)
@@ -319,12 +319,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a Decimal TypeUsage object with the specified facets
+        ///     Factory method for creating a Decimal TypeUsage object with the specified facets
         /// </summary>
-        /// <param name="primitiveType">A PrimitiveType for which to construct type usage</param>
-        /// <param name="precision">The precision of the decimal type</param>
-        /// <param name="scale">The scale of the decimal type</param>
-        /// <returns>A TypeUsage object describing a decimal type with the given facet values</returns>
+        /// <param name="primitiveType"> A PrimitiveType for which to construct type usage </param>
+        /// <param name="precision"> The precision of the decimal type </param>
+        /// <param name="scale"> The scale of the decimal type </param>
+        /// <returns> A TypeUsage object describing a decimal type with the given facet values </returns>
         public static TypeUsage CreateDecimalTypeUsage(
             PrimitiveType primitiveType,
             byte precision,
@@ -350,10 +350,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method for creating a Decimal TypeUsage object with unbounded precision and scale
+        ///     Factory method for creating a Decimal TypeUsage object with unbounded precision and scale
         /// </summary>
-        /// <param name="primitiveType">The PrimitiveType for which to construct type usage</param>
-        /// <returns>A TypeUsage object describing a decimal type with unbounded precision and scale</returns>
+        /// <param name="primitiveType"> The PrimitiveType for which to construct type usage </param>
+        /// <returns> A TypeUsage object describing a decimal type with unbounded precision and scale </returns>
         public static TypeUsage CreateDecimalTypeUsage(PrimitiveType primitiveType)
         {
             Contract.Requires(primitiveType != null);
@@ -384,20 +384,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private string _identity;
 
         /// <summary>
-        /// Set of facets that should be included in identity for TypeUsage
+        ///     Set of facets that should be included in identity for TypeUsage
         /// </summary>
-        /// <remarks>keep this sorted for binary searching</remarks>
+        /// <remarks>
+        ///     keep this sorted for binary searching
+        /// </remarks>
         private static readonly string[] _identityFacets = new[]
-            {
-                DbProviderManifest.DefaultValueFacetName,
-                DbProviderManifest.FixedLengthFacetName,
-                DbProviderManifest.MaxLengthFacetName,
-                DbProviderManifest.NullableFacetName,
-                DbProviderManifest.PrecisionFacetName,
-                DbProviderManifest.ScaleFacetName,
-                DbProviderManifest.UnicodeFacetName,
-                DbProviderManifest.SridFacetName,
-            };
+                                                               {
+                                                                   DbProviderManifest.DefaultValueFacetName,
+                                                                   DbProviderManifest.FixedLengthFacetName,
+                                                                   DbProviderManifest.MaxLengthFacetName,
+                                                                   DbProviderManifest.NullableFacetName,
+                                                                   DbProviderManifest.PrecisionFacetName,
+                                                                   DbProviderManifest.ScaleFacetName,
+                                                                   DbProviderManifest.UnicodeFacetName,
+                                                                   DbProviderManifest.SridFacetName,
+                                                               };
 
         internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue = EdmConstants.UnboundedValue;
         internal static readonly EdmConstants.Unbounded DefaultPrecisionFacetValue = EdmConstants.UnboundedValue;
@@ -411,7 +413,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -419,7 +421,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the type that this TypeUsage describes
+        ///     Gets the type that this TypeUsage describes
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public virtual EdmType EdmType
@@ -428,7 +430,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the list of facets for the type in this TypeUsage
+        ///     Gets the list of facets for the type in this TypeUsage
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.Facet, true)]
         public virtual ReadOnlyMetadataCollection<Facet> Facets
@@ -451,9 +453,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Returns a Model type usage for a provider type
+        ///     Returns a Model type usage for a provider type
         /// </summary>
-        /// <returns>model (CSpace) type usage</returns>
+        /// <returns> model (CSpace) type usage </returns>
         internal TypeUsage GetModelTypeUsage()
         {
             if (_modelTypeUsage == null)
@@ -529,10 +531,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// check if "this" is a subtype of the specified TypeUsage
+        ///     check if "this" is a subtype of the specified TypeUsage
         /// </summary>
-        /// <param name="typeUsage">The typeUsage to be checked</param>
-        /// <returns>true if this typeUsage is a subtype of the specified typeUsage</returns>
+        /// <param name="typeUsage"> The typeUsage to be checked </param>
+        /// <returns> true if this typeUsage is a subtype of the specified typeUsage </returns>
         public bool IsSubtypeOf(TypeUsage typeUsage)
         {
             if (EdmType == null
@@ -559,7 +561,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// returns the identity of the type usage
+        ///     returns the identity of the type usage
         /// </summary>
         internal override String Identity
         {
@@ -670,11 +672,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// EdmEquals override verifying the equivalence of all facets. Two facets are considered
-        /// equal if they have the same name and the same value (Object.Equals)
+        ///     EdmEquals override verifying the equivalence of all facets. Two facets are considered
+        ///     equal if they have the same name and the same value (Object.Equals)
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item"> </param>
+        /// <returns> </returns>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Diagnostics;
 
     /// <summary>
-    /// Extends IComparer support to the (non-IComparable) byte[] type, based on by-value comparison.
+    ///     Extends IComparer support to the (non-IComparable) byte[] type, based on by-value comparison.
     /// </summary>
     internal class ByValueComparer : IComparer
     {

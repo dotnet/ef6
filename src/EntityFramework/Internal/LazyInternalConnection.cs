@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Internal
         ///     Creates a new LazyInternalConnection using convention to calculate the connection.  
         ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
-        /// <param name = "nameOrConnectionString">Either the database name or a connection string.</param>
+        /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(string nameOrConnectionString)
         {
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Internal
         ///     Creates a new LazyInternalConnection targeting a specific database.  
         ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
-        /// <param name="connectionInfo">The connection to target.</param>
+        /// <param name="connectionInfo"> The connection to target. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(DbConnectionInfo connectionInfo)
         {
@@ -100,7 +101,7 @@ namespace System.Data.Entity.Internal
         ///     Returns a key consisting of the connection type and connection string.
         ///     If this is an EntityConnection then the metadata path is included in the key returned.
         /// </summary>
-        /// <value></value>
+        /// <value> </value>
         public override string ConnectionKey
         {
             get
@@ -110,7 +111,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override string ProviderName
         {
             get
@@ -130,7 +131,7 @@ namespace System.Data.Entity.Internal
         ///     metadata specifying the model, or instead is a store connection, in which case it contains no
         ///     model info.
         /// </summary>
-        /// <value><c>true</c> if connection contain model info; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if connection contain model info; otherwise, <c>false</c> . </value>
         public override bool ConnectionHasModel
         {
             get
@@ -176,10 +177,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates an <see cref = "ObjectContext" /> from metadata in the connection.  This method must
+        ///     Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
         ///     only be called if ConnectionHasModel returns true.
         /// </summary>
-        /// <returns>The newly created context.</returns>
+        /// <returns> The newly created context. </returns>
         public override ObjectContext CreateObjectContextFromConnectionModel()
         {
             Initialize();
@@ -218,10 +219,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// <summary>
-        ///     Creates the underlying <see cref = "DbConnection" /> (which may actually be an <see cref = "EntityConnection" />)
-        ///     if it does not already exist.
-        /// </summary>
+        ///     <summary>
+        ///         Creates the underlying <see cref="DbConnection" /> (which may actually be an <see cref="EntityConnection" />)
+        ///         if it does not already exist.
+        ///     </summary>
         private void Initialize()
         {
             if (UnderlyingConnection == null)
@@ -297,9 +298,9 @@ namespace System.Data.Entity.Internal
         ///     Searches the app.config/web.config file for a connection that matches the given name.
         ///     The connection might be a store connection or an EF connection.
         /// </summary>
-        /// <param name = "name">The connection name.</param>
-        /// <param name = "connectionStrings"></param>
-        /// <returns>True if a connection from the app.config file was found and used.</returns>
+        /// <param name="name"> The connection name. </param>
+        /// <param name="connectionStrings"> </param>
+        /// <returns> True if a connection from the app.config file was found and used. </returns>
         private bool TryInitializeFromAppConfig(string name, AppConfig config)
         {
             Contract.Requires(config != null);
@@ -320,17 +321,17 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Attempts to locate a connection entry in the configuration based on the supplied context name.
         /// </summary>
-        /// <param name="name">The name to search for.</param>
-        /// <param name="config">The configuration to search in.</param>
-        /// <returns>Connection string if found, otherwise null.</returns>
+        /// <param name="name"> The name to search for. </param>
+        /// <param name="config"> The configuration to search in. </param>
+        /// <returns> Connection string if found, otherwise null. </returns>
         private static ConnectionStringSettings FindConnectionInConfig(string name, AppConfig config)
         {
             // Build a list of candidate names that might be found in the app.config/web.config file.
             // The first entry is the full name.
             var candidates = new List<string>
-                {
-                    name
-                };
+                                 {
+                                     name
+                                 };
 
             // Second entry is full name with namespace stripped out.
             var lastDot = name.LastIndexOf('.');
@@ -348,9 +349,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        /// Initializes the connection based on a connection string.
+        ///     Initializes the connection based on a connection string.
         /// </summary>
-        /// <param name="appConfigConnection">The settings to initialize from.</param>
+        /// <param name="appConfigConnection"> The settings to initialize from. </param>
         private void InitializeFromConnectionStringSetting(ConnectionStringSettings appConfigConnection)
         {
             var providerInvariantName = appConfigConnection.ProviderName;

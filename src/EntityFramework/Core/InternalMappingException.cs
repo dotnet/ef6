@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
@@ -7,8 +8,8 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Mapping exception class. Note that this class has state - so if you change even
-    /// its internals, it can be a breaking change
+    ///     Mapping exception class. Note that this class has state - so if you change even
+    ///     its internals, it can be a breaking change
     /// </summary>
     [Serializable]
     internal class InternalMappingException : EntityException
@@ -18,16 +19,16 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        /// default constructor
+        ///     default constructor
         /// </summary>
         internal InternalMappingException() // required ctor
         {
         }
 
         /// <summary>
-        /// default constructor
+        ///     default constructor
         /// </summary>
-        /// <param name="message">localized error message</param>
+        /// <param name="message"> localized error message </param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
         internal InternalMappingException(string message) // required ctor
             : base(message)
@@ -35,10 +36,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// constructor
+        ///     constructor
         /// </summary>
-        /// <param name="message">localized error message</param>
-        /// <param name="innerException">inner exception</param>
+        /// <param name="message"> localized error message </param>
+        /// <param name="innerException"> inner exception </param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
         internal InternalMappingException(string message, Exception innerException) // required ctor
             : base(message, innerException)
@@ -46,10 +47,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// constructor
+        ///     constructor
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
+        /// <param name="info"> </param>
+        /// <param name="context"> </param>
         protected InternalMappingException(SerializationInfo info, StreamingContext context)
             :
                 base(info, context)
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core
         #region Properties
 
         /// <summary>
-        /// Returns the inner exceptions stored in this
+        ///     Returns the inner exceptions stored in this
         /// </summary>
         internal ErrorLog ErrorLog
         {

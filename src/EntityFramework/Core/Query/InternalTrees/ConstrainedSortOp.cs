@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
-    /// A Constrained SortOp. Used to represent physical paging (skip, limit, skip + limit) operations.
+    ///     A Constrained SortOp. Used to represent physical paging (skip, limit, skip + limit) operations.
     /// </summary>
     internal sealed class ConstrainedSortOp : SortBaseOp
     {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly ConstrainedSortOp Pattern = new ConstrainedSortOp();
 
         /// <summary>
-        /// 3 children - the input, a possibly NullOp limit and a possibly NullOp skip count.
+        ///     3 children - the input, a possibly NullOp limit and a possibly NullOp skip count.
         /// </summary>
         internal override int Arity
         {
@@ -44,10 +45,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method
+        ///     Visitor pattern method
         /// </summary>
-        /// <param name="v">The BasicOpVisitor that is visiting this Op</param>
-        /// <param name="n">The Node that references this Op</param>
+        /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
+        /// <param name="n"> The Node that references this Op </param>
         [DebuggerNonUserCode]
         internal override void Accept(BasicOpVisitor v, Node n)
         {
@@ -55,11 +56,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method for visitors with a return value
+        ///     Visitor pattern method for visitors with a return value
         /// </summary>
-        /// <param name="v">The visitor</param>
-        /// <param name="n">The node in question</param>
-        /// <returns>An instance of TResultType</returns>
+        /// <param name="v"> The visitor </param>
+        /// <param name="n"> The node in question </param>
+        /// <returns> An instance of TResultType </returns>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType>(BasicOpVisitorOfT<TResultType> v, Node n)
         {

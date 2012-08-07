@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,16 +7,15 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for NestedType.
+    ///     Summary description for NestedType.
     /// </summary>
     internal sealed class SchemaComplexType : StructuredType
     {
         #region Public Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal SchemaComplexType(Schema parentElement)
             : base(parentElement)
         {
@@ -35,7 +35,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Protected Methods
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void ResolveTopLevelNames()
         {

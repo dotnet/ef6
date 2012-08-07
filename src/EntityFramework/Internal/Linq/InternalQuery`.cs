@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Internal.Linq
     ///     information to other parts of the design in a controlled manner without adding a lot of internal methods and
     ///     properties to the DbSet and DbQuery classes themselves.
     /// </summary>
-    /// <typeparam name = "TElement">The type of entity to query for.</typeparam>
+    /// <typeparam name="TElement"> The type of entity to query for. </typeparam>
     internal class InternalQuery<TElement> : IInternalQuery<TElement>
     {
         #region Fields and constructors and initalization
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Creates a new query that will be backed by the given InternalContext.
         /// </summary>
-        /// <param name = "internalContext">The backing context.</param>
+        /// <param name="internalContext"> The backing context. </param>
         public InternalQuery(InternalContext context)
         {
             Contract.Requires(context != null);
@@ -73,8 +74,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Updates the underlying ObjectQuery with the given include path.
         /// </summary>
-        /// <param name = "path">The include path.</param>
-        /// <returns>A new query containing the defined include path.</returns>
+        /// <param name="path"> The include path. </param>
+        /// <returns> A new query containing the defined include path. </returns>
         public virtual IInternalQuery<TElement> Include(string path)
         {
             return new InternalQuery<TElement>(_internalContext, _objectQuery.Include(path));
@@ -85,9 +86,9 @@ namespace System.Data.Entity.Internal.Linq
         #region AsNoTracking
 
         /// <summary>
-        ///     Returns a new query where the entities returned will not be cached in the <see cref = "DbContext" />.
+        ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />.
         /// </summary>
-        /// <returns> A new query with NoTracking applied.</returns>
+        /// <returns> A new query with NoTracking applied. </returns>
         public virtual IInternalQuery<TElement> AsNoTracking()
         {
             return new InternalQuery<TElement>(
@@ -139,12 +140,10 @@ namespace System.Data.Entity.Internal.Linq
         #region ToString
 
         /// <summary>
-        ///     Returns a <see cref = "System.String" /> representation of the underlying query, equivalent
+        ///     Returns a <see cref="System.String" /> representation of the underlying query, equivalent
         ///     to ToTraceString on ObjectQuery.
         /// </summary>
-        /// <returns>
-        ///     The query string.
-        /// </returns>
+        /// <returns> The query string. </returns>
         public override string ToString()
         {
             Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
@@ -170,7 +169,7 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     The LINQ query provider for the underlying <see cref = "ObjectQuery" />.
+        ///     The LINQ query provider for the underlying <see cref="ObjectQuery" />.
         /// </summary>
         public virtual ObjectQueryProvider ObjectQueryProvider
         {
@@ -195,9 +194,9 @@ namespace System.Data.Entity.Internal.Linq
         #region IEnumerable
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         public virtual IEnumerator<TElement> GetEnumerator()
         {
             Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
@@ -208,9 +207,9 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TElement}"/> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         IEnumerator IInternalQuery.GetEnumerator()
         {
             return GetEnumerator();
@@ -221,9 +220,9 @@ namespace System.Data.Entity.Internal.Linq
         #region IDbAsyncEnumerable
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}"/> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         public virtual IDbAsyncEnumerator<TElement> GetAsyncEnumerator()
         {
             Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
@@ -234,9 +233,9 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator"/> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the query against the database.
         /// </summary>
-        /// <returns>The query results.</returns>
+        /// <returns> The query results. </returns>
         IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
         {
             return GetAsyncEnumerator();

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections;
@@ -16,13 +17,13 @@ namespace System.Data.Entity.Core.Common.Utils
         #region String Conversion - Unsorted
 
         /// <summary>
-        /// Converts an enumeration of values to a delimited string list.
+        ///     Converts an enumeration of values to a delimited string list.
         /// </summary>
-        /// <typeparam name="T">Type of elements to convert.</typeparam>
-        /// <param name="values">Values. If null, returns empty string.</param>
-        /// <param name="converter">Converter. If null, uses default invariant culture converter.</param>
-        /// <param name="delimiter">Delimiter. If null, uses default (', ')</param>
-        /// <returns>Delimited list of values in string.</returns>
+        /// <typeparam name="T"> Type of elements to convert. </typeparam>
+        /// <param name="values"> Values. If null, returns empty string. </param>
+        /// <param name="converter"> Converter. If null, uses default invariant culture converter. </param>
+        /// <param name="delimiter"> Delimiter. If null, uses default (', ') </param>
+        /// <returns> Delimited list of values in string. </returns>
         internal static string BuildDelimitedList<T>(IEnumerable<T> values, ToStringConverter<T> converter, string delimiter)
         {
             if (null == values)
@@ -189,9 +190,9 @@ namespace System.Data.Entity.Core.Common.Utils
         #region Some Helper routines
 
         /// <summary>
-        ///   This private static method checks a string to make sure that it is not empty.
-        ///   Comparing with String.Empty is not sufficient since a string with nothing
-        ///   but white space isn't considered "empty" by that rationale.
+        ///     This private static method checks a string to make sure that it is not empty.
+        ///     Comparing with String.Empty is not sufficient since a string with nothing
+        ///     but white space isn't considered "empty" by that rationale.
         /// </summary>
         internal static bool IsNullOrEmptyOrWhiteSpace(string value)
         {

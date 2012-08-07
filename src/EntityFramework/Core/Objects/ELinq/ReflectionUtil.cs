@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Text;
 
     /// <summary>
-    /// Static utility class for identifying methods in Queryable, Sequence, and IEnumerable
-    /// and 
+    ///     Static utility class for identifying methods in Queryable, Sequence, and IEnumerable
+    ///     and
     /// </summary>
     internal static class ReflectionUtil
     {
@@ -487,11 +488,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         #endregion
 
         /// <summary>
-        /// Identifies methods as instances of known sequence operators.
+        ///     Identifies methods as instances of known sequence operators.
         /// </summary>
-        /// <param name="method">Method info to identify</param>
-        /// <param name="sequenceMethod">Identified sequence operator</param>
-        /// <returns><c>true</c> if method is known; <c>false</c> otherwise</returns>
+        /// <param name="method"> Method info to identify </param>
+        /// <param name="sequenceMethod"> Identified sequence operator </param>
+        /// <returns> <c>true</c> if method is known; <c>false</c> otherwise </returns>
         internal static bool TryIdentifySequenceMethod(MethodInfo method, out SequenceMethod sequenceMethod)
         {
             method = method.IsGenericMethod
@@ -501,23 +502,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Identifies method call expressions as calls to known sequence operators.
+        ///     Identifies method call expressions as calls to known sequence operators.
         /// </summary>
-        /// <param name="expression">
-        ///     Expression that may represent a call to a known sequence method
-        /// </param>
-        /// <param name="unwrapLambda">
-        ///     If <c>true</c>, and the <paramref name="expression"/> argument is a LambdaExpression,
-        ///     the Body of the LambdaExpression argument will be retrieved, and that expression will
-        ///     then be examined for a sequence method call instead of the Lambda itself.
-        /// </param>
-        /// <param name="sequenceMethod">
-        ///     Identified sequence operator
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="expression"/> is a <see cref="MethodCallExpression"/> 
-        ///     and its target method is known; <c>false</c> otherwise
-        /// </returns>
+        /// <param name="expression"> Expression that may represent a call to a known sequence method </param>
+        /// <param name="unwrapLambda"> If <c>true</c> , and the <paramref name="expression" /> argument is a LambdaExpression, the Body of the LambdaExpression argument will be retrieved, and that expression will then be examined for a sequence method call instead of the Lambda itself. </param>
+        /// <param name="sequenceMethod"> Identified sequence operator </param>
+        /// <returns> <c>true</c> if <paramref name="expression" /> is a <see cref="MethodCallExpression" /> and its target method is known; <c>false</c> otherwise </returns>
         internal static bool TryIdentifySequenceMethod(Expression expression, bool unwrapLambda, out SequenceMethod sequenceMethod)
         {
             if (expression.NodeType == ExpressionType.Lambda && unwrapLambda)
@@ -537,27 +527,27 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Looks up some implementation of a sequence method.
+        ///     Looks up some implementation of a sequence method.
         /// </summary>
-        /// <param name="sequenceMethod">Sequence method to find</param>
-        /// <param name="method">Known method</param>
-        /// <returns>true if some method is found; false otherwise</returns>
+        /// <param name="sequenceMethod"> Sequence method to find </param>
+        /// <param name="method"> Known method </param>
+        /// <returns> true if some method is found; false otherwise </returns>
         internal static bool TryLookupMethod(SequenceMethod sequenceMethod, out MethodInfo method)
         {
             return _inverseMap.TryGetValue(sequenceMethod, out method);
         }
 
         /// <remarks>
-        /// Requires:
-        /// - no collisions on type names
-        /// - no output or reference method parameters
+        ///     Requires:
+        ///     - no collisions on type names
+        ///     - no output or reference method parameters
         /// </remarks>
         /// <summary>
-        /// Produces a string description of a method consisting of the name and all parameters,
-        /// where all generic type parameters have been substituted with number identifiers.
+        ///     Produces a string description of a method consisting of the name and all parameters,
+        ///     where all generic type parameters have been substituted with number identifiers.
         /// </summary>
-        /// <param name="method">Method to identify.</param>
-        /// <returns>Canonical description of method (suitable for lookup)</returns>
+        /// <param name="method"> Method to identify. </param>
+        /// <returns> Canonical description of method (suitable for lookup) </returns>
         internal static string GetCanonicalMethodDescription(MethodInfo method)
         {
             Contract.Requires(method != null);
@@ -639,7 +629,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        /// Returns all static methods in the Queryable and Enumerable classes.
+        ///     Returns all static methods in the Queryable and Enumerable classes.
         /// </summary>
         internal static IEnumerable<MethodInfo> GetAllLinqOperators()
         {

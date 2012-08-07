@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
@@ -6,18 +7,14 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.DataClasses;
 
     /// <summary>
-    /// Manages a binding list constructed from an EntityCollection.
+    ///     Manages a binding list constructed from an EntityCollection.
     /// </summary>
-    /// <typeparam name="TViewElement">
-    /// Type of the elements in the binding list.
-    /// </typeparam>
-    /// <typeparam name="TItemElement">
-    /// Type of element in the underlying EntityCollection.
-    /// </typeparam>
+    /// <typeparam name="TViewElement"> Type of the elements in the binding list. </typeparam>
+    /// <typeparam name="TItemElement"> Type of element in the underlying EntityCollection. </typeparam>
     /// <remarks>
-    /// The binding list is initialized from the EntityCollection,
-    /// and is synchronized with changes made to the EntityCollection membership.
-    /// This class always allows additions and removals from the binding list.
+    ///     The binding list is initialized from the EntityCollection,
+    ///     and is synchronized with changes made to the EntityCollection membership.
+    ///     This class always allows additions and removals from the binding list.
     /// </remarks>
     internal sealed class ObjectViewEntityCollectionData<TViewElement, TItemElement> : IObjectViewData<TViewElement>
         where TItemElement : class
@@ -30,20 +27,18 @@ namespace System.Data.Entity.Core.Objects
         private readonly bool _canEditItems;
 
         /// <summary>
-        /// <b>True</b> if item that was added to binding list but not underlying entity collection
-        /// is now being committed to the collection.
-        /// Otherwise <b>false</b>.
-        /// Used by CommitItemAt and OnCollectionChanged methods to coordinate addition
-        /// of new item to underlying entity collection.
+        ///     <b>True</b> if item that was added to binding list but not underlying entity collection
+        ///     is now being committed to the collection.
+        ///     Otherwise <b>false</b>.
+        ///     Used by CommitItemAt and OnCollectionChanged methods to coordinate addition
+        ///     of new item to underlying entity collection.
         /// </summary>
         private bool _itemCommitPending;
 
         /// <summary>
-        /// Construct a new instance of the ObjectViewEntityCollectionData class using the supplied entityCollection.
+        ///     Construct a new instance of the ObjectViewEntityCollectionData class using the supplied entityCollection.
         /// </summary>
-        /// <param name="entityCollection">
-        /// EntityCollection used to populate the binding list.
-        /// </param>
+        /// <param name="entityCollection"> EntityCollection used to populate the binding list. </param>
         internal ObjectViewEntityCollectionData(EntityCollection<TItemElement> entityCollection)
         {
             _entityCollection = entityCollection;

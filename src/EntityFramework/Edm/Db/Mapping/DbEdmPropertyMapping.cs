@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmProperty" /> instances that defines the mapped property, beginning from a property declared by the mapped entity type and optionally proceeding through properties of complex property result types.
+        ///     Gets or sets the collection of <see cref="EdmProperty" /> instances that defines the mapped property, beginning from a property declared by the mapped entity type and optionally proceeding through properties of complex property result types.
         /// </summary>
         public virtual IList<EdmProperty> PropertyPath
         {
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets a <see cref = "DbTableColumnMetadata" /> value representing the table column to which the entity property is being mapped.
+        ///     Gets or sets a <see cref="DbTableColumnMetadata" /> value representing the table column to which the entity property is being mapped.
         /// </summary>
         public virtual DbTableColumnMetadata Column { get; set; }
     }

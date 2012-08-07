@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -7,15 +8,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an OnDelete, OnCopy, OnSecure, OnLock or OnSerialize element
+    ///     Represents an OnDelete, OnCopy, OnSecure, OnLock or OnSerialize element
     /// </summary>
     internal sealed class OnOperation : SchemaElement
     {
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
-        /// <param name="operation"></param>
+        /// <param name="parentElement"> </param>
+        /// <param name="operation"> </param>
         public OnOperation(RelationshipEnd parentElement, Operation operation)
             : base(parentElement)
         {
@@ -23,12 +23,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The operation
+        ///     The operation
         /// </summary>
         public Operation Operation { get; private set; }
 
         /// <summary>
-        /// The action
+        ///     The action
         /// </summary>
         public Action Action { get; private set; }
 
@@ -63,9 +63,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handle the Action attribute
+        ///     Handle the Action attribute
         /// </summary>
-        /// <param name="reader">reader positioned at Action attribute</param>
+        /// <param name="reader"> reader positioned at Action attribute </param>
         private void HandleActionAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// the parent element.
+        ///     the parent element.
         /// </summary>
         private new RelationshipEnd ParentElement
         {

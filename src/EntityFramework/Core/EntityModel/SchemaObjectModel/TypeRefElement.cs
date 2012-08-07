@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -13,9 +14,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region constructor
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parentElement"></param>
+        /// <param name="parentElement"> </param>
         internal TypeRefElement(SchemaElement parentElement)
             : base(parentElement)
         {

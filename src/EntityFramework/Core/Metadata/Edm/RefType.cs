@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
-    /// Class representing a ref type
+    ///     Class representing a ref type
     /// </summary>
     public class RefType : EdmType
     {
@@ -16,9 +17,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing a RefType object with the entity type it references
+        ///     The constructor for constructing a RefType object with the entity type it references
         /// </summary>
-        /// <param name="entityType">The entity type that this ref type references</param>
+        /// <param name="entityType"> The entity type that this ref type references </param>
         /// <exception cref="System.ArgumentNullException">Thrown if entityType argument is null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal RefType(EntityType entityType)
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The entity type that this ref type references
+        ///     The entity type that this ref type references
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
         public virtual EntityTypeBase ElementType
@@ -61,10 +62,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Constructs the name of the collection type
+        ///     Constructs the name of the collection type
         /// </summary>
-        /// <param name="entityTypeBase">The entity type base that this ref type refers to</param>
-        /// <returns>The identity of the resulting ref type</returns>
+        /// <param name="entityTypeBase"> The entity type base that this ref type refers to </param>
+        /// <returns> The identity of the resulting ref type </returns>
         private static string GetIdentity(EntityTypeBase entityTypeBase)
         {
             var builder = new StringBuilder(50);

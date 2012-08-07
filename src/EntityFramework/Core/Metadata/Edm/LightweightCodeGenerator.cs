@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Core.Common.Utils;
@@ -15,23 +16,29 @@ namespace System.Data.Entity.Core.Objects
     using System.Security.Permissions;
 
     /// <summary>
-    /// CodeGenerator class: use lightweight code gen to dynamically generate code to get/set properties.
+    ///     CodeGenerator class: use lightweight code gen to dynamically generate code to get/set properties.
     /// </summary>
     internal static class LightweightCodeGenerator
     {
-        /// <summary>For an OSpace ComplexType returns the delegate to construct the clr instance.</summary>
+        /// <summary>
+        ///     For an OSpace ComplexType returns the delegate to construct the clr instance.
+        /// </summary>
         internal static Delegate GetConstructorDelegateForType(ClrComplexType clrType)
         {
             return (clrType.Constructor ?? (clrType.Constructor = CreateConstructor(clrType.ClrType)));
         }
 
-        /// <summary>For an OSpace EntityType returns the delegate to construct the clr instance.</summary>
+        /// <summary>
+        ///     For an OSpace EntityType returns the delegate to construct the clr instance.
+        /// </summary>
         internal static Delegate GetConstructorDelegateForType(ClrEntityType clrType)
         {
             return (clrType.Constructor ?? (clrType.Constructor = CreateConstructor(clrType.ClrType)));
         }
 
-        /// <summary>for an OSpace property, get the property value from a clr instance</summary>
+        /// <summary>
+        ///     for an OSpace property, get the property value from a clr instance
+        /// </summary>
         internal static object GetValue(EdmProperty property, object target)
         {
             var getter = GetGetterDelegateForProperty(property);
@@ -46,21 +53,19 @@ namespace System.Data.Entity.Core.Objects
                    ?? (property.ValueGetter = CreatePropertyGetter(property.EntityDeclaringType, property.PropertyGetterHandle));
         }
 
-        /// <summary>for an OSpace property, set the property value on a clr instance</summary>
-        /// <exception cref="System.Data.ConstraintException">
-        /// If <paramref name="value"/> is null for a non nullable property.
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        /// Invalid cast of <paramref name="value"/> to property type.
-        /// </exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        /// From generated enties via StructuralObject.SetValidValue.
-        /// </exception>
-        /// <permission cref="System.Security.Permissions.ReflectionPermission">
-        /// If the property setter is not public or declaring class is not public.
-        /// </permission>
-        /// <permission cref="System.Security.NamedPermissionSet">
-        /// Demand for FullTrust if the property setter or declaring class has a <see cref="System.Security.Permissions.SecurityAction.LinkDemand"/>
+        /// <summary>
+        ///     for an OSpace property, set the property value on a clr instance
+        /// </summary>
+        /// <exception cref="System.Data.ConstraintException">If
+        ///     <paramref name="value" />
+        ///     is null for a non nullable property.</exception>
+        /// <exception cref="System.InvalidOperationException">Invalid cast of
+        ///     <paramref name="value" />
+        ///     to property type.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">From generated enties via StructuralObject.SetValidValue.</exception>
+        /// <permission cref="System.Security.Permissions.ReflectionPermission">If the property setter is not public or declaring class is not public.</permission>
+        /// <permission cref="System.Security.NamedPermissionSet">Demand for FullTrust if the property setter or declaring class has a
+        ///     <see cref="System.Security.Permissions.SecurityAction.LinkDemand" />
         /// </permission>
         internal static void SetValue(EdmProperty property, object target, object value)
         {
@@ -68,7 +73,9 @@ namespace System.Data.Entity.Core.Objects
             setter(target, value);
         }
 
-        /// <summary>For an OSpace property, gets the delegate to set the property value on a clr instance.</summary>
+        /// <summary>
+        ///     For an OSpace property, gets the delegate to set the property value on a clr instance.
+        /// </summary>
         internal static Action<object, object> GetSetterDelegateForProperty(EdmProperty property)
         {
             var setter = property.ValueSetter;
@@ -84,8 +91,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to 
-        /// call GetRelatedCollection or GetRelatedReference
+        ///     Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to 
+        ///     call GetRelatedCollection or GetRelatedReference
         /// </summary>
         internal static RelatedEnd GetRelatedEnd(
             RelationshipManager sourceRelationshipManager, AssociationEndMember sourceMember, AssociationEndMember targetMember,
@@ -142,9 +149,11 @@ namespace System.Data.Entity.Core.Objects
 
         #region get the delegate
 
-        /// <summary>Gets a parameterless constructor for the specified type.</summary>
-        /// <param name="type">Type to get constructor for.</param>
-        /// <returns>Parameterless constructor for the specified type.</returns>
+        /// <summary>
+        ///     Gets a parameterless constructor for the specified type.
+        /// </summary>
+        /// <param name="type"> Type to get constructor for. </param>
+        /// <returns> Parameterless constructor for the specified type. </returns>
         internal static ConstructorInfo GetConstructorForType(Type type)
         {
             Debug.Assert(type != null);
@@ -159,8 +168,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// generate a delegate equivalent to
-        /// private object Constructor() { return new XClass(); }
+        ///     generate a delegate equivalent to
+        ///     private object Constructor() { return new XClass(); }
         /// </summary>
         internal static Delegate CreateConstructor(Type type)
         {
@@ -177,10 +186,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// generate a delegate equivalent to
-        /// private object MemberGetter(object target) { return target.PropertyX; }
-        /// or if the property is Nullable<> generate a delegate equivalent to
-        /// private object MemberGetter(object target) { Nullable<X> y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
+        ///     generate a delegate equivalent to
+        ///     private object MemberGetter(object target) { return target.PropertyX; }
+        ///     or if the property is Nullable<> generate a delegate equivalent to
+        ///     private object MemberGetter(object target) { Nullable<X>y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
         /// </summary>
         private static Func<object, object> CreatePropertyGetter(RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle rmh)
         {
@@ -263,48 +272,48 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// generate a delegate equivalent to
+        ///     generate a delegate equivalent to
         /// 
-        /// // if Property is Nullable value type
-        /// private void MemberSetter(object target, object value) {
+        ///     // if Property is Nullable value type
+        ///     private void MemberSetter(object target, object value) {
         ///     if (AllwNull &amp;&amp; (null == value)) {
-        ///         ((TargetType)target).PropertyName = default(PropertyType?);
-        ///         return;
+        ///     ((TargetType)target).PropertyName = default(PropertyType?);
+        ///     return;
         ///     }
         ///     if (value is PropertyType) {
-        ///             ((TargetType)target).PropertyName = new (PropertyType?)((PropertyType)value);
-        ///         return;
+        ///     ((TargetType)target).PropertyName = new (PropertyType?)((PropertyType)value);
+        ///     return;
         ///     }
         ///     ThrowInvalidValue(value, TargetType.Name, PropertyName);
         ///     return
-        /// }
+        ///     }
         /// 
-        /// // when PropertyType is a value type
-        /// private void MemberSetter(object target, object value) {
+        ///     // when PropertyType is a value type
+        ///     private void MemberSetter(object target, object value) {
         ///     if (value is PropertyType) {
-        ///             ((TargetType)target).PropertyName = (PropertyType)value;
-        ///         return;
+        ///     ((TargetType)target).PropertyName = (PropertyType)value;
+        ///     return;
         ///     }
         ///     ThrowInvalidValue(value, TargetType.Name, PropertyName);
         ///     return
-        /// } 
+        ///     } 
         /// 
-        /// // when PropertyType is a reference type
-        /// private void MemberSetter(object target, object value) {
+        ///     // when PropertyType is a reference type
+        ///     private void MemberSetter(object target, object value) {
         ///     if ((AllwNull &amp;&amp; (null == value)) || (value is PropertyType)) {
-        ///         ((TargetType)target).PropertyName = ((PropertyType)value);
-        ///         return;
+        ///     ((TargetType)target).PropertyName = ((PropertyType)value);
+        ///     return;
         ///     }
         ///     ThrowInvalidValue(value, TargetType.Name, PropertyName);
         ///     return
-        /// }
+        ///     }
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        /// If the method is missing or static or has indexed parameters.
-        /// Or if the delcaring type is a value type.
-        /// Or if the parameter type is a pointer.
-        /// Or if the method or declaring class has a <see cref="System.Security.Permissions.StrongNameIdentityPermissionAttribute"/>.
-        /// </exception>
+        /// <exception cref="System.InvalidOperationException">If the method is missing or static or has indexed parameters.
+        ///     Or if the delcaring type is a value type.
+        ///     Or if the parameter type is a pointer.
+        ///     Or if the method or declaring class has a
+        ///     <see cref="System.Security.Permissions.StrongNameIdentityPermissionAttribute" />
+        ///     .</exception>
         private static Action<object, object> CreatePropertySetter(
             RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle rmh, bool allowNull)
         {
@@ -445,9 +454,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>Determines if the specified method requires permission demands to be invoked safely.</summary>
-        /// <param name="mi">Method instance to check.</param>
-        /// <returns>true if the specified method requires permission demands to be invoked safely, false otherwise.</returns>
+        /// <summary>
+        ///     Determines if the specified method requires permission demands to be invoked safely.
+        /// </summary>
+        /// <param name="mi"> Method instance to check. </param>
+        /// <returns> true if the specified method requires permission demands to be invoked safely, false otherwise. </returns>
         internal static bool RequiresPermissionDemands(MethodBase mi)
         {
             Debug.Assert(mi != null);
@@ -477,11 +488,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Create delegate used to invoke either the GetRelatedReference or GetRelatedCollection generic method on the RelationshipManager.
-        /// </summary>        
-        /// <param name="sourceMember">source end of the relationship for the requested navigation</param>
-        /// <param name="targetMember">target end of the relationship for the requested navigation</param>
-        /// <returns>Delegate that can be used to invoke the corresponding method.</returns>
+        ///     Create delegate used to invoke either the GetRelatedReference or GetRelatedCollection generic method on the RelationshipManager.
+        /// </summary>
+        /// <param name="sourceMember"> source end of the relationship for the requested navigation </param>
+        /// <param name="targetMember"> target end of the relationship for the requested navigation </param>
+        /// <returns> Delegate that can be used to invoke the corresponding method. </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod(
             AssociationEndMember sourceMember, AssociationEndMember targetMember)

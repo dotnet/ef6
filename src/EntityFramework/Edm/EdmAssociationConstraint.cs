@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -23,12 +24,13 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref = "EdmAssociationEnd" /> that represents the 'dependent' end of the constraint; properties from this association end's entity type contribute to the <see cref = "DependentProperties" /> collection.
+        ///     Gets or sets the <see cref="EdmAssociationEnd" /> that represents the 'dependent' end of the constraint; properties from this association end's entity type contribute to the <see
+        ///      cref="DependentProperties" /> collection.
         /// </summary>
         public virtual EdmAssociationEnd DependentEnd { get; set; }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "EdmProperty" /> instances from the <see cref = "DependentEnd" /> of the constraint. The values of these properties are constrained against the primary key values of the remaining, 'principal' association end's entity type.
+        ///     Gets or sets the collection of <see cref="EdmProperty" /> instances from the <see cref="DependentEnd" /> of the constraint. The values of these properties are constrained against the primary key values of the remaining, 'principal' association end's entity type.
         /// </summary>
         public virtual IList<EdmProperty> DependentProperties
         {

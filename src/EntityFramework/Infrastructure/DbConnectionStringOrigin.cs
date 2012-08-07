@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     /// <summary>
-    ///     Describes the origin of the database connection string associated with a <see cref = "DbContext" />.
+    ///     Describes the origin of the database connection string associated with a <see cref="DbContext" />.
     /// </summary>
     public enum DbConnectionStringOrigin
     {
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Infrastructure
         UserCode,
 
         /// <summary>
-        ///     The connection string was overriden by connection information supplied to DbContextInfo. 
+        ///     The connection string was overriden by connection information supplied to DbContextInfo.
         /// </summary>
         DbContextInfo
     }

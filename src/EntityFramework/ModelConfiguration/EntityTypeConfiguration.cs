@@ -7,7 +7,6 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -18,8 +17,8 @@ namespace System.Data.Entity.ModelConfiguration
     ///     Allows configuration to be performed for an entity type in a model.
     /// 
     ///     An EntityTypeConfiguration can be obtained via the Entity method on
-    ///     <see cref = "DbModelBuilder" /> or a custom type derived from EntityTypeConfiguration
-    ///     can be registered via the Configurations property on <see cref = "DbModelBuilder" />.
+    ///     <see cref="DbModelBuilder" /> or a custom type derived from EntityTypeConfiguration
+    ///     can be registered via the Configurations property on <see cref="DbModelBuilder" />.
     /// </summary>
     public class EntityTypeConfiguration<TEntityType> : StructuralTypeConfiguration<TEntityType>
         where TEntityType : class
@@ -60,17 +59,9 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Configures the primary key property(s) for this entity type.
         /// </summary>
-        /// <typeparam name = "TKey">The type of the key.</typeparam>
-        /// <param name = "keyExpression">
-        ///     A lambda expression representing the property to be used as the primary key. 
-        ///     C#: t => t.Id   
-        ///     VB.Net: Function(t) t.Id
-        /// 
-        ///     If the primary key is made up of multiple properties then specify an anonymous type including the properties. 
-        ///     C#: t => new { t.Id1, t.Id2 }
-        ///     VB.Net: Function(t) New With { t.Id1, t.Id2 }
-        /// </param>
-        /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        /// <typeparam name="TKey"> The type of the key. </typeparam>
+        /// <param name="keyExpression"> A lambda expression representing the property to be used as the primary key. C#: t => t.Id VB.Net: Function(t) t.Id If the primary key is made up of multiple properties then specify an anonymous type including the properties. C#: t => new { t.Id1, t.Id2 } VB.Net: Function(t) New With { t.Id1, t.Id2 } </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public EntityTypeConfiguration<TEntityType> HasKey<TKey>(Expression<Func<TEntityType, TKey>> keyExpression)
@@ -86,8 +77,8 @@ namespace System.Data.Entity.ModelConfiguration
         ///     Configures the entity set name to be used for this entity type.
         ///     The entity set name can only be configured for the base type in each set.
         /// </summary>
-        /// <param name = "entitySetName">The name of the entity set.</param>
-        /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="entitySetName"> The name of the entity set. </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         public EntityTypeConfiguration<TEntityType> HasEntitySetName(string entitySetName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(entitySetName));
@@ -102,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Configures the table name that this entity type is mapped to.
         /// </summary>
-        /// <param name = "tableName">The name of the table.</param>
+        /// <param name="tableName"> The name of the table. </param>
         public void ToTable(string tableName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -115,8 +106,8 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Configures the table name that this entity type is mapped to.
         /// </summary>
-        /// <param name = "tableName">The name of the table.</param>
-        /// <param name = "schemaName">The database schema of the table.</param>
+        /// <param name="tableName"> The name of the table. </param>
+        /// <param name="schemaName"> The database schema of the table. </param>
         public void ToTable(string tableName, string schemaName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -135,8 +126,9 @@ namespace System.Data.Entity.ModelConfiguration
         /// 
         ///     Calls to Map are additive, subsequent calls will not override configuration already preformed via Map.
         /// </summary>
-        /// <param name = "entityMappingConfigurationAction">An action that performs configuration against an <see cref = "EntityMappingConfiguration{TEntityType}" />.</param>
-        /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="entityMappingConfigurationAction"> An action that performs configuration against an <see
+        ///      cref="EntityMappingConfiguration{TEntityType}" /> . </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> Map(
             Action<EntityMappingConfiguration<TEntityType>> entityMappingConfigurationAction)
@@ -157,9 +149,10 @@ namespace System.Data.Entity.ModelConfiguration
         ///     Allows advanced configuration related to how a derived entity type is mapped to the database schema.
         ///     Calls to Map are additive, subsequent calls will not override configuration already preformed via Map.
         /// </summary>
-        /// <typeparam name = "TDerived">The derived entity type to be configured.</typeparam>
-        /// <param name = "derivedTypeMapConfigurationAction">An action that performs configuration against an <see cref = "EntityMappingConfiguration{TEntityType}" />.</param>
-        /// <returns>The same EntityTypeConfiguration instance so that multiple calls can be chained.</returns>
+        /// <typeparam name="TDerived"> The derived entity type to be configured. </typeparam>
+        /// <param name="derivedTypeMapConfigurationAction"> An action that performs configuration against an <see
+        ///      cref="EntityMappingConfiguration{TEntityType}" /> . </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> Map<TDerived>(
             Action<EntityMappingConfiguration<TDerived>> derivedTypeMapConfigurationAction)
@@ -193,13 +186,9 @@ namespace System.Data.Entity.ModelConfiguration
         ///     Instances of the entity type will be able to be saved to the database without this relationship being specified.
         ///     The foreign key in the database will be nullable.
         /// </summary>
-        /// <typeparam name = "TTargetEntity">The type of the entity at the other end of the relationship.</typeparam>
-        /// <param name = "navigationPropertyExpression">
-        ///     A lambda expression representing the navigation property for the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <typeparam name="TTargetEntity"> The type of the entity at the other end of the relationship. </typeparam>
+        /// <param name="navigationPropertyExpression"> A lambda expression representing the navigation property for the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public OptionalNavigationPropertyConfiguration<TEntityType, TTargetEntity> HasOptional<TTargetEntity>(
@@ -217,13 +206,9 @@ namespace System.Data.Entity.ModelConfiguration
         ///     Instances of the entity type will not be able to be saved to the database unless this relationship is specified.
         ///     The foreign key in the database will be non-nullable.
         /// </summary>
-        /// <typeparam name = "TTargetEntity">The type of the entity at the other end of the relationship.</typeparam>
-        /// <param name = "navigationPropertyExpression">
-        ///     A lambda expression representing the navigation property for the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <typeparam name="TTargetEntity"> The type of the entity at the other end of the relationship. </typeparam>
+        /// <param name="navigationPropertyExpression"> A lambda expression representing the navigation property for the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public RequiredNavigationPropertyConfiguration<TEntityType, TTargetEntity> HasRequired<TTargetEntity>(
@@ -239,13 +224,9 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Configures a many relationship from this entity type.
         /// </summary>
-        /// <typeparam name = "TTargetEntity">The type of the entity at the other end of the relationship.</typeparam>
-        /// <param name = "navigationPropertyExpression">
-        ///     A lambda expression representing the navigation property for the relationship.
-        ///     C#: t => t.MyProperty   
-        ///     VB.Net: Function(t) t.MyProperty
-        /// </param>
-        /// <returns>A configuration object that can be used to further configure the relationship.</returns>
+        /// <typeparam name="TTargetEntity"> The type of the entity at the other end of the relationship. </typeparam>
+        /// <param name="navigationPropertyExpression"> A lambda expression representing the navigation property for the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public ManyNavigationPropertyConfiguration<TEntityType, TTargetEntity> HasMany<TTargetEntity>(

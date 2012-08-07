@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
@@ -16,14 +17,14 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets or sets the ID of the metadata entity, which is currently always 1.
         /// </summary>
-        /// <value>The id.</value>
+        /// <value> The id. </value>
         public int Id { get; set; }
 
         /// <summary>
         ///     Gets or sets the model hash which is used to check whether the model has
         ///     changed since the database was created from it.
         /// </summary>
-        /// <value>The model hash.</value>
+        /// <value> The model hash. </value>
         public string ModelHash { get; set; }
 
         #endregion
@@ -34,8 +35,8 @@ namespace System.Data.Entity.Infrastructure
         ///     Attempts to get the model hash calculated by Code First for the given context.
         ///     This method will return null if the context is not being used in Code First mode.
         /// </summary>
-        /// <param name = "context">The context.</param>
-        /// <returns>The hash string.</returns>
+        /// <param name="context"> The context. </param>
+        /// <returns> The hash string. </returns>
         public static string TryGetModelHash(DbContext context)
         {
             Contract.Requires(context != null);

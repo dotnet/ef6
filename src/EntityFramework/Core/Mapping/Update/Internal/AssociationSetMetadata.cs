@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -7,33 +8,33 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
 
     /// <summary>
-    /// Encapsulates information about ends of an association set needed to correctly
-    /// interpret updates.
+    ///     Encapsulates information about ends of an association set needed to correctly
+    ///     interpret updates.
     /// </summary>
     internal sealed class AssociationSetMetadata
     {
         /// <summary>
-        /// Gets association ends that must be modified if the association
-        /// is changed (e.g. the mapping of the association is conditioned
-        /// on some property of the end)
+        ///     Gets association ends that must be modified if the association
+        ///     is changed (e.g. the mapping of the association is conditioned
+        ///     on some property of the end)
         /// </summary>
         internal readonly Set<AssociationEndMember> RequiredEnds;
 
         /// <summary>
-        /// Gets association ends that may be implicitly modified as a result
-        /// of changes to the association (e.g. collocated entity with server
-        /// generated value)
+        ///     Gets association ends that may be implicitly modified as a result
+        ///     of changes to the association (e.g. collocated entity with server
+        ///     generated value)
         /// </summary>
         internal readonly Set<AssociationEndMember> OptionalEnds;
 
         /// <summary>
-        /// Gets association ends whose values may influence the association
-        /// (e.g. where there is a ReferentialIntegrity or "foreign key" constraint)
+        ///     Gets association ends whose values may influence the association
+        ///     (e.g. where there is a ReferentialIntegrity or "foreign key" constraint)
         /// </summary>
         internal readonly Set<AssociationEndMember> IncludedValueEnds;
 
         /// <summary>
-        /// true iff. there are interesting ends for this association set.
+        ///     true iff. there are interesting ends for this association set.
         /// </summary>
         internal bool HasEnds
         {
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Initialize Metadata for an AssociationSet
+        ///     Initialize Metadata for an AssociationSet
         /// </summary>
         internal AssociationSetMetadata(Set<EntitySet> affectedTables, AssociationSet associationSet, MetadataWorkspace workspace)
         {
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Initialize given required ends. 
+        ///     Initialize given required ends.
         /// </summary>
         internal AssociationSetMetadata(IEnumerable<AssociationEndMember> requiredEnds)
         {

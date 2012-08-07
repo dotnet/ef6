@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -344,7 +345,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Adds AllOtherConstants element to the domain set given by MemberPath
+        ///     Adds AllOtherConstants element to the domain set given by MemberPath
         /// </summary>
         internal void AddSentinel(MemberPath path)
         {
@@ -353,7 +354,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Removes AllOtherConstant element from the domain set given by MemberPath
+        ///     Removes AllOtherConstant element from the domain set given by MemberPath
         /// </summary>
         internal void RemoveSentinel(MemberPath path)
         {

@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     /// <summary>
-    /// VertexLiteral pair, used for ConversionContext.GetSuccessors
+    ///     VertexLiteral pair, used for ConversionContext.GetSuccessors
     /// </summary>
     internal sealed class LiteralVertexPair<T_Identifier>
     {

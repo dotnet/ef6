@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    /// Describes metadata about a table
+    ///     Describes metadata about a table
     /// </summary>
     internal class TableMD
     {
@@ -18,9 +19,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly bool m_flattened;
 
         /// <summary>
-        /// private initializer
+        ///     private initializer
         /// </summary>
-        /// <param name="extent">the entity set corresponding to this table (if any)</param>
+        /// <param name="extent"> the entity set corresponding to this table (if any) </param>
         private TableMD(EntitySetBase extent)
         {
             m_columns = new List<ColumnMD>();
@@ -29,13 +30,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Create a typed-table definition corresponding to an entityset (if specified)
+        ///     Create a typed-table definition corresponding to an entityset (if specified)
         /// 
-        /// The table has exactly one column - the type of the column is specified by 
-        /// the "type" parameter. This table is considered to be un-"flattened"
+        ///     The table has exactly one column - the type of the column is specified by 
+        ///     the "type" parameter. This table is considered to be un-"flattened"
         /// </summary>
-        /// <param name="type">type of each element (row) of the table</param>
-        /// <param name="extent">entityset corresponding to the table (if any)</param>
+        /// <param name="type"> type of each element (row) of the table </param>
+        /// <param name="extent"> entityset corresponding to the table (if any) </param>
         internal TableMD(TypeUsage type, EntitySetBase extent)
             : this(extent)
         {
@@ -44,18 +45,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Creates a "flattened" table definition. 
+        ///     Creates a "flattened" table definition. 
         /// 
-        /// The table has one column for each specified property in the "properties" parameter. 
-        /// The name and datatype of each table column are taken from the corresponding property.
+        ///     The table has one column for each specified property in the "properties" parameter. 
+        ///     The name and datatype of each table column are taken from the corresponding property.
         /// 
-        /// The keys of the table (if any) are those specified in the "keyProperties" parameter
+        ///     The keys of the table (if any) are those specified in the "keyProperties" parameter
         /// 
-        /// The table may correspond to an entity set (if the entityset parameter was non-null)
+        ///     The table may correspond to an entity set (if the entityset parameter was non-null)
         /// </summary>
-        /// <param name="properties">prperties corresponding to columns of the table</param>
-        /// <param name="keyProperties"></param>
-        /// <param name="extent">entityset corresponding to the table (if any)</param>
+        /// <param name="properties"> prperties corresponding to columns of the table </param>
+        /// <param name="keyProperties"> </param>
+        /// <param name="extent"> entityset corresponding to the table (if any) </param>
         internal TableMD(
             IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyProperties,
             EntitySetBase extent)
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// The extent metadata (if any)
+        ///     The extent metadata (if any)
         /// </summary>
         internal EntitySetBase Extent
         {
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// List of columns of this table
+        ///     List of columns of this table
         /// </summary>
         internal List<ColumnMD> Columns
         {
@@ -101,7 +102,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Keys for this table
+        ///     Keys for this table
         /// </summary>
         internal List<ColumnMD> Keys
         {
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this table a "flat" table?
+        ///     Is this table a "flat" table?
         /// </summary>
         internal bool Flattened
         {
@@ -117,9 +118,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// String form - for debugging
+        ///     String form - for debugging
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override string ToString()
         {
             return (m_extent != null ? m_extent.Name : "Transient");

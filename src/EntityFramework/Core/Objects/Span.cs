@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Text;
 
     /// <summary>
-    /// A collection of paths to determine which entities are spanned into a query.
+    ///     A collection of paths to determine which entities are spanned into a query.
     /// </summary>
     internal sealed class Span
     {
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// The list of paths that should be spanned into the query
+        ///     The list of paths that should be spanned into the query
         /// </summary>
         internal List<SpanPath> SpanList
         {
@@ -29,24 +30,24 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Checks whether relationship span needs to be performed. Currently this is only when the query is
-        /// not using MergeOption.NoTracking.
+        ///     Checks whether relationship span needs to be performed. Currently this is only when the query is
+        ///     not using MergeOption.NoTracking.
         /// </summary>
-        /// <param name="mergeOption"></param>
-        /// <returns>True if the query needs a relationship span rewrite</returns>
+        /// <param name="mergeOption"> </param>
+        /// <returns> True if the query needs a relationship span rewrite </returns>
         internal static bool RequiresRelationshipSpan(MergeOption mergeOption)
         {
             return (mergeOption != MergeOption.NoTracking);
         }
 
         /// <summary>
-        /// Includes the specified span path in the specified span instance and returns the updated span instance.
-        /// If <paramref name="spanToIncludeIn"/> is null, a new span instance is constructed and returned that contains
-        /// the specified include path.
+        ///     Includes the specified span path in the specified span instance and returns the updated span instance.
+        ///     If <paramref name="spanToIncludeIn" /> is null, a new span instance is constructed and returned that contains
+        ///     the specified include path.
         /// </summary>
-        /// <param name="spanToIncludeIn">The span instance to which the include path should be added. May be null</param>
-        /// <param name="pathToInclude">The include path to add</param>
-        /// <returns>A non-null span instance that contains the specified include path in addition to any paths ut already contained</returns>
+        /// <param name="spanToIncludeIn"> The span instance to which the include path should be added. May be null </param>
+        /// <param name="pathToInclude"> The include path to add </param>
+        /// <returns> A non-null span instance that contains the specified include path in addition to any paths ut already contained </returns>
         internal static Span IncludeIn(Span spanToIncludeIn, string pathToInclude)
         {
             if (null == spanToIncludeIn)
@@ -59,17 +60,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Returns a span instance that is the union of the two specified span instances.
-        /// If <paramref name="span1"/> and <paramref name="span2"/> are both <c>null</c>,
-        /// then <c>null</c> is returned.
-        /// If <paramref name="span1"/> or <paramref name="span2"/> is null, but the remaining argument is non-null,
-        /// then the non-null argument is returned.
-        /// If neither <paramref name="span1"/> nor <paramref name="span2"/> are null, a new span instance is returned
-        /// that contains the merged span paths from both.
+        ///     Returns a span instance that is the union of the two specified span instances.
+        ///     If <paramref name="span1" /> and <paramref name="span2" /> are both <c>null</c>,
+        ///     then <c>null</c> is returned.
+        ///     If <paramref name="span1" /> or <paramref name="span2" /> is null, but the remaining argument is non-null,
+        ///     then the non-null argument is returned.
+        ///     If neither <paramref name="span1" /> nor <paramref name="span2" /> are null, a new span instance is returned
+        ///     that contains the merged span paths from both.
         /// </summary>
-        /// <param name="span1">The first span instance from which to include span paths; may be <c>null</c></param>
-        /// <param name="span2">The second span instance from which to include span paths; may be <c>null</c></param>
-        /// <returns>A span instance representing the union of the two arguments; may be <c>null</c> if both arguments are null</returns>
+        /// <param name="span1"> The first span instance from which to include span paths; may be <c>null</c> </param>
+        /// <param name="span2"> The second span instance from which to include span paths; may be <c>null</c> </param>
+        /// <returns> A span instance representing the union of the two arguments; may be <c>null</c> if both arguments are null </returns>
         internal static Span CopyUnion(Span span1, Span span2)
         {
             if (null == span1)
@@ -134,9 +135,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Adds a path to span into the query.
+        ///     Adds a path to span into the query.
         /// </summary>
-        /// <param name="path">The path to span</param>
+        /// <param name="path"> The path to span </param>
         public void Include(string path)
         {
             EntityUtil.CheckStringArgument(path, "path");
@@ -151,9 +152,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Creates a new Span with the same SpanPaths as this Span
+        ///     Creates a new Span with the same SpanPaths as this Span
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         internal Span Clone()
         {
             var newSpan = new Span();
@@ -164,9 +165,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Adds the path if it does not already exist
+        ///     Adds the path if it does not already exist
         /// </summary>
-        /// <param name="spanPath"></param>
+        /// <param name="spanPath"> </param>
         internal void AddSpanPath(SpanPath spanPath)
         {
             if (ValidateSpanPath(spanPath))
@@ -177,9 +178,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Returns true if the path can be added
+        ///     Returns true if the path can be added
         /// </summary>
-        /// <param name="spanPath"></param>
+        /// <param name="spanPath"> </param>
         private bool ValidateSpanPath(SpanPath spanPath)
         {
             // Check for dupliacte entries
@@ -213,8 +214,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Storage for a span path
-        /// Currently this includes the list of navigation properties
+        ///     Storage for a span path
+        ///     Currently this includes the list of navigation properties
         /// </summary>
         internal class SpanPath
         {

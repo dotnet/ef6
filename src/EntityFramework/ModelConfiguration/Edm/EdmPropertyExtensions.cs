@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Collections.Generic;
@@ -47,9 +48,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(property != null);
 
             property.PropertyType = new EdmTypeReference
-                {
-                    PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                };
+                                        {
+                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
+                                        };
 
             return property;
         }
@@ -60,10 +61,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(complexType != null);
 
             property.PropertyType = new EdmTypeReference
-                {
-                    EdmType = complexType,
-                    IsNullable = false
-                };
+                                        {
+                                            EdmType = complexType,
+                                            IsNullable = false
+                                        };
 
             return property;
         }
@@ -74,10 +75,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(enumType != null);
 
             property.PropertyType = new EdmTypeReference
-                {
-                    EdmType = enumType,
-                    PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                };
+                                        {
+                                            EdmType = enumType,
+                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
+                                        };
 
             return property;
         }

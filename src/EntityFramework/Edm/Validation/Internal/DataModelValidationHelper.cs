@@ -14,8 +14,8 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Returns true if the given two ends are similar - the relationship type that this ends belongs to is the same and the entity set refered by the ends are same and they are from the same role
         /// </summary>
-        /// <param name = "left"> </param>
-        /// <param name = "right"> </param>
+        /// <param name="left"> </param>
+        /// <param name="right"> </param>
         /// <returns> </returns>
         internal static bool AreRelationshipEndsEqual(
             KeyValuePair<EdmAssociationSet, EdmEntitySet> left, KeyValuePair<EdmAssociationSet, EdmEntitySet> right)
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Return true if the Referential Constraint on the association is ready for further validation, otherwise return false.
         /// </summary>
-        /// <param name = "association"> </param>
+        /// <param name="association"> </param>
         /// <returns> </returns>
         internal static bool IsReferentialConstraintReadyForValidation(EdmAssociationType association)
         {
@@ -99,12 +99,12 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Resolves the given property names to the property in the item Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
         /// </summary>
-        /// <param name = "roleProperties"> </param>
-        /// <param name = "roleElement"> </param>
-        /// <param name = "isKeyProperty"> </param>
-        /// <param name = "areAllPropertiesNullable"> </param>
-        /// <param name = "isAnyPropertyNullable"> </param>
-        /// <param name = "isSubsetOfKeyProperties"> </param>
+        /// <param name="roleProperties"> </param>
+        /// <param name="roleElement"> </param>
+        /// <param name="isKeyProperty"> </param>
+        /// <param name="areAllPropertiesNullable"> </param>
+        /// <param name="isAnyPropertyNullable"> </param>
+        /// <param name="isSubsetOfKeyProperties"> </param>
         internal static void IsKeyProperty(
             List<EdmProperty> roleProperties,
             EdmAssociationEnd roleElement,
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Return true if the namespaceName is a Edm System Namespace
         /// </summary>
-        /// <param name = "namespaceName"> </param>
+        /// <param name="namespaceName"> </param>
         /// <returns> </returns>
         internal static bool IsEdmSystemNamespace(string namespaceName)
         {
@@ -178,9 +178,9 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Return true if the entityType is a subtype of any entity type in the dictionary keys, and return the corresponding entry EntitySet value. Otherwise return false.
         /// </summary>
-        /// <param name = "entityType"> </param>
-        /// <param name = "baseEntitySetTypes"> </param>
-        /// <param name = "set"> </param>
+        /// <param name="entityType"> </param>
+        /// <param name="baseEntitySetTypes"> </param>
+        /// <param name="set"> </param>
         /// <returns> </returns>
         internal static bool TypeIsSubTypeOf(
             EdmEntityType entityType, Dictionary<EdmEntityType, EdmEntitySet> baseEntitySetTypes, out EdmEntitySet set)
@@ -209,7 +209,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Return true if any of the properties in the EdmEntityType defines ConcurrencyMode. Otherwise return false.
         /// </summary>
-        /// <param name = "entityType"> </param>
+        /// <param name="entityType"> </param>
         /// <returns> </returns>
         internal static bool IsTypeDefinesNewConcurrencyProperties(EdmEntityType entityType)
         {
@@ -231,10 +231,10 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     Add member name to the Hash set, raise an error if the name exists already.
         /// </summary>
-        /// <param name = "item"> </param>
-        /// <param name = "memberNameList"> </param>
-        /// <param name = "context"> </param>
-        /// <param name = "getErrorString"> </param>
+        /// <param name="item"> </param>
+        /// <param name="memberNameList"> </param>
+        /// <param name="context"> </param>
+        /// <param name="getErrorString"> </param>
         internal static void AddMemberNameToHashSet(
             EdmNamedMetadataItem item,
             HashSet<string> memberNameList,
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <summary>
         ///     If the string is null, empty, or only whitespace, return false, otherwise return true
         /// </summary>
-        /// <param name = "stringToCheck"> </param>
+        /// <param name="stringToCheck"> </param>
         /// <returns> </returns>
         internal static bool HasContent(this string stringToCheck)
         {

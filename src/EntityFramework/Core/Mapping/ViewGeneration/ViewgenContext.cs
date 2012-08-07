@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
     using System.Collections.Generic;
@@ -116,12 +117,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        /// Find the Foreign Key Associations that relate EntitySets used in these left cell wrappers and 
-        /// add any equivalence facts between sets implied by 1:1 associations.
-        /// We can collect other implication facts but we don't have a scenario that needs them( yet ).
+        ///     Find the Foreign Key Associations that relate EntitySets used in these left cell wrappers and 
+        ///     add any equivalence facts between sets implied by 1:1 associations.
+        ///     We can collect other implication facts but we don't have a scenario that needs them( yet ).
         /// </summary>
-        /// <param name="rightKB"></param>
-        /// <param name="rightDomainMap"></param>
+        /// <param name="rightKB"> </param>
+        /// <param name="rightDomainMap"> </param>
         private void CreateConstraintsForForeignKeyAssociationsAffectingThisWarapper(
             FragmentQueryKB rightKB, MemberDomainMap rightDomainMap)
         {
@@ -230,9 +231,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         #region Private Methods
 
         /// <summary>
-        /// Checks:
-        ///  1) Concurrency token is not defined in this Extent's ElementTypes' derived types
-        ///  2) Members with concurrency token should not have conditions specified
+        ///     Checks:
+        ///     1) Concurrency token is not defined in this Extent's ElementTypes' derived types
+        ///     2) Members with concurrency token should not have conditions specified
         /// </summary>
         private void CheckConcurrencyControlTokens()
         {

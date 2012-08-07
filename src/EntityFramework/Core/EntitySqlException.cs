@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Core.Common.EntitySql;
@@ -11,12 +12,12 @@ namespace System.Data.Entity.Core
     using System.Text;
 
     /// <summary>
-    /// Represents an eSQL Query compilation exception;
-    /// The class of exceptional conditions that may cause this exception to be raised are mainly:
-    /// 1) Syntax Errors: raised during query text parsing and when a given query does not conform to eSQL formal grammar;
-    /// 2) Semantic Errors: raised when semantic rules of eSQL language are not met such as metadata or schema information
-    ///    not accurate or not present, type validation errors, scoping rule violations, user of undefined variables, etc.
-    /// For more information, see eSQL Language Spec.
+    ///     Represents an eSQL Query compilation exception;
+    ///     The class of exceptional conditions that may cause this exception to be raised are mainly:
+    ///     1) Syntax Errors: raised during query text parsing and when a given query does not conform to eSQL formal grammar;
+    ///     2) Semantic Errors: raised when semantic rules of eSQL language are not met such as metadata or schema information
+    ///     not accurate or not present, type validation errors, scoping rule violations, user of undefined variables, etc.
+    ///     For more information, see eSQL Language Spec.
     /// </summary>
     [Serializable]
     public sealed class EntitySqlException : EntityException
@@ -26,22 +27,22 @@ namespace System.Data.Entity.Core
         private const int HResultInvalidQuery = -2146232006;
 
         /// <summary>
-        /// error message description. 
+        ///     error message description.
         /// </summary>
         private readonly string _errorDescription;
 
         /// <summary>
-        /// information about the context where the error occurred 
+        ///     information about the context where the error occurred
         /// </summary>
         private readonly string _errorContext;
 
         /// <summary>
-        /// error line number
+        ///     error line number
         /// </summary>
         private readonly int _line;
 
         /// <summary>
-        /// error column number
+        ///     error column number
         /// </summary>
         private readonly int _column;
 
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core
         #region Public Constructors
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EntitySqlException"/> with the generic error message.
+        ///     Initializes a new instance of <see cref="EntitySqlException" /> with the generic error message.
         /// </summary>
         public EntitySqlException()
             : this(Strings.GeneralQueryError)
@@ -59,7 +60,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EntitySqlException"/> with the given message.
+        ///     Initializes a new instance of <see cref="EntitySqlException" /> with the given message.
         /// </summary>
         public EntitySqlException(string message)
             : base(message)
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EntitySqlException"/> with the given message and innerException instance.
+        ///     Initializes a new instance of <see cref="EntitySqlException" /> with the given message and innerException instance.
         /// </summary>
         public EntitySqlException(string message, Exception innerException)
             : base(message, innerException)
@@ -77,10 +78,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Initializes a new instance <see cref="EntitySqlException"/> with the given serializationInfo and streamingContext.
+        ///     Initializes a new instance <see cref="EntitySqlException" /> with the given serializationInfo and streamingContext.
         /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
+        /// <param name="serializationInfo"> </param>
+        /// <param name="streamingContext"> </param>
         private EntitySqlException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core
         #region Internal Constructors
 
         /// <summary>
-        /// Initializes a new instance EntityException with an ErrorContext instance and a given error message.
+        ///     Initializes a new instance EntityException with an ErrorContext instance and a given error message.
         /// </summary>
         internal static EntitySqlException Create(ErrorContext errCtx, string errorMessage, Exception innerException)
         {
@@ -106,7 +107,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Initializes a new instance EntityException with contextual information to allow detailed error feedback.
+        ///     Initializes a new instance EntityException with contextual information to allow detailed error feedback.
         /// </summary>
         internal static EntitySqlException Create(
             string commandText,
@@ -127,7 +128,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// core constructor
+        ///     core constructor
         /// </summary>
         private EntitySqlException(
             string message, string errorDescription, string errorContext, int line, int column, Exception innerException)
@@ -146,7 +147,7 @@ namespace System.Data.Entity.Core
         #region Public Properties
 
         /// <summary>
-        /// Gets the error description explaining the reason why the query was not accepted or an empty String.Empty
+        ///     Gets the error description explaining the reason why the query was not accepted or an empty String.Empty
         /// </summary>
         public string ErrorDescription
         {
@@ -154,7 +155,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Gets the aproximate context where the error occurred if available.
+        ///     Gets the aproximate context where the error occurred if available.
         /// </summary>
         public string ErrorContext
         {
@@ -162,7 +163,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Returns the the aproximate line number where the error occurred
+        ///     Returns the the aproximate line number where the error occurred
         /// </summary>
         public int Line
         {
@@ -170,7 +171,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Returns the the aproximate column number where the error occurred
+        ///     Returns the the aproximate column number where the error occurred
         /// </summary>
         public int Column
         {
@@ -189,8 +190,8 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Returns error context in the format [[errorContextInfo, ]line ddd, column ddd].
-        /// Returns empty string if errorPosition is less than 0 and errorContextInfo is not specified.
+        ///     Returns error context in the format [[errorContextInfo, ]line ddd, column ddd].
+        ///     Returns empty string if errorPosition is less than 0 and errorContextInfo is not specified.
         /// </summary>
         internal static string FormatErrorContext(
             string commandText,
@@ -266,7 +267,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        /// Returns error message in the format: "error such and such[, near errorContext]."
+        ///     Returns error message in the format: "error such and such[, near errorContext]."
         /// </summary>
         private static string FormatQueryError(string errorMessage, string errorContext)
         {
@@ -288,13 +289,11 @@ namespace System.Data.Entity.Core
         #region ISerializable implementation
 
         /// <summary>
-        /// sets the System.Runtime.Serialization.SerializationInfo
-        /// with information about the exception.
+        ///     sets the System.Runtime.Serialization.SerializationInfo
+        ///     with information about the exception.
         /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized
-        /// object data about the exception being thrown.
-        /// </param>
-        /// <param name="context"></param>
+        /// <param name="info"> The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown. </param>
+        /// <param name="context"> </param>
         [SecurityCritical]
         [PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

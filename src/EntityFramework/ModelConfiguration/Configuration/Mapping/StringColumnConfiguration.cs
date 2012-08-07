@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Configures a database column used to store a string values.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref = "DbModelBuilder" />.
+    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class StringColumnConfiguration : LengthColumnConfiguration
     {
@@ -23,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the column to allow the maximum length supported by the database provider.
         /// </summary>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration IsMaxLength()
         {
             base.IsMaxLength();
@@ -34,10 +35,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the property to have the specified maximum length.
         /// </summary>
-        /// <param name = "value">
-        ///     The maximum length for the property.
-        ///     Setting 'null' will result in a default length being used for the column.
-        ///     <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="value"> The maximum length for the property. Setting 'null' will result in a default length being used for the column.
+        ///     <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration HasMaxLength(int? value)
         {
             base.HasMaxLength(value);
@@ -49,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the column to be fixed length.
         ///     Use HasMaxLength to set the length that the property is fixed to.
         /// </summary>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration IsFixedLength()
         {
             base.IsFixedLength();
@@ -61,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the column to be variable length.
         ///     Columns are variable length by default.
         /// </summary>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration IsVariableLength()
         {
             base.IsVariableLength();
@@ -72,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the column to be optional.
         /// </summary>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration IsOptional()
         {
             base.IsOptional();
@@ -83,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the column to be required.
         /// </summary>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration IsRequired()
         {
             base.IsRequired();
@@ -94,8 +93,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the data type of the database column.
         /// </summary>
-        /// <param name = "columnType">Name of the database provider specific data type.</param>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="columnType"> Name of the database provider specific data type. </param>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration HasColumnType(string columnType)
         {
             base.HasColumnType(columnType);
@@ -106,8 +105,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the order of the database column.
         /// </summary>
-        /// <param name = "columnOrder">The order that this column should appear in the database table.</param>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="columnOrder"> The order that this column should appear in the database table. </param>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration HasColumnOrder(int? columnOrder)
         {
             base.HasColumnOrder(columnOrder);
@@ -118,7 +117,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the column to support Unicode string content.
         /// </summary>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public StringColumnConfiguration IsUnicode()
         {
             IsUnicode(true);
@@ -129,12 +128,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures whether or not the column supports Unicode string content.
         /// </summary>
-        /// <param name = "unicode">
-        ///     Value indicating if the column supports Unicode string content or not.
-        ///     Specifying 'null' will remove the Unicode facet from the column.
-        ///     Specifying 'null' will cause the same runtime behavior as specifying 'false'.
-        /// </param>
-        /// <returns>The same StringColumnConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="unicode"> Value indicating if the column supports Unicode string content or not. Specifying 'null' will remove the Unicode facet from the column. Specifying 'null' will cause the same runtime behavior as specifying 'false'. </param>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public StringColumnConfiguration IsUnicode(bool? unicode)
         {
             Configuration.IsUnicode = unicode;

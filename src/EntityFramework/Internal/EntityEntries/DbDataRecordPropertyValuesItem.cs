@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
 
     /// <summary>
-    ///     An implementation of <see cref = "IPropertyValuesItem" /> for an item in a <see cref = "DbDataRecordPropertyValues" />.
+    ///     An implementation of <see cref="IPropertyValuesItem" /> for an item in a <see cref="DbDataRecordPropertyValues" />.
     /// </summary>
     internal class DbDataRecordPropertyValuesItem : IPropertyValuesItem
     {
@@ -16,11 +17,11 @@ namespace System.Data.Entity.Internal
         private object _value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbDataRecordPropertyValuesItem" /> class.
+        ///     Initializes a new instance of the <see cref="DbDataRecordPropertyValuesItem" /> class.
         /// </summary>
-        /// <param name = "dataRecord">The data record.</param>
-        /// <param name = "ordinal">The ordinal.</param>
-        /// <param name = "value">The value.</param>
+        /// <param name="dataRecord"> The data record. </param>
+        /// <param name="ordinal"> The ordinal. </param>
+        /// <param name="value"> The value. </param>
         public DbDataRecordPropertyValuesItem(DbUpdatableDataRecord dataRecord, int ordinal, object value)
         {
             _dataRecord = dataRecord;
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets or sets the value of the property represented by this item.
         /// </summary>
-        /// <value>The value.</value>
+        /// <value> The value. </value>
         public object Value
         {
             get { return _value; }
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the name of the property.
         /// </summary>
-        /// <value>The name.</value>
+        /// <value> The name. </value>
         public string Name
         {
             get { return _dataRecord.GetName(_ordinal); }
@@ -58,9 +59,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether this item represents a complex property.
         /// </summary>
-        /// <value>
-        ///     <c>true</c> If this instance represents a complex property; otherwise, <c>false</c>.
-        /// </value>
+        /// <value> <c>true</c> If this instance represents a complex property; otherwise, <c>false</c> . </value>
         public bool IsComplex
         {
             get
@@ -73,7 +72,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets the type of the underlying property.
         /// </summary>
-        /// <value>The property type.</value>
+        /// <value> The property type. </value>
         public Type Type
         {
             get { return _dataRecord.GetFieldType(_ordinal); }

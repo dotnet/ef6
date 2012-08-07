@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal class EdmProviderManifest : DbProviderManifest
     {
         /// <summary>
-        /// The ConcurrencyMode Facet Name
+        ///     The ConcurrencyMode Facet Name
         /// </summary>
         internal const string ConcurrencyModeFacetName = "ConcurrencyMode";
 
         /// <summary>
-        /// The StoreGeneratedPattern Facet Name
+        ///     The StoreGeneratedPattern Facet Name
         /// </summary>
         internal const string StoreGeneratedPatternFacetName = "StoreGeneratedPattern";
 
@@ -33,14 +34,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const byte MaximumDateTimePrecision = Byte.MaxValue;
 
         /// <summary>
-        /// A private constructor to prevent other places from instantiating this class
+        ///     A private constructor to prevent other places from instantiating this class
         /// </summary>
         private EdmProviderManifest()
         {
         }
 
         /// <summary>
-        /// Gets the EDM provider manifest singleton instance
+        ///     Gets the EDM provider manifest singleton instance
         /// </summary>
         internal static EdmProviderManifest Instance
         {
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the namespace used by this provider manifest
+        ///     Returns the namespace used by this provider manifest
         /// </summary>
         public override string NamespaceName
         {
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Store version hint
+        ///     Store version hint
         /// </summary>
         internal virtual string Token
         {
@@ -65,9 +66,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the list of all the canonical functions
+        ///     Returns the list of all the canonical functions
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             InitializeCanonicalFunctions();
@@ -75,10 +76,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns all the FacetDescriptions for a particular type
+        ///     Returns all the FacetDescriptions for a particular type
         /// </summary>
-        /// <param name="type">the type to return FacetDescriptions for.</param>
-        /// <returns>The FacetDescriptions for the type given.</returns>
+        /// <param name="type"> the type to return FacetDescriptions for. </param>
+        /// <returns> The FacetDescriptions for the type given. </returns>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
             Debug.Assert(type is PrimitiveType, "EdmProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
@@ -95,10 +96,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns a primitive type from this manifest having the specified primitive type kind
+        ///     Returns a primitive type from this manifest having the specified primitive type kind
         /// </summary>
-        /// <param name="primitiveTypeKind">The value specifying the kind of primitive type to return</param>
-        /// <returns>A primitive type having the given primitive type kind</returns>
+        /// <param name="primitiveTypeKind"> The value specifying the kind of primitive type to return </param>
+        /// <returns> A primitive type having the given primitive type kind </returns>
         public PrimitiveType GetPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             InitializePrimitiveTypes();
@@ -106,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Boostrapping all the primitive types for the EDM Provider Manifest
+        ///     Boostrapping all the primitive types for the EDM Provider Manifest
         /// </summary>
         private void InitializePrimitiveTypes()
         {
@@ -238,12 +239,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initialize all the primitive type with the given primitive type kind and name
+        ///     Initialize all the primitive type with the given primitive type kind and name
         /// </summary>
-        /// <param name="primitiveType">The primitive type to initialize</param>
-        /// <param name="primitiveTypeKind">Type of the primitive type which is getting initialized</param>
-        /// <param name="name">name of the built in type</param>
-        /// <param name="clrType">the CLR Type of that maps to the EDM PrimitiveType</param>
+        /// <param name="primitiveType"> The primitive type to initialize </param>
+        /// <param name="primitiveTypeKind"> Type of the primitive type which is getting initialized </param>
+        /// <param name="name"> name of the built in type </param>
+        /// <param name="clrType"> the CLR Type of that maps to the EDM PrimitiveType </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "clrType")]
         private void InitializePrimitiveType(
             PrimitiveType primitiveType,
@@ -266,7 +267,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Boostrapping all the facet descriptions for the EDM Provider Manifest
+        ///     Boostrapping all the facet descriptions for the EDM Provider Manifest
         /// </summary>
         private void InitializeFacetDescriptions()
         {
@@ -540,7 +541,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Boostrapping all the canonical functions for the EDM Provider Manifest
+        ///     Boostrapping all the canonical functions for the EDM Provider Manifest
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -561,45 +562,45 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Max, Min
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Byte,
-                    PrimitiveTypeKind.DateTime,
-                    PrimitiveTypeKind.Decimal,
-                    PrimitiveTypeKind.Double,
-                    PrimitiveTypeKind.Int16,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64,
-                    PrimitiveTypeKind.SByte,
-                    PrimitiveTypeKind.Single,
-                    PrimitiveTypeKind.String,
-                    PrimitiveTypeKind.Binary,
-                    PrimitiveTypeKind.Time,
-                    PrimitiveTypeKind.DateTimeOffset
-                };
+                                 {
+                                     PrimitiveTypeKind.Byte,
+                                     PrimitiveTypeKind.DateTime,
+                                     PrimitiveTypeKind.Decimal,
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Int16,
+                                     PrimitiveTypeKind.Int32,
+                                     PrimitiveTypeKind.Int64,
+                                     PrimitiveTypeKind.SByte,
+                                     PrimitiveTypeKind.Single,
+                                     PrimitiveTypeKind.String,
+                                     PrimitiveTypeKind.Binary,
+                                     PrimitiveTypeKind.Time,
+                                     PrimitiveTypeKind.DateTimeOffset
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Max", type));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Min", type));
 
             // Avg, Sum
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Decimal,
-                    PrimitiveTypeKind.Double,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64
-                };
+                                 {
+                                     PrimitiveTypeKind.Decimal,
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Int32,
+                                     PrimitiveTypeKind.Int64
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Avg", type));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddAggregate("Sum", type));
 
             // STDEV, STDEVP, VAR, VARP
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Decimal,
-                    PrimitiveTypeKind.Double,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64
-                };
+                                 {
+                                     PrimitiveTypeKind.Decimal,
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Int32,
+                                     PrimitiveTypeKind.Int64
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes, type => functions.AddAggregate(PrimitiveTypeKind.Double, "StDev", type));
@@ -629,13 +630,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Substring, Left, Right overloads 
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Byte,
-                    PrimitiveTypeKind.Int16,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64,
-                    PrimitiveTypeKind.SByte
-                };
+                                 {
+                                     PrimitiveTypeKind.Byte,
+                                     PrimitiveTypeKind.Int16,
+                                     PrimitiveTypeKind.Int32,
+                                     PrimitiveTypeKind.Int64,
+                                     PrimitiveTypeKind.SByte
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes,
@@ -669,10 +670,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             #region DateTime Functions
 
-            PrimitiveTypeKind[] dateTimeParameterTypes = {
-                PrimitiveTypeKind.DateTimeOffset,
-                PrimitiveTypeKind.DateTime
-            };
+            PrimitiveTypeKind[] dateTimeParameterTypes =
+                {
+                    PrimitiveTypeKind.DateTimeOffset,
+                    PrimitiveTypeKind.DateTime
+                };
             EdmProviderManifestFunctionBuilder.ForTypes(
                 dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Year", type, "dateValue"));
             EdmProviderManifestFunctionBuilder.ForTypes(
@@ -682,11 +684,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EdmProviderManifestFunctionBuilder.ForTypes(
                 dateTimeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "DayOfYear", type, "dateValue"));
 
-            PrimitiveTypeKind[] timeParameterTypes = {
-                PrimitiveTypeKind.DateTimeOffset,
-                PrimitiveTypeKind.DateTime,
-                PrimitiveTypeKind.Time
-            };
+            PrimitiveTypeKind[] timeParameterTypes =
+                {
+                    PrimitiveTypeKind.DateTimeOffset,
+                    PrimitiveTypeKind.DateTime,
+                    PrimitiveTypeKind.Time
+                };
             EdmProviderManifestFunctionBuilder.ForTypes(
                 timeParameterTypes, type => functions.AddFunction(PrimitiveTypeKind.Int32, "Hour", type, "timeValue"));
             EdmProviderManifestFunctionBuilder.ForTypes(
@@ -795,21 +798,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Overloads for ROUND, FLOOR, CEILING functions
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Single,
-                    PrimitiveTypeKind.Double,
-                    PrimitiveTypeKind.Decimal
-                };
+                                 {
+                                     PrimitiveTypeKind.Single,
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Decimal
+                                 };
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Round", type, "value"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Floor", type, "value"));
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Ceiling", type, "value"));
 
             // Overloads for ROUND, TRUNCATE
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Double,
-                    PrimitiveTypeKind.Decimal
-                };
+                                 {
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Decimal
+                                 };
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes, type => functions.AddFunction(type, "Round", type, "value", PrimitiveTypeKind.Int32, "digits"));
             EdmProviderManifestFunctionBuilder.ForTypes(
@@ -817,30 +820,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Overloads for ABS functions
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Decimal,
-                    PrimitiveTypeKind.Double,
-                    PrimitiveTypeKind.Int16,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64,
-                    PrimitiveTypeKind.Byte,
-                    PrimitiveTypeKind.Single
-                };
+                                 {
+                                     PrimitiveTypeKind.Decimal,
+                                     PrimitiveTypeKind.Double,
+                                     PrimitiveTypeKind.Int16,
+                                     PrimitiveTypeKind.Int32,
+                                     PrimitiveTypeKind.Int64,
+                                     PrimitiveTypeKind.Byte,
+                                     PrimitiveTypeKind.Single
+                                 };
             EdmProviderManifestFunctionBuilder.ForTypes(parameterTypes, type => functions.AddFunction(type, "Abs", type, "value"));
 
             // Overloads for POWER functions
-            PrimitiveTypeKind[] powerFirstParameterTypes = {
-                PrimitiveTypeKind.Decimal,
-                PrimitiveTypeKind.Double,
-                PrimitiveTypeKind.Int32,
-                PrimitiveTypeKind.Int64
-            };
+            PrimitiveTypeKind[] powerFirstParameterTypes =
+                {
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Int32,
+                    PrimitiveTypeKind.Int64
+                };
 
-            PrimitiveTypeKind[] powerSecondParameterTypes = {
-                PrimitiveTypeKind.Decimal,
-                PrimitiveTypeKind.Double,
-                PrimitiveTypeKind.Int64
-            };
+            PrimitiveTypeKind[] powerSecondParameterTypes =
+                {
+                    PrimitiveTypeKind.Decimal,
+                    PrimitiveTypeKind.Double,
+                    PrimitiveTypeKind.Int64
+                };
 
             foreach (var kind1 in powerFirstParameterTypes)
             {
@@ -856,12 +861,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Overloads for BitwiseAND, BitwiseNOT, BitwiseOR, BitwiseXOR functions
             parameterTypes = new[]
-                {
-                    PrimitiveTypeKind.Int16,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64,
-                    PrimitiveTypeKind.Byte
-                };
+                                 {
+                                     PrimitiveTypeKind.Int16,
+                                     PrimitiveTypeKind.Int32,
+                                     PrimitiveTypeKind.Int64,
+                                     PrimitiveTypeKind.Byte
+                                 };
 
             EdmProviderManifestFunctionBuilder.ForTypes(
                 parameterTypes, type => functions.AddFunction(type, "BitwiseAnd", type, "value1", type, "value2"));
@@ -893,10 +898,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Edm Provider Specific Functionality
 
         /// <summary>
-        /// Returns the list of super-types for the given primitiveType
+        ///     Returns the list of super-types for the given primitiveType
         /// </summary>
-        /// <param name="primitiveType"></param>
-        /// <returns></returns>
+        /// <param name="primitiveType"> </param>
+        /// <returns> </returns>
         internal ReadOnlyCollection<PrimitiveType> GetPromotionTypes(PrimitiveType primitiveType)
         {
             InitializePromotableTypes();
@@ -905,7 +910,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes Promotion Type relation
+        ///     Initializes Promotion Type relation
         /// </summary>
         private void InitializePromotableTypes()
         {
@@ -1037,7 +1042,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Initializes Canonical Model Types
+        ///     Initializes Canonical Model Types
         /// </summary>
         private void InitializeCanonicalModelTypes()
         {
@@ -1060,9 +1065,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region DbProviderManifest Interface
 
         /// <summary>
-        /// Returns all the primitive types supported by the provider manifest
+        ///     Returns all the primitive types supported by the provider manifest
         /// </summary>
-        /// <returns>A collection of primitive types</returns>
+        /// <returns> A collection of primitive types </returns>
         public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
             InitializePrimitiveTypes();
@@ -1094,12 +1099,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Providers should override this to return information specific to their provider.  
+        ///     Providers should override this to return information specific to their provider.  
         /// 
-        /// This method should never return null.
+        ///     This method should never return null.
         /// </summary>
-        /// <param name="informationType">The name of the information to be retrieved.</param>
-        /// <returns>An XmlReader at the begining of the information requested.</returns>
+        /// <param name="informationType"> The name of the information to be retrieved. </param>
+        /// <returns> An XmlReader at the begining of the information requested. </returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
             throw new NotImplementedException();

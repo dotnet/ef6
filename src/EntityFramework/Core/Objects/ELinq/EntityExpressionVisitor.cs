@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Linq.Expressions
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Linq.Expressions
     using System.Linq.Expressions.Internal;
 
     /// <summary>
-    /// Visitor for LINQ expression trees.
+    ///     Visitor for LINQ expression trees.
     /// </summary>
     internal abstract class EntityExpressionVisitor
     {

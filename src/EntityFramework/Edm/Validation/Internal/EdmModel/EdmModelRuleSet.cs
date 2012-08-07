@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
     using System.Data.Entity.Edm.Common;
@@ -135,10 +136,10 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
         }
 
         /// <summary>
-        ///     Get <see cref = "EdmModelRuleSet" /> based on version
+        ///     Get <see cref="EdmModelRuleSet" /> based on version
         /// </summary>
-        /// <param name = "version"> a double value of version </param>
-        /// <returns> <see cref = "EdmModelRuleSet" /> </returns>
+        /// <param name="version"> a double value of version </param>
+        /// <returns> <see cref="EdmModelRuleSet" /> </returns>
         internal static EdmModelRuleSet CreateEdmModelRuleSet(double version, bool validateSyntax)
         {
             if (version == DataModelVersions.Version1)

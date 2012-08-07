@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
@@ -41,13 +42,13 @@ namespace System.Data.Entity.Core.Objects
         #region RelationshipEnd fields
 
         /// <summary>
-        /// Singlely-linked list of RelationshipEntry.
-        /// One of the ends in the RelationshipEntry must equal this.EntityKey
+        ///     Singlely-linked list of RelationshipEntry.
+        ///     One of the ends in the RelationshipEntry must equal this.EntityKey
         /// </summary>
         private RelationshipEntry _headRelationshipEnds;
 
         /// <summary>
-        /// Number of RelationshipEntry in the _relationshipEnds list.
+        ///     Number of RelationshipEntry in the _relationshipEnds list.
         /// </summary>
         private int _countRelationshipEnds;
 
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Objects
         #region Constructors
 
         /// <summary>
-        /// For testing purposes only.
+        ///     For testing purposes only.
         /// </summary>
         internal EntityEntry()
             : base(new ObjectStateManager(), null, EntityState.Unchanged)
@@ -84,11 +85,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Looks at the type of entity represented by this entry and sets flags defining the type of
-        /// change tracking that will be needed. The three main types are:
-        /// - Pure POCO objects or non-change-tracking proxies which need DetectChanges for everything.
-        /// - Entities derived from EntityObject which don't need DetectChanges at all.
-        /// - Change tracking proxies, which only need DetectChanges for complex properties.
+        ///     Looks at the type of entity represented by this entry and sets flags defining the type of
+        ///     change tracking that will be needed. The three main types are:
+        ///     - Pure POCO objects or non-change-tracking proxies which need DetectChanges for everything.
+        ///     - Entities derived from EntityObject which don't need DetectChanges at all.
+        ///     - Change tracking proxies, which only need DetectChanges for complex properties.
         /// </summary>
         private void SetChangeTrackingFlags()
         {
@@ -143,7 +144,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// The EntityKey associated with the ObjectStateEntry
+        ///     The EntityKey associated with the ObjectStateEntry
         /// </summary>
         public override EntityKey EntityKey
         {
@@ -204,12 +205,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Marks specified property as modified.
-        /// </summary>
-        /// <param name="propertyName">This API recognizes the names in terms of OSpace</param>
-        /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
-        ///
+        ///<summary>
+        ///    Marks specified property as modified.
+        ///</summary>
+        ///<param name="propertyName"> This API recognizes the names in terms of OSpace </param>
+        ///<exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
         public override void SetModifiedProperty(string propertyName)
         {
             // We need this because the Code Contract gets compiled out in the release build even though
@@ -270,20 +270,20 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Rejects any changes made to the property with the given name since the property was last loaded,
-        /// attached, saved, or changes were accepted. The orginal value of the property is stored and the
-        /// property will no longer be marked as modified. 
+        ///     Rejects any changes made to the property with the given name since the property was last loaded,
+        ///     attached, saved, or changes were accepted. The orginal value of the property is stored and the
+        ///     property will no longer be marked as modified.
         /// </summary>
         /// <remarks>
-        /// If the result is that no properties of the entity are marked as modified, then the entity will
-        /// be marked as Unchanged.
-        /// Changes to properties can only rejected for entities that are in the Modified or Unchanged state.
-        /// Calling this method for entities in other states (Added, Deleted, or Detached) will result in
-        /// an exception being thrown.
-        /// Rejecting changes to properties of an Unchanged entity or unchanged properties of a Modifed
-        /// is a no-op.
+        ///     If the result is that no properties of the entity are marked as modified, then the entity will
+        ///     be marked as Unchanged.
+        ///     Changes to properties can only rejected for entities that are in the Modified or Unchanged state.
+        ///     Calling this method for entities in other states (Added, Deleted, or Detached) will result in
+        ///     an exception being thrown.
+        ///     Rejecting changes to properties of an Unchanged entity or unchanged properties of a Modifed
+        ///     is a no-op.
         /// </remarks>
-        /// <param name="propertyName">The name of the property to change.</param>
+        /// <param name="propertyName"> The name of the property to change. </param>
         public override void RejectPropertyChanges(string propertyName)
         {
             // We need this because the Code Contract gets compiled out in the release build even though
@@ -326,9 +326,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Original values
+        ///     Original values
         /// </summary>
-        /// <param></param>
+        /// <param> </param>
         /// <returns> DbDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override DbDataRecord OriginalValues
@@ -337,7 +337,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Gets a version of the OriginalValues property that can be updated
+        ///     Gets a version of the OriginalValues property that can be updated
         /// </summary>
         public override OriginalValueRecord GetUpdatableOriginalValues()
         {
@@ -394,9 +394,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Current values
+        ///     Current values
         /// </summary>
-        /// <param></param>
+        /// <param> </param>
         /// <returns> DbUpdatableDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override CurrentValueRecord CurrentValues
@@ -430,10 +430,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// API to accept the current values as original values and  mark the entity as Unchanged.
+        ///     API to accept the current values as original values and  mark the entity as Unchanged.
         /// </summary>
-        /// <param></param>
-        /// <returns></returns>
+        /// <param> </param>
+        /// <returns> </returns>
         public override void AcceptChanges()
         {
             ValidateState();
@@ -549,9 +549,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Changes state of the entry to the specified <paramref name="state"/>
+        ///     Changes state of the entry to the specified <paramref name="state" />
         /// </summary>
-        /// <param name="state">The requested state</param>
+        /// <param name="state"> The requested state </param>
         public override void ChangeState(EntityState state)
         {
             EntityUtil.CheckValidStateForChangeEntityState(state);
@@ -578,9 +578,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Apply modified properties to the original object.
+        ///     Apply modified properties to the original object.
         /// </summary>
-        /// <param name="currentEntity">object with modified properties</param>
+        /// <param name="currentEntity"> object with modified properties </param>
         public override void ApplyCurrentValues(object currentEntity)
         {
             DbHelpers.ThrowIfNull(currentEntity, "currentEntity");
@@ -598,9 +598,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Apply original values to the entity.
+        ///     Apply original values to the entity.
         /// </summary>
-        /// <param name="originalEntity">The object with original values</param>
+        /// <param name="originalEntity"> The object with original values </param>
         public override void ApplyOriginalValues(object originalEntity)
         {
             DbHelpers.ThrowIfNull(originalEntity, "originalEntity");
@@ -622,7 +622,7 @@ namespace System.Data.Entity.Core.Objects
         #region RelationshipEnd methods
 
         /// <summary>
-        /// Add a RelationshipEntry (one of its ends must equal this.EntityKey)
+        ///     Add a RelationshipEntry (one of its ends must equal this.EntityKey)
         /// </summary>
         internal void AddRelationshipEnd(RelationshipEntry item)
         {
@@ -652,10 +652,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Determines if a given relationship entry is present in the list of entries
+        ///     Determines if a given relationship entry is present in the list of entries
         /// </summary>
-        /// <param name="item">The entry to look for</param>
-        /// <returns>True of the relationship end is found</returns>
+        /// <param name="item"> The entry to look for </param>
+        /// <returns> True of the relationship end is found </returns>
         internal bool ContainsRelationshipEnd(RelationshipEntry item)
         {
             for (var current = _headRelationshipEnds;
@@ -671,9 +671,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Remove a RelationshipEntry (one of its ends must equal this.EntityKey)
+        ///     Remove a RelationshipEntry (one of its ends must equal this.EntityKey)
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item"> </param>
         internal void RemoveRelationshipEnd(RelationshipEntry item)
         {
             Contract.Requires(null != item);
@@ -737,10 +737,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Update one of the ends for the related RelationshipEntry
+        ///     Update one of the ends for the related RelationshipEntry
         /// </summary>
-        /// <param name="oldKey">the EntityKey the relationship should currently have</param>
-        /// <param name="promotedEntry">if promoting entity stub to full entity</param>
+        /// <param name="oldKey"> the EntityKey the relationship should currently have </param>
+        /// <param name="promotedEntry"> if promoting entity stub to full entity </param>
         internal void UpdateRelationshipEnds(EntityKey oldKey, EntityEntry promotedEntry)
         {
             Contract.Requires(null != oldKey);
@@ -786,7 +786,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// An enumerable so that EntityEntry doesn't implement it
+        ///     An enumerable so that EntityEntry doesn't implement it
         /// </summary>
         internal struct RelationshipEndEnumerable : IEnumerable<RelationshipEntry>, IEnumerable<IEntityStateEntry>
         {
@@ -822,7 +822,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             /// <summary>
-            /// Convert the singly-linked list into an Array
+            ///     Convert the singly-linked list into an Array
             /// </summary>
             internal RelationshipEntry[] ToArray()
             {
@@ -849,7 +849,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// An enumerator to walk the RelationshipEntry linked-list
+        ///     An enumerator to walk the RelationshipEntry linked-list
         /// </summary>
         internal struct RelationshipEndEnumerator : IEnumerator<RelationshipEntry>, IEnumerator<IEntityStateEntry>
         {
@@ -919,7 +919,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Reuse or create a new (Entity)DataRecordInfo.
+        ///     Reuse or create a new (Entity)DataRecordInfo.
         /// </summary>
         internal override DataRecordInfo GetDataRecordInfo(StateManagerTypeMetadata metadata, object userObject)
         {
@@ -1012,10 +1012,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Used to report that a scalar entity property is about to change
-        /// The current value of the specified property is cached when this method is called.
+        ///     Used to report that a scalar entity property is about to change
+        ///     The current value of the specified property is cached when this method is called.
         /// </summary>
-        /// <param name="entityMemberName">The name of the entity property that is changing</param>
+        /// <param name="entityMemberName"> The name of the entity property that is changing </param>
         internal override void EntityMemberChanging(string entityMemberName)
         {
             if (IsKeyEntry)
@@ -1026,11 +1026,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Used to report that a scalar entity property has been changed
-        /// The property value that was cached during EntityMemberChanging is now
-        /// added to OriginalValues
+        ///     Used to report that a scalar entity property has been changed
+        ///     The property value that was cached during EntityMemberChanging is now
+        ///     added to OriginalValues
         /// </summary>
-        /// <param name="entityMemberName">The name of the entity property that has changing</param>
+        /// <param name="entityMemberName"> The name of the entity property that has changing </param>
         internal override void EntityMemberChanged(string entityMemberName)
         {
             if (IsKeyEntry)
@@ -1041,12 +1041,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Used to report that a complex property is about to change
-        /// The current value of the specified property is cached when this method is called.
+        ///     Used to report that a complex property is about to change
+        ///     The current value of the specified property is cached when this method is called.
         /// </summary>
-        /// <param name="entityMemberName">The name of the top-level entity property that is changing</param>
-        /// <param name="complexObject">The complex object that contains the property that is changing</param>
-        /// <param name="complexObjectMemberName">The name of the property that is changing on complexObject</param>
+        /// <param name="entityMemberName"> The name of the top-level entity property that is changing </param>
+        /// <param name="complexObject"> The complex object that contains the property that is changing </param>
+        /// <param name="complexObjectMemberName"> The name of the property that is changing on complexObject </param>
         internal override void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             if (IsKeyEntry)
@@ -1057,12 +1057,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Used to report that a complex property has been changed
-        /// The property value that was cached during EntityMemberChanging is now added to OriginalValues
+        ///     Used to report that a complex property has been changed
+        ///     The property value that was cached during EntityMemberChanging is now added to OriginalValues
         /// </summary>
-        /// <param name="entityMemberName">The name of the top-level entity property that has changed</param>
-        /// <param name="complexObject">The complex object that contains the property that changed</param>
-        /// <param name="complexObjectMemberName">The name of the property that changed on complexObject</param>
+        /// <param name="entityMemberName"> The name of the top-level entity property that has changed </param>
+        /// <param name="complexObject"> The complex object that contains the property that changed </param>
+        /// <param name="complexObjectMemberName"> The name of the property that changed on complexObject </param>
         internal override void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             if (IsKeyEntry)
@@ -1080,17 +1080,15 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Method called to complete the change tracking process on an entity property. The original property value
-        /// is now saved in the original values record if there is not already an entry in the record for this property.
-        /// The parameters to this method must have the same values as the parameter values passed to the last call to
-        /// EntityValueChanging on this ObjectStateEntry.
-        /// All inputs are in OSpace.
+        ///     Method called to complete the change tracking process on an entity property. The original property value
+        ///     is now saved in the original values record if there is not already an entry in the record for this property.
+        ///     The parameters to this method must have the same values as the parameter values passed to the last call to
+        ///     EntityValueChanging on this ObjectStateEntry.
+        ///     All inputs are in OSpace.
         /// </summary>
-        /// <param name="entityMemberName">Name of the top-level entity property that has changed</param>
-        /// <param name="complexObject">If entityMemberName refers to a complex property, this is the complex
-        /// object that contains the change. Otherwise this is null.</param>
-        /// <param name="complexObjectMemberName">If entityMemberName refers to a complex property, this is the name of
-        /// the property that has changed on complexObject. Otherwise this is null.</param>
+        /// <param name="entityMemberName"> Name of the top-level entity property that has changed </param>
+        /// <param name="complexObject"> If entityMemberName refers to a complex property, this is the complex object that contains the change. Otherwise this is null. </param>
+        /// <param name="complexObjectMemberName"> If entityMemberName refers to a complex property, this is the name of the property that has changed on complexObject. Otherwise this is null. </param>
         private void EntityMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             string changingMemberName;
@@ -1280,16 +1278,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Method called to start the change tracking process on an entity property. The current property value is cached at
-        /// this stage in preparation for later storage in the original values record. Multiple successful calls to this method
-        /// will overwrite the cached values.
-        /// All inputs are in OSpace.
+        ///     Method called to start the change tracking process on an entity property. The current property value is cached at
+        ///     this stage in preparation for later storage in the original values record. Multiple successful calls to this method
+        ///     will overwrite the cached values.
+        ///     All inputs are in OSpace.
         /// </summary>
-        /// <param name="entityMemberName">Name of the top-level entity property that is changing</param>
-        /// <param name="complexObject">If entityMemberName refers to a complex property, this is the complex
-        /// object that contains the change. Otherwise this is null.</param>
-        /// <param name="complexObjectMemberName">If entityMemberName refers to a complex property, this is the name of
-        /// the property that is changing on complexObject. Otherwise this is null.</param>
+        /// <param name="entityMemberName"> Name of the top-level entity property that is changing </param>
+        /// <param name="complexObject"> If entityMemberName refers to a complex property, this is the complex object that contains the change. Otherwise this is null. </param>
+        /// <param name="complexObjectMemberName"> If entityMemberName refers to a complex property, this is the name of the property that is changing on complexObject. Otherwise this is null. </param>
         private void EntityMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             string changingMemberName;
@@ -1419,7 +1415,7 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 #if DEBUG
-            // performance, don't do this work in retail until shadow state is supported
+                // performance, don't do this work in retail until shadow state is supported
             else if (userObject == _wrappedEntity.Entity)
             {
                 Contract.Assert(false, "shadowstate not supported");
@@ -1483,16 +1479,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Helper method to recursively expand a complex object's values down to scalars for storage in the original values record.
-        /// This method is used when a whole complex object is set on its parent object, instead of just setting
-        /// individual scalar values on that object.
+        ///     Helper method to recursively expand a complex object's values down to scalars for storage in the original values record.
+        ///     This method is used when a whole complex object is set on its parent object, instead of just setting
+        ///     individual scalar values on that object.
         /// </summary>
-        /// <param name="memberMetadata">metadata for the complex property being expanded on the parent
-        /// where the parent can be an entity or another complex object</param>
-        /// <param name="oldComplexObject">Old value of the complex property. Scalar values from this object are stored in the original values record</param>
-        /// <param name="newComplexObject">New value of the complex property. This object reference is used in the original value record and is
-        /// associated with the scalar values for the same property on the oldComplexObject</param>
-        /// <param name="useOldComplexObject">Whether or not to use the existing complex object in the original values or to use the original value that is already present </param>
+        /// <param name="memberMetadata"> metadata for the complex property being expanded on the parent where the parent can be an entity or another complex object </param>
+        /// <param name="oldComplexObject"> Old value of the complex property. Scalar values from this object are stored in the original values record </param>
+        /// <param name="newComplexObject"> New value of the complex property. This object reference is used in the original value record and is associated with the scalar values for the same property on the oldComplexObject </param>
+        /// <param name="useOldComplexObject"> Whether or not to use the existing complex object in the original values or to use the original value that is already present </param>
         private void ExpandComplexTypeAndAddValues(
             StateManagerMemberMetadata memberMetadata, object oldComplexObject, object newComplexObject, bool useOldComplexObject)
         {
@@ -1575,20 +1569,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Helper method to validate that the property names being reported as changing/changed are valid for this entity and that
-        /// the entity is in a valid state for the change request. Also determines if this is a change on a complex object, and
-        /// returns the appropriate metadata and object to be used for the rest of the changing and changed operations.
+        ///     Helper method to validate that the property names being reported as changing/changed are valid for this entity and that
+        ///     the entity is in a valid state for the change request. Also determines if this is a change on a complex object, and
+        ///     returns the appropriate metadata and object to be used for the rest of the changing and changed operations.
         /// </summary>
-        /// <param name="entityMemberName">Top-level entity property name</param>
-        /// <param name="complexObject">Complex object that contains the change, null if the change is on a top-level entity property</param>
-        /// <param name="complexObjectMemberName">Name of the property that is changing on the complexObject, null for top-level entity properties</param>
-        /// <param name="typeMetadata">Metadata for the type that contains the change, either for the entity itself or for the complex object</param>
-        /// <param name="changingMemberName">Property name that is actually changing -- either entityMemberName for entities or
-        /// complexObjectMemberName for complex objects</param>
-        /// <param name="changingObject">Object reference that contains the change, either the entity or complex object
-        /// as appropriate for the requested change</param>
-        /// <returns>Ordinal of the property that is changing, or -2 if the EntityKey is changing in a valid scenario. This is relative
-        /// to the returned typeMetadata. Throws exceptions if the requested property name(s) are invalid for this entity.</returns>
+        /// <param name="entityMemberName"> Top-level entity property name </param>
+        /// <param name="complexObject"> Complex object that contains the change, null if the change is on a top-level entity property </param>
+        /// <param name="complexObjectMemberName"> Name of the property that is changing on the complexObject, null for top-level entity properties </param>
+        /// <param name="typeMetadata"> Metadata for the type that contains the change, either for the entity itself or for the complex object </param>
+        /// <param name="changingMemberName"> Property name that is actually changing -- either entityMemberName for entities or complexObjectMemberName for complex objects </param>
+        /// <param name="changingObject"> Object reference that contains the change, either the entity or complex object as appropriate for the requested change </param>
+        /// <returns> Ordinal of the property that is changing, or -2 if the EntityKey is changing in a valid scenario. This is relative to the returned typeMetadata. Throws exceptions if the requested property name(s) are invalid for this entity. </returns>
         internal int GetAndValidateChangeMemberInfo(
             string entityMemberName, object complexObject, string complexObjectMemberName,
             out StateManagerTypeMetadata typeMetadata, out string changingMemberName, out object changingObject)
@@ -1683,7 +1674,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Helper method to set the information needed for the change tracking cache. Ensures that all of these values get set together.
+        ///     Helper method to set the information needed for the change tracking cache. Ensures that all of these values get set together.
         /// </summary>
         private void SetCachedChangingValues(
             string entityMemberName, object changingObject, string changingMember, EntityState changingState, object oldValue)
@@ -1873,16 +1864,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Uses DetectChanges to determine whether or not the current value of the property with the given
-        /// name is different from its original value. Note that this may be different from the property being
-        /// marked as modified since a property which has not changed can still be marked as modified.
+        ///     Uses DetectChanges to determine whether or not the current value of the property with the given
+        ///     name is different from its original value. Note that this may be different from the property being
+        ///     marked as modified since a property which has not changed can still be marked as modified.
         /// </summary>
         /// <remarks>
-        /// For complex properties, a new instance of the complex object which has all the same property
-        /// values as the original instance is not considered to be different by this method.
+        ///     For complex properties, a new instance of the complex object which has all the same property
+        ///     values as the original instance is not considered to be different by this method.
         /// </remarks>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <returns>True if the property has changed; false otherwise.</returns>
+        /// <param name="propertyName"> The name of the property. </param>
+        /// <returns> True if the property has changed; false otherwise. </returns>
         public override bool IsPropertyChanged(string propertyName)
         {
             // We need this because the Code Contract gets compiled out in the release build even though
@@ -1895,7 +1886,8 @@ namespace System.Data.Entity.Core.Objects
                 detectOnlyComplexProperties: false, detectOnly: true);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "originalValueFound", Justification = "Used in the debug build")]
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "originalValueFound",
+            Justification = "Used in the debug build")]
         private bool DetectChangesInProperty(int ordinal, bool detectOnlyComplexProperties, bool detectOnly)
         {
             var changeDetected = false;
@@ -2169,16 +2161,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Processes each dependent end of an FK relationship in this entity and determines if a nav
-        /// prop is set to a principal.  If it is, and if the principal is Unchanged or Modified,
-        /// then the primary key value is taken from the principal and used to fixup the FK value.
-        /// This is called during AddObject so that references set from the added object will take
-        /// precedence over FK values such that there is no need for the user to set FK values
-        /// explicitly.  If a conflict in the FK value is encountered due to an overlapping FK
-        /// that is tied to two different PK values, then an exception is thrown.
-        /// Note that references to objects that are not yet tracked by the context are ignored, since
-        /// they will ultimately be brought into the context as Added objects, at which point we would
-        /// have skipped them anyway because the are not Unchanged or Modified.
+        ///     Processes each dependent end of an FK relationship in this entity and determines if a nav
+        ///     prop is set to a principal.  If it is, and if the principal is Unchanged or Modified,
+        ///     then the primary key value is taken from the principal and used to fixup the FK value.
+        ///     This is called during AddObject so that references set from the added object will take
+        ///     precedence over FK values such that there is no need for the user to set FK values
+        ///     explicitly.  If a conflict in the FK value is encountered due to an overlapping FK
+        ///     that is tied to two different PK values, then an exception is thrown.
+        ///     Note that references to objects that are not yet tracked by the context are ignored, since
+        ///     they will ultimately be brought into the context as Added objects, at which point we would
+        ///     have skipped them anyway because the are not Unchanged or Modified.
         /// </summary>
         internal void FixupFKValuesFromNonAddedReferences()
         {
@@ -2467,14 +2459,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Designed to be used by Change Detection methods to insert 
-        /// Added/Deleted relationships into <see cref="TransactionManager"/>
-        /// Creates new entries in the dictionaries if required
+        ///     Designed to be used by Change Detection methods to insert 
+        ///     Added/Deleted relationships into <see cref="TransactionManager" />
+        ///     Creates new entries in the dictionaries if required
         /// </summary>
-        /// <typeparam name="T">IEntityWrapper or EntityKey</typeparam>
-        /// <param name="relationships">The set of detected relationships to add this entry to</param>
-        /// <param name="relatedObject">The entity the relationship points to</param>
-        /// <param name="relatedEnd">The related end the relationship originates from</param>
+        /// <typeparam name="T"> IEntityWrapper or EntityKey </typeparam>
+        /// <param name="relationships"> The set of detected relationships to add this entry to </param>
+        /// <param name="relatedObject"> The entity the relationship points to </param>
+        /// <param name="relatedEnd"> The related end the relationship originates from </param>
         private static void AddDetectedRelationship<T>(
             Dictionary<IEntityWrapper, Dictionary<RelatedEnd, HashSet<T>>> relationships,
             T relatedObject,
@@ -2513,8 +2505,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Detaches an entry and create in its place key entry if necessary
-        /// Removes relationships with another key entries and removes these key entries if necessary
+        ///     Detaches an entry and create in its place key entry if necessary
+        ///     Removes relationships with another key entries and removes these key entries if necessary
         /// </summary>
         internal void Detach()
         {
@@ -2650,7 +2642,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Nulls all FK values in this entity, or sets conceptual nulls if they are not nullable.
+        ///     Nulls all FK values in this entity, or sets conceptual nulls if they are not nullable.
         /// </summary>
         private void NullAllForeignKeys()
         {
@@ -2746,11 +2738,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// see if there are any relationship entries that point to key entries
-        /// if there are, remove the relationship entry
-        /// This is called when one of the ends of a relationship is being removed
+        ///     see if there are any relationship entries that point to key entries
+        ///     if there are, remove the relationship entry
+        ///     This is called when one of the ends of a relationship is being removed
         /// </summary>
-        /// <param name="relationshipSet">An option relationshipSet; deletes only relationships that are part of this set</param>
+        /// <param name="relationshipSet"> An option relationshipSet; deletes only relationships that are part of this set </param>
         internal void DeleteRelationshipsThatReferenceKeys(RelationshipSet relationshipSet, RelationshipEndMember endMember)
         {
             if (State != EntityState.Detached)
@@ -2979,7 +2971,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Turns this entry into a key entry (SPAN stub).
+        ///     Turns this entry into a key entry (SPAN stub).
         /// </summary>
         internal void DegradeEntry()
         {
@@ -3097,7 +3089,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Verifies that the property with the given ordinal is editable.
+        ///     Verifies that the property with the given ordinal is editable.
         /// </summary>
         /// <exception cref="InvalidOperationException">the property is not editable</exception>
         internal void VerifyEntityValueIsEditable(StateManagerTypeMetadata typeMetadata, int ordinal, string memberName)
@@ -3166,7 +3158,7 @@ namespace System.Data.Entity.Core.Objects
                     ObjectStateManager.ChangeState(relationshipEntry, EntityState.Unchanged, EntityState.Added);
                     relationshipEntry.State = EntityState.Added;
                 }
-                // Deleted -> Detached
+                    // Deleted -> Detached
                 else if (relationshipEntry.State
                          == EntityState.Deleted)
                 {
@@ -3527,8 +3519,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// For each FK contained in this entry, the entry is removed from the index maintained by
-        /// the ObjectStateManager for that key.
+        ///     For each FK contained in this entry, the entry is removed from the index maintained by
+        ///     the ObjectStateManager for that key.
         /// </summary>
         internal void RemoveFromForeignKeyIndex()
         {
@@ -3546,9 +3538,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Looks at the foreign keys contained in this entry and performs fixup to the entities that
-        /// they reference, or adds the key and this entry to the index of foreign keys that reference
-        /// entities that we don't yet know about.
+        ///     Looks at the foreign keys contained in this entry and performs fixup to the entities that
+        ///     they reference, or adds the key and this entry to the index of foreign keys that reference
+        ///     entities that we don't yet know about.
         /// </summary>
         internal void FixupReferencesByForeignKeys(bool replaceAddedRefs)
         {
@@ -3647,13 +3639,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Given a RelatedEnd that represents a FK from this dependent entity to the principal entity of the
-        /// relationship, this method fixes up references between the two entities.
+        ///     Given a RelatedEnd that represents a FK from this dependent entity to the principal entity of the
+        ///     relationship, this method fixes up references between the two entities.
         /// </summary>
-        /// <param name="relatedEnd">Represents a FK relationship to a principal</param>
-        /// <param name="foreignKey">The foreign key, if it has already been computed</param>
-        /// <param name="setIsLoaded">If true, then the IsLoaded flag for the relationship is set</param>
-        /// <param name="replaceExistingRef">If true, then any existing references will be replaced</param>
+        /// <param name="relatedEnd"> Represents a FK relationship to a principal </param>
+        /// <param name="foreignKey"> The foreign key, if it has already been computed </param>
+        /// <param name="setIsLoaded"> If true, then the IsLoaded flag for the relationship is set </param>
+        /// <param name="replaceExistingRef"> If true, then any existing references will be replaced </param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void FixupEntityReferenceToPrincipal(
             EntityReference relatedEnd, EntityKey foreignKey, bool setIsLoaded, bool replaceExistingRef)
@@ -3746,10 +3738,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Determins whether or not setting a reference will cause implicit ref stealing as part of FK fixup.
-        /// If it would, then an exception is thrown.  If it would not and we can safely overwrite the existing
-        /// value, then true is returned.  If it would not but we should not overwrite the existing value,
-        /// then false is returned.
+        ///     Determins whether or not setting a reference will cause implicit ref stealing as part of FK fixup.
+        ///     If it would, then an exception is thrown.  If it would not and we can safely overwrite the existing
+        ///     value, then true is returned.  If it would not but we should not overwrite the existing value,
+        ///     then false is returned.
         private static bool WillNotRefSteal(EntityReference refToPrincipal, IEntityWrapper wrappedPrincipal)
         {
             var dependentEnd = refToPrincipal.GetOtherEndOfRelationship(wrappedPrincipal);
@@ -3787,14 +3779,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Given that this entry represents an entity on the dependent side of a FK, this method attempts to return the key of the
-        /// entity on the principal side of the FK.  If the two entities both exist in the context, then the primary key of
-        /// the principal entity is found and returned.  If the principal entity does not exist in the context, then a key
-        /// for it is built up from the foreign key values contained in the dependent entity.
+        ///     Given that this entry represents an entity on the dependent side of a FK, this method attempts to return the key of the
+        ///     entity on the principal side of the FK.  If the two entities both exist in the context, then the primary key of
+        ///     the principal entity is found and returned.  If the principal entity does not exist in the context, then a key
+        ///     for it is built up from the foreign key values contained in the dependent entity.
         /// </summary>
-        /// <param name="principalRole">The role indicating the FK to navigate</param>
-        /// <param name="principalKey">Set to the principal key or null on return</param>
-        /// <returns>True if the principal key was found or built; false if it could not be found or built</returns>
+        /// <param name="principalRole"> The role indicating the FK to navigate </param>
+        /// <param name="principalKey"> Set to the principal key or null on return </param>
+        /// <returns> True if the principal key was found or built; false if it could not be found or built </returns>
         internal bool TryGetReferenceKey(AssociationEndMember principalRole, out EntityKey principalKey)
         {
             var relatedEnd = RelationshipManager.GetRelatedEnd(principalRole.DeclaringType.FullName, principalRole.Name) as EntityReference;
@@ -3810,8 +3802,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Performs fixuyup of foreign keys based on referencesd between objects.  This should only be called
-        /// for Added objects since this is the only time that references take precedence over FKs in fixup.
+        ///     Performs fixuyup of foreign keys based on referencesd between objects.  This should only be called
+        ///     for Added objects since this is the only time that references take precedence over FKs in fixup.
         /// </summary>
         internal void FixupForeignKeysByReference()
         {
@@ -3828,10 +3820,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Fixup the FKs by the current reference values
-        /// Do this in the order of fixing up values from the principal ends first, and then propogate those values to the dependents
+        ///     Fixup the FKs by the current reference values
+        ///     Do this in the order of fixing up values from the principal ends first, and then propogate those values to the dependents
         /// </summary>
-        /// <param name="visited"></param>
+        /// <param name="visited"> </param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void FixupForeignKeysByReference(List<EntityEntry> visited)
         {
@@ -4028,8 +4020,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Returns a list of all RelatedEnds for this entity
-        /// that are the dependent end of an FK Association
+        ///     Returns a list of all RelatedEnds for this entity
+        ///     that are the dependent end of an FK Association
         /// </summary>
         internal IEnumerable<EntityReference> FindFKRelatedEnds()
         {
@@ -4045,13 +4037,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Identifies any changes in FK's and creates entries in;
-        /// - TransactionManager.AddedRelationshipsByForeignKey
-        /// - TransactionManager.DeletedRelationshipsByForeignKey
+        ///     Identifies any changes in FK's and creates entries in;
+        ///     - TransactionManager.AddedRelationshipsByForeignKey
+        ///     - TransactionManager.DeletedRelationshipsByForeignKey
         /// 
-        /// If the FK change will result in fix-up then two entries
-        /// are added to TransactionManager.AddedRelationshipsByForeignKey 
-        /// (one for each direction of the new realtionship)
+        ///     If the FK change will result in fix-up then two entries
+        ///     are added to TransactionManager.AddedRelationshipsByForeignKey 
+        ///     (one for each direction of the new realtionship)
         /// </summary>
         internal void DetectChangesInForeignKeys()
         {
@@ -4085,8 +4077,8 @@ namespace System.Data.Entity.Core.Objects
                         Contract.Assert(!originalKeyIsConceptualNull, "If FK is nullable there shouldn't be a conceptual null set");
                         AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
                     }
-                    //If there is a Conceptual Null set we need to check if the current values
-                    //are different from the values when the Conceptual Null was created
+                        //If there is a Conceptual Null set we need to check if the current values
+                        //are different from the values when the Conceptual Null was created
                     else if (!currentKey.Equals(originalKey)
                              && (!originalKeyIsConceptualNull || ForeignKeyFactory.IsConceptualNullKeyChanged(originalKey, currentKey)))
                     {
@@ -4107,8 +4099,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// True if the underlying entity is not capable of tracking changes to complex types such that
-        /// DetectChanges is required to do this.
+        ///     True if the underlying entity is not capable of tracking changes to complex types such that
+        ///     DetectChanges is required to do this.
         /// </summary>
         internal bool RequiresComplexChangeTracking
         {
@@ -4116,8 +4108,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// True if the underlying entity is not capable of tracking changes to scalars such that
-        /// DetectChanges is required to do this.
+        ///     True if the underlying entity is not capable of tracking changes to scalars such that
+        ///     DetectChanges is required to do this.
         /// </summary>
         internal bool RequiresScalarChangeTracking
         {
@@ -4125,8 +4117,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// True if the underlying entity is not capable of performing full change tracking such that
-        /// it must be considered by at least some parts of DetectChanges.
+        ///     True if the underlying entity is not capable of performing full change tracking such that
+        ///     it must be considered by at least some parts of DetectChanges.
         /// </summary>
         internal bool RequiresAnyChangeTracking
         {

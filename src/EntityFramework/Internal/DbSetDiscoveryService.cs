@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Internal
         ///     If the type has been processed previously in the app domain, then all this information
         ///     is returned from a cache.
         /// </summary>
-        /// <returns>A dictionary of potential entity type to the list of the names of the properties that used the type.</returns>
+        /// <returns> A dictionary of potential entity type to the list of the names of the properties that used the type. </returns>
         private Dictionary<Type, List<string>> GetSets()
         {
             DbContextTypesInitializersPair setsInfo;
@@ -110,12 +111,12 @@ namespace System.Data.Entity.Internal
                 }
 
                 Action<DbContext> initializer = dbContext =>
-                    {
-                        foreach (var initer in initDelegates)
-                        {
-                            initer(dbContext);
-                        }
-                    };
+                                                    {
+                                                        foreach (var initer in initDelegates)
+                                                        {
+                                                            initer(dbContext);
+                                                        }
+                                                    };
 
                 setsInfo = new DbContextTypesInitializersPair(entityTypes, initializer);
 
@@ -136,9 +137,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Registers the entities and their entity set name hints with the given <see cref = "DbModelBuilder" />.
+        ///     Registers the entities and their entity set name hints with the given <see cref="DbModelBuilder" />.
         /// </summary>
-        /// <param name = "modelBuilder">The model builder.</param>
+        /// <param name="modelBuilder"> The model builder. </param>
         public void RegisterSets(DbModelBuilder modelBuilder)
         {
             foreach (var set in GetSets())
@@ -171,8 +172,8 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Determines whether or not an instance of DbSet/ObjectSet can be assigned to a property of the given type.
         /// </summary>
-        /// <param name = "declaredType">The type to check.</param>
-        /// <returns>The entity type of the DbSet/ObjectSet that can be assigned, or null if no set type can be assigned.</returns>
+        /// <param name="declaredType"> The type to check. </param>
+        /// <returns> The entity type of the DbSet/ObjectSet that can be assigned, or null if no set type can be assigned. </returns>
         private static Type GetSetType(Type declaredType)
         {
             if (!declaredType.IsArray)
@@ -196,8 +197,8 @@ namespace System.Data.Entity.Internal
         ///     so return the element type of the IDbSet\IObjectSet.  Currently, if the collection implements IDbSet&lt&gt\IObjectSet&lt&gt
         ///     multiple times with different types, then we will return false since this is not supported.
         /// </summary>
-        /// <param name = "setType">The type to check.</param>
-        /// <returns>The element type of the IDbSet\IObjectSet, or null if the type does not match.</returns>
+        /// <param name="setType"> The type to check. </param>
+        /// <returns> The element type of the IDbSet\IObjectSet, or null if the type does not match. </returns>
         private static Type GetSetElementType(Type setType)
         {
             // We have to check if the type actually is the interface, or if it implements the interface:

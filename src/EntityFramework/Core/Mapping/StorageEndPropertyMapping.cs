@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
@@ -8,51 +9,51 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    /// Mapping metadata for End property of an association.
+    ///     Mapping metadata for End property of an association.
     /// </summary>
     /// <example>
-    /// For Example if conceptually you could represent the CS MSL file as following
-    /// --Mapping 
-    ///   --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    ///     For Example if conceptually you could represent the CS MSL file as following
+    ///     --Mapping 
+    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///       --EntityTypeMapping
-    ///         --MappingFragment
-    ///           --EntityKey
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --ComplexPropertyMap
-    ///             --ComplexTypeMapping
-    ///               --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///             --ComplexTypeMapping
-    ///               --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///               --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///           --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EntityTypeMapping
+    ///     --MappingFragment
+    ///     --EntityKey
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ComplexPropertyMap
+    ///     --ComplexTypeMapping
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    ///     --ComplexTypeMapping
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --AssociationSetMapping 
-    ///       --AssociationTypeMapping
-    ///         --MappingFragment
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///             --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///           --EndPropertyMap
-    ///             --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    /// This class represents the metadata for all the end property map elements in the 
-    /// above example. EndPropertyMaps provide mapping for each end of the association.
+    ///     --AssociationTypeMapping
+    ///     --MappingFragment
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     --EndPropertyMap
+    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    ///     This class represents the metadata for all the end property map elements in the 
+    ///     above example. EndPropertyMaps provide mapping for each end of the association.
     /// </example>
     internal class StorageEndPropertyMapping : StoragePropertyMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Construct a new End Property mapping object
+        ///     Construct a new End Property mapping object
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="member"> </param>
         internal StorageEndPropertyMapping(EdmProperty member)
             : base(member)
         {
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Fields
 
         /// <summary>
-        /// List of property mappings that make up the End.
+        ///     List of property mappings that make up the End.
         /// </summary>
         private readonly List<StoragePropertyMapping> m_properties = new List<StoragePropertyMapping>();
 
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Properties
 
         /// <summary>
-        /// return ReadOnlyCollection of property mappings that are children of this End mapping
+        ///     return ReadOnlyCollection of property mappings that are children of this End mapping
         /// </summary>
         internal ReadOnlyCollection<StoragePropertyMapping> Properties
         {
@@ -80,12 +81,12 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// The relation end property Metadata object for which the mapping is represented.
+        ///     The relation end property Metadata object for which the mapping is represented.
         /// </summary>
         internal RelationshipEndMember EndMember { get; set; }
 
         /// <summary>
-        /// Returns all store properties that are mapped under this mapping fragment
+        ///     Returns all store properties that are mapped under this mapping fragment
         /// </summary>
         internal IEnumerable<EdmMember> StoreProperties
         {
@@ -103,20 +104,20 @@ namespace System.Data.Entity.Core.Mapping
         #region Methods
 
         /// <summary>
-        /// Add a property mapping as a child of End property mapping
+        ///     Add a property mapping as a child of End property mapping
         /// </summary>
-        /// <param name="prop"></param>
+        /// <param name="prop"> </param>
         internal void AddProperty(StoragePropertyMapping prop)
         {
             m_properties.Add(prop);
         }
 
 #if DEBUG
-    /// <summary>
-    /// This method is primarily for debugging purposes.
-    /// Will be removed shortly.
-    /// </summary>
-    /// <param name="index"></param>
+        /// <summary>
+        ///     This method is primarily for debugging purposes.
+        ///     Will be removed shortly.
+        /// </summary>
+        /// <param name="index"> </param>
         internal override void Print(int index)
         {
             StorageEntityContainerMapping.GetPrettyPrintString(ref index);

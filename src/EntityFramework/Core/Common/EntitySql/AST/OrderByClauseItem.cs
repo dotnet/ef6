@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents a order by clause item.
+    ///     Represents a order by clause item.
     /// </summary>
     internal sealed class OrderByClauseItem : Node
     {
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Identifier _optCollationIdentifier;
 
         /// <summary>
-        /// Initializes non-collated order by clause item.
+        ///     Initializes non-collated order by clause item.
         /// </summary>
         internal OrderByClauseItem(Node orderExpr, OrderKind orderKind)
             : this(orderExpr, orderKind, null)
@@ -19,9 +20,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Initializes collated order by clause item.
+        ///     Initializes collated order by clause item.
         /// </summary>
-        /// <param name="optCollationIdentifier">optional Collation identifier</param>
+        /// <param name="optCollationIdentifier"> optional Collation identifier </param>
         internal OrderByClauseItem(Node orderExpr, OrderKind orderKind, Identifier optCollationIdentifier)
         {
             _orderExpr = orderExpr;
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Oeturns order expression.
+        ///     Oeturns order expression.
         /// </summary>
         internal Node OrderExpr
         {
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns order kind (none,asc,desc).
+        ///     Returns order kind (none,asc,desc).
         /// </summary>
         internal OrderKind OrderKind
         {
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns collattion identifier if one exists.
+        ///     Returns collattion identifier if one exists.
         /// </summary>
         internal Identifier Collation
         {

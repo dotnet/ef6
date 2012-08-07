@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Edm.Db
         public virtual double Version { get; set; }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref = "DbSchemaMetadata" /> instances that specifies the schemas within the database.
+        ///     Gets or sets the collection of <see cref="DbSchemaMetadata" /> instances that specifies the schemas within the database.
         /// </summary>
         public virtual IList<DbSchemaMetadata> Schemas
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -7,8 +8,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
 #if DEBUG
     /// <summary>
-    /// The BasicValidator validates the shape of the IQT. It ensures that the 
-    /// various Ops in the tree have the right kinds and number of arguments.
+    ///     The BasicValidator validates the shape of the IQT. It ensures that the 
+    ///     various Ops in the tree have the right kinds and number of arguments.
     /// </summary>
     internal class BasicValidator : BasicOpVisitor
     {

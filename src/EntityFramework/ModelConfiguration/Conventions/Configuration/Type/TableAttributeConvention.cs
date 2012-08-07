@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
 
     /// <summary>
-    ///     Convention to process instances of <see cref = "TableAttribute" /> found on types in the model.
+    ///     Convention to process instances of <see cref="TableAttribute" /> found on types in the model.
     /// </summary>
     public sealed class TableAttributeConvention : IConfigurationConvention<Type, EntityTypeConfiguration>
     {

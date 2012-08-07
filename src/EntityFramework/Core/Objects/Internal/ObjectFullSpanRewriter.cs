@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal class ObjectFullSpanRewriter : ObjectSpanRewriter
     {
         /// <summary>
-        /// Represents a node in the 'Include' navigation property tree
-        /// built from the list of SpanPaths on the Span object with which
-        /// the FullSpanRewriter is constructed.
+        ///     Represents a node in the 'Include' navigation property tree
+        ///     built from the list of SpanPaths on the Span object with which
+        ///     the FullSpanRewriter is constructed.
         /// </summary>
         private class SpanPathInfo
         {
@@ -24,21 +25,21 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
 
             /// <summary>
-            /// The effective Entity type of this node in the tree
+            ///     The effective Entity type of this node in the tree
             /// </summary>
             internal readonly EntityType DeclaringType;
 
             /// <summary>
-            /// Describes the navigation properties that should be retrieved
-            /// from this node in the tree and the Include sub-paths that extend
-            /// from each of those navigation properties
+            ///     Describes the navigation properties that should be retrieved
+            ///     from this node in the tree and the Include sub-paths that extend
+            ///     from each of those navigation properties
             /// </summary>
             internal Dictionary<NavigationProperty, SpanPathInfo> Children;
         }
 
         /// <summary>
-        /// Maintains a reference to the SpanPathInfo tree node representing the
-        /// current position in the 'Include' path that is currently being expanded.
+        ///     Maintains a reference to the SpanPathInfo tree node representing the
+        ///     current position in the 'Include' path that is currently being expanded.
         /// </summary>
         private readonly Stack<SpanPathInfo> _currentSpanPath = new Stack<SpanPathInfo>();
 
@@ -80,11 +81,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Populates the Include span tree with appropriate branches for the Include path
-        /// represented by the specified list of navigation property names.
+        ///     Populates the Include span tree with appropriate branches for the Include path
+        ///     represented by the specified list of navigation property names.
         /// </summary>
-        /// <param name="parentInfo">The root SpanPathInfo</param>
-        /// <param name="navPropNames">A list of navigation property names that describes a single Include span path</param>
+        /// <param name="parentInfo"> The root SpanPathInfo </param>
+        /// <param name="navPropNames"> A list of navigation property names that describes a single Include span path </param>
         private void AddSpanPath(SpanPathInfo parentInfo, List<string> navPropNames)
         {
             ConvertSpanPath(parentInfo, navPropNames, 0);
@@ -133,14 +134,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Retrieves the Entity (result or element) type produced by a Navigation Property.
+        ///     Retrieves the Entity (result or element) type produced by a Navigation Property.
         /// </summary>
-        /// <param name="navProp">The navigation property</param>
-        /// <returns>
-        ///     The Entity type produced by the navigation property. 
-        ///     This may be the immediate result type (if the result is at most one)
-        ///     or the element type of the result type, otherwise.
-        /// </returns>
+        /// <param name="navProp"> The navigation property </param>
+        /// <returns> The Entity type produced by the navigation property. This may be the immediate result type (if the result is at most one) or the element type of the result type, otherwise. </returns>
         private static EntityType EntityTypeFromResultType(NavigationProperty navProp)
         {
             EntityType retType = null;
@@ -151,15 +148,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Retrieves the Entity (result or element) type referenced by the specified TypeUsage, if
-        /// its EdmType is an Entity type or a collection type with an Entity element type.
+        ///     Retrieves the Entity (result or element) type referenced by the specified TypeUsage, if
+        ///     its EdmType is an Entity type or a collection type with an Entity element type.
         /// </summary>
-        /// <param name="resultType">The TypeUsage that provides the EdmType to examine</param>
-        /// <param name="entityType">The referenced Entity (element) type, if present.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified <paramref name="resultType"/> is an Entity type or a 
-        ///     collection type with an Entity element type; otherwise <c>false</c>.
-        /// </returns>
+        /// <param name="resultType"> The TypeUsage that provides the EdmType to examine </param>
+        /// <param name="entityType"> The referenced Entity (element) type, if present. </param>
+        /// <returns> <c>true</c> if the specified <paramref name="resultType" /> is an Entity type or a collection type with an Entity element type; otherwise <c>false</c> . </returns>
         private static bool TryGetEntityType(TypeUsage resultType, out EntityType entityType)
         {
             // If the result type is an Entity, then simply use that type.
@@ -188,10 +182,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        /// Utility method to retrieve the 'To' AssociationEndMember of a NavigationProperty
+        ///     Utility method to retrieve the 'To' AssociationEndMember of a NavigationProperty
         /// </summary>
-        /// <param name="property">The navigation property</param>
-        /// <returns>The AssociationEndMember that is the target of the navigation operation represented by the NavigationProperty</returns>
+        /// <param name="property"> The navigation property </param>
+        /// <returns> The AssociationEndMember that is the target of the navigation operation represented by the NavigationProperty </returns>
         private AssociationEndMember GetNavigationPropertyTargetEnd(NavigationProperty property)
         {
             var relationship = Metadata.GetItem<AssociationType>(property.RelationshipType.FullName, DataSpace.CSpace);

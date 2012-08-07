@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Collections.Generic;
@@ -28,9 +29,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             databaseMapping.Database = database;
             var entityContainerMapping
                 = new DbEntityContainerMapping
-                    {
-                        EntityContainer = model.Containers.Single()
-                    };
+                      {
+                          EntityContainer = model.Containers.Single()
+                      };
             databaseMapping.EntityContainerMappings.Add(entityContainerMapping);
 
             return databaseMapping;
@@ -83,9 +84,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             using (var xmlWriter = XmlWriter.Create(
                 stringBuilder, new XmlWriterSettings
-                    {
-                        Indent = true
-                    }))
+                                   {
+                                       Indent = true
+                                   }))
             {
                 new MslSerializer().Serialize(databaseMapping, xmlWriter);
             }
@@ -207,9 +208,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(entitySet != null);
 
             var entitySetMapping = new DbEntitySetMapping
-                {
-                    EntitySet = entitySet
-                };
+                                       {
+                                           EntitySet = entitySet
+                                       };
 
             databaseMapping
                 .EntityContainerMappings
@@ -228,9 +229,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             var associationSetMapping
                 = new DbAssociationSetMapping
-                    {
-                        AssociationSet = associationSet
-                    }.Initialize();
+                      {
+                          AssociationSet = associationSet
+                      }.Initialize();
 
             databaseMapping
                 .EntityContainerMappings

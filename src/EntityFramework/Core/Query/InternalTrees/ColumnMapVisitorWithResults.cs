@@ -1,14 +1,15 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    /// Basic Visitor Design Pattern support for ColumnMap hierarchy; 
+    ///     Basic Visitor Design Pattern support for ColumnMap hierarchy; 
     /// 
-    /// This visitor class allows you to return results; it's useful for operations
-    /// that copy or manipulate the hierarchy.
+    ///     This visitor class allows you to return results; it's useful for operations
+    ///     that copy or manipulate the hierarchy.
     /// </summary>
-    /// <typeparam name="TArgType"></typeparam>
-    /// <typeparam name="TResultType"></typeparam>
+    /// <typeparam name="TArgType"> </typeparam>
+    /// <typeparam name="TResultType"> </typeparam>
     internal abstract class ColumnMapVisitorWithResults<TResultType, TArgType>
     {
         #region EntityIdentity handling

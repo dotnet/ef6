@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an role element in referential constraint element.
+    ///     Represents an role element in referential constraint element.
     /// </summary>
     internal sealed class ReferentialConstraintRoleElement : SchemaElement
     {
@@ -16,9 +17,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private IRelationshipEnd _end;
 
         /// <summary>
-        /// Constructs an EntityContainerAssociationSetEnd
+        ///     Constructs an EntityContainerAssociationSetEnd
         /// </summary>
-        /// <param name="parentElement">Reference to the schema element.</param>
+        /// <param name="parentElement"> Reference to the schema element. </param>
         public ReferentialConstraintRoleElement(ReferentialConstraint parentElement)
             : base(parentElement)
         {
@@ -68,9 +69,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandlePropertyRefElement(XmlReader reader)
         {
             var property = new PropertyRefElement(ParentElement);
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
+        ///     Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {

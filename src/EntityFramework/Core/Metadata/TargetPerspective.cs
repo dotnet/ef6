@@ -1,18 +1,19 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    /// Internal helper class for query
+    ///     Internal helper class for query
     /// </summary>
     internal class TargetPerspective : Perspective
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of perspective class so that query can work
-        /// ignorant of all spaces
+        ///     Creates a new instance of perspective class so that query can work
+        ///     ignorant of all spaces
         /// </summary>
-        /// <param name="metadataWorkspace">runtime metadata container</param>
+        /// <param name="metadataWorkspace"> runtime metadata container </param>
         internal TargetPerspective(MetadataWorkspace metadataWorkspace)
             : base(metadataWorkspace, TargetPerspectiveDataSpace)
         {
@@ -32,12 +33,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods 
 
         /// <summary>
-        /// Look up a type in the target data space based upon the fullName
+        ///     Look up a type in the target data space based upon the fullName
         /// </summary>
-        /// <param name="fullName">fullName</param>
-        /// <param name="ignoreCase">true for case-insensitive lookup</param>
-        /// <param name="usage"></param>
-        /// <returns>a list of types that have the specified full name but may differ by strong name</returns>
+        /// <param name="fullName"> fullName </param>
+        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
+        /// <param name="usage"> </param>
+        /// <returns> a list of types that have the specified full name but may differ by strong name </returns>
         internal override bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage usage)
         {
             EntityUtil.CheckStringArgument(fullName, "fullName");
@@ -54,12 +55,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the entity container in CSpace or SSpace
+        ///     Returns the entity container in CSpace or SSpace
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="ignoreCase"></param>
-        /// <param name="entityContainer"></param>
-        /// <returns></returns>
+        /// <param name="name"> </param>
+        /// <param name="ignoreCase"> </param>
+        /// <param name="entityContainer"> </param>
+        /// <returns> </returns>
         internal override bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
             if (!base.TryGetEntityContainer(name, ignoreCase, out entityContainer))

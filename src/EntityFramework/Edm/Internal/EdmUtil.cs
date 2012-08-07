@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Internal
 {
     using System.Diagnostics.Contracts;
@@ -206,7 +207,7 @@ namespace System.Data.Entity.Edm.Internal
 
         /// <summary>
         /// </summary>
-        /// <param name = "name"> </param>
+        /// <param name="name"> </param>
         /// <returns> </returns>
         private static bool IsValidUndottedName(string name)
         {

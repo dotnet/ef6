@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
@@ -10,7 +11,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A non-generic version of the <see cref = "DbReferenceEntry{TEntity, TProperty}" /> class.
+    ///     A non-generic version of the <see cref="DbReferenceEntry{TEntity, TProperty}" /> class.
     /// </summary>
     public class DbReferenceEntry : DbMemberEntry
     {
@@ -19,12 +20,12 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalReferenceEntry _internalReferenceEntry;
 
         /// <summary>
-        ///     Creates a <see cref = "DbReferenceEntry" /> from information in the given <see cref = "InternalReferenceEntry" />.
+        ///     Creates a <see cref="DbReferenceEntry" /> from information in the given <see cref="InternalReferenceEntry" />.
         ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
         ///     the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
-        /// <param name = "internalReferenceEntry">The internal reference entry.</param>
-        /// <returns>The new entry.</returns>
+        /// <param name="internalReferenceEntry"> The internal reference entry. </param>
+        /// <returns> The new entry. </returns>
         internal static DbReferenceEntry Create(InternalReferenceEntry internalReferenceEntry)
         {
             Contract.Requires(internalReferenceEntry != null);
@@ -33,9 +34,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "DbReferenceEntry" /> class.
+        ///     Initializes a new instance of the <see cref="DbReferenceEntry" /> class.
         /// </summary>
-        /// <param name = "internalReferenceEntry">The internal entry.</param>
+        /// <param name="internalReferenceEntry"> The internal entry. </param>
         internal DbReferenceEntry(InternalReferenceEntry internalReferenceEntry)
         {
             Contract.Requires(internalReferenceEntry != null);
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets the property name.
         /// </summary>
-        /// <value>The property name.</value>
+        /// <value> The property name. </value>
         public override string Name
         {
             get { return _internalReferenceEntry.Name; }
@@ -64,7 +65,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets or sets the current value of the navigation property.  The current value is
         ///     the entity that the navigation property references.
         /// </summary>
-        /// <value>The current value.</value>
+        /// <value> The current value. </value>
         public override object CurrentValue
         {
             get { return _internalReferenceEntry.CurrentValue; }
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Infrastructure
         ///     loads the entity from the database.
         ///     Note that if the entity already exists in the context, then it will not overwritten with values from the database.
         /// </summary>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         public Task LoadAsync()
         {
             return LoadAsync(CancellationToken.None);
@@ -100,8 +101,8 @@ namespace System.Data.Entity.Infrastructure
         ///     loads the entity from the database.
         ///     Note that if the entity already exists in the context, then it will not overwritten with values from the database.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A Task representing the asynchronous operation. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Task LoadAsync(CancellationToken cancellationToken)
@@ -112,7 +113,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets a value indicating whether the entity has been loaded from the database.
         /// </summary>
-        /// <value><c>true</c> if the entity is loaded; otherwise, <c>false</c>.</value>
+        /// <value> <c>true</c> if the entity is loaded; otherwise, <c>false</c> . </value>
         public bool IsLoaded
         {
             get { return _internalReferenceEntry.IsLoaded; }
@@ -126,7 +127,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns the query that would be used to load this entity from the database.
         ///     The returned query can be modified using LINQ to perform filtering or operations in the database.
         /// </summary>
-        /// <returns>A query for the entity.</returns>
+        /// <returns> A query for the entity. </returns>
         public IQueryable Query()
         {
             return _internalReferenceEntry.Query();
@@ -137,9 +138,9 @@ namespace System.Data.Entity.Infrastructure
         #region Back references
 
         /// <summary>
-        ///     The <see cref = "DbEntityEntry" /> to which this navigation property belongs.
+        ///     The <see cref="DbEntityEntry" /> to which this navigation property belongs.
         /// </summary>
-        /// <value>An entry for the entity that owns this navigation property.</value>
+        /// <value> An entry for the entity that owns this navigation property. </value>
         public override DbEntityEntry EntityEntry
         {
             get { return new DbEntityEntry(_internalReferenceEntry.InternalEntityEntry); }
@@ -150,9 +151,9 @@ namespace System.Data.Entity.Infrastructure
         #region InternalMemberEntry access
 
         /// <summary>
-        ///     Gets the <see cref = "InternalReferenceEntry" /> backing this object as an <see cref = "InternalMemberEntry" />.
+        ///     Gets the <see cref="InternalReferenceEntry" /> backing this object as an <see cref="InternalMemberEntry" />.
         /// </summary>
-        /// <value>The internal member entry.</value>
+        /// <value> The internal member entry. </value>
         internal override InternalMemberEntry InternalMemberEntry
         {
             get { return _internalReferenceEntry; }
@@ -163,11 +164,11 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to generic
 
         /// <summary>
-        ///     Returns the equivalent generic <see cref = "DbReferenceEntry{TEntity,TProperty}" /> object.
+        ///     Returns the equivalent generic <see cref="DbReferenceEntry{TEntity,TProperty}" /> object.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of entity on which the member is declared.</typeparam>
-        /// <typeparam name = "TProperty">The type of the property.</typeparam>
-        /// <returns>The equivalent generic object.</returns>
+        /// <typeparam name="TEntity"> The type of entity on which the member is declared. </typeparam>
+        /// <typeparam name="TProperty"> The type of the property. </typeparam>
+        /// <returns> The equivalent generic object. </returns>
         public new DbReferenceEntry<TEntity, TProperty> Cast<TEntity, TProperty>() where TEntity : class
         {
             var metadata = _internalReferenceEntry.EntryMetadata;

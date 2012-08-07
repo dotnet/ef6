@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Data.Entity.Edm.Common;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Edm
         internal abstract EdmItemKind GetItemKind();
 
         /// <summary>
-        ///     Gets an <see cref = "EdmItemKind" /> value indicating which Entity Data Model (EDM) concept is represented by this item.
+        ///     Gets an <see cref="EdmItemKind" /> value indicating which Entity Data Model (EDM) concept is represented by this item.
         /// </summary>
         public EdmItemKind ItemKind
         {

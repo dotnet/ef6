@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Migrations
     using System.Reflection;
 
     /// <summary>
-    ///     A set of extension methods for <see cref = "IDbSet{TEntity}" />
+    ///     A set of extension methods for <see cref="IDbSet{TEntity}" />
     /// </summary>
     public static class IDbSetExtensions
     {
@@ -25,9 +26,11 @@ namespace System.Data.Entity.Migrations
         ///     from database terminology. 
         ///     This method can useful when seeding data using Migrations.
         /// </summary>
-        /// <param name = "entities">The entities to add or update.</param>
+        /// <param name="entities"> The entities to add or update. </param>
         /// <remarks>
-        ///     When the <param name="set"/> parameter is a custom or fake IDbSet implementation, this method will
+        ///     When the
+        ///     <param name="set" />
+        ///     parameter is a custom or fake IDbSet implementation, this method will
         ///     attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
         public static void AddOrUpdate<TEntity>(
@@ -65,13 +68,12 @@ namespace System.Data.Entity.Migrations
         ///     Equivalent to an "upsert" operation from database terminology.
         ///     This method can useful when seeding data using Migrations.
         /// </summary>
-        /// <param name = "identifierExpression">
-        ///     An expression specifying the properties that should be used when determining
-        ///     whether an Add or Update operation should be performed.
-        /// </param>
-        /// <param name = "entities">The entities to add or update.</param>
+        /// <param name="identifierExpression"> An expression specifying the properties that should be used when determining whether an Add or Update operation should be performed. </param>
+        /// <param name="entities"> The entities to add or update. </param>
         /// <remarks>
-        ///     When the <param name="set"/> parameter is a custom or fake IDbSet implementation, this method will
+        ///     When the
+        ///     <param name="set" />
+        ///     parameter is a custom or fake IDbSet implementation, this method will
         ///     attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

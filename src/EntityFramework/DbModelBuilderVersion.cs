@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity
 {
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     A value from this enumeration can be provided directly to the <see cref = "DbModelBuilder" />
-    ///     class or can be used in the <see cref = "DbModelBuilderVersionAttribute" /> applied to
-    ///     a class derived from <see cref = "DbContext" />. The value used defines which version of
+    ///     A value from this enumeration can be provided directly to the <see cref="DbModelBuilder" />
+    ///     class or can be used in the <see cref="DbModelBuilderVersionAttribute" /> applied to
+    ///     a class derived from <see cref="DbContext" />. The value used defines which version of
     ///     the DbContext and DbModelBuilder conventions should be used when building a model from
     ///     code--also known as "Code First".
     /// </summary>
@@ -20,22 +21,22 @@ namespace System.Data.Entity
     public enum DbModelBuilderVersion
     {
         /// <summary>
-        ///     Indicates that the latest version of the <see cref = "DbModelBuilder" /> and 
-        ///     <see cref = "DbContext" /> conventions should be used.
+        ///     Indicates that the latest version of the <see cref="DbModelBuilder" /> and 
+        ///     <see cref="DbContext" /> conventions should be used.
         /// </summary>
         Latest,
 
         /// <summary>
-        ///     Indicates that the version of the <see cref = "DbModelBuilder" /> and 
-        ///     <see cref = "DbContext" /> conventions shipped with Entity Framework v4.1
+        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and 
+        ///     <see cref="DbContext" /> conventions shipped with Entity Framework v4.1
         ///     should be used.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
         V4_1,
 
         /// <summary>
-        ///     Indicates that the version of the <see cref = "DbModelBuilder" /> and 
-        ///     <see cref = "DbContext" /> conventions shipped with Entity Framework v5.0
+        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and 
+        ///     <see cref="DbContext" /> conventions shipped with Entity Framework v5.0
         ///     should be used.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]

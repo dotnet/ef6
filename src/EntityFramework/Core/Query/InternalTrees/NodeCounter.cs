@@ -1,18 +1,19 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    /// Counts the number of nodes in a tree
+    ///     Counts the number of nodes in a tree
     /// </summary>
     internal class NodeCounter : BasicOpVisitorOfT<int>
     {
         /// <summary>
-        /// Public entry point - Calculates the nubmer of nodes in the given subTree
+        ///     Public entry point - Calculates the nubmer of nodes in the given subTree
         /// </summary>
-        /// <param name="subTree"></param>
-        /// <returns></returns>
+        /// <param name="subTree"> </param>
+        /// <returns> </returns>
         internal static int Count(Node subTree)
         {
             var counter = new NodeCounter();
@@ -20,11 +21,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Common processing for all node types
-        /// Count = 1 (self) + count of children
+        ///     Common processing for all node types
+        ///     Count = 1 (self) + count of children
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
+        /// <param name="n"> </param>
+        /// <returns> </returns>
         protected override int VisitDefault(Node n)
         {
             var count = 1;

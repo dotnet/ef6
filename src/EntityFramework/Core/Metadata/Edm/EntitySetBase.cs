@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    /// Class for representing a entity set
+    ///     Class for representing a entity set
     /// </summary>
     public abstract class EntitySetBase : MetadataItem
     {
@@ -27,13 +28,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for constructing the EntitySet with a given name and an entity type
+        ///     The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
-        /// <param name="name">The name of the EntitySet</param>
-        /// <param name="schema">The db schema</param>
-        /// <param name="table">The db table</param>
-        /// <param name="definingQuery">The provider specific query that should be used to retrieve the EntitySet</param>
-        /// <param name="entityType">The entity type of the entities that this entity set type contains</param>        
+        /// <param name="name"> The name of the EntitySet </param>
+        /// <param name="schema"> The db schema </param>
+        /// <param name="table"> The db table </param>
+        /// <param name="definingQuery"> The provider specific query that should be used to retrieve the EntitySet </param>
+        /// <param name="entityType"> The entity type of the entities that this entity set type contains </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the name or entityType argument is null</exception>
         internal EntitySetBase(string name, string schema, string table, string definingQuery, EntityTypeBase entityType)
         {
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -80,7 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the identity for this item as a string
+        ///     Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
@@ -88,13 +89,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets or sets escaped SQL describing this entity set.
+        ///     Gets or sets escaped SQL describing this entity set.
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         internal string DefiningQuery { get; set; }
 
         /// <summary>
-        /// Gets/Sets the name of this entity set
+        ///     Gets/Sets the name of this entity set
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
@@ -105,7 +106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the entity container of the entity set
+        ///     Returns the entity container of the entity set
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EntitySetBase instance or the EntityContainer passed into the setter is in ReadOnly state</exception>
@@ -115,7 +116,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the entity type of this entity set
+        ///     Gets/Sets the entity type of this entity set
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
@@ -148,8 +149,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation 
-        /// for this type.
+        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     for this type.
         /// </summary>
         public override string ToString()
         {
@@ -157,7 +158,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
+        ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -174,7 +175,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Change the entity container without doing fixup in the entity set collection
+        ///     Change the entity container without doing fixup in the entity set collection
         /// </summary>
         internal void ChangeEntityContainerWithoutCollectionFixup(EntityContainer newEntityContainer)
         {

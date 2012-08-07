@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// DataRecordInfo class providing a simple way to access both the type information and the column information.
+    ///     DataRecordInfo class providing a simple way to access both the type information and the column information.
     /// </summary>
     public class DataRecordInfo
     {
@@ -21,11 +22,11 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Construct DataRecordInfo with list of EdmMembers.
-        /// Each memberInfo must be a member of metadata.
+        ///     Construct DataRecordInfo with list of EdmMembers.
+        ///     Each memberInfo must be a member of metadata.
         /// </summary>
-        /// <param name="metadata"></param>
-        /// <param name="memberInfo"></param>
+        /// <param name="metadata"> </param>
+        /// <param name="memberInfo"> </param>
         public DataRecordInfo(TypeUsage metadata, IEnumerable<EdmMember> memberInfo)
         {
             Contract.Requires(metadata != null);
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Construct FieldMetadata for structuralType.Members from TypeUsage
+        ///     Construct FieldMetadata for structuralType.Members from TypeUsage
         /// </summary>
         internal DataRecordInfo(TypeUsage metadata)
         {
@@ -99,8 +100,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
-        /// but with a different EntityKey instance.
+        ///     Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
+        ///     but with a different EntityKey instance.
         /// </summary>
         internal DataRecordInfo(DataRecordInfo recordInfo)
         {
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Column information.
+        ///     Column information.
         /// </summary>
         public ReadOnlyCollection<FieldMetadata> FieldMetadata
         {
@@ -117,7 +118,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// Type information.
+        ///     Type information.
         /// </summary>
         public virtual TypeUsage RecordType
         {

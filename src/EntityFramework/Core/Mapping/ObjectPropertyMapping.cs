@@ -1,20 +1,21 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    /// Mapping metadata for all OC member maps.
+    ///     Mapping metadata for all OC member maps.
     /// </summary>
     internal class ObjectPropertyMapping : ObjectMemberMapping
     {
         #region Constructors
 
         /// <summary>
-        /// Constrcut a new member mapping metadata object
+        ///     Constrcut a new member mapping metadata object
         /// </summary>
-        /// <param name="edmProperty"></param>
-        /// <param name="clrProperty"></param>
+        /// <param name="edmProperty"> </param>
+        /// <param name="clrProperty"> </param>
         internal ObjectPropertyMapping(EdmProperty edmProperty, EdmProperty clrProperty)
             :
                 base(edmProperty, clrProperty)
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
         #region Properties
 
         /// <summary>
-        /// The PropertyMetadata object that represents the Clr member for which mapping is being specified
+        ///     The PropertyMetadata object that represents the Clr member for which mapping is being specified
         /// </summary>
         internal EdmProperty ClrProperty
         {
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// return the member mapping kind
+        ///     return the member mapping kind
         /// </summary>
         internal override MemberMappingKind MemberMappingKind
         {

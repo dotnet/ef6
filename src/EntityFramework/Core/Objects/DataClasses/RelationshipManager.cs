@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections.Generic;
@@ -16,8 +17,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Container for the lazily created relationship navigation
-    /// property objects (collections and refs).
+    ///     Container for the lazily created relationship navigation
+    ///     property objects (collections and refs).
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [Serializable]
@@ -64,9 +65,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------
 
         /// <summary>
-        /// Returns a defensive copy of all the known relationships.  The copy is defensive because
-        /// new items may get added to the collection while the caller is iterating over it.  Without
-        /// the copy this would cause an exception for concurrently modifying the collection.
+        ///     Returns a defensive copy of all the known relationships.  The copy is defensive because
+        ///     new items may get added to the collection while the caller is iterating over it.  Without
+        ///     the copy this would cause an exception for concurrently modifying the collection.
         /// </summary>
         internal IEnumerable<RelatedEnd> Relationships
         {
@@ -78,7 +79,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Lazy initialization of the _relationships collection.
+        ///     Lazy initialization of the _relationships collection.
         /// </summary>
         private void EnsureRelationshipsInitialized()
         {
@@ -89,8 +90,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// this flag is used to keep track of nodes which have 
-        /// been visited. Currently used for Exclude operation.
+        ///     this flag is used to keep track of nodes which have 
+        ///     been visited. Currently used for Exclude operation.
         /// </summary>
         internal bool NodeVisited
         {
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Provides access to the entity that owns this manager in its wrapped form.
+        ///     Provides access to the entity that owns this manager in its wrapped form.
         /// </summary>
         internal IEntityWrapper WrappedOwner
         {
@@ -123,23 +124,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------
 
         /// <summary>
-        /// Factory method to create a new RelationshipManager object.
+        ///     Factory method to create a new RelationshipManager object.
         /// 
-        /// Used by data classes that support relationships. If the change tracker
-        /// requests the RelationshipManager property and the data class does not
-        /// already have a reference to one of these objects, it calls this method
-        /// to create one, then saves a reference to that object. On subsequent accesses
-        /// to that property, the data class should return the saved reference.
+        ///     Used by data classes that support relationships. If the change tracker
+        ///     requests the RelationshipManager property and the data class does not
+        ///     already have a reference to one of these objects, it calls this method
+        ///     to create one, then saves a reference to that object. On subsequent accesses
+        ///     to that property, the data class should return the saved reference.
         /// 
-        /// The reason for using a factory method instead of a public constructor is to 
-        /// emphasize that this is not something you would normally call outside of a data class.
-        /// By requiring that these objects are created via this method, developers should
-        /// give more thought to the operation, and will generally only use it when
-        /// they explicitly need to get an object of this type. It helps define the intended usage.  
+        ///     The reason for using a factory method instead of a public constructor is to 
+        ///     emphasize that this is not something you would normally call outside of a data class.
+        ///     By requiring that these objects are created via this method, developers should
+        ///     give more thought to the operation, and will generally only use it when
+        ///     they explicitly need to get an object of this type. It helps define the intended usage.
         /// </summary>
-        /// <param name="owner">Reference to the entity that is calling this method</param>
-        /// <exception cref="ArgumentNullException"><paramref name="owner"/> is null</exception>
-        /// <returns>A new or existing RelationshipManager for the given entity</returns>
+        /// <param name="owner"> Reference to the entity that is calling this method </param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="owner" />
+        ///     is null</exception>
+        /// <returns> A new or existing RelationshipManager for the given entity </returns>
         public static RelationshipManager Create(IEntityWithRelationships owner)
         {
             Contract.Requires(owner != null);
@@ -149,20 +152,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Factory method that creates a new, uninitialized RelationshipManager.  This should only be
-        /// used to create a RelationshipManager for an IEntityWrapper for an entity that does not
-        /// implement IEntityWithRelationships.  For entities that implement IEntityWithRelationships,
-        /// the Create(IEntityWithRelationships) method should be used instead.
+        ///     Factory method that creates a new, uninitialized RelationshipManager.  This should only be
+        ///     used to create a RelationshipManager for an IEntityWrapper for an entity that does not
+        ///     implement IEntityWithRelationships.  For entities that implement IEntityWithRelationships,
+        ///     the Create(IEntityWithRelationships) method should be used instead.
         /// </summary>
-        /// <returns>The new RelationshipManager</returns>
+        /// <returns> The new RelationshipManager </returns>
         internal static RelationshipManager Create()
         {
             return new RelationshipManager();
         }
 
         /// <summary>
-        /// Replaces the existing wrapped owner with one that potentially contains more information,
-        /// such as an entity key.  Both must wrap the same entity.
+        ///     Replaces the existing wrapped owner with one that potentially contains more information,
+        ///     such as an entity key.  Both must wrap the same entity.
         /// </summary>
         internal void SetWrappedOwner(IEntityWrapper wrappedOwner, object expectedOwner)
         {
@@ -190,19 +193,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Get the collection of entities related to the current entity using the specified
-        /// combination of relationship name, source role name, and target role name
+        ///     Get the collection of entities related to the current entity using the specified
+        ///     combination of relationship name, source role name, and target role name
         /// </summary>
-        /// <typeparam name="TSourceEntity">Type of the entity in the source role (same as the type of this)</typeparam>
-        /// <typeparam name="TTargetEntity">Type of the entity in the target role</typeparam>
-        /// <param name="relationshipName">CSpace-qualified name of the relationship to navigate</param>
-        /// <param name="sourceRoleName">Name of the source role for the navigation. Indicates the direction of navigation across the relationship.</param>
-        /// <param name="targetRoleName">Name of the target role for the navigation. Indicates the direction of navigation across the relationship.</param>
-        /// <param name="sourcePropertyName">Name of the property on the source of the navigation.</param>
-        /// <param name="targetPropertyName">Name of the property on the target of the navigation.</param>
-        /// <param name="sourceRoleMultiplicity">Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both
-        /// accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection</param>
-        /// <returns>Collection of related entities of type TTargetEntity</returns>
+        /// <typeparam name="TSourceEntity"> Type of the entity in the source role (same as the type of this) </typeparam>
+        /// <typeparam name="TTargetEntity"> Type of the entity in the target role </typeparam>
+        /// <param name="relationshipName"> CSpace-qualified name of the relationship to navigate </param>
+        /// <param name="sourceRoleName"> Name of the source role for the navigation. Indicates the direction of navigation across the relationship. </param>
+        /// <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
+        /// <param name="sourcePropertyName"> Name of the property on the source of the navigation. </param>
+        /// <param name="targetPropertyName"> Name of the property on the target of the navigation. </param>
+        /// <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
+        /// <returns> Collection of related entities of type TTargetEntity </returns>
         internal EntityCollection<TTargetEntity> GetRelatedCollection<TSourceEntity, TTargetEntity>(
             string relationshipName,
             string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
@@ -279,12 +281,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Re-merge items from collection so that relationship fixup is performed.
-        /// Ensure that any items in previous collection are excluded from the re-merge
+        ///     Re-merge items from collection so that relationship fixup is performed.
+        ///     Ensure that any items in previous collection are excluded from the re-merge
         /// </summary>
-        /// <typeparam name="TTargetEntity"></typeparam>
-        /// <param name="previousCollection">The previous EntityCollection containing items that have already had fixup performed</param>
-        /// <param name="collection">The new EntityCollection</param>
+        /// <typeparam name="TTargetEntity"> </typeparam>
+        /// <param name="previousCollection"> The previous EntityCollection containing items that have already had fixup performed </param>
+        /// <param name="collection"> The new EntityCollection </param>
         private static void RemergeCollections<TTargetEntity>(
             EntityCollection<TTargetEntity> previousCollection,
             EntityCollection<TTargetEntity> collection)
@@ -339,17 +341,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Get the entity reference of a related entity using the specified
-        /// combination of relationship name, source role name, and target role name
+        ///     Get the entity reference of a related entity using the specified
+        ///     combination of relationship name, source role name, and target role name
         /// </summary>
-        /// <param name="relationshipName">CSpace-qualified name of the relationship to navigate</param>
-        /// <param name="sourceRoleName">Name of the source role for the navigation. Indicates the direction of navigation across the relationship.</param>
-        /// <param name="targetRoleName">Name of the target role for the navigation. Indicates the direction of navigation across the relationship.</param>
-        /// <param name="sourcePropertyName">Name of the property on the source of the navigation.</param>
-        /// <param name="targetPropertyName">Name of the property on the target of the navigation.</param>
-        /// <param name="sourceRoleMultiplicity">Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both
-        /// accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection</param>
-        /// <returns>Reference for related entity of type TTargetEntity</returns>
+        /// <param name="relationshipName"> CSpace-qualified name of the relationship to navigate </param>
+        /// <param name="sourceRoleName"> Name of the source role for the navigation. Indicates the direction of navigation across the relationship. </param>
+        /// <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
+        /// <param name="sourcePropertyName"> Name of the property on the source of the navigation. </param>
+        /// <param name="targetPropertyName"> Name of the property on the target of the navigation. </param>
+        /// <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
+        /// <returns> Reference for related entity of type TTargetEntity </returns>
         internal EntityReference<TTargetEntity> GetRelatedReference<TSourceEntity, TTargetEntity>(
             string relationshipName,
             string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
@@ -383,11 +384,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Internal version of GetRelatedEnd that works with the o-space navigation property
-        /// name rather than the c-space relationship name and end name.
+        ///     Internal version of GetRelatedEnd that works with the o-space navigation property
+        ///     name rather than the c-space relationship name and end name.
         /// </summary>
-        /// <param name="navigationProperty">the name of the property to lookup</param>
-        /// <returns>the related end for the given property</returns>
+        /// <param name="navigationProperty"> the name of the property to lookup </param>
+        /// <returns> the related end for the given property </returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal RelatedEnd GetRelatedEnd(string navigationProperty, bool throwArgumentException = false)
         {
@@ -412,15 +413,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Returns either an EntityCollection or EntityReference of the correct type for the specified target role in a relationship
-        /// This is intended to be used in scenarios where the user doesn't have full metadata, including the static type
-        /// information for both ends of the relationship. This metadata is specified in the EdmRelationshipRoleAttribute
-        /// on each entity type in the relationship, so the metadata system can retrieve it based on the supplied relationship
-        /// name and target role name.
+        ///     Returns either an EntityCollection or EntityReference of the correct type for the specified target role in a relationship
+        ///     This is intended to be used in scenarios where the user doesn't have full metadata, including the static type
+        ///     information for both ends of the relationship. This metadata is specified in the EdmRelationshipRoleAttribute
+        ///     on each entity type in the relationship, so the metadata system can retrieve it based on the supplied relationship
+        ///     name and target role name.
         /// </summary>
-        /// <param name="relationshipName">Name of the relationship in which targetRoleName is defined. Can be CSpace-qualified or not.</param>
-        /// <param name="targetRoleName">Target role to use to retrieve the other end of relationshipName</param>
-        /// <returns>IRelatedEnd representing the EntityCollection or EntityReference that was retrieved</returns>
+        /// <param name="relationshipName"> Name of the relationship in which targetRoleName is defined. Can be CSpace-qualified or not. </param>
+        /// <param name="targetRoleName"> Target role to use to retrieve the other end of relationshipName </param>
+        /// <returns> IRelatedEnd representing the EntityCollection or EntityReference that was retrieved </returns>
         public IRelatedEnd GetRelatedEnd(string relationshipName, string targetRoleName)
         {
             return GetRelatedEndInternal(PrependNamespaceToRelationshipName(relationshipName), targetRoleName);
@@ -543,14 +544,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Takes an existing EntityReference that was created with the default constructor and initializes it using the provided relationship and target role names.
-        /// This method is designed to be used during deserialization only, and will throw an exception if the provided EntityReference has already been initialized, 
-        /// if the relationship manager already contains a relationship with this name and target role, or if the relationship manager is already attached to a ObjectContext.
+        ///     Takes an existing EntityReference that was created with the default constructor and initializes it using the provided relationship and target role names.
+        ///     This method is designed to be used during deserialization only, and will throw an exception if the provided EntityReference has already been initialized, 
+        ///     if the relationship manager already contains a relationship with this name and target role, or if the relationship manager is already attached to a ObjectContext.
         /// </summary>
-        /// <typeparam name="TTargetEntity">Type of the entity represented by targetRoleName</typeparam>
-        /// <param name="relationshipName"></param>
-        /// <param name="targetRoleName"></param>
-        /// <param name="entityReference"></param>
+        /// <typeparam name="TTargetEntity"> Type of the entity represented by targetRoleName </typeparam>
+        /// <param name="relationshipName"> </param>
+        /// <param name="targetRoleName"> </param>
+        /// <param name="entityReference"> </param>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void InitializeRelatedReference<TTargetEntity>(
@@ -603,14 +604,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Takes an existing EntityCollection that was created with the default constructor and initializes it using the provided relationship and target role names.
-        /// This method is designed to be used during deserialization only, and will throw an exception if the provided EntityCollection has already been initialized, 
-        /// or if the relationship manager is already attached to a ObjectContext.
+        ///     Takes an existing EntityCollection that was created with the default constructor and initializes it using the provided relationship and target role names.
+        ///     This method is designed to be used during deserialization only, and will throw an exception if the provided EntityCollection has already been initialized, 
+        ///     or if the relationship manager is already attached to a ObjectContext.
         /// </summary>
-        /// <typeparam name="TTargetEntity">Type of the entity represented by targetRoleName</typeparam>
-        /// <param name="relationshipName"></param>
-        /// <param name="targetRoleName"></param>
-        /// <param name="entityCollection"></param>
+        /// <typeparam name="TTargetEntity"> Type of the entity represented by targetRoleName </typeparam>
+        /// <param name="relationshipName"> </param>
+        /// <param name="targetRoleName"> </param>
+        /// <param name="entityCollection"> </param>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void InitializeRelatedCollection<TTargetEntity>(
@@ -652,13 +653,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Given a relationship name that may or may not be qualified with a namespace name, this method
-        /// attempts to lookup a namespace using the entity type that owns this RelationshipManager as a
-        /// source and adds that namespace to the front of the relationship name.  If the namespace
-        /// can't be found, then the relationshipName is returned untouched and the expectation is that
-        /// other validations will fail later in the code paths that use this.
-        /// This method should only be used at the imediate top-level public surface since all internal
-        /// calls are expected to use fully qualified names already.
+        ///     Given a relationship name that may or may not be qualified with a namespace name, this method
+        ///     attempts to lookup a namespace using the entity type that owns this RelationshipManager as a
+        ///     source and adds that namespace to the front of the relationship name.  If the namespace
+        ///     can't be found, then the relationshipName is returned untouched and the expectation is that
+        ///     other validations will fail later in the code paths that use this.
+        ///     This method should only be used at the imediate top-level public surface since all internal
+        ///     calls are expected to use fully qualified names already.
         /// </summary>
         private string PrependNamespaceToRelationshipName(string relationshipName)
         {
@@ -694,7 +695,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Trys to get an ObjectItemCollection and returns null if it can;t be found.
+        ///     Trys to get an ObjectItemCollection and returns null if it can;t be found.
         /// </summary>
         private static ObjectItemCollection GetObjectItemCollection(IEntityWrapper wrappedOwner)
         {
@@ -707,7 +708,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Trys to get the EntityType metadata and returns false if it can't be found.
+        ///     Trys to get the EntityType metadata and returns false if it can't be found.
         /// </summary>
         private bool TryGetOwnerEntityType(out EntityType entityType)
         {
@@ -730,7 +731,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Trys to get an DefaultObjectMappingItemCollection and returns false if it can't be found.
+        ///     Trys to get an DefaultObjectMappingItemCollection and returns false if it can't be found.
         /// </summary>
         private static bool TryGetObjectMappingItemCollection(
             IEntityWrapper wrappedOwner, out DefaultObjectMappingItemCollection collection)
@@ -807,13 +808,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Retrieves the AssociationEndMembers that corespond to the target end of a relationship
-        /// given a specific CLR type that exists on the source end of a relationship
-        /// Note: this method can be very expensive if this RelationshipManager is not attached to an 
-        /// ObjectContext because no OSpace Metadata is available
+        ///     Retrieves the AssociationEndMembers that corespond to the target end of a relationship
+        ///     given a specific CLR type that exists on the source end of a relationship
+        ///     Note: this method can be very expensive if this RelationshipManager is not attached to an 
+        ///     ObjectContext because no OSpace Metadata is available
         /// </summary>
-        /// <param name="entityClrType">A CLR type that is on the source role of the relationship</param>
-        /// <returns>The OSpace EntityType that represents this CLR type</returns>
+        /// <param name="entityClrType"> A CLR type that is on the source role of the relationship </param>
+        /// <returns> The OSpace EntityType that represents this CLR type </returns>
         private IEnumerable<AssociationEndMember> GetAllTargetEnds(Type entityClrType)
         {
             var objectItemCollection = GetObjectItemCollection(WrappedOwner);
@@ -911,13 +912,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Get the collection of a related entity using the specified
-        /// combination of relationship name, and target role name.
-        /// Only supports 2-way relationships.
+        ///     Get the collection of a related entity using the specified
+        ///     combination of relationship name, and target role name.
+        ///     Only supports 2-way relationships.
         /// </summary>
-        /// <param name="relationshipName">Name of the relationship in which targetRoleName is defined. Can be CSpace-qualified or not.</param>        
-        /// <param name="targetRoleName">Name of the target role for the navigation. Indicates the direction of navigation across the relationship.</param>
-        /// <returns>Collection of entities of type TTargetEntity</returns>
+        /// <param name="relationshipName"> Name of the relationship in which targetRoleName is defined. Can be CSpace-qualified or not. </param>
+        /// <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
+        /// <returns> Collection of entities of type TTargetEntity </returns>
         public EntityCollection<TTargetEntity> GetRelatedCollection<TTargetEntity>(string relationshipName, string targetRoleName)
             where TTargetEntity : class
         {
@@ -933,13 +934,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Get the entity reference of a related entity using the specified
-        /// combination of relationship name, and target role name.
-        /// Only supports 2-way relationships.
+        ///     Get the entity reference of a related entity using the specified
+        ///     combination of relationship name, and target role name.
+        ///     Only supports 2-way relationships.
         /// </summary>
-        /// <param name="relationshipName">Name of the relationship in which targetRoleName is defined. Can be CSpace-qualified or not.</param>        
-        /// <param name="targetRoleName">Name of the target role for the navigation. Indicates the direction of navigation across the relationship.</param>
-        /// <returns>Reference for related entity of type TTargetEntity</returns>
+        /// <param name="relationshipName"> Name of the relationship in which targetRoleName is defined. Can be CSpace-qualified or not. </param>
+        /// <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
+        /// <returns> Reference for related entity of type TTargetEntity </returns>
         public EntityReference<TTargetEntity> GetRelatedReference<TTargetEntity>(string relationshipName, string targetRoleName)
             where TTargetEntity : class
         {
@@ -955,16 +956,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Gets collection or ref of related entity for a particular navigation.
+        ///     Gets collection or ref of related entity for a particular navigation.
         /// </summary>
-        /// <param name="navigation">
-        /// Describes the relationship and navigation direction
-        /// </param>
-        /// <param name="relationshipFixer">
-        /// Encapsulates information about the other end's type and cardinality,
-        /// and knows how to create the other end
-        /// </param>
-        /// <returns></returns>
+        /// <param name="navigation"> Describes the relationship and navigation direction </param>
+        /// <param name="relationshipFixer"> Encapsulates information about the other end's type and cardinality, and knows how to create the other end </param>
+        /// <returns> </returns>
         internal RelatedEnd GetRelatedEnd(RelationshipNavigation navigation, IRelationshipFixer relationshipFixer)
         {
             RelatedEnd relatedEnd;
@@ -983,15 +979,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Factory method for creating new related ends
+        ///     Factory method for creating new related ends
         /// </summary>
-        /// <typeparam name="TSourceEntity">Type of the source end</typeparam>
-        /// <typeparam name="TTargetEntity">Type of the target end</typeparam>
-        /// <param name="navigation">RelationshipNavigation to be set on the new RelatedEnd</param>
-        /// <param name="sourceRoleMultiplicity">Multiplicity of the source role</param>
-        /// <param name="targetRoleMultiplicity">Multiplicity of the target role</param>
-        /// <param name="existingRelatedEnd">An existing related end to initialize instead of creating a new one</param>
-        /// <returns>new EntityCollection or EntityReference, depending on the specified target multiplicity</returns>
+        /// <typeparam name="TSourceEntity"> Type of the source end </typeparam>
+        /// <typeparam name="TTargetEntity"> Type of the target end </typeparam>
+        /// <param name="navigation"> RelationshipNavigation to be set on the new RelatedEnd </param>
+        /// <param name="sourceRoleMultiplicity"> Multiplicity of the source role </param>
+        /// <param name="targetRoleMultiplicity"> Multiplicity of the target role </param>
+        /// <param name="existingRelatedEnd"> An existing related end to initialize instead of creating a new one </param>
+        /// <returns> new EntityCollection or EntityReference, depending on the specified target multiplicity </returns>
         internal RelatedEnd CreateRelatedEnd<TSourceEntity, TTargetEntity>(
             RelationshipNavigation navigation, RelationshipMultiplicity sourceRoleMultiplicity,
             RelationshipMultiplicity targetRoleMultiplicity, RelatedEnd existingRelatedEnd)
@@ -1053,8 +1049,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Returns an enumeration of all the related ends.  The enumeration 
-        /// will be empty if the relationships have not been populated.
+        ///     Returns an enumeration of all the related ends.  The enumeration 
+        ///     will be empty if the relationships have not been populated.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<IRelatedEnd> GetAllRelatedEnds()
@@ -1131,10 +1127,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Add the rest of the graph, attached to this owner, to ObjectStateManager
+        ///     Add the rest of the graph, attached to this owner, to ObjectStateManager
         /// </summary>
-        /// <param name="doAttach">if TRUE, the rest of the graph is attached directly as Unchanged 
-        /// without calling AcceptChanges()</param>
+        /// <param name="doAttach"> if TRUE, the rest of the graph is attached directly as Unchanged without calling AcceptChanges() </param>
         internal void AddRelatedEntitiesToObjectStateManager(bool doAttach)
         {
             if (null != _relationships)
@@ -1228,8 +1223,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Traverse the relationships and find all the dependent ends that contain FKs, then attempt
-        /// to null all of those FKs.
+        ///     Traverse the relationships and find all the dependent ends that contain FKs, then attempt
+        ///     to null all of those FKs.
         /// </summary>
         internal void NullAllFKsInDependentsForWhichThisIsThePrincipal()
         {
@@ -1491,12 +1486,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Searches the list of relationships for an entry with the specified relationship name and role names
+        ///     Searches the list of relationships for an entry with the specified relationship name and role names
         /// </summary>
-        /// <param name="relationshipName">CSpace-qualified name of the relationship</param>        
-        /// <param name="targetRoleName">name of the target role</param>
-        /// <param name="relatedEnd">the RelatedEnd if found, otherwise null</param>
-        /// <returns>true if the entry found, false otherwise</returns>
+        /// <param name="relationshipName"> CSpace-qualified name of the relationship </param>
+        /// <param name="targetRoleName"> name of the target role </param>
+        /// <param name="relatedEnd"> the RelatedEnd if found, otherwise null </param>
+        /// <returns> true if the entry found, false otherwise </returns>
         private bool TryGetCachedRelatedEnd(string relationshipName, string targetRoleName, out RelatedEnd relatedEnd)
         {
             relatedEnd = null;
@@ -1583,10 +1578,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Helper method to validate consistency of RelationshipManager instances
+        ///     Helper method to validate consistency of RelationshipManager instances
         /// </summary>
-        /// <param name="entity">entity to compare against</param>
-        /// <returns>True if entity is the owner of this RelationshipManager, otherwise false</returns>
+        /// <param name="entity"> entity to compare against </param>
+        /// <returns> True if entity is the owner of this RelationshipManager, otherwise false </returns>
         internal bool IsOwner(IEntityWrapper wrappedEntity)
         {
             var wrappedOwner = WrappedOwner;
@@ -1595,7 +1590,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Calls AttachContext on each RelatedEnd referenced by this manager.
+        ///     Calls AttachContext on each RelatedEnd referenced by this manager.
         /// </summary>
         internal void AttachContextToRelatedEnds(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
@@ -1632,8 +1627,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Calls AttachContext on each RelatedEnd referenced by this manager and also on all the enties
-        /// referenced by that related end.
+        ///     Calls AttachContext on each RelatedEnd referenced by this manager and also on all the enties
+        ///     referenced by that related end.
         /// </summary>
         internal void ResetContextOnRelatedEnds(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
@@ -1653,7 +1648,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Calls DetachContext on each RelatedEnd referenced by this manager.
+        ///     Calls DetachContext on each RelatedEnd referenced by this manager.
         /// </summary>
         internal void DetachContextFromRelatedEnds()
         {

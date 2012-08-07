@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Summary description for Association.
+    ///     Summary description for Association.
     /// </summary>
     [DebuggerDisplay(
         "Name={Name}, Relationship={_unresolvedRelationshipName}, FromRole={_unresolvedFromEndRole}, ToRole={_unresolvedToEndRole}")]
@@ -22,16 +23,14 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private IRelationship _relationship;
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="parent"></param>
+        /// <param name="parent"> </param>
         public NavigationProperty(SchemaEntityType parent)
             : base(parent)
         {
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public new SchemaEntityType ParentElement
         {
@@ -54,7 +53,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Gets the Type of the property
+        ///     Gets the Type of the property
         /// </summary>
         public override SchemaType Type
         {
@@ -101,7 +100,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -149,7 +147,6 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// 
         /// </summary>
         internal override void Validate()
         {
@@ -174,27 +171,24 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleToRoleAttribute(XmlReader reader)
         {
             _unresolvedToEndRole = HandleUndottedNameAttribute(reader, _unresolvedToEndRole);
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleFromRoleAttribute(XmlReader reader)
         {
             _unresolvedFromEndRole = HandleUndottedNameAttribute(reader, _unresolvedFromEndRole);
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="reader"> </param>
         private void HandleAssociationAttribute(XmlReader reader)
         {
             Debug.Assert(

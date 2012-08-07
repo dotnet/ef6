@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents an operator 
+    ///     Represents an operator
     /// </summary>
     internal abstract class Op
     {
@@ -19,7 +20,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        /// Basic constructor
+        ///     Basic constructor
         /// </summary>
         internal Op(OpType opType)
         {
@@ -31,12 +32,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        /// Represents an unknown arity. Usually for Ops that can have a varying number of Args
+        ///     Represents an unknown arity. Usually for Ops that can have a varying number of Args
         /// </summary>
         internal const int ArityVarying = -1;
 
         /// <summary>
-        /// Kind of Op
+        ///     Kind of Op
         /// </summary>
         internal OpType OpType
         {
@@ -44,8 +45,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// The Arity of this Op (ie) how many arguments can it have.
-        /// Returns -1 if the arity is not known a priori
+        ///     The Arity of this Op (ie) how many arguments can it have.
+        ///     Returns -1 if the arity is not known a priori
         /// </summary>
         internal virtual int Arity
         {
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this a ScalarOp
+        ///     Is this a ScalarOp
         /// </summary>
         internal virtual bool IsScalarOp
         {
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this a RulePatternOp
+        ///     Is this a RulePatternOp
         /// </summary>
         internal virtual bool IsRulePatternOp
         {
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this a RelOp
+        ///     Is this a RelOp
         /// </summary>
         internal virtual bool IsRelOp
         {
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this an AncillaryOp
+        ///     Is this an AncillaryOp
         /// </summary>
         internal virtual bool IsAncillaryOp
         {
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is this a PhysicalOp
+        ///     Is this a PhysicalOp
         /// </summary>
         internal virtual bool IsPhysicalOp
         {
@@ -93,17 +94,17 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Is the other Op equivalent?
+        ///     Is the other Op equivalent?
         /// </summary>
-        /// <param name="other">the other Op to compare</param>
-        /// <returns>true, if the Ops are equivalent</returns>
+        /// <param name="other"> the other Op to compare </param>
+        /// <returns> true, if the Ops are equivalent </returns>
         internal virtual bool IsEquivalent(Op other)
         {
             return false;
         }
 
         /// <summary>
-        /// Simple mechanism to get the type for an Op. Applies only to scalar and ancillaryOps
+        ///     Simple mechanism to get the type for an Op. Applies only to scalar and ancillaryOps
         /// </summary>
         internal virtual TypeUsage Type
         {
@@ -112,10 +113,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method
+        ///     Visitor pattern method
         /// </summary>
-        /// <param name="v">The BasicOpVisitor that is visiting this Op</param>
-        /// <param name="n">The Node that references this Op</param>
+        /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
+        /// <param name="n"> The Node that references this Op </param>
         [DebuggerNonUserCode]
         internal virtual void Accept(BasicOpVisitor v, Node n)
         {
@@ -123,11 +124,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// Visitor pattern method for visitors with a return value
+        ///     Visitor pattern method for visitors with a return value
         /// </summary>
-        /// <param name="v">The visitor</param>
-        /// <param name="n">The node in question</param>
-        /// <returns>An instance of TResultType</returns>
+        /// <param name="v"> The visitor </param>
+        /// <param name="n"> The node in question </param>
+        /// <returns> An instance of TResultType </returns>
         [DebuggerNonUserCode]
         internal virtual TResultType Accept<TResultType>(BasicOpVisitorOfT<TResultType> v, Node n)
         {

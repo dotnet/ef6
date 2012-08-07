@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Collections;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Xml.Serialization;
 
     /// <summary>
-    /// Base class for EntityCollection and EntityReference
+    ///     Base class for EntityCollection and EntityReference
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [DataContract]
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //-----------------
 
         /// <summary>
-        /// The default constructor is required for some serialization scenarios with EntityReference.
+        ///     The default constructor is required for some serialization scenarios with EntityReference.
         /// </summary>
         internal RelatedEnd()
         {
@@ -61,8 +62,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // are serialization scenarios where they have to be set after construction
 
         /// <summary>
-        /// Note that this field should no longer be used directly.  Instead, use the _wrappedOwner
-        /// field.  This field is retained only for compatibility with the serialization format introduced in v1.
+        ///     Note that this field should no longer be used directly.  Instead, use the _wrappedOwner
+        ///     field.  This field is retained only for compatibility with the serialization format introduced in v1.
         /// </summary>
         [Obsolete]
         private IEntityWithRelationships _owner;
@@ -114,7 +115,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------
 
         /// <summary>
-        /// Event to notify changes in the Associations.
+        ///     Event to notify changes in the Associations.
         /// </summary>
         public event CollectionChangeEventHandler AssociationChanged
         {
@@ -130,7 +131,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>internal event to notify change in collection</summary>
+        /// <summary>
+        ///     internal event to notify change in collection
+        /// </summary>
         internal virtual event CollectionChangeEventHandler AssociationChangedForObjectView
         {
             // we fire this event only from EntityCollection, definitely not from EntityReference
@@ -154,12 +157,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// This class describes a relationship navigation from the
-        /// navigation property on one entity to another entity. 
-        /// RelationshipNavigation uniquely identify a relationship type.
-        /// The RelationshipNavigation class is internal only, so this property is also internal.
-        /// See RelationshipName, SourceRoleName, and TargetRoleName for the public exposure
-        /// of the information contained in this RelationshipNavigation.
+        ///     This class describes a relationship navigation from the
+        ///     navigation property on one entity to another entity. 
+        ///     RelationshipNavigation uniquely identify a relationship type.
+        ///     The RelationshipNavigation class is internal only, so this property is also internal.
+        ///     See RelationshipName, SourceRoleName, and TargetRoleName for the public exposure
+        ///     of the information contained in this RelationshipNavigation.
         /// </summary>
         internal RelationshipNavigation RelationshipNavigation
         {
@@ -167,7 +170,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Name of the relationship in which this RelatedEnd is participating        
+        ///     Name of the relationship in which this RelatedEnd is participating
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
@@ -181,7 +184,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Name of the relationship source role used to generate this RelatedEnd
+        ///     Name of the relationship source role used to generate this RelatedEnd
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
@@ -195,7 +198,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Name of the relationship target role used to generate this RelatedEnd
+        ///     Name of the relationship target role used to generate this RelatedEnd
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
@@ -238,9 +241,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Returns the relationship metadata associated with this RelatedEnd.
-        /// This value is available once the RelatedEnd is attached to an ObjectContext
-        /// or is retrieved with MergeOption.NoTracking
+        ///     Returns the relationship metadata associated with this RelatedEnd.
+        ///     This value is available once the RelatedEnd is attached to an ObjectContext
+        ///     or is retrieved with MergeOption.NoTracking
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
@@ -279,7 +282,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// IsLoaded returns true if and only if Load was called.
+        ///     IsLoaded returns true if and only if Load was called.
         /// </summary>
         [SoapIgnore]
         [XmlIgnore]
@@ -298,21 +301,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// This is the query which represents the source of the
-        /// related end.  It is constructed on demand using the
-        /// _connection and _cache fields and a query string based on
-        /// the type of related end and the metadata passed into its
-        /// constructor indicating the particular EDM construct the
-        /// related end models. This method is called by both subclasses of this type
-        /// and those subclasses pass in their generic type parameter in order
-        /// to produce an ObjectQuery of the right type. This allows this common 
-        /// functionality to be implemented here in the base class while still
-        /// allowing the base class to be non-generic.
+        ///     This is the query which represents the source of the
+        ///     related end.  It is constructed on demand using the
+        ///     _connection and _cache fields and a query string based on
+        ///     the type of related end and the metadata passed into its
+        ///     constructor indicating the particular EDM construct the
+        ///     related end models. This method is called by both subclasses of this type
+        ///     and those subclasses pass in their generic type parameter in order
+        ///     to produce an ObjectQuery of the right type. This allows this common 
+        ///     functionality to be implemented here in the base class while still
+        ///     allowing the base class to be non-generic.
         /// </summary>
-        /// <param name="mergeOption">MergeOption to use when creating the query</param>
-        /// <param name="hasResults">Indicates whether the query can produce results.
-        /// For instance, a lookup with null key values cannot produce results.</param>
-        /// <returns>The query loading related entities.</returns>
+        /// <param name="mergeOption"> MergeOption to use when creating the query </param>
+        /// <param name="hasResults"> Indicates whether the query can produce results. For instance, a lookup with null key values cannot produce results. </param>
+        /// <returns> The query loading related entities. </returns>
         internal ObjectQuery<TEntity> CreateSourceQuery<TEntity>(MergeOption mergeOption, out bool hasResults)
         {
             // must have a context
@@ -672,10 +674,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Validates that a call to Load has the correct conditions
-        /// This helps to reduce the complexity of the Load call (SQLBU 524128)
+        ///     Validates that a call to Load has the correct conditions
+        ///     This helps to reduce the complexity of the Load call (SQLBU 524128)
         /// </summary>
-        /// <returns>See RelatedEnd.CreateSourceQuery method. This is returned here so we can create it and validate the state before returning it to the caller</returns>
+        /// <returns> See RelatedEnd.CreateSourceQuery method. This is returned here so we can create it and validate the state before returning it to the caller </returns>
         internal virtual ObjectQuery<TEntity> ValidateLoad<TEntity>(MergeOption mergeOption, string relatedEndName, out bool hasResults)
         {
             var sourceQuery = CreateSourceQuery<TEntity>(mergeOption, out hasResults);
@@ -721,7 +723,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------
 
         /// <summary>
-        /// Loads the related entity or entities into the local related end using the default merge option.        
+        ///     Loads the related entity or entities into the local related end using the default merge option.
         /// </summary>
         public void Load()
         {
@@ -730,28 +732,28 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// An asynchronous version of Load, which
-        /// loads the related entity or entities into the related end using the default merge option.
+        ///     An asynchronous version of Load, which
+        ///     loads the related entity or entities into the related end using the default merge option.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
             return LoadAsync(DefaultMergeOption, cancellationToken);
         }
 
         /// <summary>
-        /// Loads the related entity or entities into the local related end using the supplied MergeOption.        
+        ///     Loads the related entity or entities into the local related end using the supplied MergeOption.
         /// </summary>
         public abstract void Load(MergeOption mergeOption);
 
         /// <summary>
-        /// An asynchronous version of Load, which
-        /// loads the related entity or entities into the related end using the specified merge option.
+        ///     An asynchronous version of Load, which
+        ///     loads the related entity or entities into the related end using the specified merge option.
         /// </summary>
-        /// <param name="mergeOption">Merge option to use for loaded entity or entities.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
         public abstract Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
         internal void DeferredLoad()
@@ -793,13 +795,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Takes a list of related entities and merges them into the current collection.
-        /// </summary>        
-        /// <param name="collection">Entities to relate to the owner of this EntityCollection</param>
-        /// <param name="mergeOption">MergeOption to use when updating existing relationships</param>
-        /// <param name="setIsLoaded">Indicates whether IsLoaded should be set to true after the Load is complete.
-        /// Should be false in cases where we cannot guarantee that the set of entities is complete
-        /// and matches the server, such as Attach.</param>
+        ///     Takes a list of related entities and merges them into the current collection.
+        /// </summary>
+        /// <param name="collection"> Entities to relate to the owner of this EntityCollection </param>
+        /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
+        /// <param name="setIsLoaded"> Indicates whether IsLoaded should be set to true after the Load is complete. Should be false in cases where we cannot guarantee that the set of entities is complete and matches the server, such as Attach. </param>
         internal virtual void Merge<TEntity>(IEnumerable<TEntity> collection, MergeOption mergeOption, bool setIsLoaded)
         {
             Contract.Requires(collection != null);
@@ -845,11 +845,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Attaches an entity to the related end.  This method works in exactly the same way as Attach(object).
-        /// It is maintained for backward compatibility with previous versions of IRelatedEnd.
+        ///     Attaches an entity to the related end.  This method works in exactly the same way as Attach(object).
+        ///     It is maintained for backward compatibility with previous versions of IRelatedEnd.
         /// </summary>
-        /// <param name="entity">The entity to attach to the related end</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
+        /// <param name="entity"> The entity to attach to the related end </param>
+        /// <exception cref="ArgumentNullException">Thrown when
+        ///     <paramref name="entity" />
+        ///     is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Attach(IEntityWithRelationships entity)
@@ -858,16 +860,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Attaches an entity to the related end. If the related end is already filled
-        /// or partially filled, this merges the existing entities with the given entity. The given
-        /// entity is not assumed to be the complete set of related entities.
+        ///     Attaches an entity to the related end. If the related end is already filled
+        ///     or partially filled, this merges the existing entities with the given entity. The given
+        ///     entity is not assumed to be the complete set of related entities.
         /// 
-        /// Owner and all entities passed in must be in Unchanged or Modified state. 
-        /// Deleted elements are allowed only when the state manager is already tracking the relationship
-        /// instance.
+        ///     Owner and all entities passed in must be in Unchanged or Modified state. 
+        ///     Deleted elements are allowed only when the state manager is already tracking the relationship
+        ///     instance.
         /// </summary>
-        /// <param name="entity">The entity to attach to the related end</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="entity"/> is null.</exception>
+        /// <param name="entity"> The entity to attach to the related end </param>
+        /// <exception cref="ArgumentNullException">Thrown when
+        ///     <paramref name="entity" />
+        ///     is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Attach(object entity)
@@ -1019,12 +1023,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal abstract IEnumerable CreateSourceQueryInternal();
 
         /// <summary>
-        /// Adds an entity to the related end.  This method works in exactly the same way as Add(object).
-        /// It is maintained for backward compatibility with previous versions of IRelatedEnd.
+        ///     Adds an entity to the related end.  This method works in exactly the same way as Add(object).
+        ///     It is maintained for backward compatibility with previous versions of IRelatedEnd.
         /// </summary>
-        /// <param name="entity">
-        ///   Entity instance to add to the related end
-        /// </param>
+        /// <param name="entity"> Entity instance to add to the related end </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Add(IEntityWithRelationships entity)
         {
@@ -1032,15 +1034,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///   Adds an entity to the related end.  If the owner is
-        ///   attached to a cache then the all the connected ends are
-        ///   added to the object cache and their corresponding relationships 
-        ///   are also added to the ObjectStateManager. The RelatedEnd of the
-        ///   relationship is also fixed.
+        ///     Adds an entity to the related end.  If the owner is
+        ///     attached to a cache then the all the connected ends are
+        ///     added to the object cache and their corresponding relationships 
+        ///     are also added to the ObjectStateManager. The RelatedEnd of the
+        ///     relationship is also fixed.
         /// </summary>
-        /// <param name="entity">
-        ///   Entity instance to add to the related end
-        /// </param>
+        /// <param name="entity"> Entity instance to add to the related end </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         void IRelatedEnd.Add(object entity)
         {
@@ -1064,13 +1064,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Removes an entity from the related end.  This method works in exactly the same way as Remove(object).
-        /// It is maintained for backward compatibility with previous versions of IRelatedEnd.
+        ///     Removes an entity from the related end.  This method works in exactly the same way as Remove(object).
+        ///     It is maintained for backward compatibility with previous versions of IRelatedEnd.
         /// </summary>
-        /// <param name="entity">
-        ///   Entity instance to remove from the related end
-        /// </param>
-        /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
+        /// <param name="entity"> Entity instance to remove from the related end </param>
+        /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IRelatedEnd.Remove(IEntityWithRelationships entity)
         {
@@ -1078,14 +1076,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///   Removes an entity from the related end.  If owner is
-        ///   attached to a cache, marks relationship for deletion and if
-        ///   the relationship is composition also marks the entity for deletion.
+        ///     Removes an entity from the related end.  If owner is
+        ///     attached to a cache, marks relationship for deletion and if
+        ///     the relationship is composition also marks the entity for deletion.
         /// </summary>
-        /// <param name="entity">
-        ///   Entity instance to remove from the related end
-        /// </param>
-        /// <returns>Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd.</returns>
+        /// <param name="entity"> Entity instance to remove from the related end </param>
+        /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IRelatedEnd.Remove(object entity)
         {
@@ -1581,9 +1577,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Returns true if this Related end represents the dependent of a Referential Constraint
+        ///     Returns true if this Related end represents the dependent of a Referential Constraint
         /// </summary>
-        /// <param name="checkIdentifying">If true then the method will only return true if the Referential Constraint is identifying</param>
+        /// <param name="checkIdentifying"> If true then the method will only return true if the Referential Constraint is identifying </param>
         internal bool IsDependentEndOfReferentialConstraint(bool checkIdentifying)
         {
             if (null != _relationMetadata)
@@ -1618,7 +1614,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Check if current RelatedEnd is a Principal end of some Referential Constraint and if some of the "from" properties is not-nullable
+        ///     Check if current RelatedEnd is a Principal end of some Referential Constraint and if some of the "from" properties is not-nullable
         /// </summary>
         internal bool IsPrincipalEndOfReferentialConstraint()
         {
@@ -2326,7 +2322,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Set the context and load options so that Query can be constructed on demand.
+        ///     Set the context and load options so that Query can be constructed on demand.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         internal void AttachContext(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
@@ -2464,8 +2460,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// Clear the source and context.
-        /// </summary>        
+        ///     Clear the source and context.
+        /// </summary>
         internal void DetachContext()
         {
             if (_context != null &&

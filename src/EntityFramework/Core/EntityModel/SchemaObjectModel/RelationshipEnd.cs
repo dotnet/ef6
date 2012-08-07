@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    /// Represents an End element in a relationship
+    ///     Represents an End element in a relationship
     /// </summary>
     internal sealed class RelationshipEnd : SchemaElement, IRelationshipEnd
     {
@@ -17,21 +18,21 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         private List<OnOperation> _operations;
 
         /// <summary>
-        /// construct a Relationship End
+        ///     construct a Relationship End
         /// </summary>
-        /// <param name="relationship"></param>
+        /// <param name="relationship"> </param>
         public RelationshipEnd(Relationship relationship)
             : base(relationship)
         {
         }
 
         /// <summary>
-        /// Type of the End
+        ///     Type of the End
         /// </summary>
         public SchemaEntityType Type { get; private set; }
 
         /// <summary>
-        /// Multiplicity of the End
+        ///     Multiplicity of the End
         /// </summary>
         public RelationshipMultiplicity? Multiplicity
         {
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The On&lt;Operation&gt;s defined for the End
+        ///     The On&lt;Operation&gt;s defined for the End
         /// </summary>
         public ICollection<OnOperation> Operations
         {
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// do whole element resolution
+        ///     do whole element resolution
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -106,7 +107,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Do simple validation across attributes
+        ///     Do simple validation across attributes
         /// </summary>
         protected override void HandleAttributesComplete()
         {
@@ -175,9 +176,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handle the Type attribute
+        ///     Handle the Type attribute
         /// </summary>
-        /// <param name="reader">reader positioned at Type attribute</param>
+        /// <param name="reader"> reader positioned at Type attribute </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -192,9 +193,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handle the Multiplicity attribute
+        ///     Handle the Multiplicity attribute
         /// </summary>
-        /// <param name="reader">reader positioned at Type attribute</param>
+        /// <param name="reader"> reader positioned at Type attribute </param>
         private void HandleMultiplicityAttribute(XmlReader reader)
         {
             Debug.Assert(reader != null);
@@ -209,19 +210,19 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Handle an OnDelete element
+        ///     Handle an OnDelete element
         /// </summary>
-        /// <param name="reader">reader positioned at the element</param>
+        /// <param name="reader"> reader positioned at the element </param>
         private void HandleOnDeleteElement(XmlReader reader)
         {
             HandleOnOperationElement(reader, Operation.Delete);
         }
 
         /// <summary>
-        /// Handle an On&lt;Operation&gt; element
+        ///     Handle an On&lt;Operation&gt; element
         /// </summary>
-        /// <param name="reader">reader positioned at the element</param>
-        /// <param name="operation">the kind of operation being handled</param>
+        /// <param name="reader"> reader positioned at the element </param>
+        /// <param name="operation"> the kind of operation being handled </param>
         private void HandleOnOperationElement(XmlReader reader, Operation operation)
         {
             Debug.Assert(reader != null);
@@ -240,7 +241,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// The parent element as an IRelationship
+        ///     The parent element as an IRelationship
         /// </summary>
         internal new IRelationship ParentElement
         {
@@ -248,11 +249,11 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Create a new Multiplicity object from a string
+        ///     Create a new Multiplicity object from a string
         /// </summary>
-        /// <param name="value">string containing Multiplicity definition</param>
-        /// <param name="multiplicity">new multiplicity object (null if there were errors)</param>
-        /// <returns>try if the string was parsable, false otherwise</returns>
+        /// <param name="value"> string containing Multiplicity definition </param>
+        /// <param name="multiplicity"> new multiplicity object (null if there were errors) </param>
+        /// <returns> try if the string was parsable, false otherwise </returns>
         private static bool TryParseMultiplicity(string value, out RelationshipMultiplicity multiplicity)
         {
             switch (value)

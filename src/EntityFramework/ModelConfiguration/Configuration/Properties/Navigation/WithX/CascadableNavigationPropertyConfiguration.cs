@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures whether or not cascade delete is on for the relationship.
         /// </summary>
-        /// <param name = "value">Value indicating if cascade delete is on or not.</param>
+        /// <param name="value"> Value indicating if cascade delete is on or not. </param>
         public void WillCascadeOnDelete(bool value)
         {
             _navigationPropertyConfiguration.DeleteAction

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
@@ -10,8 +11,8 @@ namespace System.Data.Entity.Internal
     using System.Reflection;
 
     /// <summary>
-    ///     The internal class used to implement <see cref = "System.Data.Entity.Infrastructure.DbReferenceEntry" />,
-    ///     and <see cref = "System.Data.Entity.Infrastructure.DbReferenceEntry{TEntity, TProperty}" />.
+    ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbReferenceEntry" />,
+    ///     and <see cref="System.Data.Entity.Infrastructure.DbReferenceEntry{TEntity, TProperty}" />.
     ///     This internal class contains all the common implementation between the generic and non-generic
     ///     entry classes and also allows for a clean internal factoring without compromising the public API.
     /// </summary>
@@ -27,10 +28,10 @@ namespace System.Data.Entity.Internal
                 "SetValueOnEntityReference", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref = "InternalReferenceEntry" /> class.
+        ///     Initializes a new instance of the <see cref="InternalReferenceEntry" /> class.
         /// </summary>
-        /// <param name = "internalEntityEntry">The internal entity entry.</param>
-        /// <param name = "navigationMetadata">The navigation metadata.</param>
+        /// <param name="internalEntityEntry"> The internal entity entry. </param>
+        /// <param name="navigationMetadata"> The navigation metadata. </param>
         public InternalReferenceEntry(
             InternalEntityEntry internalEntityEntry, NavigationEntryMetadata navigationMetadata)
             : base(internalEntityEntry, navigationMetadata)
@@ -42,12 +43,12 @@ namespace System.Data.Entity.Internal
         #region Current values
 
         /// <summary>
-        ///     Gets the navigation property value from the <see cref = "IRelatedEnd" /> object.
+        ///     Gets the navigation property value from the <see cref="IRelatedEnd" /> object.
         ///     For reference navigation properties, this means getting the value from the
-        ///     <see cref = "EntityReference{T}" /> object.
+        ///     <see cref="EntityReference{T}" /> object.
         /// </summary>
-        /// <param name = "entity">The entity.</param>
-        /// <returns>The navigation property value.</returns>
+        /// <param name="entity"> The entity. </param>
+        /// <returns> The navigation property value. </returns>
         protected override object GetNavigationPropertyFromRelatedEnd(object entity)
         {
             Contract.Assert(!(RelatedEnd is IDisposable), "RelatedEnd is not expected to be disposable.");
@@ -59,12 +60,12 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Sets the navigation property value onto the <see cref = "IRelatedEnd" /> object.
+        ///     Sets the navigation property value onto the <see cref="IRelatedEnd" /> object.
         ///     For reference navigation properties, this means setting the value onto the
-        ///     <see cref = "EntityReference{T}" /> object.
+        ///     <see cref="EntityReference{T}" /> object.
         /// </summary>
-        /// <param name = "entity">The entity.</param>
-        /// <param name = "value">The value.</param>
+        /// <param name="entity"> The entity. </param>
+        /// <param name="value"> The value. </param>
         protected virtual void SetNavigationPropertyOnRelatedEnd(object value)
         {
             var entityRefType = RelatedEnd.GetType();
@@ -81,14 +82,14 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Sets the given value on the given <see cref = "IRelatedEnd" /> which must be an
-        ///     <see cref = "EntityReference{TRelatedEntity}" />.
+        ///     Sets the given value on the given <see cref="IRelatedEnd" /> which must be an
+        ///     <see cref="EntityReference{TRelatedEntity}" />.
         ///     This method is setup in such a way that it can easily be used by CreateDelegate without any
         ///     dynamic code generation needed.
         /// </summary>
-        /// <typeparam name = "TRelatedEntity">The type of the related entity.</typeparam>
-        /// <param name = "entityReference">The entity reference.</param>
-        /// <param name = "value">The value.</param>
+        /// <typeparam name="TRelatedEntity"> The type of the related entity. </typeparam>
+        /// <param name="entityReference"> The entity reference. </param>
+        /// <param name="value"> The value. </param>
         private static void SetValueOnEntityReference<TRelatedEntity>(IRelatedEnd entityReference, object value)
             where TRelatedEntity : class
         {
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Internal
         ///     the entity that the navigation property references or the collection of references
         ///     for a collection property.
         /// </summary>
-        /// <value>The current value.</value>
+        /// <value> The current value. </value>
         public override object CurrentValue
         {
             get
@@ -144,22 +145,22 @@ namespace System.Data.Entity.Internal
         #region DbMemberEntry factory methods
 
         /// <summary>
-        ///     Creates a new non-generic <see cref = "DbMemberEntry" /> backed by this internal entry.
-        ///     The runtime type of the DbMemberEntry created will be <see cref = "DbReferenceEntry" /> or a subtype of it.
+        ///     Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
+        ///     The runtime type of the DbMemberEntry created will be <see cref="DbReferenceEntry" /> or a subtype of it.
         /// </summary>
-        /// <returns>The new entry.</returns>
+        /// <returns> The new entry. </returns>
         public override DbMemberEntry CreateDbMemberEntry()
         {
             return new DbReferenceEntry(this);
         }
 
         /// <summary>
-        ///     Creates a new generic <see cref = "DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
-        ///     The runtime type of the DbMemberEntry created will be <see cref = "DbReferenceEntry{TEntity,TProperty}" /> or a subtype of it.
+        ///     Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
+        ///     The runtime type of the DbMemberEntry created will be <see cref="DbReferenceEntry{TEntity,TProperty}" /> or a subtype of it.
         /// </summary>
-        /// <typeparam name = "TEntity">The type of the entity.</typeparam>
-        /// <typeparam name = "TProperty">The type of the property.</typeparam>
-        /// <returns>The new entry.</returns>
+        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+        /// <typeparam name="TProperty"> The type of the property. </typeparam>
+        /// <returns> The new entry. </returns>
         public override DbMemberEntry<TEntity, TProperty> CreateDbMemberEntry<TEntity, TProperty>()
         {
             return new DbReferenceEntry<TEntity, TProperty>(this);

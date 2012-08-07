@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Db
 {
     /// <summary>
@@ -11,10 +12,11 @@ namespace System.Data.Entity.Edm.Db
         public virtual string TypeName { get; set; }
 
         /// <summary>
-        ///     Gets or sets an optional <see cref = "DbPrimitiveTypeFacets" /> instance that applies additional constraints to a referenced primitive type.
+        ///     Gets or sets an optional <see cref="DbPrimitiveTypeFacets" /> instance that applies additional constraints to a referenced primitive type.
         /// </summary>
         /// <remarks>
-        ///     Accessing this property forces the creation of a DbPrimitiveTypeFacets value if no value has previously been set. Use <see cref = "HasFacets" /> to determine whether or not this property currently has a value.
+        ///     Accessing this property forces the creation of a DbPrimitiveTypeFacets value if no value has previously been set. Use <see
+        ///      cref="HasFacets" /> to determine whether or not this property currently has a value.
         /// </remarks>
         public virtual DbPrimitiveTypeFacets Facets
         {

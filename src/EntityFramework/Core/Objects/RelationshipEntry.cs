@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
@@ -54,10 +55,10 @@ namespace System.Data.Entity.Core.Objects
         #region Public members
 
         /// <summary>
-        /// API to accept the current values as original values and  mark the entity as Unchanged.
+        ///     API to accept the current values as original values and  mark the entity as Unchanged.
         /// </summary>
-        /// <param></param>
-        /// <returns></returns>
+        /// <param> </param>
+        /// <returns> </returns>
         public override bool IsRelationship
         {
             get
@@ -137,12 +138,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Marks specified property as modified.
-        /// </summary>
-        /// <param name="propertyName">This API recognizes the names in terms of OSpace</param>
-        /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
-        ///
+        ///<summary>
+        ///    Marks specified property as modified.
+        ///</summary>
+        ///<param name="propertyName"> This API recognizes the names in terms of OSpace </param>
+        ///<exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
         public override void SetModifiedProperty(string propertyName)
         {
             ValidateState();
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Throws since the method has no meaning for relationship entries.
+        ///     Throws since the method has no meaning for relationship entries.
         /// </summary>
         public override void RejectPropertyChanges(string propertyName)
         {
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Throws since the method has no meaning for relationship entries.
+        ///     Throws since the method has no meaning for relationship entries.
         /// </summary>
         public override bool IsPropertyChanged(string propertyName)
         {
@@ -171,9 +171,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Original values
+        ///     Original values
         /// </summary>
-        /// <param></param>
+        /// <param> </param>
         /// <returns> DbDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override DbDataRecord OriginalValues
@@ -196,9 +196,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Current values
+        ///     Current values
         /// </summary>
-        /// <param></param>
+        /// <param> </param>
         /// <returns> DbUpdatableDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override CurrentValueRecord CurrentValues
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Reuse or create a new (Entity)DataRecordInfo.
+        ///     Reuse or create a new (Entity)DataRecordInfo.
         /// </summary>
         internal override DataRecordInfo GetDataRecordInfo(StateManagerTypeMetadata metadata, object userObject)
         {
@@ -321,45 +321,45 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Used to report that a scalar entity property is about to change
-        /// The current value of the specified property is cached when this method is called.
+        ///     Used to report that a scalar entity property is about to change
+        ///     The current value of the specified property is cached when this method is called.
         /// </summary>
-        /// <param name="entityMemberName">The name of the entity property that is changing</param>
+        /// <param name="entityMemberName"> The name of the entity property that is changing </param>
         internal override void EntityMemberChanging(string entityMemberName)
         {
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
-        /// Used to report that a scalar entity property has been changed
-        /// The property value that was cached during EntityMemberChanging is now
-        /// added to OriginalValues
+        ///     Used to report that a scalar entity property has been changed
+        ///     The property value that was cached during EntityMemberChanging is now
+        ///     added to OriginalValues
         /// </summary>
-        /// <param name="entityMemberName">The name of the entity property that has changing</param>
+        /// <param name="entityMemberName"> The name of the entity property that has changing </param>
         internal override void EntityMemberChanged(string entityMemberName)
         {
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
-        /// Used to report that a complex property is about to change
-        /// The current value of the specified property is cached when this method is called.
+        ///     Used to report that a complex property is about to change
+        ///     The current value of the specified property is cached when this method is called.
         /// </summary>
-        /// <param name="entityMemberName">The name of the top-level entity property that is changing</param>
-        /// <param name="complexObject">The complex object that contains the property that is changing</param>
-        /// <param name="complexObjectMemberName">The name of the property that is changing on complexObject</param>
+        /// <param name="entityMemberName"> The name of the top-level entity property that is changing </param>
+        /// <param name="complexObject"> The complex object that contains the property that is changing </param>
+        /// <param name="complexObjectMemberName"> The name of the property that is changing on complexObject </param>
         internal override void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         /// <summary>
-        /// Used to report that a complex property has been changed
-        /// The property value that was cached during EntityMemberChanging is now added to OriginalValues
+        ///     Used to report that a complex property has been changed
+        ///     The property value that was cached during EntityMemberChanging is now added to OriginalValues
         /// </summary>
-        /// <param name="entityMemberName">The name of the top-level entity property that has changed</param>
-        /// <param name="complexObject">The complex object that contains the property that changed</param>
-        /// <param name="complexObjectMemberName">The name of the property that changed on complexObject</param>
+        /// <param name="entityMemberName"> The name of the top-level entity property that has changed </param>
+        /// <param name="complexObject"> The complex object that contains the property that changed </param>
+        /// <param name="complexObjectMemberName"> The name of the property that changed on complexObject </param>
         internal override void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
@@ -435,7 +435,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Update one of the ends of the relationship
+        ///     Update one of the ends of the relationship
         /// </summary>
         internal void ChangeRelatedEnd(EntityKey oldKey, EntityKey newKey)
         {
@@ -729,12 +729,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// Use when EntityEntry.EntityKey == this.Wrapper.Key0
+        ///     Use when EntityEntry.EntityKey == this.Wrapper.Key0
         /// </summary>
         internal RelationshipEntry NextKey0 { get; set; }
 
         /// <summary>
-        /// Use when EntityEntry.EntityKey == this.Wrapper.Key1
+        ///     Use when EntityEntry.EntityKey == this.Wrapper.Key1
         /// </summary>
         internal RelationshipEntry NextKey1 { get; set; }
 

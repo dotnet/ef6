@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
@@ -268,10 +269,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                           from pm in cm.PropertyMappings
                                           where pm.EntityType == entityType
                                           select new
-                                              {
-                                                  cm.Column,
-                                                  Property = pm
-                                              })
+                                                     {
+                                                         cm.Column,
+                                                         Property = pm
+                                                     })
             {
                 if (columnMapping.Property.PropertyPath != null
                     &&
@@ -288,10 +289,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     else
                     {
                         existingPropertyMapping = new DbEdmPropertyMapping
-                            {
-                                Column = columnMapping.Column,
-                                PropertyPath = columnMapping.Property.PropertyPath
-                            };
+                                                      {
+                                                          Column = columnMapping.Column,
+                                                          PropertyPath = columnMapping.Property.PropertyPath
+                                                      };
                         propertiesTypeMappingFragment.PropertyMappings.Add(existingPropertyMapping);
                     }
                 }
@@ -413,10 +414,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                            from tmf in etm.TypeMappingFragments
                            where tmf.Table == tableMapping.Table
                            select new
-                               {
-                                   TypeMapping = etm,
-                                   Fragment = tmf
-                               }).SingleOrDefault();
+                                      {
+                                          TypeMapping = etm,
+                                          Fragment = tmf
+                                      }).SingleOrDefault();
 
             if (mapping != null)
             {
@@ -476,18 +477,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                            .Where(pm1 => tableMapping.EntityTypes.GetEntityTypes(entitySet).Contains(pm1.EntityType))
                            .Count(pms => pms.IsDefaultDiscriminatorCondition) == 1
                  select new
-                     {
-                         ColumnMapping = cm,
-                         PropertyMapping = pm
-                     }).ToArray().Each(
-                         x =>
-                             {
-                                 x.PropertyMapping.Conditions.Clear();
-                                 if (x.PropertyMapping.PropertyPath == null)
-                                 {
-                                     x.ColumnMapping.PropertyMappings.Remove(x.PropertyMapping);
-                                 }
-                             });
+                            {
+                                ColumnMapping = cm,
+                                PropertyMapping = pm
+                            }).ToArray().Each(
+                                x =>
+                                    {
+                                        x.PropertyMapping.Conditions.Clear();
+                                        if (x.PropertyMapping.PropertyPath == null)
+                                        {
+                                            x.ColumnMapping.PropertyMappings.Remove(x.PropertyMapping);
+                                        }
+                                    });
             }
         }
 

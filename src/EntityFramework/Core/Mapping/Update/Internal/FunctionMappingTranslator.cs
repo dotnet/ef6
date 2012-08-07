@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
@@ -10,30 +11,29 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
 
     /// <summary>
-    /// Modification function mapping translators are defined per extent (entity set
-    /// or association set) and manage the creation of function commands.
+    ///     Modification function mapping translators are defined per extent (entity set
+    ///     or association set) and manage the creation of function commands.
     /// </summary>
     internal abstract class ModificationFunctionMappingTranslator
     {
         /// <summary>
-        /// Requires: this translator must be registered to handle the entity set
-        /// for the given state entry.
+        ///     Requires: this translator must be registered to handle the entity set
+        ///     for the given state entry.
         /// 
-        /// Translates the given state entry to a command.
+        ///     Translates the given state entry to a command.
         /// </summary>
-        /// <param name="translator">Parent update translator (global state for the workload)</param>
-        /// <param name="stateEntry">State entry to translate. Must belong to the 
-        /// entity/association set handled by this translator</param>
-        /// <returns>Command corresponding to the given state entry</returns>
+        /// <param name="translator"> Parent update translator (global state for the workload) </param>
+        /// <param name="stateEntry"> State entry to translate. Must belong to the entity/association set handled by this translator </param>
+        /// <returns> Command corresponding to the given state entry </returns>
         internal abstract FunctionUpdateCommand Translate(
             UpdateTranslator translator,
             ExtractedStateEntry stateEntry);
 
         /// <summary>
-        /// Initialize a translator for the given entity set mapping.
+        ///     Initialize a translator for the given entity set mapping.
         /// </summary>
-        /// <param name="setMapping">Entity set mapping.</param>
-        /// <returns>Translator.</returns>
+        /// <param name="setMapping"> Entity set mapping. </param>
+        /// <returns> Translator. </returns>
         internal static ModificationFunctionMappingTranslator CreateEntitySetTranslator(
             StorageEntitySetMapping setMapping)
         {
@@ -41,10 +41,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        /// Initialize a translator for the given association set mapping.
+        ///     Initialize a translator for the given association set mapping.
         /// </summary>
-        /// <param name="setMapping">Association set mapping.</param>
-        /// <returns>Translator.</returns>
+        /// <param name="setMapping"> Association set mapping. </param>
+        /// <returns> Translator. </returns>
         internal static ModificationFunctionMappingTranslator CreateAssociationSetTranslator(
             StorageAssociationSetMapping setMapping)
         {
@@ -77,9 +77,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var entityKey = stateEntry.Source.EntityKey;
 
                 var stateEntries = new HashSet<IEntityStateEntry>
-                    {
-                        stateEntry.Source
-                    };
+                                       {
+                                           stateEntry.Source
+                                       };
 
                 // gather all referenced association ends
                 var collocatedEntries =
@@ -142,22 +142,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Func<DbDataRecord, int, EntityKey> getEntityKey = (record, ordinal) => (EntityKey)record[ordinal];
                 Action<DbDataRecord, Action<IEntityStateEntry>> findMatch = (record, registerTarget) =>
-                    {
-                        // find the end corresponding to the 'to' end
-                        var toOrdinal = record.GetOrdinal(endMember.Name);
-                        Debug.Assert(
-                            -1 != toOrdinal,
-                            "to end of relationship doesn't exist in record");
+                                                                                {
+                                                                                    // find the end corresponding to the 'to' end
+                                                                                    var toOrdinal = record.GetOrdinal(endMember.Name);
+                                                                                    Debug.Assert(
+                                                                                        -1 != toOrdinal,
+                                                                                        "to end of relationship doesn't exist in record");
 
-                        // the 'from' end must be the other end
-                        var fromOrdinal = 0 == toOrdinal ? 1 : 0;
+                                                                                    // the 'from' end must be the other end
+                                                                                    var fromOrdinal = 0 == toOrdinal ? 1 : 0;
 
-                        if (getEntityKey(record, fromOrdinal) == source)
-                        {
-                            stateEntries.Add(candidateEntry);
-                            registerTarget(candidateEntry);
-                        }
-                    };
+                                                                                    if (getEntityKey(record, fromOrdinal) == source)
+                                                                                    {
+                                                                                        stateEntries.Add(candidateEntry);
+                                                                                        registerTarget(candidateEntry);
+                                                                                    }
+                                                                                };
 
                 switch (candidateEntry.State)
                 {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 using md = System.Data.Entity.Core.Metadata.Edm;
 
 //
@@ -19,7 +20,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Xml;
 
     /// <summary>
-    /// A dump module for the Iqt
+    ///     A dump module for the Iqt
     /// </summary>
     internal class Dump : BasicOpVisitor, IDisposable
     {
@@ -53,20 +54,20 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly Encoding DefaultEncoding = Encoding.UTF8;
 
         /// <summary>
-        /// Driver method to dump the entire tree
+        ///     Driver method to dump the entire tree
         /// </summary>
-        /// <param name="itree"></param>
-        /// <returns></returns>
+        /// <param name="itree"> </param>
+        /// <returns> </returns>
         internal static string ToXml(Command itree)
         {
             return ToXml(itree.Root);
         }
 
         /// <summary>
-        /// Driver method to dump the a subtree of a tree
+        ///     Driver method to dump the a subtree of a tree
         /// </summary>
-        /// <param name="subtree"></param>
-        /// <returns></returns>
+        /// <param name="subtree"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal static string ToXml(Node subtree)
         {
@@ -717,7 +718,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             internal static ColumnMapDumper Instance = new ColumnMapDumper();
 
             /// <summary>
-            /// Private constructor
+            ///     Private constructor
             /// </summary>
             private ColumnMapDumper()
             {
@@ -726,7 +727,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             #region Helpers
 
             /// <summary>
-            /// Common CollectionColumnMap code
+            ///     Common CollectionColumnMap code
             /// </summary>
             private void DumpCollection(CollectionColumnMap columnMap, Dump dumper)
             {
@@ -751,10 +752,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// Common code to produce an the attributes for the dumper's XML node
+            ///     Common code to produce an the attributes for the dumper's XML node
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <returns> </returns>
             private static Dictionary<string, object> GetAttributes(ColumnMap columnMap)
             {
                 var attrs = new Dictionary<string, object>();
@@ -765,11 +766,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             #endregion
 
             /// <summary>
-            /// ComplexTypeColumnMap
+            ///     ComplexTypeColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(ComplexTypeColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "ComplexType", GetAttributes(columnMap)))
@@ -786,11 +787,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// DiscriminatedCollectionColumnMap
+            ///     DiscriminatedCollectionColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(DiscriminatedCollectionColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "DiscriminatedCollection", GetAttributes(columnMap)))
@@ -807,11 +808,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// EntityColumnMap
+            ///     EntityColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(EntityColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "Entity", GetAttributes(columnMap)))
@@ -825,11 +826,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// PolymorphicColumnMap
+            ///     PolymorphicColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(SimplePolymorphicColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "SimplePolymorphic", GetAttributes(columnMap)))
@@ -856,7 +857,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// MultipleDiscriminatorPolymorphicColumnMap
+            ///     MultipleDiscriminatorPolymorphicColumnMap
             /// </summary>
             internal override void Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, Dump dumper)
             {
@@ -884,11 +885,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// RecordColumnMap
+            ///     RecordColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(RecordColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "Record", GetAttributes(columnMap)))
@@ -905,11 +906,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// RefColumnMap
+            ///     RefColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(RefColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "Ref", GetAttributes(columnMap)))
@@ -922,11 +923,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// SimpleCollectionColumnMap
+            ///     SimpleCollectionColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(SimpleCollectionColumnMap columnMap, Dump dumper)
             {
                 using (new AutoXml(dumper, "SimpleCollection", GetAttributes(columnMap)))
@@ -936,11 +937,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// SimpleColumnMap
+            ///     SimpleColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(ScalarColumnMap columnMap, Dump dumper)
             {
                 var attrs = GetAttributes(columnMap);
@@ -953,11 +954,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// SimpleColumnMap
+            ///     SimpleColumnMap
             /// </summary>
-            /// <param name="columnMap"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="columnMap"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             internal override void Visit(VarRefColumnMap columnMap, Dump dumper)
             {
                 var attrs = GetAttributes(columnMap);
@@ -968,11 +969,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// DiscriminatedEntityIdentity
+            ///     DiscriminatedEntityIdentity
             /// </summary>
-            /// <param name="entityIdentity"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="entityIdentity"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             protected override void VisitEntityIdentity(DiscriminatedEntityIdentity entityIdentity, Dump dumper)
             {
                 using (new AutoXml(dumper, "DiscriminatedEntityIdentity"))
@@ -992,11 +993,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            /// SimpleEntityIdentity
+            ///     SimpleEntityIdentity
             /// </summary>
-            /// <param name="entityIdentity"></param>
-            /// <param name="dumper"></param>
-            /// <returns></returns>
+            /// <param name="entityIdentity"> </param>
+            /// <param name="dumper"> </param>
+            /// <returns> </returns>
             protected override void VisitEntityIdentity(SimpleEntityIdentity entityIdentity, Dump dumper)
             {
                 using (new AutoXml(dumper, "SimpleEntityIdentity"))

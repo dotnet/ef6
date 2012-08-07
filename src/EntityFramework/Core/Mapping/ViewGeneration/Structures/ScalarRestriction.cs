@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
@@ -13,16 +14,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
     /// <summary>
-    /// A class that denotes the boolean expression: "scalarVar in values".
-    /// See the comments in <see cref="MemberRestriction"/> for complete and incomplete restriction objects.
+    ///     A class that denotes the boolean expression: "scalarVar in values".
+    ///     See the comments in <see cref="MemberRestriction" /> for complete and incomplete restriction objects.
     /// </summary>
     internal class ScalarRestriction : MemberRestriction
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a scalar member restriction with the meaning "<paramref name="member"/> = <paramref name="value"/>".
-        /// This constructor is used for creating discriminator type conditions.
+        ///     Creates a scalar member restriction with the meaning "<paramref name="member" /> = <paramref name="value" />".
+        ///     This constructor is used for creating discriminator type conditions.
         /// </summary>
         internal ScalarRestriction(MemberPath member, Constant value)
             : base(new MemberProjectedSlot(member), value)
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Creates a scalar member restriction with the meaning "<paramref name="member"/> in <paramref name="values"/>".
+        ///     Creates a scalar member restriction with the meaning "<paramref name="member" /> in <paramref name="values" />".
         /// </summary>
         internal ScalarRestriction(MemberPath member, IEnumerable<Constant> values, IEnumerable<Constant> possibleValues)
             : base(new MemberProjectedSlot(member), values, possibleValues)
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Creates a scalar member restriction with the meaning "<paramref name="slot"/> in <paramref name="domain"/>".
+        ///     Creates a scalar member restriction with the meaning "<paramref name="slot" /> in <paramref name="domain" />".
         /// </summary>
         internal ScalarRestriction(MemberProjectedSlot slot, Domain domain)
             : base(slot, domain)
@@ -52,8 +53,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         #region Methods
 
         /// <summary>
-        /// Fixes the range of the restriction in accordance with <paramref name="range"/>.
-        /// Member restriction must be complete for this operation. 
+        ///     Fixes the range of the restriction in accordance with <paramref name="range" />.
+        ///     Member restriction must be complete for this operation.
         /// </summary>
         internal override DomainBoolExpr FixRange(Set<Constant> range, MemberDomainMap memberDomainMap)
         {
@@ -135,7 +136,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        /// Common code for <see cref="AsEsql"/> and <see cref="AsUserString"/> methods.
+        ///     Common code for <see cref="AsEsql" /> and <see cref="AsUserString" /> methods.
         /// </summary>
         private StringBuilder ToStringHelper(StringBuilder inputBuilder, string blockAlias, bool skipIsNotNull, bool userString)
         {

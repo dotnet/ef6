@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Resources;
 
     /// <summary>
-    /// Represents an eSQL expression classified as <see cref="ExpressionResolutionClass.Value"/>.
+    ///     Represents an eSQL expression classified as <see cref="ExpressionResolutionClass.Value" />.
     /// </summary>
     internal sealed class ValueExpression : ExpressionResolution
     {
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Null if <see cref="ValueExpression"/> represents the untyped null.
+        ///     Null if <see cref="ValueExpression" /> represents the untyped null.
         /// </summary>
         internal readonly DbExpression Value;
     }

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An interface implemented by <see cref = "InternalSet{TEntity}" />.
+    ///     An interface implemented by <see cref="InternalSet{TEntity}" />.
     /// </summary>
     [ContractClass(typeof(IInternalSetContracts<>))]
     internal interface IInternalSet<TEntity> : IInternalSet, IInternalQuery<TEntity>
@@ -97,12 +98,12 @@ namespace System.Data.Entity.Internal.Linq
             throw new NotImplementedException();
         }
 
-        Infrastructure.IDbAsyncEnumerator<TEntity> IInternalQuery<TEntity>.GetAsyncEnumerator()
+        IDbAsyncEnumerator<TEntity> IInternalQuery<TEntity>.GetAsyncEnumerator()
         {
             throw new NotImplementedException();
         }
 
-        Infrastructure.IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
+        IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
         {
             throw new NotImplementedException();
         }

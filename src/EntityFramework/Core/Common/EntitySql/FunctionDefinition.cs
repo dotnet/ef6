@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Diagnostics;
 
     /// <summary>
-    /// Entity SQL query inline function definition, returned as a part of <see cref="ParseResult"/>.
+    ///     Entity SQL query inline function definition, returned as a part of <see cref="ParseResult" />.
     /// </summary>
     public sealed class FunctionDefinition
     {
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Function name.
+        ///     Function name.
         /// </summary>
         public string Name
         {
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Function body and parameters.
+        ///     Function body and parameters.
         /// </summary>
         public DbLambda Lambda
         {
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// Start position of the function definition in the eSQL query text.
+        ///     Start position of the function definition in the eSQL query text.
         /// </summary>
         public int StartPosition
         {
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        /// End position of the function definition in the eSQL query text.
+        ///     End position of the function definition in the eSQL query text.
         /// </summary>
         public int EndPosition
         {

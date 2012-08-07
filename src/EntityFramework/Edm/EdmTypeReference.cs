@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
@@ -6,7 +7,8 @@ namespace System.Data.Entity.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Allows the construction and modification of a specific use of a type in an Entity Data Model (EDM) item. See <see cref = "EdmProperty.PropertyType" /> for examples.
+    ///     Allows the construction and modification of a specific use of a type in an Entity Data Model (EDM) item. See <see
+    ///      cref="EdmProperty.PropertyType" /> for examples.
     /// </summary>
     internal class EdmTypeReference : EdmMetadataItem
     {
@@ -23,12 +25,13 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating the collection rank of the type reference. A collection rank greater than zero indicates that the type reference represents a collection of its referenced <see cref = "EdmType" /> .
+        ///     Gets or sets a value indicating the collection rank of the type reference. A collection rank greater than zero indicates that the type reference represents a collection of its referenced <see
+        ///      cref="EdmType" /> .
         /// </summary>
         public virtual int CollectionRank { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating the <see cref = "EdmDataModelType" /> referenced by this type reference.
+        ///     Gets or sets a value indicating the <see cref="EdmDataModelType" /> referenced by this type reference.
         /// </summary>
         public virtual EdmDataModelType EdmType { get; set; }
 
@@ -38,10 +41,11 @@ namespace System.Data.Entity.Edm
         public virtual bool? IsNullable { get; set; }
 
         /// <summary>
-        ///     Gets or sets an optional <see cref = "EdmPrimitiveTypeFacets" /> instance that applies additional constraints to a referenced primitive type.
+        ///     Gets or sets an optional <see cref="EdmPrimitiveTypeFacets" /> instance that applies additional constraints to a referenced primitive type.
         /// </summary>
         /// <remarks>
-        ///     Accessing this property forces the creation of an EdmPrimitiveTypeFacets value if no value has previously been set. Use <see cref = "HasFacets" /> to determine whether or not this property currently has a value.
+        ///     Accessing this property forces the creation of an EdmPrimitiveTypeFacets value if no value has previously been set. Use <see
+        ///      cref="HasFacets" /> to determine whether or not this property currently has a value.
         /// </remarks>
         public virtual EdmPrimitiveTypeFacets PrimitiveTypeFacets
         {
@@ -60,7 +64,8 @@ namespace System.Data.Entity.Edm
         #region Type Inspection Properties
 
         /// <summary>
-        ///     Gets a value indicating whether the <see cref = "PrimitiveTypeFacets" /> property of this type reference has been assigned an <see cref = "EdmPrimitiveTypeFacets" /> value with at least one facet value specified.
+        ///     Gets a value indicating whether the <see cref="PrimitiveTypeFacets" /> property of this type reference has been assigned an <see
+        ///      cref="EdmPrimitiveTypeFacets" /> value with at least one facet value specified.
         /// </summary>
         public bool HasFacets
         {
@@ -68,7 +73,8 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Indicates whether this type reference represents a collection of its referenced <see cref = "EdmType" /> (when <see cref = "CollectionRank" /> is greater than zero) or not.
+        ///     Indicates whether this type reference represents a collection of its referenced <see cref="EdmType" /> (when <see
+        ///      cref="CollectionRank" /> is greater than zero) or not.
         /// </summary>
         public bool IsCollectionType
         {
@@ -76,7 +82,8 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Indicates whether the <see cref = "EdmType" /> property of this type reference currently refers to an <see cref = "EdmComplexType" /> , is not a collection type, and does not have primitive facet values specified.
+        ///     Indicates whether the <see cref="EdmType" /> property of this type reference currently refers to an <see
+        ///      cref="EdmComplexType" /> , is not a collection type, and does not have primitive facet values specified.
         /// </summary>
         public bool IsComplexType
         {
@@ -84,7 +91,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the <see cref = "EdmComplexType" /> currently referred to by this type reference, or <code>null</code> if the type reference is a collection type or does not refer to a complex type.
+        ///     Gets the <see cref="EdmComplexType" /> currently referred to by this type reference, or <code>null</code> if the type reference is a collection type or does not refer to a complex type.
         /// </summary>
         public EdmComplexType ComplexType
         {
@@ -92,7 +99,8 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Indicates whether the <see cref = "EdmType" /> property of this type reference currently refers to an <see cref = "EdmPrimitiveType" /> and is not a collection type.
+        ///     Indicates whether the <see cref="EdmType" /> property of this type reference currently refers to an <see
+        ///      cref="EdmPrimitiveType" /> and is not a collection type.
         /// </summary>
         public bool IsPrimitiveType
         {
@@ -100,7 +108,7 @@ namespace System.Data.Entity.Edm
         }
 
         /// <summary>
-        ///     Gets the <see cref = "EdmPrimitiveType" /> currently referred to by this type reference, or <code>null</code> if the type reference is a collection type or does not refer to a primitive type.
+        ///     Gets the <see cref="EdmPrimitiveType" /> currently referred to by this type reference, or <code>null</code> if the type reference is a collection type or does not refer to a primitive type.
         /// </summary>
         public EdmPrimitiveType PrimitiveType
         {

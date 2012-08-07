@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Class representing a metadata attribute for an item
+    ///     Class representing a metadata attribute for an item
     /// </summary>
     public class MetadataProperty : MetadataItem
     {
@@ -15,11 +16,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for MetadataProperty taking in a name, a TypeUsage object, and a value for the attribute
+        ///     The constructor for MetadataProperty taking in a name, a TypeUsage object, and a value for the attribute
         /// </summary>
-        /// <param name="name">The name of this MetadataProperty</param>
-        /// <param name="typeUsage">The TypeUsage describing the type of this MetadataProperty</param>
-        /// <param name="value">The value for this attribute</param>
+        /// <param name="name"> The name of this MetadataProperty </param>
+        /// <param name="typeUsage"> The TypeUsage describing the type of this MetadataProperty </param>
+        /// <param name="value"> The value for this attribute </param>
         /// <exception cref="System.ArgumentNullException">Thrown if typeUsage argument is null</exception>
         internal MetadataProperty(string name, TypeUsage typeUsage, object value)
         {
@@ -32,12 +33,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The constructor for MetadataProperty taking in all the ingredients for creating TypeUsage and the actual value
+        ///     The constructor for MetadataProperty taking in all the ingredients for creating TypeUsage and the actual value
         /// </summary>
-        /// <param name="name">The name of the attribute</param>
-        /// <param name="edmType">The edm type of the attribute</param>
-        /// <param name="isCollectionType">Whether the collection type of the given edm type should be used</param>
-        /// <param name="value">The value of the attribute</param>
+        /// <param name="name"> The name of the attribute </param>
+        /// <param name="edmType"> The edm type of the attribute </param>
+        /// <param name="isCollectionType"> Whether the collection type of the given edm type should be used </param>
+        /// <param name="value"> The value of the attribute </param>
         internal MetadataProperty(string name, EdmType edmType, bool isCollectionType, object value)
         {
             Contract.Requires(edmType != null);
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Properties
 
         /// <summary>
-        /// Returns the kind of the type
+        ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets the identity of this item
+        ///     Gets the identity of this item
         /// </summary>
         internal override string Identity
         {
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the name of this MetadataProperty
+        ///     Gets/Sets the name of this MetadataProperty
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual string Name
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the value of this MetadataProperty
+        ///     Gets/Sets the value of this MetadataProperty
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if the MetadataProperty instance is in readonly state</exception>
         [MetadataProperty(typeof(Object), false)]
@@ -119,7 +120,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets/Sets the TypeUsage object describing the type of this attribute
+        ///     Gets/Sets the TypeUsage object describing the type of this attribute
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the MetadataProperty instance is in readonly state</exception>
@@ -134,7 +135,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         #region Methods
 
         /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
+        ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -147,7 +148,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Returns the kind of the attribute
+        ///     Returns the kind of the attribute
         /// </summary>
         public PropertyKind PropertyKind
         {

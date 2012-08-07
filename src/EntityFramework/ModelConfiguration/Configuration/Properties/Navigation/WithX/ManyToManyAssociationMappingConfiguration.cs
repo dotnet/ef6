@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Configures the table and column mapping of a many:many relationship.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref = "DbModelBuilder" />.
+    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public sealed class ManyToManyAssociationMappingConfiguration : AssociationMappingConfiguration
     {
@@ -45,8 +46,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the join table name for the relationship.
         /// </summary>
-        /// <param name = "tableName">Name of the table.</param>
-        /// <returns>The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="tableName"> Name of the table. </param>
+        /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration ToTable(string tableName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -57,9 +58,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the join table name and schema for the relationship.
         /// </summary>
-        /// <param name = "tableName">Name of the table.</param>
-        /// <param name = "schemaName">Schema of the table.</param>
-        /// <returns>The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="tableName"> Name of the table. </param>
+        /// <param name="schemaName"> Schema of the table. </param>
+        /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration ToTable(string tableName, string schemaName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -73,12 +74,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the name of the column(s) for the left foreign key.
         ///     The left foreign key represents the navigation property specified in the HasMany call.
         /// </summary>
-        /// <param name = "keyColumnNames">
-        ///     The foreign key column names.
-        ///     When using multiple foreign key properties, the properties must be specified in the same order that the
-        ///     the primary key properties were configured for the target entity type.
-        /// </param>
-        /// <returns>The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
+        /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration MapLeftKey(params string[] keyColumnNames)
         {
             Contract.Requires(keyColumnNames != null);
@@ -93,12 +90,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the name of the column(s) for the right foreign key.
         ///     The right foreign key represents the navigation property specified in the WithMany call.
         /// </summary>
-        /// <param name = "keyColumnNames">
-        ///     The foreign key column names.
-        ///     When using multiple foreign key properties, the properties must be specified in the same order that the
-        ///     the primary key properties were configured for the target entity type.
-        /// </param>
-        /// <returns>The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained.</returns>
+        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
+        /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration MapRightKey(params string[] keyColumnNames)
         {
             Contract.Requires(keyColumnNames != null);

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Diagnostics;
 
     /// <summary>
-    /// Reponsible for keep map from alias to namespace for a given schema.
+    ///     Reponsible for keep map from alias to namespace for a given schema.
     /// </summary>
     internal sealed class AliasResolver
     {
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        /// Construct the LookUp table
+        ///     Construct the LookUp table
         /// </summary>
         public AliasResolver(Schema schema)
         {
@@ -37,9 +38,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Add a ReferenceSchema to the table
+        ///     Add a ReferenceSchema to the table
         /// </summary>
-        /// <param name="refSchema">the ReferenceSchema to add</param>
+        /// <param name="refSchema"> the ReferenceSchema to add </param>
         public void Add(UsingElement usingElement)
         {
             Debug.Assert(usingElement != null, "usingElement parameter is null");
@@ -78,8 +79,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Get the Schema(s) a namespace or alias might refer to
-        /// returned schemas may be null is called before or during Schema Resolution
+        ///     Get the Schema(s) a namespace or alias might refer to
+        ///     returned schemas may be null is called before or during Schema Resolution
         /// </summary>
         public bool TryResolveAlias(string alias, out string namespaceName)
         {
@@ -90,7 +91,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        /// Resolves all the namespace specified in the using elements in this schema
+        ///     Resolves all the namespace specified in the using elements in this schema
         /// </summary>
         public void ResolveNamespaces()
         {
@@ -110,12 +111,12 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        /// Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
+        ///     Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
         /// </summary>
-        /// <param name="refSchema"></param>
-        /// <param name="name"></param>
-        /// <param name="nameKind"></param>
-        /// <returns></returns>
+        /// <param name="refSchema"> </param>
+        /// <param name="name"> </param>
+        /// <param name="nameKind"> </param>
+        /// <returns> </returns>
         private bool CheckForSystemNamespace(UsingElement refSchema, string name, NameKind nameKind)
         {
             Debug.Assert(
@@ -147,14 +148,18 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         #region Private Types
 
         /// <summary>
-        /// Kind of Name
+        ///     Kind of Name
         /// </summary>
         private enum NameKind
         {
-            /// <summary>It's an Alias</summary>
+            /// <summary>
+            ///     It's an Alias
+            /// </summary>
             Alias,
 
-            /// <summary>It's a namespace</summary>
+            /// <summary>
+            ///     It's a namespace
+            /// </summary>
             Namespace,
         }
 

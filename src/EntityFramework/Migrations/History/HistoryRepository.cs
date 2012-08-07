@@ -213,8 +213,8 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual bool Exists()
         {
-                if (_exists == null)
-                {
+            if (_exists == null)
+            {
                 _exists = QueryExists();
             }
 
@@ -222,7 +222,7 @@ namespace System.Data.Entity.Migrations.History
         }
 
         private bool QueryExists()
-                    {
+        {
             using (var connection = CreateConnection())
             {
                 using (var context = CreateContext(connection))
@@ -232,8 +232,8 @@ namespace System.Data.Entity.Migrations.History
                         if (!context.Database.Exists())
                         {
                             return false;
+                        }
                     }
-                }
                 }
 
                 foreach (var schema in _schemas.Reverse())
@@ -247,10 +247,10 @@ namespace System.Data.Entity.Migrations.History
                             CurrentSchema = schema;
 
                             return true;
-            }
+                        }
                         catch (EntityException)
                         {
-        }
+                        }
                     }
                 }
             }
@@ -294,8 +294,8 @@ namespace System.Data.Entity.Migrations.History
         {
             if (Exists())
             {
-            using (var context = createContext())
-            {
+                using (var context = createContext())
+                {
                     try
                     {
                         context.History

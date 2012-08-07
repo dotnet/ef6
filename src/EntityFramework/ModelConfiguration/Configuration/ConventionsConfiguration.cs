@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows the conventions used by a <see cref = "DbModelBuilder" /> instance to be customized.
+    ///     Allows the conventions used by a <see cref="DbModelBuilder" /> instance to be customized.
     ///     Currently removal of one or more default conventions is the only supported operation.
     ///     The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
     /// </summary>
@@ -97,10 +98,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Disables a convention for the <see cref = "DbModelBuilder" />.
+        ///     Disables a convention for the <see cref="DbModelBuilder" />.
         ///     The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
         /// </summary>
-        /// <typeparam name = "TConvention">The type of the convention to be disabled.</typeparam>
+        /// <typeparam name="TConvention"> The type of the convention to be disabled. </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void Remove<TConvention>()
             where TConvention : IConvention

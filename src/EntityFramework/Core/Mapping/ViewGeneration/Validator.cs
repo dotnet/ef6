@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
     using System.Collections.Generic;
@@ -269,10 +270,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         #region Miscellaneous checks
 
         /// <summary>
-        /// Checks that if a DISTINCT operator exists between some C-Extent and S-Extent, there are no additional
-        /// mapping fragments between that C-Extent and S-Extent.
-        /// We need to enforce this because DISTINCT is not understood by viewgen machinery, and two fragments may be merged
-        /// despite one of them having DISTINCT.
+        ///     Checks that if a DISTINCT operator exists between some C-Extent and S-Extent, there are no additional
+        ///     mapping fragments between that C-Extent and S-Extent.
+        ///     We need to enforce this because DISTINCT is not understood by viewgen machinery, and two fragments may be merged
+        ///     despite one of them having DISTINCT.
         /// </summary>
         private bool CheckCellsWithDistinctFlag()
         {

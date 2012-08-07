@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    /// Represents an ast node for an inline function definition.
+    ///     Represents an ast node for an inline function definition.
     /// </summary>
     internal sealed class FunctionDefinition : Node
     {
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly int _endPosition;
 
         /// <summary>
-        /// Initializes function definition using the name, the optional argument definitions and the body expression.
+        ///     Initializes function definition using the name, the optional argument definitions and the body expression.
         /// </summary>
         internal FunctionDefinition(Identifier name, NodeList<PropDefinition> argDefList, Node body, int startPosition, int endPosition)
         {
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns function name.
+        ///     Returns function name.
         /// </summary>
         internal string Name
         {
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns optional parameter definition list. May be null.
+        ///     Returns optional parameter definition list. May be null.
         /// </summary>
         internal NodeList<PropDefinition> Parameters
         {
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns function body.
+        ///     Returns function body.
         /// </summary>
         internal Node Body
         {
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns start position of the function definition in the command text.
+        ///     Returns start position of the function definition in the command text.
         /// </summary>
         internal int StartPosition
         {
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        /// Returns end position of the function definition in the command text.
+        ///     Returns end position of the function definition in the command text.
         /// </summary>
         internal int EndPosition
         {

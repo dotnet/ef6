@@ -41,9 +41,9 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         ///     Converts a set of migration operations into Microsoft SQL Server specific SQL.
         /// </summary>
-        /// <param name = "migrationOperations">The operations to be converted.</param>
-        /// <param name = "providerManifestToken">Token representing the version of SQL Server being targeted (i.e. "2005", "2008").</param>
-        /// <returns>A list of SQL statements to be executed to perform the migration operations.</returns>
+        /// <param name="migrationOperations"> The operations to be converted. </param>
+        /// <param name="providerManifestToken"> Token representing the version of SQL Server being targeted (i.e. "2005", "2008"). </param>
+        /// <returns> A list of SQL statements to be executed to perform the migration operations. </returns>
         public override IEnumerable<MigrationStatement> Generate(
             IEnumerable<MigrationOperation> migrationOperations, string providerManifestToken)
         {
@@ -65,19 +65,19 @@ namespace System.Data.Entity.Migrations.Sql
 
         /// <summary>
         ///     Creates an empty connection for the current provider.
-        ///     Allows derived providers to use connection other than <see cref = "SqlConnection" />.
+        ///     Allows derived providers to use connection other than <see cref="SqlConnection" />.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         protected virtual DbConnection CreateConnection()
         {
             return new SqlConnection();
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "CreateTableOperation" />.
+        ///     Generates SQL for a <see cref="CreateTableOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "createTableOperation">The operation to produce SQL for.</param>
+        /// <param name="createTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(CreateTableOperation createTableOperation)
         {
             Contract.Requires(createTableOperation != null);
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to mark a table as a system table.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "table">The table to mark as a system table.</param>
+        /// <param name="table"> The table to mark as a system table. </param>
         protected virtual void GenerateMakeSystemTable(string table)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(table));
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to create a database schema.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "createTableOperation">The name of the schema to create.</param>
+        /// <param name="createTableOperation"> The name of the schema to create. </param>
         protected virtual void GenerateCreateSchema(string schema)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(schema));
@@ -188,10 +188,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "AddForeignKeyOperation" />.
+        ///     Generates SQL for a <see cref="AddForeignKeyOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "addForeignKeyOperation">The operation to produce SQL for.</param>
+        /// <param name="addForeignKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddForeignKeyOperation addForeignKeyOperation)
         {
             Contract.Requires(addForeignKeyOperation != null);
@@ -220,10 +220,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "DropForeignKeyOperation" />.
+        ///     Generates SQL for a <see cref="DropForeignKeyOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "dropForeignKeyOperation">The operation to produce SQL for.</param>
+        /// <param name="dropForeignKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropForeignKeyOperation dropForeignKeyOperation)
         {
             Contract.Requires(dropForeignKeyOperation != null);
@@ -240,10 +240,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "CreateIndexOperation" />.
+        ///     Generates SQL for a <see cref="CreateIndexOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "createIndexOperation">The operation to produce SQL for.</param>
+        /// <param name="createIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(CreateIndexOperation createIndexOperation)
         {
             Contract.Requires(createIndexOperation != null);
@@ -270,10 +270,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "DropIndexOperation" />.
+        ///     Generates SQL for a <see cref="DropIndexOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "dropIndexOperation">The operation to produce SQL for.</param>
+        /// <param name="dropIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropIndexOperation dropIndexOperation)
         {
             Contract.Requires(dropIndexOperation != null);
@@ -290,10 +290,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "AddPrimaryKeyOperation" />.
+        ///     Generates SQL for a <see cref="AddPrimaryKeyOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "addPrimaryKeyOperation">The operation to produce SQL for.</param>
+        /// <param name="addPrimaryKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddPrimaryKeyOperation addPrimaryKeyOperation)
         {
             Contract.Requires(addPrimaryKeyOperation != null);
@@ -313,10 +313,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "DropPrimaryKeyOperation" />.
+        ///     Generates SQL for a <see cref="DropPrimaryKeyOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "dropPrimaryKeyOperation">The operation to produce SQL for.</param>
+        /// <param name="dropPrimaryKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropPrimaryKeyOperation dropPrimaryKeyOperation)
         {
             Contract.Requires(dropPrimaryKeyOperation != null);
@@ -333,10 +333,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "AddColumnOperation" />.
+        ///     Generates SQL for a <see cref="AddColumnOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "addColumnOperation">The operation to produce SQL for.</param>
+        /// <param name="addColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddColumnOperation addColumnOperation)
         {
             Contract.Requires(addColumnOperation != null);
@@ -378,10 +378,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "DropColumnOperation" />.
+        ///     Generates SQL for a <see cref="DropColumnOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "dropColumnOperation">The operation to produce SQL for.</param>
+        /// <param name="dropColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropColumnOperation dropColumnOperation)
         {
             Contract.Requires(dropColumnOperation != null);
@@ -424,10 +424,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "AlterColumnOperation" />.
+        ///     Generates SQL for a <see cref="AlterColumnOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "alterColumnOperation">The operation to produce SQL for.</param>
+        /// <param name="alterColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AlterColumnOperation alterColumnOperation)
         {
             Contract.Requires(alterColumnOperation != null);
@@ -476,10 +476,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "DropTableOperation" />.
+        ///     Generates SQL for a <see cref="DropTableOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "dropTableOperation">The operation to produce SQL for.</param>
+        /// <param name="dropTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropTableOperation dropTableOperation)
         {
             Contract.Requires(dropTableOperation != null);
@@ -494,10 +494,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "SqlOperation" />.
+        ///     Generates SQL for a <see cref="SqlOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "sqlOperation">The operation to produce SQL for.</param>
+        /// <param name="sqlOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(SqlOperation sqlOperation)
         {
             Contract.Requires(sqlOperation != null);
@@ -506,10 +506,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "RenameColumnOperation" />.
+        ///     Generates SQL for a <see cref="RenameColumnOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "renameColumnOperation">The operation to produce SQL for.</param>
+        /// <param name="renameColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameColumnOperation renameColumnOperation)
         {
             Contract.Requires(renameColumnOperation != null);
@@ -529,10 +529,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "RenameTableOperation" />.
+        ///     Generates SQL for a <see cref="RenameTableOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "renameTableOperation">The operation to produce SQL for.</param>
+        /// <param name="renameTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameTableOperation renameTableOperation)
         {
             Contract.Requires(renameTableOperation != null);
@@ -550,10 +550,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "MoveTableOperation" />.
+        ///     Generates SQL for a <see cref="MoveTableOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "moveTableOperation">The operation to produce SQL for.</param>
+        /// <param name="moveTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(MoveTableOperation moveTableOperation)
         {
             Contract.Requires(moveTableOperation != null);
@@ -638,10 +638,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "InsertHistoryOperation" />.
+        ///     Generates SQL for a <see cref="InsertHistoryOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "insertHistoryOperation">The operation to produce SQL for.</param>
+        /// <param name="insertHistoryOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(InsertHistoryOperation insertHistoryOperation)
         {
             Contract.Requires(insertHistoryOperation != null);
@@ -664,10 +664,10 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref = "DeleteHistoryOperation" />.
+        ///     Generates SQL for a <see cref="DeleteHistoryOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name = "deleteHistoryOperation">The operation to produce SQL for.</param>
+        /// <param name="deleteHistoryOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DeleteHistoryOperation deleteHistoryOperation)
         {
             Contract.Requires(deleteHistoryOperation != null);
@@ -687,8 +687,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant byte[] default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(byte[] defaultValue)
         {
             Contract.Requires(defaultValue != null);
@@ -700,8 +700,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant bool default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(bool defaultValue)
         {
             return defaultValue ? "1" : "0";
@@ -711,8 +711,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant DateTime default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(DateTime defaultValue)
         {
             return "'" + defaultValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture) + "'";
@@ -722,8 +722,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant DateTimeOffset default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(DateTimeOffset defaultValue)
         {
             return "'" + defaultValue.ToString(DateTimeOffsetFormat, CultureInfo.InvariantCulture) + "'";
@@ -733,8 +733,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant Guid default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(Guid defaultValue)
         {
             return "'" + defaultValue + "'";
@@ -744,8 +744,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant string default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(string defaultValue)
         {
             Contract.Assert(defaultValue != null);
@@ -757,8 +757,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant TimeSpan default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(TimeSpan defaultValue)
         {
             return "'" + defaultValue + "'";
@@ -768,8 +768,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant geogrpahy default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(DbGeography defaultValue)
         {
             return "'" + defaultValue + "'";
@@ -779,8 +779,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant geometry default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(DbGeometry defaultValue)
         {
             return "'" + defaultValue + "'";
@@ -790,8 +790,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify a constant default value being set on a column.
         ///     This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
-        /// <param name = "defaultValue">The value to be set.</param>
-        /// <returns>SQL representing the default value.</returns>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(object defaultValue)
         {
             Contract.Assert(defaultValue != null);
@@ -804,8 +804,8 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generates SQL to specify the data type of a column.
         ///     This method just generates the actual type, not the SQL to create the column.
         /// </summary>
-        /// <param name = "defaultValue">The definition of the column.</param>
-        /// <returns>SQL representing the data type.</returns>
+        /// <param name="defaultValue"> The definition of the column. </param>
+        /// <returns> SQL representing the data type. </returns>
         protected virtual string BuildColumnType(ColumnModel column)
         {
             Contract.Requires(column != null);
@@ -865,8 +865,8 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         ///     Generates a quoted name. The supplied name may or may not contain the schema.
         /// </summary>
-        /// <param name = "name">The name to be quoted.</param>
-        /// <returns>The quoted name.</returns>
+        /// <param name="name"> The name to be quoted. </param>
+        /// <returns> The quoted name. </returns>
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected virtual string Name(string name)
         {
@@ -880,8 +880,8 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         ///     Quotes an identifier for SQL Server.
         /// </summary>
-        /// <param name = "identifier">The identifier to be quoted.</param>
-        /// <returns>The quoted identifier.</returns>
+        /// <param name="identifier"> The identifier to be quoted. </param>
+        /// <returns> The quoted identifier. </returns>
         protected virtual string Quote(string identifier)
         {
             return "[" + identifier + "]";
@@ -890,12 +890,8 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         ///     Adds a new Statement to be executed against the database.
         /// </summary>
-        /// <param name = "sql">The statement to be executed.</param>
-        /// <param name = "suppressTransaction">
-        ///     Gets or sets a value indicating whether this statement should be performed outside of
-        ///     the transaction scope that is used to make the migration process transactional.
-        ///     If set to true, this operation will not be rolled back if the migration process fails.
-        /// </param>
+        /// <param name="sql"> The statement to be executed. </param>
+        /// <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected void Statement(string sql, bool suppressTransaction = false)
         {
@@ -910,13 +906,13 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Gets a new <see cref = "IndentedTextWriter" /> that can be used to build SQL.
+        ///     Gets a new <see cref="IndentedTextWriter" /> that can be used to build SQL.
         /// 
         ///     This is just a helper method to create a writer. Writing to the writer will
         ///     not cause SQL to be registered for execution. You must pass the generated
         ///     SQL to the Statement method.
         /// </summary>
-        /// <returns>An empty text writer to use for SQL generation.</returns>
+        /// <returns> An empty text writer to use for SQL generation. </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected static IndentedTextWriter Writer()
         {
@@ -926,7 +922,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         ///     Adds a new Statement to be executed against the database.
         /// </summary>
-        /// <param name = "writer">The writer containing the SQL to be executed.</param>
+        /// <param name="writer"> The writer containing the SQL to be executed. </param>
         protected void Statement(IndentedTextWriter writer)
         {
             Contract.Requires(writer != null);

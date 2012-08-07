@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Base class for the type created at design time to store the generated views.
+    ///     Base class for the type created at design time to store the generated views.
     /// </summary>
     public abstract class EntityViewContainer
     {
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
         #region properties
 
         /// <summary>
-        /// Returns the cached dictionary of (ExtentName,EsqlView)
+        ///     Returns the cached dictionary of (ExtentName,EsqlView)
         /// </summary>
         internal IEnumerable<KeyValuePair<string, string>> ExtentViews
         {

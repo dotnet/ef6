@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Data.Entity.Edm.Common;
@@ -12,10 +13,10 @@ namespace System.Data.Entity.Edm.Validation.Internal
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
         /// <summary>
-        ///     Validate the <see cref = "EdmModel" /> and all of its properties given certain version.
+        ///     Validate the <see cref="EdmModel" /> and all of its properties given certain version.
         /// </summary>
-        /// <param name = "root"> The root of the model to be validated </param>
-        /// <param name = "validateSyntax"> True to validate the syntax, otherwise false </param>
+        /// <param name="root"> The root of the model to be validated </param>
+        /// <param name="validateSyntax"> True to validate the syntax, otherwise false </param>
         internal void Validate(Edm.EdmModel root, bool validateSyntax)
         {
             // Build up the validation context

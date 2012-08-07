@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Diagnostics;
@@ -6,22 +7,22 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Text;
 
     /// <summary>
-    /// Abstract base class for normal form sentences (CNF and DNF)
+    ///     Abstract base class for normal form sentences (CNF and DNF)
     /// </summary>
-    /// <typeparam name="T_Identifier">Type of expression leaf term identifiers.</typeparam>
-    /// <typeparam name="T_Clause">Type of clauses in the sentence.</typeparam>
+    /// <typeparam name="T_Identifier"> Type of expression leaf term identifiers. </typeparam>
+    /// <typeparam name="T_Clause"> Type of clauses in the sentence. </typeparam>
     internal abstract class Sentence<T_Identifier, T_Clause> : NormalFormNode<T_Identifier>
         where T_Clause : Clause<T_Identifier>, IEquatable<T_Clause>
     {
         private readonly Set<T_Clause> _clauses;
 
         /// <summary>
-        /// Initialize a sentence given the appropriate sentence clauses. Produces
-        /// an equivalent expression by composing the clause expressions using
-        /// the given tree type.
+        ///     Initialize a sentence given the appropriate sentence clauses. Produces
+        ///     an equivalent expression by composing the clause expressions using
+        ///     the given tree type.
         /// </summary>
-        /// <param name="clauses">Sentence clauses</param>
-        /// <param name="treeType">Tree type for sentence (and generated expression)</param>
+        /// <param name="clauses"> Sentence clauses </param>
+        /// <param name="treeType"> Tree type for sentence (and generated expression) </param>
         protected Sentence(Set<T_Clause> clauses, ExprType treeType)
             : base(ConvertClausesToExpr(clauses, treeType))
         {
