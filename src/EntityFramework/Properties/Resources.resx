@@ -142,15 +142,6 @@
   <data name="LoggingRevertMigration" xml:space="preserve">
     <value>Reverting explicit migration: {0}.</value>
   </data>
-  <data name="LoggingHistoryInsert" xml:space="preserve">
-    <value>[Inserting migration history record]</value>
-  </data>
-  <data name="LoggingHistoryDelete" xml:space="preserve">
-    <value>[Deleting migration history record]</value>
-  </data>
-  <data name="LoggingMetadataUpdate" xml:space="preserve">
-    <value>[Updating EdmMetadata model hash]</value>
-  </data>
   <data name="LoggingSeedingDatabase" xml:space="preserve">
     <value>Running Seed method.</value>
   </data>
