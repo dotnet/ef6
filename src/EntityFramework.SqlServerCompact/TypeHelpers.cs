@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Collections.Generic;
@@ -150,17 +151,14 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return TryGetIntFacetValue(type, ProviderManifest.MaxLengthFacetName, out maxLength);
         }
 
-        /// <summary>
-        /// It will return true if there there non-boolean facets types that
-        /// are nulled out.
-        /// This function needs to be removed till the
-        /// HasNulledOutFacetValues of TypeUsage class become public
-        ///
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        /// 
-        ///
+        ///<summary>
+        ///    It will return true if there there non-boolean facets types that
+        ///    are nulled out.
+        ///    This function needs to be removed till the
+        ///    HasNulledOutFacetValues of TypeUsage class become public
+        ///</summary>
+        ///<param name="type"> </param>
+        ///<returns> </returns>
         internal static bool HasNulledOutFacetValues(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);
@@ -189,10 +187,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        /// Returns the name of Primitive Data Type
+        ///     Returns the name of Primitive Data Type
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type"> </param>
+        /// <returns> </returns>
         internal static string PrimitiveTypeName(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);

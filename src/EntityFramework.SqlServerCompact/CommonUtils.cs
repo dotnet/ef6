@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Data.Entity.SqlServerCompact.Resources;
@@ -38,23 +39,23 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        /// Method to add a closing square brace escape for all
-        /// embedded closing square braces in a string
+        ///     Method to add a closing square brace escape for all
+        ///     embedded closing square braces in a string
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name"> </param>
+        /// <returns> </returns>
         public static string EscapeSquareBraceNames(string name)
         {
             return EscapeNames(name, ']');
         }
 
         /// <summary>
-        /// Routine to replace an interesting character with itself
-        /// (to escape the interesting character)
+        ///     Routine to replace an interesting character with itself
+        ///     (to escape the interesting character)
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="quote"></param>
-        /// <returns></returns>
+        /// <param name="name"> </param>
+        /// <param name="quote"> </param>
+        /// <returns> </returns>
         public static string EscapeNames(string name, char quote)
         {
             string outputName;
@@ -68,9 +69,9 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        /// Delete the database that the fileName points to.
+        ///     Delete the database that the fileName points to.
         /// </summary>
-        /// <param name="fileName">Database file path.</param>
+        /// <param name="fileName"> Database file path. </param>
         public static void DeleteDatabase(string fileName)
         {
             var expandedFileName = ReplaceDataDirectory(fileName);
@@ -83,10 +84,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        /// Check whether the database pointed to by the file name exists or not.
+        ///     Check whether the database pointed to by the file name exists or not.
         /// </summary>
-        /// <param name="fileName">Database file path</param>
-        /// <returns></returns>
+        /// <param name="fileName"> Database file path </param>
+        /// <returns> </returns>
         public static bool DatabaseExists(string fileName)
         {
             var expandedFileName = ReplaceDataDirectory(fileName);

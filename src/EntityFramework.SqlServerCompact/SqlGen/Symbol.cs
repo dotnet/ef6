@@ -1,28 +1,28 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Globalization;
 
-    /// <summary>
-    /// <see cref="SymbolTable"/>
-    /// This class represents an extent/nested select statement,
-    /// or a column.
+    ///<summary>
+    ///    <see cref="SymbolTable" />
+    ///    This class represents an extent/nested select statement,
+    ///    or a column.
     ///
-    /// The important fields are Name, Type and NewName.
-    /// NewName starts off the same as Name, and is then modified as necessary.
+    ///    The important fields are Name, Type and NewName.
+    ///    NewName starts off the same as Name, and is then modified as necessary.
     ///
     ///
-    /// The rest are used by special symbols.
-    /// e.g. NeedsRenaming is used by columns to indicate that a new name must
-    /// be picked for the column in the second phase of translation.
+    ///    The rest are used by special symbols.
+    ///    e.g. NeedsRenaming is used by columns to indicate that a new name must
+    ///    be picked for the column in the second phase of translation.
     ///
-    /// IsUnnest is used by symbols for a collection expression used as a from clause.
-    /// This allows <see cref="SqlGenerator.AddFromSymbol(SqlSelectStatement, string, Symbol, bool)"/> to add the column list
-    /// after the alias.
-    ///
-    /// </summary>
+    ///    IsUnnest is used by symbols for a collection expression used as a from clause.
+    ///    This allows <see cref="SqlGenerator.AddFromSymbol(SqlSelectStatement, string, Symbol, bool)" /> to add the column list
+    ///    after the alias.
+    ///</summary>
     internal class Symbol : ISqlFragment
     {
         private Dictionary<string, Symbol> columns;
@@ -62,11 +62,11 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        /// Use this constructor the symbol represents a SqlStatement with renamed output columns.
+        ///     Use this constructor the symbol represents a SqlStatement with renamed output columns.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="columns"></param>
+        /// <param name="name"> </param>
+        /// <param name="type"> </param>
+        /// <param name="columns"> </param>
         public Symbol(string name, TypeUsage type, Dictionary<string, Symbol> columns)
         {
             this.name = name;
@@ -78,14 +78,14 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         #region ISqlFragment Members
 
-        /// <summary>
-        /// Write this symbol out as a string for sql.  This is just
-        /// the new name of the symbol (which could be the same as the old name).
+        ///<summary>
+        ///    Write this symbol out as a string for sql.  This is just
+        ///    the new name of the symbol (which could be the same as the old name).
         ///
-        /// We rename columns here if necessary.
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="sqlGenerator"></param>
+        ///    We rename columns here if necessary.
+        ///</summary>
+        ///<param name="writer"> </param>
+        ///<param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             if (NeedsRenaming)

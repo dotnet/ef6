@@ -1,29 +1,29 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
     using System.Diagnostics;
 
-    /// <summary>
-    /// This class is used for building the SELECT clause of a Sql Statement
-    /// It is used to gather information about required and optional columns
-    /// and whether TOP and DISTINCT should be specified.
+    ///<summary>
+    ///    This class is used for building the SELECT clause of a Sql Statement
+    ///    It is used to gather information about required and optional columns
+    ///    and whether TOP and DISTINCT should be specified.
     /// 
-    /// The underlying SqlBuilder is used for gathering the required columns.
+    ///    The underlying SqlBuilder is used for gathering the required columns.
     /// 
-    /// The list of OptionalColumns is used for gathering the optional columns. 
-    /// Whether a given OptionalColumn should be written is known only after the entire
-    /// command tree has been processed. 
+    ///    The list of OptionalColumns is used for gathering the optional columns. 
+    ///    Whether a given OptionalColumn should be written is known only after the entire
+    ///    command tree has been processed. 
     /// 
-    /// The IsDistinct property indicates that we want distinct columns.
-    /// This is given out of band, since the input expression to the select clause
-    /// may already have some columns projected out, and we use append-only SqlBuilders.
-    /// The DISTINCT is inserted when we finally write the object into a string.
+    ///    The IsDistinct property indicates that we want distinct columns.
+    ///    This is given out of band, since the input expression to the select clause
+    ///    may already have some columns projected out, and we use append-only SqlBuilders.
+    ///    The DISTINCT is inserted when we finally write the object into a string.
     /// 
-    /// Also, we have a Top property, which is non-null if the number of results should
-    /// be limited to certain number. It is given out of band for the same reasons as DISTINCT.
-    ///
-    /// </summary>
+    ///    Also, we have a Top property, which is non-null if the number of results should
+    ///    be limited to certain number. It is given out of band for the same reasons as DISTINCT.
+    ///</summary>
     internal class SqlSelectClauseBuilder : SqlBuilder
     {
         #region Fields and Properties
@@ -52,12 +52,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        /// Do we need to add a DISTINCT at the beginning of the SELECT
+        ///     Do we need to add a DISTINCT at the beginning of the SELECT
         /// </summary>
         internal bool IsDistinct { get; set; }
 
         /// <summary>
-        /// Whether any columns have been specified.
+        ///     Whether any columns have been specified.
         /// </summary>
         public override bool IsEmpty
         {
@@ -80,20 +80,19 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region ISqlFragment Members
 
         /// <summary>
-        /// Writes the string representing the Select statement:
+        ///     Writes the string representing the Select statement:
         /// 
-        /// SELECT (DISTINCT) (TOP topClause) (optionalColumns) (requiredColumns)
+        ///     SELECT (DISTINCT) (TOP topClause) (optionalColumns) (requiredColumns)
         /// 
-        /// If Distinct is specified or this is part of a top most statement 
-        /// all optional columns are marked as used.
+        ///     If Distinct is specified or this is part of a top most statement 
+        ///     all optional columns are marked as used.
         /// 
-        /// Optional columns are only written if marked as used. 
-        /// In addition, if no required columns are specified and no optional columns are 
-        /// marked as used, the first optional column is written.
-        /// 
+        ///     Optional columns are only written if marked as used. 
+        ///     In addition, if no required columns are specified and no optional columns are 
+        ///     marked as used, the first optional column is written.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="sqlGenerator"></param>
+        /// <param name="writer"> </param>
+        /// <param name="sqlGenerator"> </param>
         public override void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             writer.Write("SELECT ");
@@ -140,13 +139,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region Private Helper Methods
 
         /// <summary>
-        /// Writes the optional columns that are used. 
-        /// If this is the topmost statement or distict is specifed as part of the same statement
-        /// all optoinal columns are written.
+        ///     Writes the optional columns that are used. 
+        ///     If this is the topmost statement or distict is specifed as part of the same statement
+        ///     all optoinal columns are written.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="sqlGenerator"></param>
-        /// <returns>Whether at least one column got written</returns>
+        /// <param name="writer"> </param>
+        /// <param name="sqlGenerator"> </param>
+        /// <returns> Whether at least one column got written </returns>
         private bool WriteOptionalColumns(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             if (m_optionalColumns == null)

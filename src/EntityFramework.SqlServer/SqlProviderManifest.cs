@@ -18,7 +18,7 @@ namespace System.Data.Entity.SqlServer
     using System.Xml;
 
     /// <summary>
-    /// The Provider Manifest for SQL Server
+    ///     The Provider Manifest for SQL Server
     /// </summary>
     internal class SqlProviderManifest : DbXmlEnabledProviderManifest
     {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.SqlServer
         private readonly SqlVersion _version = SqlVersion.Sql9;
 
         /// <summary>
-        /// Maximum size of SQL Server unicode 
+        ///     Maximum size of SQL Server unicode
         /// </summary>
         private const int varcharMaxSize = 8000;
 
@@ -52,9 +52,9 @@ namespace System.Data.Entity.SqlServer
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlProviderManifest"/> class.
+        ///     Initializes a new instance of the <see cref="SqlProviderManifest" /> class.
         /// </summary>
-        /// <param name="manifestToken">A token used to infer the capabilities of the store.</param>
+        /// <param name="manifestToken"> A token used to infer the capabilities of the store. </param>
         public SqlProviderManifest(string manifestToken)
             : base(GetProviderManifest())
         {
@@ -105,16 +105,15 @@ namespace System.Data.Entity.SqlServer
         #region Internal Methods
 
         /// <summary>
-        /// Function to detect wildcard characters %, _, [ and ^ and escape them with a preceding ~
-        /// This escaping is used when StartsWith, EndsWith and Contains canonical and CLR functions
-        /// are translated to their equivalent LIKE expression
-        /// NOTE: This code has been copied from LinqToSql
+        ///     Function to detect wildcard characters %, _, [ and ^ and escape them with a preceding ~
+        ///     This escaping is used when StartsWith, EndsWith and Contains canonical and CLR functions
+        ///     are translated to their equivalent LIKE expression
+        ///     NOTE: This code has been copied from LinqToSql
         /// </summary>
-        /// <param name="text">Original input as specified by the user</param>
-        /// <param name="alwaysEscapeEscapeChar">escape the escape character ~ regardless whether wildcard 
-        /// characters were encountered </param>
-        /// <param name="usedEscapeChar">true if the escaping was performed, false if no escaping was required</param>
-        /// <returns>The escaped string that can be used as pattern in a LIKE expression</returns>
+        /// <param name="text"> Original input as specified by the user </param>
+        /// <param name="alwaysEscapeEscapeChar"> escape the escape character ~ regardless whether wildcard characters were encountered </param>
+        /// <param name="usedEscapeChar"> true if the escaping was performed, false if no escaping was required </param>
+        /// <returns> The escaped string that can be used as pattern in a LIKE expression </returns>
         internal static string EscapeLikeText(string text, bool alwaysEscapeEscapeChar, out bool usedEscapeChar)
         {
             Contract.Requires(text != null);
@@ -144,12 +143,12 @@ namespace System.Data.Entity.SqlServer
         #region Overrides
 
         /// <summary>
-        /// Providers should override this to return information specific to their provider.  
+        ///     Providers should override this to return information specific to their provider.  
         /// 
-        /// This method should never return null.
+        ///     This method should never return null.
         /// </summary>
-        /// <param name="informationType">The name of the information to be retrieved.</param>
-        /// <returns>An XmlReader at the begining of the information requested.</returns>
+        /// <param name="informationType"> The name of the information to be retrieved. </param>
+        /// <returns> An XmlReader at the begining of the information requested. </returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
             if (informationType == StoreSchemaDefinitionVersion3
@@ -179,7 +178,8 @@ namespace System.Data.Entity.SqlServer
         {
             if (_primitiveTypes == null)
             {
-                if (_version == SqlVersion.Sql10 ||
+                if (_version == SqlVersion.Sql10
+                    ||
                     _version == SqlVersion.Sql11)
                 {
                     _primitiveTypes = base.GetStoreTypes();
@@ -226,7 +226,8 @@ namespace System.Data.Entity.SqlServer
         {
             if (_functions == null)
             {
-                if (_version == SqlVersion.Sql10 ||
+                if (_version == SqlVersion.Sql10
+                    ||
                     _version == SqlVersion.Sql11)
                 {
                     _functions = base.GetStoreFunctions();
@@ -344,11 +345,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// This method takes a type and a set of facets and returns the best mapped equivalent type 
-        /// in EDM.
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     in EDM.
         /// </summary>
-        /// <param name="storeType">A TypeUsage encapsulating a store type and a set of facets</param>
-        /// <returns>A TypeUsage encapsulating an EDM type and a set of facets</returns>
+        /// <param name="storeType"> A TypeUsage encapsulating a store type and a set of facets </param>
+        /// <returns> A TypeUsage encapsulating an EDM type and a set of facets </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
@@ -522,11 +523,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// This method takes a type and a set of facets and returns the best mapped equivalent type 
-        /// in SQL Server, taking the store version into consideration.
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     in SQL Server, taking the store version into consideration.
         /// </summary>
-        /// <param name="storeType">A TypeUsage encapsulating an EDM type and a set of facets</param>
-        /// <returns>A TypeUsage encapsulating a store type and a set of facets</returns>
+        /// <param name="storeType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
+        /// <returns> A TypeUsage encapsulating a store type and a set of facets </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
@@ -750,11 +751,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Returns true, SqlClient supports escaping strings to be used as arguments to like
-        /// The escape character is '~'
+        ///     Returns true, SqlClient supports escaping strings to be used as arguments to like
+        ///     The escape character is '~'
         /// </summary>
-        /// <param name="escapeCharacter">The character '~'</param>
-        /// <returns>True</returns>
+        /// <param name="escapeCharacter"> The character '~' </param>
+        /// <returns> True </returns>
         public override bool SupportsEscapingLikeArgument(out char escapeCharacter)
         {
             escapeCharacter = LikeEscapeChar;
@@ -762,10 +763,10 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Escapes the wildcard characters and the escape character in the given argument.
+        ///     Escapes the wildcard characters and the escape character in the given argument.
         /// </summary>
-        /// <param name="argument"></param>
-        /// <returns>Equivalent to the argument, with the wildcard characters and the escape character escaped</returns>
+        /// <param name="argument"> </param>
+        /// <returns> Equivalent to the argument, with the wildcard characters and the escape character escaped </returns>
         public override string EscapeLikeArgument(string argument)
         {
             Throw.IfNull(argument, "argument");

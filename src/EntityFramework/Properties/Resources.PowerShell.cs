@@ -1,20 +1,22 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Resources
 {
     using System.CodeDom.Compiler;
-    using System.Data.Entity.Core;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Globalization;
+    using System.IO;
     using System.Resources;
     using System.Threading;
 
     /// <summary>
-    ///    Strongly-typed and parameterized string resources.
+    ///     Strongly-typed and parameterized string resources.
     /// </summary>
     [GeneratedCode("Resources.PowerShell.tt", "1.0.0.0")]
     internal static class Strings
     {
         /// <summary>
-        /// A string like "Specify the '-Verbose' flag to view the SQL statements being applied to the target database."
+        ///     A string like "Specify the '-Verbose' flag to view the SQL statements being applied to the target database."
         /// </summary>
         internal static string UpdateDatabaseCommand_VerboseInstructions
         {
@@ -22,7 +24,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "The '-SourceMigration' parameter is only valid when using '-Script'."
+        ///     A string like "The '-SourceMigration' parameter is only valid when using '-Script'."
         /// </summary>
         internal static string UpdateDatabaseCommand_SourceMigrationWithoutScript
         {
@@ -30,7 +32,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "No migrations have been applied to the target database."
+        ///     A string like "No migrations have been applied to the target database."
         /// </summary>
         internal static string GetMigrationsCommand_NoHistory
         {
@@ -38,7 +40,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Scaffolding migration '{0}'."
+        ///     A string like "Scaffolding migration '{0}'."
         /// </summary>
         internal static string LoggingGenerate(object p0)
         {
@@ -46,7 +48,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Only the Designer Code for migration '{0}' was re-scaffolded. To re-scaffold the entire migration, use the -Force parameter."
+        ///     A string like "Only the Designer Code for migration '{0}' was re-scaffolded. To re-scaffold the entire migration, use the -Force parameter."
         /// </summary>
         internal static string RescaffoldNoForce(object p0)
         {
@@ -54,7 +56,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again."
+        ///     A string like "The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again."
         /// </summary>
         internal static string SnapshotBehindWarning(object p0)
         {
@@ -62,7 +64,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
+        ///     A string like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
         /// </summary>
         internal static string MigrationsPendingException(object p0)
         {
@@ -70,7 +72,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "You can use the Add-Migration command to write the pending model changes to a code-based migration."
+        ///     A string like "You can use the Add-Migration command to write the pending model changes to a code-based migration."
         /// </summary>
         internal static string AutomaticMigrationDisabledInfo
         {
@@ -78,7 +80,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Edit the generated Configuration class to specify the context to enable migrations for."
+        ///     A string like "Edit the generated Configuration class to specify the context to enable migrations for."
         /// </summary>
         internal static string EnableMigrations_ManuallyEnterContext
         {
@@ -86,7 +88,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "No classes deriving from DbContext found in the current project."
+        ///     A string like "No classes deriving from DbContext found in the current project."
         /// </summary>
         internal static string EnableMigrations_NoContexts
         {
@@ -94,7 +96,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "More than one class deriving from DbContext found in the current project."
+        ///     A string like "More than one class deriving from DbContext found in the current project."
         /// </summary>
         internal static string EnableMigrations_MultipleContexts
         {
@@ -102,7 +104,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Error while searching for context type (specify -Verbose to see exception details)."
+        ///     A string like "Error while searching for context type (specify -Verbose to see exception details)."
         /// </summary>
         internal static string EnableMigrations_ErrorFindingContexts
         {
@@ -110,7 +112,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Code First Migrations enabled for project {0}."
+        ///     A string like "Code First Migrations enabled for project {0}."
         /// </summary>
         internal static string EnableMigrations_Success(object p0)
         {
@@ -118,7 +120,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Checking if the context targets an existing database..."
+        ///     A string like "Checking if the context targets an existing database..."
         /// </summary>
         internal static string EnableMigrations_BeginInitialScaffold
         {
@@ -126,7 +128,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Detected database created with a database initializer. Scaffolded migration '{0}' corresponding to existing database. To use an automatic migration instead, delete the Migrations folder and re-run Enable-Migrations specifying the -EnableAutomaticMigrations parameter."
+        ///     A string like "Detected database created with a database initializer. Scaffolded migration '{0}' corresponding to existing database. To use an automatic migration instead, delete the Migrations folder and re-run Enable-Migrations specifying the -EnableAutomaticMigrations parameter."
         /// </summary>
         internal static string EnableMigrations_InitialScaffold(object p0)
         {
@@ -134,7 +136,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Code First Migrations does not support web site projects."
+        ///     A string like "Code First Migrations does not support web site projects."
         /// </summary>
         internal static string WebSiteProjectNotSupported
         {
@@ -142,7 +144,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Retrieving migrations that have been applied to the target database."
+        ///     A string like "Retrieving migrations that have been applied to the target database."
         /// </summary>
         internal static string GetMigrationsCommand_Intro
         {
@@ -150,7 +152,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter."
+        ///     A string like "Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter."
         /// </summary>
         internal static string MigrationsAlreadyEnabled(object p0)
         {
@@ -158,61 +160,62 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
+        ///     A string like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
         /// </summary>
         internal static string SaveConnectionFactoryInConfigFailed(object p0)
         {
             return EntityRes.GetString(EntityRes.SaveConnectionFactoryInConfigFailed, p0);
         }
-    } 
+    }
 
     /// <summary>
-    ///    Strongly-typed and parameterized exception factory.
+    ///     Strongly-typed and parameterized exception factory.
     /// </summary>
     [GeneratedCode("Resources.PowerShell.tt", "1.0.0.0")]
     internal static class Error
     {
         /// <summary>
-        /// Migrations.MigrationsPendingException with message like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
+        ///     Migrations.MigrationsPendingException with message like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
         /// </summary>
         internal static Exception MigrationsPendingException(object p0)
         {
-            return new Migrations.MigrationsPendingException(Strings.MigrationsPendingException(p0));
+            return new MigrationsPendingException(Strings.MigrationsPendingException(p0));
         }
 
         /// <summary>
-        /// Migrations.ProjectTypeNotSupportedException with message like "Code First Migrations does not support web site projects."
+        ///     Migrations.ProjectTypeNotSupportedException with message like "Code First Migrations does not support web site projects."
         /// </summary>
         internal static Exception WebSiteProjectNotSupported()
         {
-            return new Migrations.ProjectTypeNotSupportedException(Strings.WebSiteProjectNotSupported);
+            return new ProjectTypeNotSupportedException(Strings.WebSiteProjectNotSupported);
         }
 
         /// <summary>
-        /// Migrations.Infrastructure.MigrationsException with message like "Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter."
+        ///     Migrations.Infrastructure.MigrationsException with message like "Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter."
         /// </summary>
         internal static Exception MigrationsAlreadyEnabled(object p0)
         {
-            return new Migrations.Infrastructure.MigrationsException(Strings.MigrationsAlreadyEnabled(p0));
+            return new MigrationsException(Strings.MigrationsAlreadyEnabled(p0));
         }
 
         /// <summary>
-        /// System.IO.IOException with message like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
+        ///     System.IO.IOException with message like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
         /// </summary>
         internal static Exception SaveConnectionFactoryInConfigFailed(object p0)
         {
-            return new System.IO.IOException(Strings.SaveConnectionFactoryInConfigFailed(p0));
+            return new IOException(Strings.SaveConnectionFactoryInConfigFailed(p0));
         }
+
         /// <summary>
-        /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
+        ///     The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
         /// </summary>
         internal static Exception ArgumentNull(string paramName)
         {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
-        /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
+        ///     The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
         {
@@ -220,7 +223,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
+        ///     The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
         /// </summary>
         internal static Exception NotImplemented()
         {
@@ -228,7 +231,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality. 
+        ///     The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
         internal static Exception NotSupported()
         {
@@ -236,11 +239,11 @@ namespace System.Data.Entity.Migrations.Resources
         }
     }
 
-    /// <summary>
+    ///<summary>
     ///    AutoGenerated resource class. Usage:
     ///
-    ///        string s = EntityRes.GetString(EntityRes.MyIdenfitier);
-    /// </summary>
+    ///    string s = EntityRes.GetString(EntityRes.MyIdenfitier);
+    ///</summary>
     [GeneratedCode("Resources.PowerShell.tt", "1.0.0.0")]
     internal sealed class EntityRes
     {
@@ -263,20 +266,20 @@ namespace System.Data.Entity.Migrations.Resources
         internal const string GetMigrationsCommand_Intro = "GetMigrationsCommand_Intro";
         internal const string MigrationsAlreadyEnabled = "MigrationsAlreadyEnabled";
         internal const string SaveConnectionFactoryInConfigFailed = "SaveConnectionFactoryInConfigFailed";
-        
-        static EntityRes loader = null;
-        ResourceManager resources;
+
+        private static EntityRes loader;
+        private readonly ResourceManager resources;
 
         private EntityRes()
         {
-            resources = new ResourceManager("System.Data.Entity.Properties.Resources.PowerShell", typeof(System.Data.Entity.DbContext).Assembly);
+            resources = new ResourceManager("System.Data.Entity.Properties.Resources.PowerShell", typeof(DbContext).Assembly);
         }
-        
+
         private static EntityRes GetLoader()
         {
             if (loader == null)
             {
-                EntityRes sr = new EntityRes();
+                var sr = new EntityRes();
                 Interlocked.CompareExchange(ref loader, sr, null);
             }
             return loader;
@@ -284,30 +287,31 @@ namespace System.Data.Entity.Migrations.Resources
 
         private static CultureInfo Culture
         {
-            get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
+            get { return null /*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources
         {
-            get
-            {
-                return GetLoader().resources;
-            }
+            get { return GetLoader().resources; }
         }
-        
+
         public static string GetString(string name, params object[] args)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
-                return null;
-            string res = sys.resources.GetString(name, EntityRes.Culture);
-
-            if (args != null && args.Length > 0)
             {
-                for (int i = 0; i < args.Length; i ++)
+                return null;
+            }
+            var res = sys.resources.GetString(name, Culture);
+
+            if (args != null
+                && args.Length > 0)
+            {
+                for (var i = 0; i < args.Length; i ++)
                 {
-                    String value = args[i] as String;
-                    if (value != null && value.Length > 1024)
+                    var value = args[i] as String;
+                    if (value != null
+                        && value.Length > 1024)
                     {
                         args[i] = value.Substring(0, 1024 - 3) + "...";
                     }
@@ -322,12 +326,14 @@ namespace System.Data.Entity.Migrations.Resources
 
         public static string GetString(string name)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
+            {
                 return null;
-            return sys.resources.GetString(name, EntityRes.Culture);
+            }
+            return sys.resources.GetString(name, Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback)
         {
             // always false for this version of gensr
@@ -337,10 +343,12 @@ namespace System.Data.Entity.Migrations.Resources
 
         public static object GetObject(string name)
         {
-            EntityRes sys = GetLoader();
+            var sys = GetLoader();
             if (sys == null)
+            {
                 return null;
-            return sys.resources.GetObject(name, EntityRes.Culture);
+            }
+            return sys.resources.GetObject(name, Culture);
         }
     }
 }

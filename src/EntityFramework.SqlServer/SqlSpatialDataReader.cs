@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.SqlServer
     using System.Threading.Tasks;
 
     /// <summary>
-    /// SqlClient specific implementation of <see cref="DbSpatialDataReader"/>
+    ///     SqlClient specific implementation of <see cref="DbSpatialDataReader" />
     /// </summary>
     internal sealed class SqlSpatialDataReader : DbSpatialDataReader
     {
@@ -92,16 +93,16 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Builds and compiles the Expression equivalent of the following:
+        ///     Builds and compiles the Expression equivalent of the following:
         ///   
-        /// (BinaryReader r) => { var result = new SpatialType(); result.Read(r); return r; }
+        ///     (BinaryReader r) => { var result = new SpatialType(); result.Read(r); return r; }
         ///   
-        /// The construct/read pattern is preferred over casting the result of calling GetValue on the DataReader,
-        /// because constructing the value directly allows client code to specify the type, rather than SqlClient using
-        /// the server-specified assembly qualified type name from TDS to try to locate the correct type on the client.
+        ///     The construct/read pattern is preferred over casting the result of calling GetValue on the DataReader,
+        ///     because constructing the value directly allows client code to specify the type, rather than SqlClient using
+        ///     the server-specified assembly qualified type name from TDS to try to locate the correct type on the client.
         /// </summary>
-        /// <param name="spatialType"></param>
-        /// <returns></returns>
+        /// <param name="spatialType"> </param>
+        /// <returns> </returns>
         private static Func<BinaryReader, object> CreateBinaryReadDelegate(Type spatialType)
         {
             Debug.Assert(spatialType != null, "Ensure spatialType is non-null before calling CreateBinaryReadDelegate");

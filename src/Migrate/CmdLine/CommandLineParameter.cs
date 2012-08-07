@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine
 {
     using System;
@@ -128,10 +129,10 @@ namespace CmdLine
         }
 
         /// <summary>
-        ///   Returns a boolean value from a command switch
+        ///     Returns a boolean value from a command switch
         /// </summary>
-        /// <param name = "cmd">The command switch</param>
-        /// <returns>A boolean value based on the switch and value</returns>
+        /// <param name="cmd"> The command switch </param>
+        /// <returns> A boolean value based on the switch and value </returns>
         private static bool GetBoolValue(CommandArgument cmd)
         {
             return string.IsNullOrWhiteSpace(cmd.SwitchOption) || cmd.SwitchOption.Trim() == "+";

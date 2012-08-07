@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Text;
 
     /// <summary>
-    /// Class for generating scripts to create schema objects.
+    ///     Class for generating scripts to create schema objects.
     /// </summary>
     internal sealed class SqlDdlBuilder
     {
@@ -27,10 +28,10 @@ namespace System.Data.Entity.SqlServerCompact
         private readonly List<EntitySet> ignoredEntitySets = new List<EntitySet>();
 
         /// <summary>
-        /// Helper function for generating the scripts for tables & constraints.
+        ///     Helper function for generating the scripts for tables & constraints.
         /// </summary>
-        /// <param name="itemCollection"></param>
-        /// <returns></returns> 
+        /// <param name="itemCollection"> </param>
+        /// <returns> </returns>
         internal static List<string> CreateObjectsScript(StoreItemCollection itemCollection, bool returnWarnings)
         {
             var builder = new SqlDdlBuilder();
@@ -66,9 +67,9 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Function that returns final command text by appending Constraints to ObjectBuilder.
+        ///     Function that returns final command text by appending Constraints to ObjectBuilder.
         /// </summary>
-        /// <returns></returns> 
+        /// <returns> </returns>
         internal List<string> GetCommandText(bool returnWarnings)
         {
             objects.AddRange(constraints);
@@ -85,9 +86,9 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Function for generating foreign key constraints.
+        ///     Function for generating foreign key constraints.
         /// </summary>
-        /// <param name="associationSet"></param>
+        /// <param name="associationSet"> </param>
         private void AppendCreateForeignKeys(AssociationSet associationSet)
         {
             var constraintBuilder = new StringBuilder();
@@ -137,9 +138,9 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Function for generating create table statements.
+        ///     Function for generating create table statements.
         /// </summary>
-        /// <param name="entitySet"></param>
+        /// <param name="entitySet"> </param>
         private void AppendCreateTable(EntitySet entitySet)
         {
             var objectBuilder = new StringBuilder();
@@ -315,10 +316,10 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Append raw SQL into the string builder with formatting options and invariant culture formatting.
+        ///     Append raw SQL into the string builder with formatting options and invariant culture formatting.
         /// </summary>
-        /// <param name="format">A composite format string.</param>
-        /// <param name="args">An array of objects to format.</param>
+        /// <param name="format"> A composite format string. </param>
+        /// <param name="args"> An array of objects to format. </param>
         private static void AppendSqlInvariantFormat(StringBuilder builder, string format, params object[] args)
         {
             builder.AppendFormat(CultureInfo.InvariantCulture, format, args);

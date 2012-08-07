@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using Microsoft.Win32;
 
     /// <summary>
-    /// Acts as a proxy for a <see cref="RegistryKey"/> instance such that uses of the RegistryKey can be mocked.
+    ///     Acts as a proxy for a <see cref="RegistryKey" /> instance such that uses of the RegistryKey can be mocked.
     /// </summary>
     internal class RegistryKeyProxy : IDisposable
     {
@@ -12,15 +13,15 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         private readonly RegistryKey _key;
 
         /// <summary>
-        /// For mocking.
+        ///     For mocking.
         /// </summary>
         protected RegistryKeyProxy()
         {
         }
 
         /// <summary>
-        /// Constructs a proxy around a real <see cref="RegistryKey"/>. The given key
-        /// may be null if the underlying registry key doesn't exist.
+        ///     Constructs a proxy around a real <see cref="RegistryKey" />. The given key
+        ///     may be null if the underlying registry key doesn't exist.
         /// </summary>
         public RegistryKeyProxy(RegistryKey key)
         {
@@ -28,7 +29,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        /// Allows implicit conversion of a real <see cref="RegistryKey"/> to a proxy.
+        ///     Allows implicit conversion of a real <see cref="RegistryKey" /> to a proxy.
         /// </summary>
         public static implicit operator RegistryKeyProxy(RegistryKey key)
         {
@@ -36,7 +37,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        /// Gets the count of sub keys, returning 0 if this key doesn't exist.
+        ///     Gets the count of sub keys, returning 0 if this key doesn't exist.
         /// </summary>
         public virtual int SubKeyCount
         {
@@ -44,7 +45,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        /// Gets the names of the sub keys, returnin an empty array if this key doesn't exist.
+        ///     Gets the names of the sub keys, returnin an empty array if this key doesn't exist.
         /// </summary>
         public virtual string[] GetSubKeyNames()
         {
@@ -52,8 +53,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        /// Opens the sub key with the given name and always returns a RegistryKeyProxy even
-        /// if this key or the sub key does not exist.
+        ///     Opens the sub key with the given name and always returns a RegistryKeyProxy even
+        ///     if this key or the sub key does not exist.
         /// </summary>
         public virtual RegistryKeyProxy OpenSubKey(string name)
         {
@@ -61,7 +62,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        /// Disposes the underlying <see cref="RegistryKey"/>, if it exists.
+        ///     Disposes the underlying <see cref="RegistryKey" />, if it exists.
         /// </summary>
         public virtual void Dispose()
         {

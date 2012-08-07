@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
@@ -6,7 +7,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using System.Linq;
 
     /// <summary>
-    /// Represents a specification for the default connection factory to be set into a config file.
+    ///     Represents a specification for the default connection factory to be set into a config file.
     /// </summary>
     internal class ConnectionFactorySpecification
     {

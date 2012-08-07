@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// Tracks the usage of symbols. 
-    /// When registering a symbol with the usage manager if an input symbol is specified,
-    /// than the usage of the two is 'connected' - if one ever gets marked as used, 
-    /// the other one becomes 'used' too. 
+    ///     Tracks the usage of symbols. 
+    ///     When registering a symbol with the usage manager if an input symbol is specified,
+    ///     than the usage of the two is 'connected' - if one ever gets marked as used, 
+    ///     the other one becomes 'used' too.
     /// </summary>
     internal class SymbolUsageManager
     {

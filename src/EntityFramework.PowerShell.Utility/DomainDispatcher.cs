@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Diagnostics.CodeAnalysis;
@@ -7,8 +8,8 @@ namespace System.Data.Entity.Migrations.Utilities
     using EnvDTE;
 
     /// <summary>
-    /// Provides a way of dispatching specific calls form the PowerShell commands'
-    /// AppDomain to the Visual Studio's main AppDomain.
+    ///     Provides a way of dispatching specific calls form the PowerShell commands'
+    ///     AppDomain to the Visual Studio's main AppDomain.
     /// </summary>
     [SuppressMessage("Microsoft.Contracts", "CC1036",
         Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]

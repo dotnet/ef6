@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.Generic;
@@ -14,12 +15,12 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Transactions;
 
     /// <summary>
-    /// The ProviderServices object for the Sql CE provider
+    ///     The ProviderServices object for the Sql CE provider
     /// </summary>
     internal sealed class SqlCeProviderServices : DbProviderServices
     {
         /// <summary>
-        /// Singleton object;
+        ///     Singleton object;
         /// </summary>
         internal static readonly SqlCeProviderServices Instance = new SqlCeProviderServices();
 
@@ -28,11 +29,11 @@ namespace System.Data.Entity.SqlServerCompact
         #region CodeOnly Methods
 
         /// <summary>
-        /// API for generating script for creating schema objects from the Store Item Collection.
+        ///     API for generating script for creating schema objects from the Store Item Collection.
         /// </summary>
-        /// <param name="providerManifestToken">Provider manifest</param>
-        /// <param name="storeItemCollection">Store items</param>
-        /// <returns>T-SQL script for generating schema objects.</returns>
+        /// <param name="providerManifestToken"> Provider manifest </param>
+        /// <param name="storeItemCollection"> Store items </param>
+        /// <returns> T-SQL script for generating schema objects. </returns>
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
             // Call the helper for creating schema objects.
@@ -40,14 +41,14 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// API for checkin whether database exists or not.
-        /// This will internally only check whether the file that the connection points to exists or not.
-        /// Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
+        ///     API for checkin whether database exists or not.
+        ///     This will internally only check whether the file that the connection points to exists or not.
+        ///     Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
         /// </summary>
-        /// <param name="connection">Connection</param>
-        /// <param name="timeOut">Timeout for internal commands.</param>
-        /// <param name="storeItemCollection">Item Collection.</param>
-        /// <returns>Bool indicating whether database exists or not.</returns>
+        /// <param name="connection"> Connection </param>
+        /// <param name="timeOut"> Timeout for internal commands. </param>
+        /// <param name="storeItemCollection"> Item Collection. </param>
+        /// <returns> Bool indicating whether database exists or not. </returns>
         protected override bool DbDatabaseExists(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
             // Validate and cast the connection.
@@ -74,13 +75,13 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// API for deleting the database.
-        /// In SQLCE case, this will translate to File.Delete() call.
-        /// Note: Timeout and storeItemCollection parameters are ignored.
+        ///     API for deleting the database.
+        ///     In SQLCE case, this will translate to File.Delete() call.
+        ///     Note: Timeout and storeItemCollection parameters are ignored.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="timeOut"></param>
-        /// <param name="storeItemCollection"></param>
+        /// <param name="connection"> </param>
+        /// <param name="timeOut"> </param>
+        /// <param name="storeItemCollection"> </param>
         protected override void DbDeleteDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
             // Validate that connection is a SqlCeConnection.
@@ -131,15 +132,15 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// API for creating the databse and schema objects given a StoreItemCollection.
-        /// This will do following things:
+        ///     API for creating the databse and schema objects given a StoreItemCollection.
+        ///     This will do following things:
         ///     1. Create a new database using SqlCeEngine.CreateDatabase().
         ///     2. Generate scripts for creating schema objects.
         ///     3. Execute the scrip generated in step2.
         /// </summary>
-        /// <param name="connection">Connection</param>
-        /// <param name="timeOut">Timeout for internal commands</param>
-        /// <param name="storeItemCollection">Store Item Collection</param>
+        /// <param name="connection"> Connection </param>
+        /// <param name="timeOut"> Timeout for internal commands </param>
+        /// <param name="storeItemCollection"> Store Item Collection </param>
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
@@ -275,11 +276,11 @@ namespace System.Data.Entity.SqlServerCompact
         #endregion
 
         /// <summary>
-        /// Create a Command Definition object, given the connection and command tree
+        ///     Create a Command Definition object, given the connection and command tree
         /// </summary>
-        /// <param name="providerManifest">provider manifest that was determined from metadata</param>
-        /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an executable command definition object</returns>
+        /// <param name="providerManifest"> provider manifest that was determined from metadata </param>
+        /// <param name="commandTree"> command tree for the statement </param>
+        /// <returns> an executable command definition object </returns>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
             Debug.Assert(providerManifest != null, "CreateCommandDefinition passed null provider manifest to CreateDbCommandDefinition?");
@@ -291,11 +292,11 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Create a SqlCeCommand object, given the provider manifest and command tree
+        ///     Create a SqlCeCommand object, given the provider manifest and command tree
         /// </summary>
-        /// <param name="providerManifest">provider manifest</param>
-        /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>a command object</returns>
+        /// <param name="providerManifest"> provider manifest </param>
+        /// <param name="commandTree"> command tree for the statement </param>
+        /// <returns> a command object </returns>
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree)
@@ -423,10 +424,10 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Constructs a SqlCeParameter 
+        ///     Constructs a SqlCeParameter
         /// </summary>
-        /// <param name="queryParameter"></param>
-        /// <returns></returns>
+        /// <param name="queryParameter"> </param>
+        /// <returns> </returns>
         internal static DbParameter CreateSqlCeParameter(
             string name, TypeUsage type, object value, bool ignoreMaxLengthFacet, bool isLocalProvider)
         {
@@ -509,8 +510,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Determines SqlDbType for the given primitive type. Extracts facet
-        /// information as well.
+        ///     Determines SqlDbType for the given primitive type. Extracts facet
+        ///     information as well.
         /// </summary>
         private static SqlDbType GetSqlDbType(TypeUsage type, out int? size, out byte? precision, out byte? scale)
         {
@@ -581,8 +582,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Determines preferred value for SqlParameter.Size. Returns null
-        /// where there is no preference.
+        ///     Determines preferred value for SqlParameter.Size. Returns null
+        ///     where there is no preference.
         /// </summary>
         private static int? GetParameterSize(TypeUsage type)
         {
@@ -602,8 +603,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        /// returns null.
+        ///     Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        ///     returns null.
         /// </summary>
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
@@ -619,8 +620,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
-        /// returns null.
+        ///     Returns SqlParameter.Scale where the type facet exists. Otherwise,
+        ///     returns null.
         /// </summary>
         private static byte? GetScale(TypeUsage type)
         {
@@ -636,7 +637,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Chooses the appropriate SqlDbType for the given string type.
+        ///     Chooses the appropriate SqlDbType for the given string type.
         /// </summary>
         private static SqlDbType GetStringDbType(TypeUsage type)
         {
@@ -688,7 +689,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Chooses the appropriate SqlDbType for the given binary type.
+        ///     Chooses the appropriate SqlDbType for the given binary type.
         /// </summary>
         private static SqlDbType GetBinaryDbType(TypeUsage type)
         {

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.ObjectModel;
@@ -12,15 +13,15 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Xml;
 
     /// <summary>
-    /// The Provider Manifest for SQL Server CE 
+    ///     The Provider Manifest for SQL Server CE
     /// </summary>
     internal class SqlCeProviderManifest : DbXmlEnabledProviderManifest
     {
         #region Private and Internal Fields
 
         /// <summary>
-        /// Singleton object; RDP supports all features as that of LDP.
-        /// So, this shouldn't be an issue anyways.
+        ///     Singleton object; RDP supports all features as that of LDP.
+        ///     So, this shouldn't be an issue anyways.
         /// </summary>
         internal static readonly SqlCeProviderManifest Instance = new SqlCeProviderManifest(true);
 
@@ -31,7 +32,7 @@ namespace System.Data.Entity.SqlServerCompact
         internal bool _isLocalProvider = true;
 
         /// <summary>
-        /// maximum size of SSC unicode 
+        ///     maximum size of SSC unicode
         /// </summary>
         private const int nvarcharMaxSize = 4000;
 
@@ -57,7 +58,7 @@ namespace System.Data.Entity.SqlServerCompact
         #region Constructors
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public SqlCeProviderManifest(bool isLocalProvider)
             : base(GetProviderManifest())
@@ -84,12 +85,12 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Providers should override this to return information specific to their provider.  
+        ///     Providers should override this to return information specific to their provider.  
         /// 
-        /// This method should never return null.
+        ///     This method should never return null.
         /// </summary>
-        /// <param name="informationType">The name of the information to be retrieved.</param>
-        /// <returns>An XmlReader at the begining of the information requested.</returns>
+        /// <param name="informationType"> The name of the information to be retrieved. </param>
+        /// <returns> An XmlReader at the begining of the information requested. </returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
             if (informationType == ProviderManifest.StoreSchemaDefinition)
@@ -132,11 +133,11 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// This method takes a type and a set of facets and returns the best mapped equivalent type 
-        /// in EDM.
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     in EDM.
         /// </summary>
-        /// <param name="storeType">A TypeUsage encapsulating a store type and a set of facets</param>
-        /// <returns>A TypeUsage encapsulating an EDM type and a set of facets</returns>
+        /// <param name="storeType"> A TypeUsage encapsulating a store type and a set of facets </param>
+        /// <returns> A TypeUsage encapsulating an EDM type and a set of facets </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
@@ -270,11 +271,11 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// This method takes a type and a set of facets and returns the best mapped equivalent type 
-        /// in SQL Server, taking the store version into consideration.
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     in SQL Server, taking the store version into consideration.
         /// </summary>
-        /// <param name="storeType">A TypeUsage encapsulating an EDM type and a set of facets</param>
-        /// <returns>A TypeUsage encapsulating a store type and a set of facets</returns>
+        /// <param name="storeType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
+        /// <returns> A TypeUsage encapsulating a store type and a set of facets </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Migrations.Extensions
 {
     using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace System.Data.Entity.Migrations.Extensions
         }
 
         /// <summary>
-        /// Gets the string abbreviation for the language of a VS project.
+        ///     Gets the string abbreviation for the language of a VS project.
         /// </summary>
         public static string GetLanguage(this Project project)
         {
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Migrations.Extensions
         }
 
         /// <summary>
-        /// Gets the root namespace configured for a VS project.
+        ///     Gets the root namespace configured for a VS project.
         /// </summary>
         public static string GetRootNamespace(this Project project)
         {

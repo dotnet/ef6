@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer.Utilities
 {
     using System.Collections.Generic;
@@ -9,13 +10,12 @@ namespace System.Data.Entity.SqlServer.Utilities
     internal static class DbExpressionExtensions
     {
         /// <summary>
-        /// Uses a stack to non-recursively traverse a given tree structure and retrieve the leaf nodes.
+        ///     Uses a stack to non-recursively traverse a given tree structure and retrieve the leaf nodes.
         /// </summary>
-        /// <param name="root">The node that represents the root of the tree.</param>
-        /// <param name="kind">Expressions not of this kind are considered leaves.</param>
-        /// <param name="getChildNodes">A function that traverses the tree by retrieving the <b>immediate</b>
-        /// descendants of a (non-leaf) node.</param>
-        /// <returns>An enumerable containing the leaf nodes.</returns>
+        /// <param name="root"> The node that represents the root of the tree. </param>
+        /// <param name="kind"> Expressions not of this kind are considered leaves. </param>
+        /// <param name="getChildNodes"> A function that traverses the tree by retrieving the <b>immediate</b> descendants of a (non-leaf) node. </param>
+        /// <returns> An enumerable containing the leaf nodes. </returns>
         public static IEnumerable<DbExpression> GetLeafNodes(
             this DbExpression root,
             DbExpressionKind kind,

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Data.Entity.Core;
@@ -71,17 +72,17 @@ namespace System.Data.Entity.SqlServerCompact
         #region Internal Errors
 
         /// <summary>
-        /// Internal error code to use with the InternalError exception.
+        ///     Internal error code to use with the InternalError exception.
         /// </summary>
         /// <remarks>
-        /// You must never renumber these, because we rely upon them when
-        /// we get an exception report once we release the bits.
+        ///     You must never renumber these, because we rely upon them when
+        ///     we get an exception report once we release the bits.
         /// </remarks>
         internal enum InternalErrorCode
         {
             /// <summary>
-            /// Thrown when SQL gen produces parameters for anything other than a 
-            /// modification command tree.
+            ///     Thrown when SQL gen produces parameters for anything other than a 
+            ///     modification command tree.
             /// </summary>
             SqlGenParametersNotPermitted = 1017,
         }

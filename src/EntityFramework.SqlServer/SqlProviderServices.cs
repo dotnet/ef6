@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
@@ -19,28 +20,28 @@ namespace System.Data.Entity.SqlServer
     using System.IO;
 
     /// <summary>
-    /// The DbProviderServices implementation for the SqlClient provider for SQL Server.
+    ///     The DbProviderServices implementation for the SqlClient provider for SQL Server.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [CLSCompliant(false)]
     public sealed class SqlProviderServices : DbProviderServices
     {
         /// <summary>
-        /// Private constructor to ensure only Singleton instance is created.
+        ///     Private constructor to ensure only Singleton instance is created.
         /// </summary>
         private SqlProviderServices()
         {
         }
 
         /// <summary>
-        /// Singleton object;
+        ///     Singleton object;
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
         private static readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader = new SqlTypesAssemblyLoader();
 
         /// <summary>
-        /// The Singleton instance of the SqlProviderServices type.
+        ///     The Singleton instance of the SqlProviderServices type.
         /// </summary>
         public static SqlProviderServices Instance
         {
@@ -48,11 +49,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Create a Command Definition object, given the connection and command tree
+        ///     Create a Command Definition object, given the connection and command tree
         /// </summary>
-        /// <param name="providerManifest">provider manifest that was determined from metadata</param>
-        /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>an executable command definition object</returns>
+        /// <param name="providerManifest"> provider manifest that was determined from metadata </param>
+        /// <param name="commandTree"> command tree for the statement </param>
+        /// <returns> an executable command definition object </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
@@ -65,11 +66,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Create a SqlCommand object, given the provider manifest and command tree
+        ///     Create a SqlCommand object, given the provider manifest and command tree
         /// </summary>
-        /// <param name="providerManifest">provider manifest</param>
-        /// <param name="commandTree">command tree for the statement</param>
-        /// <returns>a command object</returns>
+        /// <param name="providerManifest"> provider manifest </param>
+        /// <param name="commandTree"> command tree for the statement </param>
+        /// <returns> a command object </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
@@ -289,7 +290,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Creates a SqlParameter given a name, type, and direction
+        ///     Creates a SqlParameter given a name, type, and direction
         /// </summary>
         internal static SqlParameter CreateSqlParameter(
             string name, TypeUsage type, ParameterMode mode, object value, bool preventTruncation, SqlVersion version)
@@ -406,12 +407,13 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
-        /// Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
-        /// of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in <paramref name="value"/>.
-        /// If <paramref name="value"/> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
-        /// CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of 
-        /// DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
+        ///     Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
+        ///     Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
+        ///     of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in <paramref
+        ///      name="value" />.
+        ///     If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
+        ///     CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of 
+        ///     DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
         /// </summary>
         internal static object EnsureSqlParameterValue(object value)
         {
@@ -442,8 +444,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Determines SqlDbType for the given primitive type. Extracts facet
-        /// information as well.
+        ///     Determines SqlDbType for the given primitive type. Extracts facet
+        ///     information as well.
         /// </summary>
         private static SqlDbType GetSqlDbType(
             TypeUsage type, bool isOutParam, SqlVersion version, out int? size, out byte? precision, out byte? scale, out string udtName)
@@ -545,8 +547,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Determines preferred value for SqlParameter.Size. Returns null
-        /// where there is no preference.
+        ///     Determines preferred value for SqlParameter.Size. Returns null
+        ///     where there is no preference.
         /// </summary>
         private static int? GetParameterSize(TypeUsage type, bool isOutParam)
         {
@@ -631,9 +633,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        /// returns null or the maximum available precision to avoid truncation (which can occur
-        /// for output parameters).
+        ///     Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        ///     returns null or the maximum available precision to avoid truncation (which can occur
+        ///     for output parameters).
         /// </summary>
         private static byte? GetKatmaiDateTimePrecision(TypeUsage type, bool isOutParam)
         {
@@ -642,8 +644,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        /// returns null.
+        ///     Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        ///     returns null.
         /// </summary>
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
@@ -659,8 +661,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
-        /// returns null.
+        ///     Returns SqlParameter.Scale where the type facet exists. Otherwise,
+        ///     returns null.
         /// </summary>
         private static byte? GetScale(TypeUsage type)
         {
@@ -676,7 +678,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Chooses the appropriate SqlDbType for the given string type.
+        ///     Chooses the appropriate SqlDbType for the given string type.
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static SqlDbType GetStringDbType(TypeUsage type)
@@ -714,7 +716,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Chooses the appropriate SqlDbType for the given binary type.
+        ///     Chooses the appropriate SqlDbType for the given binary type.
         /// </summary>
         private static SqlDbType GetBinaryDbType(TypeUsage type)
         {
@@ -734,14 +736,14 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Create the database and the database objects.
-        /// If initial catalog is not specified, but AttachDBFilename is specified, we generate a random database name based on the AttachDBFilename.
-        /// Note: this causes pollution of the db, as when the connection string is later used, the mdf will get attached under a different name. 
-        /// However if we try to replicate the name under which it would be attached, the following scenario would fail:
-        ///    The file does not exist, but registered with database.
-        ///    The user calls:  If (DatabaseExists) DeleteDatabase 
-        ///                     CreateDatabase
-        /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936 
+        ///     Create the database and the database objects.
+        ///     If initial catalog is not specified, but AttachDBFilename is specified, we generate a random database name based on the AttachDBFilename.
+        ///     Note: this causes pollution of the db, as when the connection string is later used, the mdf will get attached under a different name. 
+        ///     However if we try to replicate the name under which it would be attached, the following scenario would fail:
+        ///     The file does not exist, but registered with database.
+        ///     The user calls:  If (DatabaseExists) DeleteDatabase 
+        ///     CreateDatabase
+        ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
@@ -843,7 +845,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Get the Ldf name given the Mdf full name
+        ///     Get the Ldf name given the Mdf full name
         /// </summary>
         private static string GetLdfFileName(string dataFileName)
         {
@@ -854,8 +856,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Generates database name based on the given mdfFileName.
-        /// The logic is replicated from System.Web.DataAccess.SqlConnectionHelper
+        ///     Generates database name based on the given mdfFileName.
+        ///     The logic is replicated from System.Web.DataAccess.SqlConnectionHelper
         /// </summary>
         private static string GenerateDatabaseName(string mdfFileName)
         {
@@ -880,10 +882,10 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Get the full mdf file name given the attachDBFile value from the connection string
+        ///     Get the full mdf file name given the attachDBFile value from the connection string
         /// </summary>
-        /// <param name="attachDBFile"></param>
-        /// <returns></returns>
+        /// <param name="attachDBFile"> </param>
+        /// <returns> </returns>
         private static string GetMdfFileName(string attachDBFile)
         {
             Contract.Requires(!string.IsNullOrEmpty(attachDBFile));
@@ -892,18 +894,18 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Determines whether the database for the given connection exists.
-        /// There are three cases:
-        /// 1.  Initial Catalog = X, AttachDBFilename = null:   (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
-        /// 2.  Initial Catalog = X, AttachDBFilename = F:      if (SELECT Count(*) FROM sys.databases WHERE [name]= X) >  true,
-        /// if not, try to open the connection and then return (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
-        /// 3.  Initial Catalog = null, AttachDBFilename = F:   Try to open the connection. If that succeeds the result is true, otherwise
-        /// if the there are no databases corresponding to the given file return false, otherwise throw.
+        ///     Determines whether the database for the given connection exists.
+        ///     There are three cases:
+        ///     1.  Initial Catalog = X, AttachDBFilename = null:   (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
+        ///     2.  Initial Catalog = X, AttachDBFilename = F:      if (SELECT Count(*) FROM sys.databases WHERE [name]= X) >  true,
+        ///     if not, try to open the connection and then return (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
+        ///     3.  Initial Catalog = null, AttachDBFilename = F:   Try to open the connection. If that succeeds the result is true, otherwise
+        ///     if the there are no databases corresponding to the given file return false, otherwise throw.
         /// 
-        /// Note: We open the connection to cover the scenario when the mdf exists, but is not attached. 
-        /// Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case. 
-        /// Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
-        /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936 
+        ///     Note: We open the connection to cover the scenario when the mdf exists, but is not attached. 
+        ///     Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case. 
+        ///     Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
+        ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
@@ -980,19 +982,19 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Delete the database for the given connection.
-        /// There are three cases:
-        /// 1.  If Initial Catalog is specified (X) drop database X
-        /// 2.  Else if AttachDBFilename is specified (F) drop all the databases corresponding to F
-        /// if none throw
-        /// 3.  If niether the catalog not the file name is specified - throw
+        ///     Delete the database for the given connection.
+        ///     There are three cases:
+        ///     1.  If Initial Catalog is specified (X) drop database X
+        ///     2.  Else if AttachDBFilename is specified (F) drop all the databases corresponding to F
+        ///     if none throw
+        ///     3.  If niether the catalog not the file name is specified - throw
         /// 
-        /// Note that directly deleting the files does not work for a remote server.  However, even for not attached 
-        /// databases the current logic would work assuming the user does: if (DatabaseExists) DeleteDatabase
+        ///     Note that directly deleting the files does not work for a remote server.  However, even for not attached 
+        ///     databases the current logic would work assuming the user does: if (DatabaseExists) DeleteDatabase
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="storeItemCollection"></param>
+        /// <param name="connection"> </param>
+        /// <param name="commandTimeout"> </param>
+        /// <param name="storeItemCollection"> </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {

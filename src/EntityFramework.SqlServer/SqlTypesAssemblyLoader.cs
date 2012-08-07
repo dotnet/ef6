@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -12,7 +12,7 @@ namespace System.Data.Entity.SqlServer
     internal class SqlTypesAssemblyLoader
     {
         private readonly IEnumerable<string> _preferredSqlTypesAssemblies;
-        
+
         private readonly Lazy<SqlTypesAssembly> _latestVersion;
 
         public SqlTypesAssemblyLoader(IEnumerable<string> assemblyNames = null)
@@ -20,17 +20,17 @@ namespace System.Data.Entity.SqlServer
             _preferredSqlTypesAssemblies
                 = assemblyNames
                   ?? new[]
-                      {
-                          "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                          "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                      };
+                         {
+                             "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                             "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                         };
 
             _latestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
         }
 
         /// <summary>
-        /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be
-        /// located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
+        ///     Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be
+        ///     located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
         /// </summary>
         public virtual SqlTypesAssembly TryGetSqlTypesAssembly()
         {

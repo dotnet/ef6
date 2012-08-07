@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.SqlServer
     [Serializable]
     internal sealed class SqlSpatialServices : DbSpatialServices, ISerializable
     {
-        internal static readonly SqlSpatialServices Instance 
+        internal static readonly SqlSpatialServices Instance
             = new SqlSpatialServices(new SqlTypesAssemblyLoader(), l => l.GetSqlTypesAssembly());
 
         private static Dictionary<string, SqlSpatialServices> _otherSpatialServices;
@@ -49,13 +50,10 @@ namespace System.Data.Entity.SqlServer
             InitializeMemberInfo(Instance);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override bool NativeTypesAvailable
         {
-            get
-            {
-                return _sqlTypesAssemblyLoader.TryGetSqlTypesAssembly() != null;
-            }
+            get { return _sqlTypesAssemblyLoader.TryGetSqlTypesAssembly() != null; }
         }
 
         // Given an assembly purportedly containing SqlServerTypes for spatial values, attempt to 

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace CmdLine
 {
     using System;
@@ -86,10 +87,10 @@ namespace CmdLine
         public string Program { get; set; }
 
         /// <summary>
-        ///   Returns a CommandLineArgumentsAttribute
+        ///     Returns a CommandLineArgumentsAttribute
         /// </summary>
-        /// <param name = "member"></param>
-        /// <returns></returns>
+        /// <param name="member"> </param>
+        /// <returns> </returns>
         public static CommandLineArgumentsAttribute Get(MemberInfo member)
         {
             return

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Collections.Generic;
@@ -7,62 +8,59 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    /// <summary>
-    /// A SqlSelectStatement represents a canonical SQL SELECT statement.
-    /// It has fields for the 5 main clauses
-    /// <list type="number">
-    /// <item>SELECT</item>
-    /// <item>FROM</item>
-    /// <item>WHERE</item>
-    /// <item>GROUP BY</item>
-    /// <item>ORDER BY</item>
-    /// </list>
-    /// We do not have HAVING, since the CQT does not have such a node.
-    /// Each of the fields is a SqlBuilder, so we can keep appending SQL strings
-    /// or other fragments to build up the clause.
+    ///<summary>
+    ///    A SqlSelectStatement represents a canonical SQL SELECT statement.
+    ///    It has fields for the 5 main clauses
+    ///    <list type="number">
+    ///        <item>SELECT</item>
+    ///        <item>FROM</item>
+    ///        <item>WHERE</item>
+    ///        <item>GROUP BY</item>
+    ///        <item>ORDER BY</item>
+    ///    </list>
+    ///    We do not have HAVING, since the CQT does not have such a node.
+    ///    Each of the fields is a SqlBuilder, so we can keep appending SQL strings
+    ///    or other fragments to build up the clause.
     ///
-    /// We have a IsDistinct property to indicate that we want distict columns.
-    /// This is given out of band, since the input expression to the select clause
-    /// may already have some columns projected out, and we use append-only SqlBuilders.
-    /// The DISTINCT is inserted when we finally write the object into a string.
+    ///    We have a IsDistinct property to indicate that we want distict columns.
+    ///    This is given out of band, since the input expression to the select clause
+    ///    may already have some columns projected out, and we use append-only SqlBuilders.
+    ///    The DISTINCT is inserted when we finally write the object into a string.
     /// 
-    /// Also, we have a Top property, which is non-null if the number of results should
-    /// be limited to certain number. It is given out of band for the same reasons as DISTINCT.
+    ///    Also, we have a Top property, which is non-null if the number of results should
+    ///    be limited to certain number. It is given out of band for the same reasons as DISTINCT.
     ///
-    /// The FromExtents contains the list of inputs in use for the select statement.
-    /// There is usually just one element in this - Select statements for joins may
-    /// temporarily have more than one.
+    ///    The FromExtents contains the list of inputs in use for the select statement.
+    ///    There is usually just one element in this - Select statements for joins may
+    ///    temporarily have more than one.
     ///
-    /// If the select statement is created by a Join node, we maintain a list of
-    /// all the extents that have been flattened in the join in AllJoinExtents
-    /// <example>
-    /// in J(j1= J(a,b), c)
-    /// FromExtents has 2 nodes JoinSymbol(name=j1, ...) and Symbol(name=c)
-    /// AllJoinExtents has 3 nodes Symbol(name=a), Symbol(name=b), Symbol(name=c)
-    /// </example>
-    ///
-    /// If any expression in the non-FROM clause refers to an extent in a higher scope,
-    /// we add that extent to the OuterExtents list.  This list denotes the list
-    /// of extent aliases that may collide with the aliases used in this select statement.
-    /// It is set by <see cref="SqlGenerator.Visit(DbVariableReferenceExpression)"/>.
-    /// An extent is an outer extent if it is not one of the FromExtents.
-    ///
-    ///
-    /// </summary>
+    ///    If the select statement is created by a Join node, we maintain a list of
+    ///    all the extents that have been flattened in the join in AllJoinExtents
+    ///    <example>
+    ///        in J(j1= J(a,b), c)
+    ///        FromExtents has 2 nodes JoinSymbol(name=j1, ...) and Symbol(name=c)
+    ///        AllJoinExtents has 3 nodes Symbol(name=a), Symbol(name=b), Symbol(name=c)
+    ///    </example>
+    ///    If any expression in the non-FROM clause refers to an extent in a higher scope,
+    ///    we add that extent to the OuterExtents list.  This list denotes the list
+    ///    of extent aliases that may collide with the aliases used in this select statement.
+    ///    It is set by <see cref="SqlGenerator.Visit(DbVariableReferenceExpression)" />.
+    ///    An extent is an outer extent if it is not one of the FromExtents.
+    ///</summary>
     internal sealed class SqlSelectStatement : ISqlFragment
     {
         /// <summary>
-        /// Whether the columns ouput by this sql statement were renamed from what given in the command tree.
+        ///     Whether the columns ouput by this sql statement were renamed from what given in the command tree.
         /// </summary>
         internal bool OutputColumnsRenamed { get; set; }
 
         /// <summary>
-        /// A dictionary of output columns, relevant only if output columns are renamed. 
+        ///     A dictionary of output columns, relevant only if output columns are renamed.
         /// </summary>
         internal Dictionary<string, Symbol> OutputColumns { get; set; }
 
         /// <summary>
-        /// Do we need to add a DISTINCT at the beginning of the SELECT
+        ///     Do we need to add a DISTINCT at the beginning of the SELECT
         /// </summary>
         internal bool IsDistinct { get; set; }
 
@@ -185,20 +183,19 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         #region ISqlFragment Members
 
         /// <summary>
-        /// Write out a SQL select statement as a string.
-        /// We have to
-        /// <list type="number">
-        /// <item>Check whether the aliases extents we use in this statement have
-        /// to be renamed.
-        /// We first create a list of all the aliases used by the outer extents.
-        /// For each of the FromExtents( or AllJoinExtents if it is non-null),
-        /// rename it if it collides with the previous list.
-        /// </item>
-        /// <item>Write each of the clauses (if it exists) as a string</item>
-        /// </list>
+        ///     Write out a SQL select statement as a string.
+        ///     We have to
+        ///     <list type="number">
+        ///         <item>Check whether the aliases extents we use in this statement have
+        ///             to be renamed.
+        ///             We first create a list of all the aliases used by the outer extents.
+        ///             For each of the FromExtents( or AllJoinExtents if it is non-null),
+        ///             rename it if it collides with the previous list.</item>
+        ///         <item>Write each of the clauses (if it exists) as a string</item>
+        ///     </list>
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="sqlGenerator"></param>
+        /// <param name="writer"> </param>
+        /// <param name="sqlGenerator"> </param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
