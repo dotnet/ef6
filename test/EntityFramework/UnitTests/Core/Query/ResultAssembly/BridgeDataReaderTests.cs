@@ -150,7 +150,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             {
                 methodToInvoke(bridgeDataReaderMock.Object);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
