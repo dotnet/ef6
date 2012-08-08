@@ -132,7 +132,20 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
     <Compile Include="DbSqlQueryTests.cs" />
+    <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
+    <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
+    <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
+    <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
+    <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />
+    <Compile Include="Internal\InternalCollectionEntryTests.cs" />
+    <Compile Include="Internal\InternalEntityPropertyEntryTests.cs" />
+    <Compile Include="Internal\InternalReferenceEntryTests.cs" />
+    <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
+    <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
+    <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
+    <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
+    <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
     <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
@@ -272,7 +285,7 @@
     </Compile>
     <Compile Include="TestHelpers\Fake\FakeSqlProviderFactory.cs" />
     <Compile Include="TestHelpers\Fake\FakeSqlProviderServices.cs" />
-    <Compile Include="TestHelpers\TestInternalPropertyBag`.cs" />
+    <Compile Include="TestHelpers\TestInternalPropertyValues`.cs" />
     <Compile Include="ModelConfiguration\ComplexTypeConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationRegistrarTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsConfigurationTests.cs" />
@@ -382,7 +395,7 @@
     <Compile Include="DbConnectionFactoryTests.cs" />
     <Compile Include="DbContextInfoTests.cs" />
     <Compile Include="DbContextTests.cs" />
-    <Compile Include="DbEntityEntryTests.cs" />
+    <Compile Include="Infrastructure\DbEntityEntryTests.cs" />
     <Compile Include="DbPropertyValuesTests.cs" />
     <Compile Include="DbSetTests.cs" />
     <Compile Include="DbRawSqlQueryTests.cs" />
@@ -393,7 +406,6 @@
     <Compile Include="ModelHashCalculatorTests.cs" />
     <Compile Include="MultiThreadingTests.cs" />
     <Compile Include="NoTrackingTests.cs" />
-    <Compile Include="PropertyApiTests.cs" />
     <Compile Include="PropertyConstraintExceptionTests.cs" />
     <Compile Include="SetDiscoveryTests.cs" />
     <Compile Include="ValidationTests.cs" />

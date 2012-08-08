@@ -75,6 +75,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 multiplicity: RelationshipMultiplicity.Many);
             entityReferenceMock.Setup(m => m.ToEndMember).Returns(toEndMember);
 
+            entityReferenceMock.Setup(m => m.GetInternalEnumerable()).Returns(new[] { refreshedValue });
+
             return entityReferenceMock;
         }
     }

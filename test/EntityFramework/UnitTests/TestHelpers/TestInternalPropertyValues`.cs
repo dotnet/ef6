@@ -8,11 +8,11 @@ namespace System.Data.Entity
     using Moq;
 
     /// <summary>
-    ///     This is an implementation of the abstract <see cref="InternalPropertyValues" /> class that
-    ///     is based on a simple dictionary of property values.  Instances of this class are used to
-    ///     test the functionality of the abstract class in unit tests.
-    ///     It was possible to do everything here with Moq, but it was easier and clearer in this case
-    ///     to create a simple implementation instead.
+    ///   This is an implementation of the abstract <see cref="InternalPropertyValues" /> class that
+    ///   is based on a simple dictionary of property values.  Instances of this class are used to
+    ///   test the functionality of the abstract class in unit tests.
+    ///   It was possible to do everything here with Moq, but it was easier and clearer in this case
+    ///   to create a simple implementation instead.
     /// </summary>
     /// <typeparam name="T"> The type of object that the dictionary contains. </typeparam>
     internal class TestInternalPropertyValues<T> : InternalPropertyValues

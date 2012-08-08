@@ -5,6 +5,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Base class for <see cref="InternalCollectionEntry" /> and <see cref="InternalReferenceEntry" />
@@ -40,7 +42,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Calls Load on the underlying <see cref="IRelatedEnd" />.
         /// </summary>
-        public void Load()
+        public virtual void Load()
         {
             ValidateNotDetached("Load");
 
@@ -50,7 +52,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Calls IsLoaded on the underlying <see cref="IRelatedEnd" />.
         /// </summary>
-        public bool IsLoaded
+        public virtual bool IsLoaded
         {
             get
             {
@@ -64,7 +66,7 @@ namespace System.Data.Entity.Internal
         ///     Uses CreateSourceQuery on the underlying <see cref="RelatedEnd" /> to create a query for this
         ///     navigation property.
         /// </summary>
-        public IQueryable Query()
+        public virtual IQueryable Query()
         {
             ValidateNotDetached("Query");
 

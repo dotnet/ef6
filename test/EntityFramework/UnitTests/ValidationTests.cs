@@ -1,19 +1,17 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests.Validation
+namespace System.Data.Entity
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Validation;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Validation;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -271,7 +269,7 @@ namespace ProductivityApiUnitTests.Validation
     #endregion
 
     /// <summary>
-    ///     Tests for validation.
+    ///   Tests for validation.
     /// </summary>
     public class ValidationTests : TestBase
     {
@@ -289,30 +287,14 @@ namespace ProductivityApiUnitTests.Validation
 
         #region Mock helpers
 
-        internal class InternalNestedPropertyEntryForMock : InternalNestedPropertyEntry
+        private static Mock<InternalEntityEntryForMock<object>> CreateMockInternalEntityEntry(Dictionary<string, object> values)
         {
-            private static InternalEntityPropertyEntry CreateFakePropertyEntry()
-            {
-                var propertyEntry = new Mock<PropertyApiTests.InternalEntityPropertyEntryForMock>();
-                propertyEntry.SetupGet(p => p.InternalEntityEntry).Returns(new PropertyApiTests.InternalEntityEntryForMock<object>());
-                return propertyEntry.Object;
-            }
-
-            public InternalNestedPropertyEntryForMock()
-                :
-                    base(CreateFakePropertyEntry(),
-                        new PropertyEntryMetadata(typeof(object), typeof(object), "fake Name, mock Name property", true, true))
-            {
-            }
-        }
-
-        private static Mock<PropertyApiTests.InternalEntityEntryForMock<object>> CreateMockInternalEntityEntry(
-            Dictionary<string, object> values)
-        {
-            var mockInternalEntityEntry = new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>();
+            var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<object>>();
             foreach (var propertyName in values.Keys)
             {
-                var mockEntityProperty = new Mock<PropertyApiTests.InternalEntityPropertyEntryForMock>();
+                var mockEntityProperty = new Mock<InternalEntityPropertyEntry>(
+                    CreateMockInternalEntityEntry(new object()).Object,
+                    new PropertyEntryMetadataForMock());
                 mockEntityProperty.CallBase = true;
                 mockEntityProperty.SetupGet(p => p.Name).Returns(propertyName);
                 mockEntityProperty.SetupGet(p => p.CurrentValue).Returns(values[propertyName]);
@@ -329,12 +311,11 @@ namespace ProductivityApiUnitTests.Validation
             return mockInternalEntityEntry;
         }
 
-        private static Mock<PropertyApiTests.InternalEntityEntryForMock<T>> CreateMockInternalEntityEntry<T>(T entity)
-            where T : class, new()
+        private static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity>(
+            TEntity entity, bool isDetached = false)
+            where TEntity : class, new()
         {
-            var mockInternalEntityEntry = new Mock<PropertyApiTests.InternalEntityEntryForMock<T>>();
-            mockInternalEntityEntry.SetupGet(e => e.Entity).Returns(entity);
-            mockInternalEntityEntry.Setup(e => e.EntityType).Returns(entity.GetType());
+            var mockInternalEntityEntry = MockHelper.CreateMockInternalEntityEntry<TEntity, object>(entity, isDetached: isDetached);
 
             var mockChildProperties = GetMockPropertiesForEntityOrComplexType(mockInternalEntityEntry.Object, null, entity);
             mockInternalEntityEntry.Setup(e => e.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>()))
@@ -375,7 +356,9 @@ namespace ProductivityApiUnitTests.Validation
             InternalPropertyEntry childPropertyEntry;
             if (parentPropertyEntry == null)
             {
-                var mockEntityProperty = new Mock<PropertyApiTests.InternalEntityPropertyEntryForMock>();
+                var mockEntityProperty = new Mock<InternalEntityPropertyEntry>(
+                    CreateMockInternalEntityEntry(propertyValue).Object,
+                    new PropertyEntryMetadataForMock());
                 mockEntityProperty.CallBase = true;
                 mockEntityProperty.SetupGet(p => p.Name).Returns(propInfo.Name);
                 mockEntityProperty.SetupGet(p => p.CurrentValue).Returns(propertyValue);
@@ -394,7 +377,9 @@ namespace ProductivityApiUnitTests.Validation
             }
             else
             {
-                var mockComplexProperty = new Mock<InternalNestedPropertyEntryForMock>();
+                var mockComplexProperty = new Mock<InternalNestedPropertyEntry>(
+                    MockHelper.CreateMockInternalEntityPropertyEntry(propertyValue).Object,
+                    new PropertyEntryMetadataForMock());
                 mockComplexProperty.CallBase = true;
                 mockComplexProperty.SetupGet(p => p.Name).Returns(propInfo.Name);
                 mockComplexProperty.SetupGet(p => p.CurrentValue).Returns(propertyValue);
@@ -414,6 +399,18 @@ namespace ProductivityApiUnitTests.Validation
             }
 
             return childPropertyEntry;
+        }
+
+        private static InternalPropertyEntry CreateInternalPropertyEntryForNullParent(string propertyName)
+        {
+            var parentNullPropertyEntry = new Mock<InternalEntityPropertyEntry>(
+                CreateMockInternalEntityEntry(new object()).Object,
+                new PropertyEntryMetadataForMock());
+            parentNullPropertyEntry.SetupGet(p => p.Name).Returns(propertyName);
+            parentNullPropertyEntry.SetupGet(p => p.ParentPropertyEntry);
+            parentNullPropertyEntry.SetupGet(p => p.CurrentValue).Throws(new NullReferenceException());
+
+            return parentNullPropertyEntry.Object;
         }
 
         private static ValidatableObjectValidator CreateValidatableObjectValidator(string propertyName, string errorMessage)
@@ -589,16 +586,6 @@ namespace ProductivityApiUnitTests.Validation
             return new EntityValidationContext(entityEntry, new ValidationContext(entityEntry.Entity, null, null));
         }
 
-        private static InternalPropertyEntry CreateInternalPropertyEntryForNullParent(string propertyName)
-        {
-            var parentNullPropertyEntry = new Mock<PropertyApiTests.InternalEntityPropertyEntryForMock>();
-            parentNullPropertyEntry.SetupGet(p => p.Name).Returns(propertyName);
-            parentNullPropertyEntry.SetupGet(p => p.ParentPropertyEntry);
-            parentNullPropertyEntry.SetupGet(p => p.CurrentValue).Throws(new NullReferenceException());
-
-            return parentNullPropertyEntry.Object;
-        }
-
         private void VerifyResults(Tuple<string, string>[] expectedResults, IEnumerable<DbValidationError> actualResults)
         {
             Assert.Equal(expectedResults.Count(), actualResults.Count());
@@ -729,8 +716,7 @@ namespace ProductivityApiUnitTests.Validation
         }
 
         [Fact]
-        public void ValidationAttributeValidator_returns_validation_errors_if_entity_validation_with_type_level_annotation_attributes_fails(
-            )
+        public void ValidationAttributeValidator_returns_validation_errors_if_entity_validation_with_type_level_annotation_attributes_fails()
         {
             var mockInternalEntityEntry = CreateMockInternalEntityEntry(
                 new Dictionary<string, object>
@@ -882,12 +868,11 @@ namespace ProductivityApiUnitTests.Validation
 
             Assert.Equal(
                 new DbUnexpectedValidationException(
-                    Strings.DbUnexpectedValidationException_IValidatableObject(
-                        "Airport information", "ProductivityApiUnitTests.Validation.AirportDetails")).Message,
-                Assert.Throws<DbUnexpectedValidationException>(
-                    () => validator.Validate(
-                        CreateEntityValidationContext(mockInternalEntityEntry.Object),
-                        mockInternalEntityEntry.Object.Property("Airport"))).Message);
+                    Strings.DbUnexpectedValidationException_IValidatableObject("Airport information", "System.Data.Entity.AirportDetails")).
+                    Message, Assert.Throws<DbUnexpectedValidationException>(
+                        () => validator.Validate(
+                            CreateEntityValidationContext(mockInternalEntityEntry.Object),
+                            mockInternalEntityEntry.Object.Property("Airport"))).Message);
         }
 
         #endregion
@@ -1865,7 +1850,7 @@ namespace ProductivityApiUnitTests.Validation
         {
             Assert.True(
                 new DbEntityValidationResult(
-                    new DbEntityEntry(new PropertyApiTests.InternalEntityEntryForMock<object>()),
+                    new DbEntityEntry(new InternalEntityEntryForMock<object>()),
                     new List<DbValidationError>())
                     .IsValid);
         }
@@ -1875,7 +1860,7 @@ namespace ProductivityApiUnitTests.Validation
         {
             Assert.False(
                 new DbEntityValidationResult(
-                    new DbEntityEntry(new PropertyApiTests.InternalEntityEntryForMock<object>()),
+                    new DbEntityEntry(new InternalEntityEntryForMock<object>()),
                     new List<DbValidationError>(
                         new[] { new DbValidationError("property", "errormessage") }))
                     .IsValid);
@@ -1928,27 +1913,22 @@ namespace ProductivityApiUnitTests.Validation
                                         new[]
                                             {
                                                 new DbEntityValidationResult(
-                                                    new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
-                                                                                                                                {
-                                                                                                                                    new DbValidationError
-                                                                                                                                        (
-                                                                                                                                        "propA",
-                                                                                                                                        "propA is Invalid")
-                                                                                                                                    ,
-                                                                                                                                    new DbValidationError
-                                                                                                                                        (
-                                                                                                                                        "propB",
-                                                                                                                                        "propB is Invalid")
-                                                                                                                                    ,
-                                                                                                                                }),
+                                                    new Mock<InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                                               {
+                                                                                                                   new DbValidationError(
+                                                                                                                       "propA",
+                                                                                                                       "propA is Invalid"),
+                                                                                                                   new DbValidationError(
+                                                                                                                       "propB",
+                                                                                                                       "propB is Invalid"),
+                                                                                                               }),
                                                 new DbEntityValidationResult(
-                                                    new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
-                                                                                                                                {
-                                                                                                                                    new DbValidationError
-                                                                                                                                        (
-                                                                                                                                        null,
-                                                                                                                                        "The entity is invalid")
-                                                                                                                                })
+                                                    new Mock<InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                                               {
+                                                                                                                   new DbValidationError(
+                                                                                                                       null,
+                                                                                                                       "The entity is invalid")
+                                                                                                               })
                                             },
                                         new Exception("dummy exception")
                                     };
@@ -2008,22 +1988,19 @@ namespace ProductivityApiUnitTests.Validation
                 new[]
                     {
                         new DbEntityValidationResult(
-                            new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
-                                                                                                        {
-                                                                                                            new DbValidationError(
-                                                                                                                "propA", "propA is Invalid")
-                                                                                                            ,
-                                                                                                            new DbValidationError(
-                                                                                                                "propB", "propB is Invalid")
-                                                                                                            ,
-                                                                                                        }),
+                            new Mock<InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                       {
+                                                                                           new DbValidationError(
+                                                                                               "propA", "propA is Invalid"),
+                                                                                           new DbValidationError(
+                                                                                               "propB", "propB is Invalid"),
+                                                                                       }),
                         new DbEntityValidationResult(
-                            new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>().Object, new[]
-                                                                                                        {
-                                                                                                            new DbValidationError(
-                                                                                                                null,
-                                                                                                                "The entity is invalid")
-                                                                                                        })
+                            new Mock<InternalEntityEntryForMock<object>>().Object, new[]
+                                                                                       {
+                                                                                           new DbValidationError(
+                                                                                               null, "The entity is invalid")
+                                                                                       })
                     },
                 new Exception("dummy exception")
                 );
@@ -2119,7 +2096,7 @@ namespace ProductivityApiUnitTests.Validation
                 .Returns(new EntityValidator(Enumerable.Empty<PropertyValidator>(), new[] { mockIValidator.Object }));
             mockValidationProvider.CallBase = true;
 
-            var mockInternalEntity = new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>();
+            var mockInternalEntity = new Mock<InternalEntityEntryForMock<object>>();
             var mockInternalContext = Mock.Get((InternalContextForMock)mockInternalEntity.Object.InternalContext);
             mockInternalContext.SetupGet(c => c.ValidationProvider).Returns(mockValidationProvider.Object);
 
@@ -2135,7 +2112,7 @@ namespace ProductivityApiUnitTests.Validation
         [Fact]
         public void Verify_custom_validation_items_dictionary_is_not_null_by_default()
         {
-            var mockInternalEntity = new Mock<PropertyApiTests.InternalEntityEntryForMock<object>>();
+            var mockInternalEntity = new Mock<InternalEntityEntryForMock<object>>();
             mockInternalEntity.Setup(e => e.GetValidationResult(It.IsAny<Dictionary<object, object>>()))
                 .Returns(new DbEntityValidationResult(mockInternalEntity.Object, Enumerable.Empty<DbValidationError>()));
             mockInternalEntity.CallBase = true;

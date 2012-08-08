@@ -145,7 +145,7 @@ namespace System.Data.Entity.Internal
         ///     Gets or sets the original value.
         ///     Note that complex properties are returned as objects, not property values.
         /// </summary>
-        public object OriginalValue
+        public virtual object OriginalValue
         {
             get
             {
@@ -357,7 +357,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets or sets a value indicating whether this property is modified.
         /// </summary>
-        public bool IsModified
+        public virtual bool IsModified
         {
             get
             {

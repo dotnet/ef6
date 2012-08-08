@@ -10,16 +10,15 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
     /// <summary>
-    ///     Unit tests that execute the various places where we have thread-safe code with multiple threads
-    ///     such that we have at least some chance of finding issues in this code. As with any test of this
-    ///     type just because these tests pass does not mean that the code is correct. On the other hand,
-    ///     if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
+    ///   Unit tests that execute the various places where we have thread-safe code with multiple threads
+    ///   such that we have at least some chance of finding issues in this code. As with any test of this
+    ///   type just because these tests pass does not mean that the code is correct. On the other hand,
+    ///   if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
     /// </summary>
     public class MultiThreadingTests : TestBase
     {
@@ -305,14 +304,14 @@ namespace ProductivityApiUnitTests
                 () =>
                     {
                         var collectionMetadata = new NavigationEntryMetadata(
-                            typeof(PropertyApiTests.FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
+                            typeof(FakeWithProps), typeof(FakeEntity), "Collection", isCollection: true);
                         var internalEntry =
                             new InternalCollectionEntry(
-                                new Mock<PropertyApiTests.InternalEntityEntryForMock<FakeEntity>>().Object, collectionMetadata);
+                                new Mock<InternalEntityEntryForMock<FakeEntity>>().Object, collectionMetadata);
 
-                        var entry = internalEntry.CreateDbMemberEntry<PropertyApiTests.FakeWithProps, ICollection<FakeEntity>>();
+                        var entry = internalEntry.CreateDbMemberEntry<FakeWithProps, ICollection<FakeEntity>>();
 
-                        Assert.IsAssignableFrom<DbMemberEntry<PropertyApiTests.FakeWithProps, ICollection<FakeEntity>>>(entry);
+                        Assert.IsAssignableFrom<DbMemberEntry<FakeWithProps, ICollection<FakeEntity>>>(entry);
                     });
         }
 

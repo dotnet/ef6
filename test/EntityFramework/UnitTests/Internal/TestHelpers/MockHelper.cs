@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Internal.Linq;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using Moq;
 
     public static class MockHelper
@@ -16,6 +17,79 @@ namespace System.Data.Entity.Internal
         internal static InternalSqlNonSetQuery CreateInternalSqlNonSetQuery(string sql, params object[] parameters)
         {
             return new InternalSqlNonSetQuery(new Mock<InternalContextForMock>().Object, typeof(object), sql, parameters);
+        }
+
+        internal static Mock<IEntityStateEntry> CreateMockStateEntry<TEntity>() where TEntity : class, new()
+        {
+            var mockStateEntry = new Mock<IEntityStateEntry>();
+            var fakeEntity = new TEntity();
+            mockStateEntry.Setup(e => e.Entity).Returns(fakeEntity);
+
+            var modifiedProps = new List<string>
+                                    {
+                                        "Foo",
+                                        "ValueTypeProp",
+                                        "Bar"
+                                    };
+            mockStateEntry.Setup(e => e.GetModifiedProperties()).Returns(modifiedProps);
+            mockStateEntry.Setup(e => e.SetModifiedProperty(It.IsAny<string>())).Callback<string>(modifiedProps.Add);
+
+            return mockStateEntry;
+        }
+
+        internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity>()
+            where TEntity : class, new()
+        {
+            return CreateMockInternalEntityEntry<TEntity, object>(new TEntity());
+        }
+
+        internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity>(
+            TEntity entity, bool isDetached = false)
+            where TEntity : class, new()
+        {
+            return CreateMockInternalEntityEntry<TEntity, object>(entity, isDetached: isDetached);
+        }
+
+        internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity, TRelated>(
+            TEntity entity, EntityReference<TRelated> entityReference = null, bool isDetached = false)
+            where TEntity : class, new()
+            where TRelated : class
+        {
+            return CreateMockInternalEntityEntry(entity, entityReference, null, isDetached);
+        }
+
+        internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity, TRelated>(
+            TEntity entity, EntityCollection<TRelated> entityCollection, bool isDetached = false)
+            where TEntity : class, new()
+            where TRelated : class
+        {
+            return CreateMockInternalEntityEntry(entity, null, entityCollection, isDetached);
+        }
+
+        internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity, TRelated>(
+            TEntity entity, EntityReference<TRelated> entityReference, EntityCollection<TRelated> entityCollection, bool isDetached)
+            where TEntity : class, new()
+            where TRelated : class
+        {
+            var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<TEntity>>();
+            mockInternalEntityEntry.SetupGet(e => e.Entity).Returns(entity);
+            mockInternalEntityEntry.SetupGet(e => e.EntityType).Returns(typeof(TEntity));
+            mockInternalEntityEntry.SetupGet(e => e.IsDetached).Returns(isDetached);
+            mockInternalEntityEntry.Setup(e => e.GetRelatedEnd("Reference")).Returns(entityReference);
+            mockInternalEntityEntry.Setup(e => e.GetRelatedEnd("Collection")).Returns(entityCollection);
+
+            return mockInternalEntityEntry;
+        }
+
+        internal static Mock<InternalEntityPropertyEntry> CreateMockInternalEntityPropertyEntry(object entity)
+        {
+            var propertyEntry = new Mock<InternalEntityPropertyEntry>(
+                CreateMockInternalEntityEntry(
+                    entity, new EntityReference<FakeEntity>(), new EntityCollection<FakeEntity>(), isDetached: false).Object,
+                new PropertyEntryMetadataForMock());
+            propertyEntry.SetupGet(p => p.InternalEntityEntry).Returns(new InternalEntityEntryForMock<object>());
+
+            return propertyEntry;
         }
     }
 }
