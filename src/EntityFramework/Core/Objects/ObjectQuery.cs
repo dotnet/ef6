@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Gets the <see cref="ObjectQueryProvider" /> associated with this query instance.
         /// </summary>
-        internal ObjectQueryProvider Provider
+        internal virtual ObjectQueryProvider ObjectQueryProvider
         {
             get
             {
@@ -280,8 +280,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Gets the result element type for this query instance.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Type IQueryable.ElementType
+        public virtual Type ElementType
         {
             get { return _state.ElementType; }
         }
@@ -293,21 +292,14 @@ namespace System.Data.Entity.Core.Objects
         ///     default expression is not cached. This allows us to differentiate
         ///     between LINQ and Entity-SQL queries.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Expression IQueryable.Expression
-        {
-            get { return GetExpression(); }
-        }
-
-        internal abstract Expression GetExpression();
+        public abstract Expression Expression { get; }
 
         /// <summary>
-        ///     Gets the IQueryProvider associated with this query instance.
+        ///     Gets the <see cref="IQueryProvider" /> associated with this query instance.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IQueryProvider IQueryable.Provider
+        public virtual IQueryProvider Provider
         {
-            get { return Provider; }
+            get { return ObjectQueryProvider; }
         }
 
         #endregion
@@ -318,11 +310,7 @@ namespace System.Data.Entity.Core.Objects
         ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumeratorInternal();
-        }
+        public abstract IEnumerator GetEnumerator();
 
         #endregion
 
@@ -344,7 +332,6 @@ namespace System.Data.Entity.Core.Objects
 
         #region Internal Methods
 
-        internal abstract IEnumerator GetEnumeratorInternal();
         internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult ExecuteInternal(MergeOption mergeOption);

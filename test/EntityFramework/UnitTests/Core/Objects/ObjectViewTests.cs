@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Objects
         [Fact]
         public void Add_throws_for_null_argument()
         {
-            var mockEntityCollection = MockHelper.CreateMockEntityCollection<object>(null).Object;
+            var mockEntityCollection = DataClasses.MockHelper.CreateMockEntityCollection<object>(null).Object;
             var objectView = new ObjectView<object>(
                 new ObjectViewEntityCollectionData<object, object>(mockEntityCollection), mockEntityCollection);
             Assert.Equal(
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Objects
         [Fact]
         public void Remove_throws_for_null_argument()
         {
-            var mockEntityCollection = MockHelper.CreateMockEntityCollection<object>(null).Object;
+            var mockEntityCollection = DataClasses.MockHelper.CreateMockEntityCollection<object>(null).Object;
             var objectView = new ObjectView<object>(
                 new ObjectViewEntityCollectionData<object, object>(mockEntityCollection), mockEntityCollection);
             Assert.Equal(

@@ -24,6 +24,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal static readonly MergeOption DefaultMergeOption = MergeOption.AppendOnly;
 
         /// <summary>
+        ///     Generic MethodInfo used in the non-generic CreateQuery
+        /// </summary>
+        private static readonly MethodInfo _createObjectQueryMethod =
+            typeof(ObjectQueryState).GetMethod("CreateObjectQuery", BindingFlags.Instance | BindingFlags.Public);
+
+        /// <summary>
         ///     The context of the ObjectQuery
         /// </summary>
         private readonly ObjectContext _context;
@@ -297,30 +303,31 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Helper method to create a new ObjectQuery based on this query state instance.
         /// </summary>
-        /// <returns> A new <see cref="ObjectQuery&lt;TResultType&gt;" /> - typed as <see cref="ObjectQuery" /> </returns>
+        /// <returns>
+        ///     A new <see cref="ObjectQuery{TResultType}" /> - typed as <see cref="ObjectQuery" />
+        /// </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        internal ObjectQuery CreateQuery()
+        public ObjectQuery CreateQuery()
         {
-            var createMethod = typeof(ObjectQueryState).GetMethod("CreateObjectQuery", BindingFlags.Static | BindingFlags.Public);
-            Debug.Assert(createMethod != null, "Unable to retrieve ObjectQueryState.CreateObjectQuery<> method?");
+            Debug.Assert(_createObjectQueryMethod != null, "Unable to retrieve ObjectQueryState.CreateObjectQuery<> method");
 
-            createMethod = createMethod.MakeGenericMethod(_elementType);
-            return (ObjectQuery)createMethod.Invoke(null, new object[] { this });
+            var genericObjectQueryMethod = _createObjectQueryMethod.MakeGenericMethod(_elementType);
+            return (ObjectQuery)genericObjectQueryMethod.Invoke(this, new object[0]);
         }
-
+        
         /// <summary>
         ///     Helper method used to create an ObjectQuery based on an underlying ObjectQueryState instance.
-        ///     Although not called directly, this method must be public to be reliably callable from <see cref="CreateQuery()" /> using reflection.
+        ///     This method must be public to be reliably callable from <see cref="CreateObjectQuery" /> using reflection.
+        ///     Shouldn't be named CreateQuery to avoid ambiguity with reflection.
         /// </summary>
         /// <typeparam name="TResultType"> The required element type of the new ObjectQuery </typeparam>
         /// <param name="queryState"> The underlying ObjectQueryState instance that should back the returned ObjectQuery </param>
         /// <returns> A new ObjectQuery based on the specified query state, with the specified element type </returns>
-        public static ObjectQuery<TResultType> CreateObjectQuery<TResultType>(ObjectQueryState queryState)
+        public ObjectQuery<TResultType> CreateObjectQuery<TResultType>()
         {
-            Debug.Assert(queryState != null, "Query state is required");
-            Debug.Assert(typeof(TResultType) == queryState.ElementType, "Element type mismatch");
+            Debug.Assert(typeof(TResultType) == ElementType, "Element type mismatch");
 
-            return new ObjectQuery<TResultType>(queryState);
+            return new ObjectQuery<TResultType>(this);
         }
     }
 }

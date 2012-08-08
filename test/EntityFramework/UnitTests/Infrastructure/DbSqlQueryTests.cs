@@ -1,16 +1,14 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity
+namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using Xunit;
 
     /// <summary>
     ///     Unit tests for <see cref="DbSqlQuery" /> and <see cref="DbSqlQuery{TEntity}" />.
     /// </summary>
-    public class DbSqlQueryTests : DbRawSqlQueryTests
+    public class DbSqlQueryTests : TestBase
     {
         [Fact]
         public void Generic_DbSqlQuery_AsNoTracking_returns_new_object_with_no_tracking_flag_set()

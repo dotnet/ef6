@@ -132,7 +132,7 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
-    <Compile Include="DbSqlQueryTests.cs" />
+    <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
@@ -140,6 +140,7 @@
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />
     <Compile Include="Internal\InternalCollectionEntryTests.cs" />
+    <Compile Include="Internal\InternalEntityEntryTests.cs" />
     <Compile Include="Internal\InternalEntityPropertyEntryTests.cs" />
     <Compile Include="Internal\InternalReferenceEntryTests.cs" />
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
@@ -399,7 +400,7 @@
     <Compile Include="Infrastructure\DbEntityEntryTests.cs" />
     <Compile Include="DbPropertyValuesTests.cs" />
     <Compile Include="DbSetTests.cs" />
-    <Compile Include="DbRawSqlQueryTests.cs" />
+    <Compile Include="Infrastructure\DbRawSqlQueryTests.cs" />
     <Compile Include="DefaultConnectionFactoryTests.cs" />
     <Compile Include="EdmMetadataRepositoryTests.cs" />
     <Compile Include="IncludeTests.cs" />

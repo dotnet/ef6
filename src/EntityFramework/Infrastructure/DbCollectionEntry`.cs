@@ -114,11 +114,9 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task representing the asynchronous operation. </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Task LoadAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _internalCollectionEntry.LoadAsync(cancellationToken);
         }
 
         /// <summary>

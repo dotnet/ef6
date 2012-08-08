@@ -610,7 +610,7 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectQuery Overrides
 
         /// <inheritdoc />
-        internal override IEnumerator GetEnumeratorInternal()
+        public override IEnumerator GetEnumerator()
         {
             return ((IEnumerable<T>)this).GetEnumerator();
         }
@@ -647,34 +647,37 @@ namespace System.Data.Entity.Core.Objects
         ///     to be retrieved and processed by the ELinq ExpressionConverter.
         /// </summary>
         /// <returns> The LINQ expression for this ObjectQuery, wrapped in a MergeOption-preserving call to the MergeAs method if the ObjectQuery.MergeOption property has been set. </returns>
-        internal override Expression GetExpression()
+        public override Expression Expression
         {
-            // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),
-            // then create a ConstantExpression that uses this ObjectQuery as its value.
-            Expression retExpr;
-            if (!QueryState.TryGetExpression(out retExpr))
+            get
             {
-                retExpr = Expression.Constant(this);
-            }
+                // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),
+                // then create a ConstantExpression that uses this ObjectQuery as its value.
+                Expression retExpr;
+                if (!QueryState.TryGetExpression(out retExpr))
+                {
+                    retExpr = Expression.Constant(this);
+                }
 
-            var objectQueryType = typeof(ObjectQuery<T>);
-            if (QueryState.UserSpecifiedMergeOption.HasValue)
-            {
-                var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
-                Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
-                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
-            }
+                var objectQueryType = typeof(ObjectQuery<T>);
+                if (QueryState.UserSpecifiedMergeOption.HasValue)
+                {
+                    var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
+                    Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
+                    retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
+                    retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
+                }
 
-            if (null != QueryState.Span)
-            {
-                var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
-                Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
-                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
-            }
+                if (null != QueryState.Span)
+                {
+                    var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
+                    Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
+                    retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
+                    retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
+                }
 
-            return retExpr;
+                return retExpr;
+            }
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.

@@ -120,10 +120,10 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task that contains the store values. </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        public Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
+        public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var storeValues = await _internalEntityEntry.GetDatabaseValuesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            return storeValues == null ? null : new DbPropertyValues(storeValues);
         }
 
         /// <summary>

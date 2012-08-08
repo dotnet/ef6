@@ -13,6 +13,8 @@ namespace System.Data.Entity.Internal
     using System.Globalization;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbEntityEntry" />
@@ -93,7 +95,7 @@ namespace System.Data.Entity.Internal
         ///     Gets or sets the state of the entity.
         /// </summary>
         /// <value> The state. </value>
-        public EntityState State
+        public virtual EntityState State
         {
             get { return IsDetached ? EntityState.Detached : _stateEntry.State; }
             set
@@ -176,10 +178,31 @@ namespace System.Data.Entity.Internal
         ///     Queries the database for copies of the values of the tracked entity as they currently exist in the database.
         /// </summary>
         /// <returns> The store values. </returns>
-        public InternalPropertyValues GetDatabaseValues()
+        public virtual InternalPropertyValues GetDatabaseValues()
         {
             ValidateStateToGetValues("GetDatabaseValues", EntityState.Added);
 
+            var dataRecord = GetDatabaseValuesQuery().SingleOrDefault();
+
+            return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of GetDatabaseValues, which
+        ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        /// </summary>
+        /// <returns> A Task containing the store values. </returns>
+        public virtual async Task<InternalPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
+        {
+            ValidateStateToGetValues("GetDatabaseValuesAsync", EntityState.Added);
+
+            var dataRecord = await GetDatabaseValuesQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+
+            return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
+        }
+
+        private ObjectQuery<DbDataRecord> GetDatabaseValuesQuery()
+        {
             // Build an Entity SQL query that will materialize all the properties for the entity into
             // a DbDataRecord, including nested DbDataRecords for complex properties.
             // This is preferable to a no-tracking query because it doesn't materialize an object only
@@ -228,12 +251,7 @@ namespace System.Data.Entity.Internal
                 parameters[i] = new ObjectParameter(name, entityKeyValues[i].Value);
             }
 
-            // Execute the query
-            var dataRecord =
-                _internalContext.ObjectContext.CreateQuery<DbDataRecord>(queryBuilder.ToString(), parameters).
-                    SingleOrDefault();
-
-            return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
+            return _internalContext.ObjectContext.CreateQuery<DbDataRecord>(queryBuilder.ToString(), parameters);
         }
 
         /// <summary>
@@ -304,7 +322,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Calls Refresh with StoreWins on the underlying state entry.
         /// </summary>
-        public void Reload()
+        public virtual void Reload()
         {
             ValidateStateToGetValues("Reload", EntityState.Added);
 

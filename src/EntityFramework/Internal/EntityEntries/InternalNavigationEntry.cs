@@ -50,6 +50,16 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
+        ///     Calls LoadAsync on the underlying <see cref="IRelatedEnd" />.
+        /// </summary>
+        public virtual Task LoadAsync(CancellationToken cancellationToken)
+        {
+            ValidateNotDetached("LoadAsync");
+
+            return _relatedEnd.LoadAsync(cancellationToken);
+        }
+
+        /// <summary>
         ///     Calls IsLoaded on the underlying <see cref="IRelatedEnd" />.
         /// </summary>
         public virtual bool IsLoaded

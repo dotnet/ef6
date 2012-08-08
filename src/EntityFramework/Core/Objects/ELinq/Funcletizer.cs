@@ -591,7 +591,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         throw new NotSupportedException(Strings.ELinq_UnsupportedDifferentContexts);
                     }
 
-                    queryExpression = inlineQuery.GetExpression();
+                    queryExpression = inlineQuery.Expression;
 
                     // If it's not an entity-sql (terminal) query, recursively process
                     if (!(inlineQuery.QueryState is EntitySqlQueryState))

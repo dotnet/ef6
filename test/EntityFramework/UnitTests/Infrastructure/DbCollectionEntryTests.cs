@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
+    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -23,6 +24,8 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyGetter(e => e.Name, m => m.Name);
             v.VerifyMethod(e => e.GetValidationErrors(), m => m.GetValidationErrors());
             v.VerifyMethod(e => e.Load(), m => m.Load());
+            v.VerifyMethod(e => e.LoadAsync(), m => m.LoadAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.LoadAsync(CancellationToken.None), m => m.LoadAsync(CancellationToken.None));
             v.VerifyMethod(e => e.Query(), m => m.Query());
         }
 
@@ -38,6 +41,8 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyGetter(e => e.Name, m => m.Name);
             v.VerifyMethod(e => e.GetValidationErrors(), m => m.GetValidationErrors());
             v.VerifyMethod(e => e.Load(), m => m.Load());
+            v.VerifyMethod(e => e.LoadAsync(), m => m.LoadAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.LoadAsync(CancellationToken.None), m => m.LoadAsync(CancellationToken.None));
             v.VerifyMethod(e => e.Query(), m => m.Query());
         }
 

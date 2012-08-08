@@ -92,8 +92,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     An asynchronous version of Load, which
-        ///     loads the entity from the database.
+        ///     An asynchronous version of Load, which loads the entity from the database.
         ///     Note that if the entity already exists in the context, then it will not overwritten with values from the database.
         /// </summary>
         /// <returns> A Task representing the asynchronous operation. </returns>
@@ -103,17 +102,14 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     An asynchronous version of Load, which
-        ///     loads the entity from the database.
+        ///     An asynchronous version of Load, which loads the entity from the database.
         ///     Note that if the entity already exists in the context, then it will not overwritten with values from the database.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task representing the asynchronous operation. </returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Task LoadAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _internalReferenceEntry.LoadAsync(cancellationToken);
         }
 
         /// <summary>

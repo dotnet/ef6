@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects
                 new DbEnumeratorShim<object>(((IEnumerable<object>)new[] { new object() }).GetEnumerator()));
             var objectQuery = MockHelper.CreateMockObjectQuery(null, shaperMock.Object).Object;
 
-            var enumerator = objectQuery.GetEnumeratorInternal();
+            var enumerator = objectQuery.GetEnumerator();
 
             shaperMock.Verify(m => m.GetEnumerator(), Times.Never());
 

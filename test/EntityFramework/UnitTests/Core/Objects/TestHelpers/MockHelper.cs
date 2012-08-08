@@ -90,28 +90,12 @@ namespace System.Data.Entity.Core.Objects
                 initializeCollection: null,
                 recordStateFactories: recordStateFactories);
         }
-
-        internal static Mock<EntityCollection<TEntity>> CreateMockEntityCollection<TEntity>(TEntity refreshedValue)
-            where TEntity : class
-        {
-            var entityReferenceMock = new Mock<EntityCollection<TEntity>>
-                                          {
-                                              CallBase = true
-                                          };
-
-            var hasResults = refreshedValue != null;
-            entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
-                .Returns(() => CreateMockObjectQuery(refreshedValue).Object);
-
-            return entityReferenceMock;
-        }
-
+        
         internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(
             TEntity refreshedValue, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
         {
             var shaperMock = CreateShaperMock<TEntity>();
-            shaperMock.Setup(m => m.GetEnumerator()).Returns(
-                () =>
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(() =>
                 new DbEnumeratorShim<TEntity>(((IEnumerable<TEntity>)new[] { refreshedValue }).GetEnumerator()));
             shaper = shaper ?? shaperMock.Object;
 

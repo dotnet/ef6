@@ -5,7 +5,10 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.ELinq;
+    using System.Linq;
     using Moq;
+    using Moq.Protected;
 
     public class ObjectContextForMock : ObjectContext
     {
@@ -44,6 +47,14 @@ namespace System.Data.Entity.Core.Objects
             var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspace);
 
             objectContextMock.Setup(m => m.ObjectStateManager).Returns(objectStateManagerMock.Object);
+
+            var mockObjectQuery = MockHelper.CreateMockObjectQuery<DbDataRecord>(null);
+            var fakeQueryable = new DbDataRecord[0].AsQueryable();
+            mockObjectQuery.Setup(m => m.Provider).Returns(() => fakeQueryable.Provider);
+            mockObjectQuery.Setup(m => m.Expression).Returns(() => fakeQueryable.Expression);
+
+            objectContextMock.Setup(m => m.CreateQuery<DbDataRecord>(It.IsAny<string>(), It.IsAny<ObjectParameter[]>())).Returns(
+                () => mockObjectQuery.Object);
 
             return objectContextMock.Object;
         }

@@ -3,13 +3,58 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Linq.Expressions;
+    using System.Threading;
     using Moq;
     using Xunit;
 
     public class DbEntityEntryTests
     {
+        [Fact]
+        public void NonGeneric_DbEntityEntry_delegates_to_InternalReferenceEntry()
+        {
+            var v = new DbEntityEntryVerifier();
+            var name = "foo";
+            v.VerifyGetter(e => e.CurrentValues, m => m.CurrentValues);
+            v.VerifyGetter(e => e.OriginalValues, m => m.OriginalValues);
+            v.VerifyMethod(e => e.Collection(name), m => m.Collection(name, null));
+            v.VerifyMethod(e => e.ComplexProperty(name), m => m.Property(name, null, true));
+            v.VerifyMethod(e => e.GetDatabaseValues(), m => m.GetDatabaseValues());
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.GetValidationResult(), m => m.GetValidationResult(It.IsAny<IDictionary<object, object>>()));
+            v.VerifyMethod(e => e.Member(name), m => m.Member(name, null));
+            v.VerifyMethod(e => e.Property(name), m => m.Property(name, null, false));
+            v.VerifyMethod(e => e.Reference(name), m => m.Reference(name, null));
+            v.VerifyMethod(e => e.Reload(), m => m.Reload());
+        }
+
+        [Fact]
+        public void Generic_DbEntityEntry_delegates_to_InternalReferenceEntry()
+        {
+            var v = new DbEntityEntryVerifier<object>();
+            var name = "foo";
+            v.VerifyGetter(e => e.CurrentValues, m => m.CurrentValues);
+            v.VerifyGetter(e => e.OriginalValues, m => m.OriginalValues);
+            v.VerifyMethod(e => e.Collection(name), m => m.Collection(name, null));
+            v.VerifyMethod(e => e.Collection<object>(name), m => m.Collection(name, typeof(object)));
+            v.VerifyMethod(e => e.ComplexProperty(name), m => m.Property(name, null, true));
+            v.VerifyMethod(e => e.ComplexProperty<object>(name), m => m.Property(name, typeof(object), true));
+            v.VerifyMethod(e => e.GetDatabaseValues(), m => m.GetDatabaseValues());
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.GetValidationResult(), m => m.GetValidationResult(It.IsAny<IDictionary<object,object>>()));
+            v.VerifyMethod(e => e.Member(name), m => m.Member(name, null));
+            v.VerifyMethod(e => e.Member<object>(name), m => m.Member(name, typeof(object)));
+            v.VerifyMethod(e => e.Property(name), m => m.Property(name, null, false));
+            v.VerifyMethod(e => e.Property<object>(name), m => m.Property(name, typeof(object), false));
+            v.VerifyMethod(e => e.Reference(name), m => m.Reference(name, null));
+            v.VerifyMethod(e => e.Reference<object>(name), m => m.Reference(name, typeof(object)));
+            v.VerifyMethod(e => e.Reload(), m => m.Reload());
+        }
+
         public class Reference
         {
             [Fact]
@@ -2660,5 +2705,39 @@ namespace System.Data.Entity.Infrastructure
                     Assert.Throws<ArgumentException>(() => entityEntry.Member("ComplexProp.Missing")).Message);
             }
         }
+
+        #region Helpers
+
+        internal class DbEntityEntryVerifier : DbMemberEntryVerifier<DbEntityEntry, InternalEntityEntry>
+        {
+            protected override DbEntityEntry CreateEntry(InternalEntityEntry internalEntry)
+            {
+                return new DbEntityEntry(internalEntry);
+            }
+
+            protected override Mock<InternalEntityEntry> CreateInternalEntryMock()
+            {
+                return new Mock<InternalEntityEntry>(new Mock<InternalContextForMock>() { CallBase = true }.Object,
+                    MockHelper.CreateMockStateEntry<object>().Object);
+            }
+        }
+
+        internal class DbEntityEntryVerifier<TEntity> :
+            DbMemberEntryVerifier<DbEntityEntry<TEntity>, InternalEntityEntry>
+            where TEntity : class, new()
+        {
+            protected override DbEntityEntry<TEntity> CreateEntry(InternalEntityEntry internalEntry)
+            {
+                return new DbEntityEntry<TEntity>(internalEntry);
+            }
+
+            protected override Mock<InternalEntityEntry> CreateInternalEntryMock()
+            {
+                return new Mock<InternalEntityEntry>(new Mock<InternalContextForMock>() { CallBase = true }.Object,
+                    MockHelper.CreateMockStateEntry<TEntity>().Object);
+            }
+        }
+
+        #endregion
     }
 }

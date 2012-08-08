@@ -177,7 +177,7 @@ namespace System.Data.Entity.Internal.Linq
             {
                 Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
-                return _objectQuery.Provider;
+                return _objectQuery.ObjectQueryProvider;
             }
         }
 

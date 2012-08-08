@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Threading;
     using Xunit;
 
     public class InternalReferenceEntryTests
@@ -214,6 +215,26 @@ namespace System.Data.Entity.Internal
                 Assert.Equal(
                     Strings.DbPropertyEntry_NotSupportedForDetached("Load", "Reference", "FakeEntity"),
                     Assert.Throws<InvalidOperationException>(() => internalEntry.Load()).Message);
+            }
+        }
+
+        public class LoadAsync
+        {
+            [Fact]
+            public void InternalReferenceEntry_LoadAsync_throws_if_used_with_Detached_entity()
+            {
+                var mockInternalEntry = MockHelper.CreateMockInternalEntityEntry(
+                    new FakeEntity(), isDetached: true);
+                var internalEntry = new InternalReferenceEntry(mockInternalEntry.Object, FakeWithProps.ReferenceMetadata);
+
+                Assert.Equal(
+                    Strings.DbPropertyEntry_NotSupportedForDetached("LoadAsync", "Reference", "FakeEntity"),
+                    Assert.Throws<InvalidOperationException>(() => 
+                        ExceptionHelpers.UnwrapAggregateExceptions<object>(() =>
+                                                                       {
+                                                                           internalEntry.LoadAsync(CancellationToken.None).Wait();
+                                                                           return null;
+                                                                       })).Message);
             }
         }
 
