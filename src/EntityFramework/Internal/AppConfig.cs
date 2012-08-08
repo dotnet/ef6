@@ -151,7 +151,7 @@ namespace System.Data.Entity.Internal
 
         public virtual string ConfigurationTypeName
         {
-            get { return _entityFrameworkSettings.DbConfiguration.ConfigurationTypeName; }
+            get { return _entityFrameworkSettings.ConfigurationTypeName; }
         }
     }
 }

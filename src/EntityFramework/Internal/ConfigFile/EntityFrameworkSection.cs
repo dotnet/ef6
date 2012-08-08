@@ -13,7 +13,7 @@ namespace System.Data.Entity.Internal.ConfigFile
         private const string DefaultConnectionFactoryKey = "defaultConnectionFactory";
         private const string ContextsKey = "contexts";
         private const string ProviderKey = "providers";
-        private const string DbConfigurationKey = "dbConfiguration";
+        private const string ConfigurationTypeKey = "codeConfigurationType";
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [ConfigurationProperty(DefaultConnectionFactoryKey)]
@@ -23,11 +23,11 @@ namespace System.Data.Entity.Internal.ConfigFile
             set { this[DefaultConnectionFactoryKey] = value; }
         }
 
-        [ConfigurationProperty(DbConfigurationKey)]
-        public virtual DbConfigurationElement DbConfiguration
+        [ConfigurationProperty(ConfigurationTypeKey)]
+        public virtual string ConfigurationTypeName
         {
-            get { return (DbConfigurationElement)this[DbConfigurationKey]; }
-            set { this[DbConfigurationKey] = value; }
+            get { return (string)this[ConfigurationTypeKey]; }
+            set { this[ConfigurationTypeKey] = value; }
         }
 
         [ConfigurationProperty(ProviderKey)]

@@ -253,11 +253,7 @@ namespace ProductivityApiUnitTests
             {
                 var mockEFSection = new Mock<EntityFrameworkSection>();
                 mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
-                mockEFSection.Setup(m => m.DbConfiguration).Returns(
-                    new DbConfigurationElement
-                        {
-                            ConfigurationTypeName = "Eat.Horn.White.Spoonbill"
-                        });
+                mockEFSection.Setup(m => m.ConfigurationTypeName).Returns("Eat.Horn.White.Spoonbill");
 
                 Assert.Equal(
                     "Eat.Horn.White.Spoonbill",
@@ -265,13 +261,12 @@ namespace ProductivityApiUnitTests
             }
 
             [Fact]
-            public void ConfigurationTypeName_returns_the_empty_string_if_no_type_name_is_set()
+            public void ConfigurationTypeName_returns_null_if_no_type_name_is_set()
             {
                 var mockEFSection = new Mock<EntityFrameworkSection>();
                 mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
-                mockEFSection.Setup(m => m.DbConfiguration).Returns(new DbConfigurationElement());
 
-                Assert.Equal("", new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigurationTypeName);
+                Assert.Null(new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigurationTypeName);
             }
         }
     }

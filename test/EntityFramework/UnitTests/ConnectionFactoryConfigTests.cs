@@ -494,9 +494,7 @@ namespace EntityFramework.PowerShell.UnitTests
             config.Element(ConfigFileManipulator.ConfigurationElementName).Add(
                 new XElement(
                     ConfigFileManipulator.EntityFrameworkElementName,
-                    new XElement(
-                        ConfigFileManipulator.DbConfigurationElementName,
-                        new XAttribute("type", typeof(FunctionalTestsConfiguration).AssemblyQualifiedName))));
+                        new XAttribute("codeConfigurationType", typeof(FunctionalTestsConfiguration).AssemblyQualifiedName)));
 
             var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
             config.Save(configurationFile);

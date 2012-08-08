@@ -22,7 +22,6 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public const string ParameterElementName = "parameter";
         public const string ConfigSectionsElementName = "configSections";
         public const string SectionElementName = "section";
-        public const string DbConfigurationElementName = "dbConfiguration";
 
         /// <summary>
         ///     Checks whether or not the given XML document representing a .config file contains

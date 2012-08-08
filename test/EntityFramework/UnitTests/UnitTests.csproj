@@ -131,7 +131,6 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
     <Compile Include="DbSqlQueryTests.cs" />
-    <Compile Include="Internal\ConfigFile\DbConfigurationElementTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
@@ -425,7 +424,9 @@
     <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_2.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\Microsoft.Data.Entity.Design.Edmx_3.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
