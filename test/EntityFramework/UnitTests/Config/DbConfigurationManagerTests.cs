@@ -359,7 +359,7 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
-            public void EnsureLoadedForContext_throws_if_configuration_was_set_but_is_not_found_in_context_assembly()
+            public void EnsureLoadedForContext_does_not_throw_if_configuration_was_set_but_is_not_found_in_context_assembly()
             {
                 var configuration = new Mock<DbConfiguration>().Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
@@ -367,10 +367,9 @@ namespace System.Data.Entity.Config
 
                 manager.SetConfiguration(configuration);
 
-                Assert.Equal(
-                    Strings.SetConfigurationNotDiscovered(configuration.GetType().Name, typeof(FakeContext).Name),
-                    Assert.Throws<InvalidOperationException>(
-                        () => manager.EnsureLoadedForContext(typeof(FakeContext))).Message);
+                manager.EnsureLoadedForContext(typeof(FakeContext));
+
+                Assert.Same(configuration, manager.GetConfiguration());
             }
 
             [Fact]

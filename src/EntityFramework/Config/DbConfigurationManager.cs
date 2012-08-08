@@ -13,9 +13,9 @@ namespace System.Data.Entity.Config
     using System.Reflection;
 
     /// <summary>
-    ///     This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
-    ///     This includes loading from config, discovery from the context assembly and pushing/popping configurations
-    ///     used by <see cref="DbContextInfo" />.
+    ///   This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
+    ///   This includes loading from config, discovery from the context assembly and pushing/popping configurations
+    ///   used by <see cref="DbContextInfo" />.
     /// </summary>
     internal class DbConfigurationManager
     {
@@ -142,24 +142,16 @@ namespace System.Data.Entity.Config
                      !_loader.AppConfigContainsDbConfigurationType(AppConfig.DefaultInstance))
             {
                 var foundType = _finder.TryFindConfigurationType(contextType.Assembly.GetAccessibleTypes());
-                if (!typeof(DbNullConfiguration).IsAssignableFrom(foundType))
+                if (foundType != null && !typeof(DbNullConfiguration).IsAssignableFrom(foundType))
                 {
-                    if (_configuration.Value.GetType()
-                        == typeof(DbConfiguration))
+                    if (_configuration.Value.GetType() == typeof(DbConfiguration))
                     {
-                        if (foundType != null)
-                        {
-                            throw new InvalidOperationException(Strings.ConfigurationNotDiscovered(foundType.Name));
-                        }
+                        throw new InvalidOperationException(Strings.ConfigurationNotDiscovered(foundType.Name));
                     }
-                    else
+                    if (foundType != _configuration.Value.GetType())
                     {
-                        if (foundType == null
-                            || foundType != _configuration.Value.GetType())
-                        {
-                            throw new InvalidOperationException(
-                                Strings.SetConfigurationNotDiscovered(_configuration.Value.GetType().Name, contextType.Name));
-                        }
+                        throw new InvalidOperationException(
+                            Strings.SetConfigurationNotDiscovered(_configuration.Value.GetType().Name, contextType.Name));
                     }
                 }
             }
