@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
@@ -23,11 +24,13 @@ namespace System.Data.Entity.Utilities
         {
             Contract.Requires(connection != null);
 
-            var providerServices = DbProviderServices.GetProviderServices(connection);
-            var providerManifestToken = providerServices.GetProviderManifestTokenChecked(connection);
+            var providerManifestToken = DbConfiguration
+                .DependencyResolver.GetService<IManifestTokenService>()
+                .GetProviderManifestToken(connection);
+            
             var providerInfo = new DbProviderInfo(connection.GetProviderInvariantName(), providerManifestToken);
 
-            providerManifest = providerServices.GetProviderManifest(providerManifestToken);
+            providerManifest = DbProviderServices.GetProviderServices(connection).GetProviderManifest(providerManifestToken);
 
             return providerInfo;
         }

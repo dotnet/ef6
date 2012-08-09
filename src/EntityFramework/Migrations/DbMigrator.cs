@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
@@ -28,6 +29,7 @@ namespace System.Data.Entity.Migrations
     ///     DbMigrator can be used to upgrade and downgrade to any given migration.
     ///     To scaffold migrations based on changes to your model use <see cref="Design.MigrationScaffolder" />
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class DbMigrator : MigratorBase
     {
         /// <summary>
@@ -131,8 +133,10 @@ namespace System.Data.Entity.Migrations
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
                           ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                          : DbProviderServices.GetProviderServices(connection).
-                                GetProviderManifestTokenChecked(connection);
+                          : DbConfiguration
+                                .DependencyResolver.GetService<IManifestTokenService>()
+                                .GetProviderManifestToken(connection);
+
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
                         connection.DataSource,

@@ -345,6 +345,8 @@
     <Compile Include="Core\Common\EntityUtil.cs" />
     <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactory.cs" />
+    <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
+    <Compile Include="Infrastructure\IManifestTokenService.cs" />
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerableExtensions.cs" />

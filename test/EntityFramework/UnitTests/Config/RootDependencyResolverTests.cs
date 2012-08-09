@@ -95,6 +95,12 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
+        public void The_root_resolver_returns_the_default_manifest_token_service()
+        {
+            Assert.IsType<DefaultManifestTokenService>(new RootDependencyResolver().GetService<IManifestTokenService>());
+        }
+
+        [Fact]
         public void Release_does_not_throw()
         {
             new RootDependencyResolver().Release(new object());

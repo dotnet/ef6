@@ -136,6 +136,7 @@
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
+    <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />
