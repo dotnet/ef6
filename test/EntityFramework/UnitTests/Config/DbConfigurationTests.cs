@@ -11,34 +11,6 @@ namespace System.Data.Entity.Config
 
     public class DbConfigurationTests
     {
-        public class ModelCacheKeyFactory
-        {
-            [Fact]
-            public void ModelCacheKeyFactory_cannot_be_set_to_null()
-            {
-                Assert.Equal(
-                    "value",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().ModelCacheKeyFactory = null).ParamName);
-            }
-
-            [Fact]
-            public void ModelCacheKeyFactory_returns_default_impl_when_not_set()
-            {
-                Assert.IsType<DefaultModelCacheKeyFactory>(new DbConfiguration().ModelCacheKeyFactory);
-            }
-
-            [Fact]
-            public void ModelCacheKeyFactory_can_be_set()
-            {
-                var configuration = new DbConfiguration();
-                var cacheKeyFactory = new Mock<IDbModelCacheKeyFactory>().Object;
-
-                configuration.ModelCacheKeyFactory = cacheKeyFactory;
-
-                Assert.Same(cacheKeyFactory, configuration.ModelCacheKeyFactory);
-            }
-        }
-
         public class Instance
         {
             [Fact]
@@ -261,6 +233,12 @@ namespace System.Data.Entity.Config
 
                 Assert.Same(mockAppConfigChain.Object, resolver.First);
                 Assert.Same(mockNormalChain.Object, resolver.Second);
+            }
+
+            [Fact]
+            public void Default_IDbModelCacheKeyFactory_is_returned_by_default()
+            {
+                Assert.IsType<DefaultModelCacheKeyFactory>(new DbConfiguration().DependencyResolver.GetService<IDbModelCacheKeyFactory>());
             }
         }
 
