@@ -141,8 +141,7 @@
     <Compile Include="Config\DbConfigurationFinder.cs" />
     <Compile Include="Config\DbConfigurationLoader.cs" />
     <Compile Include="Config\DbConfigurationManager.cs" />
-    <Compile Include="Config\DbNullConfiguration.cs" />
-    <Compile Include="Config\DbConfigurationProxy.cs" />
+    <Compile Include="Config\DbConfigurationTypeAttribute.cs" />
     <Compile Include="Config\DefaultProviderServicesResolver.cs" />
     <Compile Include="Config\IDbDependencyResolver.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensions.cs" />
@@ -1794,6 +1793,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.PowerShell.resx">
       <CustomToolNamespace>System.Data.Entity.Migrations.Properties</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\System\Data\EntityModel\System.Data.Resources.AnnotationSchema.xsd">
       <LogicalName>System.Data.Resources.AnnotationSchema.xsd</LogicalName>

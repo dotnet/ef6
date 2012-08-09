@@ -100,6 +100,7 @@
     <Compile Include="Config\DbConfigurationLoaderTests.cs" />
     <Compile Include="Config\DbConfigurationManagerTests.cs" />
     <Compile Include="Config\DbConfigurationTests.cs" />
+    <Compile Include="Config\DbConfigurationTypeAttributeTests.cs" />
     <Compile Include="Config\DefaultProviderServicesResolverTests.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensionsTests.cs" />
     <Compile Include="Config\MigrationsConfigurationResolverTests.cs" />

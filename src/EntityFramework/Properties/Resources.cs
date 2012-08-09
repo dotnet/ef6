@@ -13278,6 +13278,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "The DbConfiguration type '{0}' specified in the DbConfigurationTypeAttribute constructor could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
+        /// </summary>
+        internal static string DbConfigurationTypeInAttributeNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbConfigurationTypeInAttributeNotFound, p0);
+        }
+
+        /// <summary>
         /// A string like "Failed to create instance of type '{0}'. The type must have a public parameterless constructor."
         /// </summary>
         internal static string CreateInstance_NoParameterlessConstructor(object p0)
@@ -16670,6 +16678,7 @@ namespace System.Data.Entity.Resources
         internal const string CreateInstance_BadSqlGeneratorType = "CreateInstance_BadSqlGeneratorType";
         internal const string CreateInstance_BadDbConfigurationType = "CreateInstance_BadDbConfigurationType";
         internal const string DbConfigurationTypeNotFound = "DbConfigurationTypeNotFound";
+        internal const string DbConfigurationTypeInAttributeNotFound = "DbConfigurationTypeInAttributeNotFound";
         internal const string CreateInstance_NoParameterlessConstructor = "CreateInstance_NoParameterlessConstructor";
         internal const string CreateInstance_AbstractType = "CreateInstance_AbstractType";
         internal const string CreateInstance_GenericType = "CreateInstance_GenericType";

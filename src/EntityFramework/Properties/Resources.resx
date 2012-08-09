@@ -5279,6 +5279,9 @@
   <data name="DbConfigurationTypeNotFound" xml:space="preserve">
     <value>The DbConfiguration type '{0}' specified in the application config file could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
+  <data name="DbConfigurationTypeInAttributeNotFound" xml:space="preserve">
+    <value>The DbConfiguration type '{0}' specified in the DbConfigurationTypeAttribute constructor could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
+  </data>
   <data name="CreateInstance_NoParameterlessConstructor" xml:space="preserve">
     <value>Failed to create instance of type '{0}'. The type must have a public parameterless constructor.</value>
   </data>

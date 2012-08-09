@@ -81,15 +81,6 @@ namespace System.Data.Entity.Config
 
             configuration = _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? configuration;
 
-            var asProxy = configuration as DbConfigurationProxy;
-            if (asProxy != null)
-            {
-                var configType = asProxy.ConfigurationToUse();
-                configuration = configType == null || typeof(DbNullConfiguration).IsAssignableFrom(configType)
-                                    ? configuration
-                                    : configType.CreateInstance<DbConfiguration>();
-            }
-
             _newConfiguration = configuration;
 
             if (_configuration.Value.GetType()
@@ -132,7 +123,7 @@ namespace System.Data.Entity.Config
 
             if (!_configuration.IsValueCreated)
             {
-                var foundConfiguration = _finder.TryCreateConfiguration(contextType.Assembly.GetAccessibleTypes());
+                var foundConfiguration = _finder.TryCreateConfiguration(contextType);
                 if (foundConfiguration != null)
                 {
                     SetConfiguration(foundConfiguration);
@@ -141,8 +132,8 @@ namespace System.Data.Entity.Config
             else if (!contextAssembly.IsDynamic && // Don't throw for proxy contexts created in dynamic assemblies
                      !_loader.AppConfigContainsDbConfigurationType(AppConfig.DefaultInstance))
             {
-                var foundType = _finder.TryFindConfigurationType(contextType.Assembly.GetAccessibleTypes());
-                if (foundType != null && !typeof(DbNullConfiguration).IsAssignableFrom(foundType))
+                var foundType = _finder.TryFindConfigurationType(contextType);
+                if (foundType != null)
                 {
                     if (_configuration.Value.GetType() == typeof(DbConfiguration))
                     {
@@ -166,7 +157,7 @@ namespace System.Data.Entity.Config
             Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
 
             var configuration = _loader.TryLoadFromConfig(config)
-                                ?? _finder.TryCreateConfiguration(contextType.Assembly.GetAccessibleTypes())
+                                ?? _finder.TryCreateConfiguration(contextType)
                                 ?? new DbConfiguration();
 
             configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
