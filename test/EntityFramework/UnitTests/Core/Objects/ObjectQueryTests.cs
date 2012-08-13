@@ -18,13 +18,28 @@ namespace System.Data.Entity.Core.Objects
                 new DbEnumeratorShim<object>(((IEnumerable<object>)new[] { new object() }).GetEnumerator()));
             var objectQuery = MockHelper.CreateMockObjectQuery(null, shaperMock.Object).Object;
 
-            var enumerator = objectQuery.GetEnumerator();
+            var enumerator = ((IEnumerable<object>)objectQuery).GetEnumerator();
 
             shaperMock.Verify(m => m.GetEnumerator(), Times.Never());
 
             enumerator.MoveNext();
 
             shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
+        }
+
+        [Fact]
+        public void Foreach_calls_generic_GetEnumerator()
+        {
+            var shaperMock = MockHelper.CreateShaperMock<string>();
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(
+                () =>
+                new DbEnumeratorShim<string>(((IEnumerable<string>)new[] { "foo" }).GetEnumerator()));
+            var objectQuery = MockHelper.CreateMockObjectQuery(null, shaperMock.Object).Object;
+
+            foreach(var element in objectQuery)
+            {
+                Assert.True(element.StartsWith("foo")); 
+            }
         }
     }
 }

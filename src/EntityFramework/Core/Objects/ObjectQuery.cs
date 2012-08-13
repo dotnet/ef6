@@ -280,7 +280,8 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Gets the result element type for this query instance.
         /// </summary>
-        public virtual Type ElementType
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        Type IQueryable.ElementType
         {
             get { return _state.ElementType; }
         }
@@ -292,12 +293,17 @@ namespace System.Data.Entity.Core.Objects
         ///     default expression is not cached. This allows us to differentiate
         ///     between LINQ and Entity-SQL queries.
         /// </summary>
-        public abstract Expression Expression { get; }
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        Expression IQueryable.Expression
+        {
+            get { return GetExpression(); }
+        }
 
         /// <summary>
         ///     Gets the <see cref="IQueryProvider" /> associated with this query instance.
         /// </summary>
-        public virtual IQueryProvider Provider
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IQueryProvider IQueryable.Provider
         {
             get { return ObjectQueryProvider; }
         }
@@ -310,7 +316,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
-        public abstract IEnumerator GetEnumerator();
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumeratorInternal();
+        }
 
         #endregion
 
@@ -332,6 +342,8 @@ namespace System.Data.Entity.Core.Objects
 
         #region Internal Methods
 
+        internal abstract Expression GetExpression();
+        internal abstract IEnumerator GetEnumeratorInternal();
         internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult ExecuteInternal(MergeOption mergeOption);

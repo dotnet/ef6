@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// <summary>
     ///     LINQ query provider implementation.
     /// </summary>
-    internal sealed class ObjectQueryProvider : IQueryProvider, IDbAsyncQueryProvider
+    internal class ObjectQueryProvider : IQueryProvider, IDbAsyncQueryProvider
     {
         // Although ObjectQuery contains a reference to ObjectContext, it is possible
         // that IQueryProvider methods be directly invoked from the ObjectContext.
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <typeparam name="TElement"> The element type of the query. </typeparam>
         /// <param name="expression"> Expression forming the query. </param>
         /// <returns> A new <see cref="ObjectQuery{S}" /> instance. </returns>
-        private ObjectQuery<TElement> CreateQuery<TElement>(Expression expression)
+        internal virtual ObjectQuery<TElement> CreateQuery<TElement>(Expression expression)
         {
             return GetObjectQueryState(_query, expression, typeof(TElement)).CreateObjectQuery<TElement>();
         }
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="expression"> The LINQ expression that defines the new query </param>
         /// <param name="ofType"> The result type of the new ObjectQuery </param>
         /// <returns> A new <see cref="ObjectQuery{ofType}" /> , as an instance of ObjectQuery </returns>
-        private ObjectQuery CreateQuery(Expression expression, Type ofType)
+        internal virtual ObjectQuery CreateQuery(Expression expression, Type ofType)
         {
             return GetObjectQueryState(_query, expression, ofType).CreateQuery();
         }
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
-
+            
             return CreateQuery<TElement>(expression);
         }
 
@@ -140,6 +140,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // Determine the type of the query instance by binding generic parameter in Query<>.Queryable
             // (based on element type of expression)
             var elementType = TypeSystem.GetElementType(expression.Type);
+
             return CreateQuery(expression, elementType);
         }
 

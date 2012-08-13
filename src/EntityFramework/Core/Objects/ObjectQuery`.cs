@@ -557,22 +557,22 @@ namespace System.Data.Entity.Core.Objects
         {
             return new LazyEnumerator<T>(
                 () =>
+                {
+                    var disposableEnumerable = GetResults(null);
+                    try
                     {
-                        var disposableEnumerable = GetResults(null);
-                        try
-                        {
-                            var result = disposableEnumerable.GetEnumerator();
-                            return result;
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+                        var result = disposableEnumerable.GetEnumerator();
+                        return result;
+                    }
+                    catch
+                    {
+                        // if there is a problem creating the enumerator, we should dispose
+                        // the enumerable (if there is no problem, the enumerator will take 
+                        // care of the dispose)
+                        disposableEnumerable.Dispose();
+                        throw;
+                    }
+                });
         }
 
         #endregion
@@ -588,21 +588,21 @@ namespace System.Data.Entity.Core.Objects
         {
             return new LazyAsyncEnumerator<T>(
                 async () =>
-                          {
-                              var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None);
-                              try
-                              {
-                                  return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
-                              }
-                              catch
-                              {
-                                  // if there is a problem creating the enumerator, we should dispose
-                                  // the enumerable (if there is no problem, the enumerator will take 
-                                  // care of the dispose)
-                                  disposableEnumerable.Dispose();
-                                  throw;
-                              }
-                          });
+                {
+                    var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None);
+                    try
+                    {
+                        return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
+                    }
+                    catch
+                    {
+                        // if there is a problem creating the enumerator, we should dispose
+                        // the enumerable (if there is no problem, the enumerator will take 
+                        // care of the dispose)
+                        disposableEnumerable.Dispose();
+                        throw;
+                    }
+                });
         }
 
         #endregion
@@ -610,7 +610,7 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectQuery Overrides
 
         /// <inheritdoc />
-        public override IEnumerator GetEnumerator()
+        internal override IEnumerator GetEnumeratorInternal()
         {
             return ((IEnumerable<T>)this).GetEnumerator();
         }
@@ -647,37 +647,34 @@ namespace System.Data.Entity.Core.Objects
         ///     to be retrieved and processed by the ELinq ExpressionConverter.
         /// </summary>
         /// <returns> The LINQ expression for this ObjectQuery, wrapped in a MergeOption-preserving call to the MergeAs method if the ObjectQuery.MergeOption property has been set. </returns>
-        public override Expression Expression
+        internal override Expression GetExpression()
         {
-            get
+            // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),
+            // then create a ConstantExpression that uses this ObjectQuery as its value.
+            Expression retExpr;
+            if (!QueryState.TryGetExpression(out retExpr))
             {
-                // If this ObjectQuery is not backed by a LINQ Expression (it is an ESQL query),
-                // then create a ConstantExpression that uses this ObjectQuery as its value.
-                Expression retExpr;
-                if (!QueryState.TryGetExpression(out retExpr))
-                {
-                    retExpr = Expression.Constant(this);
-                }
-
-                var objectQueryType = typeof(ObjectQuery<T>);
-                if (QueryState.UserSpecifiedMergeOption.HasValue)
-                {
-                    var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
-                    Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
-                    retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                    retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
-                }
-
-                if (null != QueryState.Span)
-                {
-                    var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
-                    Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
-                    retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                    retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
-                }
-
-                return retExpr;
+                retExpr = Expression.Constant(this);
             }
+
+            var objectQueryType = typeof(ObjectQuery<T>);
+            if (QueryState.UserSpecifiedMergeOption.HasValue)
+            {
+                var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
+                Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
+                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
+                retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
+            }
+
+            if (null != QueryState.Span)
+            {
+                var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
+                Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
+                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
+                retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
+            }
+
+            return retExpr;
         }
 
         // Intended for use only in the MethodCallExpression produced for inline queries.

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Linq;
+    using System.Linq.Expressions;
     using Moq;
     using Moq.Protected;
 
@@ -49,9 +50,16 @@ namespace System.Data.Entity.Core.Objects
             objectContextMock.Setup(m => m.ObjectStateManager).Returns(objectStateManagerMock.Object);
 
             var mockObjectQuery = MockHelper.CreateMockObjectQuery<DbDataRecord>(null);
+            var mockObjectQueryProvider = new Mock<ObjectQueryProvider>(mockObjectQuery.Object);
+            mockObjectQueryProvider.Setup(m => m.CreateQuery<DbDataRecord>(It.IsAny<Expression>()))
+                .Returns(mockObjectQuery.Object);
+            mockObjectQueryProvider.Setup(m => m.CreateQuery(It.IsAny<Expression>(), typeof(DbDataRecord)))
+                .Returns(mockObjectQuery.Object);
+
             var fakeQueryable = new DbDataRecord[0].AsQueryable();
-            mockObjectQuery.Setup(m => m.Provider).Returns(() => fakeQueryable.Provider);
-            mockObjectQuery.Setup(m => m.Expression).Returns(() => fakeQueryable.Expression);
+            mockObjectQuery.Setup(m => m.GetEnumeratorInternal()).Returns(fakeQueryable.GetEnumerator);
+            mockObjectQuery.Setup(m => m.GetExpression()).Returns(() => fakeQueryable.Expression);
+            mockObjectQuery.Setup(m => m.ObjectQueryProvider).Returns(() => mockObjectQueryProvider.Object);
 
             objectContextMock.Setup(m => m.CreateQuery<DbDataRecord>(It.IsAny<string>(), It.IsAny<ObjectParameter[]>())).Returns(
                 () => mockObjectQuery.Object);
