@@ -31,10 +31,16 @@ namespace System.Data.Entity.Config
             public void GetConfiguration_returns_the_configuration_at_the_top_of_the_stack_if_overriding_configurations_have_been_pushed()
             {
                 var manager = CreateManager();
-                var configuration = new Mock<DbConfiguration>
+                var mockInternalConfiguration = new Mock<InternalConfiguration>
                     {
                         CallBase = true
-                    }.Object;
+                    };
+
+                var mockDbConfiguration = new Mock<DbConfiguration>();
+                mockDbConfiguration.Setup(m => m.InternalConfiguration).Returns(mockInternalConfiguration.Object);
+                mockInternalConfiguration.Setup(m => m.Owner).Returns(mockDbConfiguration.Object);
+                
+                var configuration = mockInternalConfiguration.Object;
 
                 manager.SetConfiguration(configuration);
                 manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
@@ -53,11 +59,11 @@ namespace System.Data.Entity.Config
             public void GetConfiguration_returns_the_previously_set_configuration()
             {
                 var manager = CreateManager();
-                var configuration = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
 
-                manager.SetConfiguration(configuration);
+                manager.SetConfiguration(mockInternalConfiguration.Object);
 
-                Assert.Same(configuration, manager.GetConfiguration());
+                Assert.Same(mockInternalConfiguration.Object, manager.GetConfiguration());
             }
 
             [Fact]
@@ -120,38 +126,38 @@ namespace System.Data.Entity.Config
             public void SetConfiguration_sets_and_locks_the_configuration_if_none_was_previously_set_and_config_file_has_none()
             {
                 var manager = CreateManager();
-                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
 
-                manager.SetConfiguration(mockConfiguration.Object);
+                manager.SetConfiguration(mockInternalConfiguration.Object);
 
-                Assert.Same(mockConfiguration.Object, manager.GetConfiguration());
+                Assert.Same(mockInternalConfiguration.Object, manager.GetConfiguration());
 
-                mockConfiguration.Verify(m => m.Lock());
+                mockInternalConfiguration.Verify(m => m.Lock());
             }
 
             [Fact]
             public void The_same_type_of_configuration_can_be_set_multiple_times()
             {
                 var manager = CreateManager();
-                var configuration1 = new Mock<DbConfiguration>().Object;
-                var configuration2 = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration1 = CreateMockInternalConfiguration();
+                var mockInternalConfiguration2 = CreateMockInternalConfiguration();
 
-                manager.SetConfiguration(configuration1);
-                manager.SetConfiguration(configuration2);
+                manager.SetConfiguration(mockInternalConfiguration1.Object);
+                manager.SetConfiguration(mockInternalConfiguration2.Object);
 
-                Assert.Same(configuration1, manager.GetConfiguration());
+                Assert.Same(mockInternalConfiguration1.Object, manager.GetConfiguration());
             }
 
             [Fact]
             public void SetConfiguration_discards_the_given_configuration_and_uses_the_configuration_from_the_config_file_if_it_exists()
             {
-                var mockLoadedConfig = new Mock<DbConfiguration>();
+                var mockLoadedConfig = CreateMockInternalConfiguration();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
                 mockLoader.Setup(m => m.TryLoadFromConfig(It.IsAny<AppConfig>())).Returns(mockLoadedConfig.Object);
 
                 var manager = CreateManager(mockLoader);
-                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockConfiguration = CreateMockInternalConfiguration();
 
                 manager.SetConfiguration(mockConfiguration.Object);
 
@@ -165,27 +171,33 @@ namespace System.Data.Entity.Config
             public void SetConfiguration_throws_if_an_attempt_is_made_to_set_a_different_configuration_type()
             {
                 var manager = CreateManager();
-                var configuration1 = new FakeConfiguration();
-                var configuration2 = new Mock<DbConfiguration>().Object;
 
-                manager.SetConfiguration(configuration1);
+                var configuration1 = new FakeConfiguration();
+                var mockInternalConfiguration1 = CreateMockInternalConfiguration(configuration1);
+
+                var configuration2 = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration2 = CreateMockInternalConfiguration(configuration2);
+
+                manager.SetConfiguration(mockInternalConfiguration1.Object);
 
                 Assert.Equal(
                     Strings.ConfigurationSetTwice(configuration2.GetType().Name, configuration1.GetType().Name),
-                    Assert.Throws<InvalidOperationException>(() => manager.SetConfiguration(configuration2)).Message);
+                    Assert.Throws<InvalidOperationException>(() => manager.SetConfiguration(mockInternalConfiguration2.Object)).Message);
             }
 
             [Fact]
             public void SetConfiguration_throws_if_an_attempt_is_made_to_set_a_configuration_after_the_default_has_already_been_used()
             {
                 var manager = CreateManager();
-                var configuration = new Mock<DbConfiguration>().Object;
+                
+                var dbConfiguration = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration = CreateMockInternalConfiguration(dbConfiguration);
 
                 manager.GetConfiguration(); // Initialize default
 
                 Assert.Equal(
-                    Strings.DefaultConfigurationUsedBeforeSet(configuration.GetType().Name),
-                    Assert.Throws<InvalidOperationException>(() => manager.SetConfiguration(configuration)).Message);
+                    Strings.DefaultConfigurationUsedBeforeSet(dbConfiguration.GetType().Name),
+                    Assert.Throws<InvalidOperationException>(() => manager.SetConfiguration(mockInternalConfiguration.Object)).Message);
             }
 
             /// <summary>
@@ -199,7 +211,7 @@ namespace System.Data.Entity.Config
             {
                 ConfigurationThreadTest(
                     m => { },
-                    m => m.SetConfiguration(new FunctionalTestsConfiguration()));
+                    m => m.SetConfiguration(new FunctionalTestsConfiguration().InternalConfiguration));
             }
         }
 
@@ -208,7 +220,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void EnsureLoadedForContext_loads_configuration_from_context_assembly_if_none_was_previously_used()
             {
-                var foundConfiguration = new Mock<DbConfiguration>().Object;
+                var foundConfiguration = CreateMockInternalConfiguration().Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryCreateConfiguration(typeof(FakeContext), It.IsAny<IEnumerable<Type>>())).Returns(foundConfiguration);
 
@@ -272,10 +284,10 @@ namespace System.Data.Entity.Config
 
                 mockFinder.Verify(m => m.TryCreateConfiguration(typeof(FakeContext), It.IsAny<IEnumerable<Type>>()));
 
-                var configuration = new Mock<DbConfiguration>().Object;
-                manager.SetConfiguration(configuration);
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
+                manager.SetConfiguration(mockInternalConfiguration.Object);
 
-                Assert.Same(configuration, manager.GetConfiguration());
+                Assert.Same(mockInternalConfiguration.Object, manager.GetConfiguration());
             }
 
             [Fact]
@@ -312,10 +324,12 @@ namespace System.Data.Entity.Config
             [Fact]
             public void EnsureLoadedForContext_does_not_throw_if_configuration_in_assembly_is_the_same_as_was_previously_used()
             {
-                var configuration = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
+
+                var configuration = mockInternalConfiguration.Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryFindConfigurationType(typeof(FakeContext), It.IsAny<IEnumerable<Type>>()))
-                    .Returns(configuration.GetType());
+                    .Returns(configuration.Owner.GetType());
                 var manager = CreateManager(null, mockFinder);
 
                 manager.SetConfiguration(configuration);
@@ -330,16 +344,17 @@ namespace System.Data.Entity.Config
             [Fact]
             public void EnsureLoadedForContext_throws_if_found_configuration_does_not_match_previously_used_configuration()
             {
-                var configuration1 = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
+
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryFindConfigurationType(typeof(FakeContext), It.IsAny<IEnumerable<Type>>()))
                     .Returns(typeof(FakeConfiguration));
                 var manager = CreateManager(null, mockFinder);
 
-                manager.SetConfiguration(configuration1);
+                manager.SetConfiguration(mockInternalConfiguration.Object);
 
                 Assert.Equal(
-                    Strings.SetConfigurationNotDiscovered(configuration1.GetType().Name, typeof(FakeContext).Name),
+                    Strings.SetConfigurationNotDiscovered(mockInternalConfiguration.Object.Owner.GetType().Name, typeof(FakeContext).Name),
                     Assert.Throws<InvalidOperationException>(
                         () => manager.EnsureLoadedForContext(typeof(FakeContext))).Message);
             }
@@ -364,7 +379,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void EnsureLoadedForContext_does_not_throw_if_configuration_was_set_but_is_not_found_in_context_assembly()
             {
-                var configuration = new Mock<DbConfiguration>().Object;
+                var configuration = CreateMockInternalConfiguration().Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var manager = CreateManager(null, mockFinder);
 
@@ -378,16 +393,16 @@ namespace System.Data.Entity.Config
             [Fact]
             public void EnsureLoadedForContext_does_not_throw_if_configuration_is_specified_in_config_file()
             {
-                var mockLoadedConfig = new Mock<DbConfiguration>();
+                var mockLoadedConfig = CreateMockInternalConfiguration();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
                 mockLoader.Setup(m => m.TryLoadFromConfig(It.IsAny<AppConfig>())).Returns(mockLoadedConfig.Object);
 
-                var configuration = new Mock<DbConfiguration>().Object;
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var manager = CreateManager(mockLoader, mockFinder);
 
-                manager.SetConfiguration(configuration);
+                manager.SetConfiguration(mockInternalConfiguration.Object);
 
                 manager.EnsureLoadedForContext(typeof(FakeContext));
                 Assert.Same(mockLoadedConfig.Object, manager.GetConfiguration());
@@ -431,7 +446,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void PushConfugiration_pushes_and_locks_configuration_from_config_if_found()
             {
-                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockConfiguration = new Mock<InternalConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
                 mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
@@ -450,7 +465,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void PushConfugiration_pushes_and_locks_configuration_discovered_in_context_assembly_if_found()
             {
-                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockConfiguration = new Mock<InternalConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryCreateConfiguration(typeof(DbContext), It.IsAny<IEnumerable<Type>>())).Returns(mockConfiguration.Object);
@@ -485,7 +500,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AppConfigResolver_is_added_to_pushed_configuration()
             {
-                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockConfiguration = new Mock<InternalConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
                 mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
@@ -498,7 +513,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void PushConfugiration_switches_in_original_root_resolver()
             {
-                var mockConfiguration = new Mock<DbConfiguration>();
+                var mockConfiguration = new Mock<InternalConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 mockLoader.Setup(m => m.TryLoadFromConfig(AppConfig.DefaultInstance)).Returns(mockConfiguration.Object);
                 mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
@@ -544,15 +559,19 @@ namespace System.Data.Entity.Config
             public void PopConfiguration_removes_the_first_configuration_associated_with_the_given_AppConfig()
             {
                 var manager = CreateManager();
-                var configuration = new Mock<DbConfiguration>
-                    {
-                        CallBase = true
-                    }.Object;
+                var mockInternalConfiguration = new Mock<InternalConfiguration>
+                {
+                    CallBase = true
+                };
+
+                var mockDbConfiguration = new Mock<DbConfiguration>();
+                mockDbConfiguration.Setup(m => m.InternalConfiguration).Returns(mockInternalConfiguration.Object);
+                mockInternalConfiguration.Setup(m => m.Owner).Returns(mockDbConfiguration.Object);
 
                 var appConfig1 = AppConfig.DefaultInstance;
                 var appConfig2 = new AppConfig(ConfigurationManager.ConnectionStrings);
 
-                manager.SetConfiguration(configuration);
+                manager.SetConfiguration(mockInternalConfiguration.Object);
 
                 manager.PushConfiguration(appConfig1, typeof(DbContext));
                 var pushed1 = manager.GetConfiguration();
@@ -562,7 +581,7 @@ namespace System.Data.Entity.Config
                 Assert.Same(pushed1, manager.GetConfiguration());
 
                 manager.PopConfiguration(appConfig1);
-                Assert.Same(configuration, manager.GetConfiguration());
+                Assert.Same(mockInternalConfiguration.Object, manager.GetConfiguration());
             }
 
             [Fact]
@@ -582,9 +601,9 @@ namespace System.Data.Entity.Config
             Mock<DbConfigurationLoader> mockLoader = null,
             Mock<DbConfigurationFinder> mockFinder = null)
         {
-            mockLoader = mockLoader ?? new Mock<DbConfigurationLoader>();
-            mockFinder = mockFinder ?? new Mock<DbConfigurationFinder>();
-            return new DbConfigurationManager(mockLoader.Object, mockFinder.Object);
+            return new DbConfigurationManager(
+                (mockLoader ?? new Mock<DbConfigurationLoader>()).Object, 
+                (mockFinder ?? new Mock<DbConfigurationFinder>()).Object);
         }
 
         public class FakeConfiguration : DbConfiguration
@@ -595,13 +614,28 @@ namespace System.Data.Entity.Config
         {
         }
 
+        private static Mock<InternalConfiguration> CreateMockInternalConfiguration(DbConfiguration dbConfiguration = null)
+        {
+            var mockInternalConfiguration = new Mock<InternalConfiguration>();
+
+            if (dbConfiguration == null)
+            {
+                var mockDbConfiguration = new Mock<DbConfiguration>();
+                mockDbConfiguration.Setup(m => m.InternalConfiguration).Returns(mockInternalConfiguration.Object);
+                dbConfiguration = mockDbConfiguration.Object;
+            }
+
+            mockInternalConfiguration.Setup(m => m.Owner).Returns(dbConfiguration);
+            return mockInternalConfiguration;
+        }
+
         private static void ConfigurationThreadTest(Action<DbConfigurationManager> beforeThreads, Action<DbConfigurationManager> inThreads)
         {
             for (var i = 0; i < 30; i++)
             {
-                var configurationBag = new ConcurrentBag<DbConfiguration>();
+                var configurationBag = new ConcurrentBag<InternalConfiguration>();
                 var manager = new DbConfigurationManager(new DbConfigurationLoader(), new DbConfigurationFinder());
-                manager.SetConfiguration(new FunctionalTestsConfiguration());
+                manager.SetConfiguration(new FunctionalTestsConfiguration().InternalConfiguration);
                 beforeThreads(manager);
 
                 ExecuteInParallel(

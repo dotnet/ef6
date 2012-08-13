@@ -26,7 +26,7 @@ namespace System.Data.Entity
     {
         static TestBase()
         {
-            DbConfiguration.Instance = new FunctionalTestsConfiguration();
+            DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
         }
 
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)

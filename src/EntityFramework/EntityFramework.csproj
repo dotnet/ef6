@@ -145,6 +145,7 @@
     <Compile Include="Config\DefaultProviderServicesResolver.cs" />
     <Compile Include="Config\IDbDependencyResolver.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensions.cs" />
+    <Compile Include="Config\InternalConfiguration.cs" />
     <Compile Include="Config\MigrationsConfigurationResolver.cs" />
     <Compile Include="Config\ProviderServicesFactory.cs" />
     <Compile Include="Config\ResolverChain.cs" />

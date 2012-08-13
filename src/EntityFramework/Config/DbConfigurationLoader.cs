@@ -9,7 +9,7 @@ namespace System.Data.Entity.Config
 
     internal class DbConfigurationLoader
     {
-        public virtual DbConfiguration TryLoadFromConfig(AppConfig config)
+        public virtual InternalConfiguration TryLoadFromConfig(AppConfig config)
         {
             Contract.Requires(config != null);
 
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Config
                 throw new InvalidOperationException(Strings.DbConfigurationTypeNotFound(typeName), ex);
             }
 
-            return configType.CreateInstance<DbConfiguration>(Strings.CreateInstance_BadDbConfigurationType);
+            return configType.CreateInstance<DbConfiguration>(Strings.CreateInstance_BadDbConfigurationType).InternalConfiguration;
         }
 
         public virtual bool AppConfigContainsDbConfigurationType(AppConfig config)

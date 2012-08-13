@@ -11,31 +11,14 @@ namespace System.Data.Entity.Config
 
     public class DbConfigurationTests
     {
-        public class Instance
+        public class SetConfiguration
         {
             [Fact]
-            public void DbConfiguration_Instance_cannot_be_set_to_null()
+            public void DbConfiguration_cannot_be_set_to_null()
             {
                 Assert.Equal(
-                    "value",
-                    Assert.Throws<ArgumentNullException>(() => DbConfiguration.Instance = null).ParamName);
-            }
-        }
-
-        public class AddAppConfigResolver
-        {
-            [Fact]
-            public void AddAppConfigResolver_adds_a_resolver_to_the_app_config_chain()
-            {
-                var mockAppConfigChain = new Mock<ResolverChain>();
-                var resolver = new Mock<IDbDependencyResolver>().Object;
-
-                new DbConfiguration(
-                    mockAppConfigChain.Object, new Mock<ResolverChain>().Object,
-                    new RootDependencyResolver()).
-                    AddAppConfigResolver(resolver);
-
-                mockAppConfigChain.Verify(m => m.Add(resolver));
+                    "configuration",
+                    Assert.Throws<ArgumentNullException>(() => DbConfiguration.SetConfiguration(null)).ParamName);
             }
         }
 
@@ -50,28 +33,14 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
-            public void AddDependencyResolver_throws_if_the_configuation_is_locked()
+            public void AddDependencyResolver_delegates_to_internal_configuration()
             {
-                var configuration = new DbConfiguration();
-                configuration.Lock();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("AddDependencyResolver"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddDependencyResolver(new Mock<IDbDependencyResolver>().Object)).Message);
-            }
-
-            [Fact]
-            public void AddDependencyResolver_adds_a_resolver_to_the_normal_chain()
-            {
-                var mockNormalChain = new Mock<ResolverChain>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
-                new DbConfiguration(
-                    new Mock<ResolverChain>().Object, mockNormalChain.Object,
-                    new RootDependencyResolver()).AddDependencyResolver(resolver);
+                new DbConfiguration(mockInternalConfiguration.Object).AddDependencyResolver(resolver);
 
-                mockNormalChain.Verify(m => m.Add(resolver));
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(resolver));
             }
         }
 
@@ -99,201 +68,62 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
-            public void AddProvider_throws_if_the_configuation_is_locked()
+            public void AddProvider_delegates_to_internal_configuration()
             {
-                var configuration = new DbConfiguration();
-                configuration.Lock();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var providerServices = new Mock<DbProviderServices>().Object;
 
-                Assert.Equal(
-                    Strings.ConfigurationLocked("AddProvider"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddProvider("Karl", new Mock<DbProviderServices>().Object)).Message);
+                new DbConfiguration(mockInternalConfiguration.Object).AddProvider("900.FTW", providerServices);
+
+                mockInternalConfiguration.Verify(m => m.AddProvider("900.FTW", providerServices));
             }
         }
 
         public class GetProvider
         {
             [Fact]
-            public void AddProvider_throws_if_given_bad_invariant_name()
+            public void GetProvider_throws_if_given_bad_invariant_name()
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
-                    Assert.Throws<ArgumentException>(() => new DbConfiguration().GetProvider(null)).Message);
+                    Assert.Throws<ArgumentException>(() => DbConfiguration.GetProvider(null)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
-                    Assert.Throws<ArgumentException>(() => new DbConfiguration().GetProvider("")).Message);
+                    Assert.Throws<ArgumentException>(() => DbConfiguration.GetProvider("")).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
-                    Assert.Throws<ArgumentException>(() => new DbConfiguration().GetProvider(" ")).Message);
-            }
-
-            [Fact]
-            public void GetProvider_returns_provider_added_by_AddProvider()
-            {
-                var configuration = new DbConfiguration();
-                var provider = new Mock<DbProviderServices>().Object;
-
-                configuration.AddProvider("Karl", provider);
-
-                Assert.Same(provider, configuration.GetProvider("Karl"));
+                    Assert.Throws<ArgumentException>(() => DbConfiguration.GetProvider(" ")).Message);
             }
         }
 
-        public class DefaultConnectionFactory
+        public class SetDefaultConnectionFactory
         {
             [Fact]
             public void Setting_DefaultConnectionFactory_throws_if_given_a_null_factory()
             {
                 Assert.Equal(
-                    "value",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().DefaultConnectionFactory = null).ParamName);
+                    "connectionFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetDefaultConnectionFactory(null)).ParamName);
             }
 
             [Fact]
-            public void Setting_DefaultConnectionFactory_throws_if_the_configuation_is_locked()
+            public void SetDefaultConnectionFactory_delegates_to_internal_configuration()
             {
-                var configuration = new DbConfiguration();
-                configuration.Lock();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var connectionFactory = new Mock<IDbConnectionFactory>().Object;
 
-                Assert.Equal(
-                    Strings.ConfigurationLocked("DefaultConnectionFactory"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.DefaultConnectionFactory = new Mock<IDbConnectionFactory>().Object).Message);
-            }
+                new DbConfiguration(mockInternalConfiguration.Object).SetDefaultConnectionFactory(connectionFactory);
 
-            [Fact]
-            public void Getting_DefaultConnectionFactory_returns_factory_previously_set()
-            {
-                var configuration = new DbConfiguration();
-                var factory = new Mock<IDbConnectionFactory>().Object;
-
-                configuration.DefaultConnectionFactory = factory;
-
-                Assert.Same(factory, configuration.DefaultConnectionFactory);
-            }
-
-            [Fact]
-            public void Getting_DefaultConnectionFactory_returns_factory_set_by_legacy_API()
-            {
-                var configuration = new DbConfiguration();
-                var legacyFactory = new Mock<IDbConnectionFactory>().Object;
-                var factory = new Mock<IDbConnectionFactory>().Object;
-
-                try
-                {
-#pragma warning disable 612,618
-                    Database.DefaultConnectionFactory = legacyFactory;
-#pragma warning restore 612,618
-
-                    configuration.DefaultConnectionFactory = factory;
-
-                    Assert.Same(legacyFactory, configuration.DefaultConnectionFactory);
-                }
-                finally
-                {
-                    Database.ResetDefaultConnectionFactory();
-                }
-            }
-
-            [Fact]
-            public void The_app_config_chain_is_prefered_over_the_normal_chain()
-            {
-                var mockAppConfigChain = new Mock<ResolverChain>();
-                var configService = new Mock<IDbConnectionFactory>().Object;
-                mockAppConfigChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(configService);
-
-                var mockNormalChain = new Mock<ResolverChain>();
-                var normalService = new Mock<IDbConnectionFactory>().Object;
-                mockNormalChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(normalService);
-
-                Assert.Same(
-                    configService,
-                    new DbConfiguration(
-                        mockAppConfigChain.Object, mockNormalChain.Object,
-                        new RootDependencyResolver()).
-                        DefaultConnectionFactory);
-
-                mockAppConfigChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Once());
-                mockNormalChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Never());
+                mockInternalConfiguration.VerifySet(m => m.DefaultConnectionFactory = connectionFactory);
             }
         }
 
         public class DependencyResolver
         {
             [Fact]
-            public void DependencyResolver_returns_the_dependency_resolver_in_use()
-            {
-                var mockAppConfigChain = new Mock<ResolverChain>();
-                var mockNormalChain = new Mock<ResolverChain>();
-
-                var config = new DbConfiguration(
-                    mockAppConfigChain.Object, mockNormalChain.Object,
-                    new RootDependencyResolver());
-                var resolver = (CompositeResolver<ResolverChain, ResolverChain>)config.DependencyResolver;
-
-                Assert.Same(mockAppConfigChain.Object, resolver.First);
-                Assert.Same(mockNormalChain.Object, resolver.Second);
-            }
-
-            [Fact]
             public void Default_IDbModelCacheKeyFactory_is_returned_by_default()
             {
-                Assert.IsType<DefaultModelCacheKeyFactory>(new DbConfiguration().DependencyResolver.GetService<IDbModelCacheKeyFactory>());
-            }
-        }
-
-        public class RootResolver
-        {
-            [Fact]
-            public void RootResolver_returns_the_root_resolver()
-            {
-                var rootResolver = new RootDependencyResolver();
-
-                var config = new DbConfiguration(new Mock<ResolverChain>().Object, new Mock<ResolverChain>().Object, rootResolver);
-
-                Assert.Same(rootResolver, config.RootResolver);
-            }
-
-            [Fact]
-            public void RootResolver_is_added_to_the_non_app_config_resolver_chain()
-            {
-                var normalChain = new ResolverChain();
-                var mockRootResolver = new Mock<RootDependencyResolver>();
-
-                new DbConfiguration(new Mock<ResolverChain>().Object, normalChain, mockRootResolver.Object);
-
-                normalChain.GetService<object>("Foo");
-
-                mockRootResolver.Verify(m => m.GetService(typeof(object), "Foo"));
-            }
-        }
-
-        public class SwitchInRootResolver
-        {
-            [Fact]
-            public void SwitchInRootResolver_swicthes_in_given_root_resolver()
-            {
-                var configuration = new DbConfiguration();
-                var mockRootResolver = new Mock<RootDependencyResolver>();
-                configuration.SwitchInRootResolver(mockRootResolver.Object);
-
-                Assert.Same(mockRootResolver.Object, configuration.RootResolver);
-
-                configuration.DependencyResolver.GetService<object>("Foo");
-                mockRootResolver.Verify(m => m.GetService(typeof(object), "Foo"));
-            }
-
-            [Fact]
-            public void SwitchInRootResolver_leaves_other_resolvers_intact()
-            {
-                var configuration = new DbConfiguration();
-                var mockResolver = new Mock<IDbDependencyResolver>();
-                configuration.AddDependencyResolver(mockResolver.Object);
-
-                configuration.SwitchInRootResolver(new Mock<RootDependencyResolver>().Object);
-
-                configuration.DependencyResolver.GetService<object>("Foo");
-                mockResolver.Verify(m => m.GetService(typeof(object), "Foo"));
+                Assert.IsType<DefaultModelCacheKeyFactory>(DbConfiguration.DependencyResolver.GetService<IDbModelCacheKeyFactory>());
             }
         }
     }

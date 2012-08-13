@@ -4,12 +4,8 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
-    using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq;
 
     /// <summary>
     ///     A class derived from this class can be placed in the same assembly as a class derived from
@@ -23,31 +19,24 @@ namespace System.Data.Entity.Config
         Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     public class DbConfiguration
     {
-        private CompositeResolver<ResolverChain, ResolverChain> _resolvers;
-        private RootDependencyResolver _rootResolver;
-
-        // This does not need to be volatile since it only protects against inappropriate use not
-        // thread-unsafe use.
-        private bool _isLocked;
+        private readonly InternalConfiguration _internalConfiguration;
 
         /// <summary>
         ///     Any class derived from <see cref="DbConfiguration" /> must have a public parameterless constructor
         ///     and that constructor should call this constructor.
         /// </summary>
         protected internal DbConfiguration()
-            : this(new ResolverChain(), new ResolverChain(), new RootDependencyResolver())
+            : this(new InternalConfiguration())
         {
-            _resolvers.First.Add(new AppConfigDependencyResolver(AppConfig.DefaultInstance));
+            _internalConfiguration.Owner = this;
         }
 
-        internal DbConfiguration(ResolverChain appConfigChain, ResolverChain normalResolverChain, RootDependencyResolver rootResolver)
+        internal DbConfiguration(InternalConfiguration internalConfiguration)
         {
-            Contract.Requires(appConfigChain != null);
-            Contract.Requires(normalResolverChain != null);
+            Contract.Requires(internalConfiguration != null);
 
-            _rootResolver = rootResolver;
-            _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain, normalResolverChain);
-            _resolvers.Second.Add(_rootResolver);
+            _internalConfiguration = internalConfiguration;
+            _internalConfiguration.Owner = this;
         }
 
         /// <summary>
@@ -55,28 +44,11 @@ namespace System.Data.Entity.Config
         ///     set at application start before any Entity Framework features have been used and afterwards
         ///     should be treated as read-only.
         /// </summary>
-        public static DbConfiguration Instance
+        public static void SetConfiguration(DbConfiguration configuration)
         {
-            // Note that GetConfiguration and SetConfiguration on DbConfigurationManager are thread-safe.
-            get { return DbConfigurationManager.Instance.GetConfiguration(); }
-            set
-            {
-                Contract.Requires(value != null);
+            Contract.Requires(configuration != null);
 
-                DbConfigurationManager.Instance.SetConfiguration(value);
-            }
-        }
-
-        internal virtual void Lock()
-        {
-            _isLocked = true;
-        }
-
-        internal virtual void AddAppConfigResolver(IDbDependencyResolver resolver)
-        {
-            Contract.Requires(resolver != null);
-
-            _resolvers.First.Add(resolver);
+            InternalConfiguration.Instance = configuration.InternalConfiguration;
         }
 
         /// <summary>
@@ -95,10 +67,8 @@ namespace System.Data.Entity.Config
         protected internal void AddDependencyResolver(IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
-            CheckNotLocked("AddDependencyResolver");
 
-            // New resolvers always run after the config resolvers so that config always wins over code
-            _resolvers.Second.Add(resolver);
+            _internalConfiguration.AddDependencyResolver(resolver);
         }
 
         /// <summary>
@@ -112,9 +82,8 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(provider != null);
-            CheckNotLocked("AddProvider");
 
-            AddDependencyResolver(new SingletonDependencyResolver<DbProviderServices>(provider, providerInvariantName));
+            _internalConfiguration.AddProvider(providerInvariantName, provider);
         }
 
         /// <summary>
@@ -124,80 +93,47 @@ namespace System.Data.Entity.Config
         /// <param name="providerInvariantName"> The provider invariant name. </param>
         /// <returns> The registered provider. </returns>
         [CLSCompliant(false)]
-        public DbProviderServices GetProvider(string providerInvariantName)
+        public static DbProviderServices GetProvider(string providerInvariantName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
-            return _resolvers.GetService<DbProviderServices>(providerInvariantName);
+            return InternalConfiguration.Instance.GetProvider(providerInvariantName);
+        }
+
+        /// <summary>
+        ///     Sets the <see cref="IDbConnectionFactory" /> that is used to create connections by convention if no other
+        ///     connection string or connection is given to or can be discovered by <see cref="DbContext" />.
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to change
+        ///     the default connection factory being used.
+        /// </summary>
+        protected internal void SetDefaultConnectionFactory(IDbConnectionFactory connectionFactory)
+        {
+            Contract.Requires(connectionFactory != null);
+
+            _internalConfiguration.DefaultConnectionFactory = connectionFactory;
         }
 
         /// <summary>
         ///     The <see cref="IDbConnectionFactory" /> that is used to create connections by convention if no other
         ///     connection string or connection is given to or can be discovered by <see cref="DbContext" />.
-        ///     Set this property from the constructor of a class derived from <see cref="DbConfiguration" /> to change
-        ///     the default connection factory being used.
         /// </summary>
-        public IDbConnectionFactory DefaultConnectionFactory
+        public static IDbConnectionFactory DefaultConnectionFactory
         {
-            protected internal set
-            {
-                Contract.Requires(value != null);
-                CheckNotLocked("DefaultConnectionFactory");
-
-                AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(value));
-            }
-            get
-            {
-                return Database.DefaultConnectionFactoryChanged
-#pragma warning disable 612,618
-                           ? Database.DefaultConnectionFactory
-#pragma warning restore 612,618
-                           : _resolvers.GetService<IDbConnectionFactory>();
-            }
+            get { return InternalConfiguration.Instance.DefaultConnectionFactory; }
         }
 
         /// <summary>
         ///     Gets the <see cref="IDbDependencyResolver" /> that is being used to resolve service
         ///     dependencies in the Entity Framework.
         /// </summary>
-        public virtual IDbDependencyResolver DependencyResolver
+        public static IDbDependencyResolver DependencyResolver
         {
-            get { return _resolvers; }
+            get { return InternalConfiguration.Instance.DependencyResolver; }
         }
 
-        internal virtual RootDependencyResolver RootResolver
+        internal virtual InternalConfiguration InternalConfiguration
         {
-            get { return _rootResolver; }
-        }
-
-        /// <summary>
-        ///     This method is not thread-safe and should only be used to switch in a different root resolver
-        ///     before the configuration is locked and set. It is used for pushing a new configuration by
-        ///     DbContextInfo while maintaining legacy settings (such as database initializers) that are
-        ///     set on the root resolver.
-        /// </summary>
-        internal virtual void SwitchInRootResolver(RootDependencyResolver value)
-        {
-            Contract.Requires(value != null);
-
-            Contract.Assert(!_isLocked);
-
-            // The following is not thread-safe but this code is only called when pushing a configuration
-            // and happens to a new DbConfiguration before it has been set and locked.
-            var newChain = new ResolverChain();
-            newChain.Add(value);
-            _resolvers.Second.Resolvers.Skip(1).Each(newChain.Add);
-
-            _rootResolver = value;
-            _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(_resolvers.First, newChain);
-        }
-
-        private void CheckNotLocked(string memberName)
-        {
-            if (_isLocked)
-            {
-                throw new InvalidOperationException(Strings.ConfigurationLocked(memberName));
-            }
+            get { return _internalConfiguration; }
         }
     }
 }

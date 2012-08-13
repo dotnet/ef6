@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         protected DbProviderServices()
         {
-            _resolver = new Lazy<IDbDependencyResolver>(() => DbConfiguration.Instance.DependencyResolver);
+            _resolver = new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver);
         }
 
         /// <summary>

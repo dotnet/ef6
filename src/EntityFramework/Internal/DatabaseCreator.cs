@@ -15,14 +15,14 @@ namespace System.Data.Entity.Internal
     /// </summary>
     internal class DatabaseCreator
     {
-        private readonly Lazy<IDbDependencyResolver> _resolver;
+        private readonly IDbDependencyResolver _resolver;
 
         public DatabaseCreator()
-            : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.Instance.DependencyResolver))
+            : this(DbConfiguration.DependencyResolver)
         {
         }
 
-        public DatabaseCreator(Lazy<IDbDependencyResolver> resolver)
+        public DatabaseCreator(IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
 
@@ -46,10 +46,8 @@ namespace System.Data.Entity.Internal
             Contract.Requires(createMigrator != null);
             // objectContext may be null when testing.
 
-            var sqlGenerator = _resolver.Value.GetService<MigrationSqlGenerator>(internalContext.ProviderName);
-
             if (internalContext.CodeFirstModel != null
-                && sqlGenerator != null)
+                && _resolver.GetService<MigrationSqlGenerator>(internalContext.ProviderName) != null)
             {
                 var contextType = internalContext.Owner.GetType();
 
@@ -62,7 +60,7 @@ namespace System.Data.Entity.Internal
                             MigrationsNamespace = contextType.Namespace,
                             TargetDatabase =
                                 new DbConnectionInfo(
-                                internalContext.OriginalConnectionString, internalContext.ProviderName)
+                                    internalContext.OriginalConnectionString, internalContext.ProviderName)
                         },
                     internalContext.Owner);
 

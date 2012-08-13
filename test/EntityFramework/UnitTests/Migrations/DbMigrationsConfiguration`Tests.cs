@@ -54,10 +54,7 @@ namespace System.Data.Entity.Migrations
             var mockResolver = new Mock<IDbDependencyResolver>();
             mockResolver.Setup(m => m.GetService(typeof(MigrationSqlGenerator), "Gu.Hu.Ha")).Returns(generator);
 
-            var mockConfiguration = new Mock<DbConfiguration>();
-            mockConfiguration.Setup(m => m.DependencyResolver).Returns(mockResolver.Object);
-
-            var migrationsConfiguration = new DbMigrationsConfiguration(new Lazy<DbConfiguration>(() => mockConfiguration.Object));
+            var migrationsConfiguration = new DbMigrationsConfiguration(new Lazy<IDbDependencyResolver>(() => mockResolver.Object));
 
             if (setGenerator)
             {
@@ -74,7 +71,7 @@ namespace System.Data.Entity.Migrations
             new DbMigrationsConfiguration().SetSqlGenerator(DbProviders.SqlCe, new SqlServerMigrationSqlGenerator());
 
             Assert.IsType<SqlCeMigrationSqlGenerator>(
-                DbConfiguration.Instance.DependencyResolver.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
+                DbConfiguration.DependencyResolver.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
         }
     }
 }

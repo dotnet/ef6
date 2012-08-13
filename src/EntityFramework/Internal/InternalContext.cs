@@ -456,8 +456,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public void PerformDatabaseInitialization()
         {
-            var dbConfiguration = DbConfiguration.Instance;
-            var initializer = dbConfiguration.DependencyResolver
+            var initializer = DbConfiguration.DependencyResolver
                                   .GetService(typeof(IDatabaseInitializer<>).MakeGenericType(Owner.GetType()))
                               ?? DefaultInitializer
                               ?? new NullDatabaseInitializer<DbContext>();

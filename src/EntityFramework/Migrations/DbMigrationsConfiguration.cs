@@ -30,13 +30,13 @@ namespace System.Data.Entity.Migrations
 
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = "Migrations";
-        private readonly Lazy<DbConfiguration> _mainConfiguration;
+        private readonly Lazy<IDbDependencyResolver> _resolver;
 
         /// <summary>
         ///     Initializes a new instance of the DbMigrationsConfiguration class.
         /// </summary>
         public DbMigrationsConfiguration()
-            : this(new Lazy<DbConfiguration>(() => DbConfiguration.Instance))
+            : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver))
         {
             SetSqlGenerator("System.Data.SqlClient", new SqlServerMigrationSqlGenerator());
             SetSqlGenerator("System.Data.SqlServerCe.4.0", new SqlCeMigrationSqlGenerator());
@@ -44,9 +44,9 @@ namespace System.Data.Entity.Migrations
             CodeGenerator = new CSharpMigrationCodeGenerator();
         }
 
-        internal DbMigrationsConfiguration(Lazy<DbConfiguration> mainConfiguration)
+        internal DbMigrationsConfiguration(Lazy<IDbDependencyResolver> resolver)
         {
-            _mainConfiguration = mainConfiguration;
+            _resolver = resolver;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Migrations
             MigrationSqlGenerator migrationSqlGenerator;
             if (!_sqlGenerators.TryGetValue(providerInvariantName, out migrationSqlGenerator))
             {
-                migrationSqlGenerator = _mainConfiguration.Value.DependencyResolver.GetService<MigrationSqlGenerator>(providerInvariantName);
+                migrationSqlGenerator = _resolver.Value.GetService<MigrationSqlGenerator>(providerInvariantName);
                 if (migrationSqlGenerator == null)
                 {
                     throw Error.NoSqlGeneratorForProvider(providerInvariantName);

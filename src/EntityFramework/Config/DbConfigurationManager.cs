@@ -25,7 +25,7 @@ namespace System.Data.Entity.Config
         private readonly DbConfigurationLoader _loader;
         private readonly DbConfigurationFinder _finder;
 
-        private readonly Lazy<DbConfiguration> _configuration;
+        private readonly Lazy<InternalConfiguration> _configuration;
         private DbConfiguration _newConfiguration = new DbConfiguration();
 
         private readonly object _lock = new object();
@@ -33,9 +33,9 @@ namespace System.Data.Entity.Config
         // We don't need a dictionary here, just a set, but there is no ConcurrentSet in the BCL.
         private readonly ConcurrentDictionary<Assembly, object> _knownAssemblies = new ConcurrentDictionary<Assembly, object>();
 
-        private readonly Lazy<List<Tuple<AppConfig, DbConfiguration>>> _configurationOverrides
-            = new Lazy<List<Tuple<AppConfig, DbConfiguration>>>(
-                () => new List<Tuple<AppConfig, DbConfiguration>>());
+        private readonly Lazy<List<Tuple<AppConfig, InternalConfiguration>>> _configurationOverrides
+            = new Lazy<List<Tuple<AppConfig, InternalConfiguration>>>(
+                () => new List<Tuple<AppConfig, InternalConfiguration>>());
 
         public DbConfigurationManager(DbConfigurationLoader loader, DbConfigurationFinder finder)
         {
@@ -44,11 +44,11 @@ namespace System.Data.Entity.Config
 
             _loader = loader;
             _finder = finder;
-            _configuration = new Lazy<DbConfiguration>(
+            _configuration = new Lazy<InternalConfiguration>(
                 () =>
                     {
-                        _newConfiguration.Lock();
-                        return _newConfiguration;
+                        _newConfiguration.InternalConfiguration.Lock();
+                        return _newConfiguration.InternalConfiguration;
                     });
         }
 
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Config
             get { return _configManager; }
         }
 
-        public virtual DbConfiguration GetConfiguration()
+        public virtual InternalConfiguration GetConfiguration()
         {
             // The common case is that no overrides have ever been set so we don't take the time to do
             // the locking and checking.
@@ -75,25 +75,23 @@ namespace System.Data.Entity.Config
             return _configuration.Value;
         }
 
-        public virtual void SetConfiguration(DbConfiguration configuration)
+        public virtual void SetConfiguration(InternalConfiguration configuration)
         {
             Contract.Requires(configuration != null);
 
             configuration = _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? configuration;
 
-            _newConfiguration = configuration;
+            _newConfiguration = configuration.Owner;
 
-            if (_configuration.Value.GetType()
-                != configuration.GetType())
+            if (_configuration.Value.Owner.GetType() != configuration.Owner.GetType())
             {
-                if (_configuration.Value.GetType()
-                    == typeof(DbConfiguration))
+                if (_configuration.Value.Owner.GetType() == typeof(DbConfiguration))
                 {
-                    throw new InvalidOperationException(Strings.DefaultConfigurationUsedBeforeSet(configuration.GetType().Name));
+                    throw new InvalidOperationException(Strings.DefaultConfigurationUsedBeforeSet(configuration.Owner.GetType().Name));
                 }
 
                 throw new InvalidOperationException(
-                    Strings.ConfigurationSetTwice(configuration.GetType().Name, _configuration.Value.GetType().Name));
+                    Strings.ConfigurationSetTwice(configuration.Owner.GetType().Name, _configuration.Value.Owner.GetType().Name));
             }
         }
 
@@ -135,14 +133,14 @@ namespace System.Data.Entity.Config
                 var foundType = _finder.TryFindConfigurationType(contextType);
                 if (foundType != null)
                 {
-                    if (_configuration.Value.GetType() == typeof(DbConfiguration))
+                    if (_configuration.Value.Owner.GetType() == typeof(DbConfiguration))
                     {
                         throw new InvalidOperationException(Strings.ConfigurationNotDiscovered(foundType.Name));
                     }
-                    if (foundType != _configuration.Value.GetType())
+                    if (foundType != _configuration.Value.Owner.GetType())
                     {
                         throw new InvalidOperationException(
-                            Strings.SetConfigurationNotDiscovered(_configuration.Value.GetType().Name, contextType.Name));
+                            Strings.SetConfigurationNotDiscovered(_configuration.Value.Owner.GetType().Name, contextType.Name));
                     }
                 }
             }
@@ -158,7 +156,7 @@ namespace System.Data.Entity.Config
 
             var configuration = _loader.TryLoadFromConfig(config)
                                 ?? _finder.TryCreateConfiguration(contextType)
-                                ?? new DbConfiguration();
+                                ?? new InternalConfiguration();
 
             configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
             configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config));

@@ -22,7 +22,7 @@ namespace ProductivityApiUnitTests
 #pragma warning disable 612,618
             Assert.IsType<SqlConnectionFactory>(Database.DefaultConnectionFactory);
 #pragma warning restore 612,618
-            Assert.IsType<SqlConnectionFactory>(DbConfiguration.Instance.DefaultConnectionFactory);
+            Assert.IsType<SqlConnectionFactory>(DbConfiguration.DefaultConnectionFactory);
         }
 
         private class FakeConnectionFactory : IDbConnectionFactory

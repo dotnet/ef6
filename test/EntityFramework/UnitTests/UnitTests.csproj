@@ -103,6 +103,7 @@
     <Compile Include="Config\DbConfigurationTypeAttributeTests.cs" />
     <Compile Include="Config\DefaultProviderServicesResolverTests.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensionsTests.cs" />
+    <Compile Include="Config\InternalConfigurationTests.cs" />
     <Compile Include="Config\MigrationsConfigurationResolverTests.cs" />
     <Compile Include="Config\ProviderServicesFactoryTests.cs" />
     <Compile Include="Config\ResolverChainTests.cs" />

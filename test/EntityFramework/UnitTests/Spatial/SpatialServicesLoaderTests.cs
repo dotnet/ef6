@@ -36,7 +36,7 @@ namespace System.Data.Entity.Spatial
         {
             Assert.Same(
                 SqlSpatialServices.Instance,
-                new SpatialServicesLoader(DbConfiguration.Instance.DependencyResolver).LoadDefaultServices());
+                new SpatialServicesLoader(DbConfiguration.DependencyResolver).LoadDefaultServices());
         }
 
         [Fact]

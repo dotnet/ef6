@@ -21,7 +21,7 @@ Public Class TemplateTests
     Private Const MemberBindingFlags As BindingFlags = BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.Public
 
     Shared Sub New()
-        DbConfiguration.Instance = New FunctionalTestsConfiguration()
+        DbConfiguration.SetConfiguration(New FunctionalTestsConfiguration())
         InitializeModelFirstDatabases()
     End Sub
 

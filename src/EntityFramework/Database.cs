@@ -78,7 +78,7 @@ namespace System.Data.Entity
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));
 
-            DbConfiguration.Instance.RootResolver.DatabaseInitializerResolver.SetInitializer(
+            InternalConfiguration.Instance.RootResolver.DatabaseInitializerResolver.SetInitializer(
                 typeof(TContext), strategy ?? new NullDatabaseInitializer<TContext>());
         }
 

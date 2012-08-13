@@ -27,12 +27,12 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void TryLoadFromConfig_returns_DbConfiguration_type_instance()
+        public void TryLoadFromConfig_returns_InternalConfiguration_with_correct_DbConfiguration_type_instance()
         {
             var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
             mockConfig.Setup(m => m.ConfigurationTypeName).Returns(typeof(FunctionalTestsConfiguration).AssemblyQualifiedName);
 
-            Assert.IsType<FunctionalTestsConfiguration>(new DbConfigurationLoader().TryLoadFromConfig(mockConfig.Object));
+            Assert.IsType<FunctionalTestsConfiguration>(new DbConfigurationLoader().TryLoadFromConfig(mockConfig.Object).Owner);
         }
 
         [Fact]

@@ -14,7 +14,7 @@ namespace System.Data.Entity.Spatial
     public abstract class DbSpatialServices
     {
         private static readonly Lazy<DbSpatialServices> _defaultServices = new Lazy<DbSpatialServices>(
-            () => new SpatialServicesLoader(DbConfiguration.Instance.DependencyResolver).LoadDefaultServices(), isThreadSafe: true);
+            () => new SpatialServicesLoader(DbConfiguration.DependencyResolver).LoadDefaultServices(), isThreadSafe: true);
 
         public static DbSpatialServices Default
         {

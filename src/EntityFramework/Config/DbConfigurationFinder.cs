@@ -49,7 +49,7 @@ namespace System.Data.Entity.Config
             return configurations.FirstOrDefault();
         }
 
-        public virtual DbConfiguration TryCreateConfiguration(Type contextType, IEnumerable<Type> typesToSearch = null)
+        public virtual InternalConfiguration TryCreateConfiguration(Type contextType, IEnumerable<Type> typesToSearch = null)
         {
             Contract.Requires(contextType != null);
 
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Config
 
             return configType == null
                        ? null
-                       : configType.CreateInstance<DbConfiguration>();
+                       : configType.CreateInstance<DbConfiguration>().InternalConfiguration;
         }
     }
 }

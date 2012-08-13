@@ -85,7 +85,7 @@ namespace System.Data.Entity.Internal
 
             Mock<MigratorBase> mockMigrator = null;
 
-            new DatabaseCreator(new Lazy<IDbDependencyResolver>(() => resolver ?? DbConfiguration.Instance.DependencyResolver))
+            new DatabaseCreator(resolver ?? DbConfiguration.DependencyResolver)
                 .CreateDatabase(
                     mockContext.Object,
                     (config, context) => (mockMigrator = new Mock<MigratorBase>(null)).Object,

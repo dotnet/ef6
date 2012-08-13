@@ -88,14 +88,14 @@ namespace System.Data.Entity.Config
             public void TryCreateConfiguration_creates_instance_of_type_returned_by_TryFindConfigurationType()
             {
                 Assert.IsType<FunctionalTestsConfiguration>(
-                    new DbConfigurationFinder().TryCreateConfiguration(typeof(DbContext), new[] { typeof(FunctionalTestsConfiguration) }));
+                    new DbConfigurationFinder().TryCreateConfiguration(typeof(DbContext), new[] { typeof(FunctionalTestsConfiguration) }).Owner);
             }
 
             [Fact]
             public void TryCreateConfiguration_creates_instance_of_type_specified_by_DbConfigurationTypeAttribute()
             {
                 Assert.IsType<FunctionalTestsConfiguration>(
-                    new DbConfigurationFinder().TryCreateConfiguration(typeof(FakeContextWithAttribute)));
+                    new DbConfigurationFinder().TryCreateConfiguration(typeof(FakeContextWithAttribute)).Owner);
             }
         }
 
