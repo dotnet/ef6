@@ -75,11 +75,14 @@ namespace System.Data.Entity.Config
             return _configuration.Value;
         }
 
-        public virtual void SetConfiguration(InternalConfiguration configuration)
+        public virtual void SetConfiguration(InternalConfiguration configuration, bool lookInConfig = true)
         {
             Contract.Requires(configuration != null);
 
-            configuration = _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? configuration;
+            if (lookInConfig)
+            {
+                configuration = _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? configuration;
+            }
 
             _newConfiguration = configuration.Owner;
 
@@ -121,10 +124,13 @@ namespace System.Data.Entity.Config
 
             if (!_configuration.IsValueCreated)
             {
-                var foundConfiguration = _finder.TryCreateConfiguration(contextType);
+                var foundConfiguration = 
+                    _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? 
+                    _finder.TryCreateConfiguration(contextType);
+
                 if (foundConfiguration != null)
                 {
-                    SetConfiguration(foundConfiguration);
+                    SetConfiguration(foundConfiguration, lookInConfig: false);
                 }
             }
             else if (!contextAssembly.IsDynamic && // Don't throw for proxy contexts created in dynamic assemblies
