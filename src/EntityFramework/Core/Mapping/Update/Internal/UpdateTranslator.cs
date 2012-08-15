@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
@@ -11,6 +12,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -20,6 +22,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     /// <summary>
     ///     This class performs to following tasks to persist C-Space changes to the store:
@@ -34,6 +37,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class UpdateTranslator
     {
+        private readonly IDbCommandInterceptor _commandInterceptor;
+
         #region Constructors
 
         /// <summary>
@@ -41,7 +46,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         /// <param name="stateManager"> Entity state manager containing changes to be processed. </param>
         /// <param name="adapter"> Map adapter requesting the changes. </param>
-        internal UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter)
+        public UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter, IDbCommandInterceptor commandInterceptor = null)
             : this()
         {
             Contract.Requires(stateManager != null);
@@ -49,6 +54,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             _stateManager = stateManager;
             _adapter = adapter;
+
+            _commandInterceptor
+                = commandInterceptor
+                  ?? DbConfiguration.DependencyResolver.GetService<IDbCommandInterceptor>();
 
             // connection state
             _providerServices = adapter.Connection.StoreProviderFactory.GetProviderServices();
@@ -415,7 +424,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // Remember the data sources so that we can throw meaningful exception
                     source = command;
-                    var rowsAffected = command.Execute(identifierValues, generatedValues);
+                    var rowsAffected = command.Execute(identifierValues, generatedValues, _commandInterceptor);
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }

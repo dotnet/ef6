@@ -5,9 +5,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     internal enum UpdateCommandKind
     {
@@ -179,7 +181,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="generatedValues"> Aggregator for server generated values. </param>
         /// <returns> Number of rows affected by the command. </returns>
         internal abstract long Execute(
-            Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues);
+            Dictionary<int, object> identifierValues, 
+            List<KeyValuePair<PropagatorResult, object>> generatedValues,
+            IDbCommandInterceptor commandInterceptor);
 
         /// <summary>
         ///     An asynchronous version of Execute, which executes the current update command.

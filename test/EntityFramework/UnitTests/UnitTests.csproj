@@ -95,6 +95,7 @@
     <Compile Include="Config\AppConfigDependencyResolverTests.cs" />
     <Compile Include="Config\CachingDependencyResolverTests.cs" />
     <Compile Include="Config\CompositeResolverTests.cs" />
+    <Compile Include="Config\ThreadLocalDependencyResolverTests.cs" />
     <Compile Include="Config\DatabaseInitializerResolverTests.cs" />
     <Compile Include="Config\DbConfigurationFinderTests.cs" />
     <Compile Include="Config\DbConfigurationLoaderTests.cs" />
@@ -139,6 +140,9 @@
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
+    <Compile Include="Internal\CommandTracerTests.cs" />
+    <Compile Include="Internal\InterceptedCommandTests.cs" />
+    <Compile Include="Internal\DefaultCommandInterceptorTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />
     <Compile Include="Internal\InternalCollectionEntryTests.cs" />
     <Compile Include="Internal\InternalEntityEntryTests.cs" />

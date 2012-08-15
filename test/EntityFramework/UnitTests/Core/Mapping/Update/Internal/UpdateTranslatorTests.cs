@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         public class Update
         {
             [Fact]
-            private void Propagates_server_gen_values_and_returns_entities_affected()
+            public void Propagates_server_gen_values_and_returns_entities_affected()
             {
                 var updateTranslatorMock = new Mock<UpdateTranslator>
                                                {
@@ -43,10 +44,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     updateTranslatorMock.Object,
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0));
+
                 updateCommandMock.Setup(
-                    m => m.Execute(It.IsAny<Dictionary<int, object>>(), It.IsAny<List<KeyValuePair<PropagatorResult, object>>>()))
+                    m => m.Execute(
+                        It.IsAny<Dictionary<int, object>>(),
+                        It.IsAny<List<KeyValuePair<PropagatorResult, object>>>(),
+                        It.IsAny<IDbCommandInterceptor>()))
                     .Returns(
-                        (Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues) =>
+                        (Dictionary<int, object> identifierValues,
+                            List<KeyValuePair<PropagatorResult, object>> generatedValues,
+                            IDbCommandInterceptor interceptor) =>
                             {
                                 generatedValues.Add(
                                     new KeyValuePair<PropagatorResult, object>(mockPropagatorResult.Object, generatedValue));
@@ -76,10 +83,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     updateTranslatorMock.Object,
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0));
+
                 updateCommandMock.Setup(
-                    m => m.Execute(It.IsAny<Dictionary<int, object>>(), It.IsAny<List<KeyValuePair<PropagatorResult, object>>>()))
-                    .Returns(
-                        (Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues) => { throw dbException; });
+                    m => m.Execute(
+                        It.IsAny<Dictionary<int, object>>(),
+                        It.IsAny<List<KeyValuePair<PropagatorResult, object>>>(),
+                        It.IsAny<IDbCommandInterceptor>()))
+                    .Returns(() => { throw dbException; });
 
                 var objectStateManager = new Mock<ObjectStateManager>
                                              {

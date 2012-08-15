@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
 
-                var rowsAffectedResult = mockFunctionUpdateCommand.Object.Execute(identifierValues, generatedValues);
+                var rowsAffectedResult = mockFunctionUpdateCommand.Object.Execute(identifierValues, generatedValues, null);
 
                 Assert.Equal(rowsAffected, rowsAffectedResult);
                 Assert.Equal(1, timesCommandTimeoutCalled);
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 mockFunctionUpdateCommand.Protected().Setup<List<KeyValuePair<string, PropagatorResult>>>("ResultColumns")
                     .Returns((new[] { idColumn }).ToList());
 
-                var rowsAffectedResult = mockFunctionUpdateCommand.Object.Execute(identifierValues, generatedValues);
+                var rowsAffectedResult = mockFunctionUpdateCommand.Object.Execute(identifierValues, generatedValues, null);
 
                 Assert.Equal(1, rowsAffectedResult);
                 Assert.Equal(1, timesSetInputIdentifiers);

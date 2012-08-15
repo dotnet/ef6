@@ -4,6 +4,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -21,6 +22,7 @@ namespace System.Data.Entity.Config
         {
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000: Dispose objects before losing scope")]
         public RootDependencyResolver(
             MigrationsConfigurationResolver migrationsConfigurationResolver,
             DefaultProviderServicesResolver defaultProviderServicesResolver,
@@ -38,6 +40,7 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IManifestTokenService>(new DefaultManifestTokenService()));
+            _resolvers.Add(new ThreadLocalDependencyResolver<IDbCommandInterceptor>(() => new DefaultCommandInterceptor()));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

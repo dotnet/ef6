@@ -136,6 +136,7 @@
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
     <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
+    <Compile Include="Config\ThreadLocalDependencyResolver.cs" />
     <Compile Include="Config\DatabaseInitializerResolver.cs" />
     <Compile Include="Config\DbConfiguration.cs" />
     <Compile Include="Config\DbConfigurationFinder.cs" />
@@ -347,6 +348,7 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactory.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
     <Compile Include="Infrastructure\IManifestTokenService.cs" />
+    <Compile Include="Internal\CommandTracer.cs" />
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerableExtensions.cs" />
@@ -357,12 +359,15 @@
     <Compile Include="Infrastructure\IDbAsyncQueryProviderExtensions.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollection.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElement.cs" />
+    <Compile Include="Internal\DefaultCommandInterceptor.cs" />
+    <Compile Include="Internal\IDbCommandInterceptor.cs" />
     <Compile Include="Internal\IDbEnumerator.cs" />
     <Compile Include="Internal\DefaultModelCacheKey.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyFactory.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKey.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKeyFactory.cs" />
     <Compile Include="Internal\InitializerConfig.cs" />
+    <Compile Include="Internal\InterceptedCommand.cs" />
     <Compile Include="Internal\LazyAsyncEnumerator.cs" />
     <Compile Include="Internal\LazyEnumerator`.cs" />
     <Compile Include="NullDatabaseInitializer.cs" />

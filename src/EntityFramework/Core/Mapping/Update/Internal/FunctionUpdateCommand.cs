@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -18,6 +19,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     /// <summary>
     ///     Aggregates information about a modification command delegated to a store function.
@@ -243,7 +245,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     See comments in <see cref="UpdateCommand" />.
         /// </summary>
         internal override long Execute(
-            Dictionary<int, object> identifierValues, List<KeyValuePair<PropagatorResult, object>> generatedValues)
+            Dictionary<int, object> identifierValues, 
+            List<KeyValuePair<PropagatorResult, object>> generatedValues,
+            IDbCommandInterceptor commandInterceptor)
         {
             var connection = Translator.Connection;
             // configure command to use the connection and transaction for this session
