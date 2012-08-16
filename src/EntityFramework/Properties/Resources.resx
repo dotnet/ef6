@@ -5328,11 +5328,19 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EmptySequence" xml:space="preserve">
-    <value>Sequence contains no elements.</value>
+    <value>Sequence contains no elements</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="UnableToAutoMigrateDefaultSchema" xml:space="preserve">
     <value>Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
+  <data name="NoMatch" xml:space="preserve">
+    <value>Sequence contains no matching element</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="MoreThanOneMatch" xml:space="preserve">
+    <value>Sequence contains more than one matching element</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
 </root>

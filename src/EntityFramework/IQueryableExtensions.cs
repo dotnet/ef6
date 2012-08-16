@@ -45,32 +45,6 @@ namespace System.Data.Entity
                                              typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
                                          });
 
-        private static readonly MethodInfo _last = GetMethod(
-            "Last", (T) => new[]
-                               {
-                                   typeof(IQueryable<>).MakeGenericType(T)
-                               });
-
-        private static readonly MethodInfo _last_Predicate = GetMethod(
-            "Last", (T) => new[]
-                               {
-                                   typeof(IQueryable<>).MakeGenericType(T),
-                                   typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                               });
-
-        private static readonly MethodInfo _lastOrDefault = GetMethod(
-            "LastOrDefault", (T) => new[]
-                                        {
-                                            typeof(IQueryable<>).MakeGenericType(T)
-                                        });
-
-        private static readonly MethodInfo _lastOrDefault_Predicate = GetMethod(
-            "LastOrDefault", (T) => new[]
-                                        {
-                                            typeof(IQueryable<>).MakeGenericType(T),
-                                            typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                        });
-
         private static readonly MethodInfo _single = GetMethod(
             "Single", (T) => new[]
                                  {
@@ -97,47 +71,12 @@ namespace System.Data.Entity
                                               typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
                                           });
 
-        private static readonly MethodInfo _elementAt = GetMethod(
-            "ElementAt", (T) => new[]
-                                    {
-                                        typeof(IQueryable<>).MakeGenericType(T), typeof(int)
-                                    });
-
-        private static readonly MethodInfo _elementAtOrDefault = GetMethod(
-            "ElementAtOrDefault", (T) => new[]
-                                             {
-                                                 typeof(IQueryable<>).MakeGenericType(T), typeof(int)
-                                             });
-
         private static readonly MethodInfo _contains = GetMethod(
             "Contains", (T) => new[]
                                    {
                                        typeof(IQueryable<>).MakeGenericType(T),
                                        T
                                    });
-
-        private static readonly MethodInfo _contains_Comparer = GetMethod(
-            "Contains", (T) => new[]
-                                   {
-                                       typeof(IQueryable<>).MakeGenericType(T),
-                                       T,
-                                       typeof(IEqualityComparer<>).MakeGenericType(T)
-                                   });
-
-        private static readonly MethodInfo _sequenceEqual = GetMethod(
-            "SequenceEqual", (T) => new[]
-                                        {
-                                            typeof(IQueryable<>).MakeGenericType(T),
-                                            typeof(IEnumerable<>).MakeGenericType(T)
-                                        });
-
-        private static readonly MethodInfo _sequenceEqual_Comparer = GetMethod(
-            "SequenceEqual", (T) => new[]
-                                        {
-                                            typeof(IQueryable<>).MakeGenericType(T),
-                                            typeof(IEnumerable<>).MakeGenericType(T),
-                                            typeof(IEqualityComparer<>).MakeGenericType(T)
-                                        });
 
         private static readonly MethodInfo _any = GetMethod(
             "Any", (T) => new[]
@@ -471,30 +410,6 @@ namespace System.Data.Entity
                                       typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
                                   });
 
-        private static readonly MethodInfo _aggregate = GetMethod(
-            "Aggregate", (T) => new[]
-                                    {
-                                        typeof(IQueryable<>).MakeGenericType(T),
-                                        typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(T, T, T))
-                                    });
-
-        private static readonly MethodInfo _aggregate_Seed = GetMethod(
-            "Aggregate", (T, U) => new[]
-                                       {
-                                           typeof(IQueryable<>).MakeGenericType(T),
-                                           U,
-                                           typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U))
-                                       });
-
-        private static readonly MethodInfo _aggregate_Seed_Selector = GetMethod(
-            "Aggregate", (T, U, V) => new[]
-                                          {
-                                              typeof(IQueryable<>).MakeGenericType(T),
-                                              U,
-                                              typeof(Expression<>).MakeGenericType(typeof(Func<,,>).MakeGenericType(U, T, U)),
-                                              typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(U, V))
-                                          });
-
         #endregion
 
         #region Include
@@ -795,7 +710,7 @@ namespace System.Data.Entity
             Contract.Requires(action != null);
             Contract.Ensures(Contract.Result<Task>() != null);
 
-            return source.ForEachAsync(action, CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ForEachAsync(action, CancellationToken.None);
         }
 
         /// <summary>
@@ -812,16 +727,7 @@ namespace System.Data.Entity
             Contract.Requires(action != null);
             Contract.Ensures(Contract.Result<Task>() != null);
 
-            var enumerable = source as IDbAsyncEnumerable;
-
-            if (enumerable != null)
-            {
-                return enumerable.ForEachAsync(action, cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Not_Async(string.Empty);
-            }
+            return source.AsDbAsyncEnumerable().ForEachAsync(action, cancellationToken);
         }
 
         /// <summary>
@@ -838,7 +744,7 @@ namespace System.Data.Entity
             Contract.Requires(action != null);
             Contract.Ensures(Contract.Result<Task>() != null);
 
-            return source.ForEachAsync(action, CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ForEachAsync(action, CancellationToken.None);
         }
 
         /// <summary>
@@ -856,15 +762,7 @@ namespace System.Data.Entity
             Contract.Requires(action != null);
             Contract.Ensures(Contract.Result<Task>() != null);
 
-            var enumerable = source as IDbAsyncEnumerable<T>;
-            if (enumerable != null)
-            {
-                return enumerable.ForEachAsync(action, cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Not_Async("<" + typeof(T) + ">");
-            }
+            return source.AsDbAsyncEnumerable().ForEachAsync(action, cancellationToken);
         }
 
         #endregion
@@ -883,7 +781,7 @@ namespace System.Data.Entity
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            return source.ToListAsync(CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -894,16 +792,12 @@ namespace System.Data.Entity
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a <see cref="List{Object}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static async Task<List<object>> ToListAsync(this IQueryable source, CancellationToken cancellationToken)
+        public static Task<List<object>> ToListAsync(this IQueryable source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
-            DbHelpers.ThrowIfNull(source, "source");
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            var list = new List<object>();
-            await source.ForEachAsync(list.Add, cancellationToken);
-            return list;
+            return source.AsDbAsyncEnumerable().ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -919,7 +813,7 @@ namespace System.Data.Entity
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
 
-            return source.ToListAsync(CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -931,16 +825,12 @@ namespace System.Data.Entity
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
+        public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
-            DbHelpers.ThrowIfNull(source, "source");
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
 
-            var list = new List<T>();
-            await source.ForEachAsync(list.Add, cancellationToken);
-            return list;
+            return source.AsDbAsyncEnumerable().ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -955,7 +845,7 @@ namespace System.Data.Entity
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<object[]>>() != null);
 
-            return source.ToArrayAsync(CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToArrayAsync();
         }
 
         /// <summary>
@@ -965,15 +855,12 @@ namespace System.Data.Entity
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
-        public static async Task<object[]> ToArrayAsync(this IQueryable source, CancellationToken cancellationToken)
+        public static Task<object[]> ToArrayAsync(this IQueryable source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-            DbHelpers.ThrowIfNull(source, "source");
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
 
-            var list = await source.ToListAsync(cancellationToken);
-            return list.ToArray();
+            return source.AsDbAsyncEnumerable().ToArrayAsync(cancellationToken);
         }
 
         /// <summary>
@@ -989,7 +876,7 @@ namespace System.Data.Entity
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<T[]>>() != null);
 
-            return source.ToArrayAsync(CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToArrayAsync();
         }
 
         /// <summary>
@@ -1001,15 +888,12 @@ namespace System.Data.Entity
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a T[] that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static async Task<T[]> ToArrayAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
+        public static Task<T[]> ToArrayAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<T[]>>() != null);
-            DbHelpers.ThrowIfNull(source, "source");
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
 
-            var list = await source.ToListAsync(cancellationToken);
-            return list.ToArray();
+            return source.AsDbAsyncEnumerable().ToArrayAsync(cancellationToken);
         }
 
         /// <summary>
@@ -1029,7 +913,7 @@ namespace System.Data.Entity
             Contract.Requires(keySelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, null, CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector);
         }
 
         /// <summary>
@@ -1050,7 +934,7 @@ namespace System.Data.Entity
             Contract.Requires(keySelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, null, cancellationToken);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, cancellationToken);
         }
 
         /// <summary>
@@ -1071,7 +955,7 @@ namespace System.Data.Entity
             Contract.Requires(keySelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, comparer, CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, comparer);
         }
 
         /// <summary>
@@ -1094,7 +978,7 @@ namespace System.Data.Entity
             Contract.Requires(keySelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, comparer, cancellationToken);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, comparer, cancellationToken);
         }
 
         /// <summary>
@@ -1119,7 +1003,7 @@ namespace System.Data.Entity
             Contract.Requires(elementSelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, elementSelector, null, CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector);
         }
 
         /// <summary>
@@ -1145,7 +1029,7 @@ namespace System.Data.Entity
             Contract.Requires(elementSelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, elementSelector, null, cancellationToken);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, cancellationToken);
         }
 
         /// <summary>
@@ -1171,7 +1055,7 @@ namespace System.Data.Entity
             Contract.Requires(elementSelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
 
-            return ToDictionaryAsync(source, keySelector, elementSelector, comparer, CancellationToken.None);
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, comparer);
         }
 
         /// <summary>
@@ -1189,22 +1073,16 @@ namespace System.Data.Entity
         /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
         ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
+        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(keySelector != null);
-            //Contract.Requires(elementSelector != null);
-            //Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
-            DbHelpers.ThrowIfNull(source, "source");
-            DbHelpers.ThrowIfNull(keySelector, "keySelector");
-            DbHelpers.ThrowIfNull(elementSelector, "elementSelector");
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
 
-            var d = new Dictionary<TKey, TElement>(comparer);
-            await source.ForEachAsync(element => d.Add(keySelector(element), elementSelector(element)), cancellationToken);
-            return d;
+            return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, comparer, cancellationToken);
         }
 
         #endregion
@@ -1347,140 +1225,6 @@ namespace System.Data.Entity
             }
         }
 
-        public static Task<TSource> LastAsync<TSource>(this IQueryable<TSource> source)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.LastAsync(CancellationToken.None);
-        }
-
-        public static Task<TSource> LastAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _last.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TSource> LastAsync<TSource>(
-            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.LastAsync(predicate, CancellationToken.None);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TSource> LastAsync<TSource>(
-            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _last_Predicate.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression, Expression.Quote(predicate) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        public static Task<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.LastOrDefaultAsync(CancellationToken.None);
-        }
-
-        public static Task<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _lastOrDefault.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TSource> LastOrDefaultAsync<TSource>(
-            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.LastOrDefaultAsync(predicate, CancellationToken.None);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TSource> LastOrDefaultAsync<TSource>(
-            this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _lastOrDefault_Predicate.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression, Expression.Quote(predicate) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source)
         {
             Contract.Requires(source != null);
@@ -1519,7 +1263,7 @@ namespace System.Data.Entity
             Contract.Requires(predicate != null);
             Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
-            return source.SingleAsync(predicate);
+            return source.SingleAsync(predicate, CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
@@ -1615,72 +1359,6 @@ namespace System.Data.Entity
             }
         }
 
-        public static Task<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, int index)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(index >= 0);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.ElementAtAsync(index, CancellationToken.None);
-        }
-
-        public static Task<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(index >= 0);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _elementAt.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression, Expression.Constant(index) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        public static Task<TSource> ElementAtOrDefaultAsync<TSource>(
-            this IQueryable<TSource> source, int index)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(index >= 0);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.ElementAtOrDefaultAsync(index, CancellationToken.None);
-        }
-
-        public static Task<TSource> ElementAtOrDefaultAsync<TSource>(
-            this IQueryable<TSource> source, int index, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(index >= 0);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _elementAtOrDefault.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression, Expression.Constant(index) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
         public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item)
         {
             Contract.Requires(source != null);
@@ -1702,116 +1380,6 @@ namespace System.Data.Entity
                         null,
                         _contains.MakeGenericMethod(typeof(TSource)),
                         new[] { source.Expression, Expression.Constant(item, typeof(TSource)) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        public static Task<bool> ContainsAsync<TSource>(
-            this IQueryable<TSource> source, TSource item, IEqualityComparer<TSource> comparer)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
-            return source.ContainsAsync(item, comparer, CancellationToken.None);
-        }
-
-        public static Task<bool> ContainsAsync<TSource>(
-            this IQueryable<TSource> source, TSource item, IEqualityComparer<TSource> comparer, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<bool>(
-                    Expression.Call(
-                        null,
-                        _contains_Comparer.MakeGenericMethod(typeof(TSource)),
-                        new[]
-                            {
-                                source.Expression, Expression.Constant(item, typeof(TSource)),
-                                Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))
-                            }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        public static Task<bool> SequenceEqualAsync<TSource>(
-            this IQueryable<TSource> source1, IEnumerable<TSource> source2)
-        {
-            Contract.Requires(source1 != null);
-            Contract.Requires(source2 != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
-            return source1.SequenceEqualAsync(source2, CancellationToken.None);
-        }
-
-        public static Task<bool> SequenceEqualAsync<TSource>(
-            this IQueryable<TSource> source1, IEnumerable<TSource> source2, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source1 != null);
-            Contract.Requires(source2 != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
-            var provider = source1.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<bool>(
-                    Expression.Call(
-                        null,
-                        _sequenceEqual.MakeGenericMethod(typeof(TSource)),
-                        new[] { source1.Expression, GetSourceExpression(source2) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        public static Task<bool> SequenceEqualAsync<TSource>(
-            this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer)
-        {
-            Contract.Requires(source1 != null);
-            Contract.Requires(source2 != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
-            return source1.SequenceEqualAsync(source2, comparer, CancellationToken.None);
-        }
-
-        public static Task<bool> SequenceEqualAsync<TSource>(
-            this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer,
-            CancellationToken cancellationToken)
-        {
-            Contract.Requires(source1 != null);
-            Contract.Requires(source2 != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
-            var provider = source1.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<bool>(
-                    Expression.Call(
-                        null,
-                        _sequenceEqual_Comparer.MakeGenericMethod(typeof(TSource)),
-                        new[]
-                            {
-                                source1.Expression,
-                                GetSourceExpression(source2),
-                                Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))
-                            }
                         ),
                     cancellationToken);
             }
@@ -3553,134 +3121,40 @@ namespace System.Data.Entity
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TSource> AggregateAsync<TSource>(
-            this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(func != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.AggregateAsync(func, CancellationToken.None);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TSource> AggregateAsync<TSource>(
-            this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(func != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TSource>(
-                    Expression.Call(
-                        null,
-                        _aggregate.MakeGenericMethod(typeof(TSource)),
-                        new[] { source.Expression, Expression.Quote(func) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TAccumulate> AggregateAsync<TSource, TAccumulate>(
-            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(func != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.AggregateAsync(seed, func, CancellationToken.None);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TAccumulate> AggregateAsync<TSource, TAccumulate>(
-            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
-            CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(func != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TAccumulate>(
-                    Expression.Call(
-                        null,
-                        _aggregate_Seed.MakeGenericMethod(typeof(TSource), typeof(TAccumulate)),
-                        new[] { source.Expression, Expression.Constant(seed), Expression.Quote(func) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<TResult> AggregateAsync<TSource, TAccumulate, TResult>(
-            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
-            Expression<Func<TAccumulate, TResult>> selector)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(func != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            return source.AggregateAsync(seed, func, selector, CancellationToken.None);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static Task<TResult> AggregateAsync<TSource, TAccumulate, TResult>(
-            this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func,
-            Expression<Func<TAccumulate, TResult>> selector, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Requires(func != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
-
-            var provider = source.Provider as IDbAsyncQueryProvider;
-            if (provider != null)
-            {
-                return provider.ExecuteAsync<TResult>(
-                    Expression.Call(
-                        null,
-                        _aggregate_Seed_Selector.MakeGenericMethod(typeof(TSource), typeof(TAccumulate), typeof(TResult)),
-                        new[] { source.Expression, Expression.Constant(seed), Expression.Quote(func), Expression.Quote(selector) }
-                        ),
-                    cancellationToken);
-            }
-            else
-            {
-                throw Error.IQueryable_Provider_Not_Async();
-            }
-        }
-
         #endregion
 
         #region Private methods
 
-        private static Expression GetSourceExpression<TSource>(IEnumerable<TSource> source)
+        private static IDbAsyncEnumerable AsDbAsyncEnumerable(this IQueryable source)
         {
-            var q = source as IQueryable<TSource>;
-            if (q != null)
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<IDbAsyncEnumerable>() != null);
+
+            var enumerable = source as IDbAsyncEnumerable;
+            if (enumerable != null)
             {
-                return q.Expression;
+                return enumerable;
             }
-            return Expression.Constant(source, typeof(IEnumerable<TSource>));
+            else
+            {
+                throw Error.IQueryable_Not_Async(string.Empty);
+            }
+        }
+
+        private static IDbAsyncEnumerable<T> AsDbAsyncEnumerable<T>(this IQueryable<T> source)
+        {
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<IDbAsyncEnumerable<T>>() != null);
+
+            var enumerable = source as IDbAsyncEnumerable<T>;
+            if (enumerable != null)
+            {
+                return enumerable;
+            }
+            else
+            {
+                throw Error.IQueryable_Not_Async("<" + typeof(T) + ">");
+            }
         }
 
         private static MethodInfo GetMethod(string methodName, Func<Type[]> getParameterTypes)
@@ -3696,11 +3170,6 @@ namespace System.Data.Entity
         private static MethodInfo GetMethod(string methodName, Func<Type, Type, Type[]> getParameterTypes)
         {
             return GetMethod(methodName, getParameterTypes.Method, 2);
-        }
-
-        private static MethodInfo GetMethod(string methodName, Func<Type, Type, Type, Type[]> getParameterTypes)
-        {
-            return GetMethod(methodName, getParameterTypes.Method, 3);
         }
 
         private static MethodInfo GetMethod(string methodName, MethodInfo getParameterTypesMethod, int genericArgumentsCount)
@@ -3750,18 +3219,6 @@ namespace System.Data.Entity
         private static bool Matches(MethodInfo methodInfo, Type[] parameterTypes)
         {
             return methodInfo.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes);
-        }
-
-        #endregion
-
-        #region Nested classes
-
-        private static class IdentityFunction<TElement>
-        {
-            public static Func<TElement, TElement> Instance
-            {
-                get { return x => x; }
-            }
         }
 
         #endregion

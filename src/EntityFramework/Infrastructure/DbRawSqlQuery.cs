@@ -3,9 +3,13 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Represents a SQL query for non-entities that is created from a <see cref="DbContext" /> 
@@ -58,6 +62,56 @@ namespace System.Data.Entity.Infrastructure
         IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
             return _internalQuery.GetAsyncEnumerator();
+        }
+
+        #endregion
+
+        #region Access to IDbAsyncEnumerable extensions
+
+        public Task ForEachAsync(Action<object> action)
+        {
+            Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable)this).ForEachAsync(action, CancellationToken.None);
+        }
+
+        public Task ForEachAsync(Action<object> action, CancellationToken cancellationToken)
+        {
+            Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable)this).ForEachAsync(action, cancellationToken);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<List<object>> ToListAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+
+            return ((IDbAsyncEnumerable)this).ToListAsync();
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<List<object>> ToListAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+
+            return ((IDbAsyncEnumerable)this).ToListAsync(cancellationToken);
+        }
+
+        public Task<object[]> ToArrayAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
+
+            return ((IDbAsyncEnumerable)this).ToArrayAsync();
+        }
+
+        public Task<object[]> ToArrayAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
+
+            return ((IDbAsyncEnumerable)this).ToArrayAsync(cancellationToken);
         }
 
         #endregion

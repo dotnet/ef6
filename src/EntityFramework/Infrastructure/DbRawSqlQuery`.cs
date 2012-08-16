@@ -7,6 +7,9 @@ namespace System.Data.Entity.Infrastructure
     using System.ComponentModel;
     using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Represents a SQL query for non-entities that is created from a <see cref="DbContext" /> 
@@ -77,6 +80,398 @@ namespace System.Data.Entity.Infrastructure
         IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
             return _internalQuery.GetAsyncEnumerator();
+        }
+
+        #endregion
+
+        #region Access to IDbAsyncEnumerable extensions
+
+        public Task ForEachAsync(Action<TElement> action)
+        {
+            Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ForEachAsync(action, CancellationToken.None);
+        }
+
+        public Task ForEachAsync(Action<TElement> action, CancellationToken cancellationToken)
+        {
+            Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ForEachAsync(action, cancellationToken);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<List<TElement>> ToListAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<List<TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToListAsync();
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<List<TElement>> ToListAsync(CancellationToken cancellationToken)
+        {
+            return ((IDbAsyncEnumerable<TElement>)this).ToListAsync(cancellationToken);
+        }
+
+        public Task<TElement[]> ToArrayAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<TElement[]>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToArrayAsync();
+        }
+
+        public Task<TElement[]> ToArrayAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<TElement[]>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToArrayAsync(cancellationToken);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, CancellationToken cancellationToken)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, cancellationToken);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, IEqualityComparer<TKey> comparer)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, comparer);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, comparer, cancellationToken);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, elementSelector);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, CancellationToken cancellationToken)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, elementSelector, cancellationToken);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, IEqualityComparer<TKey> comparer)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, elementSelector, comparer);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
+        {
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ToDictionaryAsync(keySelector, elementSelector, comparer, cancellationToken);
+        }
+
+        public Task<TElement> FirstAsync()
+        {
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstAsync();
+        }
+
+        public Task<TElement> FirstAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstAsync(predicate);
+        }
+
+        public Task<TElement> FirstAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstAsync(cancellationToken);
+        }
+
+        public Task<TElement> FirstAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstAsync(predicate, cancellationToken);
+        }
+
+        public Task<TElement> FirstOrDefaultAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstOrDefaultAsync();
+        }
+
+        public Task<TElement> FirstOrDefaultAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstOrDefaultAsync(predicate);
+        }
+
+        public Task<TElement> FirstOrDefaultAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public Task<TElement> FirstOrDefaultAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).FirstOrDefaultAsync(predicate, cancellationToken);
+        }
+
+        public Task<TElement> SingleAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleAsync();
+        }
+
+        public Task<TElement> SingleAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleAsync(cancellationToken);
+        }
+
+        public Task<TElement> SingleAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleAsync(predicate);
+        }
+
+        public Task<TElement> SingleAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleAsync(predicate, cancellationToken);
+        }
+
+        public Task<TElement> SingleOrDefaultAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleOrDefaultAsync();
+        }
+
+        public Task<TElement> SingleOrDefaultAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleOrDefaultAsync(cancellationToken);
+        }
+
+        public Task<TElement> SingleOrDefaultAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleOrDefaultAsync(predicate);
+        }
+
+        public Task<TElement> SingleOrDefaultAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).SingleOrDefaultAsync(predicate, cancellationToken);
+        }
+
+        public Task<bool> ContainsAsync(TElement value)
+        {
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ContainsAsync(value);
+        }
+
+        public Task<bool> ContainsAsync(TElement value, CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).ContainsAsync(value, cancellationToken);
+        }
+
+        public Task<bool> AnyAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).AnyAsync();
+        }
+
+        public Task<bool> AnyAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).AnyAsync(cancellationToken);
+        }
+
+        public Task<bool> AnyAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).AnyAsync(predicate);
+        }
+
+        public Task<bool> AnyAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).AnyAsync(predicate, cancellationToken);
+        }
+
+        public Task<bool> AllAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).AllAsync(predicate);
+        }
+
+        public Task<bool> AllAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).AllAsync(predicate, cancellationToken);
+        }
+
+        public Task<int> CountAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).CountAsync();
+        }
+
+        public Task<int> CountAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).CountAsync(cancellationToken);
+        }
+
+        public Task<int> CountAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).CountAsync(predicate);
+        }
+
+        public Task<int> CountAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).CountAsync(predicate, cancellationToken);
+        }
+
+        public Task<long> LongCountAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).LongCountAsync();
+        }
+
+        public Task<long> LongCountAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).LongCountAsync(cancellationToken);
+        }
+
+        public Task<long> LongCountAsync(Func<TElement, bool> predicate)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).LongCountAsync(predicate);
+        }
+
+        public Task<long> LongCountAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
+        {
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).LongCountAsync(predicate, cancellationToken);
+        }
+
+        public Task<TElement> MinAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).MinAsync();
+        }
+
+        public Task<TElement> MinAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).MinAsync(cancellationToken);
+        }
+
+        public Task<TElement> MaxAsync()
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).MaxAsync();
+        }
+
+        public Task<TElement> MaxAsync(CancellationToken cancellationToken)
+        {
+            Contract.Ensures(Contract.Result<Task<TElement>>() != null);
+
+            return ((IDbAsyncEnumerable<TElement>)this).MaxAsync(cancellationToken);
         }
 
         #endregion

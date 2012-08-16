@@ -2,16 +2,16 @@
 
 namespace ProductivityApiTests
 {
+    using ConcurrencyModel;
+    using SimpleModel;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
-    using ConcurrencyModel;
-    using SimpleModel;
     using Xunit;
     using Xunit.Sdk;
 
@@ -3007,7 +3007,7 @@ namespace ProductivityApiTests
         {
             runner(
                 q => from d in q
-                     orderby d.Name.Length , d.Value
+                     orderby d.Name.Length, d.Value
                      select d, ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -3140,7 +3140,7 @@ namespace ProductivityApiTests
         {
             runner(
                 q => from p in q
-                     orderby p.Category , p.UnitPrice descending
+                     orderby p.Category, p.UnitPrice descending
                      select p, ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -3347,12 +3347,12 @@ namespace ProductivityApiTests
             runner(
                 q => from n in q
                      group n by n.Value % 5
-                     into g
-                     select new
-                                {
-                                    Remainder = g.Key,
-                                    Numbers = g
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        Remainder = g.Key,
+                                        Numbers = g
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3426,12 +3426,12 @@ namespace ProductivityApiTests
             runner(
                 q => from w in q
                      group w by w.Name.Length
-                     into g
-                     select new
-                                {
-                                    FirstLetter = g.Key,
-                                    Words = g
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        FirstLetter = g.Key,
+                                        Words = g
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3505,12 +3505,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     select new
-                                {
-                                    Category = g.Key,
-                                    Products = g
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        Products = g
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3587,20 +3587,20 @@ namespace ProductivityApiTests
                                     c.CompanyName,
                                     YearGroups = from o in c.Orders
                                                  group o by o.OrderDate.Year
-                                                 into yg
-                                                 select new
-                                                            {
-                                                                Year = yg.Key,
-                                                                MonthGroups = from o in yg
-                                                                              group o by o.OrderDate.Month
-                                                                              into mg
-                                                                              select
-                                                                                  new
-                                                                                      {
-                                                                                          Month = mg.Key,
-                                                                                          Orders = mg
-                                                                                      }
-                                                            }
+                                                     into yg
+                                                     select new
+                                                                {
+                                                                    Year = yg.Key,
+                                                                    MonthGroups = from o in yg
+                                                                                  group o by o.OrderDate.Month
+                                                                                      into mg
+                                                                                      select
+                                                                                          new
+                                                                                              {
+                                                                                                  Month = mg.Key,
+                                                                                                  Orders = mg
+                                                                                              }
+                                                                }
                                 }, ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -4941,24 +4941,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
-        {
-            ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTest));
-        }
-
-        [Fact]
         public void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
-        }
-
-        [Fact]
-        public void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
-        {
-            ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -4969,24 +4955,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
-        {
-            ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
-        }
-
-        [Fact]
         public void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
-        }
-
-        [Fact]
-        public void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
-        {
-            ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void ElementAt_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -4997,7 +4969,7 @@ namespace ProductivityApiTests
                      where n.Value > 5
                      select n,
                 q => ((IQueryable<NumberForLinq>)q).ElementAt(1),
-                q => ((IQueryable<NumberForLinq>)q).ElementAtAsync(1).Result);
+                q => null);
         }
 
         #endregion
@@ -5147,13 +5119,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     where g.Any(p => p.UnitsInStock == 0)
-                     select new
-                                {
-                                    Category = g.Key,
-                                    Products = g
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         where g.Any(p => p.UnitsInStock == 0)
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        Products = g
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5299,13 +5271,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     where g.All(p => p.UnitsInStock > 0)
-                     select new
-                                {
-                                    Category = g.Key,
-                                    Products = g
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         where g.All(p => p.UnitsInStock > 0)
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        Products = g
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         #endregion
@@ -5605,12 +5577,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     select new
-                                {
-                                    Category = g.Key,
-                                    ProductCount = g.Count()
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        ProductCount = g.Count()
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5829,12 +5801,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     select new
-                                {
-                                    Category = g.Key,
-                                    TotalUnitsInStock = g.Sum(p => p.UnitsInStock)
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        TotalUnitsInStock = g.Sum(p => p.UnitsInStock)
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6053,12 +6025,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     select new
-                                {
-                                    Category = g.Key,
-                                    CheapestPrice = g.Min(p => p.UnitPrice)
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        CheapestPrice = g.Min(p => p.UnitPrice)
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6131,13 +6103,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     let minPrice = g.Min(p => p.UnitPrice)
-                     select new
-                                {
-                                    Category = g.Key,
-                                    CheapestProducts = g.Where(p => p.UnitPrice == minPrice)
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         let minPrice = g.Min(p => p.UnitPrice)
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        CheapestProducts = g.Where(p => p.UnitPrice == minPrice)
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6356,12 +6328,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     select new
-                                {
-                                    Category = g.Key,
-                                    MostExpensivePrice = g.Max(p => p.UnitPrice)
-                                }, ToListExecutor, ToListAsyncExecutor);
+                         into g
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        MostExpensivePrice = g.Max(p => p.UnitPrice)
+                                    }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6434,13 +6406,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     let minPrice = g.Max(p => p.UnitPrice)
-                     select new
-                                {
-                                    Category = g.Key,
-                                    MostExpensiveProducts = g.Where(p => p.UnitPrice == minPrice)
-                                },
+                         into g
+                         let minPrice = g.Max(p => p.UnitPrice)
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        MostExpensiveProducts = g.Where(p => p.UnitPrice == minPrice)
+                                    },
                 ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -6662,12 +6634,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                     into g
-                     select new
-                                {
-                                    Category = g.Key,
-                                    AveragePrice = g.Average(p => p.UnitPrice)
-                                },
+                         into g
+                         select new
+                                    {
+                                        Category = g.Key,
+                                        AveragePrice = g.Average(p => p.UnitPrice)
+                                    },
                 ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -6677,26 +6649,11 @@ namespace ProductivityApiTests
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTest));
         }
-
-        [Fact]
-        public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
-        {
-            Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTest));
-        }
-
         [Fact]
         public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
-        }
-
-        [Fact]
-        public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
-        {
-            Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -6707,26 +6664,11 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
-        {
-            Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
-        }
-
-        [Fact]
         public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
             )
         {
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
-        }
-
-        [Fact]
-        public void
-            Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
-        {
-            Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6735,7 +6677,7 @@ namespace ProductivityApiTests
             runner(
                 q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Aggregate((runningProduct, nextFactor) => runningProduct * nextFactor),
-                q => ((IQueryable<int>)q).AggregateAsync((runningProduct, nextFactor) => runningProduct * nextFactor).Result);
+                null);
         }
 
         [Fact]
@@ -6746,24 +6688,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
-        {
-            Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTest));
-        }
-
-        [Fact]
         public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
-        }
-
-        [Fact]
-        public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
-        {
-            Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -6774,25 +6702,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
-        {
-            Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
-        }
-
-        [Fact]
         public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
-        }
-
-        [Fact]
-        public void
-            Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
-        {
-            Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6807,12 +6720,7 @@ namespace ProductivityApiTests
                     ((nextWithdrawal <= balance)
                          ? (balance - nextWithdrawal)
                          : balance)),
-                q => ((IQueryable<int>)q).AggregateAsync(
-                    startBalance,
-                    (balance, nextWithdrawal) =>
-                    ((nextWithdrawal <= balance)
-                         ? (balance - nextWithdrawal)
-                         : balance)).Result);
+                null);
         }
 
         #endregion
@@ -6974,24 +6882,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
-        {
-            EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTest));
-        }
-
-        [Fact]
         public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
-        }
-
-        [Fact]
-        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
-        {
-            EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -7002,25 +6896,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
-        {
-            EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
-        }
-
-        [Fact]
         public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
-        }
-
-        [Fact]
-        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
-            )
-        {
-            EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7028,7 +6907,7 @@ namespace ProductivityApiTests
                 <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
-            runner((q1, q2) => new[] { q1.SequenceEqual(q2) }.AsQueryable(), ToListExecutor, ToListAsyncExecutor);
+            runner((q1, q2) => new[] { q1.SequenceEqual(q2) }.AsQueryable(), ToListExecutor, null);
         }
 
         [Fact]
@@ -7039,24 +6918,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
-        {
-            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTest));
-        }
-
-        [Fact]
         public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
-        }
-
-        [Fact]
-        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
-        {
-            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -7067,25 +6932,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
-        {
-            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
-        }
-
-        [Fact]
         public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
-        }
-
-        [Fact]
-        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
-            ()
-        {
-            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7095,7 +6945,7 @@ namespace ProductivityApiTests
         {
             runner(
                 (q1, q2) => new[] { q1.Select(n => n.Value).SequenceEqual(q2.Select(n => n.Value)) }.AsQueryable(),
-                ToListExecutor, ToListAsyncExecutor);
+                ToListExecutor, null);
         }
 
         [Fact]
@@ -7106,24 +6956,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
-        {
-            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTest));
-        }
-
-        [Fact]
         public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
-        }
-
-        [Fact]
-        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
-        {
-            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -7134,25 +6970,10 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
-        {
-            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
-        }
-
-        [Fact]
         public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
-        }
-
-        [Fact]
-        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
-            )
-        {
-            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7160,7 +6981,7 @@ namespace ProductivityApiTests
                 <Func<IQueryable<NumberForLinq>, IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
                 runner)
         {
-            runner((q1, q2) => new[] { q1.OrderBy(n => n.Value).SequenceEqual(q2) }.AsQueryable(), ToListExecutor, ToListAsyncExecutor);
+            runner((q1, q2) => new[] { q1.OrderBy(n => n.Value).SequenceEqual(q2) }.AsQueryable(), ToListExecutor, null);
         }
 
         #endregion

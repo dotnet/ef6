@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
@@ -28,20 +27,6 @@ namespace System.Data.Entity
             ArgumentNullTest("predicate", () => Source().FirstOrDefaultAsync(null));
             ArgumentNullTest("predicate", () => Source().FirstOrDefaultAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => IQueryableExtensions.LastAsync<int>(null));
-            ArgumentNullTest("source", () => IQueryableExtensions.LastAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => IQueryableExtensions.LastAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => IQueryableExtensions.LastAsync<int>(null, s => true, new CancellationToken()));
-            ArgumentNullTest("predicate", () => Source().LastAsync(null));
-            ArgumentNullTest("predicate", () => Source().LastAsync(null, new CancellationToken()));
-
-            ArgumentNullTest("source", () => IQueryableExtensions.LastOrDefaultAsync<int>(null));
-            ArgumentNullTest("source", () => IQueryableExtensions.LastOrDefaultAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => IQueryableExtensions.LastOrDefaultAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => IQueryableExtensions.LastOrDefaultAsync<int>(null, s => true, new CancellationToken()));
-            ArgumentNullTest("predicate", () => Source().LastOrDefaultAsync(null));
-            ArgumentNullTest("predicate", () => Source().LastOrDefaultAsync(null, new CancellationToken()));
-
             ArgumentNullTest("source", () => IQueryableExtensions.SingleAsync<int>(null));
             ArgumentNullTest("source", () => IQueryableExtensions.SingleAsync<int>(null, new CancellationToken()));
             ArgumentNullTest("source", () => IQueryableExtensions.SingleAsync<int>(null, s => true));
@@ -56,29 +41,8 @@ namespace System.Data.Entity
             ArgumentNullTest("predicate", () => Source().SingleOrDefaultAsync(null));
             ArgumentNullTest("predicate", () => Source().SingleOrDefaultAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => IQueryableExtensions.ElementAtAsync<int>(null, 1));
-            ArgumentNullTest("source", () => IQueryableExtensions.ElementAtAsync<int>(null, 1, new CancellationToken()));
-            ArgumentOutOfRangeTest("index", () => Source().ElementAtAsync(-1));
-            ArgumentOutOfRangeTest("index", () => Source().ElementAtAsync(-1, new CancellationToken()));
-
-            ArgumentNullTest("source", () => IQueryableExtensions.ElementAtOrDefaultAsync<int>(null, 1));
-            ArgumentNullTest("source", () => IQueryableExtensions.ElementAtOrDefaultAsync<int>(null, 1, new CancellationToken()));
-            ArgumentOutOfRangeTest("index", () => Source().ElementAtOrDefaultAsync(-1));
-            ArgumentOutOfRangeTest("index", () => Source().ElementAtOrDefaultAsync(-1, new CancellationToken()));
-
             ArgumentNullTest("source", () => IQueryableExtensions.ContainsAsync(null, 1));
             ArgumentNullTest("source", () => IQueryableExtensions.ContainsAsync(null, 1, new CancellationToken()));
-            ArgumentNullTest("source", () => IQueryableExtensions.ContainsAsync(null, 1, null));
-            ArgumentNullTest("source", () => IQueryableExtensions.ContainsAsync(null, 1, null, new CancellationToken()));
-
-            ArgumentNullTest("source1", () => IQueryableExtensions.SequenceEqualAsync(null, Source()));
-            ArgumentNullTest("source1", () => IQueryableExtensions.SequenceEqualAsync(null, Source(), new CancellationToken()));
-            ArgumentNullTest("source2", () => Source().SequenceEqualAsync(null));
-            ArgumentNullTest("source2", () => Source().SequenceEqualAsync(null, new CancellationToken()));
-            ArgumentNullTest("source1", () => IQueryableExtensions.SequenceEqualAsync(null, Source(), null));
-            ArgumentNullTest("source1", () => IQueryableExtensions.SequenceEqualAsync(null, Source(), null, new CancellationToken()));
-            ArgumentNullTest("source2", () => Source().SequenceEqualAsync(null, null));
-            ArgumentNullTest("source2", () => Source().SequenceEqualAsync(null, null, new CancellationToken()));
 
             ArgumentNullTest("source", () => IQueryableExtensions.AnyAsync<int>(null));
             ArgumentNullTest("source", () => IQueryableExtensions.AnyAsync<int>(null, new CancellationToken()));
@@ -244,22 +208,6 @@ namespace System.Data.Entity
             ArgumentNullTest("selector", () => Source<decimal?>().AverageAsync((Expression<Func<decimal?, int>>)null));
             ArgumentNullTest(
                 "selector", () => Source<decimal?>().AverageAsync((Expression<Func<decimal?, int>>)null, new CancellationToken()));
-
-            ArgumentNullTest("source", () => IQueryableExtensions.AggregateAsync<int>(null, (e1, e2) => 0));
-            ArgumentNullTest("source", () => IQueryableExtensions.AggregateAsync<int>(null, (e1, e2) => 0, new CancellationToken()));
-            ArgumentNullTest("source", () => IQueryableExtensions.AggregateAsync<int, int>(null, 0, (e1, e2) => 0));
-            ArgumentNullTest("source", () => IQueryableExtensions.AggregateAsync<int, int>(null, 0, (e1, e2) => 0, new CancellationToken()));
-            ArgumentNullTest("source", () => IQueryableExtensions.AggregateAsync<int, int, int>(null, 0, (e1, e2) => 0, e => 0));
-            ArgumentNullTest(
-                "source", () => IQueryableExtensions.AggregateAsync<int, int, int>(null, 0, (e1, e2) => 0, e => 0, new CancellationToken()));
-            ArgumentNullTest("func", () => Source().AggregateAsync(null));
-            ArgumentNullTest("func", () => Source().AggregateAsync(null, new CancellationToken()));
-            ArgumentNullTest("func", () => Source().AggregateAsync(0, null));
-            ArgumentNullTest("func", () => Source().AggregateAsync(0, null, new CancellationToken()));
-            ArgumentNullTest("func", () => Source().AggregateAsync(0, null, e => 0));
-            ArgumentNullTest("func", () => Source().AggregateAsync(0, null, e => 0, new CancellationToken()));
-            ArgumentNullTest("selector", () => Source().AggregateAsync<int, int, int>(0, (e1, e2) => 0, null));
-            ArgumentNullTest("selector", () => Source().AggregateAsync<int, int, int>(0, (e1, e2) => 0, null, new CancellationToken()));
         }
 
         private static IQueryable<T> Source<T>()
@@ -275,11 +223,6 @@ namespace System.Data.Entity
         private static void ArgumentNullTest(string paramName, Action test)
         {
             Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => test()).ParamName);
-        }
-
-        private static void ArgumentOutOfRangeTest(string paramName, Action test)
-        {
-            Assert.Equal(paramName, Assert.Throws<ArgumentOutOfRangeException>(() => test()).ParamName);
         }
     }
 }

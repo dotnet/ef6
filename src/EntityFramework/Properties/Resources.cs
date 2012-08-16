@@ -13404,6 +13404,22 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.UnableToAutoMigrateDefaultSchema); }
         }
+
+        /// <summary>
+        /// A string like "Sequence contains no matching element"
+        /// </summary>
+        internal static string NoMatch
+        {
+            get { return EntityRes.GetString(EntityRes.NoMatch); }
+        }
+
+        /// <summary>
+        /// A string like "Sequence contains more than one matching element"
+        /// </summary>
+        internal static string MoreThanOneMatch
+        {
+            get { return EntityRes.GetString(EntityRes.MoreThanOneMatch); }
+        }
     } 
 
     /// <summary>
@@ -14978,6 +14994,22 @@ namespace System.Data.Entity.Resources
         internal static Exception UnableToAutoMigrateDefaultSchema()
         {
             return new Migrations.Infrastructure.MigrationsException(Strings.UnableToAutoMigrateDefaultSchema);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Sequence contains no matching element"
+        /// </summary>
+        internal static Exception NoMatch()
+        {
+            return new InvalidOperationException(Strings.NoMatch);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Sequence contains more than one matching element"
+        /// </summary>
+        internal static Exception MoreThanOneMatch()
+        {
+            return new InvalidOperationException(Strings.MoreThanOneMatch);
         }
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
@@ -16694,6 +16726,8 @@ namespace System.Data.Entity.Resources
         internal const string IQueryable_Provider_Not_Async = "IQueryable_Provider_Not_Async";
         internal const string EmptySequence = "EmptySequence";
         internal const string UnableToAutoMigrateDefaultSchema = "UnableToAutoMigrateDefaultSchema";
+        internal const string NoMatch = "NoMatch";
+        internal const string MoreThanOneMatch = "MoreThanOneMatch";
         
         static EntityRes loader = null;
         ResourceManager resources;

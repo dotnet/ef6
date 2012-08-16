@@ -21,6 +21,11 @@ namespace System.Data.Entity.Internal
             return new InternalSqlNonSetQuery(new Mock<InternalContextForMock>().Object, typeof(object), sql, parameters);
         }
 
+        internal static Mock<InternalSqlNonSetQuery> CreateMockInternalSqlNonSetQuery(string sql, params object[] parameters)
+        {
+            return new Mock<InternalSqlNonSetQuery>(new Mock<InternalContextForMock>().Object, typeof(object), sql, parameters);
+        }
+
         internal static Mock<IEntityStateEntry> CreateMockStateEntry<TEntity>() where TEntity : class, new()
         {
             var mockStateEntry = new Mock<IEntityStateEntry>();
