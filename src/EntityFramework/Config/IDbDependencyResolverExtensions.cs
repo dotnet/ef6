@@ -16,13 +16,13 @@ namespace System.Data.Entity.Config
         /// </summary>
         /// <typeparam name="T"> The contract type to resolve. </typeparam>
         /// <param name="resolver"> The resolver to use. </param>
-        /// <param name="name"> The name of the dependency to resolve. </param>
+        /// <param name="key"> The key of the dependency to resolve. </param>
         /// <returns> The resolved dependency, or null if the resolver could not resolve it. </returns>
-        public static T GetService<T>(this IDbDependencyResolver resolver, string name)
+        public static T GetService<T>(this IDbDependencyResolver resolver, object key)
         {
             Contract.Requires(resolver != null);
 
-            return (T)resolver.GetService(typeof(T), name);
+            return (T)resolver.GetService(typeof(T), key);
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace System.Data.Entity.Config
         ///     Calls <see cref="IDbDependencyResolver.GetService" /> passing the given type argument and using
         ///     null for the name argument.
         /// </summary>
-        /// <param name="type"> The contract type to resolve. </param>
         /// <param name="resolver"> The resolver to use. </param>
+        /// <param name="type"> The contract type to resolve. </param>
         /// <returns> The resolved dependency, or null if the resolver could not resolve it. </returns>
         public static object GetService(this IDbDependencyResolver resolver, Type type)
         {

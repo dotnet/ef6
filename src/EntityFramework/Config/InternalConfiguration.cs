@@ -81,39 +81,18 @@ namespace System.Data.Entity.Config
             _resolvers.Second.Add(resolver);
         }
 
-        public virtual void AddProvider(string providerInvariantName, DbProviderServices provider)
+        public virtual void RegisterSingleton<TService>(TService instance, object key)
+            where TService : class
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-            Contract.Requires(provider != null);
-            CheckNotLocked("AddProvider");
+            Contract.Requires(instance != null);
+            CheckNotLocked("RegisterSingleton");
 
-            AddDependencyResolver(new SingletonDependencyResolver<DbProviderServices>(provider, providerInvariantName));
+            AddDependencyResolver(new SingletonDependencyResolver<TService>(instance, key));
         }
 
-        public virtual DbProviderServices GetProvider(string providerInvariantName)
+        public virtual TService GetService<TService>(object key)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-
-            return _resolvers.GetService<DbProviderServices>(providerInvariantName);
-        }
-
-        public virtual IDbConnectionFactory DefaultConnectionFactory
-        {
-            protected internal set
-            {
-                Contract.Requires(value != null);
-                CheckNotLocked("DefaultConnectionFactory");
-
-                AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(value));
-            }
-            get
-            {
-                return Database.DefaultConnectionFactoryChanged
-#pragma warning disable 612,618
-                           ? Database.DefaultConnectionFactory
-#pragma warning restore 612,618
-                           : _resolvers.GetService<IDbConnectionFactory>();
-            }
+            return _resolvers.GetService<TService>(key);
         }
 
         public virtual IDbDependencyResolver DependencyResolver

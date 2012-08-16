@@ -14,7 +14,7 @@ namespace System.Data.Entity.Internal
         {
             _commandInterceptor
                 = commandInterceptor
-                  ?? DbConfiguration.DependencyResolver.GetService<IDbCommandInterceptor>();
+                  ?? DbConfiguration.GetService<IDbCommandInterceptor>();
 
             if (_commandInterceptor != null)
             {

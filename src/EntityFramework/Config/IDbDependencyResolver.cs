@@ -13,7 +13,7 @@ namespace System.Data.Entity.Config
     public interface IDbDependencyResolver
     {
         /// <summary>
-        ///     Attempts to resolve a dependency for a given contract type and optionally a given name.
+        ///     Attempts to resolve a dependency for a given contract type and optionally a given key.
         ///     If the resolver cannot resolve the dependency then it must return null and not throw. This
         ///     allows resolvers to be used in a Chain of Responsibility pattern such that multiple resolvers
         ///     can be asked to resolve a dependency until one finally does.

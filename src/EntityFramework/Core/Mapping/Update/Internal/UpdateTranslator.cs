@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             _commandInterceptor
                 = commandInterceptor
-                  ?? DbConfiguration.DependencyResolver.GetService<IDbCommandInterceptor>();
+                  ?? DbConfiguration.GetService<IDbCommandInterceptor>();
 
             // connection state
             _providerServices = adapter.Connection.StoreProviderFactory.GetProviderServices();

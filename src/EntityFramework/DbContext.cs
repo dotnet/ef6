@@ -180,7 +180,7 @@ namespace System.Data.Entity
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
 
             _internalContext = new LazyInternalContext(
-                this, internalConnection, model, DbConfiguration.DependencyResolver.GetService<IDbModelCacheKeyFactory>());
+                this, internalConnection, model, DbConfiguration.GetService<IDbModelCacheKeyFactory>());
             DiscoverAndInitializeSets();
         }
 

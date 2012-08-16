@@ -25,7 +25,7 @@ namespace System.Data.Entity.Utilities
             Contract.Requires(connection != null);
 
             var providerManifestToken = DbConfiguration
-                .DependencyResolver.GetService<IManifestTokenService>()
+                .GetService<IManifestTokenService>()
                 .GetProviderManifestToken(connection);
             
             var providerInfo = new DbProviderInfo(connection.GetProviderInvariantName(), providerManifestToken);

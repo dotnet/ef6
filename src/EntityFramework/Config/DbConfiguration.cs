@@ -72,6 +72,63 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
+        ///     Registers a service instance using a <see cref="SingletonDependencyResolver{T}" />
+        /// </summary>
+        /// <typeparam name="TService"> The service contract type. </typeparam>
+        /// <param name="instance"> The instance of TService to be registered. </param>
+        protected internal void RegisterSingleton<TService>(TService instance)
+            where TService : class
+        {
+            Contract.Requires(instance != null);
+
+            RegisterSingleton(instance, null);
+        }
+
+        /// <summary>
+        ///     Registers a service instance with an optional key using a <see cref="SingletonDependencyResolver{T}" />
+        /// </summary>
+        /// <typeparam name="TService"> The service contract type. </typeparam>
+        /// <param name="instance"> The instance of TService to be registered. </param>
+        /// <param name="key"> The optional key used when resolving services of this type. </param>
+        protected internal void RegisterSingleton<TService>(TService instance, object key)
+            where TService : class
+        {
+            Contract.Requires(instance != null);
+
+            _internalConfiguration.RegisterSingleton(instance, key);
+        }
+
+        /// <summary>
+        ///     Attempts to locate and return an instance of a given service.
+        /// </summary>
+        /// <typeparam name="TService"> The service contract type. </typeparam>
+        /// <returns> The resolved dependency, which must be an instance of the given contract type, or null if the dependency could not be resolved. </returns>
+        public static TService GetService<TService>()
+        {
+            return GetService<TService>(null);
+        }
+
+        /// <summary>
+        ///     Attempts to locate and return an instance of a given service with a given key.
+        /// </summary>
+        /// <typeparam name="TService"> The service contract type. </typeparam>
+        /// <param name="key"> The optional key used to resolve the target service. </param>
+        /// <returns> The resolved dependency, which must be an instance of the given contract type, or null if the dependency could not be resolved. </returns>
+        public static TService GetService<TService>(object key)
+        {
+            return InternalConfiguration.Instance.GetService<TService>(key);
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="IDbDependencyResolver" /> that is being used to resolve service
+        ///     dependencies in the Entity Framework.
+        /// </summary>
+        public static IDbDependencyResolver DependencyResolver
+        {
+            get { return InternalConfiguration.Instance.DependencyResolver; }
+        }
+
+        /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
         ///     an Entity Framework provider.
         /// </summary>
@@ -83,21 +140,7 @@ namespace System.Data.Entity.Config
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(provider != null);
 
-            _internalConfiguration.AddProvider(providerInvariantName, provider);
-        }
-
-        /// <summary>
-        ///     Gets the Entity Framework provider that has been registered for use with ADO.NET connections that are
-        ///     identified by the given ADO.NET provider invariant name.
-        /// </summary>
-        /// <param name="providerInvariantName"> The provider invariant name. </param>
-        /// <returns> The registered provider. </returns>
-        [CLSCompliant(false)]
-        public static DbProviderServices GetProvider(string providerInvariantName)
-        {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-
-            return InternalConfiguration.Instance.GetProvider(providerInvariantName);
+            RegisterSingleton(provider, providerInvariantName);
         }
 
         /// <summary>
@@ -110,25 +153,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(connectionFactory != null);
 
-            _internalConfiguration.DefaultConnectionFactory = connectionFactory;
-        }
-
-        /// <summary>
-        ///     The <see cref="IDbConnectionFactory" /> that is used to create connections by convention if no other
-        ///     connection string or connection is given to or can be discovered by <see cref="DbContext" />.
-        /// </summary>
-        public static IDbConnectionFactory DefaultConnectionFactory
-        {
-            get { return InternalConfiguration.Instance.DefaultConnectionFactory; }
-        }
-
-        /// <summary>
-        ///     Gets the <see cref="IDbDependencyResolver" /> that is being used to resolve service
-        ///     dependencies in the Entity Framework.
-        /// </summary>
-        public static IDbDependencyResolver DependencyResolver
-        {
-            get { return InternalConfiguration.Instance.DependencyResolver; }
+            RegisterSingleton(connectionFactory);
         }
 
         internal virtual InternalConfiguration InternalConfiguration

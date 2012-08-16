@@ -134,7 +134,7 @@ namespace System.Data.Entity.Migrations
                     = context.InternalContext.ModelProviderInfo != null
                           ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
                           : DbConfiguration
-                                .DependencyResolver.GetService<IManifestTokenService>()
+                                .GetService<IManifestTokenService>()
                                 .GetProviderManifestToken(connection);
 
                 _targetDatabase

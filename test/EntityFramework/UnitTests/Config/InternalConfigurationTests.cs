@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using Moq;
@@ -24,6 +23,48 @@ namespace System.Data.Entity.Config
                     AddAppConfigResolver(resolver);
 
                 mockAppConfigChain.Verify(m => m.Add(resolver));
+            }
+        }
+
+        public class RegisterSingleton
+        {
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = new InternalConfiguration();
+                configuration.Lock();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("RegisterSingleton"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.RegisterSingleton(new object(), null)).Message);
+            }
+
+            [Fact]
+            public void Adds_a_singleton_resolver()
+            {
+                var mockNormalChain = new Mock<ResolverChain>();
+                
+                new InternalConfiguration(
+                    new Mock<ResolverChain>().Object, mockNormalChain.Object,
+                    new RootDependencyResolver()).RegisterSingleton(new object(), null);
+
+                mockNormalChain.Verify(m => m.Add(It.IsAny<SingletonDependencyResolver<object>>()));
+            }
+        }
+
+        public class GetService
+        {
+            [Fact]
+            public void Queries_resolvers_for_service()
+            {
+                var mockNormalChain = new Mock<ResolverChain>();
+
+                new InternalConfiguration(
+                    new Mock<ResolverChain>().Object, mockNormalChain.Object,
+                    new RootDependencyResolver()).GetService<object>(42);
+
+                mockNormalChain.Verify(m => m.GetService(typeof(object), 42));
             }
         }
 
@@ -52,106 +93,6 @@ namespace System.Data.Entity.Config
                     new RootDependencyResolver()).AddDependencyResolver(resolver);
 
                 mockNormalChain.Verify(m => m.Add(resolver));
-            }
-        }
-
-        public class AddProvider
-        {
-            [Fact]
-            public void AddProvider_throws_if_the_configuation_is_locked()
-            {
-                var configuration = new InternalConfiguration();
-                configuration.Lock();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("AddProvider"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddProvider("Karl", new Mock<DbProviderServices>().Object)).Message);
-            }
-        }
-
-        public class GetProvider
-        {
-            [Fact]
-            public void GetProvider_returns_provider_added_by_AddProvider()
-            {
-                var configuration = new InternalConfiguration();
-                var provider = new Mock<DbProviderServices>().Object;
-
-                configuration.AddProvider("Karl", provider);
-
-                Assert.Same(provider, configuration.GetProvider("Karl"));
-            }
-        }
-
-        public class DefaultConnectionFactory
-        {
-            [Fact]
-            public void Setting_DefaultConnectionFactory_throws_if_the_configuation_is_locked()
-            {
-                var configuration = new InternalConfiguration();
-                configuration.Lock();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("DefaultConnectionFactory"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.DefaultConnectionFactory = new Mock<IDbConnectionFactory>().Object).Message);
-            }
-
-            [Fact]
-            public void Getting_DefaultConnectionFactory_returns_factory_previously_set()
-            {
-                var configuration = new InternalConfiguration();
-                var factory = new Mock<IDbConnectionFactory>().Object;
-
-                configuration.DefaultConnectionFactory = factory;
-
-                Assert.Same(factory, configuration.DefaultConnectionFactory);
-            }
-
-            [Fact]
-            public void Getting_DefaultConnectionFactory_returns_factory_set_by_legacy_API()
-            {
-                var configuration = new InternalConfiguration();
-                var legacyFactory = new Mock<IDbConnectionFactory>().Object;
-                var factory = new Mock<IDbConnectionFactory>().Object;
-
-                try
-                {
-#pragma warning disable 612,618
-                    Database.DefaultConnectionFactory = legacyFactory;
-#pragma warning restore 612,618
-
-                    configuration.DefaultConnectionFactory = factory;
-
-                    Assert.Same(legacyFactory, configuration.DefaultConnectionFactory);
-                }
-                finally
-                {
-                    Database.ResetDefaultConnectionFactory();
-                }
-            }
-
-            [Fact]
-            public void The_app_config_chain_is_prefered_over_the_normal_chain()
-            {
-                var mockAppConfigChain = new Mock<ResolverChain>();
-                var configService = new Mock<IDbConnectionFactory>().Object;
-                mockAppConfigChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(configService);
-
-                var mockNormalChain = new Mock<ResolverChain>();
-                var normalService = new Mock<IDbConnectionFactory>().Object;
-                mockNormalChain.Setup(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>())).Returns(normalService);
-
-                Assert.Same(
-                    configService,
-                    new InternalConfiguration(
-                        mockAppConfigChain.Object, mockNormalChain.Object,
-                        new RootDependencyResolver()).
-                        DefaultConnectionFactory);
-
-                mockAppConfigChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Once());
-                mockNormalChain.Verify(m => m.GetService(typeof(IDbConnectionFactory), It.IsAny<string>()), Times.Never());
             }
         }
 

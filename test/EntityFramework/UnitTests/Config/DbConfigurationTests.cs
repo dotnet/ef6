@@ -75,24 +75,7 @@ namespace System.Data.Entity.Config
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddProvider("900.FTW", providerServices);
 
-                mockInternalConfiguration.Verify(m => m.AddProvider("900.FTW", providerServices));
-            }
-        }
-
-        public class GetProvider
-        {
-            [Fact]
-            public void GetProvider_throws_if_given_bad_invariant_name()
-            {
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
-                    Assert.Throws<ArgumentException>(() => DbConfiguration.GetProvider(null)).Message);
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
-                    Assert.Throws<ArgumentException>(() => DbConfiguration.GetProvider("")).Message);
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
-                    Assert.Throws<ArgumentException>(() => DbConfiguration.GetProvider(" ")).Message);
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerServices, "900.FTW"));
             }
         }
 
@@ -114,7 +97,38 @@ namespace System.Data.Entity.Config
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetDefaultConnectionFactory(connectionFactory);
 
-                mockInternalConfiguration.VerifySet(m => m.DefaultConnectionFactory = connectionFactory);
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(connectionFactory, null));
+            }
+        }
+
+        public class RegisterSingleton
+        {
+            [Fact]
+            public void Throws_if_given_a_null_instance()
+            {
+                Assert.Equal(
+                    "instance",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().RegisterSingleton<object>(null)).ParamName);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+
+                var instance = new object();
+                new DbConfiguration(mockInternalConfiguration.Object).RegisterSingleton(instance, 42);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(instance, 42));
+            }
+        }
+
+        public class GetService
+        {
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                Assert.NotNull(DbConfiguration.GetService<IDbCommandInterceptor>(null));
             }
         }
 
@@ -123,7 +137,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void Default_IDbModelCacheKeyFactory_is_returned_by_default()
             {
-                Assert.IsType<DefaultModelCacheKeyFactory>(DbConfiguration.DependencyResolver.GetService<IDbModelCacheKeyFactory>());
+                Assert.IsType<DefaultModelCacheKeyFactory>(DbConfiguration.GetService<IDbModelCacheKeyFactory>());
             }
         }
     }

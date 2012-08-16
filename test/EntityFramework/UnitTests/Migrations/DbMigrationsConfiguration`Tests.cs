@@ -71,7 +71,7 @@ namespace System.Data.Entity.Migrations
             new DbMigrationsConfiguration().SetSqlGenerator(DbProviders.SqlCe, new SqlServerMigrationSqlGenerator());
 
             Assert.IsType<SqlCeMigrationSqlGenerator>(
-                DbConfiguration.DependencyResolver.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
+                DbConfiguration.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
         }
     }
 }

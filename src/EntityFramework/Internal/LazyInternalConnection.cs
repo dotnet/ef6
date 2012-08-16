@@ -266,7 +266,12 @@ namespace System.Data.Entity.Internal
                         {
                             // Otherwise figure out the connection factory to use (either the default,
                             // the one set in code, or one provided by DbContextInfo via the AppSettings property
-                            var defaultConnectionFactory = DbConfiguration.DefaultConnectionFactory;
+                            var defaultConnectionFactory
+                                = Database.DefaultConnectionFactoryChanged
+#pragma warning disable 612,618
+                                      ? Database.DefaultConnectionFactory
+#pragma warning restore 612,618
+                                      : DbConfiguration.GetService<IDbConnectionFactory>();
 
                             UnderlyingConnection =
                                 defaultConnectionFactory.CreateConnection(name ?? _nameOrConnectionString);
