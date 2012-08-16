@@ -787,13 +787,13 @@ namespace System.Data.Entity.Internal
             Contract.Ensures(Contract.Result<IDbAsyncEnumerator<TElement>>() != null);
 
             return new LazyAsyncEnumerator<TElement>(
-                async () =>
+                async cancellationToken =>
                 {
                     //Not initializing asynchronously as it's not expected to be done frequently
                     Initialize();
 
                     var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                        sql, CancellationToken.None, parameters).ConfigureAwait(continueOnCapturedContext: false);
+                        sql, cancellationToken, parameters).ConfigureAwait(continueOnCapturedContext: false);
 
                     try
                     {

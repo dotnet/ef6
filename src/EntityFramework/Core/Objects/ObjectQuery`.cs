@@ -587,9 +587,9 @@ namespace System.Data.Entity.Core.Objects
         IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
         {
             return new LazyAsyncEnumerator<T>(
-                async () =>
+                async cancellationToken =>
                 {
-                    var disposableEnumerable = await GetResultsAsync(null, CancellationToken.None).ConfigureAwait(continueOnCapturedContext: false);
+                    var disposableEnumerable = await GetResultsAsync(null, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     try
                     {
                         return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
