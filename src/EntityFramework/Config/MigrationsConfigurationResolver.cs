@@ -6,8 +6,10 @@ namespace System.Data.Entity.Config
 
     internal class MigrationsConfigurationResolver : IDbDependencyResolver
     {
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
+            var name = key as string;
+
             return type == typeof(MigrationSqlGenerator)
                        ? (name == "System.Data.SqlClient"
                               ? new SqlServerMigrationSqlGenerator()

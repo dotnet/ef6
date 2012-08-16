@@ -11,7 +11,7 @@ namespace System.Data.Entity.Config
         private readonly ConcurrentDictionary<Type, object> _initializers =
             new ConcurrentDictionary<Type, object>();
 
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
             var contextType = type.TryGetElementType(typeof(IDatabaseInitializer<>));
             if (contextType != null)

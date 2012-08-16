@@ -17,8 +17,8 @@ namespace System.Data.Entity.Config
     {
         private readonly AppConfig _appConfig;
 
-        private readonly ConcurrentDictionary<Tuple<Type, string>, Func<object>> _serviceFactories
-            = new ConcurrentDictionary<Tuple<Type, string>, Func<object>>();
+        private readonly ConcurrentDictionary<Tuple<Type, object>, Func<object>> _serviceFactories
+            = new ConcurrentDictionary<Tuple<Type, object>, Func<object>>();
 
         public AppConfigDependencyResolver(AppConfig appConfig)
         {
@@ -27,11 +27,11 @@ namespace System.Data.Entity.Config
             _appConfig = appConfig;
         }
 
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
             return _serviceFactories.GetOrAdd(
-                Tuple.Create(type, name),
-                t => GetServiceFactory(type, name))();
+                Tuple.Create(type, key),
+                t => GetServiceFactory(type, key as string))();
         }
 
         public virtual Func<object> GetServiceFactory(Type type, string name)

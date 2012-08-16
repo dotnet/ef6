@@ -49,9 +49,9 @@ namespace System.Data.Entity.Config
         }
 
         /// <inheritdoc />
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
-            return _resolvers.GetService(type, name);
+            return _resolvers.GetService(type, key);
         }
 
         /// <inheritdoc />

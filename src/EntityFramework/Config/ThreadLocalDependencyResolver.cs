@@ -4,11 +4,11 @@ namespace System.Data.Entity.Config
 {
     using System.Diagnostics.Contracts;
     using System.Threading;
-    
+
     public sealed class ThreadLocalDependencyResolver<T> : IDbDependencyResolver, IDisposable
     {
         private readonly ThreadLocal<T> _threadLocal;
-        private readonly string _name;
+        private readonly object _key;
 
         public ThreadLocalDependencyResolver(Func<T> valueFactory)
             : this(valueFactory, null)
@@ -16,19 +16,19 @@ namespace System.Data.Entity.Config
             Contract.Requires(valueFactory != null);
         }
 
-        public ThreadLocalDependencyResolver(Func<T> valueFactory, string name)
+        public ThreadLocalDependencyResolver(Func<T> valueFactory, object key)
         {
             Contract.Requires(valueFactory != null);
 
             _threadLocal = new ThreadLocal<T>(valueFactory);
-            _name = name;
+            _key = key;
         }
 
         /// <inheritdoc />
-        public object GetService(Type type, string name)
+        public object GetService(Type type, object key)
         {
-            return type == typeof(T)
-                   && (_name == null || name == _name)
+            return ((type == typeof(T))
+                    && (_key == null || key == _key))
                        ? (object)_threadLocal.Value
                        : null;
         }

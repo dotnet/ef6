@@ -7,8 +7,10 @@ namespace System.Data.Entity.Config
 
     internal class DefaultProviderServicesResolver : IDbDependencyResolver
     {
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
+            var name = key as string;
+
             if (type == typeof(DbProviderServices))
             {
                 if (string.IsNullOrWhiteSpace(name))

@@ -15,7 +15,7 @@ namespace System.Data.Entity.Config
     public class SingletonDependencyResolver<T> : IDbDependencyResolver
     {
         private readonly T _singletonInstance;
-        private readonly string _name;
+        private readonly object _key;
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
@@ -33,18 +33,19 @@ namespace System.Data.Entity.Config
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
         /// <para> The name of the dependency to resolve. </para>
-        public SingletonDependencyResolver(T singletonInstance, string name)
+        public SingletonDependencyResolver(T singletonInstance, object key)
         {
             Contract.Requires(singletonInstance != null);
 
             _singletonInstance = singletonInstance;
-            _name = name;
+            _key = key;
         }
 
         /// <inheritdoc />
-        public object GetService(Type type, string name)
+        public object GetService(Type type, object key)
         {
-            return type == typeof(T) && (_name == null || name == _name)
+            return ((type == typeof(T))
+                    && (_key == null || key == _key))
                        ? (object)_singletonInstance
                        : null;
         }

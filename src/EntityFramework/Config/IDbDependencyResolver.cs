@@ -19,9 +19,9 @@ namespace System.Data.Entity.Config
         ///     can be asked to resolve a dependency until one finally does.
         /// </summary>
         /// <param name="type"> The interface or abstract base class that defines the dependency to be resolved. The returned object is expected to be an instance of this type. </param>
-        /// <param name="name"> Optionally, the name of the dependency to be resolved. This may be null for dependencies that are not differentiated by name. </param>
+        /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
         /// <returns> The resolved dependency, which must be an instance of the given contract type, or null if the dependency could not be resolved. </returns>
-        object GetService(Type type, string name);
+        object GetService(Type type, object key);
 
         /// <summary>
         ///     This method is called for transient services to give the resolver a chance to release the service

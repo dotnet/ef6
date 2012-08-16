@@ -35,10 +35,10 @@ namespace System.Data.Entity.Config
             get { return _resolversSnapshot.Reverse(); }
         }
 
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
             return _resolversSnapshot
-                .Select(r => r.GetService(type, name))
+                .Select(r => r.GetService(type, key))
                 .FirstOrDefault(s => s != null);
         }
 

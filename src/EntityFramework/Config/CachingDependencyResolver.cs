@@ -15,8 +15,8 @@ namespace System.Data.Entity.Config
     {
         private readonly IDbDependencyResolver _underlyingResolver;
 
-        private readonly ConcurrentDictionary<Tuple<Type, string>, object> _resolvedDependencies
-            = new ConcurrentDictionary<Tuple<Type, string>, object>();
+        private readonly ConcurrentDictionary<Tuple<Type, object>, object> _resolvedDependencies
+            = new ConcurrentDictionary<Tuple<Type, object>, object>();
 
         public CachingDependencyResolver(IDbDependencyResolver underlyingResolver)
         {
@@ -25,11 +25,11 @@ namespace System.Data.Entity.Config
             _underlyingResolver = underlyingResolver;
         }
 
-        public virtual object GetService(Type type, string name)
+        public virtual object GetService(Type type, object key)
         {
             return _resolvedDependencies.GetOrAdd(
-                Tuple.Create(type, name),
-                k => _underlyingResolver.GetService(type, name));
+                Tuple.Create(type, key),
+                k => _underlyingResolver.GetService(type, key));
         }
 
         public virtual void Release(object service)

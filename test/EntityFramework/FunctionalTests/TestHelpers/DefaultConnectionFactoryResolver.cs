@@ -22,7 +22,7 @@ namespace FunctionalTests.TestHelpers
             set { _connectionFactory = value; }
         }
 
-        public object GetService(Type type, string name)
+        public object GetService(Type type, object key)
         {
             if (type == typeof(IDbConnectionFactory))
             {
