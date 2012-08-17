@@ -33,6 +33,19 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
+            public void AddDependencyResolver_throws_if_the_configuation_is_locked()
+            {
+                var internalConfiguration = new InternalConfiguration();
+                internalConfiguration.Lock();
+                var configuration = new DbConfiguration(internalConfiguration);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddDependencyResolver"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.AddDependencyResolver(new Mock<IDbDependencyResolver>().Object)).Message);
+            }
+
+            [Fact]
             public void AddDependencyResolver_delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>();
@@ -77,6 +90,19 @@ namespace System.Data.Entity.Config
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerServices, "900.FTW"));
             }
+
+            [Fact]
+            public void AddProvider_throws_if_the_configuation_is_locked()
+            {
+                var internalConfiguration = new InternalConfiguration();
+                internalConfiguration.Lock();
+                var configuration = new DbConfiguration(internalConfiguration);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddProvider"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.AddProvider("Karl", new Mock<DbProviderServices>().Object)).Message);
+            }
         }
 
         public class SetDefaultConnectionFactory
@@ -87,6 +113,19 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "connectionFactory",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetDefaultConnectionFactory(null)).ParamName);
+            }
+
+            [Fact]
+            public void Setting_DefaultConnectionFactory_throws_if_the_configuation_is_locked()
+            {
+                var internalConfiguration = new InternalConfiguration();
+                internalConfiguration.Lock();
+                var configuration = new DbConfiguration(internalConfiguration);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetDefaultConnectionFactory"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetDefaultConnectionFactory(new Mock<IDbConnectionFactory>().Object)).Message);
             }
 
             [Fact]
@@ -103,6 +142,19 @@ namespace System.Data.Entity.Config
 
         public class RegisterSingleton
         {
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var internalConfiguration = new InternalConfiguration();
+                internalConfiguration.Lock();
+                var configuration = new DbConfiguration(internalConfiguration);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("RegisterSingleton"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.RegisterSingleton(new object(), null)).Message);
+            }
+
             [Fact]
             public void Throws_if_given_a_null_instance()
             {

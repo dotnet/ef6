@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Resources;
     using Moq;
     using Xunit;
 
@@ -29,22 +27,10 @@ namespace System.Data.Entity.Config
         public class RegisterSingleton
         {
             [Fact]
-            public void Throws_if_the_configuation_is_locked()
-            {
-                var configuration = new InternalConfiguration();
-                configuration.Lock();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("RegisterSingleton"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.RegisterSingleton(new object(), null)).Message);
-            }
-
-            [Fact]
             public void Adds_a_singleton_resolver()
             {
                 var mockNormalChain = new Mock<ResolverChain>();
-                
+
                 new InternalConfiguration(
                     new Mock<ResolverChain>().Object, mockNormalChain.Object,
                     new RootDependencyResolver()).RegisterSingleton(new object(), null);
@@ -70,19 +56,6 @@ namespace System.Data.Entity.Config
 
         public class AddDependencyResolver
         {
-            [Fact]
-            public void AddDependencyResolver_throws_if_the_configuation_is_locked()
-            {
-                var configuration = new InternalConfiguration();
-                configuration.Lock();
-
-                Assert.Equal(
-
-                    Strings.ConfigurationLocked("SetDefaultConnectionFactory"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddDependencyResolver(new Mock<IDbDependencyResolver>().Object)).Message);
-            }
-
             [Fact]
             public void AddDependencyResolver_adds_a_resolver_to_the_normal_chain()
             {

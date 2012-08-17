@@ -75,7 +75,7 @@ namespace System.Data.Entity.Config
         public virtual void AddDependencyResolver(IDbDependencyResolver resolver)
         {
             Contract.Requires(resolver != null);
-            CheckNotLocked("AddDependencyResolver");
+            Contract.Assert(!_isLocked);
 
             // New resolvers always run after the config resolvers so that config always wins over code
             _resolvers.Second.Add(resolver);
@@ -85,14 +85,13 @@ namespace System.Data.Entity.Config
             where TService : class
         {
             Contract.Requires(instance != null);
-            CheckNotLocked("RegisterSingleton");
+            Contract.Assert(!_isLocked);
 
             AddDependencyResolver(new SingletonDependencyResolver<TService>(instance, key));
         }
 
         public virtual TService GetService<TService>(object key)
         {
-
             return _resolvers.GetService<TService>(key);
         }
 
@@ -130,7 +129,7 @@ namespace System.Data.Entity.Config
 
         public virtual DbConfiguration Owner { get; set; }
 
-        private void CheckNotLocked(string memberName)
+        public virtual void CheckNotLocked(string memberName)
         {
             if (_isLocked)
             {

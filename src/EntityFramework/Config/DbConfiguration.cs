@@ -68,6 +68,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(resolver != null);
 
+            _internalConfiguration.CheckNotLocked("AddDependencyResolver");
             _internalConfiguration.AddDependencyResolver(resolver);
         }
 
@@ -95,6 +96,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(instance != null);
 
+            _internalConfiguration.CheckNotLocked("RegisterSingleton");
             _internalConfiguration.RegisterSingleton(instance, key);
         }
 
@@ -140,7 +142,8 @@ namespace System.Data.Entity.Config
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
             Contract.Requires(provider != null);
 
-            RegisterSingleton(provider, providerInvariantName);
+            _internalConfiguration.CheckNotLocked("AddProvider");
+            _internalConfiguration.RegisterSingleton(provider, providerInvariantName);
         }
 
         /// <summary>
@@ -153,7 +156,8 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(connectionFactory != null);
 
-            RegisterSingleton(connectionFactory);
+            _internalConfiguration.CheckNotLocked("SetDefaultConnectionFactory");
+            _internalConfiguration.RegisterSingleton(connectionFactory, null);
         }
 
         internal virtual InternalConfiguration InternalConfiguration
