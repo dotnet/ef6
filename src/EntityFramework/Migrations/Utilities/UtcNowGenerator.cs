@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Threading;
 
     /// <summary>
     ///     Used for generating <see cref="DateTime.UtcNow" /> values that are always in sequential
@@ -13,8 +14,7 @@ namespace System.Data.Entity.Migrations.Utilities
     {
         public const string MigrationIdFormat = "yyyyMMddHHmmssf";
 
-        [ThreadStatic]
-        private static DateTime _lastNow = DateTime.UtcNow;
+        private static readonly ThreadLocal<DateTime> _lastNow = new ThreadLocal<DateTime>(() => DateTime.UtcNow);
 
         /// <summary>
         ///     Returns the value of <see cref="DateTime.UtcNow" /> unless this value would be the same as the
@@ -30,22 +30,20 @@ namespace System.Data.Entity.Migrations.Utilities
         public static DateTime UtcNow()
         {
             var now = DateTime.UtcNow;
+            var lastNow = _lastNow.Value;
 
             // At least on some machines DateTime.UtcNow can return values that are a little bit (< 1 second) less than the
             // last value that it returned.
-            if (now <= _lastNow
+            if (now <= lastNow
                 || now.ToString(MigrationIdFormat, CultureInfo.InvariantCulture)
-                       .Equals(
-                           _lastNow.ToString(MigrationIdFormat, CultureInfo.InvariantCulture), StringComparison.Ordinal))
+                       .Equals(lastNow.ToString(MigrationIdFormat, CultureInfo.InvariantCulture), StringComparison.Ordinal))
             {
-                now = _lastNow.AddMilliseconds(100);
+                now = lastNow.AddMilliseconds(100);
 
-                Contract.Assert(
-                    !now.ToString(MigrationIdFormat).Equals(
-                        _lastNow.ToString(MigrationIdFormat), StringComparison.Ordinal));
+                Contract.Assert(!now.ToString(MigrationIdFormat).Equals(lastNow.ToString(MigrationIdFormat), StringComparison.Ordinal));
             }
 
-            _lastNow = now;
+            _lastNow.Value = now;
 
             return now;
         }
