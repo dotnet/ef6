@@ -816,23 +816,13 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="byte" /> column.
-        /// </summary>
-        /// <param name="defaultValue"> The value to be used as the default. </param>
-        /// <returns> Code representing the default value. </returns>
-        protected virtual string Generate(byte defaultValue)
-        {
-            return defaultValue.ToString(CultureInfo.InvariantCulture);
-        }
-
-        /// <summary>
         ///     Generates code to specify the default value for a <see cref="decimal" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
         protected virtual string Generate(decimal defaultValue)
         {
-            return defaultValue + "m";
+            return defaultValue.ToString(CultureInfo.InvariantCulture) + "m";
         }
 
         /// <summary>
@@ -862,7 +852,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns> Code representing the default value. </returns>
         protected virtual string Generate(float defaultValue)
         {
-            return defaultValue + "f";
+            return defaultValue.ToString(CultureInfo.InvariantCulture) + "f";
         }
 
         /// <summary>
@@ -913,7 +903,7 @@ namespace System.Data.Entity.Migrations.Design
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         protected virtual string Generate(object defaultValue)
         {
-            return defaultValue.ToString().ToLowerInvariant();
+            return string.Format(CultureInfo.InvariantCulture, "{0}", defaultValue).ToLowerInvariant();
         }
 
         /// <summary>

@@ -782,7 +782,7 @@ namespace System.Data.Entity.Migrations.Sql
             Contract.Assert(defaultValue != null);
             Contract.Assert(defaultValue.GetType().IsValueType);
 
-            return defaultValue.ToString();
+            return string.Format(CultureInfo.InvariantCulture, "{0}", defaultValue);
         }
 
         /// <summary>
