@@ -155,6 +155,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#if !NET40
+
         public class OpenAsync
         {
             [Fact]
@@ -325,5 +327,8 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(expectedMessage, innerException.Message);
             }
         }
+
+#endif
+
     }
 }

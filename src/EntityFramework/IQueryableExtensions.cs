@@ -656,6 +656,8 @@ namespace System.Data.Entity
             }
         }
 
+#if !NET40
+
         /// <summary>
         ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />, <see
         ///      cref="ObjectSet{T}" />,
@@ -693,9 +695,13 @@ namespace System.Data.Entity
             return source.ForEachAsync(e => { }, cancellationToken);
         }
 
+#endif
+
         #endregion
 
         #region ForEachAsync
+
+#if !NET40
 
         /// <summary>
         ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
@@ -765,9 +771,13 @@ namespace System.Data.Entity
             return source.AsDbAsyncEnumerable().ForEachAsync(action, cancellationToken);
         }
 
+#endif
+
         #endregion
 
         #region Async equivalents of IEnumerable extension methods
+
+#if !NET40
 
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
@@ -1057,9 +1067,13 @@ namespace System.Data.Entity
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, comparer, cancellationToken);
         }
 
+#endif
+
         #endregion
 
         #region Async equivalents of IQueryable extension methods
+
+#if !NET40
 
         // TODO: XML comments for the methods in this region
 
@@ -3093,9 +3107,13 @@ namespace System.Data.Entity
             }
         }
 
+#endif
+
         #endregion
 
         #region Private methods
+
+#if !NET40
 
         private static IDbAsyncEnumerable AsDbAsyncEnumerable(this IQueryable source)
         {
@@ -3128,6 +3146,8 @@ namespace System.Data.Entity
                 throw Error.IQueryable_Not_Async("<" + typeof(T) + ">");
             }
         }
+
+#endif
 
         private static MethodInfo GetMethod(string methodName, Func<Type[]> getParameterTypes)
         {

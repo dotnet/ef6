@@ -190,6 +190,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
+#if !NET40
+
         /// <summary>
         ///     See comments in <see cref="UpdateCommand" />.
         /// </summary>
@@ -273,6 +275,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return rowsAffected;
             }
         }
+
+#endif
 
         /// <summary>
         ///     Gets DB command definition encapsulating store logic for this command.

@@ -22,13 +22,16 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyMethod(e => e.Collection(name), m => m.Collection(name, null));
             v.VerifyMethod(e => e.ComplexProperty(name), m => m.Property(name, null, true));
             v.VerifyMethod(e => e.GetDatabaseValues(), m => m.GetDatabaseValues());
-            v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
-            v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
             v.VerifyMethod(e => e.GetValidationResult(), m => m.GetValidationResult(It.IsAny<IDictionary<object, object>>()));
             v.VerifyMethod(e => e.Member(name), m => m.Member(name, null));
             v.VerifyMethod(e => e.Property(name), m => m.Property(name, null, false));
             v.VerifyMethod(e => e.Reference(name), m => m.Reference(name, null));
             v.VerifyMethod(e => e.Reload(), m => m.Reload());
+
+#if !NET40
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+#endif
         }
 
         [Fact]
@@ -43,8 +46,6 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyMethod(e => e.ComplexProperty(name), m => m.Property(name, null, true));
             v.VerifyMethod(e => e.ComplexProperty<object>(name), m => m.Property(name, typeof(object), true));
             v.VerifyMethod(e => e.GetDatabaseValues(), m => m.GetDatabaseValues());
-            v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
-            v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
             v.VerifyMethod(e => e.GetValidationResult(), m => m.GetValidationResult(It.IsAny<IDictionary<object,object>>()));
             v.VerifyMethod(e => e.Member(name), m => m.Member(name, null));
             v.VerifyMethod(e => e.Member<object>(name), m => m.Member(name, typeof(object)));
@@ -53,6 +54,11 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyMethod(e => e.Reference(name), m => m.Reference(name, null));
             v.VerifyMethod(e => e.Reference<object>(name), m => m.Reference(name, typeof(object)));
             v.VerifyMethod(e => e.Reload(), m => m.Reload());
+
+#if !NET40
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+#endif
         }
 
         public class Reference

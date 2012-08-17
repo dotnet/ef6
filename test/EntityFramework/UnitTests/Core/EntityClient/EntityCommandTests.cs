@@ -172,6 +172,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#if !NET40
+
         public class ExecuteReaderAsync
         {
             [Fact]
@@ -327,6 +329,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#endif
+        
         public class ExecuteNonQuery
         {
             [Fact]
@@ -390,6 +394,8 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(10, result);
             }
         }
+
+#if !NET40
 
         public class ExecuteNonQueryAsync
         {
@@ -467,6 +473,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#endif
+        
         private static EntityConnection InitializeEntityConnection()
         {
             var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
@@ -484,17 +492,22 @@ namespace System.Data.Entity.Core.EntityClient
         private static EntityCommandDefinition InitializeEntityCommandDefinition()
         {
             var storeDataReaderMock = new Mock<DbDataReader>();
+#if !NET40
             storeDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
+#endif
             var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
             entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
             entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                 Returns(storeDataReaderMock.Object);
+#if !NET40
             entityCommandDefinitionMock.Setup(
                 m => m.ExecuteAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())).
                 Returns((EntityCommand ec, CommandBehavior cb, CancellationToken ct) => Task.FromResult(storeDataReaderMock.Object));
-
+#endif
             return entityCommandDefinitionMock.Object;
         }
+
+#if !NET40
 
         private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Xunit.Assert.ThrowsDelegate testCode)
             where TException : Exception
@@ -504,5 +517,8 @@ namespace System.Data.Entity.Core.EntityClient
             Assert.IsType<TException>(innerException);
             Assert.Equal(expectedMessage, innerException.Message);
         }
+
+#endif
+
     }
 }

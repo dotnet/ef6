@@ -133,6 +133,8 @@ namespace ProductivityApiUnitTests
             }
         }
 
+#if !NET40
+        
         public class ExecuteSqlCommandAsync
         {
             [Fact]
@@ -189,6 +191,8 @@ namespace ProductivityApiUnitTests
                     m => m.ExecuteSqlCommandAsync("query", CancellationToken.None, It.IsAny<object[]>()), Times.Once());
             }
         }
+
+#endif
 
         public class SqlQuery_Generic
         {

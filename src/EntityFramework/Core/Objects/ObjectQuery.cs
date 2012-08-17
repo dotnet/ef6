@@ -22,7 +22,10 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public abstract class ObjectQuery : IEnumerable, IDbAsyncEnumerable, IOrderedQueryable, IListSource
+    public abstract class ObjectQuery : IEnumerable, IOrderedQueryable, IListSource
+#if !NET40
+, IDbAsyncEnumerable
+#endif
     {
         #region Private Instance Members
 
@@ -234,6 +237,8 @@ namespace System.Data.Entity.Core.Objects
             return ExecuteInternal(mergeOption);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Execute, which
         ///     allows explicit query evaluation with a specified merge
@@ -260,6 +265,8 @@ namespace System.Data.Entity.Core.Objects
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             return ExecuteInternalAsync(mergeOption, cancellationToken);
         }
+
+#endif
 
         #region IListSource implementation
 
@@ -326,6 +333,8 @@ namespace System.Data.Entity.Core.Objects
 
         #region IDbAsyncEnumerable<T> implementation
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
@@ -336,6 +345,8 @@ namespace System.Data.Entity.Core.Objects
             return GetAsyncEnumeratorInternal();
         }
 
+#endif
+
         #endregion
 
         #endregion
@@ -344,10 +355,16 @@ namespace System.Data.Entity.Core.Objects
 
         internal abstract Expression GetExpression();
         internal abstract IEnumerator GetEnumeratorInternal();
+
+#if !NET40
+
         internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
+        internal abstract Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken);
+
+#endif
+
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult ExecuteInternal(MergeOption mergeOption);
-        internal abstract Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
         #endregion
     }

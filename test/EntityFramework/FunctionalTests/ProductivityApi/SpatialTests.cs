@@ -50,11 +50,15 @@ namespace ProductivityApiTests
             DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works(ToList);
         }
 
+#if !NET40
+
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works_async()
         {
             DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works(ToListAsync);
         }
+
+#endif
 
         private void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works(
             Func<IQueryable<IQueryable<SupplierWithLocation>>, List<IQueryable<SupplierWithLocation>>> toList)
@@ -80,11 +84,15 @@ namespace ProductivityApiTests
             DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works(ToList);
         }
 
+#if !NET40
+
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works_async()
         {
             DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works(ToListAsync);
         }
+
+#endif
 
         private void DbQuery_with_TVFs_mapped_to_static_methods_involving_spatial_types_works(
             Func<IQueryable<IQueryable<SupplierWithLocation>>, List<IQueryable<SupplierWithLocation>>> toList)
@@ -116,11 +124,15 @@ namespace ProductivityApiTests
             DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works(ToList);
         }
 
+#if !NET40
+
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works_async()
         {
             DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works(ToListAsync);
         }
+
+#endif
 
         private void DbQuery_with_TVFs_mapped_to_arbitrary_instance_methods_involving_spatial_types_works(
             Func<IQueryable<IQueryable<SupplierWithLocation>>, List<IQueryable<SupplierWithLocation>>> toList)
@@ -303,12 +315,16 @@ namespace ProductivityApiTests
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToList);
         }
 
+#if !NET40
+
         [Fact]
         public void
             Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception_async()
         {
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToListAsync);
         }
+
+#endif
 
         private void
             Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception(
@@ -343,12 +359,16 @@ namespace ProductivityApiTests
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToList);
         }
 
+#if !NET40
+
         [Fact]
         public void
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception_async()
         {
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToListAsync);
         }
+
+#endif
 
         private void
             Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(
@@ -381,6 +401,8 @@ namespace ProductivityApiTests
             return toList(objectContext.CreateQuery<DbDataRecord>(query));
         }
 
+#if !NET40
+
         private List<DbDataRecord> ExecuteESqlQueryAsync(
             DbContext context, string query,
             Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
@@ -391,15 +413,21 @@ namespace ProductivityApiTests
             return toList(objectContext.CreateQuery<DbDataRecord>(query));
         }
 
+#endif
+
         private List<T> ToList<T>(IQueryable<T> query)
         {
             return query.ToList();
         }
 
+#if !NET40
+
         private List<T> ToListAsync<T>(IQueryable<T> query)
         {
             return query.ToListAsync().Result;
         }
+
+#endif
 
         #endregion
     }

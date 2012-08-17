@@ -185,6 +185,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             List<KeyValuePair<PropagatorResult, object>> generatedValues,
             IDbCommandInterceptor commandInterceptor);
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Execute, which executes the current update command.
         ///     All server-generated values are added to the generatedValues list. If those values are identifiers, they are
@@ -198,6 +200,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         internal abstract Task<long> ExecuteAsync(
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken);
+
+#endif
 
         /// <summary>
         ///     Implementation of CompareTo for concrete subclass of UpdateCommand.

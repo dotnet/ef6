@@ -66,6 +66,8 @@ namespace System.Data.Entity.Internal
 
         #region IDbAsyncEnumerable implementation
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
@@ -75,6 +77,8 @@ namespace System.Data.Entity.Internal
         {
             return _internalContext.ExecuteSqlQueryAsync(_elementType, Sql, Parameters);
         }
+
+#endif
 
         #endregion
     }

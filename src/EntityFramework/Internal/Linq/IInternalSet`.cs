@@ -21,7 +21,13 @@ namespace System.Data.Entity.Internal.Linq
         where TEntity : class
     {
         TEntity Find(params object[] keyValues);
+
+#if !NET40
+
         Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
+
+#endif
+
         TEntity Create();
         TEntity Create(Type derivedEntityType);
         ObservableCollection<TEntity> Local { get; }
@@ -36,10 +42,14 @@ namespace System.Data.Entity.Internal.Linq
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         Task<TEntity> IInternalSet<TEntity>.FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             throw new NotImplementedException();
         }
+
+#endif
 
         TEntity IInternalSet<TEntity>.Create()
         {
@@ -98,6 +108,8 @@ namespace System.Data.Entity.Internal.Linq
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         IDbAsyncEnumerator<TEntity> IInternalQuery<TEntity>.GetAsyncEnumerator()
         {
             throw new NotImplementedException();
@@ -107,6 +119,8 @@ namespace System.Data.Entity.Internal.Linq
         {
             throw new NotImplementedException();
         }
+
+#endif
 
         IEnumerator<TEntity> IInternalQuery<TEntity>.GetEnumerator()
         {
@@ -148,9 +162,14 @@ namespace System.Data.Entity.Internal.Linq
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         IDbAsyncEnumerator IInternalSet.ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
         {
             throw new NotImplementedException();
         }
+
+#endif
+
     }
 }

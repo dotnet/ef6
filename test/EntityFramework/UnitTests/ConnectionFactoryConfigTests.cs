@@ -976,12 +976,23 @@ namespace EntityFramework.PowerShell.UnitTests
                     });
         }
 
+        [Fact]
+        public void GetProjectTypes_returns_project_types()
+        {
+            Run_Project_test_if_Visual_Studio_is_running(
+                p =>
+                    {
+                        var types = powershell::System.Data.Entity.Migrations.Extensions.ProjectExtensions.GetProjectTypes(p);
+                        Assert.Equal(new[] { "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" }, types);
+                    });
+        }
+
         private void Run_Project_test_if_Visual_Studio_is_running(Action<Project> test)
         {
             MessageFilter.Register();
             try
             {
-                var dte = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");
+                var dte = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.11.0");
                 var project = TryGetPowerShellUnitTests(dte);
                 if (project != null)
                 {
@@ -1007,9 +1018,7 @@ namespace EntityFramework.PowerShell.UnitTests
                 .OfType<Project>()
                 .Where(p => p.Name == "Tests")
                 .SelectMany(p => p.ProjectItems.OfType<ProjectItem>())
-                .Where(p => p.Name == "PowerShell")
-                .SelectMany(p => p.SubProject.ProjectItems.OfType<ProjectItem>())
-                .Where(p => p.Name == "PowerShell.UnitTests")
+                .Where(p => p.Name == "UnitTests")
                 .Select(p => p.SubProject)
                 .FirstOrDefault();
         }

@@ -24,6 +24,8 @@ namespace System.Data.Entity.Core.Common.Utils
             Assert.Equal(expectedNumberOfResults, currentResult - 1);
         }
 
+#if !NET40
+
         [Fact]
         public void ConsumeReaderAsync()
         {
@@ -37,5 +39,8 @@ namespace System.Data.Entity.Core.Common.Utils
 
             Assert.Equal(expectedNumberOfResults, currentResult - 1);
         }
+
+#endif
+
     }
 }

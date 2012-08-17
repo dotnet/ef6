@@ -54,6 +54,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         void Load();
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Load, which
         ///     loads the related entity or entities into the related end using the default merge option.
@@ -62,11 +64,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> A Task representing the asynchronous operation. </returns>
         Task LoadAsync(CancellationToken cancellationToken);
 
+#endif
+
         /// <summary>
         ///     Loads the related entity or entities into the related end using the specified merge option.
         /// </summary>
         /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
         void Load(MergeOption mergeOption);
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of Load, which
@@ -76,6 +82,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task representing the asynchronous operation. </returns>
         Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
+
+#endif
 
         /// <summary>
         ///     Adds an entity to the related end.  If the owner is
@@ -208,6 +216,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         public Task LoadAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -217,6 +227,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             throw new NotImplementedException();
         }
+
+#endif
 
         public void Add(IEntityWithRelationships entity)
         {

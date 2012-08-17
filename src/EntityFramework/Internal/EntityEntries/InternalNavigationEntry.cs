@@ -49,6 +49,8 @@ namespace System.Data.Entity.Internal
             _relatedEnd.Load();
         }
 
+#if !NET40
+
         /// <summary>
         ///     Calls LoadAsync on the underlying <see cref="IRelatedEnd" />.
         /// </summary>
@@ -58,6 +60,8 @@ namespace System.Data.Entity.Internal
 
             return _relatedEnd.LoadAsync(cancellationToken);
         }
+
+#endif
 
         /// <summary>
         ///     Calls IsLoaded on the underlying <see cref="IRelatedEnd" />.

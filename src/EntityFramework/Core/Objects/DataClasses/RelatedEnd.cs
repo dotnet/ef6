@@ -731,6 +731,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Load(DefaultMergeOption);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Load, which
         ///     loads the related entity or entities into the related end using the default merge option.
@@ -742,10 +744,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return LoadAsync(DefaultMergeOption, cancellationToken);
         }
 
+#endif
+
         /// <summary>
         ///     Loads the related entity or entities into the local related end using the supplied MergeOption.
         /// </summary>
         public abstract void Load(MergeOption mergeOption);
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of Load, which
@@ -755,6 +761,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
         /// <returns> A task representing the asynchronous operation. </returns>
         public abstract Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
+
+#endif
 
         internal void DeferredLoad()
         {

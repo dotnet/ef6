@@ -458,6 +458,8 @@ namespace System.Data.Entity.Core.EntityClient
             return reader;
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of ExecuteReader, which
         ///     executes the command and returns a data reader for reading the results. May only
@@ -524,6 +526,8 @@ namespace System.Data.Entity.Core.EntityClient
             return reader;
         }
 
+#endif
+
         /// <summary>
         ///     Executes the command and returns a data reader for reading the results
         /// </summary>
@@ -533,6 +537,9 @@ namespace System.Data.Entity.Core.EntityClient
         {
             return ExecuteReader(behavior);
         }
+
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of ExecuteDbDataReader, which
@@ -546,6 +553,8 @@ namespace System.Data.Entity.Core.EntityClient
             return await ExecuteReaderAsync(behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 
+#endif
+
         /// <summary>
         ///     Executes the command and discard any results returned from the command
         /// </summary>
@@ -558,6 +567,8 @@ namespace System.Data.Entity.Core.EntityClient
                 return reader.RecordsAffected;
             }
         }
+        
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of ExecuteNonQuery, which
@@ -573,6 +584,8 @@ namespace System.Data.Entity.Core.EntityClient
                 return reader.RecordsAffected;
             }
         }
+
+#endif
 
         /// <summary>
         ///     Executes the command and return the first column in the first row of the result, extra results are ignored

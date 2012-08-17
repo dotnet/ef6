@@ -100,6 +100,8 @@ namespace System.Data.Entity.Infrastructure
             return storeValues == null ? null : new DbPropertyValues(storeValues);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of GetDatabaseValues, which
         ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
@@ -125,6 +127,8 @@ namespace System.Data.Entity.Infrastructure
             var storeValues = await _internalEntityEntry.GetDatabaseValuesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return storeValues == null ? null : new DbPropertyValues(storeValues);
         }
+
+#endif
 
         /// <summary>
         ///     Reloads the entity from the database overwriting any property values with values from the database.

@@ -109,7 +109,7 @@ namespace System.Data.Entity.SqlServer
         {
             var nullSqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType
                 .GetProperty("Null", BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
-            var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(nullSqlGeography.GetValue(null));
+            var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(nullSqlGeography.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeography);
         }
@@ -131,7 +131,7 @@ namespace System.Data.Entity.SqlServer
         {
             var nullSqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType
                 .GetProperty("Null", BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
-            var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(nullSqlGeometry.GetValue(null));
+            var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(nullSqlGeometry.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeometry);
         }

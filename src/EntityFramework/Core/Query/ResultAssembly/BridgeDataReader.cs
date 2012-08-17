@@ -66,7 +66,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// </summary>
         private int _initialized = 0;
         private readonly Action _initialize;
+
+#if !NET40
+
         private readonly Func<CancellationToken, Task> _initializeAsync;
+
+#endif
 
         #endregion
 
@@ -82,7 +87,13 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             _nextResultShaperInfoEnumerator = nextResultShaperInfos;
             _initialize = () => SetShaper(shaper, coordinatorFactory, depth);
+
+#if !NET40
+
             _initializeAsync = ct => SetShaperAsync(shaper, coordinatorFactory, depth, ct);
+
+#endif
+
         }
 
         #endregion
@@ -100,6 +111,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
+#if !NET40
+
         /// <summary>
         /// An asynchronous version of <see cref="EnsureInitialized"/>, which
         /// runs the initialization if it hasn't been run
@@ -110,6 +123,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 ? _initializeAsync(cancellationToken)
                 : Task.FromResult<object>(null);
         }
+
+#endif
 
         private void SetShaper(Shaper<RecordState> shaper, CoordinatorFactory<RecordState> coordinatorFactory, int depth)
         {
@@ -125,6 +140,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             InitializeHasRows();
         }
 
+#if !NET40
+
         private async Task SetShaperAsync(Shaper<RecordState> shaper, CoordinatorFactory<RecordState> coordinatorFactory,
             int depth, CancellationToken cancellationToken)
         {
@@ -139,6 +156,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             InitializeHasRows();
         }
+
+#endif
 
         private void InitializeHasRows()
         {
@@ -194,6 +213,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             _dataRecord.CloseImplicitly();
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of <see cref="CloseImplicitly"/>, which
         ///     implicitly closes this (nested) data reader; will be called whenever 
@@ -209,6 +230,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             await _dataRecord.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 
+#endif
+
         /// <summary>
         ///     Reads to the end of the source enumerator provided
         /// </summary>
@@ -218,6 +241,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             {
             }
         }
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of <see cref="Consume"/>, which
@@ -229,6 +254,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             {
             }
         }
+
+#endif
 
         /// <summary>
         ///     Figure out the CLR type from the TypeMetadata object; For scalars, 
@@ -428,6 +455,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return false;
         }
 
+#if !NET40
+
         /// <inheritdoc/>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
@@ -472,6 +501,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return false;
         }
 
+#endif
+
         /// <inheritdoc/>
         public override bool Read()
         {
@@ -491,6 +522,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
+#if !NET40
+
         /// <inheritdoc/>
         public override async Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
@@ -509,6 +542,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             _dataRecord.SetRecordSource(_shaper.RootEnumerator.Current, result);
             return result;
         }
+
+#endif
 
         /// <summary>
         ///     Internal read method; does the work of advancing the root enumerator
@@ -553,6 +588,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
+#if !NET40
+
         // See ReadInternal
         private async Task<bool> ReadInternalAsync(CancellationToken cancellationToken)
         {
@@ -589,6 +626,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
             return result;
         }
+
+#endif
 
         /// <inheritdoc/>
         public override int FieldCount
@@ -733,12 +772,16 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return _dataRecord.GetValue(ordinal);
         }
 
+#if !NET40
+
         /// <inheritdoc/>
         public override async Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
         {
             await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return await base.GetFieldValueAsync<T>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
+
+#endif
 
         /// <inheritdoc/>
         public override int GetValues(object[] values)

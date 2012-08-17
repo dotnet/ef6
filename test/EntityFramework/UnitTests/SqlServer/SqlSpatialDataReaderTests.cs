@@ -26,6 +26,8 @@ namespace System.Data.Entity.SqlServer
             Assert.Equal(dbGeography.WellKnownValue.WellKnownText, convertedDbGeography.WellKnownValue.WellKnownText);
         }
 
+#if !NET40
+        
         [Fact]
         public void GetGeographyAsync_roundtrips_DbGeography()
         {
@@ -38,6 +40,8 @@ namespace System.Data.Entity.SqlServer
             Assert.Equal(dbGeography.WellKnownValue.WellKnownText, convertedDbGeography.WellKnownValue.WellKnownText);
         }
 
+#endif
+        
         [Fact]
         public void GetGeometry_roundtrips_DbGeometry()
         {
@@ -49,6 +53,8 @@ namespace System.Data.Entity.SqlServer
 
             Assert.Equal(dbGeometry.WellKnownValue.WellKnownText, convertedDbGeometry.WellKnownValue.WellKnownText);
         }
+
+#if !NET40
 
         [Fact]
         public void GetGeometryAsync_roundtrips_DbGeometry()
@@ -62,6 +68,8 @@ namespace System.Data.Entity.SqlServer
             Assert.Equal(dbGeometry.WellKnownValue.WellKnownText, convertedDbGeometry.WellKnownValue.WellKnownText);
         }
 
+#endif
+        
         private SqlDataReaderWrapper CreateSqlDataReaderWrapper(object spatialProviderValueToReturn, string providerDataType)
         {
             var mockSqlDataReader = new Mock<SqlDataReaderWrapper>();
@@ -77,7 +85,9 @@ namespace System.Data.Entity.SqlServer
                 var sqlBytes = new SqlBytes(memoryStream.ToArray());
 
                 mockSqlDataReader.Setup(m => m.GetSqlBytes(0)).Returns(sqlBytes);
+#if !NET40
                 mockSqlDataReader.Setup(m => m.GetFieldValueAsync<SqlBytes>(0, CancellationToken.None)).Returns(Task.FromResult(sqlBytes));
+#endif
                 mockSqlDataReader.Setup(m => m.GetDataTypeName(0)).Returns(providerDataType);
             }
 

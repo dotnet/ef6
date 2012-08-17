@@ -165,6 +165,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
+#if !NET40
+
         public class ExecuteAsync
         {
             [Fact]
@@ -281,5 +283,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Equal(0, generatedValues[0].Key.GetSimpleValue());
             }
         }
+
+#endif
+
     }
 }

@@ -69,6 +69,8 @@ namespace System.Data.Entity
             return _internalSet.Find(keyValues);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Find, which
         ///     finds an entity with the given primary key values.
@@ -93,6 +95,8 @@ namespace System.Data.Entity
         {
             return _internalSet.FindAsync(cancellationToken, keyValues);
         }
+
+#endif
 
         #endregion
 

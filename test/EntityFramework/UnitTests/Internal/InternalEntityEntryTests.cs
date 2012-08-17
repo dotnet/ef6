@@ -36,6 +36,8 @@ namespace System.Data.Entity.Internal
             }
         }
 
+#if !NET40
+
         public class GetDatabaseValuesAsync
         {
             [Fact]
@@ -64,5 +66,8 @@ namespace System.Data.Entity.Internal
                             mockInternalEntityEntry.Object.GetDatabaseValuesAsync(CancellationToken.None).Result)).Message);
             }
         }
+
+#endif
+
     }
 }

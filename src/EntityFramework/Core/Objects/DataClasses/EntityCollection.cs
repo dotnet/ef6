@@ -212,6 +212,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // API that call (Internal void Load(IEnumerable<T>))
         }
 
+#if !NET40
+
         /// <inheritdoc />
         public override Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
@@ -223,6 +225,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // once it is fired in one level deeper, (at Internal void Load(IEnumerable<T>)), you don't need to add the event at other
             // API that call (Internal void Load(IEnumerable<T>))
         }
+
+#endif
 
         /// <summary>
         ///     Loads related entities into the local collection. If the collection is already filled
@@ -313,6 +317,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             OnAssociationChanged(CollectionChangeAction.Refresh, null);
         }
 
+#if !NET40
+
         internal virtual async Task LoadAsync(List<IEntityWrapper> collection, MergeOption mergeOption, CancellationToken cancellationToken)
         {
             // Validate that the Load is possible
@@ -350,6 +356,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // fire the AssociationChange with Refresh
             OnAssociationChanged(CollectionChangeAction.Refresh, null);
         }
+
+#endif
 
         public void Add(TEntity item)
         {

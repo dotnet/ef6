@@ -219,6 +219,8 @@ namespace System.Data.Entity.Internal.Linq
 
         #region IDbAsyncEnumerable
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
@@ -240,6 +242,8 @@ namespace System.Data.Entity.Internal.Linq
         {
             return GetAsyncEnumerator();
         }
+
+#endif
 
         #endregion
     }

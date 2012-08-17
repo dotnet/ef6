@@ -447,6 +447,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return totalStateEntries;
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Update, which 
         ///     persists state manager changes to the store.
@@ -500,6 +502,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             return totalStateEntries;
         }
+
+#endif
 
         protected virtual IEnumerable<UpdateCommand> ProduceCommands()
         {

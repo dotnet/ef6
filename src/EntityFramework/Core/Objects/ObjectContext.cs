@@ -1565,6 +1565,8 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+#if !NET40
+
         /// <summary>
         ///     Ensures that the connection is opened for an operation that requires an open connection to the store.
         ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
@@ -1710,6 +1712,8 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
         }
+
+#endif
 
         /// <summary>
         ///     Resets the state of connection management when the connection becomes closed.
@@ -2513,6 +2517,8 @@ namespace System.Data.Entity.Core.Objects
             return SaveChanges(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of SaveChanges, which
         ///     persists all updates to the store.
@@ -2533,6 +2539,8 @@ namespace System.Data.Entity.Core.Objects
         {
             return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
         }
+
+#endif
 
         /// <summary>
         ///     Persists all updates to the store.
@@ -2577,6 +2585,8 @@ namespace System.Data.Entity.Core.Objects
             return entriesAffected;
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of SaveChanges, which
         ///     persists all updates to the store.
@@ -2612,6 +2622,8 @@ namespace System.Data.Entity.Core.Objects
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             return entriesAffected;
         }
+
+#endif
 
         private void PrepareToSaveChanges(SaveOptions options)
         {
@@ -2731,6 +2743,8 @@ namespace System.Data.Entity.Core.Objects
             return entriesAffected;
         }
 
+#if !NET40
+
         private async Task<int> SaveChangesToStoreAsync(SaveOptions options, CancellationToken cancellationToken)
         {
             int entriesAffected;
@@ -2821,6 +2835,8 @@ namespace System.Data.Entity.Core.Objects
 
             return entriesAffected;
         }
+
+#endif
 
         #endregion //SaveChanges
 
@@ -3401,6 +3417,8 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of ExecuteStoreCommand, which
         ///     executes a command against the database server that does not return a sequence of objects.
@@ -3438,6 +3456,8 @@ namespace System.Data.Entity.Core.Objects
                 ReleaseConnection();
             }
         }
+
+#endif
 
         /// <summary>
         ///     Execute the sequence returning query against the database server.
@@ -3510,6 +3530,8 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
         }
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of ExecuteStoreQuery, which
@@ -3628,6 +3650,8 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
         }
+
+#endif
 
         /// <summary>
         ///     Translates the data from a DbDataReader into sequence of objects.

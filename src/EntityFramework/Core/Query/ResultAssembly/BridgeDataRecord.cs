@@ -105,6 +105,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             Close(Status.ClosedExplicitly, CloseNestedObjectImplicitly);
         }
 
+#if !NET40
+
         /// <summary>
         /// An asynchronous version of <see cref="CloseExplicitly"/>, which
         /// is called by our owning datareader when it is explicitly closed; will
@@ -116,6 +118,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return Close(Status.ClosedExplicitly, () => CloseNestedObjectImplicitlyAsync(cancellationToken));
         }
 
+#endif
+
         /// <summary>
         ///     Called by our parent object to ensure that we're marked as implicitly 
         ///     closed;  will not be called for root level data readers.
@@ -124,6 +128,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             Close(Status.ClosedImplicitly, CloseNestedObjectImplicitly);
         }
+
+#if !NET40
 
         /// <summary>
         /// An asynchronous version of <see cref="CloseImplicitly"/>, which
@@ -134,6 +140,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             return Close(Status.ClosedImplicitly, () => CloseNestedObjectImplicitlyAsync(cancellationToken));
         }
+
+#endif
 
         private T Close<T>(Status status, Func<T> close)
         {
@@ -167,6 +175,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return null;
         }
 
+#if !NET40
+
         /// <summary>
         /// An asynchronous version of <see cref="CloseNestedObjectImplicitly"/>, which
         /// Ensure that whatever column we're currently processing is implicitly closed;
@@ -190,6 +200,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 await currentNestedReader.CloseImplicitlyAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
+
+#endif
 
         /// <summary>
         ///     Should be called after each Read on the data reader.

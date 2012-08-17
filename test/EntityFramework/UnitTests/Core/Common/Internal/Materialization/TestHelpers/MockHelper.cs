@@ -66,22 +66,31 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 .Returns(
                     () =>
                     underlyingEnumerators[currentResultSet].MoveNext());
+#if !NET40
+
             dbDataReaderMock
                 .Setup(m => m.ReadAsync(It.IsAny<CancellationToken>()))
                 .Returns(
                     (CancellationToken ct) =>
                     Task.FromResult(underlyingEnumerators[currentResultSet].MoveNext()));
 
+#endif
+
             dbDataReaderMock
                 .Setup(m => m.NextResult())
                 .Returns(
                     () =>
                     ++currentResultSet < underlyingEnumerators.Length);
+
+#if !NET40
+
             dbDataReaderMock
                 .Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>()))
                 .Returns(
                     (CancellationToken ct) =>
                     Task.FromResult(++currentResultSet < underlyingEnumerators.Length));
+
+#endif
 
             dbDataReaderMock
                 .Setup(m => m.GetValue(It.IsAny<int>()))

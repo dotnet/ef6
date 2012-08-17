@@ -62,10 +62,15 @@ namespace SimpleModel
             return base.SaveChanges();
         }
 
+#if !NET40
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             SaveChangesCalled = true;
             return base.SaveChangesAsync(cancellationToken);
         }
+
+#endif
+
     }
 }

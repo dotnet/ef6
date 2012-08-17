@@ -138,6 +138,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#if !NET40
+
         public class ExecuteAsync
         {
             [Fact]
@@ -278,6 +280,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#endif
+
         public class ExecuteStoreCommands
         {
             [Fact]
@@ -390,6 +394,8 @@ namespace System.Data.Entity.Core.EntityClient
                 return entityCommandMock.Object;
             }
         }
+
+#if !NET40
 
         public class ExecuteStoreCommandsAsync
         {
@@ -528,5 +534,8 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(expectedMessage, innerException.Message);
             }
         }
+
+#endif
+
     }
 }

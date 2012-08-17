@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.Common
         public static DbProviderFactory GetProviderFactory(DbConnection connection)
         {
             Contract.Requires(connection != null);
-            var factory = DbProviderFactories.GetFactory(connection);
+            var factory = connection.GetProviderFactory();
             if (factory == null)
             {
                 throw new ProviderIncompatibleException(

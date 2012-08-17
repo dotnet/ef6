@@ -5,7 +5,10 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
 
-    internal interface IDbEnumerator<out T> : IDbAsyncEnumerator<T>, IEnumerator<T>
+    internal interface IDbEnumerator<out T> : IEnumerator<T>
+#if !NET40
+        , IDbAsyncEnumerator<T>
+#endif
     {
         new T Current { get; }
     }

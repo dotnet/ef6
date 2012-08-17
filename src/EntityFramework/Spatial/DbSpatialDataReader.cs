@@ -19,6 +19,8 @@ namespace System.Data.Entity.Spatial
         /// <returns> The instance of DbGeography at the specified column value. </returns>
         public abstract DbGeography GetGeography(int ordinal);
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of GetGeography, which
         ///     reads an instance of <see cref="DbGeography" /> from the column at the specified column ordinal.
@@ -60,12 +62,16 @@ namespace System.Data.Entity.Spatial
             }
         }
 
+#endif
+
         /// <summary>
         ///     When implemented in derived types, reads an instance of <see cref="DbGeometry" /> from the column at the specified column ordinal.
         /// </summary>
         /// <param name="ordinal"> The ordinal of the data record column that contains the provider-specific geometry data. </param>
         /// <returns> The instance of DbGeometry at the specified column value. </returns>
         public abstract DbGeometry GetGeometry(int ordinal);
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of GetGeometry, which
@@ -107,5 +113,8 @@ namespace System.Data.Entity.Spatial
                 return TaskHelper.FromException<DbGeometry>(e);
             }
         }
+
+#endif
+
     }
 }

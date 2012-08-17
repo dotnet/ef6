@@ -463,6 +463,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of NextResult, which
         ///     moves the reader to the next result set when reading a batch of statements
@@ -487,6 +489,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#endif
+
         /// <summary>
         ///     Move the reader to the next row of the current result set
         /// </summary>
@@ -495,6 +499,8 @@ namespace System.Data.Entity.Core.EntityClient
         {
             return _storeDataReader.Read();
         }
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of Read, which
@@ -506,6 +512,8 @@ namespace System.Data.Entity.Core.EntityClient
         {
             return _storeDataReader.ReadAsync(cancellationToken);
         }
+
+#endif
 
         /// <summary>
         ///     Get an enumerator for enumerating results over this data reader

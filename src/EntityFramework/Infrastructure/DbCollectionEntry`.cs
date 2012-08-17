@@ -96,6 +96,8 @@ namespace System.Data.Entity.Infrastructure
             _internalCollectionEntry.Load();
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Load, which
         ///     loads the entity from the database.
@@ -118,6 +120,8 @@ namespace System.Data.Entity.Infrastructure
         {
             return _internalCollectionEntry.LoadAsync(cancellationToken);
         }
+
+#endif
 
         /// <summary>
         ///     Gets a value indicating whether the collection of entities has been loaded from the database.

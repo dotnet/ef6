@@ -41,11 +41,15 @@ namespace ProductivityApiTests
             TestPropertyValuesScalars(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Scalar_store_values_can_be_accessed_asynchronously_as_a_property_dictionary()
         {
             TestPropertyValuesScalars(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesScalars(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues)
         {
@@ -78,11 +82,15 @@ namespace ProductivityApiTests
             TestPropertyValuesDerivedScalars(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Scalar_store_values_of_a_derived_object_can_be_accessed_asynchronously_as_a_property_dictionary()
         {
             TestPropertyValuesDerivedScalars(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesDerivedScalars(
             Func<DbEntityEntry<CurrentEmployee>, DbPropertyValues> getPropertyValues)
@@ -116,11 +124,15 @@ namespace ProductivityApiTests
             TestPropertyValuesComplex(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_values_can_be_accessed_asynchronously_as_a_property_dictionary()
         {
             TestPropertyValuesComplex(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesComplex(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues)
         {
@@ -160,11 +172,15 @@ namespace ProductivityApiTests
             TestPropertyValuesDerivedComplex(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_values_of_a_TPT_derived_object_can_be_accessed_asynchronously_as_a_property_dictionary()
         {
             TestPropertyValuesDerivedComplex(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesDerivedComplex(
             Func<DbEntityEntry<TitleSponsor>, DbPropertyValues> getPropertyValues)
@@ -220,12 +236,16 @@ namespace ProductivityApiTests
             Null_complex_original_values_result_in_exception_when_querying_for_store_values_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Null_complex_original_values_result_in_exception_when_querying_for_store_values_asynchronously()
         {
             Null_complex_original_values_result_in_exception_when_querying_for_store_values_implementation(e =>
                 ExceptionHelpers.UnwrapAggregateExceptions(() => e.GetDatabaseValuesAsync().Result));
         }
+
+#endif
 
         private void Null_complex_original_values_result_in_exception_when_querying_for_store_values_implementation(
             Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues)
@@ -271,11 +291,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesScalars(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Scalar_store_values_can_be_accessed_asynchronously_as_a_non_generic_property_dictionary()
         {
             TestNonGenericPropertyValuesScalars(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesScalars(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -311,11 +335,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesDerivedScalars(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Scalar_store_values_of_a_derived_object_can_be_accessed_asynchronously_as_a_non_generic_property_dictionary()
         {
             TestNonGenericPropertyValuesDerivedScalars(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesDerivedScalars(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -348,11 +376,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesComplex(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_values_can_be_accessed_asynchronously_as_a_non_generic_property_dictionary()
         {
             TestNonGenericPropertyValuesComplex(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesComplex(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -403,11 +435,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesDerivedComplex(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_values_of_a_TPT_derived_object_can_be_accessed_asynchronously_as_a_non_generic_property_dictionary()
         {
             TestNonGenericPropertyValuesDerivedComplex(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesDerivedComplex(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -741,11 +777,15 @@ namespace ProductivityApiTests
             TestPropertyValuesClone(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_copied_into_an_object_asynchronously()
         {
             TestPropertyValuesClone(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesClone(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues)
         {
@@ -784,11 +824,15 @@ namespace ProductivityApiTests
             TestPropertyValuesDerivedClone(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_for_derived_object_can_be_copied_into_an_object_asynchronously()
         {
             TestPropertyValuesDerivedClone(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesDerivedClone(
             Func<DbEntityEntry<CurrentEmployee>, DbPropertyValues> getPropertyValues)
@@ -823,11 +867,15 @@ namespace ProductivityApiTests
             TestPropertyValuesComplexClone(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_value_can_be_cloned_from_property_Values_asynchronously()
         {
             TestPropertyValuesComplexClone(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesComplexClone(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues)
         {
@@ -871,11 +919,15 @@ namespace ProductivityApiTests
             TestPropertyValuesDerivedComplexClone(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_valus_from_derived_object_can_be_cloned_from_property_Values_asynchronously()
         {
             TestPropertyValuesDerivedComplexClone(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesDerivedComplexClone(
             Func<DbEntityEntry<TitleSponsor>, DbPropertyValues> getPropertyValues)
@@ -918,11 +970,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesClone(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_copied_asynchronously_non_generic_property_dictionary_into_an_object()
         {
             TestNonGenericPropertyValuesClone(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesClone(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -961,11 +1017,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesComplexClone(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Complex_store_value_can_be_cloned_asynchronously_from_a_non_generic_property_dictionary()
         {
             TestNonGenericPropertyValuesComplexClone(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesComplexClone(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -1013,11 +1073,15 @@ namespace ProductivityApiTests
             TestPropertyValuesCloneToValues(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_copied_into_a_cloned_dictionary_asynchronously()
         {
             TestPropertyValuesCloneToValues(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestPropertyValuesCloneToValues(Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues)
         {
@@ -1087,11 +1151,15 @@ namespace ProductivityApiTests
             TestNonGenericPropertyValuesCloneToValues(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_copied_asynchronously_into_a_non_generic_cloned_dictionary()
         {
             TestNonGenericPropertyValuesCloneToValues(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void TestNonGenericPropertyValuesCloneToValues(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -1161,11 +1229,15 @@ namespace ProductivityApiTests
             TestPropertyValuesPositiveForState(e => e.GetDatabaseValues(), EntityState.Deleted);
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_read_and_set_for_an_object_in_the_Deleted_state_asynchronously()
         {
             TestPropertyValuesPositiveForState(e => e.GetDatabaseValuesAsync().Result, EntityState.Deleted);
         }
+
+#endif
 
         [Fact]
         public void Current_values_can_be_read_and_set_for_an_object_in_the_Unchanged_state()
@@ -1185,11 +1257,15 @@ namespace ProductivityApiTests
             TestPropertyValuesPositiveForState(e => e.GetDatabaseValues(), EntityState.Unchanged);
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_read_and_set_for_an_object_in_the_Unchanged_state_asynchronously()
         {
             TestPropertyValuesPositiveForState(e => e.GetDatabaseValuesAsync().Result, EntityState.Unchanged);
         }
+
+#endif
 
         [Fact]
         public void Current_values_can_be_read_and_set_for_an_object_in_the_Modified_state()
@@ -1209,11 +1285,15 @@ namespace ProductivityApiTests
             TestPropertyValuesPositiveForState(e => e.GetDatabaseValues(), EntityState.Modified);
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_can_be_read_and_set_for_an_object_in_the_Modified_state_asynchronously()
         {
             TestPropertyValuesPositiveForState(e => e.GetDatabaseValuesAsync().Result, EntityState.Modified);
         }
+
+#endif
 
         [Fact]
         public void Current_values_can_be_read_and_set_for_an_object_in_the_Added_state()
@@ -1233,12 +1313,16 @@ namespace ProductivityApiTests
             TestPropertyValuesNegativeForDetached(e => e.GetDatabaseValues(), "GetDatabaseValues");
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_cannot_be_read_or_set_for_an_object_in_the_Added_state_asynchronously()
         {
             TestPropertyValuesNegativeForDetached(e =>
                 ExceptionHelpers.UnwrapAggregateExceptions(() => e.GetDatabaseValuesAsync().Result), "GetDatabaseValuesAsync");
         }
+
+#endif
 
         [Fact]
         public void Current_values_cannot_be_read_or_set_for_a_Detached_object()
@@ -1258,12 +1342,16 @@ namespace ProductivityApiTests
             TestPropertyValuesNegativeForDetached(e => e.GetDatabaseValues(), "GetDatabaseValues");
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_cannot_be_read_or_set_for_a_Detached_object_asynchronously()
         {
             TestPropertyValuesNegativeForDetached(e =>
                 ExceptionHelpers.UnwrapAggregateExceptions(() => e.GetDatabaseValuesAsync().Result), "GetDatabaseValuesAsync");
         }
+
+#endif
 
         private void TestPropertyValuesPositiveForState(
             Func<DbEntityEntry<Building>, DbPropertyValues> getPropertyValues, EntityState state)
@@ -1824,11 +1912,15 @@ namespace ProductivityApiTests
             TestPropertyNames(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void PropertyNames_for_store_values_returns_readonly_c_space_property_names_asynchronously()
         {
             TestPropertyNames(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         [Fact]
         public void PropertyNames_for_cloned_dictionary_returns_readonly_c_space_property_names()
@@ -1896,11 +1988,15 @@ namespace ProductivityApiTests
             TestCreateProxy(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void ToObject_for_store_values_creates_proxy_asynchronously()
         {
             TestCreateProxy(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         [Fact]
         public void ToObject_for_cloned_dictionary_creates_proxy()
@@ -1944,11 +2040,15 @@ namespace ProductivityApiTests
             TestNonGenericCreateProxy(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void ToObject_for_non_generic_store_values_creates_proxy_asynchronously()
         {
             TestNonGenericCreateProxy(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         [Fact]
         public void ToObject_for_non_generic_cloned_dictionary_creates_proxy()
@@ -1980,11 +2080,15 @@ namespace ProductivityApiTests
             GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void GetDatabaseValuesAsync_for_entity_not_in_the_store_returns_null()
         {
             GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2007,11 +2111,15 @@ namespace ProductivityApiTests
             NonGeneric_GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void NonGeneric_GetDatabaseValuesAsync_for_entity_not_in_the_store_returns_null()
         {
             NonGeneric_GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void NonGeneric_GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2034,11 +2142,15 @@ namespace ProductivityApiTests
             GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void GetDatabaseValuesAsync_for_derived_entity_not_in_the_store_returns_null()
         {
             GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         private void GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2064,11 +2176,15 @@ namespace ProductivityApiTests
             NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void NonGeneric_GetDatabaseValuesAsync_for_derived_entity_not_in_the_store_returns_null()
         {
             NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         public void NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2095,11 +2211,15 @@ namespace ProductivityApiTests
             GetDatabaseValues_for_the_wrong_type_in_the_store_returns_null_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void GetDatabaseValuesAsync_for_the_wrong_type_in_the_store_returns_null()
         {
             GetDatabaseValues_for_the_wrong_type_in_the_store_returns_null_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         public void GetDatabaseValues_for_the_wrong_type_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2131,11 +2251,15 @@ namespace ProductivityApiTests
             NonGeneric_GetDatabaseValues_for_the_wrong_type_in_the_store_throws_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void NonGeneric_GetDatabaseValuesAsync_for_the_wrong_type_in_the_store_throws()
         {
             NonGeneric_GetDatabaseValues_for_the_wrong_type_in_the_store_throws_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         public void NonGeneric_GetDatabaseValues_for_the_wrong_type_in_the_store_throws_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2167,11 +2291,15 @@ namespace ProductivityApiTests
             Store_values_really_are_store_values_not_current_or_original_values_implementation(e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void Store_values_really_are_store_values_not_current_or_original_values_async()
         {
             Store_values_really_are_store_values_not_current_or_original_values_implementation(e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         public void Store_values_really_are_store_values_not_current_or_original_values_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
@@ -2228,12 +2356,16 @@ namespace ProductivityApiTests
                 e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void GetDatabaseValuesAsync_uses_the_CLR_namespace_when_context_and_entities_are_in_different_namespaces()
         {
             GetDatabaseValues_uses_the_CLR_namespace_when_context_and_entities_are_in_different_namespaces_implementation(
                 e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         public void GetDatabaseValues_uses_the_CLR_namespace_when_context_and_entities_are_in_different_namespaces_implementation(
             Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
@@ -2259,12 +2391,16 @@ namespace ProductivityApiTests
                 e => e.GetDatabaseValues());
         }
 
+#if !NET40
+
         [Fact]
         public void GetDatabaseValuesAsync_uses_the_CLR_namespace_when_context_Model_namespace_does_not_match_code_namespaces()
         {
             GetDatabaseValues_uses_the_CLR_namespace_when_context_Model_namespace_does_not_match_code_namespaces_implementation(
                 e => e.GetDatabaseValuesAsync().Result);
         }
+
+#endif
 
         public void GetDatabaseValues_uses_the_CLR_namespace_when_context_Model_namespace_does_not_match_code_namespaces_implementation(
             Func<DbEntityEntry, DbPropertyValues> getPropertyValues)

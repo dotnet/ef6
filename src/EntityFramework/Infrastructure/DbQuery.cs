@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
@@ -15,7 +16,10 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable
+    public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
+#if !NET40
+        , IDbAsyncEnumerable
+#endif
     {
         #region Fields and constructors
 
@@ -60,7 +64,7 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -73,6 +77,8 @@ namespace System.Data.Entity.Infrastructure
 
         #region IDbAsyncEnumerable
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the query against the database.
         /// </summary>
@@ -82,6 +88,8 @@ namespace System.Data.Entity.Infrastructure
         {
             return InternalQuery.GetAsyncEnumerator();
         }
+
+#endif
 
         #endregion
 

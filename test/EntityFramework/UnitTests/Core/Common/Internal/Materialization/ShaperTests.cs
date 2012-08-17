@@ -20,11 +20,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(e => e.ToList());
         }
 
+#if !NET40
+
         [Fact]
         public void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory_async()
         {
             GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(e => e.ToListAsync().Result);
         }
+
+#endif
 
         private void GetEnumerator_returns_SimpleEnumerator_for_simple_CoordinatorFactory(
             Func<IDbEnumerator<object>, List<object>> toList)
@@ -57,11 +61,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(e => e.ToList());
         }
 
+#if !NET40
+
         [Fact]
         public void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories_async()
         {
             GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(e => e.ToListAsync().Result);
         }
+
+#endif
 
         private void GetEnumerator_returns_ObjectQueryNestedEnumerator_for_nested_coordinatorFactories(
             Func<IDbEnumerator<object>, List<object>> toList)
@@ -136,6 +144,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     });
         }
 
+#if !NET40
+
         [Fact]
         public void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState_async()
         {
@@ -150,6 +160,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         return actualValues;
                     });
         }
+
+#endif
 
         private void GetEnumerator_returns_RecordStateEnumerator_for_nested_coordinatorFactories_of_RecordState(
             Func<IDbEnumerator<RecordState>, List<object>> toList)

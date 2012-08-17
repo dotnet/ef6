@@ -39,6 +39,8 @@ namespace System.Data.Entity
         /// <returns> The entity found, or null. </returns>
         TEntity Find(params object[] keyValues);
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Find, which
         ///     finds an entity with the given primary key values.
@@ -56,6 +58,8 @@ namespace System.Data.Entity
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> A Task containing the entity found, or null. </returns>
         Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
+
+#endif
 
         /// <summary>
         ///     Adds the given entity to the context underlying the set in the Added state such that it will
@@ -169,10 +173,14 @@ namespace System.Data.Entity
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         Task<TEntity> IDbSet<TEntity>.FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             throw new NotImplementedException();
         }
+
+#endif
 
         TEntity IDbSet<TEntity>.Add(TEntity entity)
         {

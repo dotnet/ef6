@@ -22,7 +22,10 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
-    public class DbRawSqlQuery : IEnumerable, IListSource, IDbAsyncEnumerable
+    public class DbRawSqlQuery : IEnumerable, IListSource
+#if !NET40
+        , IDbAsyncEnumerable
+#endif
     {
         #region Constructors and fields
 
@@ -54,6 +57,8 @@ namespace System.Data.Entity.Infrastructure
 
         #region IDbAsyncEnumerable implementation
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerable" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
@@ -64,9 +69,13 @@ namespace System.Data.Entity.Infrastructure
             return _internalQuery.GetAsyncEnumerator();
         }
 
+#endif
+
         #endregion
 
         #region Access to IDbAsyncEnumerable extensions
+
+#if !NET40
 
         public Task ForEachAsync(Action<object> action)
         {
@@ -99,6 +108,8 @@ namespace System.Data.Entity.Infrastructure
 
             return ((IDbAsyncEnumerable)this).ToListAsync<T>(cancellationToken);
         }
+
+#endif
 
         #endregion
 

@@ -135,6 +135,8 @@ namespace System.Data.Entity.Infrastructure
 
         #region IDbAsyncEnumerable extension methods
 
+#if !NET40
+        
         [Fact]
         public void Generic_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_asIEnumerable_extension_methods()
         {
@@ -634,6 +636,8 @@ namespace System.Data.Entity.Infrastructure
             }
         }
 
+#endif
+        
         #endregion
     }
 }

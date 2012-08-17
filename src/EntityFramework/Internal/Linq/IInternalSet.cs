@@ -22,7 +22,13 @@ namespace System.Data.Entity.Internal.Linq
         void Initialize();
         void TryInitialize();
         IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters);
+
+#if !NET40
+
         IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters);
+
+#endif
+
     }
 
     [ContractClassFor(typeof(IInternalSet))]
@@ -67,6 +73,8 @@ namespace System.Data.Entity.Internal.Linq
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         IDbAsyncEnumerator IInternalSet.ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
         {
             Contract.Requires(sql != null);
@@ -74,6 +82,8 @@ namespace System.Data.Entity.Internal.Linq
 
             throw new NotImplementedException();
         }
+
+#endif
 
         void IInternalQuery.ResetQuery()
         {
@@ -105,10 +115,14 @@ namespace System.Data.Entity.Internal.Linq
             get { throw new NotImplementedException(); }
         }
 
+#if !NET40
+
         IDbAsyncEnumerator IInternalQuery.GetAsyncEnumerator()
         {
             throw new NotImplementedException();
         }
+
+#endif
 
         IEnumerator IInternalQuery.GetEnumerator()
         {

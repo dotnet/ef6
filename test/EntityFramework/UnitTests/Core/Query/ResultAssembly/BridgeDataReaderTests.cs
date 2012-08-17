@@ -66,7 +66,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             VerifyGetterInitialization(bdr => bdr.VisibleFieldCount);
             VerifyMethodInitialization(bdr => bdr.Close());
             VerifyMethodInitialization(bdr => bdr.CloseImplicitly());
-            VerifyMethodInitialization(bdr => bdr.CloseImplicitlyAsync(CancellationToken.None).Wait(), async: true);
             VerifyMethodInitialization(bdr => bdr.Dispose());
             VerifyMethodInitialization(bdr => bdr.GetBoolean(0));
             VerifyMethodInitialization(bdr => bdr.GetByte(0));
@@ -81,8 +80,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             VerifyMethodInitialization(bdr => bdr.GetDecimal(0));
             VerifyMethodInitialization(bdr => bdr.GetDouble(0));
             VerifyMethodInitialization(bdr => bdr.GetFieldType(0));
-            VerifyMethodInitialization(bdr => bdr.GetFieldValue<object>(0));
-            VerifyMethodInitialization(bdr => bdr.GetFieldValueAsync<object>(0).Wait(), async: true);
             VerifyMethodInitialization(bdr => bdr.GetFloat(0));
             VerifyMethodInitialization(bdr => bdr.GetGuid(0));
             VerifyMethodInitialization(bdr => bdr.GetInt16(0));
@@ -90,18 +87,24 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             VerifyMethodInitialization(bdr => bdr.GetInt64(0));
             VerifyMethodInitialization(bdr => bdr.GetName(0));
             VerifyMethodInitialization(bdr => bdr.GetOrdinal(""));
-            VerifyMethodInitialization(bdr => bdr.GetStream(0));
             VerifyMethodInitialization(bdr => bdr.GetString(0));
-            VerifyMethodInitialization(bdr => bdr.GetTextReader(0));
             VerifyMethodInitialization(bdr => bdr.GetValue(0));
             VerifyMethodInitialization(bdr => bdr.GetValues(new object[0]));
             VerifyMethodInitialization(bdr => bdr.IsDBNull(0));
-            VerifyMethodInitialization(bdr => bdr.IsDBNullAsync(0));
             VerifyMethodInitialization(bdr => bdr.NextResult());
-            VerifyMethodInitialization(bdr => bdr.NextResultAsync().Wait(), async: true);
             VerifyMethodInitialization(bdr => bdr.Read());
-            VerifyMethodInitialization(bdr => bdr.ReadAsync().Wait(), async: true);
             VerifyMethodInitialization(bdr => bdr.ToList<object>());
+
+#if !NET40
+            VerifyMethodInitialization(bdr => bdr.CloseImplicitlyAsync(CancellationToken.None).Wait(), async: true);
+            VerifyMethodInitialization(bdr => bdr.GetFieldValue<object>(0));
+            VerifyMethodInitialization(bdr => bdr.GetFieldValueAsync<object>(0).Wait(), async: true);
+            VerifyMethodInitialization(bdr => bdr.GetStream(0));
+            VerifyMethodInitialization(bdr => bdr.GetTextReader(0));
+            VerifyMethodInitialization(bdr => bdr.IsDBNullAsync(0));
+            VerifyMethodInitialization(bdr => bdr.NextResultAsync().Wait(), async: true);
+            VerifyMethodInitialization(bdr => bdr.ReadAsync().Wait(), async: true);
+#endif
         }
 
         private void VerifyGetterInitialization<TProperty>(
@@ -144,7 +147,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                                            };
 
             bridgeDataReaderMock.Protected().Setup("EnsureInitialized").Verifiable();
+#if !NET40
             bridgeDataReaderMock.Protected().Setup<Task>("EnsureInitializedAsync", ItExpr.IsAny<CancellationToken>()).Verifiable();
+#endif
 
             try
             {
@@ -164,6 +169,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 bridgeDataReaderMock.Protected().Verify("EnsureInitialized", Times.AtLeastOnce());
             }
         }
+
+#if !NET40
 
         [Fact]
         public void NextResult_Read_and_GetFieldValue_return_data_from_underlying_reader()
@@ -200,6 +207,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             Assert.Equal(new[] { 1, 2, 1, 3 }.ToList(), actualValues);
         }
+
+#endif
 
         private BridgeDataReader CreateNestedBridgeDataReader(DbDataReader dataReader = null)
         {
@@ -317,6 +326,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             Assert.False(nextResultCalled);
         }
 
+#if !NET40
+
         [Fact]
         public void CloseImplicitlyAsync_consumes_reader()
         {
@@ -365,5 +376,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             Assert.True(readCalled);
             Assert.False(nextResultCalled);
         }
+
+#endif
+
     }
 }

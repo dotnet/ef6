@@ -24,9 +24,12 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyGetter(e => e.Name, m => m.Name);
             v.VerifyMethod(e => e.GetValidationErrors(), m => m.GetValidationErrors());
             v.VerifyMethod(e => e.Load(), m => m.Load());
+            v.VerifyMethod(e => e.Query(), m => m.Query());
+
+#if !NET40
             v.VerifyMethod(e => e.LoadAsync(), m => m.LoadAsync(CancellationToken.None));
             v.VerifyMethod(e => e.LoadAsync(CancellationToken.None), m => m.LoadAsync(CancellationToken.None));
-            v.VerifyMethod(e => e.Query(), m => m.Query());
+#endif
         }
 
         [Fact]
@@ -41,9 +44,12 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyGetter(e => e.Name, m => m.Name);
             v.VerifyMethod(e => e.GetValidationErrors(), m => m.GetValidationErrors());
             v.VerifyMethod(e => e.Load(), m => m.Load());
+            v.VerifyMethod(e => e.Query(), m => m.Query());
+
+#if !NET40
             v.VerifyMethod(e => e.LoadAsync(), m => m.LoadAsync(CancellationToken.None));
             v.VerifyMethod(e => e.LoadAsync(CancellationToken.None), m => m.LoadAsync(CancellationToken.None));
-            v.VerifyMethod(e => e.Query(), m => m.Query());
+#endif
         }
 
         public class EntityEntry

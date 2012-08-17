@@ -69,6 +69,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return Update(entityCache, 0, ut => ut.Update(), throwOnClosedConnection);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Update, which
         ///     persists modifications described in the given cache.
@@ -81,11 +83,14 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return Update(entityCache, Task.FromResult(0), ut => ut.UpdateAsync(cancellationToken), true);
         }
 
+#endif
+
         private T Update<T>(
             IEntityStateManager entityCache,
             T noChangesResult,
             Func<UpdateTranslator, T> updateFunction,
             bool throwOnClosedConnection)
+
         {
             if (!IsStateManagerDirty(entityCache))
             {

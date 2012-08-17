@@ -429,6 +429,8 @@ namespace System.Data.Entity
             return _internalContext.ExecuteSqlCommand(sql, parameters);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of ExecuteSqlCommand, which
         ///     executes the given DDL/DML command against the database.
@@ -460,6 +462,8 @@ namespace System.Data.Entity
 
             return _internalContext.ExecuteSqlCommandAsync(sql, cancellationToken, parameters);
         }
+
+#endif
 
         #endregion
 

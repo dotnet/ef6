@@ -13,11 +13,17 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public abstract class ObjectResult : IEnumerable, IDbAsyncEnumerable, IDisposable, IListSource
+    public abstract class ObjectResult : IEnumerable, IDisposable, IListSource
+#if !NET40
+        , IDbAsyncEnumerable
+#endif
+
     {
         internal ObjectResult()
         {
         }
+
+#if !NET40
 
         /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -25,6 +31,8 @@ namespace System.Data.Entity.Core.Objects
         {
             return GetAsyncEnumeratorInternal();
         }
+
+#endif
 
         /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -71,7 +79,12 @@ namespace System.Data.Entity.Core.Objects
             return GetNextResultInternal<TElement>();
         }
 
+#if !NET40
+
         internal abstract IDbAsyncEnumerator GetAsyncEnumeratorInternal();
+
+#endif
+
         internal abstract IEnumerator GetEnumeratorInternal();
         internal abstract IList GetIListSourceListInternal();
         internal abstract ObjectResult<TElement> GetNextResultInternal<TElement>();

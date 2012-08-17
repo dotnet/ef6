@@ -96,6 +96,8 @@ namespace System.Data.Entity.Internal.Linq
             return (TEntity)entity;
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Find, which
         ///     finds an entity with the given primary key values.
@@ -139,6 +141,8 @@ namespace System.Data.Entity.Internal.Linq
             }
             return (TEntity)entity;
         }
+
+#endif
 
         /// <summary>
         ///     Finds an entity in the state manager with the given primary key values, or returns null
@@ -227,6 +231,8 @@ namespace System.Data.Entity.Internal.Linq
             }
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of FindInStore, which
         ///     finds an entity in the store with the given primary key values, or returns null
@@ -266,6 +272,8 @@ namespace System.Data.Entity.Internal.Linq
                 throw;
             }
         }
+
+#endif
 
         private ObjectQuery<TEntity> BuildFindQuery(WrappedEntityKey key)
         {
@@ -685,6 +693,8 @@ namespace System.Data.Entity.Internal.Linq
                     });
         }
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database
         ///     materializing entities into the entity set that backs this set.
@@ -718,6 +728,8 @@ namespace System.Data.Entity.Internal.Linq
                               }
                           });
         }
+
+#endif
 
         #endregion
 
@@ -765,6 +777,8 @@ namespace System.Data.Entity.Internal.Linq
 
         #region IDbAsyncEnumerable
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the backing query against the database.
         /// </summary>
@@ -774,6 +788,8 @@ namespace System.Data.Entity.Internal.Linq
             Initialize();
             return base.GetAsyncEnumerator();
         }
+
+#endif
 
         #endregion
     }

@@ -4405,7 +4405,11 @@ namespace ProductivityApiTests
             runner(
                 SimpleQuery,
                 q => ((IQueryable<NumberForLinq>)q).ToArray(),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).ToArray());
+#else
                 q => ((IQueryable<NumberForLinq>)q).ToArrayAsync().Result);
+#endif
         }
 
         [Fact]
@@ -4547,7 +4551,11 @@ namespace ProductivityApiTests
             runner(
                 SimpleQuery,
                 q => ((IQueryable<NumberForLinq>)q).ToDictionary(n => n.Name),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).ToDictionary(n => n.Name));
+#else
                 q => ((IQueryable<NumberForLinq>)q).ToDictionaryAsync(n => n.Name).Result);
+#endif
         }
 
         private IQueryable<NumberForLinq> SimpleQuery(IQueryable<NumberForLinq> q)
@@ -4710,7 +4718,11 @@ namespace ProductivityApiTests
                      where p.Id == 12
                      select p,
                 q => ((IQueryable<ProductForLinq>)q).First(),
+#if NET40
+                q => ((IQueryable<ProductForLinq>)q).First());
+#else
                 q => ((IQueryable<ProductForLinq>)q).FirstAsync().Result);
+#endif
         }
 
         [Fact]
@@ -4783,7 +4795,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).First(s => s.Name.Substring(0, 1) == "T"),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).First(s => s.Name.Substring(0, 1) == "T"));
+#else
                 q => ((IQueryable<NumberForLinq>)q).FirstAsync(s => s.Name.Substring(0, 1) == "T").Result);
+#endif
         }
 
         [Fact]
@@ -4860,7 +4876,11 @@ namespace ProductivityApiTests
                      where p.ProductName == "Office Space"
                      select p,
                 q => ((IQueryable<ProductForLinq>)q).FirstOrDefault(),
+#if NET40
+                q => ((IQueryable<ProductForLinq>)q).FirstOrDefault());
+#else
                 q => ((IQueryable<ProductForLinq>)q).FirstOrDefaultAsync().Result);
+#endif
         }
 
         [Fact]
@@ -4930,7 +4950,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).FirstOrDefault(s => s.Name.Substring(0, 1) == "Q"),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).FirstOrDefault(s => s.Name.Substring(0, 1) == "Q"));
+#else
                 q => ((IQueryable<NumberForLinq>)q).FirstOrDefaultAsync(s => s.Name.Substring(0, 1) == "Q").Result);
+#endif
         }
 
         [Fact]
@@ -5046,7 +5070,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Any(w => w.Name.Contains("e")),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Any(w => w.Name.Contains("e")));
+#else
                 q => ((IQueryable<NumberForLinq>)q).AnyAsync(w => w.Name.Contains("e")).Result);
+#endif
         }
 
         [Fact]
@@ -5198,7 +5226,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).All(n => n.Value % 2 == 1),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).All(n => n.Value % 2 == 1));
+#else
                 q => ((IQueryable<NumberForLinq>)q).AllAsync(n => n.Value % 2 == 1).Result);
+#endif
         }
 
         [Fact]
@@ -5354,7 +5386,11 @@ namespace ProductivityApiTests
             runner(
                 q => q.Distinct(),
                 q => ((IQueryable<NumberForLinq>)q).Count(),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Count());
+#else
                 q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
+#endif
         }
 
         [Fact]
@@ -5428,7 +5464,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Count(n => n.Value % 2 == 1),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Count(n => n.Value % 2 == 1));
+#else
                 q => ((IQueryable<NumberForLinq>)q).CountAsync(n => n.Value % 2 == 1).Result);
+#endif
         }
 
         [Fact]
@@ -5655,7 +5695,11 @@ namespace ProductivityApiTests
             runner(
                 q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Sum(),
+#if NET40
+                q => ((IQueryable<int>)q).Sum());
+#else
                 q => ((IQueryable<int>)q).SumAsync().Result);
+#endif
         }
 
         [Fact]
@@ -5728,7 +5772,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Sum(n => n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => n.Name.Length));
+#else
                 q => ((IQueryable<NumberForLinq>)q).SumAsync(n => n.Name.Length).Result);
+#endif
         }
 
         [Fact]
@@ -5879,7 +5927,11 @@ namespace ProductivityApiTests
             runner(
                 q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Min(),
+#if NET40
+                q => ((IQueryable<int>)q).Min());
+#else
                 q => ((IQueryable<int>)q).MinAsync().Result);
+#endif
         }
 
         [Fact]
@@ -5952,7 +6004,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Min(n => n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Min(n => n.Name.Length));
+#else
                 q => ((IQueryable<NumberForLinq>)q).MinAsync(n => n.Name.Length).Result);
+#endif
         }
 
         [Fact]
@@ -6182,7 +6238,11 @@ namespace ProductivityApiTests
             runner(
                 q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Max(),
+#if NET40
+                q => ((IQueryable<int>)q).Max());
+#else
                 q => ((IQueryable<int>)q).MaxAsync().Result);
+#endif
         }
 
         [Fact]
@@ -6255,7 +6315,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Max(n => n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Max(n => n.Name.Length));
+#else
                 q => ((IQueryable<NumberForLinq>)q).MaxAsync(n => n.Name.Length).Result);
+#endif
         }
 
         [Fact]
@@ -6486,7 +6550,11 @@ namespace ProductivityApiTests
             runner(
                 q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Average(),
+#if NET40
+                q => ((IQueryable<int>)q).Average());
+#else
                 q => ((IQueryable<int>)q).AverageAsync().Result);
+#endif
         }
 
         [Fact]
@@ -6561,7 +6629,11 @@ namespace ProductivityApiTests
             runner(
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Average(n => n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => n.Name.Length));
+#else
                 q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => n.Name.Length).Result);
+#endif
         }
 
         [Fact]
@@ -7532,7 +7604,11 @@ namespace ProductivityApiTests
                             from p in pq
                             select n,
                 q => ((IQueryable<NumberForLinq>)q).Count(),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Count());
+#else
                 q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
+#endif
         }
 
         [Fact]
@@ -7680,7 +7756,11 @@ namespace ProductivityApiTests
                             from p in pq.Where(r => r.Id > 0)
                             select n,
                 q => ((IQueryable<NumberForLinq>)q).Count(),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Count());
+#else
                 q => ((IQueryable<NumberForLinq>)q).CountAsync().Result);
+#endif
         }
 
         [Fact]
@@ -8626,7 +8706,11 @@ namespace ProductivityApiTests
         /// </summary>
         private static object ToListAsyncExecutor(IQueryable query)
         {
+#if NET40
+            return query.ToList<object>();
+#else
             return query.ToListAsync<object>().Result;
+#endif
         }
 
         /// <summary>

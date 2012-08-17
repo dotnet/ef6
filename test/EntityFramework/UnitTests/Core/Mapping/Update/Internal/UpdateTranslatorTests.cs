@@ -111,6 +111,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
+#if !NET40
+
         public class UpdateAsync
         {
             [Fact]
@@ -210,5 +212,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Same(objectStateEntryMock.Object, ((UpdateException)exception.InnerException).StateEntries.Single());
             }
         }
+
+#endif
+
     }
 }

@@ -17,7 +17,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// <summary>
     ///     LINQ query provider implementation.
     /// </summary>
-    internal class ObjectQueryProvider : IQueryProvider, IDbAsyncQueryProvider
+    internal class ObjectQueryProvider : IQueryProvider
+#if !NET40
+                   , IDbAsyncQueryProvider
+#endif
     {
         // Although ObjectQuery contains a reference to ObjectContext, it is possible
         // that IQueryProvider methods be directly invoked from the ObjectContext.
@@ -163,6 +166,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #endregion
 
+#if !NET40
+
         #region IDbAsyncQueryProvider
 
         Task<TResult> IDbAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
@@ -180,6 +185,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         #endregion
+
+#endif
 
         #region Internal Utility API
 
@@ -224,6 +231,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return (sequence) => { return sequence.Single(); };
         }
 
+#if !NET40
+
         internal static Task<TResult> ExecuteSingleAsync<TResult>(
             IDbAsyncEnumerable<TResult> query, Expression queryRoot, CancellationToken cancellationToken)
         {
@@ -254,6 +263,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             return (sequence, cancellationToken) => { return sequence.SingleAsync(cancellationToken); };
         }
+
+#endif
 
         #endregion
     }

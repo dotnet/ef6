@@ -17,7 +17,10 @@ namespace System.Data.Entity.Core.Objects
     ///     This class represents the result of the <see cref="ObjectQuery{T}.Execute" /> method.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class ObjectResult<T> : ObjectResult, IEnumerable<T>, IDbAsyncEnumerable<T>
+    public class ObjectResult<T> : ObjectResult, IEnumerable<T>
+#if !NET40
+        , IDbAsyncEnumerable<T>
+#endif
     {
         private Shaper<T> _shaper;
         private DbDataReader _reader;
@@ -78,12 +81,16 @@ namespace System.Data.Entity.Core.Objects
 
         #region IDbAsyncEnumerable
 
+#if !NET40
+
         /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
         {
             return GetDbEnumerator();
         }
+
+#endif
 
         #endregion
 
@@ -123,10 +130,14 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+#if !NET40
+
         internal override IDbAsyncEnumerator GetAsyncEnumeratorInternal()
         {
             return GetDbEnumerator();
         }
+
+#endif
 
         internal override IEnumerator GetEnumeratorInternal()
         {

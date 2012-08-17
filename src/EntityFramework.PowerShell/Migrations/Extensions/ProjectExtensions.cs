@@ -10,12 +10,14 @@ namespace System.Data.Entity.Migrations.Extensions
     using System.Linq;
     using System.Runtime.InteropServices;
     using EnvDTE;
-    using Microsoft.VisualStudio.OLE.Interop;
-    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
     internal static class ProjectExtensions
     {
+        private static readonly Type _serviceProviderType =
+            Type.GetType("Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+            ?? Type.GetType("Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+
         public const int S_OK = 0;
         public const string WebApplicationProjectTypeGuid = "{349C5851-65DF-11DA-9384-00065B846F21}";
         public const string WebSiteProjectTypeGuid = "{E24C65DC-7377-472B-9ABA-BC803B73C61A}";
@@ -275,13 +277,16 @@ namespace System.Data.Entity.Migrations.Extensions
             return (T)property.Value;
         }
 
-        private static IEnumerable<string> GetProjectTypes(this Project project)
+        public static IEnumerable<string> GetProjectTypes(this Project project)
         {
             Contract.Requires(project != null);
 
             IVsHierarchy hierarchy;
 
-            var serviceProvider = new ServiceProvider((IServiceProvider)project.DTE);
+            var serviceProvider = (IServiceProvider)Activator.CreateInstance(
+                _serviceProviderType, 
+                (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)project.DTE);
+
             var solution = (IVsSolution)serviceProvider.GetService(typeof(IVsSolution));
             var hr = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
 

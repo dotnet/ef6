@@ -187,6 +187,8 @@ namespace System.Data.Entity.Internal
             return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of GetDatabaseValues, which
         ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
@@ -200,6 +202,8 @@ namespace System.Data.Entity.Internal
 
             return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
         }
+
+#endif
 
         private ObjectQuery<DbDataRecord> GetDatabaseValuesQuery()
         {

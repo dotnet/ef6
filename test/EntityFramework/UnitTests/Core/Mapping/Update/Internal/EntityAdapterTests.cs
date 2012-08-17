@@ -151,6 +151,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
+#if !NET40
+        
         public class UpdateAsync
         {
             [Fact]
@@ -274,5 +276,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         () => entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None)).Message);
             }
         }
+
+#endif
+
     }
 }

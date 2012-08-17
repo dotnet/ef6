@@ -57,6 +57,8 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         public abstract object Find(params object[] keyValues);
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Find, which
         ///     finds an entity with the given primary key values.
@@ -94,6 +96,8 @@ namespace System.Data.Entity
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> A Task containing the entity found, or null. </returns>
         public abstract Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
+
+#endif
 
         #endregion
 

@@ -135,7 +135,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 // Verify that a factory can be retrieved
-                if (DbProviderFactories.GetFactory(connection) == null)
+                if (connection.GetProviderFactory() == null)
                 {
                     throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
                 }
@@ -556,6 +556,8 @@ namespace System.Data.Entity.Core.EntityClient
             SetEntityClientConnectionStateToOpen();
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Open, which
         ///     establishes a connection to the data store by calling the Open method on the underlying data provider
@@ -615,6 +617,8 @@ namespace System.Data.Entity.Core.EntityClient
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
             SetEntityClientConnectionStateToOpen();
         }
+
+#endif
 
         /// <summary>
         ///     Helper method that opens a specified store connection if it's not opened yet.

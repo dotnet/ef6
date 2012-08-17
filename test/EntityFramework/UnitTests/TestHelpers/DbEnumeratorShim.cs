@@ -27,10 +27,19 @@ namespace System.Data.Entity
             get { return _enumerator.Current; }
         }
 
+#if !NET40
+
         object Infrastructure.IDbAsyncEnumerator.Current
         {
             get { return _enumerator.Current; }
         }
+
+        public Task<bool> MoveNextAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_enumerator.MoveNext());
+        }
+
+#endif
 
         public void Dispose()
         {
@@ -40,11 +49,6 @@ namespace System.Data.Entity
         public bool MoveNext()
         {
             return _enumerator.MoveNext();
-        }
-
-        public Task<bool> MoveNextAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(_enumerator.MoveNext());
         }
 
         public void Reset()

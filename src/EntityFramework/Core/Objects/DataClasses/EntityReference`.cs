@@ -193,6 +193,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             OnAssociationChanged(CollectionChangeAction.Refresh, null);
         }
 
+#if !NET40
+
         /// <summary>
         ///     An asynchronous version of Load, which
         ///     loads the related entity or entities into the related end using the specified merge option.
@@ -229,6 +231,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // fire the AssociationChange with Refresh
             OnAssociationChanged(CollectionChangeAction.Refresh, null);
         }
+
+#endif
 
         private void HandleRefreshedValue(MergeOption mergeOption, IList<TEntity> refreshedValue)
         {

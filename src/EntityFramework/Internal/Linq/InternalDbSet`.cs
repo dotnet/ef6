@@ -16,7 +16,10 @@ namespace System.Data.Entity.Internal.Linq
     ///     still implements <see cref="IQueryable{T}" />.
     /// </summary>
     /// <typeparam name="TEntity"> The type of the entity. </typeparam>
-    internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>, IDbAsyncEnumerable<TEntity>
+    internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>
+#if !NET40
+        , IDbAsyncEnumerable<TEntity>
+#endif
         where TEntity : class
     {
         #region Fields and constructors
@@ -92,11 +95,15 @@ namespace System.Data.Entity.Internal.Linq
             return _internalSet.Find(keyValues);
         }
 
+#if !NET40
+
         /// <inheritdoc />
         public override async Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             return await _internalSet.FindAsync(cancellationToken, keyValues).ConfigureAwait(continueOnCapturedContext: false);
         }
+
+#endif
 
         /// <inheritdoc />
         public override IList Local
@@ -137,6 +144,8 @@ namespace System.Data.Entity.Internal.Linq
 
         #region IDbAsyncEnumerable
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the backing query against the database.
         /// </summary>
@@ -145,6 +154,8 @@ namespace System.Data.Entity.Internal.Linq
         {
             return _internalSet.GetAsyncEnumerator();
         }
+
+#endif
 
         #endregion
     }

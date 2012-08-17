@@ -34,6 +34,8 @@ namespace System.Data.Entity.Core.Query
             Assert.True(bridgeDataRecord.IsExplicitlyClosed);
         }
 
+#if !NET40
+
         [Fact]
         public void CloseExplicitlyAsync_doesnt_throw()
         {
@@ -44,6 +46,8 @@ namespace System.Data.Entity.Core.Query
             Assert.True(bridgeDataRecord.IsExplicitlyClosed);
         }
 
+#endif
+        
         [Fact]
         public void CloseImplicitly_doesnt_throw()
         {
@@ -53,6 +57,8 @@ namespace System.Data.Entity.Core.Query
             bridgeDataRecord.CloseImplicitly();
             Assert.True(bridgeDataRecord.IsImplicitlyClosed);
         }
+
+#if !NET40
 
         [Fact]
         public void CloseImplicitlyAsync_doesnt_throw()
@@ -64,6 +70,8 @@ namespace System.Data.Entity.Core.Query
             Assert.True(bridgeDataRecord.IsImplicitlyClosed);
         }
 
+#endif
+        
         private BridgeDataRecord CreateBridgeDataRecord()
         {
             var dbDataReaderMock = new Mock<DbDataReader>();

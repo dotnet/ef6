@@ -18,7 +18,11 @@ namespace System.Data.Entity.Infrastructure
     /// <typeparam name="TResult"> The type of entity to query for. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
-    public class DbQuery<TResult> : IOrderedQueryable<TResult>, IListSource, IInternalQueryAdapter, IDbAsyncEnumerable<TResult>
+    public class DbQuery<TResult> : IOrderedQueryable<TResult>, IListSource, IInternalQueryAdapter
+#if !NET40
+        , IDbAsyncEnumerable<TResult>
+
+#endif
     {
         #region Fields and constructors
 
@@ -130,6 +134,8 @@ namespace System.Data.Entity.Infrastructure
 
         #region IDbAsyncEnumerable
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
@@ -149,6 +155,8 @@ namespace System.Data.Entity.Infrastructure
         {
             return _internalQuery.GetAsyncEnumerator();
         }
+
+#endif
 
         #endregion
 

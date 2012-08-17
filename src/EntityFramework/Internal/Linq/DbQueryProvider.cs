@@ -18,7 +18,10 @@ namespace System.Data.Entity.Internal.Linq
     ///     are always instances of <see cref="DbQuery{TResult}" />. This provider is associated with
     ///     generic <see cref="DbQuery{T}" /> objects.
     /// </summary>
-    internal class DbQueryProvider : IQueryProvider, IDbAsyncQueryProvider
+    internal class DbQueryProvider : IQueryProvider
+#if !NET40
+        , IDbAsyncQueryProvider
+#endif
     {
         #region Fields and constructors
 
@@ -96,6 +99,8 @@ namespace System.Data.Entity.Internal.Linq
 
         #region IDbAsyncQueryProvider Members
 
+#if !NET40
+
         /// <summary>
         ///     By default, calls the same method on the wrapped provider.
         /// </summary>
@@ -115,6 +120,8 @@ namespace System.Data.Entity.Internal.Linq
 
             return ((IDbAsyncQueryProvider)_provider).ExecuteAsync(expression, cancellationToken);
         }
+
+#endif
 
         #endregion
 

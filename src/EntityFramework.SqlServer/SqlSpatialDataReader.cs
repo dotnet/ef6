@@ -38,6 +38,8 @@ namespace System.Data.Entity.SqlServer
             return _spatialServices.GeographyFromProviderValue(providerValue);
         }
 
+#if !NET40
+
         public override async Task<DbGeography> GetGeographyAsync(int ordinal, CancellationToken cancellationToken)
         {
             EnsureGeographyColumn(ordinal);
@@ -45,6 +47,8 @@ namespace System.Data.Entity.SqlServer
             var providerValue = _sqlGeographyFromBinaryReader.Value(new BinaryReader(geogBytes.Stream));
             return SqlSpatialServices.Instance.GeographyFromProviderValue(providerValue);
         }
+
+#endif
 
         public override DbGeometry GetGeometry(int ordinal)
         {
@@ -54,6 +58,8 @@ namespace System.Data.Entity.SqlServer
             return _spatialServices.GeometryFromProviderValue(providerValue);
         }
 
+#if !NET40
+
         public override async Task<DbGeometry> GetGeometryAsync(int ordinal, CancellationToken cancellationToken)
         {
             EnsureGeometryColumn(ordinal);
@@ -61,6 +67,8 @@ namespace System.Data.Entity.SqlServer
             var providerValue = _sqlGeometryFromBinaryReader.Value(new BinaryReader(geomBytes.Stream));
             return SqlSpatialServices.Instance.GeometryFromProviderValue(providerValue);
         }
+
+#endif
 
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeographyFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(

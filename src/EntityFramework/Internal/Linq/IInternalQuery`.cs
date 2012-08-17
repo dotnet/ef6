@@ -19,7 +19,11 @@ namespace System.Data.Entity.Internal.Linq
     {
         IInternalQuery<TElement> Include(string path);
         IInternalQuery<TElement> AsNoTracking();
+
+#if !NET40
         new IDbAsyncEnumerator<TElement> GetAsyncEnumerator();
+#endif
+
         new IEnumerator<TElement> GetEnumerator();
     }
 
@@ -68,6 +72,8 @@ namespace System.Data.Entity.Internal.Linq
             throw new NotImplementedException();
         }
 
+#if !NET40
+
         IDbAsyncEnumerator<TElement> IInternalQuery<TElement>.GetAsyncEnumerator()
         {
             throw new NotImplementedException();
@@ -77,6 +83,8 @@ namespace System.Data.Entity.Internal.Linq
         {
             throw new NotImplementedException();
         }
+
+#endif
 
         IEnumerator<TElement> IInternalQuery<TElement>.GetEnumerator()
         {

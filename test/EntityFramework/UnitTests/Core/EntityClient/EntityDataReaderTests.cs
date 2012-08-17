@@ -57,12 +57,15 @@ namespace System.Data.Entity.Core.EntityClient
                 VerifyMethod(r => r.GetValues(Enumerable.Empty<object>().ToArray()), m => m.GetValues(It.IsAny<object[]>()));
                 VerifyMethod(r => r.IsDBNull(default(int)), m => m.IsDBNull(It.IsAny<int>()));
                 VerifyMethod(r => r.NextResult(), m => m.NextResult());
+                VerifyMethod(r => r.Read(), m => m.Read());
+                VerifyMethod(r => r.GetEnumerator(), m => m.GetEnumerator());
+
+#if !NET40
                 VerifyMethod(r => r.NextResultAsync(), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
                 VerifyMethod(r => r.NextResultAsync(default(CancellationToken)), m => m.NextResultAsync(It.IsAny<CancellationToken>()));
-                VerifyMethod(r => r.Read(), m => m.Read());
                 VerifyMethod(r => r.ReadAsync(), m => m.ReadAsync(It.IsAny<CancellationToken>()));
                 VerifyMethod(r => r.ReadAsync(default(CancellationToken)), m => m.ReadAsync(It.IsAny<CancellationToken>()));
-                VerifyMethod(r => r.GetEnumerator(), m => m.GetEnumerator());
+#endif
             }
 
             private void VerifyGetter<TProperty>(
@@ -126,6 +129,8 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Throws<EntityCommandExecutionException>(() => entityDataReader.NextResult()).Message);
         }
 
+#if !NET40
+        
         [Fact]
         public void NextResultAsync_wraps_exception_into_EntityCommandExecutionException_if_one_was_thrown()
         {
@@ -150,5 +155,8 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(expectedMessage, innerException.Message);
             }
         }
+
+#endif
+
     }
 }

@@ -21,7 +21,10 @@ namespace System.Data.Entity.Infrastructure
     ///     See <see cref="DbRawSqlQuery{TElement}" /> for a non-generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-    public class DbRawSqlQuery<TElement> : IEnumerable<TElement>, IDbAsyncEnumerable<TElement>, IListSource
+    public class DbRawSqlQuery<TElement> : IEnumerable<TElement>, IListSource
+#if !NET40
+        , IDbAsyncEnumerable<TElement>
+#endif
     {
         #region Constructors and fields
 
@@ -62,6 +65,8 @@ namespace System.Data.Entity.Infrastructure
 
         #region IDbAsyncEnumerable implementation
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerable{T}" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
@@ -82,9 +87,13 @@ namespace System.Data.Entity.Infrastructure
             return _internalQuery.GetAsyncEnumerator();
         }
 
+#endif
+
         #endregion
 
         #region Access to IDbAsyncEnumerable extensions
+
+#if !NET40
 
         public Task ForEachAsync(Action<TElement> action)
         {
@@ -473,6 +482,8 @@ namespace System.Data.Entity.Infrastructure
 
             return ((IDbAsyncEnumerable<TElement>)this).MaxAsync(cancellationToken);
         }
+
+#endif
 
         #endregion
 

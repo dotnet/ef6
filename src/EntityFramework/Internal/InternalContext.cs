@@ -58,17 +58,24 @@ namespace System.Data.Entity.Internal
             typeof(InternalContext).GetMethod(
                 "ExecuteSqlQueryAsIEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
 
+#if !NET40
+
         private static readonly MethodInfo _executeSqlQueryAsIDbAsyncEnumeratorMethod =
             typeof(InternalContext).GetMethod(
                 "ExecuteSqlQueryAsIDbAsyncEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
+#endif
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerator>>
             _queryExecutors =
                 new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IEnumerator>>();
 
+#if !NET40
+
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, object[], IDbAsyncEnumerator>>
             _asyncQueryExecutors =
                 new ConcurrentDictionary<Type, Func<InternalContext, string, object[], IDbAsyncEnumerator>>();
+
+#endif
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>
             _setFactories =
@@ -388,6 +395,8 @@ namespace System.Data.Entity.Internal
             }
         }
 
+#if !NET40
+
         public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             try
@@ -423,6 +432,8 @@ namespace System.Data.Entity.Internal
                 throw;
             }
         }
+
+#endif
 
         #endregion
 
@@ -772,6 +783,8 @@ namespace System.Data.Entity.Internal
                 });
         }
 
+#if !NET40
+
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
@@ -810,6 +823,8 @@ namespace System.Data.Entity.Internal
                 });
         }
 
+#endif
+
         /// <summary>
         ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
         ///     database backing this context. The results are not materialized as entities or tracked.
@@ -844,6 +859,8 @@ namespace System.Data.Entity.Internal
         {
             return ExecuteSqlQuery<TElement>(sql, parameters);
         }
+
+#if !NET40
 
         /// <summary>
         ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
@@ -882,6 +899,8 @@ namespace System.Data.Entity.Internal
             return ExecuteSqlQueryAsync<TElement>(sql, parameters);
         }
 
+#endif
+
         /// <summary>
         ///     Executes the given SQL command against the database backing this context.
         /// </summary>
@@ -897,6 +916,8 @@ namespace System.Data.Entity.Internal
 
             return ObjectContext.ExecuteStoreCommand(sql, parameters);
         }
+
+#if !NET40
 
         /// <summary>
         ///     An asynchronous version of ExecuteSqlCommand, which
@@ -916,6 +937,8 @@ namespace System.Data.Entity.Internal
 
             return ObjectContext.ExecuteStoreCommandAsync(sql, cancellationToken, parameters);
         }
+
+#endif
 
         #endregion
 

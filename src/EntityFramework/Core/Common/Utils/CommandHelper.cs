@@ -35,6 +35,9 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
+
+#if !NET40
+
         /// <summary>
         ///     Asynchronously consumes all rows and result sets from the reader. This allows client to retrieve
         ///     parameter values and intercept any store exceptions.
@@ -52,6 +55,8 @@ namespace System.Data.Entity.Core.Common.Utils
                 }
             }
         }
+
+#endif
 
         /// <summary>
         ///     requires: commandText must not be null

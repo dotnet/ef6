@@ -596,12 +596,16 @@ namespace ProductivityApiTests
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChanges());
         }
 
+#if !NET40
+
         [Fact]
         [AutoRollback]
         public void SaveChangesAsync_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChangesAsync().Result);
         }
+
+#endif
 
         private void SaveChanges_saves_Added_Modified_Deleted_entities_implementation(Func<DbContext, int> saveChanges)
         {
@@ -664,12 +668,16 @@ namespace ProductivityApiTests
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChanges());
         }
 
+#if !NET40
+
         [Fact]
         [AutoRollback]
         public void SaveChangesAsync_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChangesAsync().Result);
         }
+
+#endif
 
         private void SaveChanges_performs_DetectChanges_implementation(Func<DbContext, int> saveChanges)
         {
@@ -695,6 +703,8 @@ namespace ProductivityApiTests
             }
         }
 
+#if !NET40
+
         [Fact]
         public void SaveChangesAsync_on_uninitialized_context_does_not_throw()
         {
@@ -703,6 +713,8 @@ namespace ProductivityApiTests
                 Assert.Equal(0, context.SaveChangesAsync().Result);
             }
         }
+
+#endif
 
         public class SaveChangesDoesntInitializeContext : DbContext
         {
@@ -734,6 +746,8 @@ namespace ProductivityApiTests
             }
         }
 
+#if !NET40
+
         public class SaveChangesAsyncDoesntInitializeContext : DbContext
         {
             public SaveChangesAsyncDoesntInitializeContext()
@@ -764,6 +778,8 @@ namespace ProductivityApiTests
             }
         }
 
+#endif
+
         [Fact]
         public void SaveChanges_is_virtual()
         {
@@ -773,6 +789,8 @@ namespace ProductivityApiTests
                 Assert.True(((SimpleModelContextWithNoData)context).SaveChangesCalled);
             }
         }
+
+#if !NET40
 
         [Fact]
         public void SaveChangesAsync_is_virtual()
@@ -784,6 +802,8 @@ namespace ProductivityApiTests
             }
         }
 
+#endif
+
         #endregion
 
         #region Negative SaveChanges tests
@@ -794,12 +814,16 @@ namespace ProductivityApiTests
             SaveChanges_bubbles_presave_exception_implementation((c) => c.SaveChanges());
         }
 
+#if !NET40
+
         [Fact]
         public void SaveChangesAsync_bubbles_presave_exception()
         {
             SaveChanges_bubbles_presave_exception_implementation(
                 (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
         }
+
+#endif
 
         private void SaveChanges_bubbles_presave_exception_implementation(Func<DbContext, int> saveChanges)
         {
@@ -837,6 +861,8 @@ namespace ProductivityApiTests
             SaveChanges_bubbles_UpdateException_implementation((c) => c.SaveChanges());
         }
 
+#if !NET40
+
         [Fact]
         [AutoRollback]
         public void SaveChangesAsync_bubbles_UpdateException()
@@ -844,6 +870,8 @@ namespace ProductivityApiTests
             SaveChanges_bubbles_UpdateException_implementation(
                 (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
         }
+
+#endif
 
         private void SaveChanges_bubbles_UpdateException_implementation(Func<DbContext, int> saveChanges)
         {
@@ -868,6 +896,8 @@ namespace ProductivityApiTests
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation((c) => c.SaveChanges());
         }
 
+#if !NET40
+
         [Fact]
         [AutoRollback]
         public void SaveChangesAsync_bubbles_exception_during_AcceptChanges()
@@ -875,6 +905,8 @@ namespace ProductivityApiTests
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation(
                 (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
         }
+
+#endif
 
         private void SaveChanges_bubbles_exception_during_AcceptChanges_implementation(Func<DbContext, int> saveChanges)
         {
@@ -905,12 +937,16 @@ namespace ProductivityApiTests
             SaveChanges_throws_on_validation_errors_implementation((c) => c.SaveChanges());
         }
 
+#if !NET40
+
         [Fact]
         public void SaveChangesAsync_throws_on_validation_errors()
         {
             SaveChanges_throws_on_validation_errors_implementation(
                 (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
         }
+
+#endif
 
         public void SaveChanges_throws_on_validation_errors_implementation(Func<DbContext, int> saveChanges)
         {

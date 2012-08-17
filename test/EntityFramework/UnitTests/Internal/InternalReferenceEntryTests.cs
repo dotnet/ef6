@@ -218,6 +218,8 @@ namespace System.Data.Entity.Internal
             }
         }
 
+#if !NET40
+
         public class LoadAsync
         {
             [Fact]
@@ -237,6 +239,8 @@ namespace System.Data.Entity.Internal
                                                                        })).Message);
             }
         }
+
+#endif
 
         public class IsLoaded
         {
