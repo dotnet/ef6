@@ -698,10 +698,10 @@ namespace System.Data.Entity.Internal.Linq
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
             return new LazyAsyncEnumerator<object>(
-                async () =>
+                async cancellationToken =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, mergeOption, CancellationToken.None, parameters).ConfigureAwait(continueOnCapturedContext: false);
+                                  sql, EntitySetName, mergeOption, cancellationToken, parameters).ConfigureAwait(continueOnCapturedContext: false);
 
                               try
                               {

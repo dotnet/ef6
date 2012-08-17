@@ -148,6 +148,7 @@
     <Compile Include="Internal\InternalEntityEntryTests.cs" />
     <Compile Include="Internal\InternalEntityPropertyEntryTests.cs" />
     <Compile Include="Internal\InternalReferenceEntryTests.cs" />
+    <Compile Include="Internal\LazyAsyncEnumeratorTests.cs" />
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />

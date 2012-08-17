@@ -3,27 +3,45 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
     internal class LazyAsyncEnumerator<T> : IDbAsyncEnumerator<T>
     {
-        private readonly Lazy<Task<IDbAsyncEnumerator<T>>> _lazyAsyncEnumerator;
+        private readonly Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> _getEnumeratorAsync;
+        private volatile Task<IDbAsyncEnumerator<T>> _asyncEnumeratorTask;
 
         /// <summary>
         ///     Initializes a new instance of <see cref="LazyAsyncEnumerator{T}" />
         /// </summary>
         /// <param name="getEnumeratorAsync"> Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null. </param>
-        // TODO: Currently we are not accepting a CancellationToken parameter because we are relying on Lazy<T>
-        // which doesn't support TAP
-        public LazyAsyncEnumerator(Func<Task<IDbAsyncEnumerator<T>>> getEnumeratorAsync)
+        public LazyAsyncEnumerator(Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> getEnumeratorAsync)
         {
-            _lazyAsyncEnumerator = new Lazy<Task<IDbAsyncEnumerator<T>>>(getEnumeratorAsync);
+            Contract.Requires(getEnumeratorAsync != null);
+
+            _getEnumeratorAsync = getEnumeratorAsync;
+        }
+
+        private Task<IDbAsyncEnumerator<T>> GetEnumeratorAsync(CancellationToken cancellationToken)
+        {
+            if (_asyncEnumeratorTask == null)
+            {
+                lock (_getEnumeratorAsync)
+                {
+                    if (_asyncEnumeratorTask == null)
+                    {
+                        _asyncEnumeratorTask = _getEnumeratorAsync(cancellationToken);
+                    }
+                }
+            }
+
+            return _asyncEnumeratorTask;
         }
 
         public T Current
         {
-            get { return _lazyAsyncEnumerator.Value.Result.Current; }
+            get { return GetEnumeratorAsync(CancellationToken.None).Result.Current; }
         }
 
         object IDbAsyncEnumerator.Current
@@ -33,15 +51,18 @@ namespace System.Data.Entity.Internal
 
         public void Dispose()
         {
-            if (_lazyAsyncEnumerator.IsValueCreated)
+            if (_asyncEnumeratorTask != null)
             {
-                _lazyAsyncEnumerator.Value.Result.Dispose();
+                _asyncEnumeratorTask.Result.Dispose();
             }
         }
 
         public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
         {
-            var enumerator = await _lazyAsyncEnumerator.Value.ConfigureAwait(continueOnCapturedContext: false);
+            // TODO: Uncomment when code contracts support async
+            //Contract.Ensures(Contract.Result<Task<bool>>() != null);
+
+            var enumerator = await GetEnumeratorAsync(CancellationToken.None).ConfigureAwait(continueOnCapturedContext: false);
             return await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
     }
