@@ -30,12 +30,12 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 
         public override string DataSource
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public override string Database
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public override string ServerVersion

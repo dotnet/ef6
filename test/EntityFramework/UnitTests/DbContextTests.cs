@@ -903,12 +903,11 @@ END";
             mockContext.Verify(m => m.Connection, Times.Never());
         }
 
-        // TODO: [Fact(Skip = "Provider registration needed.")]
+        [Fact]
         public void Can_get_metadata_with_minimal_DbConnection_implementation()
         {
             // Required for use with MVC Scaffolding that uses Microsoft.VisualStudio.Web.Mvc.Scaffolding.BuiltIn.ScaffoldingDbConnection
             // which is a very minimal implementation of DbConnection.
-
             using (var connection = new FakeSqlConnection
                                         {
                                             ConnectionString = ""

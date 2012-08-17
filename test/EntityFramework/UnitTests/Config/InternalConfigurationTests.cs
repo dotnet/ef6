@@ -77,7 +77,8 @@ namespace System.Data.Entity.Config
                 configuration.Lock();
 
                 Assert.Equal(
-                    Strings.ConfigurationLocked("AddDependencyResolver"),
+
+                    Strings.ConfigurationLocked("SetDefaultConnectionFactory"),
                     Assert.Throws<InvalidOperationException>(
                         () => configuration.AddDependencyResolver(new Mock<IDbDependencyResolver>().Object)).Message);
             }

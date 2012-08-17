@@ -32,14 +32,14 @@ namespace System.Data.Entity.Config
             {
                 var manager = CreateManager();
                 var mockInternalConfiguration = new Mock<InternalConfiguration>
-                    {
-                        CallBase = true
-                    };
+                                                    {
+                                                        CallBase = true
+                                                    };
 
                 var mockDbConfiguration = new Mock<DbConfiguration>();
                 mockDbConfiguration.Setup(m => m.InternalConfiguration).Returns(mockInternalConfiguration.Object);
                 mockInternalConfiguration.Setup(m => m.Owner).Returns(mockDbConfiguration.Object);
-                
+
                 var configuration = mockInternalConfiguration.Object;
 
                 manager.SetConfiguration(configuration);
@@ -78,10 +78,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void GetConfiguration_for_default_value_can_be_called_from_multiple_threads_concurrently()
@@ -90,10 +90,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void GetConfiguration_for_pushed_config_can_be_called_from_multiple_threads_concurrently()
@@ -102,10 +102,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void GetConfiguration_for_pushed_and_popped_config_can_be_called_from_multiple_threads_concurrently()
@@ -189,7 +189,7 @@ namespace System.Data.Entity.Config
             public void SetConfiguration_throws_if_an_attempt_is_made_to_set_a_configuration_after_the_default_has_already_been_used()
             {
                 var manager = CreateManager();
-                
+
                 var dbConfiguration = new Mock<DbConfiguration>().Object;
                 var mockInternalConfiguration = CreateMockInternalConfiguration(dbConfiguration);
 
@@ -201,10 +201,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void SetConfiguration_can_be_called_from_multiple_threads_concurrently_and_only_one_will_win()
@@ -222,7 +222,8 @@ namespace System.Data.Entity.Config
             {
                 var foundConfiguration = CreateMockInternalConfiguration().Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
-                mockFinder.Setup(m => m.TryCreateConfiguration(typeof(FakeContext), It.IsAny<IEnumerable<Type>>())).Returns(foundConfiguration);
+                mockFinder.Setup(m => m.TryCreateConfiguration(typeof(FakeContext), It.IsAny<IEnumerable<Type>>())).Returns(
+                    foundConfiguration);
 
                 var manager = CreateManager(null, mockFinder);
 
@@ -408,11 +409,37 @@ namespace System.Data.Entity.Config
                 Assert.Same(mockLoadedConfig.Object, manager.GetConfiguration());
             }
 
+            [Fact]
+            public void EnsureLoadedForContext_does_not_throw_even_if_finder_would_throw_if_configuration_is_specified_in_config_file()
+            {
+                var mockLoadedConfig = CreateMockInternalConfiguration();
+                var mockLoader = new Mock<DbConfigurationLoader>();
+                mockLoader.Setup(m => m.AppConfigContainsDbConfigurationType(It.IsAny<AppConfig>())).Returns(true);
+                mockLoader.Setup(m => m.TryLoadFromConfig(It.IsAny<AppConfig>())).Returns(mockLoadedConfig.Object);
+
+                var mockInternalConfiguration = CreateMockInternalConfiguration();
+
+                var mockFinder = new Mock<DbConfigurationFinder>();
+                mockFinder
+                    .Setup(m => m.TryCreateConfiguration(It.IsAny<Type>(), It.IsAny<IEnumerable<Type>>()))
+                    .Throws<InvalidOperationException>();
+                mockFinder
+                    .Setup(m => m.TryFindConfigurationType(It.IsAny<Type>(), It.IsAny<IEnumerable<Type>>()))
+                    .Throws<InvalidOperationException>();
+
+                var manager = CreateManager(mockLoader, mockFinder);
+                manager.SetConfiguration(mockInternalConfiguration.Object);
+
+                manager.EnsureLoadedForContext(typeof(FakeContext));
+
+                Assert.Same(mockLoadedConfig.Object, manager.GetConfiguration());
+            }
+
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void EnsureLoadedForContext_can_be_called_from_multiple_threads_concurrently_before_configuration_has_been_used()
@@ -423,10 +450,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void EnsureLoadedForContext_can_be_called_from_multiple_threads_concurrently_after_push_and_pop()
@@ -468,7 +495,8 @@ namespace System.Data.Entity.Config
                 var mockConfiguration = new Mock<InternalConfiguration>();
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 var mockFinder = new Mock<DbConfigurationFinder>();
-                mockFinder.Setup(m => m.TryCreateConfiguration(typeof(DbContext), It.IsAny<IEnumerable<Type>>())).Returns(mockConfiguration.Object);
+                mockFinder.Setup(m => m.TryCreateConfiguration(typeof(DbContext), It.IsAny<IEnumerable<Type>>())).Returns(
+                    mockConfiguration.Object);
 
                 var manager = CreateManager(mockLoader, mockFinder);
 
@@ -527,10 +555,10 @@ namespace System.Data.Entity.Config
             }
 
             /// <summary>
-            ///   This test makes calls from multiple threads such that we have at least some chance of finding threading
-            ///   issues. As with any test of this type just because the test passes does not mean that the code is
-            ///   correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
-            ///   be investigated. DON'T just re-run and think things are okay if the test then passes.
+            ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
+            ///     issues. As with any test of this type just because the test passes does not mean that the code is
+            ///     correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+            ///     be investigated. DON'T just re-run and think things are okay if the test then passes.
             /// </summary>
             [Fact]
             public void Configurations_can_be_pushed_and_popped_from_multiple_threads_concurrently()
@@ -560,9 +588,9 @@ namespace System.Data.Entity.Config
             {
                 var manager = CreateManager();
                 var mockInternalConfiguration = new Mock<InternalConfiguration>
-                {
-                    CallBase = true
-                };
+                                                    {
+                                                        CallBase = true
+                                                    };
 
                 var mockDbConfiguration = new Mock<DbConfiguration>();
                 mockDbConfiguration.Setup(m => m.InternalConfiguration).Returns(mockInternalConfiguration.Object);
@@ -602,7 +630,7 @@ namespace System.Data.Entity.Config
             Mock<DbConfigurationFinder> mockFinder = null)
         {
             return new DbConfigurationManager(
-                (mockLoader ?? new Mock<DbConfigurationLoader>()).Object, 
+                (mockLoader ?? new Mock<DbConfigurationLoader>()).Object,
                 (mockFinder ?? new Mock<DbConfigurationFinder>()).Object);
         }
 
