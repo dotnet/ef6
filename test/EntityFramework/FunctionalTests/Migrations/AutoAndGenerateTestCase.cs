@@ -143,8 +143,7 @@ namespace System.Data.Entity.Migrations
             private static readonly IList<Type> _excludedTypes
                 = new List<Type>
                       {
-                          typeof(InsertHistoryOperation),
-                          typeof(DeleteHistoryOperation)
+                          typeof(HistoryOperation)
                       };
 
             private readonly Action<IEnumerable<MigrationOperation>> _verifyAction;
@@ -153,8 +152,6 @@ namespace System.Data.Entity.Migrations
 
             public SqlInterceptor(Action<IEnumerable<MigrationOperation>> verifyAction)
             {
-                Contract.Requires(verifyAction != null);
-
                 _verifyAction = verifyAction;
             }
 

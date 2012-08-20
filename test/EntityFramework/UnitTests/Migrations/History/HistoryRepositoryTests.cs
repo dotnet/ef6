@@ -9,7 +9,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -431,7 +430,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void CreateInsertOperation_should_return_valid_add_operation()
+        public void CreateInsertOperation_should_return_valid_history_operation()
         {
             var modelBuilder = new DbModelBuilder();
             var model = modelBuilder.Build(ProviderInfo);
@@ -449,11 +448,37 @@ namespace System.Data.Entity.Migrations
             var modelDocument = model.GetModel();
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
-            var insertHistoryOperation
-                = (InsertHistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
 
-            Assert.Equal("Migration1", insertHistoryOperation.MigrationId);
-            Assert.Equal(new ModelCompressor().Compress(modelDocument), (object)insertHistoryOperation.Model);
+            var historyOperation
+                = (HistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
+
+            Assert.NotEmpty(historyOperation.Commands);
+        }
+
+        [MigrationsTheory]
+        public void CreateDeleteOperation_should_return_valid_history_operation()
+        {
+            var modelBuilder = new DbModelBuilder();
+            var model = modelBuilder.Build(ProviderInfo);
+
+            var edmxString = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(
+                edmxString, new XmlWriterSettings
+                                {
+                                    Indent = true
+                                }))
+            {
+                EdmxWriter.WriteEdmx(model, xmlWriter);
+            }
+
+            var modelDocument = model.GetModel();
+
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory);
+
+            var historyOperation
+                = (HistoryOperation)historyRepository.CreateDeleteOperation("Migration1");
+
+            Assert.NotEmpty(historyOperation.Commands);
         }
 
         [MigrationsTheory]

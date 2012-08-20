@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
-    using System;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
@@ -30,9 +29,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Returns_number_of_enties_affected()
             {
-                var expectedCacheEntriesAffected = 1;
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
-                mockUpdateTranslator.Setup(m => m.Update()).Returns(expectedCacheEntriesAffected);
+                mockUpdateTranslator.Setup(m => m.Update()).Returns(1);
 
                 var updateTranslatorFactory = new Func<IEntityStateManager, EntityAdapter, UpdateTranslator>(
                     (stateManager, adapter) => mockUpdateTranslator.Object);
@@ -57,7 +55,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var cacheEntriesAffected = entityAdapter.Update(entityStateManagerMock.Object);
 
-                Assert.Equal(expectedCacheEntriesAffected, cacheEntriesAffected);
+                Assert.Equal(1, cacheEntriesAffected);
             }
 
             [Fact]
@@ -132,6 +130,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     Strings.EntityClient_ClosedConnectionForUpdate,
                     Assert.Throws<InvalidOperationException>(() => entityAdapter.Update(entityStateManagerMock.Object)).Message);
             }
+
+            [Fact]
+            public void Does_not_throw_invalid_operation_if_connection_is_closed_but_exception_suppressed()
+            {
+                var entityAdapter = new EntityAdapter();
+                var entityStateManagerMock = new Mock<IEntityStateManager>();
+                var entityStateEntryMock = new Mock<IEntityStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                    .Returns(new[] { entityStateEntryMock.Object });
+
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.Setup(m => m.StoreConnection)
+                    .Returns(new Mock<DbConnection>().Object);
+                entityConnectionMock.Setup(m => m.StoreProviderFactory)
+                    .Returns(new Mock<DbProviderFactory>().Object);
+                entityAdapter.Connection = entityConnectionMock.Object;
+
+                Assert.Throws<NotSupportedException>(() => entityAdapter.Update(entityStateManagerMock.Object, false));
+            }
         }
 
         public class UpdateAsync
@@ -150,10 +167,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Returns_number_of_enties_affected()
             {
-                var expectedCacheEntriesAffected = 1;
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.UpdateAsync(It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(expectedCacheEntriesAffected));
+                    .Returns(Task.FromResult(1));
 
                 var updateTranslatorFactory = new Func<IEntityStateManager, EntityAdapter, UpdateTranslator>(
                     (stateManager, adapter) => mockUpdateTranslator.Object);
@@ -178,7 +194,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var cacheEntriesAffected = entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None).Result;
 
-                Assert.Equal(expectedCacheEntriesAffected, cacheEntriesAffected);
+                Assert.Equal(1, cacheEntriesAffected);
             }
 
             [Fact]

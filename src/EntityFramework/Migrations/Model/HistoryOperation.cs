@@ -2,49 +2,41 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     /// <summary>
-    ///     Common base class for operations that affect the migrations history table.
+    ///     Operation representing DML changes to the migrations history table.
     ///     The migrations history table is used to store a log of the migrations that have been applied to the database.
     /// </summary>
-    public abstract class HistoryOperation : MigrationOperation
+    public class HistoryOperation : MigrationOperation
     {
-        private readonly string _table;
-        private readonly string _migrationId;
+        private readonly IEnumerable<InterceptedCommand> _commands;
 
         /// <summary>
         ///     Initializes a new instance of the HistoryOperation class.
         /// </summary>
-        /// <param name="table"> Name of the migrations history table. </param>
-        /// <param name="migrationId"> Name of the migration being affected. </param>
-        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
+        /// <param name="commands"> A sequence of commands representing the operations being applied to the history table. </param>
+        /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        protected HistoryOperation(string table, string migrationId, object anonymousArguments = null)
+        public HistoryOperation(IEnumerable<InterceptedCommand> commands, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            Contract.Requires(commands != null);
+            Contract.Requires(commands.Any());
 
-            _table = table;
-            _migrationId = migrationId;
+            _commands = commands;
         }
 
         /// <summary>
-        ///     Gets the name of the migrations history table.
+        ///     A sequence of commands representing the operations being applied to the history table.
         /// </summary>
-        public string Table
+        public IEnumerable<InterceptedCommand> Commands
         {
-            get { return _table; }
-        }
-
-        /// <summary>
-        ///     Gets the name of the migration being affected.
-        /// </summary>
-        public string MigrationId
-        {
-            get { return _migrationId; }
+            get { return _commands; }
         }
 
         /// <inheritdoc />

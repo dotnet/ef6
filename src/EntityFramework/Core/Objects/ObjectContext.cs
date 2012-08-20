@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects
     using System.ComponentModel;
     using System.Configuration;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -19,6 +20,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -80,6 +82,8 @@ namespace System.Data.Entity.Core.Objects
         private readonly Translator _translator;
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
+
+        private readonly IDbCommandInterceptor _commandInterceptor;
 
         private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
 
@@ -165,7 +169,8 @@ namespace System.Data.Entity.Core.Objects
             EntityConnection connection,
             bool isConnectionConstructor,
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
-            Translator translator = null)
+            Translator translator = null,
+            IDbCommandInterceptor commandInterceptor = null)
         {
             if (connection == null)
             {
@@ -222,10 +227,14 @@ namespace System.Data.Entity.Core.Objects
             {
                 ContextOptions.UseLegacyPreserveChangesBehavior = useV35Behavior;
             }
+
+            _commandInterceptor
+                = commandInterceptor
+                  ?? DbConfiguration.GetService<IDbCommandInterceptor>();
         }
 
         /// <summary>
-        ///     For testing porpuses only.
+        ///     For testing porpoises only.
         /// </summary>
         internal ObjectContext(
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
@@ -233,6 +242,17 @@ namespace System.Data.Entity.Core.Objects
         {
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
+            
+        }
+
+        internal ObjectContext(
+            ObjectStateManager objectStateManager,
+            IDbCommandInterceptor commandInterceptor,
+            IEntityAdapter adapter)
+        {
+            _objectStateManager = objectStateManager ?? new ObjectStateManager();
+            _commandInterceptor = commandInterceptor;
+            _adapter = adapter;
         }
 
         #endregion //Constructors
@@ -2633,19 +2653,25 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                EnsureConnection();
-                mustReleaseConnection = true;
-
                 // determine what transaction to enlist in
                 var needLocalTransaction = false;
 
-                if (null == connection.CurrentTransaction
-                    && !connection.EnlistedInUserTransaction)
+                var interceptingEnabled
+                    = (_commandInterceptor != null) && _commandInterceptor.IsEnabled;
+
+                if (!interceptingEnabled)
                 {
-                    // If there isn't a local transaction started by the user, we'll attempt to enlist 
-                    // on the current SysTx transaction so we don't need to construct a local
-                    // transaction.
-                    needLocalTransaction = (null == _lastTransaction);
+                    EnsureConnection();
+                    mustReleaseConnection = true;
+
+                    if (null == connection.CurrentTransaction
+                        && !connection.EnlistedInUserTransaction)
+                    {
+                        // If there isn't a local transaction started by the user, we'll attempt to enlist 
+                        // on the current SysTx transaction so we don't need to construct a local
+                        // transaction.
+                        needLocalTransaction = (null == _lastTransaction);
+                    }
                 }
 
                 // else the user already has his own local transaction going; user will do the abort or commit.
@@ -2658,7 +2684,7 @@ namespace System.Data.Entity.Core.Objects
                         localTransaction = connection.BeginTransaction();
                     }
 
-                    entriesAffected = _adapter.Update(ObjectStateManager);
+                    entriesAffected = _adapter.Update(ObjectStateManager, !interceptingEnabled);
 
                     if (null != localTransaction)
                     {
@@ -2748,7 +2774,8 @@ namespace System.Data.Entity.Core.Objects
                         localTransaction = connection.BeginTransaction();
                     }
 
-                    entriesAffected = await _adapter.UpdateAsync(ObjectStateManager, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    entriesAffected =
+                        await _adapter.UpdateAsync(ObjectStateManager, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
                     if (null != localTransaction)
                     {

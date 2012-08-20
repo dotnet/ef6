@@ -24,6 +24,9 @@ namespace System.Data.Entity.Migrations.History
 
     internal class HistoryRepository : RepositoryBase
     {
+        private static readonly string _productVersion =
+            Assembly.GetExecutingAssembly().GetInformationalVersion();
+
         private readonly IEnumerable<string> _schemas;
 
         private string _currentSchema;
@@ -318,20 +321,50 @@ namespace System.Data.Entity.Migrations.History
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
             Contract.Requires(model != null);
+            Contract.Ensures(Contract.Result<MigrationOperation>() != null);
 
-            return new InsertHistoryOperation(TableName, migrationId, new ModelCompressor().Compress(model));
+            using (var context = CreateContext())
+            {
+                context.History.Add(
+                    new HistoryRow
+                        {
+                            MigrationId = migrationId,
+                            Model = new ModelCompressor().Compress(model),
+                            ProductVersion = _productVersion
+                        });
+
+                using (var commandTracer = new CommandTracer())
+                {
+                    context.SaveChanges();
+
+                    return new HistoryOperation(commandTracer.Commands);
+                }
+            }
         }
 
         public virtual MigrationOperation CreateDeleteOperation(string migrationId)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            Contract.Ensures(Contract.Result<MigrationOperation>() != null);
 
-            return new DeleteHistoryOperation(TableName, migrationId);
-        }
+            using (var context = CreateContext())
+            {
+                var historyRow
+                    = new HistoryRow
+                          {
+                              MigrationId = migrationId
+                          };
 
-        private string TableName
-        {
-            get { return (CurrentSchema ?? _schemas.Last()) + "." + HistoryContext.TableName; }
+                context.History.Attach(historyRow);
+                context.History.Remove(historyRow);
+
+                using (var commandTracer = new CommandTracer())
+                {
+                    context.SaveChanges();
+
+                    return new HistoryOperation(commandTracer.Commands);
+                }
+            }
         }
 
         public virtual void BootstrapUsingEFProviderDdl(XDocument model)

@@ -2,11 +2,14 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Common;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using Xunit;
 
@@ -299,23 +302,47 @@ END CATCH"));
         {
             var migrationProvider = new SqlServerMigrationSqlGenerator();
 
+            var sqlCommand = new SqlCommand("insert Foo (Bar) values (p1)");
+            sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
+
             var insertHistoryOperation
-                = new InsertHistoryOperation(
-                    "Foo",
-                    "Migration1",
-                    new byte[] { 0xBE, 0xEF }
-                    );
+                = new HistoryOperation(new []
+                                           {
+                                               new InterceptedCommand(sqlCommand)
+                                           });
 
             var sql =
                 migrationProvider.Generate(
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            var expectedVersion = FileVersionInfo.GetVersionInfo(typeof(DbMigrator).Assembly.Location).ProductVersion;
+            Assert.True(
+                sql.Contains(
+                    "INSERT Foo (Bar) VALUES ('Baz')"));
+        }
+
+        [Fact]
+        public void Generate_can_output_delete_history_statement()
+        {
+            var migrationProvider = new SqlServerMigrationSqlGenerator();
+
+            var sqlCommand = new SqlCommand("delete Foo where Bar = p1");
+            sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
+
+            var insertHistoryOperation
+                = new HistoryOperation(new[]
+                                           {
+                                               new InterceptedCommand(sqlCommand)
+                                           });
+
+            var sql =
+                migrationProvider.Generate(
+                    new[] { insertHistoryOperation },
+                    "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(
                 sql.Contains(
-                    "INSERT INTO [Foo] ([MigrationId], [Model], [ProductVersion]) VALUES ('Migration1', 0xBEEF, '" + expectedVersion + "')"));
+                    "DELETE Foo WHERE Bar = 'Baz'"));
         }
 
         [Fact]

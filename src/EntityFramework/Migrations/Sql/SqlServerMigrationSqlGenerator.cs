@@ -638,46 +638,31 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="InsertHistoryOperation" />.
+        ///     Generates SQL for a <see cref="HistoryOperation" />.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name="insertHistoryOperation"> The operation to produce SQL for. </param>
-        protected virtual void Generate(InsertHistoryOperation insertHistoryOperation)
+        /// <param name="historyOperation"> The operation to produce SQL for. </param>
+        protected virtual void Generate(HistoryOperation historyOperation)
         {
-            Contract.Requires(insertHistoryOperation != null);
+            Contract.Requires(historyOperation != null);
 
             using (var writer = Writer())
             {
-                writer.Write("INSERT INTO ");
-                writer.Write(Name(insertHistoryOperation.Table));
-                writer.Write(" ([MigrationId], [Model], [ProductVersion])");
-                writer.Write(" VALUES (");
-                writer.Write(Generate(insertHistoryOperation.MigrationId));
-                writer.Write(", ");
-                writer.Write(Generate(insertHistoryOperation.Model));
-                writer.Write(", ");
-                writer.Write(Generate(insertHistoryOperation.ProductVersion));
-                writer.Write(")");
+                historyOperation.Commands.Each(
+                    c =>
+                        {
+                            var sql
+                                = c.CommandText
+                                    .Replace("insert ", "INSERT ")
+                                    .Replace("values ", "VALUES ")
+                                    .Replace("delete ", "DELETE ")
+                                    .Replace("where ", "WHERE "); // prettify
 
-                Statement(writer);
-            }
-        }
+                            // inline params
+                            c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
 
-        /// <summary>
-        ///     Generates SQL for a <see cref="DeleteHistoryOperation" />.
-        ///     Generated SQL should be added using the Statement method.
-        /// </summary>
-        /// <param name="deleteHistoryOperation"> The operation to produce SQL for. </param>
-        protected virtual void Generate(DeleteHistoryOperation deleteHistoryOperation)
-        {
-            Contract.Requires(deleteHistoryOperation != null);
-
-            using (var writer = Writer())
-            {
-                writer.Write("DELETE FROM ");
-                writer.Write(Name(deleteHistoryOperation.Table));
-                writer.Write(" WHERE [MigrationId] = ");
-                writer.Write(Generate(deleteHistoryOperation.MigrationId));
+                            writer.Write(sql);
+                        });
 
                 Statement(writer);
             }

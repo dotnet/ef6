@@ -243,13 +243,12 @@
     <Compile Include="Migrations\Model\ColumnModelTests.cs" />
     <Compile Include="Migrations\Model\CreateIndexOperationTests.cs" />
     <Compile Include="Migrations\Model\CreateTableOperationTests.cs" />
-    <Compile Include="Migrations\Model\DeleteHistoryOperationTests.cs" />
+    <Compile Include="Migrations\Model\HistoryOperationTests.cs" />
     <Compile Include="Migrations\Model\DropColumnOperationTests.cs" />
     <Compile Include="Migrations\Model\DropForeignKeyOperationTests.cs" />
     <Compile Include="Migrations\Model\DropIndexOperationTests.cs" />
     <Compile Include="Migrations\Model\DropPrimaryKeyOperationTests.cs" />
     <Compile Include="Migrations\Model\DropTableOperationTests.cs" />
-    <Compile Include="Migrations\Model\InsertHistoryOperationTests.cs" />
     <Compile Include="Migrations\Model\MoveTableOperationTests.cs" />
     <Compile Include="Migrations\Model\RenameColumnOperationTests.cs" />
     <Compile Include="Migrations\Model\RenameTableOperationTests.cs" />

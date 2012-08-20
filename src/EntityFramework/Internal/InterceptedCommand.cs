@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    internal class InterceptedCommand
+    public sealed class InterceptedCommand
     {
         private readonly string _commandText;
         private readonly DbParameter[] _parameters;

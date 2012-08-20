@@ -1318,7 +1318,6 @@
     <Compile Include="Migrations\Model\ColumnModel.cs" />
     <Compile Include="Migrations\Model\CreateIndexOperation.cs" />
     <Compile Include="Migrations\Model\CreateTableOperation.cs" />
-    <Compile Include="Migrations\Model\DeleteHistoryOperation.cs" />
     <Compile Include="Migrations\Model\DropColumnOperation.cs" />
     <Compile Include="Migrations\Model\DropForeignKeyOperation.cs" />
     <Compile Include="Migrations\Model\DropIndexOperation.cs" />
@@ -1327,7 +1326,6 @@
     <Compile Include="Migrations\Model\ForeignKeyOperation.cs" />
     <Compile Include="Migrations\Model\HistoryOperation.cs" />
     <Compile Include="Migrations\Model\IndexOperation.cs" />
-    <Compile Include="Migrations\Model\InsertHistoryOperation.cs" />
     <Compile Include="Migrations\Model\MigrationOperation.cs" />
     <Compile Include="Migrations\Model\MoveTableOperation.cs" />
     <Compile Include="Migrations\Model\PrimaryKeyOperation.cs" />

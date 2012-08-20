@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;
-    using System.Threading;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -24,8 +24,10 @@ namespace System.Data.Entity.Core.Objects
                 var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/);
 
                 objectContextMock.Object.SaveChanges();
-                var expectedSavedOptions = SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave;
-                objectContextMock.Verify(m => m.SaveChanges(expectedSavedOptions), Times.Once());
+
+                objectContextMock.Verify(
+                    m => m.SaveChanges(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave),
+                    Times.Once());
             }
 
             [Fact]
@@ -44,6 +46,31 @@ namespace System.Data.Entity.Core.Objects
                 objectContext.SaveChanges(SaveOptions.DetectChangesBeforeSave);
 
                 objectStateManagerMock.Verify(m => m.DetectChanges(), Times.Once());
+            }
+
+            [Fact]
+            public void Does_not_ensure_connection_when_intercepting()
+            {
+                var mockObjectStateManager = new Mock<ObjectStateManager>();
+                mockObjectStateManager.Setup(osm => osm.GetObjectStateEntriesCount(It.IsAny<EntityState>())).Returns(1);
+
+                var mockCommandInterceptor = new Mock<IDbCommandInterceptor>();
+                mockCommandInterceptor.SetupGet(ci => ci.IsEnabled).Returns(true);
+
+                var mockEntityAdapter = new Mock<IEntityAdapter>();
+
+                var mockObjectContext
+                    = new Mock<ObjectContext>(
+                        mockObjectStateManager.Object, mockCommandInterceptor.Object, mockEntityAdapter.Object)
+                          {
+                              CallBase = true
+                          };
+                mockObjectContext.SetupGet(oc => oc.Connection).Returns(new Mock<EntityConnection>().Object);
+
+                mockObjectContext.Object.SaveChanges(SaveOptions.None);
+
+                mockObjectContext.Verify(oc => oc.EnsureConnection(), Times.Never());
+                mockEntityAdapter.Verify(ea => ea.Update(mockObjectStateManager.Object, false));
             }
 
             [Fact]
@@ -68,11 +95,11 @@ namespace System.Data.Entity.Core.Objects
                 var mockObjectContext = ObjectContextForMock.Create();
                 var mockServiceProvider = (IServiceProvider)((EntityConnection)mockObjectContext.Connection).StoreProviderFactory;
                 var entityAdapterMock = Mock.Get((IEntityAdapter)mockServiceProvider.GetService(typeof(IEntityAdapter)));
-                entityAdapterMock.Setup(m => m.Update(It.IsAny<IEntityStateManager>())).Verifiable();
+                entityAdapterMock.Setup(m => m.Update(It.IsAny<IEntityStateManager>(), true)).Verifiable();
 
                 var entriesAffected = mockObjectContext.SaveChanges(SaveOptions.None);
 
-                entityAdapterMock.Verify(m => m.Update(It.IsAny<IEntityStateManager>()), Times.Never());
+                entityAdapterMock.Verify(m => m.Update(It.IsAny<IEntityStateManager>(), true), Times.Never());
                 Assert.Equal(0, entriesAffected);
             }
 

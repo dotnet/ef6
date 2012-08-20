@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Persists the changes made in the entity cache to the store.
         /// </summary>
-        Int32 Update(IEntityStateManager cache);
+        Int32 Update(IEntityStateManager cache, bool throwOnClosedConnection = true);
 
         /// <summary>
         ///     An asynchronous version of Update, which

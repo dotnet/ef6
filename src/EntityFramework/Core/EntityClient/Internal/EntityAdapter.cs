@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -63,9 +64,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// </summary>
         /// <param name="entityCache"> Entity cache containing changes to persist to the store. </param>
         /// <returns> Number of cache entries affected by the udpate. </returns>
-        public int Update(IEntityStateManager entityCache)
+        public int Update(IEntityStateManager entityCache, bool throwOnClosedConnection = true)
         {
-            return Update(entityCache, 0, (ut) => ut.Update());
+            return Update(entityCache, 0, ut => ut.Update(), throwOnClosedConnection);
         }
 
         /// <summary>
@@ -77,10 +78,14 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <returns> A Task containing the number of cache entries affected by the update. </returns>
         public Task<int> UpdateAsync(IEntityStateManager entityCache, CancellationToken cancellationToken)
         {
-            return Update(entityCache, Task.FromResult(0), (ut) => ut.UpdateAsync(cancellationToken));
+            return Update(entityCache, Task.FromResult(0), ut => ut.UpdateAsync(cancellationToken), true);
         }
 
-        private T Update<T>(IEntityStateManager entityCache, T noChangesResult, Func<UpdateTranslator, T> updateFunction)
+        private T Update<T>(
+            IEntityStateManager entityCache,
+            T noChangesResult,
+            Func<UpdateTranslator, T> updateFunction,
+            bool throwOnClosedConnection)
         {
             if (!IsStateManagerDirty(entityCache))
             {
@@ -101,13 +106,14 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             }
 
             // Check that the connection is open before we proceed
-            if (ConnectionState.Open
-                != _connection.State)
+            if (throwOnClosedConnection
+                && (ConnectionState.Open != _connection.State))
             {
                 throw Error.EntityClient_ClosedConnectionForUpdate();
             }
 
             var updateTranslator = _updateTranslatorFactory(entityCache, this);
+
             return updateFunction(updateTranslator);
         }
 
@@ -119,17 +125,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         private static bool IsStateManagerDirty(IEntityStateManager entityCache)
         {
             Debug.Assert(null != entityCache);
-            var hasChanges = false;
 
             // this call to GetCacheEntries is constant time (the ObjectStateManager implementation
             // maintains an explicit list of entries in each state)
-            foreach (var entry in entityCache.GetEntityStateEntries(EntityState.Added | EntityState.Deleted | EntityState.Modified))
-            {
-                hasChanges = true;
-                break;
-            }
-
-            return hasChanges;
+            return entityCache.GetEntityStateEntries(EntityState.Added | EntityState.Deleted | EntityState.Modified).Any();
         }
     }
 }
