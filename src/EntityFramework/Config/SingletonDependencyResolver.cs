@@ -13,13 +13,14 @@ namespace System.Data.Entity.Config
     ///     This class is immutable such that instances can be accessed by multiple threads at the same time.
     /// </remarks>
     public class SingletonDependencyResolver<T> : IDbDependencyResolver
+        where T : class
     {
         private readonly T _singletonInstance;
         private readonly object _key;
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
-        ///     regardless of the name passed to the Get method.
+        ///     regardless of the key passed to the Get method.
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
         public SingletonDependencyResolver(T singletonInstance)
@@ -29,10 +30,10 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
-        ///     if the given name matches exactly the name passed to the Get method.
+        ///     if the given key matches exactly the key passed to the Get method.
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
-        /// <para> The name of the dependency to resolve. </para>
+        /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
         public SingletonDependencyResolver(T singletonInstance, object key)
         {
             Contract.Requires(singletonInstance != null);
@@ -45,8 +46,8 @@ namespace System.Data.Entity.Config
         public object GetService(Type type, object key)
         {
             return ((type == typeof(T))
-                    && (_key == null || key == _key))
-                       ? (object)_singletonInstance
+                    && (_key == null || Equals(key, _key)))
+                       ? _singletonInstance
                        : null;
         }
 

@@ -3,44 +3,42 @@
 namespace System.Data.Entity.Config
 {
     using System.Diagnostics.Contracts;
-    using System.Threading;
 
     /// <summary>
-    ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it returns
-    ///     a per-thread instance and does nothing on Release.
+    ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it always returns
+    ///     a new instance and does nothing on Release.
     /// </summary>
     /// <typeparam name="T"> The type that defines the contract for the dependency that will be resolved. </typeparam>
     /// <remarks>
     ///     This class is immutable such that instances can be accessed by multiple threads at the same time.
     /// </remarks>
-    public sealed class ThreadLocalDependencyResolver<T> : IDbDependencyResolver, IDisposable
+    public class TransientDependencyResolver<T> : IDbDependencyResolver
         where T : class
     {
-        private readonly ThreadLocal<T> _threadLocal;
+        private readonly Func<T> _activator;
         private readonly object _key;
 
         /// <summary>
-        ///     Constructs a new resolver that will return the given instance for the contract type
-        ///     regardless of the key passed to the Get method.
+        ///     Constructs a new resolver that will return the given instance for the contract type.
         /// </summary>
-        /// <param name="valueFactory"> The <see cref="T:System.Func{T}" /> invoked to produce a new per-thread instance of the target service. </param>
-        public ThreadLocalDependencyResolver(Func<T> valueFactory)
-            : this(valueFactory, null)
+        /// <param name="activator"> The <see cref="T:System.Func{T}" /> invoked to produce a new transient instance of the target service. </param>
+        public TransientDependencyResolver(Func<T> activator)
+            : this(activator, null)
         {
-            Contract.Requires(valueFactory != null);
+            Contract.Requires(activator != null);
         }
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
         ///     if the given key matches exactly the key passed to the Get method.
         /// </summary>
-        /// <param name="valueFactory"> The <see cref="T:System.Func{T}" /> invoked to produce a new per-thread instance of the target service. </param>
+        /// <param name="activator"> The <see cref="T:System.Func{T}" /> invoked to produce a new transient instance of the target service. </param>
         /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
-        public ThreadLocalDependencyResolver(Func<T> valueFactory, object key)
+        public TransientDependencyResolver(Func<T> activator, object key)
         {
-            Contract.Requires(valueFactory != null);
+            Contract.Requires(activator != null);
 
-            _threadLocal = new ThreadLocal<T>(valueFactory);
+            _activator = activator;
             _key = key;
         }
 
@@ -49,18 +47,13 @@ namespace System.Data.Entity.Config
         {
             return ((type == typeof(T))
                     && (_key == null || Equals(key, _key)))
-                       ? _threadLocal.Value
+                       ? _activator()
                        : null;
         }
 
         /// <inheritdoc />
         public void Release(object service)
         {
-        }
-
-        public void Dispose()
-        {
-            _threadLocal.Dispose();
         }
     }
 }

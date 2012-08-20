@@ -6,16 +6,15 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using System.Windows.Media;
     using FunctionalTests.Model;
@@ -1066,13 +1065,13 @@ namespace FunctionalTests
 
     public class Repro150634_Dependent : Repro150634_BaseDependent
     {
-        public System.Int32 DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+        public Int32 DependentForeignKeyPropertyNotFromConvention1 { get; set; }
         public Repro150634_Principal PrincipalNavigation { get; set; }
     }
 
     public class Repro150634_DerivedDependent : Repro150634_Dependent
     {
-        public System.Int32 ExtraProp { get; set; }
+        public Int32 ExtraProp { get; set; }
     }
 
     public class Repro150634_Principal
@@ -1148,14 +1147,14 @@ namespace FunctionalTests
 
     public class Repro143351_A1
     {
-        [DatabaseGeneratedAttribute(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
 
         public string A1Col1 { get; set; }
         public byte[] A1Col2 { get; set; }
     }
 
-    [TableAttribute("NewA2TableName")]
+    [Table("NewA2TableName")]
     public class Repro143351_A2 : Repro143351_A1
     {
         public byte[] A2Col1 { get; set; }
@@ -1163,7 +1162,7 @@ namespace FunctionalTests
 
     public class Repro143351_A3 : Repro143351_A2
     {
-        public System.DateTime A3Col1 { get; set; }
+        public DateTime A3Col1 { get; set; }
     }
 
     public class Repro143351_A4 : Repro143351_A1

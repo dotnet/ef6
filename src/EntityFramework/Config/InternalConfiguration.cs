@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Resources;

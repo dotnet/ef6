@@ -313,7 +313,7 @@
     <Compile Include="TestModels\AllTypeKeysModel\LongKeyEntity.cs" />
     <Compile Include="TestModels\AllTypeKeysModel\ShortKeyEntity.cs" />
     <Compile Include="TestModels\AllTypeKeysModel\TimeSpanKeyEntity.cs" />
-    <Compile Include="ProductivityApi\changetrackingproxytests.cs" />
+    <Compile Include="ProductivityApi\ChangeTrackingProxyTests.cs" />
     <Compile Include="ProductivityApi\ComplexTypeTests.cs" />
     <Compile Include="TestModels\ConcurrencyModel\Chassis.cs" />
     <Compile Include="TestModels\ConcurrencyModel\ConcurrencyModelInitializer.cs" />

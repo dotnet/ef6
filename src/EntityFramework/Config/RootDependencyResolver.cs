@@ -4,6 +4,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Sql;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -18,24 +19,30 @@ namespace System.Data.Entity.Config
         private readonly DatabaseInitializerResolver _databaseInitializerResolver;
 
         public RootDependencyResolver()
-            : this(new MigrationsConfigurationResolver(), new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
+            : this(new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
         {
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000: Dispose objects before losing scope")]
         public RootDependencyResolver(
-            MigrationsConfigurationResolver migrationsConfigurationResolver,
             DefaultProviderServicesResolver defaultProviderServicesResolver,
             DatabaseInitializerResolver databaseInitializerResolver)
         {
-            Contract.Requires(migrationsConfigurationResolver != null);
             Contract.Requires(defaultProviderServicesResolver != null);
             Contract.Requires(databaseInitializerResolver != null);
 
             _databaseInitializerResolver = databaseInitializerResolver;
 
             _resolvers.Add(_databaseInitializerResolver);
-            _resolvers.Add(migrationsConfigurationResolver);
+
+            _resolvers.Add(
+                new TransientDependencyResolver<MigrationSqlGenerator>(
+                    () => new SqlServerMigrationSqlGenerator(), "System.Data.SqlClient"));
+
+            _resolvers.Add(
+                new TransientDependencyResolver<MigrationSqlGenerator>(
+                    () => new SqlCeMigrationSqlGenerator(), "System.Data.SqlServerCe.4.0"));
+
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
             _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));

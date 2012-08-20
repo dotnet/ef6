@@ -136,6 +136,7 @@
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
     <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
+    <Compile Include="Config\TransientDependencyResolver.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolver.cs" />
     <Compile Include="Config\DatabaseInitializerResolver.cs" />
     <Compile Include="Config\DbConfiguration.cs" />
@@ -147,7 +148,6 @@
     <Compile Include="Config\IDbDependencyResolver.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensions.cs" />
     <Compile Include="Config\InternalConfiguration.cs" />
-    <Compile Include="Config\MigrationsConfigurationResolver.cs" />
     <Compile Include="Config\ProviderServicesFactory.cs" />
     <Compile Include="Config\ResolverChain.cs" />
     <Compile Include="Config\RootDependencyResolver.cs" />

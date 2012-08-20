@@ -1111,7 +1111,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the provider name bsing used either using a cached value or getting it from
+        ///     Gets the provider name being used either using a cached value or getting it from
         ///     the DbConnection in use.
         /// </summary>
         public virtual string ProviderName

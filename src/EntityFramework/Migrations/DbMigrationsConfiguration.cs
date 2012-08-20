@@ -27,7 +27,6 @@ namespace System.Data.Entity.Migrations
         private Type _contextType;
         private Assembly _migrationsAssembly;
         private EdmModelDiffer _modelDiffer = new EdmModelDiffer();
-
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = "Migrations";
         private readonly Lazy<IDbDependencyResolver> _resolver;
@@ -38,9 +37,6 @@ namespace System.Data.Entity.Migrations
         public DbMigrationsConfiguration()
             : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver))
         {
-            SetSqlGenerator("System.Data.SqlClient", new SqlServerMigrationSqlGenerator());
-            SetSqlGenerator("System.Data.SqlServerCe.4.0", new SqlCeMigrationSqlGenerator());
-
             CodeGenerator = new CSharpMigrationCodeGenerator();
         }
 
@@ -83,9 +79,12 @@ namespace System.Data.Entity.Migrations
             Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
 
             MigrationSqlGenerator migrationSqlGenerator;
+
             if (!_sqlGenerators.TryGetValue(providerInvariantName, out migrationSqlGenerator))
             {
-                migrationSqlGenerator = _resolver.Value.GetService<MigrationSqlGenerator>(providerInvariantName);
+                migrationSqlGenerator
+                    = _resolver.Value.GetService<MigrationSqlGenerator>(providerInvariantName);
+
                 if (migrationSqlGenerator == null)
                 {
                     throw Error.NoSqlGeneratorForProvider(providerInvariantName);

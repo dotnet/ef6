@@ -105,7 +105,7 @@
     <Compile Include="Config\DefaultProviderServicesResolverTests.cs" />
     <Compile Include="Config\IDbDependencyResolverExtensionsTests.cs" />
     <Compile Include="Config\InternalConfigurationTests.cs" />
-    <Compile Include="Config\MigrationsConfigurationResolverTests.cs" />
+    <Compile Include="Config\TransientDependencyResolverTests.cs" />
     <Compile Include="Config\ProviderServicesFactoryTests.cs" />
     <Compile Include="Config\ResolverChainTests.cs" />
     <Compile Include="Config\RootDependencyResolverTests.cs" />
