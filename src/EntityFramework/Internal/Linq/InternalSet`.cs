@@ -74,6 +74,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         public TEntity Find(params object[] keyValues)
         {
+            InternalContext.ObjectContext.AsyncMonitor.EnsureNotEntered();
+
             // This DetectChanges is useful in the case where objects are added to the graph and then the user
             // attempts to find one of those added objects.
             InternalContext.DetectChanges();
@@ -118,7 +120,14 @@ namespace System.Data.Entity.Internal.Linq
         /// <exception cref="InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public async Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        public Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            InternalContext.ObjectContext.AsyncMonitor.EnsureNotEntered();
+
+            return FindInternalAsync(cancellationToken, keyValues);
+        }
+
+        private async Task<TEntity> FindInternalAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
             // This DetectChanges is useful in the case where objects are added to the graph and then the user
             // attempts to find one of those added objects.
@@ -691,6 +700,8 @@ namespace System.Data.Entity.Internal.Linq
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
 
+            InternalContext.ObjectContext.AsyncMonitor.EnsureNotEntered();
+
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
@@ -731,6 +742,8 @@ namespace System.Data.Entity.Internal.Linq
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
 
+            InternalContext.ObjectContext.AsyncMonitor.EnsureNotEntered();
+
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
@@ -738,8 +751,8 @@ namespace System.Data.Entity.Internal.Linq
                 async cancellationToken =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters).ConfigureAwait(
-                                      continueOnCapturedContext: false);
+                                  sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters)
+                                                                              .ConfigureAwait(continueOnCapturedContext: false);
 
                               try
                               {

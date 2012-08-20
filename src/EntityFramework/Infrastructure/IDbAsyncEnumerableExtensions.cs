@@ -49,13 +49,19 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="action"> The action to be executed. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task representing the asynchronous operation. </returns>
-        internal static async Task ForEachAsync<T>(
+        internal static Task ForEachAsync<T>(
             this IDbAsyncEnumerable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
             DebugCheck.NotNull(source);
             DebugCheck.NotNull(action);
 
-            using (var enumerator = source.GetAsyncEnumerator())
+            return ForEachAsync(source.GetAsyncEnumerator(), action, cancellationToken);
+        }
+
+        private static async Task ForEachAsync<T>(
+            IDbAsyncEnumerator<T> enumerator, Action<T> action, CancellationToken cancellationToken)
+        {
+            using (enumerator)
             {
                 if (await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
@@ -126,13 +132,30 @@ namespace System.Data.Entity.Infrastructure
         ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
+        internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
             DebugCheck.NotNull(source);
 
+            var tcs = new TaskCompletionSource<List<T>>();
             var list = new List<T>();
-            await source.ForEachAsync(list.Add, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            return list;
+            source.ForEachAsync(list.Add, cancellationToken).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    tcs.TrySetException(t.Exception.InnerExceptions);
+                }
+                else if (t.IsCanceled)
+                {
+                    tcs.TrySetCanceled();
+                }
+                else
+                {
+                    tcs.TrySetResult(list);
+                }
+            }, TaskContinuationOptions.ExecuteSynchronously);
+
+            return tcs.Task;
+
         }
 
         /// <summary>

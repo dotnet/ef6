@@ -5313,4 +5313,7 @@
   <data name="EdmProperty_InvalidPropertyType">
     <value>A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType.</value>
   </data>
+  <data name="ConcurrentMethodInvocation" xml:space="preserve">
+    <value>A concurrent method invocation has been detected. Ensure that any asynchronous methods invoked on this context have finished executing before calling any other method on the context. Also don't use the same context instance across different threads.</value>
+  </data>
 </root>

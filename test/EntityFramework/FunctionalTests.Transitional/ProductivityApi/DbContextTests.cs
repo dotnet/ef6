@@ -871,7 +871,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         public void SaveChanges_bubbles_UpdateException()
         {
             SaveChanges_bubbles_UpdateException_implementation((c) => c.SaveChanges());
@@ -880,7 +879,6 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
         public void SaveChangesAsync_bubbles_UpdateException()
         {
             SaveChanges_bubbles_UpdateException_implementation(
@@ -893,15 +891,18 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var prod = new Product
-                               {
-                                   Name = "Wallaby Sausages",
-                                   CategoryId = "AUSSIE FOODS"
-                               };
-                context.Products.Add(prod);
+                using (context.Database.BeginTransaction())
+                {
+                    var prod = new Product
+                                   {
+                                       Name = "Wallaby Sausages",
+                                       CategoryId = "AUSSIE FOODS"
+                                   };
+                    context.Products.Add(prod);
 
-                Assert.Throws<DbUpdateException>(() => saveChanges(context)).ValidateMessage(
-                    "Update_GeneralExecutionException");
+                    Assert.Throws<DbUpdateException>(() => saveChanges(context)).ValidateMessage(
+                        "Update_GeneralExecutionException");
+                }
             }
         }
 

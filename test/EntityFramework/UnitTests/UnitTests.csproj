@@ -286,6 +286,7 @@
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
+    <Compile Include="Internal\ThrowingMonitorTests.cs" />
     <Compile Include="Migrations\AddMigrationCommandTests.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />

@@ -90,6 +90,8 @@ namespace System.Data.Entity.Core.Objects
 
         private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
 
+        private readonly ThrowingMonitor _asyncMonitor = new ThrowingMonitor();
+
         #endregion Fields
 
         #region Constructors
@@ -383,7 +385,15 @@ namespace System.Data.Entity.Core.Objects
         internal bool InMaterialization { get; set; }
 
         /// <summary>
-        ///     Get <see cref="ObjectContextOptions" /> instance that contains options
+        ///     Indicates whether there is an asynchronous method currently running that uses this instance
+        /// </summary>
+        internal ThrowingMonitor AsyncMonitor
+        {
+            get { return _asyncMonitor; }
+        }
+
+        /// <summary>
+        ///     Get <see cref="ObjectContextOptions" /> instance that contains options 
         ///     that affect the behavior of the ObjectContext.
         /// </summary>
         /// <value>
@@ -2134,6 +2144,8 @@ namespace System.Data.Entity.Core.Objects
             // but not in the other, so we need to do that check before we get to this common method
             DebugCheck.NotNull(collection);
 
+            AsyncMonitor.EnsureNotEntered();
+
             var openedConnection = false;
 
             try
@@ -2448,6 +2460,8 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries in the ObjectStateManager processed by SaveChanges. </returns>
         public virtual int SaveChanges(SaveOptions options)
         {
+            AsyncMonitor.EnsureNotEntered();
+
             PrepareToSaveChanges(options);
 
             var entriesAffected =
@@ -2485,26 +2499,41 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="options"> Describes behavior options of SaveChanges </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
         /// <returns> A task representing the asynchronous operation </returns>
-        public virtual async Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
+        public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
         {
-            PrepareToSaveChanges(options);
+            AsyncMonitor.EnsureNotEntered();
 
-            var entriesAffected =
-                ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
+            return SaveChangesInternalAsync(options, cancellationToken);
+        }
 
-            // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
-            if (0 < entriesAffected)
+        private async Task<Int32> SaveChangesInternalAsync(SaveOptions options, CancellationToken cancellationToken)
+        {
+            AsyncMonitor.Enter();
+            try
             {
-                var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-                entriesAffected = await executionStrategy.ExecuteAsync(
-                    () => SaveChangesToStoreAsync(
-                        options,
-                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken))
-                                                         .ConfigureAwait(continueOnCapturedContext: false);
-            }
+                PrepareToSaveChanges(options);
 
-            ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            return entriesAffected;
+                var entriesAffected =
+                    ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
+
+                // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
+                if (0 < entriesAffected)
+                {
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+                    entriesAffected = await executionStrategy.ExecuteAsync(
+                        () => SaveChangesToStoreAsync(
+                            options,
+                            /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken))
+                                                             .ConfigureAwait(continueOnCapturedContext: false);
+                }
+
+                ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+                return entriesAffected;
+            }
+            finally
+            {
+                AsyncMonitor.Exit();
+            }
         }
 
 #endif
@@ -2746,7 +2775,7 @@ namespace System.Data.Entity.Core.Objects
                     localTransaction.Commit();
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
-                
+
                 if (releaseConnectionOnSuccess)
                 {
                     ReleaseConnection();
@@ -2936,6 +2965,8 @@ namespace System.Data.Entity.Core.Objects
             Check.NotNull(parameters, "parameters");
             Check.NotEmpty(functionName, "function");
 
+            AsyncMonitor.EnsureNotEntered();
+
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
             var returnTypeCount = Math.Max(1, functionImport.ReturnParameters.Count);
@@ -2981,6 +3012,8 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(parameters, "parameters");
             Check.NotEmpty(functionName, "function");
+
+            AsyncMonitor.EnsureNotEntered();
 
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
@@ -3427,6 +3460,8 @@ namespace System.Data.Entity.Core.Objects
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            AsyncMonitor.EnsureNotEntered();
+
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
@@ -3461,13 +3496,29 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
+            AsyncMonitor.EnsureNotEntered();
+            return ExecuteStoreCommandInternalAsync(commandText, cancellationToken, parameters);
+        }
+
+        private async Task<int> ExecuteStoreCommandInternalAsync(
+           string commandText, CancellationToken cancellationToken, params object[] parameters)
+        {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-            return executionStrategy.ExecuteAsync(
-                () => ExecuteInTransactionAsync(
-                    () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
-                          /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                          /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken),
-                cancellationToken);
+            AsyncMonitor.Enter();
+
+            try
+            {
+                return await executionStrategy.ExecuteAsync(
+                    () => ExecuteInTransactionAsync(
+                        () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
+                        /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                        /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken),
+                    cancellationToken);
+            }
+            finally
+            {
+                AsyncMonitor.Exit();
+            }
         }
 
 #endif
@@ -3550,6 +3601,8 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<TElement> ExecuteStoreQueryReliably<TElement>(
             string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
+            AsyncMonitor.EnsureNotEntered();
+
             // Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
@@ -3664,8 +3717,16 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
+            AsyncMonitor.EnsureNotEntered();
+
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            if (executionStrategy.RetriesOnFailure)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return ExecuteStoreQueryReliablyAsync<TElement>(
-                commandText, /*entitySetName:*/null, ExecutionOptions.Default, cancellationToken, parameters);
+                commandText, /*entitySetName:*/null, ExecutionOptions.Default, cancellationToken, executionStrategy, parameters);
         }
 
         /// <summary>
@@ -3684,8 +3745,17 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, ExecutionOptions executionOptions, params object[] parameters)
         {
+            AsyncMonitor.EnsureNotEntered();
+
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            if (executionStrategy.RetriesOnFailure
+                && executionOptions.Streaming)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return ExecuteStoreQueryReliablyAsync<TElement>(
-                commandText, /*entitySetName:*/null, executionOptions, CancellationToken.None, parameters);
+                commandText, /*entitySetName:*/null, executionOptions, CancellationToken.None, executionStrategy, parameters);
         }
 
         /// <summary>
@@ -3705,8 +3775,17 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, ExecutionOptions executionOptions, CancellationToken cancellationToken, params object[] parameters)
         {
+            AsyncMonitor.EnsureNotEntered();
+
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            if (executionStrategy.RetriesOnFailure
+                && executionOptions.Streaming)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return ExecuteStoreQueryReliablyAsync<TElement>(
-                commandText, /*entitySetName:*/null, executionOptions, cancellationToken, parameters);
+                commandText, /*entitySetName:*/null, executionOptions, cancellationToken, executionStrategy, parameters);
         }
 
         /// <summary>
@@ -3724,9 +3803,9 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
-            string commandText, string entitySetName, ExecutionOptions executionOption, params object[] parameters)
+            string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
-            return ExecuteStoreQueryAsync<TElement>(commandText, entitySetName, executionOption, CancellationToken.None, parameters);
+            return ExecuteStoreQueryAsync<TElement>(commandText, entitySetName, executionOptions, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -3745,44 +3824,61 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
-            string commandText, string entitySetName, ExecutionOptions executionOption, CancellationToken cancellationToken,
-            params object[] parameters)
-        {
-            Check.NotEmpty(entitySetName, "entitySetName");
-
-            return ExecuteStoreQueryReliablyAsync<TElement>(
-                commandText, entitySetName, executionOption, cancellationToken, parameters);
-        }
-
-        private Task<ObjectResult<TElement>> ExecuteStoreQueryReliablyAsync<TElement>(
             string commandText, string entitySetName, ExecutionOptions executionOptions, CancellationToken cancellationToken,
             params object[] parameters)
         {
-            // Ensure the assembly containing the entity's CLR type
-            // is loaded into the workspace. If the schema types are not loaded
-            // metadata, cache & query would be unable to reason about the type. We
-            // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
-            // auto-load the user's calling assembly and its referenced assemblies.
-            // If the entities in the user's result spans multiple assemblies, the
-            // user must manually call LoadFromAssembly. *GetCallingAssembly returns
-            // the assembly of the method that invoked the currently executing method.
-            MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
+            Check.NotEmpty(entitySetName, "entitySetName");
+            AsyncMonitor.EnsureNotEntered();
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
             }
 
-            return executionStrategy.ExecuteAsync(
-                () => ExecuteInTransactionAsync(
-                    () => ExecuteStoreQueryInternalAsync<TElement>(
-                        commandText, entitySetName, executionOptions, cancellationToken, parameters),
-                          /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                          /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming, cancellationToken),
-                cancellationToken);
+            return ExecuteStoreQueryReliablyAsync<TElement>(
+                commandText, entitySetName, executionOptions, cancellationToken, executionStrategy, parameters);
+        }
+
+        private async Task<ObjectResult<TElement>> ExecuteStoreQueryReliablyAsync<TElement>(
+            string commandText, string entitySetName, ExecutionOptions executionOptions, CancellationToken cancellationToken,
+            IExecutionStrategy executionStrategy, params object[] parameters)
+        {
+            if (executionOptions.MergeOption != MergeOption.NoTracking)
+            {
+                AsyncMonitor.Enter();
+            }
+
+            try
+            {
+                // Ensure the assembly containing the entity's CLR type
+                // is loaded into the workspace. If the schema types are not loaded
+                // metadata, cache & query would be unable to reason about the type. We
+                // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
+                // auto-load the user's calling assembly and its referenced assemblies.
+                // If the entities in the user's result spans multiple assemblies, the
+                // user must manually call LoadFromAssembly. *GetCallingAssembly returns
+                // the assembly of the method that invoked the currently executing method.
+                MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
+                
+                return await executionStrategy.ExecuteAsync(
+                    () => ExecuteInTransactionAsync(
+                        () => ExecuteStoreQueryInternalAsync<TElement>(
+                            commandText, entitySetName, executionOptions, cancellationToken, parameters),
+                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                              /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
+                        cancellationToken),
+                    cancellationToken);
+
+            }
+            finally
+            {
+                if (executionOptions.MergeOption != MergeOption.NoTracking)
+                {
+                    AsyncMonitor.Exit();
+                }
+            }
         }
 
         private async Task<ObjectResult<TElement>> ExecuteStoreQueryInternalAsync<TElement>(

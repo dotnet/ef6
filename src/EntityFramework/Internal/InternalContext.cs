@@ -416,29 +416,48 @@ namespace System.Data.Entity.Internal
 
 #if !NET40
 
-        public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            try
+            if (ValidateOnSaveEnabled)
             {
-                if (ValidateOnSaveEnabled)
+                var validationResults = Owner.GetValidationErrors();
+                if (validationResults.Any())
                 {
-                    var validationResults = Owner.GetValidationErrors();
-                    if (validationResults.Any())
-                    {
-                        throw new DbEntityValidationException(
-                            Strings.DbEntityValidationException_ValidationFailed, validationResults);
-                    }
+                    throw new DbEntityValidationException(
+                        Strings.DbEntityValidationException_ValidationFailed, validationResults);
                 }
+            }
 
-                var shouldDetectChanges = AutoDetectChangesEnabled && !ValidateOnSaveEnabled;
-                var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
-                                  (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
-                return await ObjectContext.SaveChangesAsync(saveOptions, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            }
-            catch (UpdateException ex)
-            {
-                throw WrapUpdateException(ex);
-            }
+            var tcs = new TaskCompletionSource<int>();
+            var shouldDetectChanges = AutoDetectChangesEnabled && !ValidateOnSaveEnabled;
+            var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
+                              (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
+            ObjectContext.SaveChangesAsync(saveOptions, cancellationToken).ContinueWith(
+                t =>
+                    {
+                        if (t.IsFaulted)
+                        {
+                            var wrappedExceptions = t.Exception.InnerExceptions.Select(
+                                ex =>
+                                    {
+                                        var updateException = ex as UpdateException;
+                                        return updateException == null
+                                                   ? ex
+                                                   : WrapUpdateException(updateException);
+                                    });
+                            tcs.TrySetException(wrappedExceptions);
+                        }
+                        else if (t.IsCanceled)
+                        {
+                            tcs.TrySetCanceled();
+                        }
+                        else
+                        {
+                            tcs.TrySetResult(t.Result);
+                        }
+                    }, TaskContinuationOptions.ExecuteSynchronously);
+
+            return tcs.Task;
         }
 
 #endif
@@ -782,6 +801,8 @@ namespace System.Data.Entity.Internal
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
 
+            ObjectContext.AsyncMonitor.EnsureNotEntered();
+
             return new LazyEnumerator<TElement>(
                 () =>
                     {
@@ -820,6 +841,8 @@ namespace System.Data.Entity.Internal
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
+
+            ObjectContext.AsyncMonitor.EnsureNotEntered();
 
             return new LazyAsyncEnumerator<TElement>(
                 async cancellationToken =>

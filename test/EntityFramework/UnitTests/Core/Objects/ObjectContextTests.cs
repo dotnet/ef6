@@ -22,14 +22,14 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Linq;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using System.Transactions;
     using Moq;
     using Moq.Protected;
     using Xunit;
-#if !NET40
-#endif
 
     public class ObjectContextTests
     {

@@ -526,6 +526,8 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
+            QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
+
             return new LazyEnumerator<T>(
                 () =>
                     {
@@ -559,6 +561,8 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator()
         {
+            QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
+
             return new LazyAsyncEnumerator<T>(
                 async cancellationToken =>
                           {
@@ -683,6 +687,7 @@ namespace System.Data.Entity.Core.Objects
 
         private ObjectResult<T> GetResults(MergeOption? forMergeOption)
         {
+            QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
             var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
 
             if (executionStrategy.RetriesOnFailure
@@ -695,28 +700,55 @@ namespace System.Data.Entity.Core.Objects
                 () => QueryState.ObjectContext.ExecuteInTransaction(
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .Execute<T>(QueryState.ObjectContext, QueryState.Parameters),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false, releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
+                    releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
         }
 
 #if !NET40
 
         private Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
         {
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+            QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
             }
 
-            return executionStrategy.ExecuteAsync(
-                () => QueryState.ObjectContext.ExecuteInTransactionAsync(
-                    () => QueryState.GetExecutionPlan(forMergeOption)
-                                    .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
-                    /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                    /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour, cancellationToken),
-                cancellationToken);
+            return GetResultsAsync(forMergeOption, executionStrategy, cancellationToken);
+        }
+
+        private async Task<ObjectResult<T>> GetResultsAsync(
+            MergeOption? forMergeOption, IExecutionStrategy executionStrategy, CancellationToken cancellationToken)
+        {
+            var mergeOption = forMergeOption.HasValue
+                                  ? forMergeOption.Value
+                                  : QueryState.EffectiveMergeOption;
+            if (mergeOption != MergeOption.NoTracking)
+            {
+                QueryState.ObjectContext.AsyncMonitor.Enter();
+            }
+
+            try
+            {
+                return await executionStrategy.ExecuteAsync(
+                    () => QueryState.ObjectContext.ExecuteInTransactionAsync(
+                        () => QueryState.GetExecutionPlan(forMergeOption)
+                                        .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
+                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                              /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour,
+                        cancellationToken),
+                    cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            }
+            finally
+            {
+                if (mergeOption != MergeOption.NoTracking)
+                {
+                    QueryState.ObjectContext.AsyncMonitor.Exit();
+                }
+            }
         }
 
 #endif

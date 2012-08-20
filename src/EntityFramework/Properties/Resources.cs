@@ -13316,6 +13316,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.EdmProperty_InvalidPropertyType, p0);
         }
+
+        /// <summary>
+        ///     A string like "A concurrent method invocation has been detected. Ensure that any asynchronous methods invoked on this context have finished executing before calling any other method on the context. Also don't use the same context instance across different threads."
+        /// </summary>
+        internal static string ConcurrentMethodInvocation
+        {
+            get { return EntityRes.GetString(EntityRes.ConcurrentMethodInvocation); }
+        }
     }
 
     /// <summary>
@@ -16676,6 +16684,7 @@ namespace System.Data.Entity.Resources
         internal const string ExecutionStrategy_StreamingNotSupported = "ExecutionStrategy_StreamingNotSupported";
         internal const string DbProviderNameAttributeNotFound = "DbProviderNameAttributeNotFound";
         internal const string EdmProperty_InvalidPropertyType = "EdmProperty_InvalidPropertyType";
+        internal const string ConcurrentMethodInvocation = "ConcurrentMethodInvocation";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
