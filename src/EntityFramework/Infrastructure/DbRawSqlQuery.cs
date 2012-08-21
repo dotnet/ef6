@@ -85,33 +85,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<List<object>> ToListAsync()
+        public Task<List<T>> ToListAsync<T>()
         {
             Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            return ((IDbAsyncEnumerable)this).ToListAsync();
+            return ((IDbAsyncEnumerable)this).ToListAsync<T>();
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<List<object>> ToListAsync(CancellationToken cancellationToken)
+        public Task<List<T>> ToListAsync<T>(CancellationToken cancellationToken)
         {
             Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            return ((IDbAsyncEnumerable)this).ToListAsync(cancellationToken);
-        }
-
-        public Task<object[]> ToArrayAsync()
-        {
-            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-
-            return ((IDbAsyncEnumerable)this).ToArrayAsync();
-        }
-
-        public Task<object[]> ToArrayAsync(CancellationToken cancellationToken)
-        {
-            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-
-            return ((IDbAsyncEnumerable)this).ToArrayAsync(cancellationToken);
+            return ((IDbAsyncEnumerable)this).ToListAsync<T>(cancellationToken);
         }
 
         #endregion

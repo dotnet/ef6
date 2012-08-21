@@ -73,31 +73,33 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{Object}" /> from the <see cref="IDbAsyncEnumerable" />.
+        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
+        /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
-        internal static Task<List<object>> ToListAsync(this IDbAsyncEnumerable source)
+        internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source)
         {
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            return source.ToListAsync(CancellationToken.None);
+            return source.ToListAsync<T>(CancellationToken.None);
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{Object}" /> from the <see cref="IDbAsyncEnumerable" />.
+        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
+        /// <typeparam name="T">The type that the elements will be cast to.</typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
-        internal static async Task<List<object>> ToListAsync(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
+        internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
             //Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            var list = new List<object>();
-            await source.ForEachAsync(list.Add, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var list = new List<T>();
+            await source.ForEachAsync(e => list.Add((T)e), cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return list;
         }
 
@@ -130,35 +132,6 @@ namespace System.Data.Entity.Infrastructure
             var list = new List<T>();
             await source.ForEachAsync(list.Add, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return list;
-        }
-
-        /// <summary>
-        ///     Creates a object[] from an <see cref="IDbAsyncEnumerable" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
-        /// </summary>
-        /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
-        internal static Task<object[]> ToArrayAsync(this IDbAsyncEnumerable source)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-
-            return source.ToArrayAsync(CancellationToken.None);
-        }
-
-        /// <summary>
-        ///     Creates a object[] from an <see cref="IDbAsyncEnumerable" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
-        /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
-        internal static async Task<object[]> ToArrayAsync(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
-        {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-
-            var list = await source.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            return list.ToArray();
         }
 
         /// <summary>

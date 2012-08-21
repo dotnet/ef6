@@ -8626,7 +8626,7 @@ namespace ProductivityApiTests
         /// </summary>
         private static object ToListAsyncExecutor(IQueryable query)
         {
-            return query.ToListAsync().Result;
+            return query.ToListAsync<object>().Result;
         }
 
         /// <summary>

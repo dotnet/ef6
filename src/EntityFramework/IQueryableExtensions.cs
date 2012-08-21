@@ -770,41 +770,43 @@ namespace System.Data.Entity
         #region Async equivalents of IEnumerable extension methods
 
         /// <summary>
-        ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
+        ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
+        /// <typeparam name="T">The type that the elements will be cast to.</typeparam>
         /// <param name="source"> The source query. </param>
-        /// <returns> A Task containing a <see cref="List{Object}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<List<object>> ToListAsync(this IQueryable source)
+        public static Task<List<T>> ToListAsync<T>(this IQueryable source)
         {
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            return source.AsDbAsyncEnumerable().ToListAsync();
+            return source.AsDbAsyncEnumerable().ToListAsync<T>();
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
+        ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
+        /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="List{Object}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<List<object>> ToListAsync(this IQueryable source, CancellationToken cancellationToken)
+        public static Task<List<T>> ToListAsync<T>(this IQueryable source, CancellationToken cancellationToken)
         {
             Contract.Requires(source != null);
             Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
-            return source.AsDbAsyncEnumerable().ToListAsync(cancellationToken);
+            return source.AsDbAsyncEnumerable().ToListAsync<T>(cancellationToken);
         }
 
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
         /// <param name="source"> The source query. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -831,36 +833,6 @@ namespace System.Data.Entity
             Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
 
             return source.AsDbAsyncEnumerable().ToListAsync(cancellationToken);
-        }
-
-        /// <summary>
-        ///     Creates a object[] from an <see cref="IQueryable" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
-        /// </summary>
-        /// <param name="source"> The source query. </param>
-        /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<object[]> ToArrayAsync(this IQueryable source)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-
-            return source.AsDbAsyncEnumerable().ToArrayAsync();
-        }
-
-        /// <summary>
-        ///     Creates a object[] from an <see cref="IQueryable" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
-        /// </summary>
-        /// <param name="source"> The source query. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a object[] that contains elements from the input sequence. </returns>
-        public static Task<object[]> ToArrayAsync(this IQueryable source, CancellationToken cancellationToken)
-        {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<object[]>>() != null);
-
-            return source.AsDbAsyncEnumerable().ToArrayAsync(cancellationToken);
         }
 
         /// <summary>
@@ -1598,7 +1570,7 @@ namespace System.Data.Entity
             Contract.Requires(predicate != null);
             Contract.Ensures(Contract.Result<Task<long>>() != null);
 
-            return source.LongCountAsync(predicate);
+            return source.LongCountAsync(predicate, CancellationToken.None);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]

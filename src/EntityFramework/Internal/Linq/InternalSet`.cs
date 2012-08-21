@@ -235,6 +235,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         private async Task<object> FindInStoreAsync(WrappedEntityKey key, string keyValuesParamName, CancellationToken cancellationToken)
         {
+            // TODO: Uncomment when code contracts support async
             //Contract.Requires(key != null);
             DbHelpers.ThrowIfNull(key, "key");
 
@@ -697,7 +698,7 @@ namespace System.Data.Entity.Internal.Linq
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
-            return new LazyAsyncEnumerator<object>(
+            return new LazyAsyncEnumerator<TEntity>(
                 async cancellationToken =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
