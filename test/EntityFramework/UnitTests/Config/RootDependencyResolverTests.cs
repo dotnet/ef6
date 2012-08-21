@@ -6,6 +6,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Linq;
     using Moq;
@@ -83,6 +84,13 @@ namespace System.Data.Entity.Config
         public void The_root_resolver_returns_the_default_command_interceptor_service()
         {
             Assert.IsType<DefaultCommandInterceptor>(new RootDependencyResolver().GetService<IDbCommandInterceptor>());
+        }
+
+        [Fact]
+        public void The_root_resolver_returns_the_default_sql_generators()
+        {
+            Assert.IsType<SqlServerMigrationSqlGenerator>(new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlClient"));
+            Assert.IsType<SqlCeMigrationSqlGenerator>(new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlServerCe.4.0"));
         }
 
         [Fact]
