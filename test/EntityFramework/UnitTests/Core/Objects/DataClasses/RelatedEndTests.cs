@@ -10,6 +10,8 @@ using Xunit;
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Data.Common;
+
     public class RelatedEndTests
     {
         public class Merge
@@ -108,7 +110,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     {
                         var relatedEndMock = CreateMockRelatedEnd();
 
-                        var objectContext = ObjectContextForMock.Create();
+                        var objectContext = Objects.MockHelper.CreateMockObjectContext<DbDataRecord>();
                         relatedEndMock.Setup(m => m.ObjectContext).Returns(objectContext);
                         relatedEndMock.Setup(m => m.RelationshipSet).Returns(() => null);
                         relatedEndMock.Setup(m => m.FromEndMember).Returns(() => null);

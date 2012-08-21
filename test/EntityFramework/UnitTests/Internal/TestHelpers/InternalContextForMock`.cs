@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using Moq;
 
@@ -16,10 +17,15 @@ namespace System.Data.Entity.Internal
         private ObjectContext _objectContext;
 
         protected InternalContextForMock()
+            : this(Core.Objects.MockHelper.CreateMockObjectContext<DbDataRecord>())
+        {
+        }
+
+        protected InternalContextForMock(ObjectContext objectContext)
             : base(new Mock<TContext> { CallBase = true }.Object)
         {
             Mock.Get((TContext)Owner).Setup(c => c.InternalContext).Returns(this);
-            _objectContext = ObjectContextForMock.Create();
+            _objectContext = objectContext;
         }
 
         public override ObjectContext ObjectContext

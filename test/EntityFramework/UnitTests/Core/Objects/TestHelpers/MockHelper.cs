@@ -3,12 +3,16 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.TestHelpers;
+    using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Moq;
 
     public static class MockHelper
@@ -18,7 +22,7 @@ namespace System.Data.Entity.Core.Objects
             return new Mock<Shaper<T>>(
                 /*reader*/ null, /*context*/ null, /*workspace*/ null,
                     MergeOption.AppendOnly, /*stateCount*/ 1, /*rootCoordinatorFactory*/ CreateCoordinatorFactory<T>(),
-                    /*checkPermissions*/ null, /*readerOwned*/ false);
+                /*checkPermissions*/ null, /*readerOwned*/ false);
         }
 
         internal static CoordinatorFactory<T> CreateCoordinatorFactory<T>(Expression<Func<Shaper, T>> element = null)
@@ -90,7 +94,49 @@ namespace System.Data.Entity.Core.Objects
                 initializeCollection: null,
                 recordStateFactories: recordStateFactories);
         }
-        
+
+        internal static ObjectContextForMock CreateMockObjectContext<TEntity>()
+        {
+            var providerFactoryMock = new Mock<DbProviderFactoryForMock>
+                                          {
+                                              CallBase = true
+                                          };
+
+            var entityConnectionMock = new Mock<EntityConnection>();
+            entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactoryMock.Object);
+            entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(default(DbConnection));
+            var entityConnection = entityConnectionMock.Object;
+
+            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection);
+            objectContextMock.Setup(m => m.Connection).Returns(entityConnection);
+
+            var metadataWorkspace = new Mock<MetadataWorkspace>().Object;
+            objectContextMock.Setup(m => m.MetadataWorkspace).Returns(metadataWorkspace);
+
+            var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspace);
+            objectContextMock.Setup(m => m.ObjectStateManager).Returns(objectStateManagerMock.Object);
+
+            var mockObjectQuery = MockHelper.CreateMockObjectQuery(default(TEntity), objectContext: objectContextMock.Object);
+            var mockObjectQueryProvider = new Mock<ObjectQueryProvider>(mockObjectQuery.Object);
+            mockObjectQueryProvider.Setup(m => m.CreateQuery<TEntity>(It.IsAny<Expression>()))
+                .Returns(mockObjectQuery.Object);
+            mockObjectQueryProvider.Setup(m => m.CreateQuery(It.IsAny<Expression>(), typeof(TEntity)))
+                .Returns(mockObjectQuery.Object);
+
+            var fakeQueryable = new TEntity[0].AsQueryable();
+            mockObjectQuery.Setup(m => m.GetEnumeratorInternal()).Returns(fakeQueryable.GetEnumerator);
+            mockObjectQuery.Setup(m => m.GetExpression()).Returns(() => fakeQueryable.Expression);
+            mockObjectQuery.Setup(m => m.ObjectQueryProvider).Returns(() => mockObjectQueryProvider.Object);
+
+            objectContextMock.Setup(m => m.CreateQuery<TEntity>(It.IsAny<string>(), It.IsAny<ObjectParameter[]>())).Returns(
+                () => mockObjectQuery.Object);
+
+            objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<object>(null));
+
+            return objectContextMock.Object;
+        }
+
         internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(
             TEntity refreshedValue, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
         {
@@ -104,7 +150,9 @@ namespace System.Data.Entity.Core.Objects
                                            CallBase = true
                                        };
 
-            objectContext = objectContext ?? new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator()).Object;
+            var objectContextMock = new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator());
+            objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
+            objectContext = objectContext ?? objectContextMock.Object;
             var objectQueryStateMock = new Mock<ObjectQueryState>(typeof(TEntity), objectContext, /*parameters:*/ null, /*span:*/ null)
                                            {
                                                CallBase = true
@@ -114,6 +162,9 @@ namespace System.Data.Entity.Core.Objects
                 MockBehavior.Loose, null, null, null, MergeOption.NoTracking, null, null);
             objectQueryExecutionPlanMock.Setup(m => m.Execute<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
                 .Returns(() => objectResultMock.Object);
+            objectQueryExecutionPlanMock.Setup(m => m.ExecuteAsync<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(),
+                It.IsAny<CancellationToken>()))
+                .Returns(() => Task.FromResult(objectResultMock.Object));
 
             objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
 

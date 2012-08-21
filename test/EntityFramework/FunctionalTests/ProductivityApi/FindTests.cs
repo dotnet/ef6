@@ -257,6 +257,13 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
+                var notMatchedAddedProduct = new Product
+                {
+                    Id = -2,
+                    Name = "Yam"
+                };
+                context.Products.Add(notMatchedAddedProduct);
+
                 var addedProduct = new Product
                                        {
                                            Id = -1,
@@ -269,7 +276,7 @@ namespace ProductivityApiTests
                 Assert.Same(addedProduct, foundProduct);
                 Assert.Equal(-1, addedProduct.Id);
                 Assert.Equal(EntityState.Added, GetStateEntry(context, addedProduct).State);
-                Assert.Equal(1, GetStateEntries(context).Count());
+                Assert.Equal(2, GetStateEntries(context).Count());
             }
         }
 
@@ -318,6 +325,12 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
+                var notMatchedAddedCategory = new Category
+                {
+                    Id = "Green Fruit",
+                };
+                context.Categories.Add(notMatchedAddedCategory);
+
                 var addedCategory = new Category
                                         {
                                             Id = "NorthStar Center"
@@ -329,7 +342,7 @@ namespace ProductivityApiTests
                 Assert.Same(addedCategory, foundCategory);
                 Assert.Equal("NorthStar Center", addedCategory.Id);
                 Assert.Equal(EntityState.Added, GetStateEntry(context, addedCategory).State);
-                Assert.Equal(1, GetStateEntries(context).Count());
+                Assert.Equal(2, GetStateEntries(context).Count());
             }
         }
 
@@ -346,6 +359,15 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsMasterContext())
             {
                 // Arrange
+
+                var notMatchedByteKey = new byte[] { 4, 3, 2, 1 };
+                var notMatchedWhiteBoard = new Whiteboard
+                {
+                    iD = notMatchedByteKey,
+                    AssetTag = "MSFT-DrWat-1012"
+                };
+                context.Set<Whiteboard>().Add(notMatchedWhiteBoard);
+
                 var byteKey = new byte[] { 1, 2, 3, 4 };
                 var whiteBoard = new Whiteboard
                                      {
@@ -365,6 +387,7 @@ namespace ProductivityApiTests
                     StructuralComparisons.StructuralEqualityComparer.Equals(
                         foundWhiteBoard.AssetTag,
                         "AMZN-PacMed-1012"));
+                Assert.Equal(2, GetStateEntries(context).Count());
             }
         }
 

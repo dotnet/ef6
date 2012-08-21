@@ -673,8 +673,6 @@ namespace System.Data.Entity.Internal.Linq
             return new LazyEnumerator<TEntity>(
                 () =>
                     {
-                        Initialize();
-
                         var disposableEnumerable = InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
                             sql, EntitySetName, mergeOption, parameters);
                         try

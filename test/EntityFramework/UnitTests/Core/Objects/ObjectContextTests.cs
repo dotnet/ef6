@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Shortcircuits_if_no_state_changes()
             {
-                var mockObjectContext = ObjectContextForMock.Create();
+                var mockObjectContext = MockHelper.CreateMockObjectContext<DbDataRecord>();
                 var mockServiceProvider = (IServiceProvider)((EntityConnection)mockObjectContext.Connection).StoreProviderFactory;
                 var entityAdapterMock = Mock.Get((IEntityAdapter)mockServiceProvider.GetService(typeof(IEntityAdapter)));
                 entityAdapterMock.Setup(m => m.Update(It.IsAny<IEntityStateManager>(), true)).Verifiable();

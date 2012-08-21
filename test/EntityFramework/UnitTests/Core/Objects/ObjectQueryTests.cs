@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
-    using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Infrastructure;
     using Moq;
     using Xunit;
 
@@ -23,6 +23,24 @@ namespace System.Data.Entity.Core.Objects
             shaperMock.Verify(m => m.GetEnumerator(), Times.Never());
 
             enumerator.MoveNext();
+
+            shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
+        }
+
+        [Fact]
+        public void GetEnumeratorAsync_calls_Shaper_GetEnumerator_lazily()
+        {
+            var shaperMock = MockHelper.CreateShaperMock<object>();
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(
+                () =>
+                new DbEnumeratorShim<object>(((IEnumerable<object>)new[] { new object() }).GetEnumerator()));
+            var objectQuery = MockHelper.CreateMockObjectQuery(null, shaperMock.Object).Object;
+
+            var enumerator = ((IDbAsyncEnumerable<object>)objectQuery).GetAsyncEnumerator();
+
+            shaperMock.Verify(m => m.GetEnumerator(), Times.Never());
+
+            enumerator.MoveNextAsync().Wait();
 
             shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
         }

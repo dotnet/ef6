@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Core.Objects;
+
     /// <summary>
     ///     A derived InternalContext implementation that exposes a parameterless constructor
     ///     that creates a mocked underlying DbContext such that the internal context can
@@ -9,5 +11,13 @@ namespace System.Data.Entity.Internal
     /// </summary>
     internal abstract class InternalContextForMock : InternalContextForMock<DbContext>
     {
+        protected InternalContextForMock()
+        {
+        }
+
+        protected InternalContextForMock(ObjectContext objectContext)
+            : base(objectContext)
+        {
+        }
     }
 }

@@ -4,6 +4,8 @@ namespace System.Data.Entity.Internal
 {
     using System.ComponentModel;
     using System.Data.Entity.Resources;
+    using System.Linq.Expressions;
+    using Moq;
     using Xunit;
 
     public class InternalSqlNonSetQueryTests
@@ -41,6 +43,37 @@ namespace System.Data.Entity.Internal
             Assert.Equal(
                 Strings.DbQuery_BindingToDbQueryNotSupported,
                 Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
+        }
+
+        [Fact]
+        public void InternalSqlNonSetQuery_delegates_to_InternalSet_correctly()
+        {
+            var parameters = new[] { "bar" };
+            VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync(typeof(string), "foo", parameters),
+                "foo", parameters);
+            VerifyMethod<string>(e => e.GetEnumerator(), m => m.ExecuteSqlQuery(typeof(string), "foo", parameters),
+                "foo", parameters);
+        }
+
+        internal void VerifyMethod<T>(Action<InternalSqlNonSetQuery> methodInvoke, Expression<Action<InternalContextForMock>> mockMethodInvoke,
+            string sql, object[] parameters)
+            where T : class
+        {
+            Assert.NotNull(methodInvoke);
+            Assert.NotNull(mockMethodInvoke);
+
+            var internalContextMock = new Mock<InternalContextForMock>();
+            var sqlSetQuery = new InternalSqlNonSetQuery(internalContextMock.Object, typeof(T), sql, parameters);
+
+            try
+            {
+                methodInvoke(sqlSetQuery);
+            }
+            catch (Exception)
+            {
+            }
+
+            internalContextMock.Verify(mockMethodInvoke, Times.Once());
         }
     }
 }

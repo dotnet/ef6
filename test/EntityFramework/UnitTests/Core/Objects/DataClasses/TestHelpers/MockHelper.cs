@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using Moq;
 
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var associationSet = new AssociationSet(name: "associationSetName", associationType: associationType);
             entityReferenceMock.Setup(m => m.RelationshipSet).Returns(associationSet);
 
-            entityReferenceMock.Setup(m => m.ObjectContext).Returns(ObjectContextForMock.Create());
+            entityReferenceMock.Setup(m => m.ObjectContext).Returns(Objects.MockHelper.CreateMockObjectContext<DbDataRecord>());
 
             var objectQueryMock = Objects.MockHelper.CreateMockObjectQuery(refreshedValue);
 
