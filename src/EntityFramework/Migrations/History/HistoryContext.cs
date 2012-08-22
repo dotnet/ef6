@@ -4,8 +4,15 @@ namespace System.Data.Entity.Migrations.History
 {
     using System.Data.Common;
 
-    internal class HistoryContext : HistoryContextBase<HistoryContext>
+    internal class HistoryContext : DbContext
     {
+        public const string TableName = "__MigrationHistory";
+
+        static HistoryContext()
+        {
+            Database.SetInitializer<HistoryContext>(null);
+        }
+
         private readonly string _defaultSchema;
 
         public HistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
@@ -19,15 +26,17 @@ namespace System.Data.Entity.Migrations.History
             get { return _defaultSchema; }
         }
 
+        public virtual IDbSet<HistoryRow> History { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-#pragma warning disable 612,618
-            modelBuilder.Entity<HistoryRow>().Ignore(h => h.CreatedOn);
-#pragma warning restore 612,618
-
             modelBuilder.HasDefaultSchema(_defaultSchema);
+
+            modelBuilder.Entity<HistoryRow>().ToTable(TableName);
+            modelBuilder.Entity<HistoryRow>().HasKey(h => h.MigrationId);
+            modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasMaxLength(255).IsRequired();
+            modelBuilder.Entity<HistoryRow>().Property(h => h.Model).IsRequired().IsMaxLength();
+            modelBuilder.Entity<HistoryRow>().Property(h => h.ProductVersion).HasMaxLength(32).IsRequired();
         }
     }
 }

@@ -1400,7 +1400,6 @@
     <Compile Include="Utilities\XContainerExtensions.cs" />
     <Compile Include="Utilities\XDocumentExtensions.cs" />
     <Compile Include="Migrations\History\HistoryContext.cs" />
-    <Compile Include="Migrations\History\HistoryContextBase`.cs" />
     <Compile Include="Migrations\History\HistoryRepository.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -55,13 +55,6 @@ namespace System.Data.Entity.Migrations
 
             var createTableOperation = GetLegacyHistoryCreateTableOperation();
 
-            createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
-            createTableOperation.Columns.Add(
-                new ColumnModel(PrimitiveTypeKind.String)
-                    {
-                        Name = "Hash"
-                    });
-
             ExecuteOperations(
                 createTableOperation,
                 new SqlOperation(
@@ -92,14 +85,7 @@ namespace System.Data.Entity.Migrations
             ResetDatabase();
 
             var createTableOperation = GetLegacyHistoryCreateTableOperation();
-
-            createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
-            createTableOperation.Columns.Add(
-                new ColumnModel(PrimitiveTypeKind.String)
-                    {
-                        Name = "Hash"
-                    });
-
+            
             ExecuteOperations(
                 createTableOperation,
                 new SqlOperation(
@@ -120,16 +106,35 @@ namespace System.Data.Entity.Migrations
 
         private CreateTableOperation GetLegacyHistoryCreateTableOperation()
         {
-            var connection = ProviderFactory.CreateConnection();
+            var createTableOperation
+                = new CreateTableOperation(HistoryContext.TableName);
 
-            connection.ConnectionString = ConnectionString;
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                {
+                    Name = "MigrationId",
+                    MaxLength = 255
+                });
 
-            return (CreateTableOperation)
-                   new EdmModelDiffer().Diff(
-                       new DbModelBuilder().Build(ProviderInfo).GetModel(),
-                       new LegacyHistoryContext(connection).GetModel(),
-                       includeSystemOperations: true)
-                       .Single();
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.DateTime)
+                {
+                    Name = "CreatedOn"
+                });
+
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Binary)
+                {
+                    Name = "Model"
+                });
+
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                {
+                    Name = "Hash"
+                });
+
+            return createTableOperation;
         }
 
         [MigrationsTheory]

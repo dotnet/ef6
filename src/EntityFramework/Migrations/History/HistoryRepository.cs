@@ -17,7 +17,6 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Reflection;
     using System.Transactions;
     using System.Xml.Linq;
@@ -268,53 +267,65 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual IEnumerable<MigrationOperation> GetUpgradeOperations()
         {
-            if (ColumnExists(() => CreateContext(), h => h.ProductVersion) == false)
-            {
-                yield return new DropColumnOperation(HistoryContext.TableName, "Hash");
-
-                yield return new AddColumnOperation(
-                    HistoryContext.TableName,
-                    new ColumnModel(PrimitiveTypeKind.String)
-                        {
-                            MaxLength = 32,
-                            Name = "ProductVersion",
-                            IsNullable = false,
-                            DefaultValue = "0.7.0.0"
-                        });
-            }
-
-#pragma warning disable 612,618
-            if (ColumnExists(() => new LegacyHistoryContext(CreateConnection()), h => h.CreatedOn) == true)
-#pragma warning restore 612,618
-            {
-                yield return new DropColumnOperation(HistoryContext.TableName, "CreatedOn");
-            }
-        }
-
-        private bool? ColumnExists<TContext, TResult>(
-            Func<HistoryContextBase<TContext>> createContext, Expression<Func<HistoryRow, TResult>> selector)
-            where TContext : DbContext
-        {
             if (Exists())
             {
-                using (var context = createContext())
+                using (var connection = CreateConnection())
                 {
-                    try
+                    using (var context = CreateContext(connection))
                     {
-                        context.History
-                            .Select(selector)
-                            .FirstOrDefault();
-                    }
-                    catch (EntityException)
-                    {
-                        return false;
+                        var productVersionExists = false;
+
+                        try
+                        {
+                            context.History
+                                .Select(h => h.ProductVersion)
+                                .FirstOrDefault();
+
+                            productVersionExists = true;
+                        }
+                        catch (EntityException)
+                        {
+                        }
+
+                        if (!productVersionExists)
+                        {
+                            yield return new DropColumnOperation(HistoryContext.TableName, "Hash");
+
+                            yield return new AddColumnOperation(
+                                HistoryContext.TableName,
+                                new ColumnModel(PrimitiveTypeKind.String)
+                                    {
+                                        MaxLength = 32,
+                                        Name = "ProductVersion",
+                                        IsNullable = false,
+                                        DefaultValue = "0.7.0.0"
+                                    });
+                        }
                     }
 
-                    return true;
+                    using (var context = new LegacyHistoryContext(connection))
+                    {
+                        var createdOnExists = false;
+
+                        try
+                        {
+                            context.History
+                                .Select(h => h.CreatedOn)
+                                .FirstOrDefault();
+
+                            createdOnExists = true;
+                        }
+                        catch (EntityException)
+                        {
+                        }
+
+                        if (createdOnExists)
+                        {
+                            yield return new DropColumnOperation(HistoryContext.TableName, "CreatedOn");
+                        }
+                    }
                 }
             }
-
-            return null;
         }
 
         public virtual MigrationOperation CreateInsertOperation(string migrationId, XDocument model)

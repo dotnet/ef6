@@ -18,12 +18,6 @@ namespace System.Data.Entity.Migrations.History
         public string MigrationId { get; set; }
 
         /// <summary>
-        ///     Gets or sets the date and time that this migrations history entry was created.
-        /// </summary>
-        [Obsolete("The MigrationId column is now used for all ordering.")]
-        public DateTime CreatedOn { get; set; }
-
-        /// <summary>
         ///     Gets or sets the state of the model after this migration was applied.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]

@@ -482,7 +482,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void GetLastModel_gets_latest_based_on_MigrationId_not_on_CreatedOn()
+        public void GetLastModel_gets_latest_based_on_MigrationId()
         {
             var historyRepository = SetupHistoryRepositoryForOrderingTest();
 
@@ -493,7 +493,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void GetMigrationsSince_gets_migrations_based_on_MigrationId_not_on_CreatedOn()
+        public void GetMigrationsSince_gets_migrations_based_on_MigrationId()
         {
             var historyRepository = SetupHistoryRepositoryForOrderingTest();
 
@@ -514,7 +514,7 @@ namespace System.Data.Entity.Migrations
                 var clonedConnection = DbProviderServices.GetProviderFactory(context.Database.Connection).CreateConnection();
                 clonedConnection.ConnectionString = context.Database.Connection.ConnectionString;
 
-                using (var historyContext = new LegacyHistoryContext(clonedConnection))
+                using (var historyContext = new HistoryContext(clonedConnection, false, null))
                 {
                     context.InternalContext.MarkDatabaseInitialized();
 
@@ -525,9 +525,6 @@ namespace System.Data.Entity.Migrations
                         new HistoryRow
                             {
                                 MigrationId = "227309030010001_Migration1",
-#pragma warning disable 612,618
-                                CreatedOn = new DateTime(2273, 9, 3, 0, 10, 0, 0, DateTimeKind.Utc),
-#pragma warning restore 612,618
                                 Model = new ModelCompressor().Compress(model),
                                 ProductVersion = "",
                             });
@@ -535,10 +532,7 @@ namespace System.Data.Entity.Migrations
                     historyContext.History.Add(
                         new HistoryRow
                             {
-                                MigrationId = "227209030010001_Migration2", // Id is before
-#pragma warning disable 612,618
-                                CreatedOn = new DateTime(2274, 9, 3, 0, 10, 0, 0, DateTimeKind.Utc), // CreatedOn is after
-#pragma warning restore 612,618
+                                MigrationId = "227209030010001_Migration2",
                                 Model = new ModelCompressor().Compress(model),
                                 ProductVersion = "",
                             });

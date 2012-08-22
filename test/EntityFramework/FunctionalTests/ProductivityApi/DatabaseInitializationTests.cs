@@ -22,14 +22,9 @@ namespace ProductivityApiTests
     using SimpleModel;
     using Xunit;
 
-    /// <summary>
-    ///     Functional tests for database initialization and seeding.  Unit tests also exist in the unit tests project.
-    /// </summary>
     public class DatabaseInitializationTests : FunctionalTestBase
     {
         #region Infrastructure/setup
-
-        private const string MigrationHistoryTableName = "__MigrationHistory";
 
         public DatabaseInitializationTests()
         {
@@ -391,7 +386,7 @@ namespace ProductivityApiTests
         {
             using (var poker = new EdmMetadataPokerContext(connection))
             {
-                poker.Database.ExecuteSqlCommand("drop table " + MigrationHistoryTableName);
+                poker.Database.ExecuteSqlCommand("drop table " + HistoryContext.TableName);
 
                 poker.Database.ExecuteSqlCommand(
                     ((IObjectContextAdapter)poker).ObjectContext.CreateDatabaseScript());
@@ -424,11 +419,8 @@ namespace ProductivityApiTests
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<HistoryRow>().ToTable(MigrationHistoryTableName);
+                modelBuilder.Entity<HistoryRow>().ToTable(HistoryContext.TableName);
                 modelBuilder.Entity<HistoryRow>().HasKey(h => h.MigrationId);
-#pragma warning disable 612,618
-                modelBuilder.Entity<HistoryRow>().Ignore(h => h.CreatedOn);
-#pragma warning restore 612,618
             }
         }
 
@@ -851,7 +843,7 @@ namespace ProductivityApiTests
                 context.Database.Delete();
                 context.Database.Create();
 
-                context.Database.ExecuteSqlCommand("drop table " + MigrationHistoryTableName);
+                context.Database.ExecuteSqlCommand("drop table " + HistoryContext.TableName);
 
                 VerifyMigrationsHistoryTable(context, historyShouldExist: false);
             }
@@ -925,7 +917,7 @@ namespace ProductivityApiTests
             var tables =
                 GetObjectContext(context).ExecuteStoreQuery<SchemaTable>("SELECT name FROM sys.Tables").ToList();
 
-            Assert.Equal(historyShouldExist, tables.Any(t => t.name == MigrationHistoryTableName));
+            Assert.Equal(historyShouldExist, tables.Any(t => t.name == HistoryContext.TableName));
 
             // Sanity check that the other tables are still there and that we're querying for the correct database.
             Assert.True(tables.Any(t => t.name == "Products"));

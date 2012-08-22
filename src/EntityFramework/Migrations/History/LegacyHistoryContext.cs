@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.History
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Common;
 
     /// <summary>
@@ -9,11 +10,25 @@ namespace System.Data.Entity.Migrations.History
     ///     It is used when figuring out whether or not the CreatedOn column exists and so should
     ///     be dropped.
     /// </summary>
-    internal class LegacyHistoryContext : HistoryContextBase<LegacyHistoryContext>
+    internal sealed class LegacyHistoryContext : DbContext
     {
-        public LegacyHistoryContext(DbConnection existingConnection, bool contextOwnsConnection = true)
-            : base(existingConnection, contextOwnsConnection)
+        static LegacyHistoryContext()
+        {
+            Database.SetInitializer<LegacyHistoryContext>(null);
+        }
+
+        public LegacyHistoryContext(DbConnection existingConnection)
+            : base(existingConnection, false)
         {
         }
+
+        public IDbSet<LegacyHistoryRow> History { get; set; }
+    }
+
+    [Table(HistoryContext.TableName)]
+    internal sealed class LegacyHistoryRow
+    {
+        public int Id { get; set; } // dummy
+        public DateTime CreatedOn { get; set; }
     }
 }
