@@ -255,7 +255,6 @@
       <Link>Properties\SharedAssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ConnectionFactoryConfig\ConnectionFactorySpecification.cs" />
-    <Compile Include="ConnectionFactoryConfig\VersionMapper.cs" />
     <Compile Include="Migrations\AddMigrationCommand.cs" />
     <Compile Include="ConnectionFactoryConfig\ConfigFileFinder.cs" />
     <Compile Include="ConnectionFactoryConfig\ConfigFileManipulator.cs" />

@@ -5,13 +5,24 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <NuGetExePath>$(MSBuildProjectDirectory)\..\..\.nuget\nuget.exe</NuGetExePath>
+        <LibFolder>net45</LibFolder>
+        <LibFolder Condition="'$(Configuration)' == 'ReleaseNet40' Or '$(Configuration)' == 'DebugNet40'">net40</LibFolder>
     </PropertyGroup>
 
     <Target Name="Build">
-        <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.dll" />
-        <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.xml" />
-        <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.dll" />
-        <Copy DestinationFolder="EntityFramework\lib\net45" SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.xml" />
+        <Copy
+            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
+            SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.dll" />
+        <Copy 
+            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
+            SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.xml" />
+        <Copy 
+            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
+            SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.dll" />
+        <Copy
+            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
+            SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.xml" />
+        
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.exe" />
         <!--<Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.x86.exe" />-->

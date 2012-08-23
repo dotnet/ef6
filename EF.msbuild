@@ -5,13 +5,13 @@
         <Configuration>Release</Configuration>
         <Platform>Any CPU</Platform>
         <SolutionFile>EntityFramework.sln</SolutionFile>
-        <BuildProperties>Configuration=$(Configuration);Platform=$(Platform);RestorePackages=false</BuildProperties>
+        <BuildProperties>Platform=$(Platform);RestorePackages=false</BuildProperties>
     </PropertyGroup>
 
     <Target Name="Clean">
         <MSBuild Targets="Clean" 
                  Projects="$(SolutionFile)" 
-                 Properties="$(BuildProperties)"/>
+                 Properties="Configuration=$(Configuration);$(BuildProperties)"/>
     </Target>
     
     <Target Name="PreRestorePackages">
@@ -32,24 +32,27 @@
     <Target Name="Build" DependsOnTargets="RestorePackagesSafe">
         <MSBuild Targets="Build" 
                  Projects="$(SolutionFile)"
-                 Properties="$(BuildProperties);BuildPackages=false" />
+                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
     <Target Name="Rebuild" DependsOnTargets="RestorePackagesSafe">
         <MSBuild Targets="Rebuild" 
                  Projects="$(SolutionFile)"
-                 Properties="$(BuildProperties);BuildPackages=false" />
+                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
    
     <Target Name="Test" DependsOnTargets="Rebuild">
         <MSBuild Projects="EF.xunit.targets"
-                 Properties="$(BuildProperties)" />
+                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
 
     <Target Name="Package" DependsOnTargets="UpdateVersionNumber;Rebuild">
         <MSBuild Targets="Rebuild"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
+                 Properties="Configuration=$(Configuration);$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
+        <MSBuild Targets="Rebuild"
+                 Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
+                 Properties="Configuration=ReleaseNet40;$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
     </Target>
 
     <Target Name="UpdateVersionNumber" Condition=" '$(BUILD_NUMBER)' != '' ">

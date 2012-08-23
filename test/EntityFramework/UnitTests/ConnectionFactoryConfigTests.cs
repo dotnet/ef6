@@ -34,7 +34,7 @@ namespace EntityFramework.PowerShell.UnitTests
         // assembly version number is incremented.
         private static readonly Version _builtEntityFrameworkVersion = new Version("6.0.0.0");
         private static readonly Version _net45EntityFrameworkVersion = new Version("6.0.0.0");
-        private static readonly Version _net40EntityFrameworkVersion = new Version("4.4.0.0");
+        private static readonly Version _net40EntityFrameworkVersion = new Version("6.0.0.0");
 
         private const string EntityFrameworkSectionFormat =
             "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";
@@ -44,57 +44,6 @@ namespace EntityFramework.PowerShell.UnitTests
 
         private static readonly string _net40EntityFrameworkSectionName = string.Format(
             CultureInfo.InvariantCulture, EntityFrameworkSectionFormat, _net40EntityFrameworkVersion);
-
-        #endregion
-
-        #region Version mapping
-
-        [Fact]
-        public void VersionMapper_maps_dotNET_4_to_net40_assembly()
-        {
-            Assert.Equal(
-                _net40EntityFrameworkVersion,
-                new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.0")));
-        }
-
-        [Fact]
-        public void VersionMapper_maps_dotNET_4_client_to_net40_assembly()
-        {
-            Assert.Equal(
-                _net40EntityFrameworkVersion,
-                new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.0, Profile=Client")));
-        }
-
-        [Fact]
-        public void VersionMapper_maps_dotNET_4_5_to_built_assembly()
-        {
-            Assert.Equal(
-                _builtEntityFrameworkVersion,
-                new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=4.5")));
-        }
-
-        [Fact]
-        public void VersionMapper_maps_future_dotNET_version_to_built_assembly()
-        {
-            Assert.Equal(
-                _builtEntityFrameworkVersion,
-                new VersionMapper().GetEntityFrameworkVersion(CreateMockProject(".NET Framework, Version=7.3")));
-        }
-
-        private Project CreateMockProject(string frameworkName)
-        {
-            var mockMonikerProperty = new Mock<Property>();
-            mockMonikerProperty.Setup(m => m.Name).Returns("TargetFrameworkMoniker");
-            mockMonikerProperty.Setup(m => m.Value).Returns(frameworkName);
-
-            var mockProperties = new Mock<Properties>();
-            mockProperties.Setup(m => m.Item("TargetFrameworkMoniker")).Returns(mockMonikerProperty.Object);
-
-            var mockProject = new Mock<Project>();
-            mockProject.Setup(m => m.Properties).Returns(mockProperties.Object);
-
-            return mockProject.Object;
-        }
 
         #endregion
 

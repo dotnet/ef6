@@ -40,14 +40,13 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                 var factorySpecification = detector.BuildConnectionFactorySpecification();
                 var manipulator = new ConfigFileManipulator();
                 var processor = new ConfigFileProcessor();
-                var efVersion = new VersionMapper().GetEntityFrameworkVersion(project);
 
                 new ConfigFileFinder().FindConfigFiles(
                     project.ProjectItems,
                     i => processor.ProcessConfigFile(
                         i, new Func<XDocument, bool>[]
                                {
-                                   c => manipulator.AddOrUpdateConfigSection(c, efVersion),
+                                   c => manipulator.AddOrUpdateConfigSection(c, GetType().Assembly.GetName().Version),
                                    c => manipulator.AddConnectionFactoryToConfig(c, factorySpecification)
                                }));
             }
