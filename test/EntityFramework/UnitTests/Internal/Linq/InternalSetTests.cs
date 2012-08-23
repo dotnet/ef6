@@ -36,6 +36,8 @@ namespace System.Data.Entity.Internal.Linq
             Assert.Equal("foo", actualEnumerator.Current);
         }
 
+#if !NET40
+
         [Fact]
         public void ExecuteSqlQueryAsync_delegates_lazily()
         {
@@ -64,6 +66,8 @@ namespace System.Data.Entity.Internal.Linq
             Assert.Equal("foo", actualEnumerator.Current);
         }
 
+#endif
+
         [Fact]
         public void GetEnumerator_calls_ObjectQuery_GetEnumerator()
         {
@@ -79,6 +83,8 @@ namespace System.Data.Entity.Internal.Linq
 
             executionPlanMock.Verify(m => m.Execute<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()), Times.Once());
         }
+
+#if !NET40
 
         [Fact]
         public void GetAsyncEnumerator_calls_ObjectQuery_GetAsyncEnumerator()
@@ -98,6 +104,8 @@ namespace System.Data.Entity.Internal.Linq
                 .Verify(m => m.ExecuteAsync<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
+#endif
+
         private InternalSet<TEntity> CreateInternalSet<TEntity>(Mock<ObjectContextForMock> objectContextMock, TEntity value)
             where TEntity : class
         {
@@ -115,12 +123,15 @@ namespace System.Data.Entity.Internal.Linq
                 .Setup(
                     m => m.ExecuteStoreQuery<TEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()))
                 .Returns(objectResultMock.Object);
+
+#if !NET40
             objectContextMock
                 .Setup(
                     m =>
                     m.ExecuteStoreQueryAsync<TEntity>(
                         It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
                 .Returns(Task.FromResult(objectResultMock.Object));
+#endif
 
             var internalContextMock = new Mock<InternalContextForMock>(objectContextMock.Object)
                                       {

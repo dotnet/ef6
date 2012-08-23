@@ -22,7 +22,7 @@ namespace System.ComponentModel.DataAnnotations
         /// <summary>
         ///     Gets the maximum allowable length of the array/string data.
         /// </summary>
-        public int Length { get; internal set; }
+        public int Length { get; private set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MaxLengthAttribute" /> class.
@@ -64,23 +64,13 @@ namespace System.ComponentModel.DataAnnotations
             // Check the lengths for legality
             EnsureLegalLengths();
 
-            var length = 0;
             if (value == null)
             {
                 return true;
             }
-            else
-            {
-                var str = value as string;
-                if (str != null)
-                {
-                    length = str.Length;
-                }
-                else
-                {
-                    length = ((Array)value).Length;
-                }
-            }
+
+            var str = value as string;
+            var length = str != null ? str.Length : ((Array)value).Length;
 
             // Automatically pass if value is null. RequiredAttribute should be used to assert a value is not null.
             // We expect a cast exception if a non-{string|array} property was passed in.

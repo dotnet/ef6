@@ -49,8 +49,12 @@ namespace System.Data.Entity.Internal
         public void InternalSqlNonSetQuery_delegates_to_InternalSet_correctly()
         {
             var parameters = new[] { "bar" };
+
+#if !NET40
             VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync(typeof(string), "foo", parameters),
                 "foo", parameters);
+#endif
+
             VerifyMethod<string>(e => e.GetEnumerator(), m => m.ExecuteSqlQuery(typeof(string), "foo", parameters),
                 "foo", parameters);
         }

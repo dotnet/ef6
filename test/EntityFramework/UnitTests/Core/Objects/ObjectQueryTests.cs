@@ -27,6 +27,8 @@ namespace System.Data.Entity.Core.Objects
             shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
         }
 
+#if !NET40
+
         [Fact]
         public void GetEnumeratorAsync_calls_Shaper_GetEnumerator_lazily()
         {
@@ -44,6 +46,8 @@ namespace System.Data.Entity.Core.Objects
 
             shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
         }
+
+#endif
 
         [Fact]
         public void Foreach_calls_generic_GetEnumerator()

@@ -14,8 +14,12 @@ namespace System.Data.Entity.Internal
         {
             var isNoTracking = true;
             var parameters = new[] { "bar" };
+
+#if !NET40
             VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync("foo", isNoTracking, parameters),
                 "foo", isNoTracking, parameters);
+#endif
+
             VerifyMethod<string>(e => e.GetEnumerator(), m => m.ExecuteSqlQuery("foo", isNoTracking, parameters),
                 "foo", isNoTracking, parameters);
         }

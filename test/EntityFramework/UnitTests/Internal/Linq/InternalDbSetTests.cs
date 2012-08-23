@@ -20,14 +20,17 @@ namespace System.Data.Entity.Internal.Linq
             VerifyGetter<string, Type>(e => e.ElementType, m => m.ElementType);
             var key = 1;
             VerifyMethod<string>(e => e.Find(key), m => m.Find(key));
-            VerifyMethod<string>(e => e.FindAsync(key), m => m.FindAsync(CancellationToken.None, key));
             var cancellationTokenSource = new CancellationTokenSource();
-            VerifyMethod<string>(e => e.FindAsync(cancellationTokenSource.Token, key), m => m.FindAsync(cancellationTokenSource.Token, key));
-            VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.GetAsyncEnumerator());
             VerifyMethod<string>(e => e.GetEnumerator(), m => m.GetEnumerator());
             VerifyMethod<string>(e => e.Include("foo"), m => m.Include("foo"));
             VerifyGetter<string, IList>(e => e.Local, m => m.Local);
             VerifyMethod<string>(e => e.Remove("foo"), m => m.Remove("foo"));
+
+#if !NET40
+            VerifyMethod<string>(e => e.FindAsync(key), m => m.FindAsync(CancellationToken.None, key));
+            VerifyMethod<string>(e => e.FindAsync(cancellationTokenSource.Token, key), m => m.FindAsync(cancellationTokenSource.Token, key));
+            VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.GetAsyncEnumerator());
+#endif
         }
 
         [Fact]

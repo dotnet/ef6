@@ -131,8 +131,10 @@ namespace System.Data.Entity.Core.Objects
             objectContextMock.Setup(m => m.CreateQuery<TEntity>(It.IsAny<string>(), It.IsAny<ObjectParameter[]>())).Returns(
                 () => mockObjectQuery.Object);
 
+#if !NET40
             objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult<object>(null));
+#endif
 
             return objectContextMock.Object;
         }
@@ -151,7 +153,11 @@ namespace System.Data.Entity.Core.Objects
                                        };
 
             var objectContextMock = new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator());
+
+#if !NET40
             objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
+#endif
+            
             objectContext = objectContext ?? objectContextMock.Object;
             var objectQueryStateMock = new Mock<ObjectQueryState>(typeof(TEntity), objectContext, /*parameters:*/ null, /*span:*/ null)
                                            {
@@ -162,9 +168,12 @@ namespace System.Data.Entity.Core.Objects
                 MockBehavior.Loose, null, null, null, MergeOption.NoTracking, null, null);
             objectQueryExecutionPlanMock.Setup(m => m.Execute<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
                 .Returns(() => objectResultMock.Object);
+
+#if !NET40
             objectQueryExecutionPlanMock.Setup(m => m.ExecuteAsync<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(),
                 It.IsAny<CancellationToken>()))
                 .Returns(() => Task.FromResult(objectResultMock.Object));
+#endif
 
             objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
 

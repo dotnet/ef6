@@ -985,7 +985,7 @@
     <value>The field {0} must be a string or array type with a maximum length of '{1}'.</value>
   </data>
   <data name="MaxLengthAttribute_InvalidMaxLength" xml:space="preserve">
-    <value>MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to  indicate that the string or array can have the maximum allowable length.</value>
+    <value>MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to indicate that the string or array can have the maximum allowable length.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="MinLengthAttribute_ValidationError" xml:space="preserve">
