@@ -910,6 +910,8 @@ namespace EntityFramework.PowerShell.UnitTests
             }
         }
 
+#if !NET40
+
         [Fact]
         public void SqlServerDetector_detects_LocalDB_v11_0_on_dev_machine()
         {
@@ -918,6 +920,8 @@ namespace EntityFramework.PowerShell.UnitTests
                 Assert.Equal("11.0", detector.TryGetLocalDBVersionInstalled());
             }
         }
+
+#endif
 
         [Fact]
         public void Base_connection_string_on_dev_box_with_SQL_Express_installed_has_SQL_Express_connection_string()

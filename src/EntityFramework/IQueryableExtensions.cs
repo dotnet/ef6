@@ -19,6 +19,8 @@ namespace System.Data.Entity
     {
         #region Private static fields
 
+#if !NET40
+
         private static readonly MethodInfo _first = GetMethod(
             "First", (T) => new[]
                                 {
@@ -409,6 +411,8 @@ namespace System.Data.Entity
                                       typeof(IQueryable<>).MakeGenericType(T),
                                       typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
                                   });
+
+#endif
 
         #endregion
 
@@ -3147,8 +3151,6 @@ namespace System.Data.Entity
             }
         }
 
-#endif
-
         private static MethodInfo GetMethod(string methodName, Func<Type[]> getParameterTypes)
         {
             return GetMethod(methodName, getParameterTypes.Method, 0);
@@ -3186,6 +3188,13 @@ namespace System.Data.Entity
             return null;
         }
 
+        private static bool Matches(MethodInfo methodInfo, Type[] parameterTypes)
+        {
+            return methodInfo.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes);
+        }
+
+#endif
+
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Called from an assert")]
         private static string PrettyPrint(MethodInfo getParameterTypesMethod, int genericArgumentsCount)
@@ -3206,11 +3215,6 @@ namespace System.Data.Entity
             }
 
             return "(" + string.Join(", ", textRepresentations) + ")";
-        }
-
-        private static bool Matches(MethodInfo methodInfo, Type[] parameterTypes)
-        {
-            return methodInfo.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes);
         }
 
         #endregion

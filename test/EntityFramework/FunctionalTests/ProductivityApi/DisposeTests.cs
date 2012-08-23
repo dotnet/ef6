@@ -21,7 +21,7 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        /// <summary>
+        public DisposeTests()        {            CreateMetadataFilesForSimpleModel();        }        /// <summary>
         ///     Asserts that an operation on a set from a disposed context throws, but only when the operation is
         ///     executed, not when the set is created.
         /// </summary>

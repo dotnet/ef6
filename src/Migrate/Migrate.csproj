@@ -115,6 +115,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
+    <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

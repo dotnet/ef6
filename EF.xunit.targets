@@ -13,7 +13,7 @@
     <Target Name="Xunit">
         <xunit Assembly="test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.dll" Xml="test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.xml" ShadowCopy="true" />
         <xunit Assembly="test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.dll" Xml="test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.xml" ShadowCopy="true" />
-        <xunit Assembly="test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" Xml="test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.xml" ShadowCopy="true" />
+        <xunit Condition="'$(Configuration)' != 'ReleaseNet40' And '$(Configuration)' != 'DebugNet40'" Assembly="test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" Xml="test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.xml" ShadowCopy="true" />
     </Target>
     
 </Project>

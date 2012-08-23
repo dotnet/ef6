@@ -49,7 +49,7 @@
     <Target Name="Package" DependsOnTargets="UpdateVersionNumber;Rebuild">
         <MSBuild Targets="Rebuild"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="$(BuildProperties);Platform=AnyCPU;DefineConstants=INTERNALS_INVISIBLE;RunCodeAnalysis=false" />
+                 Properties="$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
     </Target>
 
     <Target Name="UpdateVersionNumber" Condition=" '$(BUILD_NUMBER)' != '' ">

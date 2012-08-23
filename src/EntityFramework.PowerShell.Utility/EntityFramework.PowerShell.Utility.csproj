@@ -176,6 +176,9 @@
     <CodeContractsCustomRewriterAssembly />
     <CodeContractsCustomRewriterClass />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
+    <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>

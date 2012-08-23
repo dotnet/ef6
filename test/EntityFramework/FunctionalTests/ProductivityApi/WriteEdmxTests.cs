@@ -19,6 +19,9 @@ namespace ProductivityApiTests
     /// </summary>
     public class WriteEdmxTests : FunctionalTestBase
     {
+        #region Infrastructure/setup
+
+        public WriteEdmxTests()        {            CreateMetadataFilesForSimpleModel();        }        #endregion
         #region Tests for creating EDMX files from a Code First DbContext.
 
         [Fact]

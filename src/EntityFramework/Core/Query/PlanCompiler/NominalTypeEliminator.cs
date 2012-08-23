@@ -710,6 +710,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     The <paramref name="unnestNode" /> contains a TVF call. 
         ///     Return new node with ProjectOp and <paramref name="newVars" /> representing the projection outputs.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "TVFs")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node CreateTVFProjection(
@@ -1356,6 +1357,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"> </param>
         /// <param name="n"> </param>
         /// <returns> new subtree </returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "TVFs")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newUnnestVar")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "unnest")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",

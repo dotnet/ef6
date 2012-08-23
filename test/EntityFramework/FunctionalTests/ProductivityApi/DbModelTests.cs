@@ -22,6 +22,9 @@ namespace CodeFirstTest
     /// </summary>
     public class DbModelTests : FunctionalTestBase
     {
+        #region Infrastructure/setup
+
+        public DbModelTests()        {            CreateMetadataFilesForSimpleModel();        }        #endregion
         #region Positive CreateObjectContext tests
 
         [Fact]

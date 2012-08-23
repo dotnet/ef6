@@ -30,6 +30,8 @@ namespace ProductivityApiTests
     /// </summary>
     public class DbContextTests : FunctionalTestBase
     {
+        #region Infrastructure/setup        
+        public DbContextTests()        {            CreateMetadataFilesForSimpleModel();        }        #endregion
         #region Positive constructor tests
 
         [Fact]
