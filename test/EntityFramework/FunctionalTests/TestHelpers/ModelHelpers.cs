@@ -4,19 +4,15 @@ namespace System.Data.Entity
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
-    using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Security.AccessControl;
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
