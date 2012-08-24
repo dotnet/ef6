@@ -178,6 +178,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             return from es1 in _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                    from es2 in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
+                   let isSystem = es2.IsSystemAttribute().EqualsIgnoreCase("true")
                    where es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute())
                          && !es1.SchemaAttribute().EqualsIgnoreCase(es2.SchemaAttribute())
                    select
@@ -185,7 +186,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
                        GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
                        es2.SchemaAttribute())
                            {
-                               IsSystem = es2.IsSystemAttribute().EqualsIgnoreCase("true")
+                               IsSystem = isSystem,
+                               CreateTableOperation
+                                   = isSystem
+                                         ? BuildCreateTableOperation(
+                                             es2.NameAttribute(),
+                                             es2.TableAttribute(),
+                                             es2.SchemaAttribute(),
+                                             es2.IsSystemAttribute(),
+                                             _target)
+                                         : null
                            };
         }
 

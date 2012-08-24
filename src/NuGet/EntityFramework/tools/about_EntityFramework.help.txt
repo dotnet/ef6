@@ -8,7 +8,6 @@ LONG DESCRIPTION
     This topic describes the Entity Framework commands. Entity Framework is
     Microsoft's recommended data access technology for new applications.
 
-
     The following Entity Framework cmdlets are included.
 
         Cmdlet              Description

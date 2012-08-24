@@ -52,6 +52,7 @@ namespace System.Data.Entity.Migrations
         private readonly string _providerManifestToken;
         private readonly string _targetDatabase;
         private readonly string _defaultSchema;
+        private readonly string _legacyContextKey;
 
         private MigrationSqlGenerator _sqlGenerator;
 
@@ -128,7 +129,11 @@ namespace System.Data.Entity.Migrations
                 }
 
                 _historyRepository
-                    = new HistoryRepository(_usersContextInfo.ConnectionString, _providerFactory, historySchemas);
+                    = new HistoryRepository(
+                        _usersContextInfo.ConnectionString,
+                        _providerFactory,
+                        _configuration.ContextKey,
+                        historySchemas);
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
@@ -145,6 +150,8 @@ namespace System.Data.Entity.Migrations
                         _usersContextInfo.ConnectionStringOrigin == DbConnectionStringOrigin.DbContextInfo
                             ? Strings.LoggingExplicit
                             : _usersContextInfo.ConnectionStringOrigin.ToString());
+
+                _legacyContextKey = context.InternalContext.ContextKey;
             }
             finally
             {
@@ -224,7 +231,7 @@ namespace System.Data.Entity.Migrations
         internal ScaffoldedMigration ScaffoldInitialCreate(string @namespace)
         {
             string migrationId;
-            var databaseModel = _historyRepository.GetLastModel(out migrationId);
+            var databaseModel = _historyRepository.GetLastModel(out migrationId, contextKey: _legacyContextKey);
 
             if ((databaseModel == null)
                 || !migrationId.MigrationName().Equals(Strings.InitialCreate))
@@ -559,7 +566,8 @@ namespace System.Data.Entity.Migrations
         {
             bool? includeSystemOps = null;
 
-            if (ReferenceEquals(targetModel, _emptyModel.Value))
+            if (ReferenceEquals(targetModel, _emptyModel.Value)
+                && !_historyRepository.IsShared())
             {
                 includeSystemOps = true;
 
@@ -609,7 +617,8 @@ namespace System.Data.Entity.Migrations
 
             bool? includeSystemOps = null;
 
-            if (ReferenceEquals(lastModel, _emptyModel.Value))
+            if (ReferenceEquals(lastModel, _emptyModel.Value)
+                && !_historyRepository.IsShared())
             {
                 includeSystemOps = true;
 
@@ -623,8 +632,9 @@ namespace System.Data.Entity.Migrations
                 }
             }
 
-            var systemOperations = _modelDiffer.Diff(lastModel, targetModel, includeSystemOps)
-                .Where(o => o.IsSystem);
+            var systemOperations
+                = _modelDiffer.Diff(lastModel, targetModel, includeSystemOps)
+                    .Where(o => o.IsSystem);
 
             migration.Up();
 
@@ -636,7 +646,8 @@ namespace System.Data.Entity.Migrations
         {
             bool? includeSystemOps = null;
 
-            if (ReferenceEquals(downgrading ? targetModel : sourceModel, _emptyModel.Value))
+            if (ReferenceEquals(downgrading ? targetModel : sourceModel, _emptyModel.Value)
+                && !_historyRepository.IsShared())
             {
                 includeSystemOps = true;
 
@@ -723,7 +734,8 @@ namespace System.Data.Entity.Migrations
 
             if (createHistoryOperation != null)
             {
-                _historyRepository.CurrentSchema = createHistoryOperation.Name.ToDatabaseName().Schema;
+                _historyRepository.CurrentSchema
+                    = createHistoryOperation.Name.ToDatabaseName().Schema;
             }
 
             var moveHistoryOperation
@@ -734,6 +746,8 @@ namespace System.Data.Entity.Migrations
             if (moveHistoryOperation != null)
             {
                 _historyRepository.CurrentSchema = moveHistoryOperation.NewSchema;
+
+                moveHistoryOperation.ContextKey = _configuration.ContextKey;
             }
 
             if (!downgrading)
@@ -827,8 +841,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private void FillInForeignKeyOperations(
-            IEnumerable<MigrationOperation> operations, XDocument targetModel)
+        private void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
         {
             Contract.Requires(operations != null);
             Contract.Requires(targetModel != null);

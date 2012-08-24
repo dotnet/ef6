@@ -25,7 +25,11 @@ $knownExceptions = @(
 
 .PARAMETER EnableAutomaticMigrations
     Specifies whether automatic migrations will be enabled in the scaffolded migrations configuration.
-    If ommitted, automatic migrations will be disabled.
+    If omitted, automatic migrations will be disabled.
+
+.PARAMETER MigrationsDirectory
+    Specifies the name of the directory that will contain migrations code files.
+    If omitted, the directory will be named "Migrations". 
 
 .PARAMETER ProjectName
     Specifies the project that the scaffolded migrations configuration class will
@@ -58,6 +62,7 @@ function Enable-Migrations
         [string] $ContextTypeName,
         [alias('Auto')]
         [switch] $EnableAutomaticMigrations,
+        [string] $MigrationsDirectory,
         [string] $ProjectName,
         [string] $StartUpProjectName,
         [parameter(ParameterSetName = 'ConnectionStringName')]
@@ -75,7 +80,7 @@ function Enable-Migrations
 
     try
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent) @{ 'ContextTypeName' = $ContextTypeName }
+        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent ) @{ 'ContextTypeName' = $ContextTypeName; 'MigrationsDirectory' = $MigrationsDirectory }
         $error = Get-RunnerError $runner
         
         if ($error)
@@ -110,7 +115,7 @@ function Enable-Migrations
 
 .PARAMETER ProjectName
     Specifies the project that contains the migration configuration type to be
-    used. If ommitted, the default project selected in package manager console
+    used. If omitted, the default project selected in package manager console
     is used.
 
 .PARAMETER StartUpProjectName
@@ -193,12 +198,12 @@ function Add-Migration
 
 .PARAMETER SourceMigration
     Only valid with -Script. Specifies the name of a particular migration to use
-    as the update's starting point. If ommitted, the last applied migration in
+    as the update's starting point. If omitted, the last applied migration in
     the database will be used.
 
 .PARAMETER TargetMigration
     Specifies the name of a particular migration to update the database to. If
-    ommitted, the current model will be used.
+    omitted, the current model will be used.
 
 .PARAMETER Script
     Generate a SQL script rather than executing the pending changes directly.
@@ -209,7 +214,7 @@ function Add-Migration
 
 .PARAMETER ProjectName
     Specifies the project that contains the migration configuration type to be
-    used. If ommitted, the default project selected in package manager console
+    used. If omitted, the default project selected in package manager console
     is used.
 
 .PARAMETER StartUpProjectName
@@ -284,7 +289,7 @@ function Update-Database
 
 .PARAMETER ProjectName
     Specifies the project that contains the migration configuration type to be
-    used. If ommitted, the default project selected in package manager console
+    used. If omitted, the default project selected in package manager console
     is used.
 
 .PARAMETER StartUpProjectName

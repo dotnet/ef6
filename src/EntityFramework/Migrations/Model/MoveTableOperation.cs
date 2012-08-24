@@ -64,5 +64,9 @@ namespace System.Data.Entity.Migrations.Model
         {
             get { return false; }
         }
+
+        internal string ContextKey { get; set; }
+
+        internal CreateTableOperation CreateTableOperation { get; set; }
     }
 }

@@ -187,7 +187,7 @@ namespace System.Data.Entity.Migrations
 
             var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
 
-            migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: initialCreate);
+            migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: initialCreate, contextKey: "ClassLibrary1.Context");
 
             migrator.Update();
 

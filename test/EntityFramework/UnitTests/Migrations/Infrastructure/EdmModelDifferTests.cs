@@ -30,7 +30,7 @@ namespace System.Data.Entity.Migrations
 
             var model2 = modelBuilder.Build(ProviderInfo).GetModel();
 
-            new HistoryRepository(ConnectionString, ProviderFactory).AppendHistoryModel(model2, ProviderInfo);
+            new HistoryRepository(ConnectionString, ProviderFactory, "MyKey").AppendHistoryModel(model2, ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1, model2);
 
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Migrations
 
             var model2 = modelBuilder.Build(ProviderInfo).GetModel();
 
-            new HistoryRepository(ConnectionString, ProviderFactory).AppendHistoryModel(model2, ProviderInfo);
+            new HistoryRepository(ConnectionString, ProviderFactory, "MyKey").AppendHistoryModel(model2, ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1, model2, includeSystemOperations: true);
 
@@ -642,7 +642,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void Can_detect_table_move()
+        public void Can_detect_moved_tables()
         {
             var modelBuilder = new DbModelBuilder();
 
@@ -662,6 +662,31 @@ namespace System.Data.Entity.Migrations
 
             Assert.Equal("dbo.MigrationsCustomers", moveTableOperation.Name);
             Assert.Equal("foo", moveTableOperation.NewSchema);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_moved_system_tables()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo).GetModel();
+
+            modelBuilder = new DbModelBuilder();
+
+            var model2 = modelBuilder.Build(ProviderInfo).GetModel();
+
+            new HistoryRepository(ConnectionString, ProviderFactory, "MyKey").AppendHistoryModel(model1, ProviderInfo);
+            new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", new []{"foo"}).AppendHistoryModel(model2, ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1, model2, includeSystemOperations: true);
+
+            var moveTableOperation
+                = operations.OfType<MoveTableOperation>().Single();
+
+            Assert.True(moveTableOperation.IsSystem);
+            Assert.NotNull(moveTableOperation.CreateTableOperation);
+            Assert.Equal("dbo.__MigrationHistory", moveTableOperation.Name);
+            Assert.Equal("foo.__MigrationHistory", moveTableOperation.CreateTableOperation.Name);
         }
 
         [MigrationsTheory]

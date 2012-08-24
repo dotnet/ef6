@@ -16,12 +16,24 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         [Fact]
-        public void Can_get_and_set_rename_properties()
+        public void Can_get_and_set_name_properties()
         {
             var moveTableOperation = new MoveTableOperation("dbo.Customers", "crm");
 
             Assert.Equal("dbo.Customers", moveTableOperation.Name);
             Assert.Equal("crm", moveTableOperation.NewSchema);
+        }
+
+        [Fact]
+        public void Can_get_and_set_context_key_properties()
+        {
+            var moveTableOperation
+                = new MoveTableOperation("dbo.Customers", "crm")
+                      {
+                          ContextKey = "foo"
+                      };
+
+            Assert.Equal("foo", moveTableOperation.ContextKey);
         }
 
         [Fact]

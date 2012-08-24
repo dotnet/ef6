@@ -97,45 +97,54 @@ namespace System.Data.Entity.Migrations.Sql
 
             using (var writer = Writer())
             {
-                writer.WriteLine("CREATE TABLE " + Name(createTableOperation.Name) + " (");
-                writer.Indent++;
-
-                var columnCount = createTableOperation.Columns.Count();
-
-                createTableOperation.Columns.Each(
-                    (c, i) =>
-                        {
-                            Generate(c, writer);
-
-                            if (i < columnCount - 1)
-                            {
-                                writer.WriteLine(",");
-                            }
-                        });
-
-                if (createTableOperation.PrimaryKey != null)
-                {
-                    writer.WriteLine(",");
-                    writer.Write("CONSTRAINT ");
-                    writer.Write(Quote(createTableOperation.PrimaryKey.Name));
-                    writer.Write(" PRIMARY KEY (");
-                    writer.Write(createTableOperation.PrimaryKey.Columns.Join(Quote));
-                    writer.WriteLine(")");
-                }
-                else
-                {
-                    writer.WriteLine();
-                }
-
-                writer.Indent--;
-                writer.Write(")");
+                WriteCreateTable(createTableOperation, writer);
 
                 Statement(writer);
             }
+        }
+
+        private void WriteCreateTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
+        {
+            Contract.Requires(createTableOperation != null);
+            Contract.Requires(writer != null);
+
+            writer.WriteLine("CREATE TABLE " + Name(createTableOperation.Name) + " (");
+            writer.Indent++;
+
+            var columnCount = createTableOperation.Columns.Count();
+
+            createTableOperation.Columns.Each(
+                (c, i) =>
+                    {
+                        Generate(c, writer);
+
+                        if (i < columnCount - 1)
+                        {
+                            writer.WriteLine(",");
+                        }
+                    });
+
+            if (createTableOperation.PrimaryKey != null)
+            {
+                writer.WriteLine(",");
+                writer.Write("CONSTRAINT ");
+                writer.Write(Quote(createTableOperation.PrimaryKey.Name));
+                writer.Write(" PRIMARY KEY (");
+                writer.Write(createTableOperation.PrimaryKey.Columns.Join(Quote));
+                writer.WriteLine(")");
+            }
+            else
+            {
+                writer.WriteLine();
+            }
+
+            writer.Indent--;
+            writer.Write(")");
 
             if (createTableOperation.IsSystem)
             {
-                GenerateMakeSystemTable(createTableOperation.Name);
+                writer.WriteLine();
+                GenerateMakeSystemTable(createTableOperation, writer);
             }
         }
 
@@ -144,24 +153,20 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="table"> The table to mark as a system table. </param>
-        protected virtual void GenerateMakeSystemTable(string table)
+        protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
+            Contract.Requires(createTableOperation != null);
+            Contract.Requires(writer != null);
 
-            using (var writer = Writer())
-            {
-                writer.WriteLine("BEGIN TRY");
+            writer.WriteLine("BEGIN TRY");
 
-                writer.Indent++;
-                writer.WriteLine("EXEC sp_MS_marksystemobject '" + table + "'");
-                writer.Indent--;
+            writer.Indent++;
+            writer.WriteLine("EXEC sp_MS_marksystemobject '" + createTableOperation.Name + "'");
+            writer.Indent--;
 
-                writer.WriteLine("END TRY");
-                writer.WriteLine("BEGIN CATCH");
-                writer.Write("END CATCH");
-
-                Statement(writer);
-            }
+            writer.WriteLine("END TRY");
+            writer.WriteLine("BEGIN CATCH");
+            writer.Write("END CATCH");
         }
 
         /// <summary>
@@ -558,19 +563,19 @@ namespace System.Data.Entity.Migrations.Sql
         {
             Contract.Requires(moveTableOperation != null);
 
-            using (var writer = Writer())
+            var newSchema = moveTableOperation.NewSchema ?? "dbo";
+
+            if (!newSchema.EqualsIgnoreCase("dbo")
+                && !_generatedSchemas.Contains(newSchema))
             {
-                var newSchema = moveTableOperation.NewSchema ?? "dbo";
+                GenerateCreateSchema(newSchema);
 
-                if (!newSchema.EqualsIgnoreCase("dbo")
-                    && !_generatedSchemas.Contains(newSchema))
-                {
-                    GenerateCreateSchema(newSchema);
+                _generatedSchemas.Add(newSchema);
+            }
 
-                    _generatedSchemas.Add(newSchema);
-                }
-
-                if (!moveTableOperation.IsSystem)
+            if (!moveTableOperation.IsSystem)
+            {
+                using (var writer = Writer())
                 {
                     writer.Write("ALTER SCHEMA ");
                     writer.Write(Quote(newSchema));
@@ -579,21 +584,44 @@ namespace System.Data.Entity.Migrations.Sql
 
                     Statement(writer);
                 }
-                else
-                {
-                    var tableName = moveTableOperation.Name.ToDatabaseName().Name;
-                    var newName = moveTableOperation.NewSchema + "." + tableName;
+            }
+            else
+            {
+                Contract.Assert(moveTableOperation.CreateTableOperation != null);
+                Contract.Assert(!string.IsNullOrWhiteSpace(moveTableOperation.ContextKey));
 
-                    writer.Write("SELECT * INTO ");
-                    writer.Write(Name(newName));
-                    writer.Write(" FROM ");
+                using (var writer = Writer())
+                {
+                    writer.Write("IF object_id('");
+                    writer.Write(moveTableOperation.CreateTableOperation.Name);
+                    writer.WriteLine("') IS NULL BEGIN");
+                    writer.Indent++;
+                    WriteCreateTable(moveTableOperation.CreateTableOperation, writer);
+                    writer.WriteLine();
+                    writer.Indent--;
+                    writer.WriteLine("END");
+
+                    writer.Write("INSERT INTO ");
+                    writer.WriteLine(Name(moveTableOperation.CreateTableOperation.Name));
+                    writer.Write("SELECT * FROM ");
+                    writer.WriteLine(Name(moveTableOperation.Name));
+                    writer.Write("WHERE [ContextKey] = ");
+                    writer.WriteLine(Generate(moveTableOperation.ContextKey));
+
+                    writer.Write("DELETE ");
+                    writer.WriteLine(Name(moveTableOperation.Name));
+                    writer.Write("WHERE [ContextKey] = ");
+                    writer.WriteLine(Generate(moveTableOperation.ContextKey));
+
+                    writer.Write("IF NOT EXISTS(SELECT * FROM ");
                     writer.Write(Name(moveTableOperation.Name));
+                    writer.WriteLine(")");
+                    writer.Indent++;
+                    writer.Write("DROP TABLE ");
+                    writer.Write(Name(moveTableOperation.Name));
+                    writer.Indent--;
 
                     Statement(writer);
-
-                    GenerateMakeSystemTable(newName);
-
-                    Generate(new DropTableOperation(moveTableOperation.Name));
                 }
             }
         }

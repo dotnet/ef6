@@ -59,5 +59,25 @@ namespace System.Data.Entity.Migrations
             Assert.NotNull(migrationsConfiguration.GetSqlGenerator(DbProviders.Sql));
             Assert.NotNull(migrationsConfiguration.GetSqlGenerator(DbProviders.SqlCe));
         }
+
+        [Fact]
+        public void ContextKey_is_assigned_by_default()
+        {
+            var migrationsConfiguration = new TestMigrationsConfiguration();
+
+            Assert.Equal(migrationsConfiguration.GetType().FullName, migrationsConfiguration.ContextKey);
+        }
+
+        [Fact]
+        public void Can_get_and_set_context_key()
+        {
+            var migrationsConfiguration
+                = new TestMigrationsConfiguration
+                      {
+                          ContextKey = "Foo"
+                      };
+
+            Assert.Equal("Foo", migrationsConfiguration.ContextKey);
+        }
     }
 }

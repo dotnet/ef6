@@ -19,6 +19,8 @@ namespace System.Data.Entity.Migrations.History
             : base(existingConnection, contextOwnsConnection)
         {
             _defaultSchema = defaultSchema;
+
+            Configuration.ValidateOnSaveEnabled = false;
         }
 
         public string DefaultSchema
@@ -33,8 +35,14 @@ namespace System.Data.Entity.Migrations.History
             modelBuilder.HasDefaultSchema(_defaultSchema);
 
             modelBuilder.Entity<HistoryRow>().ToTable(TableName);
-            modelBuilder.Entity<HistoryRow>().HasKey(h => h.MigrationId);
+            modelBuilder.Entity<HistoryRow>().HasKey(
+                h => new
+                         {
+                             h.MigrationId,
+                             h.ContextKey
+                         });
             modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasMaxLength(255).IsRequired();
+            modelBuilder.Entity<HistoryRow>().Property(h => h.ContextKey).HasMaxLength(512).IsRequired();
             modelBuilder.Entity<HistoryRow>().Property(h => h.Model).IsRequired().IsMaxLength();
             modelBuilder.Entity<HistoryRow>().Property(h => h.ProductVersion).HasMaxLength(32).IsRequired();
         }

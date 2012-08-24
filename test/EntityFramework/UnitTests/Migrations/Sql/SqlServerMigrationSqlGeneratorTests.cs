@@ -5,14 +5,18 @@ namespace System.Data.Entity.Migrations
     using System.Data.Common;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Globalization;
     using System.Threading;
+    using System.Linq;
     using Xunit;
 
     public class SqlServerMigrationSqlGeneratorTests
@@ -50,7 +54,7 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_add_timestamp_column_operation()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var addColumnOperation
                 = new AddColumnOperation(
@@ -62,7 +66,7 @@ namespace System.Data.Entity.Migrations
                             IsTimestamp = true
                         });
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] rowversion NOT NULL"));
         }
@@ -70,7 +74,7 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_add_rowversion_store_type_column_operation()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var addColumnOperation
                 = new AddColumnOperation(
@@ -82,7 +86,7 @@ namespace System.Data.Entity.Migrations
                             StoreType = "RowVersion"
                         });
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] [RowVersion] NOT NULL"));
         }
@@ -90,7 +94,7 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_add_timestamp_store_type_column_operation()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var addColumnOperation
                 = new AddColumnOperation(
@@ -102,7 +106,7 @@ namespace System.Data.Entity.Migrations
                             StoreType = "timestamp"
                         });
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] [timestamp] NOT NULL"));
         }
@@ -110,14 +114,14 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_drop_primary_key_operation()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var dropPrimaryKeyOperation = new DropPrimaryKeyOperation
                                               {
                                                   Table = "T"
                                               };
 
-            var sql = migrationProvider.Generate(new[] { dropPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { dropPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [T] DROP CONSTRAINT [PK_T]"));
         }
@@ -125,7 +129,7 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_add_primary_key_operation()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation
                                              {
@@ -135,7 +139,7 @@ namespace System.Data.Entity.Migrations
             addPrimaryKeyOperation.Columns.Add("c1");
             addPrimaryKeyOperation.Columns.Add("c2");
 
-            var sql = migrationProvider.Generate(new[] { addPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY ([c1], [c2])"));
         }
@@ -143,11 +147,11 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_drop_column()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var dropColumnOperation = new DropColumnOperation("Customers", "Foo");
 
-            var sql = migrationProvider.Generate(new[] { dropColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { dropColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Customers] DROP COLUMN [Foo]"));
         }
@@ -155,7 +159,7 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_timestamp_column()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var createTableOperation = new CreateTableOperation("Customers");
             var column = new ColumnModel(PrimitiveTypeKind.Binary)
@@ -165,7 +169,7 @@ namespace System.Data.Entity.Migrations
                              };
             createTableOperation.Columns.Add(column);
 
-            var sql = migrationProvider.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains(@"[Version] rowversion"));
         }
@@ -173,9 +177,9 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Generate_can_output_custom_sql_operation()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationProvider.Generate(new[] { new SqlOperation("insert into foo") }, "2008").Join(
+            var sql = migrationSqlGenerator.Generate(new[] { new SqlOperation("insert into foo") }, "2008").Join(
                 s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains(@"insert into foo"));
@@ -201,9 +205,9 @@ namespace System.Data.Entity.Migrations
             createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationProvider.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(
                 sql.Contains(
@@ -237,9 +241,9 @@ CREATE TABLE [foo].[Customers] (
                         IsNullable = false
                     });
 
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationProvider.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(
                 sql.Contains(
@@ -252,6 +256,57 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 END CATCH"));
+        }
+
+        [Fact]
+        public void Generate_can_output_move_table_as_system_object_statement()
+        {
+            var createTableOperation
+                = new CreateTableOperation("dbo.History");
+
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Int32)
+                    {
+                        Name = "Id",
+                        IsNullable = false
+                    });
+
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
+
+            var moveTableOperation
+                = new MoveTableOperation("dbo.History", "foo")
+                      {
+                          IsSystem = true,
+                          ContextKey = "MyKey",
+                          CreateTableOperation = createTableOperation
+                      };
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { moveTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.True(
+                sql.Contains(
+                    @"IF schema_id('foo') IS NULL
+    EXECUTE('CREATE SCHEMA [foo]')
+IF object_id('dbo.History') IS NULL BEGIN
+    CREATE TABLE [dbo].[History] (
+        [Id] [int] NOT NULL,
+        [Name] [nvarchar](max) NOT NULL
+    )
+END
+INSERT INTO [dbo].[History]
+SELECT * FROM [dbo].[History]
+WHERE [ContextKey] = 'MyKey'
+DELETE [dbo].[History]
+WHERE [ContextKey] = 'MyKey'
+IF NOT EXISTS(SELECT * FROM [dbo].[History])
+    DROP TABLE [dbo].[History]"));
         }
 
         [Fact]
@@ -274,7 +329,7 @@ END CATCH"));
             createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var createIndexOperation = new CreateIndexOperation
                                            {
@@ -285,7 +340,7 @@ END CATCH"));
             createIndexOperation.Columns.Add(idColumn.Name);
 
             var sql
-                = migrationProvider.Generate(
+                = migrationSqlGenerator.Generate(
                     new[]
                         {
                             createIndexOperation
@@ -309,9 +364,9 @@ END CATCH"));
             addForeignKeyOperation.PrincipalColumns.Add("CustomerId");
             addForeignKeyOperation.DependentColumns.Add("CustomerId");
 
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationProvider.Generate(new[] { addForeignKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addForeignKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(
                 sql.Contains(
@@ -321,9 +376,9 @@ END CATCH"));
         [Fact]
         public void Generate_can_output_drop_table_statement()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationProvider.Generate(new[] { new DropTableOperation("Customers") }, "2008").Join(
+            var sql = migrationSqlGenerator.Generate(new[] { new DropTableOperation("Customers") }, "2008").Join(
                 s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("DROP TABLE [Customers]"));
@@ -332,7 +387,7 @@ END CATCH"));
         [Fact]
         public void Generate_can_output_insert_history_statement()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var sqlCommand = new SqlCommand("insert Foo (Bar) values (p1)");
             sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
@@ -344,7 +399,7 @@ END CATCH"));
                                            });
 
             var sql =
-                migrationProvider.Generate(
+                migrationSqlGenerator.Generate(
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -356,7 +411,7 @@ END CATCH"));
         [Fact]
         public void Generate_can_output_delete_history_statement()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var sqlCommand = new SqlCommand("delete Foo where Bar = p1");
             sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
@@ -368,7 +423,7 @@ END CATCH"));
                                            });
 
             var sql =
-                migrationProvider.Generate(
+                migrationSqlGenerator.Generate(
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
@@ -380,7 +435,7 @@ END CATCH"));
         [Fact]
         public void Generate_can_output_add_column_statement()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Guid)
                              {
@@ -389,7 +444,7 @@ END CATCH"));
                              };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT newid()"));
         }
@@ -397,7 +452,7 @@ END CATCH"));
         [Fact]
         public void Generate_can_output_add_column_statement_with_custom_store_type()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.String)
                              {
@@ -407,7 +462,7 @@ END CATCH"));
                              };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [varchar](15)"));
         }
@@ -699,7 +754,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         [Fact]
         public void Generate_can_output_add_column_statement_with_explicit_default_value()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Guid)
                              {
@@ -709,7 +764,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                              };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] NOT NULL DEFAULT 42"));
         }
@@ -717,7 +772,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         [Fact]
         public void Generate_can_output_add_column_statement_with_explicit_default_value_sql()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Guid)
                              {
@@ -727,7 +782,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                              };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] NOT NULL DEFAULT 42"));
         }
@@ -735,7 +790,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         [Fact]
         public void Generate_can_output_add_column_statement_when_non_nullable_and_no_default_provided()
         {
-            var migrationProvider = new SqlServerMigrationSqlGenerator();
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Int32)
                              {
@@ -744,7 +799,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                              };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [int] NOT NULL DEFAULT 0"));
         }

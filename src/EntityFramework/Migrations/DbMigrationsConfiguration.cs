@@ -20,6 +20,8 @@ namespace System.Data.Entity.Migrations
     /// </summary>
     public class DbMigrationsConfiguration
     {
+        public const string DefaultMigrationsDirectory = "Migrations";
+
         private readonly Dictionary<string, MigrationSqlGenerator> _sqlGenerators
             = new Dictionary<string, MigrationSqlGenerator>();
 
@@ -28,7 +30,7 @@ namespace System.Data.Entity.Migrations
         private Assembly _migrationsAssembly;
         private EdmModelDiffer _modelDiffer = new EdmModelDiffer();
         private DbConnectionInfo _connectionInfo;
-        private string _migrationsDirectory = "Migrations";
+        private string _migrationsDirectory = DefaultMigrationsDirectory;
         private readonly Lazy<IDbDependencyResolver> _resolver;
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace System.Data.Entity.Migrations
             : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver))
         {
             CodeGenerator = new CSharpMigrationCodeGenerator();
+            ContextKey = GetType().FullName;
         }
 
         internal DbMigrationsConfiguration(Lazy<IDbDependencyResolver> resolver)
@@ -49,6 +52,8 @@ namespace System.Data.Entity.Migrations
         ///     Gets or sets a value indicating if automatic migrations can be used when migration the database.
         /// </summary>
         public bool AutomaticMigrationsEnabled { get; set; }
+
+        public string ContextKey { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating if data loss is acceptable during automatic migration.

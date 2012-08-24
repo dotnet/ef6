@@ -18,6 +18,11 @@ namespace System.Data.Entity.Migrations.History
         public string MigrationId { get; set; }
 
         /// <summary>
+        ///     Gets or sets a key representing to which context the row applies.
+        /// </summary>
+        public string ContextKey { get; set; }
+
+        /// <summary>
         ///     Gets or sets the state of the model after this migration was applied.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]

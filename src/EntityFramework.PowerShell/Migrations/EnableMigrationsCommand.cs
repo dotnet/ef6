@@ -21,6 +21,7 @@ namespace System.Data.Entity.Migrations
                         var project = Project;
 
                         var contextTypeName = GetAnonymousArgument<string>("ContextTypeName");
+                        var migrationsDirectory = GetAnonymousArgument<string>("MigrationsDirectory");
                         var qualifiedContextTypeName = FindContextToEnable(contextTypeName);
                         var isVb = project.CodeModel.Language == CodeModelLanguageConstants.vsCMLanguageVB;
                         var fileName = isVb ? "Configuration.vb" : "Configuration.cs";
@@ -28,38 +29,56 @@ namespace System.Data.Entity.Migrations
 
                         var tokens = new Dictionary<string, string>();
 
+                        if (!string.IsNullOrWhiteSpace(migrationsDirectory))
+                        {
+                            tokens["migrationsDirectory"]
+                                = "\r\n            MigrationsDirectory = "
+                                  + (!isVb ? "@" : null)
+                                  + "\"" + migrationsDirectory + "\""
+                                  + (!isVb ? ";" : null);
+                        }
+                        else
+                        {
+                            migrationsDirectory = "Migrations";
+                        }
+
                         tokens["enableAutomaticMigrations"]
                             = enableAutomaticMigrations
                                   ? (isVb ? "True" : "true")
                                   : (isVb ? "False" : "false");
 
                         var rootNamespace = project.GetRootNamespace();
-                        tokens["rootnamespace"] = rootNamespace;
+                        var migrationsNamespace = migrationsDirectory.Replace("\\", ".");
+
+                        tokens["namespace"]
+                            = !isVb && !string.IsNullOrWhiteSpace(rootNamespace)
+                                  ? rootNamespace + "." + migrationsNamespace
+                                  : migrationsNamespace;
 
                         if (string.IsNullOrWhiteSpace(qualifiedContextTypeName))
                         {
-                            tokens["contexttype"]
+                            tokens["contextType"]
                                 = isVb
                                       ? "[[type name]]"
                                       : "/* TODO: put your Code First context type name here */";
 
                             if (isVb)
                             {
-                                tokens["contexttypecomment"]
+                                tokens["contextTypeComment"]
                                     = "\r\n        'TODO: replace [[type name]] with your Code First context type name";
                             }
                         }
                         else if (isVb && qualifiedContextTypeName.StartsWith(rootNamespace + "."))
                         {
-                            tokens["contexttype"] =
-                                qualifiedContextTypeName.Substring(rootNamespace.Length + 1).Replace('+', '.');
+                            tokens["contextType"]
+                                = qualifiedContextTypeName.Substring(rootNamespace.Length + 1).Replace('+', '.');
                         }
                         else
                         {
-                            tokens["contexttype"] = qualifiedContextTypeName.Replace('+', '.');
+                            tokens["contextType"] = qualifiedContextTypeName.Replace('+', '.');
                         }
 
-                        var path = Path.Combine("Migrations", fileName);
+                        var path = Path.Combine(migrationsDirectory, fileName);
                         var absolutePath = Path.Combine(project.GetProjectDir(), path);
 
                         if (!force
@@ -69,12 +88,12 @@ namespace System.Data.Entity.Migrations
                         }
 
                         project.AddFile(path, new TemplateProcessor().Process(template, tokens));
-                        project.OpenFile(path);
 
-                        if (!enableAutomaticMigrations && StartUpProject.TryBuild()
+                        if (!enableAutomaticMigrations
+                            && StartUpProject.TryBuild()
                             && project.TryBuild())
                         {
-                            var configurationTypeName = rootNamespace + ".Migrations.Configuration";
+                            var configurationTypeName = rootNamespace + "." + migrationsNamespace + ".Configuration";
 
                             using (var facade = GetFacade(configurationTypeName))
                             {
@@ -87,11 +106,23 @@ namespace System.Data.Entity.Migrations
                                 {
                                     new MigrationWriter(this).Write(scaffoldedMigration);
 
+                                    // We found an initial create so we need to add an explicit ContextKey
+                                    // assignment to the configuration
+
+                                    tokens["contextKey"]
+                                        = "\r\n            ContextKey = "
+                                          + "\"" + qualifiedContextTypeName + "\""
+                                          + (!isVb ? ";" : null);
+
+                                    File.WriteAllText(absolutePath, new TemplateProcessor().Process(template, tokens));
+
                                     WriteWarning(
                                         Strings.EnableMigrations_InitialScaffold(scaffoldedMigration.MigrationId));
                                 }
                             }
                         }
+
+                        project.OpenFile(path);
 
                         WriteLine(Strings.EnableMigrations_Success(project.Name));
                     });

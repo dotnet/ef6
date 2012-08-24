@@ -58,6 +58,7 @@ namespace System.Data.Entity.Internal
                             AutomaticMigrationsEnabled = true,
                             MigrationsAssembly = contextType.Assembly,
                             MigrationsNamespace = contextType.Namespace,
+                            ContextKey = internalContext.ContextKey,
                             TargetDatabase =
                                 new DbConnectionInfo(
                                     internalContext.OriginalConnectionString, internalContext.ProviderName)

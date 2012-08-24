@@ -48,13 +48,33 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<CustomSchemaContext_v1>();
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            var generatedMigration0 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v0");
+
+            migrator = CreateMigrator<ShopContext_v1>(false, scaffoldedMigrations: generatedMigration0);
+
+            migrator.Update();
+
+            Assert.True(TableExists("dbo.OrderLines"));
+            Assert.True(TableExists("ordering.Orders"));
+            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+
+            migrator = CreateMigrator<CustomSchemaContext_v1>();
 
             var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
 
-            migrator = CreateMigrator<CustomSchemaContext_v1>(false, scaffoldedMigrations: generatedMigration1);
+            migrator = CreateMigrator<CustomSchemaContext_v1>(
+                false, scaffoldedMigrations: new [] { generatedMigration0, generatedMigration1 });
 
             migrator.Update();
+
+            WhenNotSqlCe(
+                () =>
+                {
+                    Assert.False(TableExists("dbo.OrderLines"));
+                    Assert.False(TableExists("dbo." + HistoryContext.TableName));
+                });
 
             Assert.True(TableExists("foo.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
@@ -66,7 +86,7 @@ namespace System.Data.Entity.Migrations
 
             migrator
                 = CreateMigrator<CustomSchemaContext_v2>(
-                    false, scaffoldedMigrations: new[] { generatedMigration1, generatedMigration2 });
+                    false, scaffoldedMigrations: new[] { generatedMigration0, generatedMigration1, generatedMigration2 });
 
             migrator.Update();
 

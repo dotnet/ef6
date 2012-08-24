@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
-    using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
@@ -13,7 +12,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using Xunit;
 
@@ -132,6 +130,7 @@ namespace System.Data.Entity.Migrations
             bool automaticMigrationsEnabled = true,
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
+            string contextKey = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -140,6 +139,7 @@ namespace System.Data.Entity.Migrations
                     automaticMigrationsEnabled,
                     automaticDataLossEnabled,
                     targetDatabase,
+                    contextKey,
                     scaffoldedMigrations));
         }
 
@@ -147,17 +147,24 @@ namespace System.Data.Entity.Migrations
             bool automaticMigrationsEnabled = true,
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
+            string contextKey = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
-            var migrationsConfiguration = new DbMigrationsConfiguration
-                                              {
-                                                  AutomaticMigrationsEnabled = automaticMigrationsEnabled,
-                                                  AutomaticMigrationDataLossAllowed = automaticDataLossEnabled,
-                                                  ContextType = typeof(TContext),
-                                                  MigrationsAssembly = TestBase.SystemComponentModelDataAnnotationsAssembly,
-                                                  MigrationsNamespace = typeof(TContext).Namespace
-                                              };
+            var migrationsConfiguration
+                = new DbMigrationsConfiguration
+                      {
+                          AutomaticMigrationsEnabled = automaticMigrationsEnabled,
+                          AutomaticMigrationDataLossAllowed = automaticDataLossEnabled,
+                          ContextType = typeof(TContext),
+                          MigrationsAssembly = SystemComponentModelDataAnnotationsAssembly,
+                          MigrationsNamespace = typeof(TContext).Namespace
+                      };
+
+            if (!string.IsNullOrWhiteSpace(contextKey))
+            {
+                migrationsConfiguration.ContextKey = contextKey;
+            }
 
             if (!string.IsNullOrWhiteSpace(targetDatabase))
             {
@@ -184,7 +191,7 @@ namespace System.Data.Entity.Migrations
             migrationsConfiguration.TargetDatabase = new DbConnectionInfo(TestDatabase.ConnectionString, TestDatabase.ProviderName);
             migrationsConfiguration.CodeGenerator = CodeGenerator;
 
-            migrationsConfiguration.MigrationsAssembly = TestBase.SystemComponentModelDataAnnotationsAssembly;
+            migrationsConfiguration.MigrationsAssembly = SystemComponentModelDataAnnotationsAssembly;
         }
 
         public TContext CreateContext<TContext>()

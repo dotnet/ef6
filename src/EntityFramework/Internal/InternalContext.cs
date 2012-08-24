@@ -282,7 +282,10 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public virtual XDocument QueryForModel()
         {
-            return new HistoryRepository(OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
+            return new HistoryRepository(
+                OriginalConnectionString,
+                DbProviderServices.GetProviderFactory(Connection),
+                ContextKey)
                 .GetLastModel();
         }
 
@@ -295,7 +298,10 @@ namespace System.Data.Entity.Internal
             {
                 PerformInitializationAction(
                     () =>
-                    new HistoryRepository(OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
+                    new HistoryRepository(
+                        OriginalConnectionString,
+                        DbProviderServices.GetProviderFactory(Connection),
+                        ContextKey)
                         .BootstrapUsingEFProviderDdl(Owner.GetModel()));
             }
         }
@@ -420,14 +426,14 @@ namespace System.Data.Entity.Internal
             {
                 ae.Flatten().Handle(
                     e =>
-                    {
-                        var ex = e as UpdateException;
-                        if (ex != null)
                         {
-                            throw WrapUpdateException(ex);
-                        }
-                        return false;
-                    });
+                            var ex = e as UpdateException;
+                            if (ex != null)
+                            {
+                                throw WrapUpdateException(ex);
+                            }
+                            return false;
+                        });
 
                 throw;
             }
@@ -763,24 +769,24 @@ namespace System.Data.Entity.Internal
 
             return new LazyEnumerator<TElement>(
                 () =>
-                {
-                    Initialize();
+                    {
+                        Initialize();
 
-                    var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
-                    try
-                    {
-                        var result = disposableEnumerable.GetEnumerator();
-                        return result;
-                    }
-                    catch
-                    {
-                        // if there is a problem creating the enumerator, we should dispose
-                        // the enumerable (if there is no problem, the enumerator will take 
-                        // care of the dispose)
-                        disposableEnumerable.Dispose();
-                        throw;
-                    }
-                });
+                        var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(sql, parameters);
+                        try
+                        {
+                            var result = disposableEnumerable.GetEnumerator();
+                            return result;
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
 #if !NET40
@@ -801,26 +807,26 @@ namespace System.Data.Entity.Internal
 
             return new LazyAsyncEnumerator<TElement>(
                 async cancellationToken =>
-                {
-                    //Not initializing asynchronously as it's not expected to be done frequently
-                    Initialize();
+                          {
+                              //Not initializing asynchronously as it's not expected to be done frequently
+                              Initialize();
 
-                    var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                        sql, cancellationToken, parameters).ConfigureAwait(continueOnCapturedContext: false);
+                              var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                                  sql, cancellationToken, parameters).ConfigureAwait(continueOnCapturedContext: false);
 
-                    try
-                    {
-                        return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
-                    }
-                    catch
-                    {
-                        // if there is a problem creating the enumerator, we should dispose
-                        // the enumerable (if there is no problem, the enumerator will take 
-                        // care of the dispose)
-                        disposableEnumerable.Dispose();
-                        throw;
-                    }
-                });
+                              try
+                              {
+                                  return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
+                              }
+                              catch
+                              {
+                                  // if there is a problem creating the enumerator, we should dispose
+                                  // the enumerable (if there is no problem, the enumerator will take 
+                                  // care of the dispose)
+                                  disposableEnumerable.Dispose();
+                                  throw;
+                              }
+                          });
         }
 
 #endif
@@ -1286,7 +1292,8 @@ namespace System.Data.Entity.Internal
             var metadataWorkspace = GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace;
             var objectItemCollection = (ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace);
             var ospaceTypes = metadataWorkspace.GetItems<ComplexType>(DataSpace.OSpace);
-            return ospaceTypes.Where(t => objectItemCollection.GetClrType(t) == clrType).Any();
+
+            return ospaceTypes.Any(t => objectItemCollection.GetClrType(t) == clrType);
         }
 
         /// <summary>
@@ -1363,6 +1370,11 @@ namespace System.Data.Entity.Internal
         public virtual string DefaultSchema
         {
             get { return null; }
+        }
+
+        public string ContextKey
+        {
+            get { return Owner.GetType().FullName; }
         }
     }
 

@@ -116,6 +116,7 @@ namespace System.Data.Entity.Internal
             Assert.Equal(
                 "Database=Foo",
                 configuration.TargetDatabase.GetConnectionString(AppConfig.DefaultInstance).ConnectionString);
+            Assert.Equal("Castle.Proxies.FakeContextProxy", configuration.ContextKey);
         }
 
         [Fact]

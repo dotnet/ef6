@@ -184,6 +184,7 @@
     <Compile Include="Migrations\AutoAndGenerateScenarios.cs" />
     <Compile Include="Migrations\AutoAndGenerateTestCase.cs" />
     <Compile Include="Migrations\BasicMigrationScenarios.cs" />
+    <Compile Include="Migrations\MultiTenantScenarios.cs" />
     <Compile Include="Migrations\UpgradeScenarios.cs" />
     <Compile Include="Migrations\SchemaScenarios.cs" />
     <Compile Include="Migrations\CreateIndexScenarios.cs" />

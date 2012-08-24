@@ -1,18 +1,18 @@
-﻿namespace $rootnamespace$.Migrations
+﻿namespace $namespace$
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<$contexttype$>
+    internal sealed class Configuration : DbMigrationsConfiguration<$contextType$>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = $enableAutomaticMigrations$;
+            AutomaticMigrationsEnabled = $enableAutomaticMigrations$;$migrationsDirectory$$contextKey$
         }
 
-        protected override void Seed($contexttype$ context)
+        protected override void Seed($contextType$ context)
         {
             //  This method will be called after migrating to the latest version.
 
