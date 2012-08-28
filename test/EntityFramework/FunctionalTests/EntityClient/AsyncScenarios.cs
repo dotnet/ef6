@@ -12,6 +12,15 @@ namespace System.Data.Entity.EntityClient
 
     public class AsyncScenarios : FunctionalTestBase
     {
+        #region Infrastructure/setup
+
+        public AsyncScenarios()
+        {
+            CreateMetadataFilesForSimpleModel();
+        }
+
+        #endregion
+
         [Fact]
         public void Async_query_returns_same_as_as_sync()
         {
