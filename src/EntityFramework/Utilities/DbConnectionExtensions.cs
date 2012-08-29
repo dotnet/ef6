@@ -8,22 +8,9 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Reflection;
 
     internal static class DbConnectionExtensions
     {
-#if NET40
-
-        private static readonly MethodInfo _getFactoryMethod = typeof(DbProviderFactories)
-            .GetMethod(
-                "GetFactory",
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static,
-                null,
-                new[] { typeof(DbConnection) },
-                null);
-
-#endif
-
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string GetProviderInvariantName(this DbConnection connection)
         {
@@ -53,12 +40,7 @@ namespace System.Data.Entity.Utilities
         {
             Contract.Requires(connection != null);
 
-#if NET40
-            // TODO: Use non-reflective mechanism here.
-            return (DbProviderFactory)_getFactoryMethod.Invoke(null, new object[] { connection });
-#else
-            return DbProviderFactories.GetFactory(connection);
-#endif
+            return DbConfiguration.GetService<IDbProviderFactoryService>().GetProviderFactory(connection);
         }
     }
 }

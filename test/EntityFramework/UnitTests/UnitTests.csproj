@@ -168,6 +168,7 @@
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
+    <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Migrations\Extensions\IEnumerableExtensionsTests.cs" />
     <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
     <Compile Include="Utilities\PartialTrustAssemblyExtensionsTests.cs" />
+    <Compile Include="Utilities\ProviderRowFinderTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
     <Compile Include="Utilities\TaskHelperTests.cs" />
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />

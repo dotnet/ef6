@@ -15,15 +15,17 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     public class FakeSqlConnection : DbConnection
     {
         private readonly string _manifestToken;
+        private readonly DbProviderFactory _factory;
 
-        public FakeSqlConnection(string manifestToken = "2008")
+        public FakeSqlConnection(string manifestToken = "2008", DbProviderFactory factory = null)
         {
             _manifestToken = manifestToken;
+            _factory = factory ?? FakeSqlProviderFactory.Instance;
         }
 
         protected override DbProviderFactory DbProviderFactory
         {
-            get { return FakeSqlProviderFactory.Instance; }
+            get { return _factory; }
         }
 
         public override string ConnectionString { get; set; }

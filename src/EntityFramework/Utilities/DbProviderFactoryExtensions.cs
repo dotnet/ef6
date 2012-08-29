@@ -8,10 +8,8 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Reflection;
 
     internal static class DbProviderFactoryExtensions
     {
@@ -20,56 +18,18 @@ namespace System.Data.Entity.Utilities
         {
             Contract.Requires(factory != null);
 
-            const int assemblyQualifiedNameIndex = 3;
             const int invariantNameIndex = 2;
 
-            var connectionProviderFactoryType = factory.GetType();
-            var connectionProviderFactoryAssemblyName = new AssemblyName(
-                connectionProviderFactoryType.Assembly.FullName);
+            var row = new ProviderRowFinder().FindRow(
+                factory.GetType(),
+                r => DbProviderFactories.GetFactory(r).GetType() == factory.GetType());
 
-            foreach (DataRow row in DbProviderFactories.GetFactoryClasses().Rows)
+            if (row == null)
             {
-                var assemblyQualifiedTypeName = (string)row[assemblyQualifiedNameIndex];
-
-                AssemblyName rowProviderFactoryAssemblyName = null;
-
-                // parse the provider factory assembly qualified type name
-                Type.GetType(
-                    assemblyQualifiedTypeName,
-                    a =>
-                        {
-                            rowProviderFactoryAssemblyName = a;
-
-                            return null;
-                        },
-                    (_, __, ___) => null);
-
-                if (rowProviderFactoryAssemblyName != null)
-                {
-                    if (string.Equals(
-                        connectionProviderFactoryAssemblyName.Name,
-                        rowProviderFactoryAssemblyName.Name,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        try
-                        {
-                            var providerFactory = DbProviderFactories.GetFactory(row);
-
-                            if (providerFactory.GetType().Equals(connectionProviderFactoryType))
-                            {
-                                return (string)row[invariantNameIndex];
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.Fail("GetFactory failed with: " + ex);
-                            // Ignore bad providers.
-                        }
-                    }
-                }
+                throw new NotSupportedException(Strings.ProviderNameNotFound(factory));
             }
 
-            throw Error.ModelBuilder_ProviderNameNotFound(factory);
+            return (string)row[invariantNameIndex];
         }
 
         internal static DbProviderServices GetProviderServices(this DbProviderFactory factory)

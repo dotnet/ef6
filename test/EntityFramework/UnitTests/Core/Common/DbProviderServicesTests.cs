@@ -136,12 +136,9 @@ namespace System.Data.Entity.Core.Common
             [Fact]
             public void GetProviderServices_returns_provider_registered_in_app_config()
             {
-                var mockConnection = new Mock<DbConnection>();
-                mockConnection.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(FakeSqlProviderFactory.Instance);
-
                 Assert.Same(
                     FakeSqlProviderServices.Instance,
-                    DbProviderServices.GetProviderServices(mockConnection.Object));
+                    DbProviderServices.GetProviderServices(new FakeSqlConnection()));
             }
         }
 

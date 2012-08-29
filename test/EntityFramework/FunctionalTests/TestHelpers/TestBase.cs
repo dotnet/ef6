@@ -51,6 +51,26 @@ namespace System.Data.Entity
             return clone.Build(ProviderRegistry.SqlCe4_ProviderInfo).DatabaseMapping;
         }
 
+        protected static DataRow CreateProviderRow(string name, string invariantName, string assemblyQualifiedName)
+        {
+            var table = new DataTable();
+            table.Columns.AddRange(
+                new[]
+                    {
+                        new DataColumn("Name", typeof(string)),
+                        new DataColumn("Description", typeof(string)),
+                        new DataColumn("InvariantName", typeof(string)),
+                        new DataColumn("AssemblyQualifiedName", typeof(string)),
+                    });
+
+            var row = table.NewRow();
+            row["Name"] = name;
+            row["Description"] = "Name: " + name + " Invariant: " + invariantName;
+            row["InvariantName"] = invariantName;
+            row["AssemblyQualifiedName"] = assemblyQualifiedName;
+            return row;
+        }
+
         #region Assemblies and exceptions
 
         /// <summary>

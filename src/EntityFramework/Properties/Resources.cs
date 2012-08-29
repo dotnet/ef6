@@ -654,11 +654,19 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Unable to determine the provider name for connection of type '{0}'."
+        /// A string like "Unable to determine the provider name for provider factory of type '{0}'. Make sure that the ADO.NET provider is installed or registered in the application config."
         /// </summary>
-        internal static string ModelBuilder_ProviderNameNotFound(object p0)
+        internal static string ProviderNameNotFound(object p0)
         {
-            return EntityRes.GetString(EntityRes.ModelBuilder_ProviderNameNotFound, p0);
+            return EntityRes.GetString(EntityRes.ProviderNameNotFound, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unable to determine the DbProviderFactory type for connection of type '{0}'. Make sure that the ADO.NET provider is installed or registered in the application config."
+        /// </summary>
+        internal static string ProviderNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ProviderNotFound, p0);
         }
 
         /// <summary>
@@ -1918,7 +1926,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to  indicate that the string or array can have the maximum allowable length."
+        /// A string like "MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to indicate that the string or array can have the maximum allowable length."
         /// </summary>
         internal static string MaxLengthAttribute_InvalidMaxLength
         {
@@ -13390,7 +13398,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Sequence contains no elements."
+        /// A string like "Sequence contains no elements"
         /// </summary>
         internal static string EmptySequence
         {
@@ -13898,14 +13906,6 @@ namespace System.Data.Entity.Resources
         internal static Exception InvalidEntitySplittingProperties(object p0)
         {
             return new InvalidOperationException(Strings.InvalidEntitySplittingProperties(p0));
-        }
-
-        /// <summary>
-        /// NotSupportedException with message like "Unable to determine the provider name for connection of type '{0}'."
-        /// </summary>
-        internal static Exception ModelBuilder_ProviderNameNotFound(object p0)
-        {
-            return new NotSupportedException(Strings.ModelBuilder_ProviderNameNotFound(p0));
         }
 
         /// <summary>
@@ -14653,7 +14653,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to  indicate that the string or array can have the maximum allowable length."
+        /// InvalidOperationException with message like "MaxLengthAttribute must have a Length value that is greater than zero. Use MaxLength() without parameters to indicate that the string or array can have the maximum allowable length."
         /// </summary>
         internal static Exception MaxLengthAttribute_InvalidMaxLength()
         {
@@ -14981,7 +14981,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "Sequence contains no elements."
+        /// InvalidOperationException with message like "Sequence contains no elements"
         /// </summary>
         internal static Exception EmptySequence()
         {
@@ -15132,7 +15132,8 @@ namespace System.Data.Entity.Resources
         internal const string InvalidDiscriminatorType = "InvalidDiscriminatorType";
         internal const string ConventionNotFound = "ConventionNotFound";
         internal const string InvalidEntitySplittingProperties = "InvalidEntitySplittingProperties";
-        internal const string ModelBuilder_ProviderNameNotFound = "ModelBuilder_ProviderNameNotFound";
+        internal const string ProviderNameNotFound = "ProviderNameNotFound";
+        internal const string ProviderNotFound = "ProviderNotFound";
         internal const string InvalidDatabaseName = "InvalidDatabaseName";
         internal const string EntityMappingConfiguration_DuplicateMapInheritedProperties = "EntityMappingConfiguration_DuplicateMapInheritedProperties";
         internal const string EntityMappingConfiguration_DuplicateMappedProperties = "EntityMappingConfiguration_DuplicateMappedProperties";

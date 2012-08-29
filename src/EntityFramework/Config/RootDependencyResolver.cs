@@ -48,6 +48,7 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IManifestTokenService>(new DefaultManifestTokenService()));
             _resolvers.Add(new ThreadLocalDependencyResolver<IDbCommandInterceptor>(() => new DefaultCommandInterceptor()));
+            _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new DefaultDbProviderFactoryService()));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

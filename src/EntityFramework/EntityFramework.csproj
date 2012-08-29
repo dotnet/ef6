@@ -456,7 +456,9 @@
     <Compile Include="DataAnnotations\Schema\InversePropertyAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\NotMappedAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
+    <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
+    <Compile Include="Infrastructure\IDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\IManifestTokenService.cs" />
     <Compile Include="Internal\CommandTracer.cs" />
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
@@ -1398,6 +1400,7 @@
     </Compile>
     <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\MemberInfoExtensions.cs" />
+    <Compile Include="Utilities\ProviderRowFinder.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\TaskHelper.cs" />
     <Compile Include="Utilities\XContainerExtensions.cs" />

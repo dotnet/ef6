@@ -89,8 +89,16 @@ namespace System.Data.Entity.Config
         [Fact]
         public void The_root_resolver_returns_the_default_sql_generators()
         {
-            Assert.IsType<SqlServerMigrationSqlGenerator>(new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlClient"));
-            Assert.IsType<SqlCeMigrationSqlGenerator>(new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlServerCe.4.0"));
+            Assert.IsType<SqlServerMigrationSqlGenerator>(
+                new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlClient"));
+            Assert.IsType<SqlCeMigrationSqlGenerator>(
+                new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlServerCe.4.0"));
+        }
+
+        [Fact]
+        public void The_root_resolver_returns_default_provider_factory_service()
+        {
+            Assert.IsType<DefaultDbProviderFactoryService>(new RootDependencyResolver().GetService<IDbProviderFactoryService>());
         }
 
         [Fact]

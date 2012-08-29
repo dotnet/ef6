@@ -3,27 +3,18 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Common;
-    using System.Data.Entity;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
-    using System.Linq;
-    using System.Reflection;
     using Moq;
     using Moq.Protected;
     using Xunit;
 
-    public sealed class DbConnectionExtensionsTests
+    public sealed class DbConnectionExtensionsTests : TestBase
     {
         [Fact]
         public void GetProviderInvariantName_should_return_correct_name()
         {
             Assert.Equal("System.Data.SqlClient", new SqlConnection().GetProviderInvariantName());
-        }
-
-        [Fact]
-        public void GetProviderInvariantName_should_return_correct_name_when_generic_provider()
-        {
-            Assert.Equal("My.Generic.Provider.DbProviderFactory", new GenericConnection<DbProviderFactory>().GetProviderInvariantName());
         }
 
         [Fact]
@@ -33,88 +24,35 @@ namespace System.Data.Entity.Utilities
             mockConnection.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
             mockConnection.Setup(m => m.ToString()).Returns("I Be A Bad Bad Connection Is What I Be.");
 
+            // On .NET 4 the situation where we fail to get the invariant name is the same as not being
+            // able to get the provider, so the exception message is different.
             Assert.Equal(
-                Strings.ModelBuilder_ProviderNameNotFound("Castle.Proxies.DbProviderFactoryProxy"),
+#if NET40
+                Strings.ProviderNotFound("I Be A Bad Bad Connection Is What I Be."),
+#else
+                Strings.ProviderNameNotFound("Castle.Proxies.DbProviderFactoryProxy"),
+#endif
                 Assert.Throws<NotSupportedException>(() => mockConnection.Object.GetProviderInvariantName()).Message);
         }
 
         [Fact]
-        public void GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider()
+        public void GetProviderFactory_should_return_correct_factory()
         {
-            Assert.Equal(
-                "Weak.Provider.Factory",
-                CreateMockConnection(_weakProviderType.AssemblyQualifiedName).Object.GetProviderInvariantName());
+            Assert.Equal(SqlClientFactory.Instance, new SqlConnection().GetProviderFactory());
         }
 
+#if NET40
         [Fact]
-        public void
-            GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider_without_version_or_key_information_in_registered_name(
-            )
+        public void GetProviderFactory_throws_for_unknown_provider_on_net40()
         {
-            Assert.Equal(
-                "Weak.Provider.Factory",
-                CreateMockConnection("WeakProviderFactory, ProviderAssembly").Object.GetProviderInvariantName());
-        }
-
-        [Fact]
-        public void
-            GetProviderInvariantName_returns_invariant_name_for_weakly_named_provider_with_non_standard_spacing_in_the_registered_name()
-        {
-            Assert.Equal(
-                "Weak.Provider.Factory",
-                CreateMockConnection("WeakProviderFactory,ProviderAssembly,   Version=0.0.0.0,    Culture=neutral,PublicKeyToken=null").
-                    Object.GetProviderInvariantName());
-        }
-
-        private static Mock<DbConnection> CreateMockConnection(string assemblyQualifiedName)
-        {
-            var providerType = _weakProviderType;
-            RegisterWeakProviderFactory(assemblyQualifiedName);
-            var dbProviderFactory = (DbProviderFactory)Activator.CreateInstance(providerType);
-
             var mockConnection = new Mock<DbConnection>();
-            mockConnection.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(dbProviderFactory);
-            return mockConnection;
+            mockConnection.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
+            mockConnection.Setup(m => m.ToString()).Returns("I Be A Bad Bad Connection Is What I Be.");
+
+            Assert.Equal(
+                Strings.ProviderNotFound("I Be A Bad Bad Connection Is What I Be."),
+                Assert.Throws<NotSupportedException>(() => mockConnection.Object.GetProviderFactory()).Message);
         }
-
-        private static readonly Type _weakProviderType = CreateWeakProviderType();
-
-        private static Type CreateWeakProviderType()
-        {
-            var assembly = new DynamicAssembly();
-            var dynamicType = assembly.DynamicType("WeakProviderFactory").HasBaseClass(typeof(DbProviderFactory));
-            dynamicType.CtorAccess = MemberAccess.Public;
-            dynamicType.Field("Instance").HasType(dynamicType).IsStatic().IsInstance();
-            var compiledAssembly = assembly.Compile(new AssemblyName("ProviderAssembly"));
-
-            // We need this so that Type.GetType() used in DbProviderFactories.GetFactory will work for
-            // the dynamic assembly. In other words, this is only needed for the test code to work.
-            AppDomain.CurrentDomain.AssemblyResolve +=
-                (sender, args) => args.Name.StartsWith("ProviderAssembly") ? compiledAssembly : null;
-
-            return assembly.GetType("WeakProviderFactory");
-        }
-
-        private static void RegisterWeakProviderFactory(string assemblyQualifiedName)
-        {
-            var providerTable = (DataTable)typeof(DbProviderFactories)
-                                               .GetMethod("GetProviderTable", BindingFlags.Static | BindingFlags.NonPublic)
-                                               .Invoke(null, null);
-
-            var row = providerTable.Rows
-                .OfType<DataRow>()
-                .FirstOrDefault(r => (string)r["InvariantName"] == "Weak.Provider.Factory");
-            if (row != null)
-            {
-                providerTable.Rows.Remove(row);
-            }
-
-            row = providerTable.NewRow();
-            row["Name"] = "WeakProviderFactory";
-            row["InvariantName"] = "Weak.Provider.Factory";
-            row["Description"] = "Provider factory that is not strongly named.";
-            row["AssemblyQualifiedName"] = assemblyQualifiedName;
-            providerTable.Rows.Add(row);
-        }
+#endif
     }
 }

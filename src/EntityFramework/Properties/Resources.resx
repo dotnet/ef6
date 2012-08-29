@@ -416,9 +416,11 @@
     <value>Not all properties for type '{0}' have been mapped. Either map those properties or explicitly excluded them from the model.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="ModelBuilder_ProviderNameNotFound" xml:space="preserve">
-    <value>Unable to determine the provider name for connection of type '{0}'.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
+  <data name="ProviderNameNotFound" xml:space="preserve">
+    <value>Unable to determine the provider name for provider factory of type '{0}'. Make sure that the ADO.NET provider is installed or registered in the application config.</value>
+  </data>
+  <data name="ProviderNotFound" xml:space="preserve">
+    <value>Unable to determine the DbProviderFactory type for connection of type '{0}'. Make sure that the ADO.NET provider is installed or registered in the application config.</value>
   </data>
   <data name="InvalidDatabaseName" xml:space="preserve">
     <value>The database name '{0}' is invalid. Database names must be of the form [&lt;schema_name&gt;.]&lt;object_name&gt;.</value>

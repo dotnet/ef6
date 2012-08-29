@@ -13,10 +13,6 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     {
         public static readonly FakeSqlProviderFactory Instance = new FakeSqlProviderFactory();
 
-        private FakeSqlProviderFactory()
-        {
-        }
-
         public static void Initialize()
         {
             // Does nothing but ensures that the singleton instance has been created.
