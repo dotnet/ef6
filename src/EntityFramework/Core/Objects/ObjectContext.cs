@@ -20,6 +20,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Core.Objects
     ///     serving as a gateway for Create, Read, Update, and Delete operations.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    public class ObjectContext : IDisposable
+    public class ObjectContext : IDisposable, IObjectContextAdapter
     {
         #region Fields
 
@@ -398,6 +399,17 @@ namespace System.Data.Entity.Core.Objects
         internal virtual EntityWrapperFactory EntityWrapperFactory
         {
             get { return _entityWrapperFactory; }
+        }
+		
+        /// <summary>
+        ///     Returns itself. ObjectContext implements <see cref="IObjectContextAdapter"/> to provide a common
+        ///     interface for <see cref="DbContext"/> and ObjectContext both of which will return the underlying
+        ///     ObjectContext.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        ObjectContext IObjectContextAdapter.ObjectContext
+        {
+            get { return this; }
         }
 
         #endregion //Properties

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -16,6 +17,17 @@ namespace System.Data.Entity.Core.Objects
 
     public class ObjectContextTests
     {
+        public class IObjectContextAdapter_ObjectContext
+        {
+            [Fact]
+            public void ObjectContext_property_returns_self()
+            {
+                var context = new ObjectContextForMock(null);
+
+                Assert.Same(context, ((IObjectContextAdapter)context).ObjectContext);
+            }
+        }
+
         public class SaveChanges
         {
             [Fact]
