@@ -6,11 +6,123 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
+    using System.Globalization;
     using System.IO;
+    using System.Threading;
     using Xunit;
 
     public class CSharpMigrationCodeGeneratorTests
     {
+        [Fact]
+        public void Generate_should_output_invariant_decimals_when_non_invariant_culture()
+        {
+            var lastCulture = Thread.CurrentThread.CurrentCulture;
+
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("nl-NL");
+
+                var generatedMigration
+                    = new CSharpMigrationCodeGenerator().Generate(
+                        "Migration",
+                        new[]
+                        {
+                            new AddColumnOperation(
+                                "T",
+                                new ColumnModel(PrimitiveTypeKind.Decimal)
+                                    {
+                                        Name = "C",
+                                        DefaultValue = 123.45m
+                                    })
+                        },
+                        "Source",
+                        "Target",
+                        "Foo",
+                        "Bar");
+
+                Assert.Equal(
+                    @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn(""T"", ""C"", c => c.Decimal(defaultValue: 123.45m));
+        }
+        
+        public override void Down()
+        {
+            DropColumn(""T"", ""C"");
+        }
+    }
+}
+",
+                    generatedMigration.UserCode);    
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = lastCulture;
+            }
+        }
+
+        [Fact]
+        public void Generate_should_output_invariant_floats_when_non_invariant_culture()
+        {
+            var lastCulture = Thread.CurrentThread.CurrentCulture;
+
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("nl-NL");
+
+                var generatedMigration
+                    = new CSharpMigrationCodeGenerator().Generate(
+                        "Migration",
+                        new[]
+                        {
+                            new AddColumnOperation(
+                                "T",
+                                new ColumnModel(PrimitiveTypeKind.Single)
+                                    {
+                                        Name = "C",
+                                        DefaultValue = 123.45f
+                                    })
+                        },
+                        "Source",
+                        "Target",
+                        "Foo",
+                        "Bar");
+
+                Assert.Equal(
+                    @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn(""T"", ""C"", c => c.Single(defaultValue: 123.45f));
+        }
+        
+        public override void Down()
+        {
+            DropColumn(""T"", ""C"");
+        }
+    }
+}
+",
+                    generatedMigration.UserCode);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = lastCulture;
+            }
+        }
+
         [Fact]
         public void Generate_should_not_produce_lines_that_are_too_long_for_the_compiler()
         {

@@ -11,10 +11,42 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Spatial;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Globalization;
+    using System.Threading;
     using Xunit;
 
     public class SqlServerMigrationSqlGeneratorTests
     {
+        [Fact]
+        public void Generate_should_output_invariant_decimals_when_non_invariant_culture()
+        {
+            var migrationProvider = new SqlServerMigrationSqlGenerator();
+
+            var addColumnOperation
+                = new AddColumnOperation(
+                    "T",
+                    new ColumnModel(PrimitiveTypeKind.Binary)
+                        {
+                            Name = "C",
+                            DefaultValue = 123.45m
+                        });
+
+            var lastCulture = Thread.CurrentThread.CurrentCulture;
+
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("nl-NL");
+
+                var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+                Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] [varbinary](max) DEFAULT 123.45"));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = lastCulture;
+            }
+        }
+
         [Fact]
         public void Generate_can_output_add_timestamp_column_operation()
         {
