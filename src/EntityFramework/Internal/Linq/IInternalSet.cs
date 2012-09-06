@@ -28,7 +28,6 @@ namespace System.Data.Entity.Internal.Linq
         IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters);
 
 #endif
-
     }
 
     [ContractClassFor(typeof(IInternalSet))]

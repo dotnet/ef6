@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.EntityClient
             [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
             [ResourceConsumption(ResourceScope.Machine)]
             // For ChangeConnectionString method call. But the paths are not created in this method.
-            set
+                set
             {
                 ValidateChangesPermitted();
                 ChangeConnectionString(value);

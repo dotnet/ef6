@@ -20,7 +20,7 @@ namespace System.Data.Entity.Internal.Linq
     /// </summary>
     internal class DbQueryProvider : IQueryProvider
 #if !NET40
-        , IDbAsyncQueryProvider
+                                     , IDbAsyncQueryProvider
 #endif
     {
         #region Fields and constructors

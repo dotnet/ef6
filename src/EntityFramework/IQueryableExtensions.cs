@@ -787,7 +787,7 @@ namespace System.Data.Entity
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T">The type that the elements will be cast to.</typeparam>
+        /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="source"> The source query. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -820,7 +820,7 @@ namespace System.Data.Entity
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
         /// <param name="source"> The source query. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

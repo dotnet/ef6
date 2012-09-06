@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="generatedValues"> Aggregator for server generated values. </param>
         /// <returns> Number of rows affected by the command. </returns>
         internal abstract long Execute(
-            Dictionary<int, object> identifierValues, 
+            Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues,
             IDbCommandInterceptor commandInterceptor);
 

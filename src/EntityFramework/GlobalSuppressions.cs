@@ -194,4 +194,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "objectname", Scope = "resource",
         Target = "System.Data.Entity.Properties.Resources.resources")]
-[assembly:     SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "URIs", Scope = "resource",         Target = "System.Data.Entity.Properties.Resources.resources")][assembly:     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",         Target = "System.ComponentModel.DataAnnotations")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "URIs", Scope = "resource",
+        Target = "System.Data.Entity.Properties.Resources.resources")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.ComponentModel.DataAnnotations")]

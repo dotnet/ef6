@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     public class DbRawSqlQuery : IEnumerable, IListSource
 #if !NET40
-        , IDbAsyncEnumerable
+                                 , IDbAsyncEnumerable
 #endif
     {
         #region Constructors and fields

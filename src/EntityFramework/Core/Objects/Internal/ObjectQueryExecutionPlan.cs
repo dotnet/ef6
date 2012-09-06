@@ -152,7 +152,10 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
 
                 // acquire store reader
-                storeReader = await commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                storeReader =
+                    await
+                    commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken).ConfigureAwait(
+                        continueOnCapturedContext: false);
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
                 var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
@@ -185,6 +188,5 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
-
     }
 }

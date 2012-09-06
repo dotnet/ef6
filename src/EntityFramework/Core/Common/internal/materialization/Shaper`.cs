@@ -205,7 +205,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             return readSucceeded;
         }
 
-
 #if !NET40
 
         private async Task<bool> StoreReadAsync(CancellationToken cancellationToken)
@@ -293,7 +292,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 get { return _shaper.RootCoordinator.Current; }
             }
-
 
 #if !NET40
 

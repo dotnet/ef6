@@ -243,7 +243,6 @@ namespace System.Data.Entity.Core.Objects
         {
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
-            
         }
 
         internal ObjectContext(
@@ -400,10 +399,10 @@ namespace System.Data.Entity.Core.Objects
         {
             get { return _entityWrapperFactory; }
         }
-		
+
         /// <summary>
-        ///     Returns itself. ObjectContext implements <see cref="IObjectContextAdapter"/> to provide a common
-        ///     interface for <see cref="DbContext"/> and ObjectContext both of which will return the underlying
+        ///     Returns itself. ObjectContext implements <see cref="IObjectContextAdapter" /> to provide a common
+        ///     interface for <see cref="DbContext" /> and ObjectContext both of which will return the underlying
         ///     ObjectContext.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]

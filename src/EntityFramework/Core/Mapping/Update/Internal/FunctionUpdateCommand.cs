@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     See comments in <see cref="UpdateCommand" />.
         /// </summary>
         internal override long Execute(
-            Dictionary<int, object> identifierValues, 
+            Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues,
             IDbCommandInterceptor commandInterceptor)
         {
@@ -349,7 +349,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // If there are result columns, read the server gen results
                 rowsAffected = 0;
                 var members = TypeHelpers.GetAllStructuralMembers(CurrentValues.StructuralType);
-                using (var reader = await _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                using (
+                    var reader =
+                        await
+                        _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(
+                            continueOnCapturedContext: false))
                 {
                     // Retrieve only the first row from the first result set
                     if (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
@@ -365,16 +369,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             object value;
 
                             if (Helper.IsSpatialType(columnType)
-                                && !await reader.IsDBNullAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                                &&
+                                !await
+                                 reader.IsDBNullAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                             {
                                 value =
                                     await
                                     SpatialHelpers.GetSpatialValueAsync(
-                                        Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken).ConfigureAwait(
+                                            continueOnCapturedContext: false);
                             }
                             else
                             {
-                                value = await reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                value =
+                                    await
+                                    reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken).ConfigureAwait(
+                                        continueOnCapturedContext: false);
                             }
 
                             // register for back-propagation

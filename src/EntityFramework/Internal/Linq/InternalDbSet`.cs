@@ -18,7 +18,7 @@ namespace System.Data.Entity.Internal.Linq
     /// <typeparam name="TEntity"> The type of the entity. </typeparam>
     internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>
 #if !NET40
-        , IDbAsyncEnumerable<TEntity>
+                                            , IDbAsyncEnumerable<TEntity>
 #endif
         where TEntity : class
     {

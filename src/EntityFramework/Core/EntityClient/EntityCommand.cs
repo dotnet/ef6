@@ -519,7 +519,8 @@ namespace System.Data.Entity.Core.EntityClient
         {
             // prepare the query first
             Prepare();
-            var dbDataReader = await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var dbDataReader =
+                await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             var reader = _entityDataReaderFactory.CreateEntityDataReader(this, dbDataReader, behavior);
             _dataReader = reader;
 
@@ -537,7 +538,6 @@ namespace System.Data.Entity.Core.EntityClient
         {
             return ExecuteReader(behavior);
         }
-
 
 #if !NET40
 
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.EntityClient
                 return reader.RecordsAffected;
             }
         }
-        
+
 #if !NET40
 
         /// <summary>
@@ -578,7 +578,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> A task representing the asynchronous operation. </returns>
         public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
-            using (var reader = await ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+            using (
+                var reader =
+                    await
+                    ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)
+                )
             {
                 await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 return reader.RecordsAffected;

@@ -14,7 +14,7 @@ namespace System.Data.Entity.Internal
     /// </summary>
     internal abstract class InternalSqlQuery : IEnumerable, IListSource
 #if !NET40
-        , IDbAsyncEnumerable
+                                               , IDbAsyncEnumerable
 #endif
     {
         #region Constructors and fields

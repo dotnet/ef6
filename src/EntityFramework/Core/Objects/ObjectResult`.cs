@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectResult<T> : ObjectResult, IEnumerable<T>
 #if !NET40
-        , IDbAsyncEnumerable<T>
+                                   , IDbAsyncEnumerable<T>
 #endif
     {
         private Shaper<T> _shaper;

@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Objects
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public abstract class ObjectQuery : IEnumerable, IOrderedQueryable, IListSource
 #if !NET40
-, IDbAsyncEnumerable
+                                        , IDbAsyncEnumerable
 #endif
     {
         #region Private Instance Members

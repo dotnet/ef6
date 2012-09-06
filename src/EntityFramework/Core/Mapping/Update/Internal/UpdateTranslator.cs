@@ -473,7 +473,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // Remember the data sources so that we can throw meaningful exception
                     source = command;
-                    var rowsAffected = await command.ExecuteAsync(identifierValues, generatedValues, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    var rowsAffected =
+                        await
+                        command.ExecuteAsync(identifierValues, generatedValues, cancellationToken).ConfigureAwait(
+                            continueOnCapturedContext: false);
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }

@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 else
                 {
                     // We currently only intercept commands on this code path.
-                    
+
                     var executeCommand = true;
 
                     if (commandInterceptor != null)
@@ -219,7 +219,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // retrieve server gen results
                     rowsAffected = 0;
-                    using (var reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    using (
+                        var reader =
+                            await
+                            command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(
+                                continueOnCapturedContext: false))
                     {
                         if (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                         {
@@ -234,16 +238,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                 var member = members[columnName];
                                 object value;
                                 if (Helper.IsSpatialType(member.TypeUsage)
-                                    && !await reader.IsDBNullAsync(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                                    &&
+                                    !await reader.IsDBNullAsync(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                                 {
                                     value =
                                         await
                                         SpatialHelpers.GetSpatialValueAsync(
-                                            Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                            Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken).
+                                            ConfigureAwait(continueOnCapturedContext: false);
                                 }
                                 else
                                 {
-                                    value = await reader.GetFieldValueAsync<object>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    value =
+                                        await
+                                        reader.GetFieldValueAsync<object>(ordinal, cancellationToken).ConfigureAwait(
+                                            continueOnCapturedContext: false);
                                 }
 
                                 // retrieve result which includes the context for back-propagation

@@ -170,6 +170,5 @@ namespace System.Data.Entity.Internal.Linq
         }
 
 #endif
-
     }
 }

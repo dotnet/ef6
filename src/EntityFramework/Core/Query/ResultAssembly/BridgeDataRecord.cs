@@ -108,10 +108,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #if !NET40
 
         /// <summary>
-        /// An asynchronous version of <see cref="CloseExplicitly"/>, which
-        /// is called by our owning datareader when it is explicitly closed; will
-        /// not be called for nested structures, they go through the ClosedImplicitly.
-        /// path instead.
+        ///     An asynchronous version of <see cref="CloseExplicitly" />, which
+        ///     is called by our owning datareader when it is explicitly closed; will
+        ///     not be called for nested structures, they go through the ClosedImplicitly.
+        ///     path instead.
         /// </summary>
         internal Task CloseExplicitlyAsync(CancellationToken cancellationToken)
         {
@@ -132,9 +132,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #if !NET40
 
         /// <summary>
-        /// An asynchronous version of <see cref="CloseImplicitly"/>, which
-        /// is called by our parent object to ensure that we're marked as implicitly 
-        /// closed;  will not be called for root level data readers.
+        ///     An asynchronous version of <see cref="CloseImplicitly" />, which
+        ///     is called by our parent object to ensure that we're marked as implicitly 
+        ///     closed;  will not be called for root level data readers.
         /// </summary>
         internal Task CloseImplicitlyAsync(CancellationToken cancellationToken)
         {
@@ -178,8 +178,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #if !NET40
 
         /// <summary>
-        /// An asynchronous version of <see cref="CloseNestedObjectImplicitly"/>, which
-        /// Ensure that whatever column we're currently processing is implicitly closed;
+        ///     An asynchronous version of <see cref="CloseNestedObjectImplicitly" />, which
+        ///     Ensure that whatever column we're currently processing is implicitly closed;
         /// </summary>
         private async Task CloseNestedObjectImplicitlyAsync(CancellationToken cancellationToken)
         {

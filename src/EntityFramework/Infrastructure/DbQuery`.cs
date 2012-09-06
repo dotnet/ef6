@@ -20,8 +20,7 @@ namespace System.Data.Entity.Infrastructure
         Justification = "Name is intentional")]
     public class DbQuery<TResult> : IOrderedQueryable<TResult>, IListSource, IInternalQueryAdapter
 #if !NET40
-        , IDbAsyncEnumerable<TResult>
-
+                                    , IDbAsyncEnumerable<TResult>
 #endif
     {
         #region Fields and constructors

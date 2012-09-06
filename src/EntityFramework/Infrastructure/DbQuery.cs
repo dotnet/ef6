@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
@@ -18,7 +17,7 @@ namespace System.Data.Entity.Infrastructure
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
 #if !NET40
-        , IDbAsyncEnumerable
+                                    , IDbAsyncEnumerable
 #endif
     {
         #region Fields and constructors

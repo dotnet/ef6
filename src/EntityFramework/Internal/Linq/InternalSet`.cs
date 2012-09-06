@@ -132,7 +132,8 @@ namespace System.Data.Entity.Internal.Linq
             // because it would go to the store before checking for Added objects, and also
             // because if the object found was of the wrong type then it would still get into
             // the state manager.
-            var entity = FindInStateManager(key) ?? await FindInStoreAsync(key, "keyValues", cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var entity = FindInStateManager(key)
+                         ?? await FindInStoreAsync(key, "keyValues", cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             if (entity != null
                 && !(entity is TEntity))
@@ -710,7 +711,8 @@ namespace System.Data.Entity.Internal.Linq
                 async cancellationToken =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, mergeOption, cancellationToken, parameters).ConfigureAwait(continueOnCapturedContext: false);
+                                  sql, EntitySetName, mergeOption, cancellationToken, parameters).ConfigureAwait(
+                                      continueOnCapturedContext: false);
 
                               try
                               {

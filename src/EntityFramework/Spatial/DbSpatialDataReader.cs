@@ -115,6 +115,5 @@ namespace System.Data.Entity.Spatial
         }
 
 #endif
-
     }
 }

@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Objects
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectQuery<T> : ObjectQuery, IOrderedQueryable<T>, IEnumerable<T>
 #if !NET40
-        , IDbAsyncEnumerable<T>
+                                  , IDbAsyncEnumerable<T>
 #endif
     {
         #region Private Static Members
@@ -564,22 +564,22 @@ namespace System.Data.Entity.Core.Objects
         {
             return new LazyEnumerator<T>(
                 () =>
-                {
-                    var disposableEnumerable = GetResults(null);
-                    try
                     {
-                        var result = disposableEnumerable.GetEnumerator();
-                        return result;
-                    }
-                    catch
-                    {
-                        // if there is a problem creating the enumerator, we should dispose
-                        // the enumerable (if there is no problem, the enumerator will take 
-                        // care of the dispose)
-                        disposableEnumerable.Dispose();
-                        throw;
-                    }
-                });
+                        var disposableEnumerable = GetResults(null);
+                        try
+                        {
+                            var result = disposableEnumerable.GetEnumerator();
+                            return result;
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
         #endregion
@@ -597,21 +597,22 @@ namespace System.Data.Entity.Core.Objects
         {
             return new LazyAsyncEnumerator<T>(
                 async cancellationToken =>
-                {
-                    var disposableEnumerable = await GetResultsAsync(null, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                    try
-                    {
-                        return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
-                    }
-                    catch
-                    {
-                        // if there is a problem creating the enumerator, we should dispose
-                        // the enumerable (if there is no problem, the enumerator will take 
-                        // care of the dispose)
-                        disposableEnumerable.Dispose();
-                        throw;
-                    }
-                });
+                          {
+                              var disposableEnumerable =
+                                  await GetResultsAsync(null, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                              try
+                              {
+                                  return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
+                              }
+                              catch
+                              {
+                                  // if there is a problem creating the enumerator, we should dispose
+                                  // the enumerable (if there is no problem, the enumerator will take 
+                                  // care of the dispose)
+                                  disposableEnumerable.Dispose();
+                                  throw;
+                              }
+                          });
         }
 
 #endif
@@ -741,7 +742,10 @@ namespace System.Data.Entity.Core.Objects
             try
             {
                 var execPlan = QueryState.GetExecutionPlan(forMergeOption);
-                return await execPlan.ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                return
+                    await
+                    execPlan.ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken).ConfigureAwait(
+                        continueOnCapturedContext: false);
             }
             catch
             {

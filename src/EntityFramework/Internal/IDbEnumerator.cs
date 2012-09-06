@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal
 
     internal interface IDbEnumerator<out T> : IEnumerator<T>
 #if !NET40
-        , IDbAsyncEnumerator<T>
+                                              , IDbAsyncEnumerator<T>
 #endif
     {
         new T Current { get; }

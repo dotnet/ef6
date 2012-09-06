@@ -35,7 +35,6 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-
 #if !NET40
 
         /// <summary>

@@ -7,15 +7,14 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
     /// <summary>
-    ///   This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
-    ///   This includes loading from config, discovery from the context assembly and pushing/popping configurations
-    ///   used by <see cref="DbContextInfo" />.
+    ///     This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
+    ///     This includes loading from config, discovery from the context assembly and pushing/popping configurations
+    ///     used by <see cref="DbContextInfo" />.
     /// </summary>
     internal class DbConfigurationManager
     {
@@ -124,8 +123,8 @@ namespace System.Data.Entity.Config
 
             if (!_configuration.IsValueCreated)
             {
-                var foundConfiguration = 
-                    _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ?? 
+                var foundConfiguration =
+                    _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ??
                     _finder.TryCreateConfiguration(contextType);
 
                 if (foundConfiguration != null)
@@ -133,8 +132,8 @@ namespace System.Data.Entity.Config
                     SetConfiguration(foundConfiguration, lookInConfig: false);
                 }
             }
-            else if (!contextAssembly.IsDynamic && // Don't throw for proxy contexts created in dynamic assemblies
-                     !_loader.AppConfigContainsDbConfigurationType(AppConfig.DefaultInstance))
+            else if (!contextAssembly.IsDynamic // Don't throw for proxy contexts created in dynamic assemblies
+                     && !_loader.AppConfigContainsDbConfigurationType(AppConfig.DefaultInstance))
             {
                 var foundType = _finder.TryFindConfigurationType(contextType);
                 if (foundType != null)

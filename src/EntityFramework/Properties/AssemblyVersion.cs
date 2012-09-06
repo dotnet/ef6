@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -32,15 +34,15 @@ using System.Security;
 // the type forwarding below forwards from the EntityFramework.dll for EF 5+ on .NET 4 to
 // System.ComponentModel.DataAnnotations.dll in .NET 4.5 or later.
 
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.MaxLengthAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.MinLengthAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.ColumnAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.ComplexTypeAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.ForeignKeyAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.InversePropertyAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.NotMappedAttribute))]
-[assembly: TypeForwardedTo(typeof(System.ComponentModel.DataAnnotations.Schema.TableAttribute))]
+[assembly: TypeForwardedTo(typeof(MaxLengthAttribute))]
+[assembly: TypeForwardedTo(typeof(MinLengthAttribute))]
+[assembly: TypeForwardedTo(typeof(ColumnAttribute))]
+[assembly: TypeForwardedTo(typeof(ComplexTypeAttribute))]
+[assembly: TypeForwardedTo(typeof(DatabaseGeneratedAttribute))]
+[assembly: TypeForwardedTo(typeof(DatabaseGeneratedOption))]
+[assembly: TypeForwardedTo(typeof(ForeignKeyAttribute))]
+[assembly: TypeForwardedTo(typeof(InversePropertyAttribute))]
+[assembly: TypeForwardedTo(typeof(NotMappedAttribute))]
+[assembly: TypeForwardedTo(typeof(TableAttribute))]
 
 #endif

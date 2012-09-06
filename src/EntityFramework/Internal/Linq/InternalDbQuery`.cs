@@ -15,7 +15,7 @@ namespace System.Data.Entity.Internal.Linq
     /// <typeparam name="TElement"> The type of the element. </typeparam>
     internal class InternalDbQuery<TElement> : DbQuery, IOrderedQueryable<TElement>
 #if !NET40
-        , IDbAsyncEnumerable<TElement>
+                                               , IDbAsyncEnumerable<TElement>
 #endif
     {
         #region Fields and constructors

@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// </summary>
     internal class ObjectQueryProvider : IQueryProvider
 #if !NET40
-                   , IDbAsyncQueryProvider
+                                         , IDbAsyncQueryProvider
 #endif
     {
         // Although ObjectQuery contains a reference to ObjectContext, it is possible
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 throw new ArgumentException(Strings.ELinq_ExpressionMustBeIQueryable, "expression");
             }
-            
+
             return CreateQuery<TElement>(expression);
         }
 

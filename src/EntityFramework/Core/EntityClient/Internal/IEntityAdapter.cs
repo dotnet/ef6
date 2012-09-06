@@ -44,6 +44,5 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         Task<int> UpdateAsync(IEntityStateManager entityCache, CancellationToken cancellationToken);
 
 #endif
-
     }
 }

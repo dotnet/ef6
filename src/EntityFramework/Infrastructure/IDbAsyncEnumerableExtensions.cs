@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+
 #if !NET40
 
 namespace System.Data.Entity.Infrastructure
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
-        /// <typeparam name="T">The type that the elements will be cast to.</typeparam>
+        /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
@@ -349,7 +350,9 @@ namespace System.Data.Entity.Infrastructure
             //Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
 
             var d = new Dictionary<TKey, TElement>(comparer);
-            await source.ForEachAsync(element => d.Add(keySelector(element), elementSelector(element)), cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await
+                source.ForEachAsync(element => d.Add(keySelector(element), elementSelector(element)), cancellationToken).ConfigureAwait(
+                    continueOnCapturedContext: false);
             return d;
         }
 
@@ -408,7 +411,10 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
-                    if (predicate(e.Current)) return e.Current;
+                    if (predicate(e.Current))
+                    {
+                        return e.Current;
+                    }
                 }
             }
 
@@ -456,7 +462,10 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
-                    if (predicate(e.Current)) return e.Current;
+                    if (predicate(e.Current))
+                    {
+                        return e.Current;
+                    }
                 }
             }
 
@@ -492,7 +501,8 @@ namespace System.Data.Entity.Infrastructure
             throw Error.MoreThanOneElement();
         }
 
-        internal static Task<TSource> SingleAsync<TSource>(this IDbAsyncEnumerable<TSource> source,
+        internal static Task<TSource> SingleAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
             Contract.Requires(source != null);
@@ -519,15 +529,20 @@ namespace System.Data.Entity.Infrastructure
                     if (predicate(e.Current))
                     {
                         result = e.Current;
-                        checked { count++; }
+                        checked
+                        {
+                            count++;
+                        }
                     }
                 }
             }
 
             switch (count)
             {
-                case 0: throw Error.NoMatch();
-                case 1: return result;
+                case 0:
+                    throw Error.NoMatch();
+                case 1:
+                    return result;
             }
 
             throw Error.MoreThanOneMatch();
@@ -564,7 +579,8 @@ namespace System.Data.Entity.Infrastructure
             throw Error.MoreThanOneElement();
         }
 
-        internal static Task<TSource> SingleOrDefaultAsync<TSource>(this IDbAsyncEnumerable<TSource> source,
+        internal static Task<TSource> SingleOrDefaultAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
             Contract.Requires(source != null);
@@ -591,7 +607,10 @@ namespace System.Data.Entity.Infrastructure
                     if (predicate(e.Current))
                     {
                         result = e.Current;
-                        checked { count++; }
+                        checked
+                        {
+                            count++;
+                        }
                     }
                 }
             }
@@ -612,7 +631,8 @@ namespace System.Data.Entity.Infrastructure
             return source.ContainsAsync(value, CancellationToken.None);
         }
 
-        internal static async Task<bool> ContainsAsync<TSource>(this IDbAsyncEnumerable<TSource> source, TSource value, CancellationToken cancellationToken)
+        internal static async Task<bool> ContainsAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source, TSource value, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
@@ -648,7 +668,10 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false)) return true;
+                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -732,7 +755,7 @@ namespace System.Data.Entity.Infrastructure
             //Contract.Requires(source != null);
             //Contract.Ensures(Contract.Result<Task<int>>() != null);
 
-            int count = 0;
+            var count = 0;
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -758,7 +781,6 @@ namespace System.Data.Entity.Infrastructure
             return source.CountAsync(predicate, CancellationToken.None);
         }
 
-
         internal static async Task<int> CountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
@@ -767,7 +789,7 @@ namespace System.Data.Entity.Infrastructure
             //Contract.Requires(predicate != null);
             //Contract.Ensures(Contract.Result<Task<int>>() != null);
 
-            int count = 0;
+            var count = 0;
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -794,7 +816,8 @@ namespace System.Data.Entity.Infrastructure
             return source.LongCountAsync(CancellationToken.None);
         }
 
-        internal static async Task<long> LongCountAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
+        internal static async Task<long> LongCountAsync<TSource>(
+            this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
             //Contract.Requires(source != null);
@@ -867,15 +890,16 @@ namespace System.Data.Entity.Infrastructure
             //Contract.Requires(source != null);
             //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
-            Comparer<TSource> comparer = Comparer<TSource>.Default;
-            TSource value = default(TSource);
+            var comparer = Comparer<TSource>.Default;
+            var value = default(TSource);
             if (value == null)
             {
                 using (var e = source.GetAsyncEnumerator())
                 {
                     while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                     {
-                        if (e.Current != null && (value == null || comparer.Compare(e.Current, value) < 0))
+                        if (e.Current != null
+                            && (value == null || comparer.Compare(e.Current, value) < 0))
                         {
                             value = e.Current;
                         }
@@ -886,7 +910,7 @@ namespace System.Data.Entity.Infrastructure
             }
             else
             {
-                bool hasValue = false;
+                var hasValue = false;
 
                 using (var e = source.GetAsyncEnumerator())
                 {
@@ -907,7 +931,10 @@ namespace System.Data.Entity.Infrastructure
                     }
                 }
 
-                if (hasValue) return value;
+                if (hasValue)
+                {
+                    return value;
+                }
                 throw Error.EmptySequence();
             }
         }
@@ -926,15 +953,16 @@ namespace System.Data.Entity.Infrastructure
             //Contract.Requires(source != null);
             //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
-            Comparer<TSource> comparer = Comparer<TSource>.Default;
-            TSource value = default(TSource);
+            var comparer = Comparer<TSource>.Default;
+            var value = default(TSource);
             if (value == null)
             {
                 using (var e = source.GetAsyncEnumerator())
                 {
                     while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                     {
-                        if (e.Current != null && (value == null || comparer.Compare(e.Current, value) > 0))
+                        if (e.Current != null
+                            && (value == null || comparer.Compare(e.Current, value) > 0))
                         {
                             value = e.Current;
                         }
@@ -945,7 +973,7 @@ namespace System.Data.Entity.Infrastructure
             }
             else
             {
-                bool hasValue = false;
+                var hasValue = false;
 
                 using (var e = source.GetAsyncEnumerator())
                 {
@@ -966,7 +994,10 @@ namespace System.Data.Entity.Infrastructure
                     }
                 }
 
-                if (hasValue) return value;
+                if (hasValue)
+                {
+                    return value;
+                }
                 throw Error.EmptySequence();
             }
         }
@@ -1304,7 +1335,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (double)sum / count;
+            if (count > 0)
+            {
+                return (double)sum / count;
+            }
             throw Error.EmptySequence();
         }
 
@@ -1339,7 +1373,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (double)sum / count;
+            if (count > 0)
+            {
+                return (double)sum / count;
+            }
             throw Error.EmptySequence();
         }
 
@@ -1371,7 +1408,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (double)sum / count;
+            if (count > 0)
+            {
+                return (double)sum / count;
+            }
             throw Error.EmptySequence();
         }
 
@@ -1406,7 +1446,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (double)sum / count;
+            if (count > 0)
+            {
+                return (double)sum / count;
+            }
             throw Error.EmptySequence();
         }
 
@@ -1438,7 +1481,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (float)(sum / count);
+            if (count > 0)
+            {
+                return (float)(sum / count);
+            }
             throw Error.EmptySequence();
         }
 
@@ -1473,7 +1519,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (float)(sum / count);
+            if (count > 0)
+            {
+                return (float)(sum / count);
+            }
             throw Error.EmptySequence();
         }
 
@@ -1505,7 +1554,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (float)(sum / count);
+            if (count > 0)
+            {
+                return (float)(sum / count);
+            }
             throw Error.EmptySequence();
         }
 
@@ -1540,7 +1592,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return (float)(sum / count);
+            if (count > 0)
+            {
+                return (float)(sum / count);
+            }
             throw Error.EmptySequence();
         }
 
@@ -1572,7 +1627,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return sum / count;
+            if (count > 0)
+            {
+                return sum / count;
+            }
             throw Error.EmptySequence();
         }
 
@@ -1607,7 +1665,10 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            if (count > 0) return sum / count;
+            if (count > 0)
+            {
+                return sum / count;
+            }
             throw Error.EmptySequence();
         }
 

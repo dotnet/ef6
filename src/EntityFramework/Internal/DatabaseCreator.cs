@@ -61,7 +61,7 @@ namespace System.Data.Entity.Internal
                             ContextKey = internalContext.ContextKey,
                             TargetDatabase =
                                 new DbConnectionInfo(
-                                    internalContext.OriginalConnectionString, internalContext.ProviderName)
+                                internalContext.OriginalConnectionString, internalContext.ProviderName)
                         },
                     internalContext.Owner);
 

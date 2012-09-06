@@ -124,7 +124,8 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> A Task that contains the store values. </returns>
         public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
-            var storeValues = await _internalEntityEntry.GetDatabaseValuesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var storeValues =
+                await _internalEntityEntry.GetDatabaseValuesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return storeValues == null ? null : new DbPropertyValues(storeValues);
         }
 

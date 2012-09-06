@@ -74,7 +74,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         /// <summary>
         ///     Given the slot and the <paramref name="blockAlias" />, generates eSQL corresponding to the slot.
-        ///     If slot is a qualified slot, <paramref name="blockAlias" /> is ignored. Returns the modified <paramref name="builder" />.
+        ///     If slot is a qualified slot, <paramref name="blockAlias" /> is ignored. Returns the modified <paramref
+        ///      name="builder" />.
         /// </summary>
         /// <param name="outputMember"> outputMember is non-null if this slot is not a constant slot </param>
         /// <param name="indentLevel"> indicates the appropriate indentation level (method can ignore it) </param>

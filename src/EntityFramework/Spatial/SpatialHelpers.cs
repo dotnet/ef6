@@ -35,11 +35,13 @@ namespace System.Data.Entity.Spatial
             var spatialReader = CreateSpatialDataReader(workspace, reader);
             if (Helper.IsGeographicType((PrimitiveType)columnType.EdmType))
             {
-                return await spatialReader.GetGeographyAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                return
+                    await spatialReader.GetGeographyAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             else
             {
-                return await spatialReader.GetGeometryAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                return
+                    await spatialReader.GetGeometryAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 

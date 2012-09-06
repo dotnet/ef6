@@ -20,7 +20,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// <summary>
         ///     Creates a join block (type given by <paramref name="opType" />) with SELECT (<paramref name="slotInfos" />), FROM (<paramref
         ///     name="children" />),
-        ///     ON (<paramref name="onClauses" /> - one for each child except 0th), WHERE (true), AS (<paramref name="blockAliasNum" />).
+        ///     ON (<paramref name="onClauses" /> - one for each child except 0th), WHERE (true), AS (<paramref
+        ///     name="blockAliasNum" />).
         /// </summary>
         internal JoinCqlBlock(
             CellTreeOpType opType,

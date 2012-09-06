@@ -480,10 +480,7 @@ namespace System.Data.Entity.Core.EntityClient
             catch (AggregateException ae)
             {
                 ae.Flatten().Handle(
-                    e =>
-                        {
-                            throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
-                        });
+                    e => { throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e); });
 
                 throw;
             }

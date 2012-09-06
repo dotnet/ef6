@@ -303,9 +303,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Helper method to create a new ObjectQuery based on this query state instance.
         /// </summary>
-        /// <returns>
-        ///     A new <see cref="ObjectQuery{TResultType}" /> - typed as <see cref="ObjectQuery" />
-        /// </returns>
+        /// <returns> A new <see cref="ObjectQuery{TResultType}" /> - typed as <see cref="ObjectQuery" /> </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public ObjectQuery CreateQuery()
         {
@@ -314,7 +312,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var genericObjectQueryMethod = _createObjectQueryMethod.MakeGenericMethod(_elementType);
             return (ObjectQuery)genericObjectQueryMethod.Invoke(this, new object[0]);
         }
-        
+
         /// <summary>
         ///     Helper method used to create an ObjectQuery based on an underlying ObjectQueryState instance.
         ///     This method must be public to be reliably callable from <see cref="CreateObjectQuery" /> using reflection.

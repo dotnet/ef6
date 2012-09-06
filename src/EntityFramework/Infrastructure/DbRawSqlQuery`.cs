@@ -23,7 +23,7 @@ namespace System.Data.Entity.Infrastructure
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class DbRawSqlQuery<TElement> : IEnumerable<TElement>, IListSource
 #if !NET40
-        , IDbAsyncEnumerable<TElement>
+                                           , IDbAsyncEnumerable<TElement>
 #endif
     {
         #region Constructors and fields
@@ -149,7 +149,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, CancellationToken cancellationToken)
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
+            Func<TElement, TKey> keySelector, CancellationToken cancellationToken)
         {
             Contract.Requires(keySelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
@@ -167,7 +168,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
+            Func<TElement, TKey> keySelector, IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
         {
             Contract.Requires(keySelector != null);
             Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
@@ -176,7 +178,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector)
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
+            Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector)
         {
             Contract.Requires(keySelector != null);
             Contract.Requires(elementSelector != null);
@@ -186,7 +189,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, CancellationToken cancellationToken)
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
+            Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, CancellationToken cancellationToken)
         {
             Contract.Requires(keySelector != null);
             Contract.Requires(elementSelector != null);
@@ -196,7 +200,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, IEqualityComparer<TKey> comparer)
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
+            Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, IEqualityComparer<TKey> comparer)
         {
             Contract.Requires(keySelector != null);
             Contract.Requires(elementSelector != null);
@@ -206,7 +211,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
+            Func<TElement, TKey> keySelector, Func<TElement, TElement> elementSelector, IEqualityComparer<TKey> comparer,
+            CancellationToken cancellationToken)
         {
             Contract.Requires(keySelector != null);
             Contract.Requires(elementSelector != null);

@@ -233,7 +233,7 @@ namespace ProductivityApiUnitTests
             public static string SeedDatabase { get; set; }
         }
 
-        [Fact]
+        // [Fact] See http://entityframework.codeplex.com/workitem/490
         public void MigrateDatabaseToLatestVersion_invokes_migrations_pipeline_to_latest_version()
         {
             var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>();
@@ -246,7 +246,7 @@ namespace ProductivityApiUnitTests
             Assert.True(TestMigrationsConfiguration.SeedCalled);
         }
 
-        [Fact]
+        // [Fact] See http://entityframework.codeplex.com/workitem/490
         public void MigrateDatabaseToLatestVersion_use_connection_name_from_config_file()
         {
             var init =

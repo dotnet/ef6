@@ -198,7 +198,8 @@ namespace System.Data.Entity.Internal
         {
             ValidateStateToGetValues("GetDatabaseValuesAsync", EntityState.Added);
 
-            var dataRecord = await GetDatabaseValuesQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var dataRecord =
+                await GetDatabaseValuesQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
         }

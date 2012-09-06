@@ -456,7 +456,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
 
-            var storeDataReader = await ExecuteStoreCommandsAsync(entityCommand, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var storeDataReader =
+                await ExecuteStoreCommandsAsync(entityCommand, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             DbDataReader result = null;
 
             // If we actually executed something, then go ahead and construct a bridge
@@ -470,7 +471,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     {
                         // For a query with no result type (and therefore no column map), consume the reader.
                         // When the user requests Metadata for this reader, we return nothing.
-                        await CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                        await
+                            CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken).ConfigureAwait(
+                                continueOnCapturedContext: false);
                         result = storeDataReader;
                     }
                     else
@@ -544,7 +547,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             DbDataReader reader = null;
             try
             {
-                reader = await storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                reader =
+                    await
+                    storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(
+                        continueOnCapturedContext: false);
             }
             catch (AggregateException ae)
             {
