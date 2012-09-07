@@ -47,12 +47,15 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                           ? EdmAssociationEndKind.Optional
                           : EdmAssociationEndKind.Many;
 
-                var associationType = _typeMapper.MappingContext.Model.AddAssociationType(
-                    entityType.Name + "_" + propertyInfo.Name,
-                    entityType,
-                    sourceAssociationEndKind,
-                    targetEntityType,
-                    targetAssociationEndKind);
+                var associationType
+                    = _typeMapper.MappingContext.Model.AddAssociationType(
+                        entityType.Name + "_" + propertyInfo.Name,
+                        entityType,
+                        sourceAssociationEndKind,
+                        targetEntityType,
+                        targetAssociationEndKind);
+
+                associationType.SourceEnd.SetClrPropertyInfo(propertyInfo);
 
                 _typeMapper.MappingContext.Model.AddAssociationSet(associationType.Name, associationType);
 

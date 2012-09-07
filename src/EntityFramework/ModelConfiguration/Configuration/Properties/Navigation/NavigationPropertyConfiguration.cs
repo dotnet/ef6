@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 // consistency when processing the configuration above.
                 associationSetMapping.SetConfiguration(this);
 
-                AssociationMappingConfiguration.Configure(associationSetMapping, databaseMapping.Database);
+                AssociationMappingConfiguration.Configure(associationSetMapping, databaseMapping.Database, _navigationProperty);
             }
         }
 
@@ -315,8 +315,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     var navProp = model.Namespaces
                         .SelectMany(ns => ns.EntityTypes)
                         .SelectMany(et => et.DeclaredNavigationProperties)
-                        .Where(np => np.GetClrPropertyInfo().IsSameAs(NavigationProperty))
-                        .Single();
+                        .Single(np => np.GetClrPropertyInfo().IsSameAs(NavigationProperty));
 
                     principalEnd = IsNavigationPropertyDeclaringTypePrincipal.Value
                                        ? associationType.GetOtherEnd(navProp.ResultEnd)
@@ -334,7 +333,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         var associationSet
                             = model.Containers
                                 .SelectMany(ct => ct.AssociationSets)
-                                .Where(aset => aset.ElementType == associationType).Single();
+                                .Single(aset => aset.ElementType == associationType);
 
                         var sourceSet = associationSet.SourceSet;
                         associationSet.SourceSet = associationSet.TargetSet;

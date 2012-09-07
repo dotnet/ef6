@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var isIndependent
                 = associationType.Annotations.GetAnnotation(IsIndependentAnnotation);
 
-            return isIndependent != null ? (bool)isIndependent : false;
+            return isIndependent != null && (bool)isIndependent;
         }
 
         public static void MarkPrincipalConfigured(this EdmAssociationType associationType)
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var isPrincipalConfigured
                 = associationType.Annotations.GetAnnotation(IsPrincipalConfiguredAnnotation);
 
-            return isPrincipalConfigured != null ? (bool)isPrincipalConfigured : false;
+            return isPrincipalConfigured != null && (bool)isPrincipalConfigured;
         }
 
         public static EdmAssociationEnd GetOtherEnd(

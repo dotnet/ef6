@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
@@ -13,6 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     ///     Configures the table and column mapping of a many:many relationship.
@@ -72,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the name of the column(s) for the left foreign key.
-        ///     The left foreign key represents the navigation property specified in the HasMany call.
+        ///     The left foreign key points to the parent entity of the navigation property specified in the HasMany call.
         /// </summary>
         /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
@@ -88,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the name of the column(s) for the right foreign key.
-        ///     The right foreign key represents the navigation property specified in the WithMany call.
+        ///     The right foreign key points to the parent entity of the the navigation property specified in the WithMany call.
         /// </summary>
         /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
@@ -102,7 +104,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
-        internal override void Configure(DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database)
+        internal override void Configure(
+            DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database, PropertyInfo navigationProperty)
         {
             var table = associationSetMapping.Table;
 
@@ -112,8 +115,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 table.SetConfiguration(this);
             }
 
-            ConfigureColumnNames(_leftKeyColumnNames, associationSetMapping.SourceEndMapping.PropertyMappings);
-            ConfigureColumnNames(_rightKeyColumnNames, associationSetMapping.TargetEndMapping.PropertyMappings);
+            var sourceEndIsPrimaryConfiguration
+                = navigationProperty.IsSameAs(
+                    associationSetMapping.SourceEndMapping.AssociationEnd.GetClrPropertyInfo());
+
+            ConfigureColumnNames(
+                sourceEndIsPrimaryConfiguration ? _leftKeyColumnNames : _rightKeyColumnNames,
+                associationSetMapping.SourceEndMapping.PropertyMappings);
+
+            ConfigureColumnNames(
+                sourceEndIsPrimaryConfiguration ? _rightKeyColumnNames : _leftKeyColumnNames,
+                associationSetMapping.TargetEndMapping.PropertyMappings);
         }
 
         private static void ConfigureColumnNames(

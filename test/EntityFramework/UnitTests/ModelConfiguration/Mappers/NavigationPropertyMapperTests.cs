@@ -116,5 +116,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             Assert.NotNull(navigationProperty.Association);
             Assert.NotSame(entityType, navigationProperty.ResultEnd.EntityType);
         }
+
+        [Fact]
+        public void Map_should_set_clr_property_info_on_assocation_source_end()
+        {
+            var modelConfiguration = new ModelConfiguration();
+            var model = new EdmModel().Initialize();
+            var entityType = new EdmEntityType();
+            var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
+
+            var mockPropertyInfo = new MockPropertyInfo(new MockType("Target"), "Nav");
+
+            new NavigationPropertyMapper(new TypeMapper(mappingContext))
+                .Map(
+                    mockPropertyInfo, entityType,
+                    () => new EntityTypeConfiguration(typeof(object)));
+
+            var associationType = model.Namespaces.Single().AssociationTypes.Single();
+
+            Assert.Same(mockPropertyInfo.Object, associationType.SourceEnd.GetClrPropertyInfo());
+        }
     }
 }

@@ -17,12 +17,12 @@ namespace System.Data.Entity
             this DbDatabaseMapping databaseMapping, Expression<Func<TStructuralType, object>> propertyExpression)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
-                    .Where(
+                = databaseMapping.Model.Namespaces.Single().ChildItems
+                    .OfType<EdmStructuralType>()
+                    .Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
-                                 && (Type)a.Value == typeof(TStructuralType)))
-                    .Single();
+                                 && (Type)a.Value == typeof(TStructuralType)));
 
             var property
                 = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
@@ -30,12 +30,10 @@ namespace System.Data.Entity
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
                                  && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
-                    .SelectMany(th => th.ChildItems.OfType<EdmProperty>())
-                    .Where(
+                    .SelectMany(th => th.ChildItems.OfType<EdmProperty>()).Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrPropertyInfo"
-                                 && (PropertyInfo)a.Value == GetPropertyInfo(propertyExpression)))
-                    .Single();
+                                 && (PropertyInfo)a.Value == GetPropertyInfo(propertyExpression)));
 
             var columns
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
@@ -52,12 +50,10 @@ namespace System.Data.Entity
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
-                    .Where(
-                        i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
-                                 && (Type)a.Value == typeof(TStructuralType)))
-                    .Single();
+                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                    i => i.Annotations.Any(
+                        a => a.Name == "ClrType"
+                             && (Type)a.Value == typeof(TStructuralType)));
 
             var table
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
@@ -75,19 +71,16 @@ namespace System.Data.Entity
         {
             var structuralType
                 = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
-                    .Where(
+                    .Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
-                                 && (Type)a.Value == typeof(TStructuralType)))
-                    .Single();
+                                 && (Type)a.Value == typeof(TStructuralType)));
 
             var table
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments)
-                    .Where(mf => mf.Table.DatabaseIdentifier == tableName)
-                    .First()
+                    .SelectMany(etm => etm.TypeMappingFragments).First(mf => mf.Table.DatabaseIdentifier == tableName)
                     .Table;
 
             return new TypeAssertions(table);
@@ -112,12 +105,10 @@ namespace System.Data.Entity
             string tableName)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
-                    .Where(
-                        i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
-                                 && (Type)a.Value == typeof(TStructuralType)))
-                    .Single();
+                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                    i => i.Annotations.Any(
+                        a => a.Name == "ClrType"
+                             && (Type)a.Value == typeof(TStructuralType)));
 
             var fragments
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
@@ -138,20 +129,16 @@ namespace System.Data.Entity
             string tableName, bool isTypeOfMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
-                    .Where(
-                        i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
-                                 && (Type)a.Value == typeof(TStructuralType)))
-                    .Single();
+                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                    i => i.Annotations.Any(
+                        a => a.Name == "ClrType"
+                             && (Type)a.Value == typeof(TStructuralType)));
 
             var fragment
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType && isTypeOfMapping == etm.IsHierarchyMapping)
-                    .SelectMany(etm => etm.TypeMappingFragments)
-                    .Where(mf => mf.Table.DatabaseIdentifier == tableName)
-                    .Single();
+                    .SelectMany(etm => etm.TypeMappingFragments).Single(mf => mf.Table.DatabaseIdentifier == tableName);
 
             return new MappingFragmentAssertions(fragment);
         }
@@ -159,12 +146,10 @@ namespace System.Data.Entity
         internal static void AssertNoMapping<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
-                    .Where(
-                        i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
-                                 && (Type)a.Value == typeof(TStructuralType)))
-                    .Single();
+                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                    i => i.Annotations.Any(
+                        a => a.Name == "ClrType"
+                             && (Type)a.Value == typeof(TStructuralType)));
 
             var fragments
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
@@ -315,15 +300,14 @@ namespace System.Data.Entity
 
             public ColumnAssertions Column(string column)
             {
-                return new ColumnAssertions(_table.Columns.Where(c => c.Name == column).Single());
+                return new ColumnAssertions(_table.Columns.Single(c => c.Name == column));
             }
 
             public TypeAssertions HasForeignKeyColumn(string column)
             {
                 Xunit.Assert.Equal(
                     1,
-                    _table.ForeignKeyConstraints.Where(f => f.DependentColumns.Any(d => d.Name == column))
-                        .Count());
+                    _table.ForeignKeyConstraints.Count(f => f.DependentColumns.Any(d => d.Name == column)));
 
                 return this;
             }
@@ -332,10 +316,9 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     1,
-                    _table.ForeignKeyConstraints.Where(
-                        f =>
-                        f.PrincipalTable.DatabaseIdentifier == toTable &&
-                        f.DependentColumns.Select(c => c.Name).SequenceEqual(columns)).Count());
+                    _table.ForeignKeyConstraints.Count(
+                        f => f.PrincipalTable.DatabaseIdentifier == toTable &&
+                             f.DependentColumns.Select(c => c.Name).SequenceEqual(columns)));
 
                 return this;
             }
@@ -344,10 +327,9 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     1,
-                    _table.ForeignKeyConstraints.Where(
-                        f =>
-                        f.PrincipalTable.DatabaseIdentifier == toTable &&
-                        f.DependentColumns.Any(d => d.Name == column)).Count());
+                    _table.ForeignKeyConstraints.Count(
+                        f => f.PrincipalTable.DatabaseIdentifier == toTable &&
+                             f.DependentColumns.Any(d => d.Name == column)));
 
                 return this;
             }
@@ -356,8 +338,7 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     0,
-                    _table.ForeignKeyConstraints.Where(f => f.DependentColumns.Any(d => d.Name == column))
-                        .Count());
+                    _table.ForeignKeyConstraints.Count(f => f.DependentColumns.Any(d => d.Name == column)));
 
                 return this;
             }
@@ -373,8 +354,7 @@ namespace System.Data.Entity
             {
                 return
                     new ColumnAssertions(
-                        _table.ForeignKeyConstraints.SelectMany(f => f.DependentColumns).Where(c => c.Name == column).
-                            Single());
+                        _table.ForeignKeyConstraints.SelectMany(f => f.DependentColumns).Single(c => c.Name == column));
             }
         }
 

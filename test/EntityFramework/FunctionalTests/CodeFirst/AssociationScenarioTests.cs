@@ -10,6 +10,7 @@ namespace FunctionalTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -2083,9 +2084,7 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
-            Assert.Throws<MetadataException>(
-                () =>
-                databaseMapping.AssertValid());
+            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
         }
 
         [Fact]
@@ -2287,8 +2286,7 @@ namespace FunctionalTests
                 .HasMany(s => s.SalesReasons)
                 .WithMany(r => r.SalesOrderHeaders)
                 .Map(
-                    m => m
-                             .ToTable("MappingTable")
+                    m => m.ToTable("MappingTable")
                              .MapLeftKey("TheOrder")
                              .MapRightKey("TheReason"));
             modelBuilder.Entity<SalesReason>();
@@ -2296,6 +2294,8 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             databaseMapping.Assert("MappingTable").HasColumns("TheOrder", "TheReason");
+            databaseMapping.Assert("MappingTable").HasForeignKey(new[] { "TheOrder" }, "SalesOrderHeaders");
+            databaseMapping.Assert("MappingTable").HasForeignKey(new[] { "TheReason" }, "SalesReasons");
         }
 
         [Fact]
@@ -3397,11 +3397,11 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Repro150565_BaseDependent>().HasKey(e => e.Key1);
-            modelBuilder.Entity<Repro150565_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
+            modelBuilder.Entity<Repro150565_Dependent>().Map(mapping => mapping.ToTable("Dependent"));
             modelBuilder.Entity<Repro150565_Dependent>().HasOptional(e => e.PrincipalNavigation).WithMany(
                 e => e.DependentNavigation)
                 .Map(m => m.MapKey("IndependentColumn1"));
-            modelBuilder.Entity<Repro150565_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
+            modelBuilder.Entity<Repro150565_BaseDependent>().Map(mapping => mapping.ToTable("BaseDependent"));
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -3435,7 +3435,9 @@ namespace FunctionalTests
             var databaseMapping = model.DatabaseMapping;
 
             databaseMapping.AssertValid();
-            databaseMapping.Assert("person_role", "domain").HasColumns("role_identifier", "person_identifier");
+            databaseMapping.Assert("person_role", "domain").HasColumns("person_identifier", "role_identifier");
+            databaseMapping.Assert("person_role", "domain").HasForeignKey(new[] { "role_identifier" }, "role");
+            databaseMapping.Assert("person_role", "domain").HasForeignKey(new[] { "person_identifier" }, "person");
         }
 
         [Fact]

@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             independentAssociationMappingConfiguration.ToTable("Split");
 
-            independentAssociationMappingConfiguration.Configure(associationSetMapping, database);
+            independentAssociationMappingConfiguration.Configure(associationSetMapping, database, new MockPropertyInfo());
 
             Assert.True(targetTable.Columns.Contains(fkColumn));
             Assert.True(targetTable.ForeignKeyConstraints.Contains(foreignKeyConstraint));
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(
                 Strings.TableNotFound("Split"),
                 Assert.Throws<InvalidOperationException>(
-                    () => independentAssociationMappingConfiguration.Configure(associationSetMapping, database)).Message);
+                    () => independentAssociationMappingConfiguration.Configure(associationSetMapping, database, new MockPropertyInfo())).Message);
         }
 
         [Fact]

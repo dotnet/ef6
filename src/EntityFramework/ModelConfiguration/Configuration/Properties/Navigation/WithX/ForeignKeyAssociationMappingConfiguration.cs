@@ -13,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     ///     Configures the table and column mapping of a relationship that does not expose foreign key properties in the object model.
@@ -95,7 +96,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
-        internal override void Configure(DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database)
+        internal override void Configure(
+            DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database, PropertyInfo navigationProperty)
         {
             // By convention source end contains the dependent column mappings
             var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings;

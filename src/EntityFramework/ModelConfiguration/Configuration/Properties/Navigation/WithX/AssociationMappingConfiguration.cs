@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Diagnostics.Contracts;
+    using System.Reflection;
 
     /// <summary>
     ///     Base class for performing configuration of a relationship.
@@ -13,7 +14,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     [ContractClass(typeof(AssociationMappingConfigurationContracts))]
     public abstract class AssociationMappingConfiguration
     {
-        internal abstract void Configure(DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database);
+        internal abstract void Configure(
+            DbAssociationSetMapping associationSetMapping,
+            DbDatabaseMetadata database,
+            PropertyInfo navigationProperty);
 
         internal abstract AssociationMappingConfiguration Clone();
 
@@ -22,10 +26,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [ContractClassFor(typeof(AssociationMappingConfiguration))]
         private abstract class AssociationMappingConfigurationContracts : AssociationMappingConfiguration
         {
-            internal override void Configure(DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database)
+            internal override void Configure(
+                DbAssociationSetMapping associationSetMapping,
+                DbDatabaseMetadata database,
+                PropertyInfo navigationProperty)
             {
                 Contract.Requires(associationSetMapping != null);
                 Contract.Requires(database != null);
+                Contract.Requires(navigationProperty != null);
             }
         }
 

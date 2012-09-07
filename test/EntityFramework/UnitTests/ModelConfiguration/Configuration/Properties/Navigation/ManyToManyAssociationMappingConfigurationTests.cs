@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
+    using System.Data.Entity.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -24,7 +26,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             manyToManyAssociationMappingConfiguration.ToTable("NewName");
 
-            manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database);
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
+
+            manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
 
             Assert.Equal("NewName", table.GetTableName().Name);
             Assert.Same(manyToManyAssociationMappingConfiguration, table.GetConfiguration());
@@ -47,7 +54,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             manyToManyAssociationMappingConfiguration.MapLeftKey("NewName");
 
-            manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database);
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
+
+            manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
 
             Assert.Equal("NewName", column.Name);
         }
@@ -69,7 +81,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             manyToManyAssociationMappingConfiguration.MapRightKey("NewName");
 
-            manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database);
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
+
+            manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
 
             Assert.Equal("NewName", column.Name);
         }
@@ -85,10 +102,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             manyToManyAssociationMappingConfiguration.MapLeftKey("Id1", "Id2");
 
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
+
             Assert.Equal(
                 Strings.IncorrectColumnCount("Id1, Id2"),
                 Assert.Throws<InvalidOperationException>(
-                    () => manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database)).Message);
+                    () => manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo)).Message);
         }
 
         [Fact]

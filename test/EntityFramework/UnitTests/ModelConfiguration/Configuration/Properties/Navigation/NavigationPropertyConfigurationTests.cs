@@ -152,12 +152,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var manyToManyAssociationMappingConfiguration = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration.ToTable("Foo");
 
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo())
-                                                      {
-                                                          AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration
-                                                      };
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            var navigationPropertyConfiguration
+                = new NavigationPropertyConfiguration(mockPropertyInfo)
+                      {
+                          AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration
+                      };
 
             var databaseMapping = new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
+
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
                 new EdmAssociationSet
                     {
@@ -165,6 +169,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     });
             associationSetMapping.Table = new DbTableMetadata();
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
+
+            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping);
 
