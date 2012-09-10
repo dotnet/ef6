@@ -15,8 +15,11 @@ namespace System.Data.Entity.Migrations.Extensions
     internal static class ProjectExtensions
     {
         private static readonly Type _serviceProviderType =
-            Type.GetType("Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-            ?? Type.GetType("Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+            Type.GetType(
+                "Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+            ??
+            Type.GetType(
+                "Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
 
         public const int S_OK = 0;
         public const string WebApplicationProjectTypeGuid = "{349C5851-65DF-11DA-9384-00065B846F21}";
@@ -42,16 +45,11 @@ namespace System.Data.Entity.Migrations.Extensions
             Contract.Requires(project != null);
 
             var fullPath = project.GetProjectDir();
-            string outputPath;
 
-            if (project.IsWebSiteProject())
-            {
-                outputPath = "Bin";
-            }
-            else
-            {
-                outputPath = project.GetConfigurationPropertyValue<string>("OutputPath");
-            }
+            var outputPath
+                = project.IsWebSiteProject()
+                      ? "Bin"
+                      : project.GetConfigurationPropertyValue<string>("OutputPath");
 
             return Path.Combine(fullPath, outputPath);
         }
@@ -162,7 +160,8 @@ namespace System.Data.Entity.Migrations.Extensions
 
             var directory = Path.GetDirectoryName(path);
             var fileName = Path.GetFileName(path);
-            var absolutePath = Path.Combine(project.GetProjectDir(), path);
+            var projectDir = project.GetProjectDir();
+            var absolutePath = Path.Combine(projectDir, path);
 
             var projectItems
                 = directory
@@ -174,19 +173,19 @@ namespace System.Data.Entity.Migrations.Extensions
                                 Contract.Assert(pi != null);
                                 Contract.Assert(pi.Kind == VsProjectItemKindPhysicalFolder);
 
+                                projectDir = Path.Combine(projectDir, dir);
+
                                 try
                                 {
-                                    var subDir = pi.Item(dir);
-                                    return subDir.ProjectItems;
+                                    var projectItem = pi.Item(dir);
+
+                                    return projectItem.ProjectItems;
                                 }
                                 catch
                                 {
                                 }
-
-                                var projectDir = ((Project)pi.Parent).GetProjectDir();
-                                var absoluteDir = Path.Combine(projectDir, dir);
-
-                                return pi.AddFromDirectory(absoluteDir).ProjectItems;
+                                
+                                return pi.AddFromDirectory(projectDir).ProjectItems;
                             });
 
             try
@@ -216,7 +215,6 @@ namespace System.Data.Entity.Migrations.Extensions
             Contract.Requires(!Path.IsPathRooted(path));
 
             var absolutePath = Path.Combine(project.GetProjectDir(), path);
-            var dte = project.DTE;
 
             GetDispatcher().OpenFile(absolutePath);
         }
@@ -284,7 +282,7 @@ namespace System.Data.Entity.Migrations.Extensions
             IVsHierarchy hierarchy;
 
             var serviceProvider = (IServiceProvider)Activator.CreateInstance(
-                _serviceProviderType, 
+                _serviceProviderType,
                 (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)project.DTE);
 
             var solution = (IVsSolution)serviceProvider.GetService(typeof(IVsSolution));
