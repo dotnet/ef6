@@ -60,8 +60,7 @@ namespace System.Data.Entity.Internal
                 }
 
                 if (databaseTables.Any(
-                    t => t.Item2 == HistoryContext.TableName
-                         || t.Item2 == EdmMetadataContext.TableName))
+                    t => t.Item2 == EdmMetadataContext.TableName))
                 {
                     return true;
                 }
@@ -70,15 +69,7 @@ namespace System.Data.Entity.Internal
                                    ? EqualityComparer<Tuple<string, string>>.Default
                                    : (IEqualityComparer<Tuple<string, string>>)new IgnoreSchemaComparer();
 
-                foreach (var databaseTable in databaseTables)
-                {
-                    if (modelTables.Contains(databaseTable, comparer))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
+                return databaseTables.Any(databaseTable => modelTables.Contains(databaseTable, comparer));
             }
             catch (Exception ex)
             {
@@ -101,16 +92,13 @@ namespace System.Data.Entity.Internal
                     s => !s.MetadataProperties.Contains("Type")
                          || (string)s.MetadataProperties["Type"].Value == "Tables");
 
-            foreach (var table in tables)
-            {
-                var schemaName = (string)table.MetadataProperties["Schema"].Value;
-                var tableName = table.MetadataProperties.Contains("Table")
-                                && table.MetadataProperties["Table"].Value != null
-                                    ? (string)table.MetadataProperties["Table"].Value
-                                    : table.Name;
-
-                yield return Tuple.Create(schemaName, tableName);
-            }
+            return from table in tables
+                   let schemaName = (string)table.MetadataProperties["Schema"].Value
+                   let tableName = table.MetadataProperties.Contains("Table")
+                                   && table.MetadataProperties["Table"].Value != null
+                                       ? (string)table.MetadataProperties["Table"].Value
+                                       : table.Name
+                   select Tuple.Create(schemaName, tableName);
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]

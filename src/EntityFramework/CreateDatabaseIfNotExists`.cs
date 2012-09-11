@@ -37,7 +37,7 @@ namespace System.Data.Entity
 
             if (databaseExists && new DatabaseTableChecker().AnyModelTableExists(context))
             {
-                // If there is no metadata either in the model or in the databaase, then
+                // If there is no metadata either in the model or in the database, then
                 // we assume that the database matches the model because the common cases for
                 // these scenarios are database/model first and/or an existing database.
                 if (!context.Database.CompatibleWithModel(throwIfNoMetadata: false))

@@ -197,9 +197,7 @@ namespace System.Data.Entity.Migrations
         public TContext CreateContext<TContext>()
             where TContext : DbContext
         {
-            var contextInfo = new DbContextInfo(typeof(TContext));
-
-            contextInfo = new DbContextInfo(
+            var contextInfo = new DbContextInfo(
                 typeof(TContext), new DbConnectionInfo(TestDatabase.ConnectionString, TestDatabase.ProviderName));
 
             return (TContext)contextInfo.CreateInstance();

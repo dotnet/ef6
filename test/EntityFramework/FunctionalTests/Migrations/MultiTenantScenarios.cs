@@ -9,7 +9,7 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
-    public class MultitenantScenarios : DbTestCase
+    public class MultiTenantScenarios : DbTestCase
     {
         public class ContextA : DbContext
         {
@@ -99,6 +99,21 @@ namespace System.Data.Entity.Migrations
 
             Assert.False(TableExists("TenantAs"));
             Assert.False(TableExists("TenantBs"));
+        }
+
+        [MigrationsTheory]
+        public void Can_initialize_with_create_if_not_exists()
+        {
+            ResetDatabase();
+
+            Database.SetInitializer(new CreateDatabaseIfNotExists<ContextA>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<ContextB>());
+
+            CreateContext<ContextA>().Database.Initialize(true);
+            CreateContext<ContextB>().Database.Initialize(true);
+
+            Assert.True(TableExists("TenantAs"));
+            Assert.True(TableExists("TenantBs"));
         }
     }
 
