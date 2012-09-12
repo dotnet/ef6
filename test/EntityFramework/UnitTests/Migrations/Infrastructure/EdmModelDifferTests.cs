@@ -529,6 +529,22 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(4, operations.Count());
             Assert.Equal(2, operations.OfType<CreateTableOperation>().Count());
             Assert.Equal(1, operations.OfType<CreateIndexOperation>().Count());
+
+            // create fk indexes first
+            Assert.True(
+                operations.Select(
+                    (o, i) => new
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is CreateIndexOperation).i <
+                operations.Select(
+                    (o, i) => new
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is AddForeignKeyOperation).i);
+
             var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
 
             Assert.Equal("ordering.Orders", addForeignKeyOperation.PrincipalTable);
@@ -603,6 +619,22 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(4, operations.Count());
             Assert.Equal(2, operations.OfType<DropTableOperation>().Count());
             Assert.Equal(1, operations.OfType<DropIndexOperation>().Count());
+
+            // drop fks before indexes
+            Assert.True(
+                operations.Select(
+                    (o, i) => new
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is DropForeignKeyOperation).i <
+                operations.Select(
+                    (o, i) => new
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is DropIndexOperation).i);
+
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
             Assert.Equal("ordering.Orders", dropForeignKeyOperation.PrincipalTable);
