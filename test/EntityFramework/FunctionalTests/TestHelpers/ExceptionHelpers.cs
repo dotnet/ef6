@@ -219,6 +219,15 @@ namespace System.Data.Entity
             }
         }
 
+        public static void UnwrapAggregateExceptions(Action executor)
+        {
+            UnwrapAggregateExceptions<object>(() =>
+                {
+                    executor();
+                    return null;
+                });
+        }
+
         /// <summary>
         ///     Examines the AggregateExceptions thrown by the <paramref name="executor" />
         ///     and rethrows the inner exception if only one is contained.

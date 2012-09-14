@@ -231,12 +231,8 @@ namespace System.Data.Entity.Internal
 
                 Assert.Equal(
                     Strings.DbPropertyEntry_NotSupportedForDetached("LoadAsync", "Reference", "FakeEntity"),
-                    Assert.Throws<InvalidOperationException>(() => 
-                        ExceptionHelpers.UnwrapAggregateExceptions<object>(() =>
-                                                                       {
-                                                                           internalEntry.LoadAsync(CancellationToken.None).Wait();
-                                                                           return null;
-                                                                       })).Message);
+                    Assert.Throws<InvalidOperationException>(() =>
+                        internalEntry.LoadAsync(CancellationToken.None).Wait()).Message);
             }
         }
 

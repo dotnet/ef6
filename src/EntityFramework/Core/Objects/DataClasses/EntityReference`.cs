@@ -246,7 +246,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     && ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
                 {
                     //query returned zero related end; one related end was expected.
-                    throw new InvalidOperationException(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound);
+                    throw Error.EntityReference_LessThanExpectedRelatedEntitiesFound();
                 }
                 else if (mergeOption == MergeOption.OverwriteChanges
                          || mergeOption == MergeOption.PreserveChanges)
@@ -273,7 +273,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             else
             {
                 // More than 1 result, which is non-recoverable data inconsistency
-                throw new InvalidOperationException(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound);
+                throw Error.EntityReference_MoreThanExpectedRelatedEntitiesFound();
             }
         }
 

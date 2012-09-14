@@ -766,7 +766,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal void DeferredLoad()
         {
-            if (_wrappedOwner != null && _wrappedOwner != NullEntityWrapper.NullWrapper &&
+            if (_wrappedOwner != null &&
+                _wrappedOwner != NullEntityWrapper.NullWrapper &&
                 !IsLoaded &&
                 _context != null &&
                 _context.ContextOptions.LazyLoadingEnabled &&
@@ -780,8 +781,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     (_wrappedOwner.ObjectStateEntry != null &&
                      (_wrappedOwner.ObjectStateEntry.State == EntityState.Unchanged ||
                       _wrappedOwner.ObjectStateEntry.State == EntityState.Modified ||
-                      (_wrappedOwner.ObjectStateEntry.State == EntityState.Added && IsForeignKey
-                       && IsDependentEndOfReferentialConstraint(false)))))
+                      (_wrappedOwner.ObjectStateEntry.State == EntityState.Added &&
+                       IsForeignKey &&
+                       IsDependentEndOfReferentialConstraint(false)))))
                 {
                     // Avoid infinite recursive calls
                     _context.ContextOptions.LazyLoadingEnabled = false;
@@ -1720,9 +1722,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     wrappedEntity, /*relationshipAlreadyExists*/ false,
                     addRelationshipAsUnchanged, doAttach);
             }
-                // There is a possibility that related entity is added to cache but relationship is not added.
-                // Example: Suppose A and B are related. When walking the graph it is possible that 
-                // node B was visited through some relationship other than A-B. 
+            // There is a possibility that related entity is added to cache but relationship is not added.
+            // Example: Suppose A and B are related. When walking the graph it is possible that 
+            // node B was visited through some relationship other than A-B. 
             else if (null == FindRelationshipEntryInObjectStateManager(wrappedEntity))
             {
                 VerifyDetachedKeyMatches(wrappedEntity.EntityKey);
@@ -1845,9 +1847,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     RemoveEntityFromObjectStateManager(wrappedEntity);
                 }
-                    // There is a possibility that related entity is removed from cache but relationship is not removed.
-                    // Example: Suppose A and B are related. When walking the graph it is possible that 
-                    // node B was visited through some relationship other than A-B. 
+                // There is a possibility that related entity is removed from cache but relationship is not removed.
+                // Example: Suppose A and B are related. When walking the graph it is possible that 
+                // node B was visited through some relationship other than A-B. 
                 else if (!IsForeignKey
                          && null != FindRelationshipEntryInObjectStateManager(wrappedEntity))
                 {
@@ -2393,7 +2395,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var foundFromRelationEnd = false;
                 var foundToRelationEnd = false;
                 foreach (var relationEnd in ((AssociationType)_relationMetadata).AssociationEndMembers)
-                    //Only Association relationship is supported
+                //Only Association relationship is supported
                 {
                     if (relationEnd.Name
                         == _navigation.From)

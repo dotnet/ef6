@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects.Internal;
-using System.Linq;
-using Moq;
-using Xunit;
-
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects.Internal;
+    using System.Linq;
+    using Moq;
+    using Xunit;
 
     public class RelatedEndTests
     {

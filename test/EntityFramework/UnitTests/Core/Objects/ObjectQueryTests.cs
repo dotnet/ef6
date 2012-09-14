@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Objects
             shaperMock.Setup(m => m.GetEnumerator()).Returns(
                 () =>
                 new DbEnumeratorShim<string>(((IEnumerable<string>)new[] { "foo" }).GetEnumerator()));
-            var objectQuery = MockHelper.CreateMockObjectQuery(null, shaperMock.Object).Object;
+            var objectQuery = MockHelper.CreateMockObjectQuery(refreshedValue: null, shaper: shaperMock.Object).Object;
 
             foreach(var element in objectQuery)
             {

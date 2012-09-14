@@ -142,9 +142,15 @@ namespace System.Data.Entity.Core.Objects
         internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(
             TEntity refreshedValue, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
         {
+            return CreateMockObjectQuery(new[] { refreshedValue }, shaper, objectContext);
+        }
+
+        internal static Mock<ObjectQuery<TEntity>> CreateMockObjectQuery<TEntity>(
+            IEnumerable<TEntity> refreshedValues, Shaper<TEntity> shaper = null, ObjectContext objectContext = null)
+        {
             var shaperMock = CreateShaperMock<TEntity>();
             shaperMock.Setup(m => m.GetEnumerator()).Returns(() =>
-                new DbEnumeratorShim<TEntity>(((IEnumerable<TEntity>)new[] { refreshedValue }).GetEnumerator()));
+                new DbEnumeratorShim<TEntity>(refreshedValues.GetEnumerator()));
             shaper = shaper ?? shaperMock.Object;
 
             var objectResultMock = new Mock<ObjectResult<TEntity>>(shaper, null, null)

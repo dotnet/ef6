@@ -3035,9 +3035,11 @@
   </data>
   <data name="EntityReference_LessThanExpectedRelatedEntitiesFound" xml:space="preserve">
     <value>A relationship multiplicity constraint violation occurred: An EntityReference expected at least one related object, but the query returned no related objects from the data store.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityReference_MoreThanExpectedRelatedEntitiesFound" xml:space="preserve">
     <value>A relationship multiplicity constraint violation occurred: An EntityReference can have no more than one related object, but the query returned more than one related object. This is a non-recoverable error.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityReference_CannotChangeReferentialConstraintProperty" xml:space="preserve">
     <value>A referential integrity constraint violation occurred: A primary key property that is a part of referential integrity constraint cannot be changed when the dependent object is Unchanged unless it is being set to the association's principal object. The principal object must be tracked and not marked for deletion.</value>

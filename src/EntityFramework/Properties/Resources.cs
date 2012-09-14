@@ -14829,6 +14829,22 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// InvalidOperationException with message like "A relationship multiplicity constraint violation occurred: An EntityReference expected at least one related object, but the query returned no related objects from the data store."
+        /// </summary>
+        internal static Exception EntityReference_LessThanExpectedRelatedEntitiesFound()
+        {
+            return new InvalidOperationException(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "A relationship multiplicity constraint violation occurred: An EntityReference can have no more than one related object, but the query returned more than one related object. This is a non-recoverable error."
+        /// </summary>
+        internal static Exception EntityReference_MoreThanExpectedRelatedEntitiesFound()
+        {
+            return new InvalidOperationException(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound);
+        }
+
+        /// <summary>
         /// InvalidOperationException with message like "The EntityKey property cannot be set to EntityNotValidKey, NoEntitySetKey, or a temporary key."
         /// </summary>
         internal static Exception EntityReference_CannotSetSpecialKeys()
