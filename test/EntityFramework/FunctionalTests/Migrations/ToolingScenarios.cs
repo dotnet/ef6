@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations
 {
     using System.CodeDom.Compiler;
     using System.Data.Entity.Migrations.Design;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Linq;
@@ -285,8 +284,8 @@ namespace System.Data.Entity.Migrations
                 null,
                 null))
             {
-                var ex = Assert.Throws<ToolingException>(() => facade.GetDatabaseMigrations());
-                Assert.Equal(Strings.ToolingFacade_AssemblyNotFound(unknownAssemblyName), ex.Message);
+                Assert.Throws<ToolingException>(() => facade.GetDatabaseMigrations())
+                    .ValidateMessage("ToolingFacade_AssemblyNotFound", unknownAssemblyName);
             }
         }
 

@@ -5,7 +5,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Resources;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -65,7 +64,7 @@ namespace System.Data.Entity.Migrations
             var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
 
             migrator = CreateMigrator<CustomSchemaContext_v1>(
-                false, scaffoldedMigrations: new [] { generatedMigration0, generatedMigration1 });
+                false, scaffoldedMigrations: new[] { generatedMigration0, generatedMigration1 });
 
             migrator.Update();
 
@@ -92,10 +91,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                    {
-                        Assert.False(TableExists("foo.OrderLines"));
-                        Assert.False(TableExists("foo." + HistoryContext.TableName));
-                    });
+                {
+                    Assert.False(TableExists("foo.OrderLines"));
+                    Assert.False(TableExists("foo." + HistoryContext.TableName));
+                });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
@@ -139,10 +138,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                    {
-                        Assert.False(TableExists("foo.OrderLines"));
-                        Assert.False(TableExists("foo." + HistoryContext.TableName));
-                    });
+                {
+                    Assert.False(TableExists("foo.OrderLines"));
+                    Assert.False(TableExists("foo." + HistoryContext.TableName));
+                });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
@@ -207,10 +206,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                    {
-                        Assert.True(TableExists("foo." + HistoryContext.TableName));
-                        Assert.False(TableExists("dbo." + HistoryContext.TableName));
-                    });
+                {
+                    Assert.True(TableExists("foo." + HistoryContext.TableName));
+                    Assert.False(TableExists("dbo." + HistoryContext.TableName));
+                });
 
             migrator.Update("0");
 
@@ -225,9 +224,8 @@ namespace System.Data.Entity.Migrations
 
             var migrator = CreateMigrator<CustomSchemaContext_v1>();
 
-            Assert.Equal(
-                Strings.UnableToAutoMigrateDefaultSchema,
-                Assert.Throws<MigrationsException>(() => migrator.Update()).Message);
+            Assert.Throws<MigrationsException>(() => migrator.Update())
+                .ValidateMessage("UnableToAutoMigrateDefaultSchema");
         }
 
         [MigrationsTheory]
@@ -241,9 +239,8 @@ namespace System.Data.Entity.Migrations
 
             migrator = CreateMigrator<CustomSchemaContext_v1>();
 
-            Assert.Equal(
-                Strings.UnableToAutoMigrateDefaultSchema,
-                Assert.Throws<MigrationsException>(() => migrator.Update()).Message);
+            Assert.Throws<MigrationsException>(() => migrator.Update())
+                .ValidateMessage("UnableToAutoMigrateDefaultSchema");
         }
 
         [MigrationsTheory]

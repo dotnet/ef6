@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -92,8 +91,8 @@ namespace System.Data.Entity.Migrations
 
             migrator = CreateMigrator<ShopContext_v1>(new CreateOobTableInvalidFkMigration());
 
-            Assert.Equal(
-                Strings.PartialFkOperation("Oob_Dependent", "Fk"), Assert.Throws<MigrationsException>(() => migrator.Update()).Message);
+            Assert.Throws<MigrationsException>(() => migrator.Update())
+                .ValidateMessage("PartialFkOperation", "Oob_Dependent", "Fk");
         }
 
         private class CreateCustomColumnNameMigration : DbMigration

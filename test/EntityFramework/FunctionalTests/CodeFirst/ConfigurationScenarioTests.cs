@@ -8,7 +8,6 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
-    using System.Data.Entity.Resources;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -112,16 +111,16 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                    {
-                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
-                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
-                        modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
-                            c => new
-                                     {
-                                         c.Id1,
-                                         c.Id2
-                                     });
-                    },
+                {
+                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
+                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
+                    modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
+                        c => new
+                                 {
+                                     c.Id1,
+                                     c.Id2
+                                 });
+                },
                 new[] { "Id1", "Id2" },
                 new[] { "Id2", "Id1" });
         }
@@ -131,14 +130,14 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                    {
-                        modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
-                            c => new
-                                     {
-                                         c.Id2,
-                                         c.Id1
-                                     });
-                    },
+                {
+                    modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
+                        c => new
+                                 {
+                                     c.Id2,
+                                     c.Id1
+                                 });
+                },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -148,10 +147,10 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                    {
-                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
-                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
-                    },
+                {
+                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
+                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
+                },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -161,20 +160,20 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                    {
-                        var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
+                {
+                    var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
 
-                        configuration.Property(c => c.Id2).HasColumnOrder(1);
-                        configuration.Property(c => c.Id1).HasColumnOrder(2);
-                        configuration.HasKey(
-                            c => new
-                                     {
-                                         c.Id1,
-                                         c.Id2
-                                     });
+                    configuration.Property(c => c.Id2).HasColumnOrder(1);
+                    configuration.Property(c => c.Id1).HasColumnOrder(2);
+                    configuration.HasKey(
+                        c => new
+                                 {
+                                     c.Id1,
+                                     c.Id2
+                                 });
 
-                        modelBuilder.Configurations.Add(configuration);
-                    },
+                    modelBuilder.Configurations.Add(configuration);
+                },
                 new[] { "Id1", "Id2" },
                 new[] { "Id2", "Id1" });
         }
@@ -184,18 +183,18 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                    {
-                        var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
+                {
+                    var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
 
-                        configuration.HasKey(
-                            c => new
-                                     {
-                                         c.Id2,
-                                         c.Id1
-                                     });
+                    configuration.HasKey(
+                        c => new
+                                 {
+                                     c.Id2,
+                                     c.Id1
+                                 });
 
-                        modelBuilder.Configurations.Add(configuration);
-                    },
+                    modelBuilder.Configurations.Add(configuration);
+                },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -205,14 +204,14 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                    {
-                        var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
+                {
+                    var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
 
-                        configuration.Property(c => c.Id2).HasColumnOrder(1);
-                        configuration.Property(c => c.Id1).HasColumnOrder(2);
+                    configuration.Property(c => c.Id2).HasColumnOrder(1);
+                    configuration.Property(c => c.Id1).HasColumnOrder(2);
 
-                        modelBuilder.Configurations.Add(configuration);
-                    },
+                    modelBuilder.Configurations.Add(configuration);
+                },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -224,10 +223,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<CompositeKeyNoOrder>();
 
-            Assert.Equal(
-                Strings.ModelGeneration_UnableToDetermineKeyOrder(typeof(CompositeKeyNoOrder)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ModelGeneration_UnableToDetermineKeyOrder", typeof(CompositeKeyNoOrder));
         }
 
         [Fact]
@@ -311,10 +309,9 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            Assert.Equal(
-                Strings.ModelBuilder_KeyPropertiesMustBePrimitive("CustomerAddresses", typeof(Customer)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Entity<Customer>().HasKey(c => c.CustomerAddresses)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Entity<Customer>().HasKey(c => c.CustomerAddresses))
+                .ValidateMessage("ModelBuilder_KeyPropertiesMustBePrimitive", "CustomerAddresses", typeof(Customer));
         }
 
         [Fact]
@@ -322,10 +319,9 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            Assert.Equal(
-                Strings.ModelBuilder_KeyPropertiesMustBePrimitive("CustomerDiscount", typeof(Customer)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Entity<Customer>().HasKey(c => c.CustomerDiscount)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Entity<Customer>().HasKey(c => c.CustomerDiscount))
+                .ValidateMessage("ModelBuilder_KeyPropertiesMustBePrimitive", "CustomerDiscount", typeof(Customer));
         }
 
         [Fact]
@@ -335,10 +331,9 @@ namespace FunctionalTests
 
             modelBuilder.ComplexType<CustomerDiscount>();
 
-            Assert.Equal(
-                Strings.ModelBuilder_KeyPropertiesMustBePrimitive("CustomerDiscount", typeof(Customer)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Entity<Customer>().HasKey(c => c.CustomerDiscount)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Entity<Customer>().HasKey(c => c.CustomerDiscount))
+                .ValidateMessage("ModelBuilder_KeyPropertiesMustBePrimitive", "CustomerDiscount", typeof(Customer));
         }
 
         [Fact]

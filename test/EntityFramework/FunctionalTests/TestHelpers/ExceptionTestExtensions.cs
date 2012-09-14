@@ -13,7 +13,7 @@ namespace System.Data.Entity
         public static void ValidateMessage(
             this Exception exception,
             string expectedResourceKey,
-            params string[] parameters)
+            params object[] parameters)
         {
             Contract.Requires(exception != null);
             Contract.Requires(expectedResourceKey != null);
@@ -26,7 +26,7 @@ namespace System.Data.Entity
             Assembly resourceAssembly,
             string expectedResourceKey,
             string resourceTable = null,
-            params string[] parameters)
+            params object[] parameters)
         {
             Contract.Requires(exception != null);
             Contract.Requires(resourceAssembly != null);

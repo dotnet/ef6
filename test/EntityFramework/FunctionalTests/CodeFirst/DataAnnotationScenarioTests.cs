@@ -9,7 +9,6 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
@@ -183,10 +182,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Entity_10558>();
 
-            Assert.Equal(
-                Strings.DuplicateConfiguredColumnOrder("Entity_10558"),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("DuplicateConfiguredColumnOrder", "Entity_10558");
         }
 
         [Fact]
@@ -214,10 +212,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<NotMappedDerived>();
 
-            Assert.Equal(
-                Strings.InvalidEntityType(typeof(NotMappedDerived)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("InvalidEntityType", typeof(NotMappedDerived));
         }
 
         [Fact]
@@ -473,10 +470,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Login), typeof(Profile));
                 }
             }
         }
@@ -499,10 +495,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Login), typeof(Profile));
                 }
             }
         }
@@ -526,10 +521,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Login), typeof(Profile)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Login), typeof(Profile));
                 }
             }
         }
@@ -548,10 +542,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
         }
@@ -570,10 +563,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
         }
@@ -593,10 +585,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
         }
@@ -646,10 +637,9 @@ namespace FunctionalTests
                     modelBuilder.Entity<Login>();
                     modelBuilder.Entity<Profile>();
 
-                    Assert.Equal(
-                        Strings.UnableToDeterminePrincipal(typeof(Profile), typeof(Login)),
-                        Assert.Throws<InvalidOperationException>(
-                            () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
         }

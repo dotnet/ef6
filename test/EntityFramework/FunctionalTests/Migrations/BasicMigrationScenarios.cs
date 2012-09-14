@@ -2,11 +2,10 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Utilities;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -184,9 +183,8 @@ namespace System.Data.Entity.Migrations
                     automaticDataLossEnabled: false,
                     scaffoldedMigrations: generatedMigration);
 
-            Assert.Equal(
-                new AutomaticDataLossException(Strings.AutomaticDataLoss).Message,
-                Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
+            Assert.Throws<AutomaticDataLossException>(() => migrator.Update())
+                .ValidateMessage("AutomaticDataLoss");
         }
 
         [MigrationsTheory]
@@ -254,7 +252,8 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.Equal(Strings.MigrationNotFound("balony"), Assert.Throws<MigrationsException>(() => migrator.Update("balony")).Message);
+            Assert.Throws<MigrationsException>(() => migrator.Update("balony"))
+                .ValidateMessage("MigrationNotFound", "balony");
         }
 
         [MigrationsTheory]

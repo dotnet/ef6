@@ -4,14 +4,10 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using System.Transactions;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
     using SimpleModel;
@@ -1272,9 +1268,8 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("propertyName"),
-                    Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges(null)).Message);
+                Assert.Throws<ArgumentException>(() => stateEntry.RejectPropertyChanges(null))
+                    .ValidateMessage("ArgumentIsNullOrWhitespace", "propertyName");
             }
         }
 
@@ -1453,13 +1448,13 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        building.Name = "Oops I Did It Again!";
+                {
+                    building.Name = "Oops I Did It Again!";
 
-                        Assert.False(entry.Property(b => b.Name).IsModified);
-                        Assert.True(stateEntry.IsPropertyChanged("Name"));
-                        Assert.False(entry.Property(b => b.Name).IsModified);
-                    });
+                    Assert.False(entry.Property(b => b.Name).IsModified);
+                    Assert.True(stateEntry.IsPropertyChanged("Name"));
+                    Assert.False(entry.Property(b => b.Name).IsModified);
+                });
         }
 
         [Fact]
@@ -1467,11 +1462,11 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        entry.Property(b => b.Name).IsModified = true;
+                {
+                    entry.Property(b => b.Name).IsModified = true;
 
-                        Assert.False(stateEntry.IsPropertyChanged("Name"));
-                    });
+                    Assert.False(stateEntry.IsPropertyChanged("Name"));
+                });
         }
 
         [Fact]
@@ -1479,11 +1474,11 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        Assert.False(entry.Property(b => b.Name).IsModified);
-                        Assert.False(stateEntry.IsPropertyChanged("Name"));
-                        Assert.False(entry.Property(b => b.Name).IsModified);
-                    });
+                {
+                    Assert.False(entry.Property(b => b.Name).IsModified);
+                    Assert.False(stateEntry.IsPropertyChanged("Name"));
+                    Assert.False(entry.Property(b => b.Name).IsModified);
+                });
         }
 
         [Fact]
@@ -1491,11 +1486,11 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        building.Name = null;
+                {
+                    building.Name = null;
 
-                        Assert.True(stateEntry.IsPropertyChanged("Name"));
-                    });
+                    Assert.True(stateEntry.IsPropertyChanged("Name"));
+                });
         }
 
         private void IsPropertyChanged_returns_true_for_complex_property_that_is_changed_and_marked_as_modified(
@@ -1503,12 +1498,12 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        changeAddress(building, entry.ComplexProperty(b => b.Address));
+                {
+                    changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                        Assert.True(entry.Property(b => b.Address).IsModified);
-                        Assert.True(stateEntry.IsPropertyChanged("Address"));
-                    });
+                    Assert.True(entry.Property(b => b.Address).IsModified);
+                    Assert.True(stateEntry.IsPropertyChanged("Address"));
+                });
         }
 
         private void IsPropertyChanged_returns_true_for_complex_property_that_is_changed_but_not_marked_as_modified(
@@ -1516,13 +1511,13 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        changeAddress(building, entry.ComplexProperty(b => b.Address));
+                {
+                    changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                        Assert.False(entry.Property(b => b.Address).IsModified);
-                        Assert.True(stateEntry.IsPropertyChanged("Address"));
-                        Assert.False(entry.Property(b => b.Address).IsModified);
-                    });
+                    Assert.False(entry.Property(b => b.Address).IsModified);
+                    Assert.True(stateEntry.IsPropertyChanged("Address"));
+                    Assert.False(entry.Property(b => b.Address).IsModified);
+                });
         }
 
         private void
@@ -1531,12 +1526,12 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        changeAddress(building, entry.ComplexProperty(b => b.Address));
+                {
+                    changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                        Assert.True(entry.Property(b => b.Address).IsModified);
-                        Assert.False(stateEntry.IsPropertyChanged("Address"));
-                    });
+                    Assert.True(entry.Property(b => b.Address).IsModified);
+                    Assert.False(stateEntry.IsPropertyChanged("Address"));
+                });
         }
 
         private void
@@ -1545,13 +1540,13 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        changeAddress(building, entry.ComplexProperty(b => b.Address));
+                {
+                    changeAddress(building, entry.ComplexProperty(b => b.Address));
 
-                        Assert.False(entry.Property(b => b.Address).IsModified);
-                        Assert.False(stateEntry.IsPropertyChanged("Address"));
-                        Assert.False(entry.Property(b => b.Address).IsModified);
-                    });
+                    Assert.False(entry.Property(b => b.Address).IsModified);
+                    Assert.False(stateEntry.IsPropertyChanged("Address"));
+                    Assert.False(entry.Property(b => b.Address).IsModified);
+                });
         }
 
         [Fact]
@@ -1560,12 +1555,12 @@ namespace ProductivityApiTests
             IsPropertyChanged_returns_false_for_complex_property_that_is_changed_by_reference_only_and_marked_as_modified_implementation
                 (
                     (b, e) =>
-                        {
-                            var originalAddress = b.Address;
-                            var newAddress = CloneAddress(originalAddress);
-                            newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
-                            e.CurrentValue = newAddress;
-                        });
+                    {
+                        var originalAddress = b.Address;
+                        var newAddress = CloneAddress(originalAddress);
+                        newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
+                        e.CurrentValue = newAddress;
+                    });
         }
 
         [Fact]
@@ -1574,12 +1569,12 @@ namespace ProductivityApiTests
             IsPropertyChanged_returns_true_for_complex_property_that_is_changed_by_reference_only_but_not_marked_as_modified
                 (
                     (b, e) =>
-                        {
-                            var originalAddress = b.Address;
-                            var newAddress = CloneAddress(originalAddress);
-                            newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
-                            b.Address = newAddress;
-                        });
+                    {
+                        var originalAddress = b.Address;
+                        var newAddress = CloneAddress(originalAddress);
+                        newAddress.SiteInfo = originalAddress.SiteInfo; // Keep same nested complex instance
+                        b.Address = newAddress;
+                    });
         }
 
         [Fact]
@@ -1648,11 +1643,11 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        entry.Property(b => b.Name).IsModified = true;
+                {
+                    entry.Property(b => b.Name).IsModified = true;
 
-                        Assert.False(stateEntry.IsPropertyChanged("Address"));
-                    });
+                    Assert.False(stateEntry.IsPropertyChanged("Address"));
+                });
         }
 
         [Fact]
@@ -1660,11 +1655,11 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        Assert.False(entry.Property(b => b.Address).IsModified);
-                        Assert.False(stateEntry.IsPropertyChanged("Address"));
-                        Assert.False(entry.Property(b => b.Address).IsModified);
-                    });
+                {
+                    Assert.False(entry.Property(b => b.Address).IsModified);
+                    Assert.False(stateEntry.IsPropertyChanged("Address"));
+                    Assert.False(entry.Property(b => b.Address).IsModified);
+                });
         }
 
         [Fact]
@@ -1672,13 +1667,13 @@ namespace ProductivityApiTests
         {
             IsPropertyChangedTest(
                 (building, entry, stateEntry) =>
-                    {
-                        building.Address = null;
+                {
+                    building.Address = null;
 
-                        Assert.Throws<InvalidOperationException>(
-                            () => stateEntry.IsPropertyChanged("Address")).ValidateMessage(
-                                "ComplexObject_NullableComplexTypesNotSupported", "Address");
-                    });
+                    Assert.Throws<InvalidOperationException>(
+                        () => stateEntry.IsPropertyChanged("Address")).ValidateMessage(
+                            "ComplexObject_NullableComplexTypesNotSupported", "Address");
+                });
         }
 
         [Fact]
@@ -1689,9 +1684,8 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("propertyName"),
-                    Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged(null)).Message);
+                Assert.Throws<ArgumentException>(() => stateEntry.IsPropertyChanged(null))
+                    .ValidateMessage("ArgumentIsNullOrWhitespace", "propertyName");
             }
         }
 
@@ -1820,9 +1814,8 @@ namespace ProductivityApiTests
                 var hamilton = context.Drivers.Where(d => d.Name == "Lewis Hamilton").Single();
                 var stateEntry = GetObjectContext(context).ObjectStateManager.GetObjectStateEntry(hamilton);
 
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("propertyName"),
-                    Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty(null)).Message);
+                Assert.Throws<ArgumentException>(() => stateEntry.SetModifiedProperty(null))
+                    .ValidateMessage("ArgumentIsNullOrWhitespace", "propertyName");
 
                 Assert.Equal(EntityState.Unchanged, stateEntry.State);
             }

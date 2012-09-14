@@ -13,11 +13,9 @@ namespace FunctionalTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
-    using Strings = System.Data.Entity.Resources.Strings;
 
     #region Fixtures
 
@@ -942,17 +940,17 @@ namespace FunctionalTests
             modelBuilder.Entity<Dependent_162348>()
                 .Map(
                     mapping =>
-                        {
-                            mapping.Properties(e => e.Key1);
-                            mapping.ToTable("DependentSplit");
-                        });
+                    {
+                        mapping.Properties(e => e.Key1);
+                        mapping.ToTable("DependentSplit");
+                    });
             modelBuilder.Entity<Dependent_162348>()
                 .Map(
                     mapping =>
-                        {
-                            mapping.Properties(e => e.PrincipalNavigationKey1);
-                            mapping.ToTable("Dependent_162348");
-                        });
+                    {
+                        mapping.Properties(e => e.PrincipalNavigationKey1);
+                        mapping.ToTable("Dependent_162348");
+                    });
             modelBuilder.Entity<Dependent_162348>()
                 .HasOptional(e => e.PrincipalNavigation).WithMany().Map(m => m.ToTable("Dependent_162348"));
 
@@ -1452,10 +1450,8 @@ namespace FunctionalTests
                          });
             modelBuilder.Entity<CompositePartiallyAnnotatedDependent>();
 
-            Assert.Equal(
-                Strings.ForeignKeyAttributeConvention_OrderRequired(typeof(CompositePartiallyAnnotatedDependent)),
-                Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                    .Message);
+            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ForeignKeyAttributeConvention_OrderRequired", typeof(CompositePartiallyAnnotatedDependent));
         }
 
         [Fact]
@@ -1479,12 +1475,11 @@ namespace FunctionalTests
 
             modelBuilder.Entity<AnnotatedDependentWrong>();
 
-            Assert.Equal(
-                Strings.ForeignKeyAttributeConvention_InvalidNavigationProperty(
+            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage(
+                    "ForeignKeyAttributeConvention_InvalidNavigationProperty",
                     "Id", typeof(AnnotatedDependentWrong),
-                    "Wrong"),
-                Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                    .Message);
+                    "Wrong");
         }
 
         [Fact]
@@ -1592,10 +1587,9 @@ namespace FunctionalTests
             modelBuilder.Entity<Principal>();
             modelBuilder.Entity<Dependent>();
 
-            Assert.Equal(
-                Strings.UnableToDeterminePrincipal(typeof(Dependent), typeof(Principal)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("UnableToDeterminePrincipal", typeof(Dependent).ToString(), typeof(Principal).ToString());
         }
 
         [Fact]
@@ -1610,10 +1604,9 @@ namespace FunctionalTests
                 .Entity<SomeItemDetail>()
                 .HasOptional(d => d.Item);
 
-            Assert.Equal(
-                Strings.UnableToDeterminePrincipal(typeof(SomeItem), typeof(SomeItemDetail)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("UnableToDeterminePrincipal", typeof(SomeItem).ToString(), typeof(SomeItemDetail).ToString());
         }
 
         [Fact]
@@ -1703,10 +1696,9 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasRequired(e => e.Detail).WithOptional(e => e.Item);
             modelBuilder.Entity<SomeItem>().HasOptional(e => e.Detail);
 
-            Assert.Equal(
-                Strings.UnableToDeterminePrincipal(typeof(SomeItem), typeof(SomeItemDetail)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("UnableToDeterminePrincipal", typeof(SomeItem), typeof(SomeItemDetail));
         }
 
         [Fact]
@@ -1760,10 +1752,9 @@ namespace FunctionalTests
                              o.AnotherId2
                          });
 
-            Assert.Equal(
-                Strings.UnableToDeterminePrincipal(typeof(ToOne), typeof(One)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("UnableToDeterminePrincipal", typeof(ToOne), typeof(One));
         }
 
         [Fact]
@@ -1811,10 +1802,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SelfRefToOne>();
 
-            Assert.Equal(
-                Strings.UnableToDeterminePrincipal(typeof(SelfRefToOne), typeof(SelfRefToOne)),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("UnableToDeterminePrincipal", typeof(SelfRefToOne), typeof(SelfRefToOne));
         }
 
         [Fact]
@@ -1838,16 +1828,16 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItemDetail>()
                 .Map(
                     c =>
-                        {
-                            c.ToTable("SomeItemDetail");
-                            c.Properties(s => s.Id);
-                        })
+                    {
+                        c.ToTable("SomeItemDetail");
+                        c.Properties(s => s.Id);
+                    })
                 .Map(
                     c =>
-                        {
-                            c.ToTable("SplitTable");
-                            c.Properties(s => s.Id);
-                        });
+                    {
+                        c.ToTable("SplitTable");
+                        c.Properties(s => s.Id);
+                    });
 
             modelBuilder.Entity<SomeItem>()
                 .HasOptional(s => s.Detail)
@@ -1940,10 +1930,10 @@ namespace FunctionalTests
                 .WithMany(p => p.Parents)
                 .Map(
                     m =>
-                        {
-                            m.MapLeftKey("ParentId");
-                            m.MapRightKey("ChildId");
-                        });
+                    {
+                        m.MapLeftKey("ParentId");
+                        m.MapRightKey("ChildId");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1968,7 +1958,7 @@ namespace FunctionalTests
 
             Assert.Equal(2, joinTable.ForeignKeyConstraints.Count);
 
-            joinTable.ForeignKeyConstraints.Each(fk => Assert.Equal(DbOperationAction.None, fk.DeleteAction));
+            Assert.True(joinTable.ForeignKeyConstraints.All(fk => fk.DeleteAction == DbOperationAction.None));
         }
 
         [Fact]
@@ -1982,10 +1972,10 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("ProductId");
-                            mc.MapRightKey("TagId");
-                        });
+                    {
+                        mc.MapLeftKey("ProductId");
+                        mc.MapRightKey("TagId");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2004,12 +1994,12 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("BadId");
-                            mc.MapRightKey("BadId");
-                            mc.MapLeftKey("ProductId");
-                            mc.MapRightKey("TagId");
-                        });
+                    {
+                        mc.MapLeftKey("BadId");
+                        mc.MapRightKey("BadId");
+                        mc.MapLeftKey("ProductId");
+                        mc.MapRightKey("TagId");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2028,10 +2018,10 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("ProductId");
-                            mc.MapRightKey("TagId");
-                        });
+                    {
+                        mc.MapLeftKey("ProductId");
+                        mc.MapRightKey("TagId");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2041,7 +2031,7 @@ namespace FunctionalTests
 
             Assert.Equal(2, joinTable.ForeignKeyConstraints.Count);
 
-            joinTable.ForeignKeyConstraints.Each(fk => Assert.Equal(DbOperationAction.Cascade, fk.DeleteAction));
+            Assert.True(joinTable.ForeignKeyConstraints.All(fk => fk.DeleteAction == DbOperationAction.Cascade));
         }
 
         [Fact]
@@ -2055,10 +2045,10 @@ namespace FunctionalTests
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("TagId");
-                            mc.MapRightKey("ProductId");
-                        });
+                    {
+                        mc.MapLeftKey("TagId");
+                        mc.MapRightKey("ProductId");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2077,10 +2067,10 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("ProductId");
-                            mc.MapRightKey("ProductId");
-                        });
+                    {
+                        mc.MapLeftKey("ProductId");
+                        mc.MapRightKey("ProductId");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2154,10 +2144,9 @@ namespace FunctionalTests
             modelBuilder.ComplexType<SomeItemDetail>().Ignore(d => d.Item);
             modelBuilder.Entity<SomeItem>().HasRequired(e => e.Detail).WithMany();
 
-            Assert.Equal(
-                Strings.NavigationPropertyNotFound("Detail", "SomeItem"),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("NavigationPropertyNotFound", "Detail", "SomeItem");
         }
 
         [Fact]
@@ -2168,10 +2157,9 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().Ignore(e => e.Detail);
             modelBuilder.Entity<SomeItem>().HasRequired(e => e.Detail).WithMany();
 
-            Assert.Equal(
-                Strings.NavigationPropertyNotFound("Detail", "SomeItem"),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("NavigationPropertyNotFound", "Detail", "SomeItem");
         }
 
         [Fact]
@@ -2398,12 +2386,11 @@ namespace FunctionalTests
                 .WithMany(p => p.DerivedDependentNavigations)
                 .HasForeignKey(d => d.PrincipalNavigationId);
 
-            Assert.Equal(
-                Strings.ForeignKeyPropertyNotFound("PrincipalNavigationId", "DerivedDependent"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.BuildAndValidate(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.BuildAndValidate(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ForeignKeyPropertyNotFound", "PrincipalNavigationId", "DerivedDependent");
         }
 
         [Fact]
@@ -2441,29 +2428,29 @@ namespace FunctionalTests
             modelBuilder.Entity<SpecialOfferProduct>()
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                p =>
-                                new
-                                    {
-                                        p.ProductID,
-                                        p.rowguid,
-                                        p.SpecialOfferID // FK in table 1
-                                    });
-                            m.ToTable("ProductOne");
-                        })
+                    {
+                        m.Properties(
+                            p =>
+                            new
+                                {
+                                    p.ProductID,
+                                    p.rowguid,
+                                    p.SpecialOfferID // FK in table 1
+                                });
+                        m.ToTable("ProductOne");
+                    })
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                p =>
-                                new
-                                    {
-                                        p.ProductID,
-                                        p.ModifiedDate,
-                                    });
-                            m.ToTable("ProductTwo");
-                        });
+                    {
+                        m.Properties(
+                            p =>
+                            new
+                                {
+                                    p.ProductID,
+                                    p.ModifiedDate,
+                                });
+                        m.ToTable("ProductTwo");
+                    });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -2497,29 +2484,29 @@ namespace FunctionalTests
             modelBuilder.Entity<SpecialOfferProduct>()
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                p =>
-                                new
-                                    {
-                                        p.ProductID,
-                                        p.rowguid
-                                    });
-                            m.ToTable("ProductOne");
-                        })
+                    {
+                        m.Properties(
+                            p =>
+                            new
+                                {
+                                    p.ProductID,
+                                    p.rowguid
+                                });
+                        m.ToTable("ProductOne");
+                    })
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                p =>
-                                new
-                                    {
-                                        p.ProductID,
-                                        p.ModifiedDate,
-                                        p.SpecialOfferID // FK in table 2
-                                    });
-                            m.ToTable("ProductTwo");
-                        });
+                    {
+                        m.Properties(
+                            p =>
+                            new
+                                {
+                                    p.ProductID,
+                                    p.ModifiedDate,
+                                    p.SpecialOfferID // FK in table 2
+                                });
+                        m.ToTable("ProductTwo");
+                    });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -2563,29 +2550,29 @@ namespace FunctionalTests
                 .HasKey(p => p.ProductID)
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                p =>
-                                new
-                                    {
-                                        p.ProductID,
-                                        p.rowguid
-                                    });
-                            m.ToTable("ProductOne");
-                        })
+                    {
+                        m.Properties(
+                            p =>
+                            new
+                                {
+                                    p.ProductID,
+                                    p.rowguid
+                                });
+                        m.ToTable("ProductOne");
+                    })
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                p =>
-                                new
-                                    {
-                                        p.ProductID,
-                                        p.ModifiedDate,
-                                        p.SpecialOfferID
-                                    });
-                            m.ToTable("ProductTwo");
-                        });
+                    {
+                        m.Properties(
+                            p =>
+                            new
+                                {
+                                    p.ProductID,
+                                    p.ModifiedDate,
+                                    p.SpecialOfferID
+                                });
+                        m.ToTable("ProductTwo");
+                    });
 
             modelBuilder.Entity<SpecialOffer>()
                 .HasKey(o => o.SpecialOfferID)
@@ -2642,12 +2629,12 @@ namespace FunctionalTests
                 .WithRequired(p => p.SpecialOffer)
                 .Map(
                     mc =>
-                        {
-                            mc.MapKey("BadFK");
-                            mc.ToTable("BadTable");
-                            mc.MapKey("TheFK");
-                            mc.ToTable("SpecialOfferProducts");
-                        });
+                    {
+                        mc.MapKey("BadFK");
+                        mc.ToTable("BadTable");
+                        mc.MapKey("TheFK");
+                        mc.ToTable("SpecialOfferProducts");
+                    });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -2900,22 +2887,22 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("ProductId");
-                            mc.MapRightKey("TagId");
-                            mc.ToTable("ProductTags");
-                        });
+                    {
+                        mc.MapLeftKey("ProductId");
+                        mc.MapRightKey("TagId");
+                        mc.ToTable("ProductTags");
+                    });
 
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Products)
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("TagId");
-                            mc.MapRightKey("ProductId");
-                            mc.ToTable("ProductTags");
-                        });
+                    {
+                        mc.MapLeftKey("TagId");
+                        mc.MapRightKey("ProductId");
+                        mc.ToTable("ProductTags");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2932,22 +2919,22 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("TagId");
-                            mc.MapRightKey("ProductId");
-                            mc.ToTable("ProductTags");
-                        });
+                    {
+                        mc.MapLeftKey("TagId");
+                        mc.MapRightKey("ProductId");
+                        mc.ToTable("ProductTags");
+                    });
 
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Products)
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("TagId");
-                            mc.MapRightKey("ProductId");
-                            mc.ToTable("ProductTags");
-                        });
+                    {
+                        mc.MapLeftKey("TagId");
+                        mc.MapRightKey("ProductId");
+                        mc.ToTable("ProductTags");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2964,27 +2951,26 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("ProductCode");
-                            mc.MapRightKey("TagId");
-                            mc.ToTable("ProductTags");
-                        });
+                    {
+                        mc.MapLeftKey("ProductCode");
+                        mc.MapRightKey("TagId");
+                        mc.ToTable("ProductTags");
+                    });
 
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Products)
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                        {
-                            mc.MapLeftKey("TagId");
-                            mc.MapRightKey("ProductId");
-                            mc.ToTable("ProductTags");
-                        });
+                    {
+                        mc.MapLeftKey("TagId");
+                        mc.MapRightKey("ProductId");
+                        mc.ToTable("ProductTags");
+                    });
 
-            Assert.Equal(
-                Strings.ConflictingMapping("Products", "FunctionalTests.Tag"),
-                Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMapping", "Products", "FunctionalTests.Tag");
         }
 
         [Fact]
@@ -2995,12 +2981,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithRequired(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithRequiredDependent(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Detail", "FunctionalTests.SomeItem"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Detail", "FunctionalTests.SomeItem");
         }
 
         [Fact]
@@ -3011,12 +2996,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithRequired(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithRequiredPrincipal(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Detail", "FunctionalTests.SomeItem"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Detail", "FunctionalTests.SomeItem");
         }
 
         [Fact]
@@ -3027,12 +3011,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithRequired(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasOptional(d => d.Item).WithRequired(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3043,12 +3026,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithRequired(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasOptional(d => d.Item).WithOptionalDependent(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3059,12 +3041,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithRequired(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasOptional(d => d.Item).WithOptionalPrincipal(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3075,12 +3056,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithOptionalPrincipal(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasOptional(d => d.Item).WithOptionalPrincipal(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingConstraint("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3091,12 +3071,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithOptionalDependent(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasOptional(d => d.Item).WithOptionalDependent(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingConstraint("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3107,12 +3086,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithOptionalDependent(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithRequiredDependent(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3123,12 +3101,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasOptional(d => d.Detail).WithOptionalDependent(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithRequiredPrincipal(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3139,12 +3116,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasRequired(d => d.Detail).WithRequiredPrincipal(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithRequiredPrincipal(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingConstraint("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3155,12 +3131,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItem>().HasRequired(d => d.Detail).WithRequiredDependent(p => p.Item);
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithRequiredDependent(p => p.Detail);
 
-            Assert.Equal(
-                Strings.ConflictingConstraint("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3173,12 +3148,10 @@ namespace FunctionalTests
             modelBuilder.Entity<ProductCategory>().HasMany(c => c.ProductSubcategories).WithOptional(
                 s => s.ProductCategory);
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("ProductCategory", "FunctionalTests.Model.ProductSubcategory"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).
-                    Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).
+                ValidateMessage("ConflictingMultiplicities", "ProductCategory", "FunctionalTests.Model.ProductSubcategory");
         }
 
         // Dev11 330745
@@ -3197,12 +3170,11 @@ namespace FunctionalTests
                 .HasRequired(d => d.Item)
                 .WithRequiredPrincipal(); // <- There is an inverse nav-prop, but pretending that there isn't.
 
-            Assert.Equal(
-                Strings.ConflictingMultiplicities("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3253,12 +3225,11 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItemDetail>().HasRequired(d => d.Item).WithOptional(p => p.Detail).
                 WillCascadeOnDelete(false);
 
-            Assert.Equal(
-                Strings.ConflictingCascadeDeleteOperation("Item", "FunctionalTests.SomeItemDetail"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingCascadeDeleteOperation", "Item", "FunctionalTests.SomeItemDetail");
         }
 
         [Fact]
@@ -3271,12 +3242,10 @@ namespace FunctionalTests
             modelBuilder.Entity<ProductCategory>().HasMany(c => c.ProductSubcategories).WithRequired(
                 s => s.ProductCategory).HasForeignKey(s => s.ProductSubcategoryID);
 
-            Assert.Equal(
-                Strings.ConflictingConstraint("ProductSubcategories", "FunctionalTests.Model.ProductCategory"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).
-                    Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).
+                ValidateMessage("ConflictingConstraint", "ProductSubcategories", "FunctionalTests.Model.ProductCategory");
         }
 
         [Fact]
@@ -3289,12 +3258,10 @@ namespace FunctionalTests
             modelBuilder.Entity<ProductCategory>().HasMany(c => c.ProductSubcategories).WithRequired(
                 s => s.ProductCategory).Map(_ => { });
 
-            Assert.Equal(
-                Strings.ConflictingConstraint("ProductSubcategories", "FunctionalTests.Model.ProductCategory"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).
-                    Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).
+                ValidateMessage("ConflictingConstraint", "ProductSubcategories", "FunctionalTests.Model.ProductCategory");
         }
 
         [Fact]
@@ -3307,12 +3274,11 @@ namespace FunctionalTests
             modelBuilder.Entity<ProductCategory>().HasMany(c => c.ProductSubcategories).WithRequired(
                 s => s.ProductCategory).Map(c => c.MapKey("Key2"));
 
-            Assert.Equal(
-                Strings.ConflictingMapping("ProductSubcategories", "FunctionalTests.Model.ProductCategory"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder.Build(
-                        ProviderRegistry.Sql2008_ProviderInfo)).Message);
+            Assert.Throws<InvalidOperationException>(
+                () =>
+                modelBuilder.Build(
+                    ProviderRegistry.Sql2008_ProviderInfo))
+                .ValidateMessage("ConflictingMapping", "ProductSubcategories", "FunctionalTests.Model.ProductCategory");
         }
 
         #endregion
