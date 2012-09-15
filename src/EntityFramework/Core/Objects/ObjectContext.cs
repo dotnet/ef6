@@ -2774,21 +2774,27 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                mustReleaseConnection = true;
-
                 // determine what transaction to enlist in
                 var needLocalTransaction = false;
 
-                if (null == connection.CurrentTransaction
-                    && !connection.EnlistedInUserTransaction)
-                {
-                    // If there isn't a local transaction started by the user, we'll attempt to enlist 
-                    // on the current SysTx transaction so we don't need to construct a local
-                    // transaction.
-                    needLocalTransaction = (null == _lastTransaction);
-                }
+                var interceptingEnabled
+                    = (_commandInterceptor != null) && _commandInterceptor.IsEnabled;
 
+                if (!interceptingEnabled)
+                {
+                    await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    mustReleaseConnection = true;
+
+                    if (null == connection.CurrentTransaction
+                        && !connection.EnlistedInUserTransaction)
+                    {
+                        // If there isn't a local transaction started by the user, we'll attempt to enlist 
+                        // on the current SysTx transaction so we don't need to construct a local
+                        // transaction.
+                        needLocalTransaction = (null == _lastTransaction);
+                    }
+                }
+                
                 // else the user already has his own local transaction going; user will do the abort or commit.
                 DbTransaction localTransaction = null;
                 try
