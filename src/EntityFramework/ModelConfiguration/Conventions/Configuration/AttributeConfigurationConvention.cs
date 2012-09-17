@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -15,7 +16,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <typeparam name="TConfiguration"> The type of the configuration to look for. </typeparam>
     /// <typeparam name="TAttribute"> The type of the attribute to look for. </typeparam>
     [ContractClass(typeof(AttributeConfigurationConventionContracts<,,>))]
-    internal abstract class AttributeConfigurationConvention<TMemberInfo, TConfiguration, TAttribute>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
+    public abstract class AttributeConfigurationConvention<TMemberInfo, TConfiguration, TAttribute>
         : IConfigurationConvention<TMemberInfo, TConfiguration>
         where TMemberInfo : MemberInfo
         where TConfiguration : ConfigurationBase
@@ -35,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _attributeProvider = attributeProvider;
         }
 
-        internal abstract void Apply(TMemberInfo memberInfo, TConfiguration configuration, TAttribute attribute);
+        public abstract void Apply(TMemberInfo memberInfo, TConfiguration configuration, TAttribute attribute);
 
         void IConfigurationConvention<TMemberInfo, TConfiguration>.Apply(
             TMemberInfo memberInfo, Func<TConfiguration> configuration)
@@ -56,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         where TConfiguration : ConfigurationBase
         where TAttribute : Attribute
     {
-        internal override void Apply(TMemberInfo memberInfo, TConfiguration configuration, TAttribute attribute)
+        public override void Apply(TMemberInfo memberInfo, TConfiguration configuration, TAttribute attribute)
         {
             Contract.Requires(memberInfo != null);
             Contract.Requires(configuration != null);

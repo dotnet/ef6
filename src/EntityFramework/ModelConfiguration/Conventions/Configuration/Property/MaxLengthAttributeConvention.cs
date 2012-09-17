@@ -10,50 +10,33 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="MaxLengthAttribute" /> found on properties in the model.
     /// </summary>
-    public sealed class MaxLengthAttributeConvention
-        : IConfigurationConvention<PropertyInfo, LengthPropertyConfiguration>
+    public class MaxLengthAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, LengthPropertyConfiguration, MaxLengthAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, LengthPropertyConfiguration> _impl
-            = new MaxLengthAttributeConventionImpl();
+        private const int MaxLengthIndicator = -1;
 
-        internal MaxLengthAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, LengthPropertyConfiguration configuration,
+            MaxLengthAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, LengthPropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<LengthPropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class MaxLengthAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, LengthPropertyConfiguration, MaxLengthAttribute>
-        {
-            private const int MaxLengthIndicator = -1;
-
-            internal override void Apply(
-                PropertyInfo propertyInfo, LengthPropertyConfiguration lengthPropertyConfiguration,
-                MaxLengthAttribute maxLengthAttribute)
+            if ((attribute.Length == 0)
+                || (attribute.Length < MaxLengthIndicator))
             {
-                if ((maxLengthAttribute.Length == 0)
-                    || (maxLengthAttribute.Length < MaxLengthIndicator))
-                {
-                    throw Error.MaxLengthAttributeConvention_InvalidMaxLength(
-                        propertyInfo.Name, propertyInfo.ReflectedType);
-                }
+                throw Error.MaxLengthAttributeConvention_InvalidMaxLength(
+                    memberInfo.Name, memberInfo.ReflectedType);
+            }
 
-                // Set the length if the length configuration's maxlength is not yet set
-                if (lengthPropertyConfiguration.IsMaxLength == null
-                    && lengthPropertyConfiguration.MaxLength == null)
+            // Set the length if the length configuration's maxlength is not yet set
+            if (configuration.IsMaxLength == null
+                && configuration.MaxLength == null)
+            {
+                if (attribute.Length == MaxLengthIndicator)
                 {
-                    if (maxLengthAttribute.Length == MaxLengthIndicator)
-                    {
-                        lengthPropertyConfiguration.IsMaxLength = true;
-                    }
-                    else
-                    {
-                        lengthPropertyConfiguration.MaxLength = maxLengthAttribute.Length;
-                    }
+                    configuration.IsMaxLength = true;
+                }
+                else
+                {
+                    configuration.MaxLength = attribute.Length;
                 }
             }
         }

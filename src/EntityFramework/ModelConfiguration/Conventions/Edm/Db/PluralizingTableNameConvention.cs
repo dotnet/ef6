@@ -11,24 +11,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the table name to be a pluralized version of the entity type name.
     /// </summary>
-    public sealed class PluralizingTableNameConvention : IDbConvention<DbTableMetadata>
+    public class PluralizingTableNameConvention : IDbConvention<DbTableMetadata>
     {
         private static readonly PluralizationService _pluralizationService
             = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
 
-        internal PluralizingTableNameConvention()
+        public void Apply(DbTableMetadata dbDataModelItem, DbDatabaseMetadata database)
         {
-        }
-
-        void IDbConvention<DbTableMetadata>.Apply(DbTableMetadata table, DbDatabaseMetadata database)
-        {
-            if (table.GetTableName() == null)
+            if (dbDataModelItem.GetTableName() == null)
             {
-                var schema = database.Schemas.Where(s => s.Tables.Contains(table)).Single();
+                var schema = database.Schemas.Single(s => s.Tables.Contains(dbDataModelItem));
 
-                table.DatabaseIdentifier
-                    = schema.Tables.Except(new[] { table })
-                        .UniquifyIdentifier(_pluralizationService.Pluralize(table.DatabaseIdentifier));
+                dbDataModelItem.DatabaseIdentifier
+                    = schema.Tables.Except(new[] { dbDataModelItem })
+                        .UniquifyIdentifier(_pluralizationService.Pluralize(dbDataModelItem.DatabaseIdentifier));
             }
         }
     }

@@ -13,14 +13,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to detect navigation properties to be inverses of each other when only one pair 
     ///     of navigation properties exists between the related types.
     /// </summary>
-    public sealed class AssociationInverseDiscoveryConvention : IEdmConvention
+    public class AssociationInverseDiscoveryConvention : IEdmConvention
     {
-        internal AssociationInverseDiscoveryConvention()
-        {
-        }
-
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        void IEdmConvention.Apply(EdmModel model)
+        public void Apply(EdmModel model)
         {
             var associationPairs
                 = (from a1 in model.GetAssociationTypes()

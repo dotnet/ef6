@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
     internal static class DbDatabaseMappingExtensions
     {
-        internal static DbDatabaseMapping Initialize(
+        public static DbDatabaseMapping Initialize(
             this DbDatabaseMapping databaseMapping, EdmModel model, DbDatabaseMetadata database)
         {
             Contract.Requires(databaseMapping != null);
@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        internal static MetadataWorkspace ToMetadataWorkspace(this DbDatabaseMapping databaseMapping)
+        public static MetadataWorkspace ToMetadataWorkspace(this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        internal static StorageMappingItemCollection ToStorageMappingItemCollection(
+        public static StorageMappingItemCollection ToStorageMappingItemCollection(
             this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             }
         }
 
-        internal static DbEntityTypeMapping GetEntityTypeMapping(
+        public static DbEntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, EdmEntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -109,14 +109,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             {
                 return mappings.SingleOrDefault();
             }
-            else
-            {
-                // Return the property mapping
-                return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
-            }
+
+            // Return the property mapping
+            return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        internal static IEnumerable<DbEntityTypeMapping> GetEntityTypeMappings(
+        public static IEnumerable<DbEntityTypeMapping> GetEntityTypeMappings(
             this DbDatabaseMapping databaseMapping, EdmEntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -128,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                     select etm);
         }
 
-        internal static DbEntityTypeMapping GetEntityTypeMapping(
+        public static DbEntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, Type entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -143,14 +141,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             {
                 return mappings.SingleOrDefault();
             }
-            else
-            {
-                // Return the property mapping
-                return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
-            }
+
+            // Return the property mapping
+            return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        internal static IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> GetComplexPropertyMappings(
+        public static IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> GetComplexPropertyMappings(
             this DbDatabaseMapping databaseMapping, Type complexType)
         {
             Contract.Requires(databaseMapping != null);
@@ -167,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                    select Tuple.Create(epm, etmf.Table);
         }
 
-        internal static DbEntitySetMapping GetEntitySetMapping(
+        public static DbEntitySetMapping GetEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EdmEntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
@@ -180,7 +176,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .SingleOrDefault(e => e.EntitySet == entitySet);
         }
 
-        internal static IEnumerable<DbEntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
+        public static IEnumerable<DbEntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -190,7 +186,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .EntitySetMappings;
         }
 
-        internal static IEnumerable<DbAssociationSetMapping> GetAssociationSetMappings(
+        public static IEnumerable<DbAssociationSetMapping> GetAssociationSetMappings(
             this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
@@ -201,7 +197,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .AssociationSetMappings;
         }
 
-        internal static DbEntitySetMapping AddEntitySetMapping(
+        public static DbEntitySetMapping AddEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EdmEntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
@@ -221,7 +217,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return entitySetMapping;
         }
 
-        internal static DbAssociationSetMapping AddAssociationSetMapping(
+        public static DbAssociationSetMapping AddAssociationSetMapping(
             this DbDatabaseMapping databaseMapping, EdmAssociationSet associationSet)
         {
             Contract.Requires(databaseMapping != null);

@@ -42,7 +42,7 @@ namespace System.Data.Entity.Infrastructure
             get { return _cachedModelBuilder; }
         }
 
-        internal DbDatabaseMapping DatabaseMapping
+        public DbDatabaseMapping DatabaseMapping
         {
             get { return _databaseMapping; }
         }

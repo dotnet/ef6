@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    internal abstract class ConfigurationBase
+    public abstract class ConfigurationBase
     {
     }
 }

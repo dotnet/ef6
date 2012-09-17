@@ -6,7 +6,7 @@ namespace System.Data.Entity.Edm.Common
     ///     INamedDataModelItem is implemented by model-specific base types for all types with a <see cref="Name" /> property. <seealso
     ///      cref="EdmNamedMetadataItem" />
     /// </summary>
-    internal interface INamedDataModelItem
+    public interface INamedDataModelItem
     {
         /// <summary>
         ///     Gets or sets the currently assigned name.

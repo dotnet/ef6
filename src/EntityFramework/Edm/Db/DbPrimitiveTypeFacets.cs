@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db
     /// <summary>
     ///     Allows the construction and modification of additional constraints that can be applied to a specific use of a primitive type in a Database Metadata item.
     /// </summary>
-    internal class DbPrimitiveTypeFacets
+    public class DbPrimitiveTypeFacets
         : DbDataModelItem
     {
         internal override DbItemKind GetMetadataKind()

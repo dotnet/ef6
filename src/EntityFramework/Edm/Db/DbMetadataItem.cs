@@ -5,11 +5,12 @@ namespace System.Data.Entity.Edm.Db
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     The base for all all Database Metadata types that support annotation using <see cref="DataModelAnnotation" /> .
     /// </summary>
-    internal abstract class DbMetadataItem
+    public abstract class DbMetadataItem
         : DbDataModelItem, IAnnotatedDataModelItem
     {
         private readonly BackingList<DataModelAnnotation> annotationsList = new BackingList<DataModelAnnotation>();
@@ -17,6 +18,7 @@ namespace System.Data.Entity.Edm.Db
         /// <summary>
         ///     Gets or sets the currently assigned annotations.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DataModelAnnotation> Annotations
         {
             get { return annotationsList.EnsureValue(); }

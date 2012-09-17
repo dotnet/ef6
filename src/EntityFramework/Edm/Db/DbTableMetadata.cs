@@ -13,7 +13,7 @@ namespace System.Data.Entity.Edm.Db
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
-    internal class DbTableMetadata : DbSchemaMetadataItem
+    public class DbTableMetadata : DbSchemaMetadataItem
     {
         private readonly BackingList<DbTableColumnMetadata> columnsList = new BackingList<DbTableColumnMetadata>();
 
@@ -28,6 +28,7 @@ namespace System.Data.Entity.Edm.Db
         /// <summary>
         ///     Gets or sets the collection of <see cref="DbTableColumnMetadata" /> instances that specifies the columns present within the table.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbTableColumnMetadata> Columns
         {
             get { return columnsList.EnsureValue(); }
@@ -50,6 +51,7 @@ namespace System.Data.Entity.Edm.Db
         /// <summary>
         ///     Gets or sets the collection of <see cref="DbForeignKeyConstraintMetadata" /> instances that defines the foreign key constraints sourced from the table.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbForeignKeyConstraintMetadata> ForeignKeyConstraints
         {
             get { return fkConstraintsList.EnsureValue(); }

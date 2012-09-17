@@ -12,14 +12,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to apply column ordering specified via <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
     ///     or the <see cref="DbModelBuilder" /> API.
     /// </summary>
-    internal class ColumnOrderingConvention : IDbConvention<DbTableMetadata>
+    public class ColumnOrderingConvention : IDbConvention<DbTableMetadata>
     {
-        void IDbConvention<DbTableMetadata>.Apply(DbTableMetadata table, DbDatabaseMetadata database)
+        public void Apply(DbTableMetadata dbDataModelItem, DbDatabaseMetadata database)
         {
-            ValidateColumns(table);
+            ValidateColumns(dbDataModelItem);
 
-            table.Columns = OrderColumns(table.Columns);
-            table.ForeignKeyConstraints.Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
+            dbDataModelItem.Columns = OrderColumns(dbDataModelItem.Columns);
+            dbDataModelItem.ForeignKeyConstraints.Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
         }
 
         protected virtual void ValidateColumns(DbTableMetadata table)

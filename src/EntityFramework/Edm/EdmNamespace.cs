@@ -11,7 +11,7 @@ namespace System.Data.Entity.Edm
     ///     Allows the construction and modification of a namespace in an <see cref="EdmModel" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class EdmNamespace : EdmQualifiedNameMetadataItem
+    public class EdmNamespace : EdmQualifiedNameMetadataItem
     {
         private readonly BackingList<EdmAssociationType> associationTypesList = new BackingList<EdmAssociationType>();
         private readonly BackingList<EdmComplexType> complexTypesList = new BackingList<EdmComplexType>();
@@ -46,6 +46,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the <see cref="EdmAssociationType" /> s declared within the namespace.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmAssociationType> AssociationTypes
         {
             get { return associationTypesList.EnsureValue(); }
@@ -60,6 +61,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the <see cref="EdmComplexType" /> s declared within the namespace.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmComplexType> ComplexTypes
         {
             get { return complexTypesList.EnsureValue(); }
@@ -74,6 +76,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the <see cref="EdmEntityType" /> s declared within the namespace.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmEntityType> EntityTypes
         {
             get { return entityTypesList.EnsureValue(); }
@@ -85,6 +88,7 @@ namespace System.Data.Entity.Edm
             get { return entityTypesList.HasValue; }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmEnumType> EnumTypes
         {
             get { return enumTypesList.EnsureValue(); }

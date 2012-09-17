@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Edm.Db
 {
-    internal enum DbStoreGeneratedPattern
+    public enum DbStoreGeneratedPattern
     {
         None = 0,
         Identity = 1,

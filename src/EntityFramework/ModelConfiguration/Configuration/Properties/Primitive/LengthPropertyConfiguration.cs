@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
-    internal abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
+    public abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
         public bool? IsFixedLength { get; set; }
         public int? MaxLength { get; set; }
@@ -95,11 +95,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool InCSpace, out string errorMessage)
+        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var lenRhs = other as LengthPropertyConfiguration;
 
-            var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
+            var baseIsCompatible = base.IsCompatible(other, inCSpace, out errorMessage);
             var isFixedLengthIsCompatible = lenRhs == null
                                             || IsCompatible(c => c.IsFixedLength, lenRhs, ref errorMessage);
             var isMaxLengthIsCompatible = lenRhs == null || IsCompatible(c => c.IsMaxLength, lenRhs, ref errorMessage);

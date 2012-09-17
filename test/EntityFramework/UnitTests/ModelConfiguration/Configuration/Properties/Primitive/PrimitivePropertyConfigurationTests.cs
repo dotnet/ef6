@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void HasColumnOrder_should_throw_when_argument_out_of_range()
         {
-            var configuration = new Configuration.PrimitivePropertyConfiguration(new PrimitivePropertyConfiguration());
+            var configuration = new Configuration.PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(new PrimitivePropertyConfiguration());
 
             Assert.Equal(
                 new ArgumentOutOfRangeException("columnOrder").Message,
@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void HasDatabaseGeneratedOption_should_throw_when_argument_out_of_range()
         {
-            var configuration = new Configuration.PrimitivePropertyConfiguration(new PrimitivePropertyConfiguration());
+            var configuration = new Configuration.PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(new PrimitivePropertyConfiguration());
 
             Assert.Equal(
                 new ArgumentOutOfRangeException("databaseGeneratedOption").Message,

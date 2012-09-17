@@ -7,7 +7,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     The base for all all Entity Data Model (EDM) item types that with a <see cref="Name" /> property.
     /// </summary>
-    internal abstract class EdmNamedMetadataItem
+    public abstract class EdmNamedMetadataItem
         : EdmMetadataItem, INamedDataModelItem
     {
         /// <summary>

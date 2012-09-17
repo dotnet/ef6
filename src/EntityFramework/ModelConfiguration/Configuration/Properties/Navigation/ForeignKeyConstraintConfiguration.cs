@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Linq;
     using System.Reflection;
 
-    internal class ForeignKeyConstraintConfiguration : ConstraintConfiguration
+    public class ForeignKeyConstraintConfiguration : ConstraintConfiguration
     {
         private readonly List<PropertyInfo> _dependentProperties = new List<PropertyInfo>();
         private readonly bool _isFullySpecified;

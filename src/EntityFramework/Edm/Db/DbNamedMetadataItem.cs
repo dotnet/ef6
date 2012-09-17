@@ -8,7 +8,7 @@ namespace System.Data.Entity.Edm.Db
     ///     NamedDbItem is the base for all types in the Database Metadata construction and modification API with a <see
     ///      cref="Name" /> property.
     /// </summary>
-    internal abstract class DbNamedMetadataItem
+    public abstract class DbNamedMetadataItem
         : DbMetadataItem, INamedDataModelItem
     {
         /// <summary>

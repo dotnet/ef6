@@ -14,79 +14,62 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on foreign key properties in the model.
     /// </summary>
-    public sealed class ForeignKeyPrimitivePropertyAttributeConvention :
-        IConfigurationConvention<PropertyInfo, ModelConfiguration>
+    public class ForeignKeyPrimitivePropertyAttributeConvention :
+        AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, ForeignKeyAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, ModelConfiguration> _impl =
-            new ForeignKeyAttributeConventionImpl();
-
-        internal ForeignKeyPrimitivePropertyAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, ModelConfiguration configuration,
+            ForeignKeyAttribute attribute)
         {
+            if (memberInfo.IsValidEdmScalarProperty())
+            {
+                ApplyNavigationProperty(memberInfo, configuration, attribute);
+            }
         }
 
-        void IConfigurationConvention<PropertyInfo, ModelConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<ModelConfiguration> configuration)
+        private static void ApplyNavigationProperty(
+            PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
+            ForeignKeyAttribute foreignKeyAttribute)
         {
-            _impl.Apply(memberInfo, configuration);
+            var navigationPropertyInfo
+                = (from pi in new PropertyFilter().GetProperties(propertyInfo.ReflectedType, false)
+                   where pi.Name.Equals(foreignKeyAttribute.Name, StringComparison.Ordinal)
+                   select pi).SingleOrDefault();
+
+            if (navigationPropertyInfo == null)
+            {
+                throw Error.ForeignKeyAttributeConvention_InvalidNavigationProperty(
+                    propertyInfo.Name, propertyInfo.ReflectedType, foreignKeyAttribute.Name);
+            }
+
+            var navigationPropertyConfiguration
+                = modelConfiguration.Entity(propertyInfo.ReflectedType).Navigation(navigationPropertyInfo);
+
+            if (HasConfiguredConstraint(propertyInfo, modelConfiguration, navigationPropertyConfiguration))
+            {
+                return;
+            }
+
+            var foreignKeyConstraintConfiguration
+                = (ForeignKeyConstraintConfiguration)
+                  (navigationPropertyConfiguration.Constraint
+                   ?? (navigationPropertyConfiguration.Constraint = new ForeignKeyConstraintConfiguration()));
+
+            foreignKeyConstraintConfiguration.AddColumn(propertyInfo);
         }
 
-        internal sealed class ForeignKeyAttributeConventionImpl :
-            AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, ForeignKeyAttribute>
+        private static bool HasConfiguredConstraint(
+            PropertyInfo propertyInfo,
+            ModelConfiguration modelConfiguration,
+            NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
-            internal override void Apply(
-                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
-                ForeignKeyAttribute foreignKeyAttribute)
-            {
-                if (propertyInfo.IsValidEdmScalarProperty())
-                {
-                    ApplyNavigationProperty(propertyInfo, modelConfiguration, foreignKeyAttribute);
-                }
-            }
-
-            private static void ApplyNavigationProperty(
-                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
-                ForeignKeyAttribute foreignKeyAttribute)
-            {
-                var navigationPropertyInfo
-                    = (from pi in new PropertyFilter().GetProperties(propertyInfo.ReflectedType, false)
-                       where pi.Name.Equals(foreignKeyAttribute.Name, StringComparison.Ordinal)
-                       select pi).SingleOrDefault();
-
-                if (navigationPropertyInfo == null)
-                {
-                    throw Error.ForeignKeyAttributeConvention_InvalidNavigationProperty(
-                        propertyInfo.Name, propertyInfo.ReflectedType, foreignKeyAttribute.Name);
-                }
-
-                var navigationPropertyConfiguration
-                    = modelConfiguration.Entity(propertyInfo.ReflectedType).Navigation(navigationPropertyInfo);
-
-                if (HasConfiguredConstraint(propertyInfo, modelConfiguration, navigationPropertyConfiguration))
-                {
-                    return;
-                }
-
-                var foreignKeyConstraintConfiguration
-                    = (ForeignKeyConstraintConfiguration)
-                      (navigationPropertyConfiguration.Constraint
-                       ?? (navigationPropertyConfiguration.Constraint = new ForeignKeyConstraintConfiguration()));
-
-                foreignKeyConstraintConfiguration.AddColumn(propertyInfo);
-            }
-
-            private static bool HasConfiguredConstraint(
-                PropertyInfo propertyInfo,
-                ModelConfiguration modelConfiguration,
-                NavigationPropertyConfiguration navigationPropertyConfiguration)
-            {
-                return ((navigationPropertyConfiguration.Constraint != null)
-                        && navigationPropertyConfiguration.Constraint.IsFullySpecified)
-                       || ((navigationPropertyConfiguration.InverseNavigationProperty != null)
-                           && (modelConfiguration
-                                  .Entity(propertyInfo.PropertyType.GetTargetType())
-                                  .Navigation(navigationPropertyConfiguration.InverseNavigationProperty)).Constraint
-                           != null);
-            }
+            return ((navigationPropertyConfiguration.Constraint != null)
+                    && navigationPropertyConfiguration.Constraint.IsFullySpecified)
+                   || ((navigationPropertyConfiguration.InverseNavigationProperty != null)
+                       && (modelConfiguration
+                              .Entity(propertyInfo.PropertyType.GetTargetType())
+                              .Navigation(navigationPropertyConfiguration.InverseNavigationProperty)).Constraint
+                       != null);
         }
     }
 }

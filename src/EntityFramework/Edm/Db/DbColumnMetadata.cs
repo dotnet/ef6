@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db
     /// <summary>
     ///     When implemented in derived types, allows the construction and modification of a column in a Database Metadata table or row.
     /// </summary>
-    internal abstract class DbColumnMetadata : DbNamedMetadataItem
+    public abstract class DbColumnMetadata : DbNamedMetadataItem
     {
         /// <summary>
         ///     Gets or sets a string indicating the database-specific type of the column.

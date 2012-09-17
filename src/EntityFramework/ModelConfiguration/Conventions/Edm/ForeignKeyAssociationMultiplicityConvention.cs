@@ -12,35 +12,30 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to distinguish between optional and required relationships based on CLR nullability of the foreign key property.
     /// </summary>
-    public sealed class ForeignKeyAssociationMultiplicityConvention : IEdmConvention<EdmAssociationType>
+    public class ForeignKeyAssociationMultiplicityConvention : IEdmConvention<EdmAssociationType>
     {
-        internal ForeignKeyAssociationMultiplicityConvention()
+        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
         {
-        }
-
-        void IEdmConvention<EdmAssociationType>.Apply(EdmAssociationType associationType, EdmModel model)
-        {
-            var constraint = associationType.Constraint;
+            var constraint = edmDataModelItem.Constraint;
 
             if (constraint == null)
             {
                 return;
             }
 
-            var navPropConfig = associationType.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
+            var navPropConfig = edmDataModelItem.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
 
             if (constraint.DependentProperties
                 .All(
                     p => (p.PropertyType.IsNullable != null)
                          && !p.PropertyType.IsNullable.Value))
             {
-                var principalEnd = associationType.GetOtherEnd(constraint.DependentEnd);
+                var principalEnd = edmDataModelItem.GetOtherEnd(constraint.DependentEnd);
 
                 // find the navigation property with this end
                 var navProp = model.Namespaces.SelectMany(ns => ns.EntityTypes)
                     .SelectMany(et => et.DeclaredNavigationProperties)
-                    .Where(np => np.ResultEnd == principalEnd)
-                    .SingleOrDefault();
+                    .SingleOrDefault(np => np.ResultEnd == principalEnd);
 
                 PropertyInfo navPropInfo;
                 if (navPropConfig != null &&

@@ -2,15 +2,13 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Used to configure a <see cref="T:System.decimal" /> property of an entity type or complex type. 
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
+    public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration<Properties.Primitive.DecimalPropertyConfiguration>
     {
         internal DecimalPropertyConfiguration(Properties.Primitive.DecimalPropertyConfiguration configuration)
             : base(configuration)
@@ -127,36 +125,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.Scale = scale;
 
             return this;
-        }
-
-        internal new Properties.Primitive.DecimalPropertyConfiguration Configuration
-        {
-            get { return (Properties.Primitive.DecimalPropertyConfiguration)base.Configuration; }
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public new Type GetType()
-        {
-            return base.GetType();
         }
     }
 }

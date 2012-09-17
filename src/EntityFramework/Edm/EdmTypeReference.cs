@@ -10,7 +10,7 @@ namespace System.Data.Entity.Edm
     ///     Allows the construction and modification of a specific use of a type in an Entity Data Model (EDM) item. See <see
     ///      cref="EdmProperty.PropertyType" /> for examples.
     /// </summary>
-    internal class EdmTypeReference : EdmMetadataItem
+    public class EdmTypeReference : EdmMetadataItem
     {
         private EdmPrimitiveTypeFacets facets;
 

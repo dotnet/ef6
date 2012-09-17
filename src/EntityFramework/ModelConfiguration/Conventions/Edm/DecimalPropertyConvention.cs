@@ -7,18 +7,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set precision to 18 and scale to 2 for decimal properties.
     /// </summary>
-    public sealed class DecimalPropertyConvention : IEdmConvention<EdmProperty>
+    public class DecimalPropertyConvention : IEdmConvention<EdmProperty>
     {
-        internal DecimalPropertyConvention()
+        public void Apply(EdmProperty edmDataModelItem, EdmModel model)
         {
-        }
-
-        void IEdmConvention<EdmProperty>.Apply(EdmProperty property, EdmModel model)
-        {
-            if (property.PropertyType.PrimitiveType
+            if (edmDataModelItem.PropertyType.PrimitiveType
                 == EdmPrimitiveType.Decimal)
             {
-                var facets = property.PropertyType.PrimitiveTypeFacets;
+                var facets = edmDataModelItem.PropertyType.PrimitiveTypeFacets;
 
                 if (facets.Precision == null)
                 {

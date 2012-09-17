@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
     /// <summary>
     ///     Indicates which EDM-to-Database Mapping concept is represented by a given item.
     /// </summary>
-    internal enum DbMappingItemKind
+    public enum DbMappingItemKind
     {
         /// <summary>
         ///     Database Mapping Kind

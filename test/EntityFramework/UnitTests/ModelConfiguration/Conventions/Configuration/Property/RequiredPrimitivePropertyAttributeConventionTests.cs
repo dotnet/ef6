@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new StringPropertyConfiguration();
 
-            new RequiredPrimitivePropertyAttributeConvention.RequiredPrimitivePropertyAttributeConventionImpl()
+            new RequiredPrimitivePropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new RequiredAttribute());
 
             Assert.Equal(false, propertyConfiguration.IsNullable);
@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 IsNullable = true
                                             };
 
-            new RequiredPrimitivePropertyAttributeConvention.RequiredPrimitivePropertyAttributeConventionImpl()
+            new RequiredPrimitivePropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new RequiredAttribute());
 
             Assert.Equal(true, propertyConfiguration.IsNullable);

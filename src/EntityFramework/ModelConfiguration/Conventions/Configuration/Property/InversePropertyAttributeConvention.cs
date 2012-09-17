@@ -13,64 +13,47 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="InversePropertyAttribute" /> found on properties in the model.
     /// </summary>
-    public sealed class InversePropertyAttributeConvention : IConfigurationConvention<PropertyInfo, ModelConfiguration>
+    public class InversePropertyAttributeConvention :
+        AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, InversePropertyAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, ModelConfiguration> _impl
-            = new InversePropertyAttributeConventionImpl();
-
-        internal InversePropertyAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, ModelConfiguration configuration,
+            InversePropertyAttribute attribute)
         {
-        }
+            var navigationPropertyConfiguration
+                = configuration
+                    .Entity(memberInfo.ReflectedType)
+                    .Navigation(memberInfo);
 
-        void IConfigurationConvention<PropertyInfo, ModelConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<ModelConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class InversePropertyAttributeConventionImpl :
-            AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, InversePropertyAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo, ModelConfiguration modelConfiguration,
-                InversePropertyAttribute inversePropertyAttribute)
+            if (navigationPropertyConfiguration.InverseNavigationProperty != null)
             {
-                var navigationPropertyConfiguration
-                    = modelConfiguration
-                        .Entity(propertyInfo.ReflectedType)
-                        .Navigation(propertyInfo);
-
-                if (navigationPropertyConfiguration.InverseNavigationProperty != null)
-                {
-                    return;
-                }
-
-                var inverseType = propertyInfo.PropertyType.GetTargetType();
-                var inverseNavigationProperty
-                    = new PropertyFilter()
-                        .GetProperties(inverseType, false)
-                        .Where(
-                            p =>
-                            string.Equals(p.Name, inversePropertyAttribute.Property, StringComparison.OrdinalIgnoreCase))
-                        .SingleOrDefault();
-
-                if (inverseNavigationProperty == null)
-                {
-                    throw Error.InversePropertyAttributeConvention_PropertyNotFound(
-                        inversePropertyAttribute.Property,
-                        inverseType,
-                        propertyInfo.Name,
-                        propertyInfo.ReflectedType);
-                }
-
-                if (propertyInfo == inverseNavigationProperty)
-                {
-                    throw Error.InversePropertyAttributeConvention_SelfInverseDetected(
-                        propertyInfo.Name, propertyInfo.ReflectedType);
-                }
-
-                navigationPropertyConfiguration.InverseNavigationProperty = inverseNavigationProperty;
+                return;
             }
+
+            var inverseType = memberInfo.PropertyType.GetTargetType();
+            var inverseNavigationProperty
+                = new PropertyFilter()
+                    .GetProperties(inverseType, false)
+                    .SingleOrDefault(
+                        p =>
+                        string.Equals(p.Name, attribute.Property, StringComparison.OrdinalIgnoreCase));
+
+            if (inverseNavigationProperty == null)
+            {
+                throw Error.InversePropertyAttributeConvention_PropertyNotFound(
+                    attribute.Property,
+                    inverseType,
+                    memberInfo.Name,
+                    memberInfo.ReflectedType);
+            }
+
+            if (memberInfo == inverseNavigationProperty)
+            {
+                throw Error.InversePropertyAttributeConvention_SelfInverseDetected(
+                    memberInfo.Name, memberInfo.ReflectedType);
+            }
+
+            navigationPropertyConfiguration.InverseNavigationProperty = inverseNavigationProperty;
         }
     }
 }

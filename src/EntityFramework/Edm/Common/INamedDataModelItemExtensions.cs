@@ -4,7 +4,7 @@ namespace System.Data.Entity.Edm.Common
 {
     using System.Collections.Generic;
 
-    internal static class INamedDataModelItemExtensions
+    public static class INamedDataModelItemExtensions
     {
         public static bool TryGetByName<TNamedItem>(
             this IEnumerable<TNamedItem> list, string itemName, out TNamedItem result)

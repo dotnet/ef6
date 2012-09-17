@@ -4,12 +4,13 @@ namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents the mapping of an EDM association end ( <see cref="EdmAssociationEnd" /> ) as a collection of property mappings ( <see
     ///      cref="DbEdmPropertyMapping" /> ).
     /// </summary>
-    internal class DbAssociationEndMapping : DbMappingMetadataItem
+    public class DbAssociationEndMapping : DbMappingMetadataItem
     {
         private readonly BackingList<DbEdmPropertyMapping> propertyMappings = new BackingList<DbEdmPropertyMapping>();
 
@@ -21,6 +22,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         /// <summary>
         ///     Gets the collection of <see cref="DbEdmPropertyMapping" /> s that specifies how the association end key properties are mapped to the table.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEdmPropertyMapping> PropertyMappings
         {
             get { return propertyMappings.EnsureValue(); }

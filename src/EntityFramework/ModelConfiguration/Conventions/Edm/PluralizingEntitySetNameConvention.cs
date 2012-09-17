@@ -12,23 +12,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the entity set name to be a pluralized version of the entity type name.
     /// </summary>
-    public sealed class PluralizingEntitySetNameConvention : IEdmConvention<EdmEntitySet>
+    public class PluralizingEntitySetNameConvention : IEdmConvention<EdmEntitySet>
     {
         private static readonly PluralizationService _pluralizationService
             = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
 
-        internal PluralizingEntitySetNameConvention()
+        public void Apply(EdmEntitySet edmDataModelItem, EdmModel model)
         {
-        }
-
-        void IEdmConvention<EdmEntitySet>.Apply(EdmEntitySet entitySet, EdmModel model)
-        {
-            if (entitySet.GetConfiguration() == null)
+            if (edmDataModelItem.GetConfiguration() == null)
             {
-                entitySet.Name
+                edmDataModelItem.Name
                     = model.GetEntitySets()
-                        .Except(new[] { entitySet })
-                        .UniquifyName(_pluralizationService.Pluralize(entitySet.Name));
+                        .Except(new[] { edmDataModelItem })
+                        .UniquifyName(_pluralizationService.Pluralize(edmDataModelItem.Name));
             }
         }
     }

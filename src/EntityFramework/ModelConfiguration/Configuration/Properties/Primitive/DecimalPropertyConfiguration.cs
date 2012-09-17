@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
-    internal class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
+    public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
     {
         public byte? Precision { get; set; }
         public byte? Scale { get; set; }
@@ -89,11 +89,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool InCSpace, out string errorMessage)
+        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var decRhs = other as DecimalPropertyConfiguration;
 
-            var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
+            var baseIsCompatible = base.IsCompatible(other, inCSpace, out errorMessage);
             var precisionIsCompatible = decRhs == null || IsCompatible(c => c.Precision, decRhs, ref errorMessage);
             var scaleIsCompatible = decRhs == null || IsCompatible(c => c.Scale, decRhs, ref errorMessage);
 

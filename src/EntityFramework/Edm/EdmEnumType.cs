@@ -7,13 +7,15 @@ namespace System.Data.Entity.Edm
     using System.Diagnostics.CodeAnalysis;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class EdmEnumType : EdmDataModelType
+    public class EdmEnumType : EdmDataModelType
     {
         private readonly BackingList<EdmEnumTypeMember> membersList = new BackingList<EdmEnumTypeMember>();
 
+        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
         public virtual bool IsFlags { get; set; }
         public virtual EdmPrimitiveType UnderlyingType { get; set; }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmEnumTypeMember> Members
         {
             get { return membersList.EnsureValue(); }

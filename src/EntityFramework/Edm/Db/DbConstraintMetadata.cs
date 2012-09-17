@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Edm.Db
 {
-    internal abstract class DbConstraintMetadata
+    public abstract class DbConstraintMetadata
         : DbNamedMetadataItem
     {
     }

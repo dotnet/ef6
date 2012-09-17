@@ -4,12 +4,13 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of a constraint applied to an Entity Data Model (EDM) association.
     /// </summary>
-    internal class EdmAssociationConstraint : EdmMetadataItem
+    public class EdmAssociationConstraint : EdmMetadataItem
     {
         private readonly BackingList<EdmProperty> dependentPropertiesList = new BackingList<EdmProperty>();
 
@@ -32,6 +33,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the collection of <see cref="EdmProperty" /> instances from the <see cref="DependentEnd" /> of the constraint. The values of these properties are constrained against the primary key values of the remaining, 'principal' association end's entity type.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmProperty> DependentProperties
         {
             get { return dependentPropertiesList.EnsureValue(); }

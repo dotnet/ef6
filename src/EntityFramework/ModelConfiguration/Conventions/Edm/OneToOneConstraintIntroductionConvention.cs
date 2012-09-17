@@ -9,31 +9,27 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure the primary key(s) of the dependent entity type as foreign key(s) in a one:one relationship.
     /// </summary>
-    public sealed class OneToOneConstraintIntroductionConvention : IEdmConvention<EdmAssociationType>
+    public class OneToOneConstraintIntroductionConvention : IEdmConvention<EdmAssociationType>
     {
-        internal OneToOneConstraintIntroductionConvention()
+        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
         {
-        }
-
-        void IEdmConvention<EdmAssociationType>.Apply(EdmAssociationType associationType, EdmModel model)
-        {
-            if (associationType.IsOneToOne()
-                && !associationType.IsSelfReferencing()
-                && !associationType.IsIndependent()
-                && (associationType.Constraint == null))
+            if (edmDataModelItem.IsOneToOne()
+                && !edmDataModelItem.IsSelfReferencing()
+                && !edmDataModelItem.IsIndependent()
+                && (edmDataModelItem.Constraint == null))
             {
-                var sourceKeys = associationType.SourceEnd.EntityType.KeyProperties();
-                var targetKeys = associationType.TargetEnd.EntityType.KeyProperties();
+                var sourceKeys = edmDataModelItem.SourceEnd.EntityType.KeyProperties();
+                var targetKeys = edmDataModelItem.TargetEnd.EntityType.KeyProperties();
 
                 if ((sourceKeys.Count() == targetKeys.Count())
                     && sourceKeys.Select(p => p.PropertyType.UnderlyingPrimitiveType)
                            .SequenceEqual(targetKeys.Select(p => p.PropertyType.UnderlyingPrimitiveType)))
                 {
                     EdmAssociationEnd _, dependentEnd;
-                    if (associationType.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd)
-                        || associationType.IsPrincipalConfigured())
+                    if (edmDataModelItem.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd)
+                        || edmDataModelItem.IsPrincipalConfigured())
                     {
-                        dependentEnd = dependentEnd ?? associationType.TargetEnd;
+                        dependentEnd = dependentEnd ?? edmDataModelItem.TargetEnd;
 
                         var constraint = new EdmAssociationConstraint
                                              {
@@ -41,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                                  DependentProperties = dependentEnd.EntityType.KeyProperties().ToList()
                                              };
 
-                        associationType.Constraint = constraint;
+                        edmDataModelItem.Constraint = constraint;
                     }
                 }
             }

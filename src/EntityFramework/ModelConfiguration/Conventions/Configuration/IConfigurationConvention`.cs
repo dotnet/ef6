@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     [ContractClass(typeof(IConfigurationConventionContracts<,>))]
-    internal interface IConfigurationConvention<TMemberInfo, TConfiguration> : IConvention
+    public interface IConfigurationConvention<TMemberInfo, TConfiguration> : IConvention
         where TMemberInfo : MemberInfo
         where TConfiguration : ConfigurationBase
     {

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Diagnostics.Contracts;
     using System.Xml;
 
-    internal class SsdlSerializer
+    public class SsdlSerializer
     {
         /// <summary>
         ///     Serialize the <see cref="DbDatabaseMetadata" /> to the <see cref="XmlWriter" />

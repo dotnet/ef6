@@ -9,35 +9,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="DatabaseGeneratedAttribute" /> found on properties in the model.
     /// </summary>
-    public sealed class DatabaseGeneratedAttributeConvention
-        : IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>
+    public class DatabaseGeneratedAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, DatabaseGeneratedAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration> _impl
-            = new DatabaseGeneratedAttributeConventionImpl();
-
-        internal DatabaseGeneratedAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo,
+            PrimitivePropertyConfiguration configuration,
+            DatabaseGeneratedAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class DatabaseGeneratedAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, DatabaseGeneratedAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo,
-                PrimitivePropertyConfiguration primitivePropertyConfiguration,
-                DatabaseGeneratedAttribute databaseGeneratedAttribute)
+            if (configuration.DatabaseGeneratedOption == null)
             {
-                if (primitivePropertyConfiguration.DatabaseGeneratedOption == null)
-                {
-                    primitivePropertyConfiguration.DatabaseGeneratedOption =
-                        databaseGeneratedAttribute.DatabaseGeneratedOption;
-                }
+                configuration.DatabaseGeneratedOption =
+                    attribute.DatabaseGeneratedOption;
             }
         }
     }

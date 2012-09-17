@@ -10,50 +10,34 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to discover foreign key properties whose names are a combination
     ///     of the dependent navigation property name and the principal type primary key property name(s).
     /// </summary>
-    public sealed class NavigationPropertyNameForeignKeyDiscoveryConvention : IEdmConvention<EdmAssociationType>
+    public class NavigationPropertyNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {
-        private readonly IEdmConvention<EdmAssociationType> _impl =
-            new NavigationPropertyNameForeignKeyDiscoveryConventionImpl();
-
-        internal NavigationPropertyNameForeignKeyDiscoveryConvention()
+        protected override bool MatchDependentKeyProperty(
+            EdmAssociationType associationType,
+            EdmAssociationEnd dependentAssociationEnd,
+            EdmProperty dependentProperty,
+            EdmEntityType principalEntityType,
+            EdmProperty principalKeyProperty)
         {
-        }
+            var otherEnd = associationType.GetOtherEnd(dependentAssociationEnd);
 
-        void IEdmConvention<EdmAssociationType>.Apply(EdmAssociationType associationType, EdmModel model)
-        {
-            _impl.Apply(associationType, model);
-        }
+            var navigationProperty
+                = dependentAssociationEnd.EntityType.NavigationProperties
+                    .SingleOrDefault(n => n.ResultEnd == otherEnd);
 
-        // Nested impl. because ForeignKeyDiscoveryConvention needs to be internal for now
-        private sealed class NavigationPropertyNameForeignKeyDiscoveryConventionImpl : ForeignKeyDiscoveryConvention
-        {
-            protected override bool MatchDependentKeyProperty(
-                EdmAssociationType associationType,
-                EdmAssociationEnd dependentAssociationEnd,
-                EdmProperty dependentProperty,
-                EdmEntityType principalEntityType,
-                EdmProperty principalKeyProperty)
+            if (navigationProperty == null)
             {
-                var otherEnd = associationType.GetOtherEnd(dependentAssociationEnd);
-
-                var navigationProperty
-                    = dependentAssociationEnd.EntityType.NavigationProperties
-                        .SingleOrDefault(n => n.ResultEnd == otherEnd);
-
-                if (navigationProperty == null)
-                {
-                    return false;
-                }
-
-                return string.Equals(
-                    dependentProperty.Name, navigationProperty.Name + principalKeyProperty.Name,
-                    StringComparison.OrdinalIgnoreCase);
+                return false;
             }
 
-            protected override bool SupportsMultipleAssociations
-            {
-                get { return true; }
-            }
+            return string.Equals(
+                dependentProperty.Name, navigationProperty.Name + principalKeyProperty.Name,
+                StringComparison.OrdinalIgnoreCase);
+        }
+
+        protected override bool SupportsMultipleAssociations
+        {
+            get { return true; }
         }
     }
 }

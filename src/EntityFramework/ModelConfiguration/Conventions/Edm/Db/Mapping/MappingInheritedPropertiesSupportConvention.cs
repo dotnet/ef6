@@ -13,13 +13,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to ensure an invalid/unsupported mapping is not created when mapping inherited properties
     /// </summary>
-    public sealed class MappingInheritedPropertiesSupportConvention : IDbMappingConvention
+    public class MappingInheritedPropertiesSupportConvention : IDbMappingConvention
     {
-        internal MappingInheritedPropertiesSupportConvention()
-        {
-        }
-
-        void IDbMappingConvention.Apply(DbDatabaseMapping databaseMapping)
+        public void Apply(DbDatabaseMapping databaseMapping)
         {
             databaseMapping.EntityContainerMappings
                 .SelectMany(ecm => ecm.EntitySetMappings)

@@ -4,12 +4,13 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     Allows the construction and modification of an entity container in an Entity Data Model (EDM) <see cref="EdmModel" /> .
     /// </summary>
-    internal class EdmEntityContainer
+    public class EdmEntityContainer
         : EdmNamedMetadataItem
     {
         private readonly BackingList<EdmAssociationSet> associationSetsList = new BackingList<EdmAssociationSet>();
@@ -41,6 +42,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the collection of <see cref="EdmAssociationSet" /> s that specifies the association sets within the container.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmAssociationSet> AssociationSets
         {
             get { return associationSetsList.EnsureValue(); }
@@ -55,6 +57,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the collection of <see cref="EdmEntitySet" /> s that specifies the entity sets within the container.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmEntitySet> EntitySets
         {
             get { return entitySetsList.EnsureValue(); }

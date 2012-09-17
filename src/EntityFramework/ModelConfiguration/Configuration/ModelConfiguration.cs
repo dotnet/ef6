@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
-    internal class ModelConfiguration : ConfigurationBase
+    public class ModelConfiguration : ConfigurationBase
     {
         private readonly Dictionary<Type, EntityTypeConfiguration> _entityConfigurations
             = new Dictionary<Type, EntityTypeConfiguration>();
@@ -50,17 +50,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ModelConfiguration(this);
         }
 
-        internal virtual IEnumerable<Type> ConfiguredTypes
+        public virtual IEnumerable<Type> ConfiguredTypes
         {
             get { return _entityConfigurations.Keys.Union(_complexTypeConfigurations.Keys).Union(_ignoredTypes); }
         }
 
-        internal virtual IEnumerable<Type> Entities
+        public virtual IEnumerable<Type> Entities
         {
             get { return _entityConfigurations.Keys.Except(_ignoredTypes).ToList(); }
         }
 
-        internal virtual IEnumerable<Type> ComplexTypes
+        public virtual IEnumerable<Type> ComplexTypes
         {
             get { return _complexTypeConfigurations.Keys.Except(_ignoredTypes).ToList(); }
         }
@@ -72,7 +72,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal string DefaultSchema { get; set; }
 
-        internal virtual void Add(EntityTypeConfiguration entityTypeConfiguration)
+        public virtual void Add(EntityTypeConfiguration entityTypeConfiguration)
         {
             Contract.Requires(entityTypeConfiguration != null);
 
@@ -99,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _entityConfigurations.Add(entityTypeConfiguration.ClrType, entityTypeConfiguration);
         }
 
-        internal virtual void Add(ComplexTypeConfiguration complexTypeConfiguration)
+        public virtual void Add(ComplexTypeConfiguration complexTypeConfiguration)
         {
             Contract.Requires(complexTypeConfiguration != null);
 
@@ -112,7 +112,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _complexTypeConfigurations.Add(complexTypeConfiguration.ClrType, complexTypeConfiguration);
         }
 
-        internal virtual EntityTypeConfiguration Entity(Type entityType, bool explicitEntity = false)
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public virtual EntityTypeConfiguration Entity(Type entityType, bool explicitEntity = false)
         {
             Contract.Requires(entityType != null);
 
@@ -162,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _ignoredTypes.Add(type);
         }
 
-        internal virtual StructuralTypeConfiguration GetStructuralTypeConfiguration(Type type)
+        public virtual StructuralTypeConfiguration GetStructuralTypeConfiguration(Type type)
         {
             Contract.Requires(type != null);
 
@@ -181,21 +182,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return null;
         }
 
-        internal virtual bool IsComplexType(Type type)
+        public virtual bool IsComplexType(Type type)
         {
             Contract.Requires(type != null);
 
             return _complexTypeConfigurations.ContainsKey(type);
         }
 
-        internal virtual bool IsIgnoredType(Type type)
+        public virtual bool IsIgnoredType(Type type)
         {
             Contract.Requires(type != null);
 
             return _ignoredTypes.Contains(type);
         }
 
-        internal virtual IEnumerable<PropertyInfo> GetConfiguredProperties(Type type)
+        public virtual IEnumerable<PropertyInfo> GetConfiguredProperties(Type type)
         {
             Contract.Requires(type != null);
 
@@ -206,19 +207,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                        : Enumerable.Empty<PropertyInfo>();
         }
 
-        internal virtual bool IsIgnoredProperty(Type type, PropertyInfo propertyInfo)
+        public virtual bool IsIgnoredProperty(Type type, PropertyInfo propertyInfo)
         {
             Contract.Requires(type != null);
             Contract.Requires(propertyInfo != null);
 
             var structuralTypeConfiguration = GetStructuralTypeConfiguration(type);
 
-            return (structuralTypeConfiguration != null)
-                       ? structuralTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(propertyInfo))
-                       : false;
+            return structuralTypeConfiguration != null
+                && structuralTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(propertyInfo));
         }
 
-        internal void Configure(EdmModel model)
+        public void Configure(EdmModel model)
         {
             Contract.Requires(model != null);
 
@@ -226,7 +226,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ConfigureComplexTypes(model);
         }
 
-        internal void ConfigureEntities(EdmModel model)
+        public void ConfigureEntities(EdmModel model)
         {
             Contract.Requires(model != null);
 
@@ -255,7 +255,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void Configure(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
+        public void Configure(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(providerManifest != null);
@@ -437,8 +437,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     {
                         entityType = derivedTypes.Pop();
                         var correspondingEntityConfiguration =
-                            ActiveEntityConfigurations.Where(ec => ec.ClrType == entityType.GetClrType()).
-                                SingleOrDefault();
+                            ActiveEntityConfigurations.SingleOrDefault(ec => ec.ClrType == entityType.GetClrType());
                         if ((correspondingEntityConfiguration != null)
                             &&
                             (!entityConfigurationsSortedByInheritance.Contains(correspondingEntityConfiguration)))
@@ -507,9 +506,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                  (from etm in esm.EntityTypeMappings
                   from etmf in etm.TypeMappingFragments
                   group etmf by etmf.Table
-                  into g
-                  where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
-                  select g.Single(x => x.GetDefaultDiscriminator() != null))
+                      into g
+                      where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
+                      select g.Single(x => x.GetDefaultDiscriminator() != null))
                         })
                 .Each(x => x.Fragments.Each(f => f.RemoveDefaultDiscriminator(x.Set)));
         }
@@ -530,16 +529,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             tables.Each(
                 t =>
+                {
+                    var tableName = t.GetTableName();
+
+                    if (tableName != null)
                     {
-                        var tableName = t.GetTableName();
+                        throw Error.OrphanedConfiguredTableDetected(tableName);
+                    }
 
-                        if (tableName != null)
-                        {
-                            throw Error.OrphanedConfiguredTableDetected(tableName);
-                        }
-
-                        databaseMapping.Database.RemoveTable(t);
-                    });
+                    databaseMapping.Database.RemoveTable(t);
+                });
         }
 
         private IEnumerable<EntityTypeConfiguration> ActiveEntityConfigurations

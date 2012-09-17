@@ -10,33 +10,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="ConcurrencyCheckAttribute" /> found on properties in the model.
     /// </summary>
-    public sealed class ConcurrencyCheckAttributeConvention
-        : IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>
+    public class ConcurrencyCheckAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ConcurrencyCheckAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration> _impl
-            = new ConcurrencyCheckAttributeConventionImpl();
-
-        internal ConcurrencyCheckAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, PrimitivePropertyConfiguration configuration,
+            ConcurrencyCheckAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class ConcurrencyCheckAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ConcurrencyCheckAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration,
-                ConcurrencyCheckAttribute _)
+            if (configuration.ConcurrencyMode == null)
             {
-                if (primitivePropertyConfiguration.ConcurrencyMode == null)
-                {
-                    primitivePropertyConfiguration.ConcurrencyMode = EdmConcurrencyMode.Fixed;
-                }
+                configuration.ConcurrencyMode = EdmConcurrencyMode.Fixed;
             }
         }
     }

@@ -16,12 +16,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
-    internal class PrimitivePropertyConfiguration : PropertyConfiguration
+    public class PrimitivePropertyConfiguration : PropertyConfiguration
     {
         public PrimitivePropertyConfiguration()
         {
@@ -214,10 +215,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                        {
-                            c.Name = renamedColumns.UniquifyName(ColumnName);
-                            renamedColumns.Add(c);
-                        });
+                    {
+                        c.Name = renamedColumns.UniquifyName(ColumnName);
+                        renamedColumns.Add(c);
+                    });
         }
 
         internal virtual void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
@@ -270,6 +271,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             OverridableConfigurationParts &= other.OverridableConfigurationParts;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#")]
         public virtual bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -296,9 +298,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                    columnTypeIsCompatible;
         }
 
-        protected bool IsCompatible<T, C>(Expression<Func<C, T?>> propertyExpression, C other, ref string errorMessage)
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
+        protected bool IsCompatible<T, TConfiguration>(Expression<Func<TConfiguration, T?>> propertyExpression, TConfiguration other, ref string errorMessage)
             where T : struct
-            where C : PrimitivePropertyConfiguration
+            where TConfiguration : PrimitivePropertyConfiguration
         {
             Contract.Requires(propertyExpression != null);
             Contract.Requires(other != null);
@@ -318,8 +323,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return false;
         }
 
-        protected bool IsCompatible<C>(Expression<Func<C, string>> propertyExpression, C other, ref string errorMessage)
-            where C : PrimitivePropertyConfiguration
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
+        protected bool IsCompatible<TConfiguration>(Expression<Func<TConfiguration, string>> propertyExpression, TConfiguration other, ref string errorMessage)
+            where TConfiguration : PrimitivePropertyConfiguration
         {
             Contract.Requires(propertyExpression != null);
             Contract.Requires(other != null);

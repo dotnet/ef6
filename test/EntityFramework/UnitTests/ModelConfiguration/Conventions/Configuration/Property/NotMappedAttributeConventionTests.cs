@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockPropertyInfo = new MockPropertyInfo();
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
-            new NotMappedPropertyAttributeConvention.NotMappedPropertyAttributeConventionImpl()
+            new NotMappedPropertyAttributeConvention()
                 .Apply(mockPropertyInfo, entityTypeConfiguration, new NotMappedAttribute());
 
             Assert.True(entityTypeConfiguration.IgnoredProperties.Contains(mockPropertyInfo));

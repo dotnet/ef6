@@ -6,7 +6,7 @@ namespace System.Data.Entity.Edm
     ///     Allows the construction and modification of additional constraints that can be applied to a specific use of a primitive type in an Entity Data Model (EDM) item. See <see
     ///      cref="EdmTypeReference" /> .
     /// </summary>
-    internal class EdmPrimitiveTypeFacets : EdmDataModelItem
+    public class EdmPrimitiveTypeFacets : EdmDataModelItem
     {
         internal override EdmItemKind GetItemKind()
         {

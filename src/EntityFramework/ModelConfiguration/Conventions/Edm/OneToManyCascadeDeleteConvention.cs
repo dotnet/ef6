@@ -9,32 +9,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to enable cascade delete for any required relationships.
     /// </summary>
-    public sealed class OneToManyCascadeDeleteConvention : IEdmConvention<EdmAssociationType>
+    public class OneToManyCascadeDeleteConvention : IEdmConvention<EdmAssociationType>
     {
-        internal OneToManyCascadeDeleteConvention()
+        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
         {
-        }
+            Contract.Assert(edmDataModelItem.SourceEnd != null);
+            Contract.Assert(edmDataModelItem.TargetEnd != null);
 
-        void IEdmConvention<EdmAssociationType>.Apply(EdmAssociationType associationType, EdmModel model)
-        {
-            Contract.Assert(associationType.SourceEnd != null);
-            Contract.Assert(associationType.TargetEnd != null);
-
-            if (associationType.IsSelfReferencing() // EF DDL gen will fail for self-ref
-                || associationType.HasDeleteAction())
+            if (edmDataModelItem.IsSelfReferencing() // EF DDL gen will fail for self-ref
+                || edmDataModelItem.HasDeleteAction())
             {
                 return;
             }
 
             EdmAssociationEnd principalEnd = null;
 
-            if (associationType.IsRequiredToMany())
+            if (edmDataModelItem.IsRequiredToMany())
             {
-                principalEnd = associationType.SourceEnd;
+                principalEnd = edmDataModelItem.SourceEnd;
             }
-            else if (associationType.IsManyToRequired())
+            else if (edmDataModelItem.IsManyToRequired())
             {
-                principalEnd = associationType.TargetEnd;
+                principalEnd = edmDataModelItem.TargetEnd;
             }
 
             if (principalEnd != null)

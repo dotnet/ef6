@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "Id");
             var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(object));
 
-            new KeyAttributeConvention.KeyAttributeConventionImpl()
+            new KeyAttributeConvention()
                 .Apply(mockPropertyInfo, mockEntityTypeConfiguration.Object, new KeyAttribute());
 
             mockEntityTypeConfiguration.Verify(e => e.Key(mockPropertyInfo, null));

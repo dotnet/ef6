@@ -37,7 +37,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Applies the convention to the given model.
         /// </summary>
         /// <param name="model"> The model. </param>
-        void IEdmConvention.Apply(EdmModel model)
+        public virtual void Apply(EdmModel model)
         {
             model.Containers.Single().Name = _containerName;
         }

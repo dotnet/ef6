@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new PrimitivePropertyConfiguration();
 
-            new DatabaseGeneratedAttributeConvention.DatabaseGeneratedAttributeConventionImpl()
+            new DatabaseGeneratedAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.None, propertyConfiguration.DatabaseGeneratedOption);
@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 DatabaseGeneratedOption = DatabaseGeneratedOption.Computed
                                             };
 
-            new DatabaseGeneratedAttributeConvention.DatabaseGeneratedAttributeConventionImpl()
+            new DatabaseGeneratedAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.Computed, propertyConfiguration.DatabaseGeneratedOption);

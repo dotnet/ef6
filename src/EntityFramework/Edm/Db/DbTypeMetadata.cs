@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db
     /// <summary>
     ///     Represents a specific use of a type in a Database Metadata item.
     /// </summary>
-    internal abstract class DbTypeMetadata : DbMetadataItem
+    public abstract class DbTypeMetadata : DbMetadataItem
     {
         private DbPrimitiveTypeFacets facets;
 

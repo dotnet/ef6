@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
-    internal class StringPropertyConfiguration : LengthPropertyConfiguration
+    public class StringPropertyConfiguration : LengthPropertyConfiguration
     {
         public bool? IsUnicode { get; set; }
 
@@ -72,11 +72,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool InCSpace, out string errorMessage)
+        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var stringRhs = other as StringPropertyConfiguration;
 
-            var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
+            var baseIsCompatible = base.IsCompatible(other, inCSpace, out errorMessage);
             var isUnicodeIsCompatible = stringRhs == null || IsCompatible(c => c.IsUnicode, stringRhs, ref errorMessage);
 
             return baseIsCompatible &&

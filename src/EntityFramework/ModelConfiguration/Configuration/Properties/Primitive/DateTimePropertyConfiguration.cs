@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
-    internal class DateTimePropertyConfiguration : PrimitivePropertyConfiguration
+    public class DateTimePropertyConfiguration : PrimitivePropertyConfiguration
     {
         public byte? Precision { get; set; }
 
@@ -72,11 +72,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool InCSpace, out string errorMessage)
+        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var dateRhs = other as DateTimePropertyConfiguration;
 
-            var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
+            var baseIsCompatible = base.IsCompatible(other, inCSpace, out errorMessage);
             var precisionIsCompatible = dateRhs == null || IsCompatible(c => c.Precision, dateRhs, ref errorMessage);
 
             return baseIsCompatible &&

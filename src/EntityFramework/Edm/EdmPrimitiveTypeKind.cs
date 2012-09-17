@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.Edm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     ///     Primitive Types as defined by the Entity Data Model (EDM).
     /// </summary>
-    internal enum EdmPrimitiveTypeKind
+    public enum EdmPrimitiveTypeKind
     {
         /// <summary>
         ///     Binary Type Kind
@@ -95,32 +97,35 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Geometric point type kind
         /// </summary>
-        GeometricPoint = 17,
+        GeometryPoint = 17,
 
         /// <summary>
         ///     Geometric linestring type kind
         /// </summary>
-        GeometricLinestring = 18,
+        GeometryLineString = 18,
 
         /// <summary>
         ///     Geometric polygon type kind
         /// </summary>
-        GeometricPolygon = 19,
+        GeometryPolygon = 19,
 
         /// <summary>
         ///     Geometric multi-point type kind
         /// </summary>
-        GeometricMultiPoint = 20,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi")]
+        GeometryMultiPoint = 20,
 
         /// <summary>
         ///     Geometric multi-linestring type kind
         /// </summary>
-        GeometricMultiLinestring = 21,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi")]
+        GeometryMultiLineString = 21,
 
         /// <summary>
         ///     Geometric multi-polygon type kind
         /// </summary>
-        GeometricMultiPolygon = 22,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi")]
+        GeometryMultiPolygon = 22,
 
         /// <summary>
         ///     Geometric collection type kind
@@ -130,32 +135,35 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Geographic point type kind
         /// </summary>
-        GeographicPoint = 24,
+        GeographyPoint = 24,
 
         /// <summary>
         ///     Geographic linestring type kind
         /// </summary>
-        GeographicLinestring = 25,
+        GeographyLineString = 25,
 
         /// <summary>
         ///     Geographic polygon type kind
         /// </summary>
-        GeographicPolygon = 26,
+        GeographyPolygon = 26,
 
         /// <summary>
         ///     Geographic multi-point type kind
         /// </summary>
-        GeographicMultiPoint = 27,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi")]
+        GeographyMultiPoint = 27,
 
         /// <summary>
         ///     Geographic multi-linestring type kind
         /// </summary>
-        GeographicMultiLinestring = 28,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi")]
+        GeographyMultiLineString = 28,
 
         /// <summary>
         ///     Geographic multi-polygon type kind
         /// </summary>
-        GeographicMultiPolygon = 29,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi")]
+        GeographyMultiPolygon = 29,
 
         /// <summary>
         ///     Geographic collection type kind

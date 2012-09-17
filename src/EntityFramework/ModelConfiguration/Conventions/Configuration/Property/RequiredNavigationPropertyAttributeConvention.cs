@@ -11,34 +11,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="RequiredAttribute" /> found on navigation properties in the model.
     /// </summary>
-    public sealed class RequiredNavigationPropertyAttributeConvention
-        : IConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration>
+    public class RequiredNavigationPropertyAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration, RequiredAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration> _impl
-            = new RequiredNavigationPropertyAttributeConventionImpl();
-
-        internal RequiredNavigationPropertyAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, NavigationPropertyConfiguration configuration,
+            RequiredAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<NavigationPropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class RequiredNavigationPropertyAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration, RequiredAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo, NavigationPropertyConfiguration navigationPropertyConfiguration,
-                RequiredAttribute _)
+            if ((configuration.EndKind == null)
+                && !memberInfo.PropertyType.IsCollection())
             {
-                if ((navigationPropertyConfiguration.EndKind == null)
-                    && !propertyInfo.PropertyType.IsCollection())
-                {
-                    navigationPropertyConfiguration.EndKind = EdmAssociationEndKind.Required;
-                }
+                configuration.EndKind = EdmAssociationEndKind.Required;
             }
         }
     }

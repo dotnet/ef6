@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(ConstraintConfigurationContracts))]
-    internal abstract class ConstraintConfiguration
+    public abstract class ConstraintConfiguration : ConfigurationBase
     {
         internal abstract ConstraintConfiguration Clone();
 

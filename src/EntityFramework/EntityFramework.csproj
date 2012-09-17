@@ -1505,8 +1505,6 @@
     <Compile Include="Edm\Db\DbMetadataItem.cs" />
     <Compile Include="Edm\Db\DbNamedMetadataItem.cs" />
     <Compile Include="Edm\Db\DbOperationAction.cs" />
-    <Compile Include="Edm\Db\DbParameterMode.cs" />
-    <Compile Include="Edm\Db\DbParameterTypeSemantics.cs" />
     <Compile Include="Edm\Db\DbPrimitiveTypeFacets.cs" />
     <Compile Include="Edm\Db\DbSchemaMetadata.cs" />
     <Compile Include="Edm\Db\DbSchemaMetadataItem.cs" />
@@ -1548,7 +1546,6 @@
     <Compile Include="Edm\EdmNamespaceItem.cs" />
     <Compile Include="Edm\EdmNavigationProperty.cs" />
     <Compile Include="Edm\EdmOperationAction.cs" />
-    <Compile Include="Edm\EdmParameterMode.cs" />
     <Compile Include="Edm\EdmPrimitiveType.cs" />
     <Compile Include="Edm\EdmPrimitiveTypeFacets.cs" />
     <Compile Include="Edm\EdmPrimitiveTypeKind.cs" />

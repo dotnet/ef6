@@ -7,7 +7,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     EdmDataModelItem is the base for all types in the Entity Data Model (EDM) metadata construction and modification API.
     /// </summary>
-    internal abstract class EdmDataModelItem
+    public abstract class EdmDataModelItem
         : DataModelItem
     {
         internal abstract EdmItemKind GetItemKind();

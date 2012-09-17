@@ -11,7 +11,7 @@ namespace System.Data.Entity.Edm
     ///     Allows the construction and modification of a complex type in an Entity Data Model (EDM) <see cref="EdmNamespace" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class EdmComplexType
+    public class EdmComplexType
         : EdmStructuralType
     {
         private readonly BackingList<EdmProperty> declaredPropertiesList = new BackingList<EdmProperty>();
@@ -63,6 +63,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the collection of <see cref="EdmProperty" /> instances that describe the (scalar or complex) properties of the complex type.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmProperty> DeclaredProperties
         {
             get { return declaredPropertiesList.EnsureValue(); }
@@ -78,13 +79,7 @@ namespace System.Data.Entity.Edm
         {
             get
             {
-                foreach (var declaringType in this.ToHierarchy().Reverse())
-                {
-                    foreach (var declaredProp in declaringType.declaredPropertiesList)
-                    {
-                        yield return declaredProp;
-                    }
-                }
+                return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredPropertiesList);
             }
         }
     }

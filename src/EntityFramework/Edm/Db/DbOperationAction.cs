@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db
     /// <summary>
     ///     Specifies the action to take on a given operation.
     /// </summary>
-    internal enum DbOperationAction
+    public enum DbOperationAction
     {
         /// <summary>
         ///     Default behavior

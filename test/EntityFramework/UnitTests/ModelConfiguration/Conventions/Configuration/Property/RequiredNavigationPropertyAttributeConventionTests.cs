@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
 
-            new RequiredNavigationPropertyAttributeConvention.RequiredNavigationPropertyAttributeConventionImpl()
+            new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
 
             Assert.Equal(EdmAssociationEndKind.Required, associationConfiguration.EndKind);
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                           EndKind = EdmAssociationEndKind.Optional
                       };
 
-            new RequiredNavigationPropertyAttributeConvention.RequiredNavigationPropertyAttributeConventionImpl()
+            new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
 
             Assert.Equal(EdmAssociationEndKind.Optional, associationConfiguration.EndKind);
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                           EndKind = EdmAssociationEndKind.Many
                       };
 
-            new RequiredNavigationPropertyAttributeConvention.RequiredNavigationPropertyAttributeConventionImpl()
+            new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
 
             Assert.Equal(EdmAssociationEndKind.Many, associationConfiguration.EndKind);

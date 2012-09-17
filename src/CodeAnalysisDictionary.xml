@@ -3,31 +3,27 @@
 <Dictionary>
     <Words>
         <Recognized>
-            <Word>Edm</Word>
-            <Word>Edmx</Word>
-            <Word>fwlink</Word>
             <Word>asax</Word>
-            <Word>Memberwise</Word>
-            <Word>Scaffolded</Word>
-            <Word>Scaffolder</Word>
-            <Word>Ce</Word>
-            <Word>Migrator</Word>
-            <Word>Niladic</Word>
-            <Word>Multiset</Word>
-            <Word>Composable</Word>
-            <Word>memberless</Word>
+            <Word>ce</Word>
+            <Word>composable</Word>
             <Word>csdl</Word>
-            <Word>ssdl</Word>
+            <Word>edm</Word>
+            <Word>edmx</Word>
+            <Word>fwlink</Word>
+            <Word>memberless</Word>
+            <Word>memberwise</Word>
             <Word>msl</Word>
+            <Word>multiset</Word>
+            <Word>niladic</Word>
+            <Word>scaffolded</Word>
+            <Word>scaffolder</Word>
+            <Word>srid</Word>
+            <Word>ssdl</Word>
         </Recognized>
         <Compound>
+            <Term CompoundAlternate="MultiLine">multiline</Term>
+            <Term CompoundAlternate="MultiPoint">multipoint</Term>
             <Term CompoundAlternate="StartUp">startup</Term>
         </Compound>
     </Words>
-    <Acronyms>
-        <CasingExceptions>
-            <Acronym>Db</Acronym>
-            <Acronym>Ce</Acronym>
-        </CasingExceptions>
-    </Acronyms>
 </Dictionary>

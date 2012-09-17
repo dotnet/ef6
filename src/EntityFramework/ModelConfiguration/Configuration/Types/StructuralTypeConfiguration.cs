@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Linq;
     using System.Reflection;
 
-    internal abstract class StructuralTypeConfiguration : ConfigurationBase
+    public abstract class StructuralTypeConfiguration : ConfigurationBase
     {
         internal static Type GetPropertyConfigurationType(Type propertyType)
         {
@@ -121,17 +121,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return Property(
                 propertyPath,
                 () =>
+                {
+                    var configuration = (PrimitivePropertyConfiguration)Activator
+                                                                            .CreateInstance(
+                                                                                GetPropertyConfigurationType(
+                                                                                    propertyPath.Last().PropertyType));
+                    if (overridableConfigurationParts.HasValue)
                     {
-                        var configuration = (PrimitivePropertyConfiguration)Activator
-                                                                                .CreateInstance(
-                                                                                    GetPropertyConfigurationType(
-                                                                                        propertyPath.Last().PropertyType));
-                        if (overridableConfigurationParts.HasValue)
-                        {
-                            configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
-                        }
-                        return configuration;
-                    });
+                        configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
+                    }
+                    return configuration;
+                });
         }
 
         internal virtual void RemoveProperty(PropertyPath propertyPath)

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     Specifies the action to take on a given operation. <seealso cref="EdmAssociationEnd.DeleteAction" />
     /// </summary>
-    internal enum EdmOperationAction
+    public enum EdmOperationAction
     {
         /// <summary>
         ///     Default behavior

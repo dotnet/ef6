@@ -13,15 +13,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on navigation properties in the model.
     /// </summary>
-    public sealed class ForeignKeyNavigationPropertyAttributeConvention : IEdmConvention<EdmNavigationProperty>
+    public class ForeignKeyNavigationPropertyAttributeConvention : IEdmConvention<EdmNavigationProperty>
     {
-        internal ForeignKeyNavigationPropertyAttributeConvention()
+        public void Apply(EdmNavigationProperty edmDataModelItem, EdmModel model)
         {
-        }
-
-        void IEdmConvention<EdmNavigationProperty>.Apply(EdmNavigationProperty navigationProperty, EdmModel model)
-        {
-            var associationType = navigationProperty.Association;
+            var associationType = edmDataModelItem.Association;
 
             if (associationType.Constraint != null)
             {
@@ -29,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             var foreignKeyAttribute
-                = navigationProperty.GetClrAttributes<ForeignKeyAttribute>().SingleOrDefault();
+                = edmDataModelItem.GetClrAttributes<ForeignKeyAttribute>().SingleOrDefault();
 
             if (foreignKeyAttribute == null)
             {
@@ -50,8 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 var declaringEntityType
                     = model.GetEntityTypes()
-                        .Where(e => e.DeclaredNavigationProperties.Contains(navigationProperty))
-                        .Single();
+                        .Single(e => e.DeclaredNavigationProperties.Contains(edmDataModelItem));
 
                 var constraint = new EdmAssociationConstraint
                                      {
@@ -61,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                                  dependentEnd.EntityType,
                                                  dependentPropertyNames,
                                                  declaringEntityType,
-                                                 navigationProperty).ToList()
+                                                 edmDataModelItem).ToList()
                                      };
 
                 var dependentKeyProperties = dependentEnd.EntityType.KeyProperties();

@@ -9,33 +9,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="RequiredAttribute" /> found on primitive properties in the model.
     /// </summary>
-    public sealed class RequiredPrimitivePropertyAttributeConvention
-        : IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>
+    public class RequiredPrimitivePropertyAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, RequiredAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration> _impl
-            = new RequiredPrimitivePropertyAttributeConventionImpl();
-
-        internal RequiredPrimitivePropertyAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, PrimitivePropertyConfiguration configuration,
+            RequiredAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class RequiredPrimitivePropertyAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, RequiredAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo memberInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration,
-                RequiredAttribute attribute)
+            if (configuration.IsNullable == null)
             {
-                if (primitivePropertyConfiguration.IsNullable == null)
-                {
-                    primitivePropertyConfiguration.IsNullable = false;
-                }
+                configuration.IsNullable = false;
             }
         }
     }

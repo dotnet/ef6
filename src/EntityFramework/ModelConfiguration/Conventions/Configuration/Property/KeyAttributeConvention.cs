@@ -10,31 +10,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="KeyAttribute" /> found on properties in the model.
     /// </summary>
-    public sealed class KeyAttributeConvention : IConfigurationConvention<PropertyInfo, EntityTypeConfiguration>
+    public class KeyAttributeConvention :
+        AttributeConfigurationConvention<PropertyInfo, EntityTypeConfiguration, KeyAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, EntityTypeConfiguration> _impl
-            = new KeyAttributeConventionImpl();
-
-        internal KeyAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, EntityTypeConfiguration configuration, KeyAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, EntityTypeConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<EntityTypeConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class KeyAttributeConventionImpl :
-            AttributeConfigurationConvention<PropertyInfo, EntityTypeConfiguration, KeyAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo, EntityTypeConfiguration entityTypeConfiguration, KeyAttribute _)
+            if (memberInfo.IsValidEdmScalarProperty())
             {
-                if (propertyInfo.IsValidEdmScalarProperty())
-                {
-                    entityTypeConfiguration.Key(propertyInfo);
-                }
+                configuration.Key(memberInfo);
             }
         }
     }

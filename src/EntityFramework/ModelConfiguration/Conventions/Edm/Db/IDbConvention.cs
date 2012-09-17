@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(IDbConventionContracts))]
-    internal interface IDbConvention : IConvention
+    public interface IDbConvention : IConvention
     {
         void Apply(DbDatabaseMetadata database);
     }

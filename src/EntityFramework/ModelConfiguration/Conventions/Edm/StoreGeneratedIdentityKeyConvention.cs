@@ -13,26 +13,22 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure integer primary keys to be identity.
     /// </summary>
-    public sealed class StoreGeneratedIdentityKeyConvention : IEdmConvention<EdmEntityType>
+    public class StoreGeneratedIdentityKeyConvention : IEdmConvention<EdmEntityType>
     {
         private static readonly IEnumerable<EdmPrimitiveTypeKind> _applicableTypes
             = new[] { EdmPrimitiveTypeKind.Int16, EdmPrimitiveTypeKind.Int32, EdmPrimitiveTypeKind.Int64 };
 
-        internal StoreGeneratedIdentityKeyConvention()
+        public void Apply(EdmEntityType edmDataModelItem, EdmModel model)
         {
-        }
+            Contract.Assert(edmDataModelItem.DeclaredKeyProperties != null);
 
-        void IEdmConvention<EdmEntityType>.Apply(EdmEntityType entityType, EdmModel model)
-        {
-            Contract.Assert(entityType.DeclaredKeyProperties != null);
-
-            if ((entityType.DeclaredKeyProperties.Count == 1)
-                && !(from p in entityType.DeclaredProperties
+            if ((edmDataModelItem.DeclaredKeyProperties.Count == 1)
+                && !(from p in edmDataModelItem.DeclaredProperties
                      let sgp = p.GetStoreGeneratedPattern()
                      where sgp != null && sgp == DbStoreGeneratedPattern.Identity
                      select sgp).Any()) // Entity already has an Identity property.
             {
-                var property = entityType.DeclaredKeyProperties.Single();
+                var property = edmDataModelItem.DeclaredKeyProperties.Single();
 
                 Contract.Assert(property.PropertyType != null);
 
@@ -41,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     && _applicableTypes.Contains(property.PropertyType.PrimitiveType.PrimitiveTypeKind))
                 {
                     if (!model.GetAssociationTypes().Any(a => IsNonTableSplittingForeignKey(a, property))
-                        && !ParentOfTpc(entityType, model))
+                        && !ParentOfTpc(edmDataModelItem, model))
                     {
                         property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
                     }

@@ -11,24 +11,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set a default maximum length of 128 for properties whose type supports length facets.
     /// </summary>
-    public sealed class PropertyMaxLengthConvention : IEdmConvention<EdmEntityType>,
-                                                      IEdmConvention<EdmComplexType>,
-                                                      IEdmConvention<EdmAssociationType>
+    public class PropertyMaxLengthConvention : IEdmConvention<EdmEntityType>,
+                                               IEdmConvention<EdmComplexType>,
+                                               IEdmConvention<EdmAssociationType>
     {
         private const int DefaultLength = 128;
 
-        internal PropertyMaxLengthConvention()
+        public void Apply(EdmEntityType edmDataModelItem, EdmModel model)
         {
+            SetLength(edmDataModelItem.DeclaredProperties, edmDataModelItem.DeclaredKeyProperties);
         }
 
-        void IEdmConvention<EdmEntityType>.Apply(EdmEntityType entityType, EdmModel model)
+        public void Apply(EdmComplexType edmDataModelItem, EdmModel model)
         {
-            SetLength(entityType.DeclaredProperties, entityType.DeclaredKeyProperties);
-        }
-
-        void IEdmConvention<EdmComplexType>.Apply(EdmComplexType complexType, EdmModel model)
-        {
-            SetLength(complexType.DeclaredProperties, new List<EdmProperty>());
+            SetLength(edmDataModelItem.DeclaredProperties, new List<EdmProperty>());
         }
 
         private static void SetLength(IEnumerable<EdmProperty> properties, ICollection<EdmProperty> keyProperties)
@@ -54,28 +50,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        void IEdmConvention<EdmAssociationType>.Apply(EdmAssociationType associationType, EdmModel model)
+        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
         {
-            if (associationType.Constraint == null)
+            if (edmDataModelItem.Constraint == null)
             {
                 return;
             }
 
             var principalKeyProperties
-                = associationType
-                    .GetOtherEnd(associationType.Constraint.DependentEnd)
+                = edmDataModelItem
+                    .GetOtherEnd(edmDataModelItem.Constraint.DependentEnd)
                     .EntityType
                     .KeyProperties();
 
             if (principalKeyProperties.Count()
-                != associationType.Constraint.DependentProperties.Count)
+                != edmDataModelItem.Constraint.DependentProperties.Count)
             {
                 return;
             }
 
-            for (var i = 0; i < associationType.Constraint.DependentProperties.Count; i++)
+            for (var i = 0; i < edmDataModelItem.Constraint.DependentProperties.Count; i++)
             {
-                var dependentProperty = associationType.Constraint.DependentProperties[i];
+                var dependentProperty = edmDataModelItem.Constraint.DependentProperties[i];
                 var principalProperty = principalKeyProperties.ElementAt(i);
 
                 if ((dependentProperty.PropertyType.PrimitiveType == EdmPrimitiveType.String)

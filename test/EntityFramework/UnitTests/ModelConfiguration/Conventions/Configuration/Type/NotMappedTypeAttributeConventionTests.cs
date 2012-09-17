@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockType = new MockType();
             var modelConfiguration = new ModelConfiguration();
 
-            new NotMappedTypeAttributeConvention.NotMappedTypeAttributeConventionImpl()
+            new NotMappedTypeAttributeConvention()
                 .Apply(mockType, modelConfiguration, new NotMappedAttribute());
 
             Assert.True(modelConfiguration.IsIgnoredType(mockType));

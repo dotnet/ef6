@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(IDbMappingConventionContracts))]
-    internal interface IDbMappingConvention : IConvention
+    public interface IDbMappingConvention : IConvention
     {
         void Apply(DbDatabaseMapping databaseMapping);
     }

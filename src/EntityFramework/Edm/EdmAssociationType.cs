@@ -11,7 +11,7 @@ namespace System.Data.Entity.Edm
     /// .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class EdmAssociationType
+    public class EdmAssociationType
         : EdmStructuralType
     {
         internal override EdmItemKind GetItemKind()

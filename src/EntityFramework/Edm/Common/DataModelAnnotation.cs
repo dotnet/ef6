@@ -2,17 +2,20 @@
 
 namespace System.Data.Entity.Edm.Common
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     ///     Allows the construction and modification of a user-specified annotation (name-value pair) on a <see
     ///      cref="DataModelItem" /> instance.
     /// </summary>
-    internal class DataModelAnnotation
+    public class DataModelAnnotation
         : INamedDataModelItem
     {
         /// <summary>
         ///     Gets or sets an optional namespace that can be used to distinguish the annotation from others with the same <see
         ///      cref="Name" /> value.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Namespace")]
         public virtual string Namespace { get; set; }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace System.Data.Entity.Edm
     ///     Allows the construction and modification of an entity set in an Entity Data Model (EDM) <see cref="EdmEntityContainer" /> .
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class EdmEntitySet
+    public class EdmEntitySet
         : EdmEntityContainerItem
     {
         internal override EdmItemKind GetItemKind()

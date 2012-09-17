@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     Concurrency mode for properties.
     /// </summary>
-    internal enum EdmConcurrencyMode
+    public enum EdmConcurrencyMode
     {
         /// <summary>
         ///     Default concurrency mode: the property is never validated at write time

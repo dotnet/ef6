@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Edm;
@@ -23,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Currently removal of one or more default conventions is the only supported operation.
     ///     The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
     /// </summary>
-    public partial class ConventionsConfiguration
+    public partial class ConventionsConfiguration : ConfigurationBase, IEnumerable<IConvention>
     {
         private readonly List<IConvention> _conventions = new List<IConvention>();
 
@@ -60,16 +61,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             conventions.Each(c => _conventions.Add(c));
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal void Add<TConvention>()
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void Add<TConvention>()
             where TConvention : IConvention, new()
         {
             Add(new TConvention());
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        internal void AddAfter<TExistingConvention>(IConvention newConvention)
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void AddAfter<TExistingConvention>(IConvention newConvention)
             where TExistingConvention : IConvention
         {
             Contract.Requires(newConvention != null);
@@ -78,14 +78,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             _conventions.Each(
                 c =>
+                {
+                    if (c.GetType()
+                        == typeof(TExistingConvention))
                     {
-                        if (c.GetType()
-                            == typeof(TExistingConvention))
-                        {
-                            return;
-                        }
-                        index++;
-                    });
+                        return;
+                    }
+                    index++;
+                });
 
             if (index < _conventions.Count)
             {
@@ -95,6 +95,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
             }
+        }
+
+        public void Remove(params IConvention[] conventions)
+        {
+            Contract.Requires(conventions != null);
+
+            conventions.Each(c => _conventions.Remove(c));
         }
 
         /// <summary>
@@ -136,7 +143,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyMapping(DbDatabaseMapping databaseMapping)
+        public void ApplyMapping(DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -262,10 +269,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw new ArgumentNullException("database");
             }
 
-            foreach (var convention in _conventions.Where(c => c.GetType() == typeof(PluralizingTableNameConvention)))
+            foreach (var convention in _conventions.Where(c => c is PluralizingTableNameConvention))
             {
                 new DatabaseConventionDispatcher(convention, database).Dispatch();
             }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IEnumerator<IConvention> IEnumerable<IConvention>.GetEnumerator()
+        {
+            return _conventions.GetEnumerator();
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _conventions.GetEnumerator();
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

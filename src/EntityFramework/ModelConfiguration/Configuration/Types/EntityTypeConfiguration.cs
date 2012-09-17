@@ -16,11 +16,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
-    internal class EntityTypeConfiguration : StructuralTypeConfiguration
+    public class EntityTypeConfiguration : StructuralTypeConfiguration
     {
         private readonly List<PropertyInfo> _keyProperties = new List<PropertyInfo>();
 
@@ -118,6 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = true;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public virtual void Key(
             PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts = null)
         {
@@ -250,7 +252,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _entityMappingConfigurations.Add(mappingConfiguration);
 
             if (_entityMappingConfigurations.Count > 1
-                && _entityMappingConfigurations.Where(mc => mc.TableName == null).Any())
+                && _entityMappingConfigurations.Any(mc => mc.TableName == null))
             {
                 throw Error.InvalidTableMapping_NoTableName(ClrType.Name);
             }
@@ -532,21 +534,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
+                        {
+                            var primitivePropertyConfiguration =
+                                c.GetConfiguration() as PrimitivePropertyConfiguration;
+
+                            if ((primitivePropertyConfiguration != null)
+                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                var primitivePropertyConfiguration =
-                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
+                                return;
+                            }
 
-                                if ((primitivePropertyConfiguration != null)
-                                    && (primitivePropertyConfiguration.ColumnType != null))
-                                {
-                                    return;
-                                }
+                            var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
-
-                                c.TypeName = principalColumn.TypeName;
-                                c.Facets.CopyFrom(principalColumn.Facets);
-                            });
+                            c.TypeName = principalColumn.TypeName;
+                            c.Facets.CopyFrom(principalColumn.Facets);
+                        });
             }
         }
 
@@ -571,7 +573,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 }
                 else if (!entityTypeMappings.SelectMany(etm => etm.TypeMappingFragments)
                               .SelectMany(mf => mf.PropertyMappings)
-                              .Where(pm => pm.PropertyPath.SequenceEqual(propertyPath)).Any()
+                              .Any(pm => pm.PropertyPath.SequenceEqual(propertyPath))
                          && !entityType.IsAbstract)
                 {
                     throw Error.InvalidEntitySplittingProperties(entityType.Name);

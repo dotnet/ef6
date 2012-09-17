@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
-            new TableAttributeConvention.TableAttributeConventionImpl()
+            new TableAttributeConvention()
                 .Apply(new MockType(), entityTypeConfiguration, new TableAttribute("Foo"));
 
             Assert.Equal("Foo", entityTypeConfiguration.GetTableName().Name);
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             entityTypeConfiguration.ToTable("Bar");
 
-            new TableAttributeConvention.TableAttributeConventionImpl()
+            new TableAttributeConvention()
                 .Apply(new MockType(), entityTypeConfiguration, new TableAttribute("Foo"));
 
             Assert.Equal("Bar", entityTypeConfiguration.GetTableName().Name);
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
-            new TableAttributeConvention.TableAttributeConventionImpl()
+            new TableAttributeConvention()
                 .Apply(
                     new MockType(), entityTypeConfiguration, new TableAttribute("Foo")
                                                                  {

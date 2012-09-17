@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     or the <see cref="DbModelBuilder" /> API. This convention throws if a duplicate configured column order
     ///     is detected.
     /// </summary>
-    internal sealed class ColumnOrderingConventionStrict : ColumnOrderingConvention
+    public class ColumnOrderingConventionStrict : ColumnOrderingConvention
     {
         protected override void ValidateColumns(DbTableMetadata table)
         {
@@ -21,8 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Select(c => c.GetOrder())
                     .Where(o => o != null)
                     .GroupBy(o => o)
-                    .Where(g => g.Count() > 1)
-                    .Any();
+                    .Any(g => g.Count() > 1);
 
             if (hasDuplicates)
             {

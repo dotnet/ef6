@@ -2,15 +2,13 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Used to configure a <see cref="T:System.byte[]" /> property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class BinaryPropertyConfiguration : LengthPropertyConfiguration
+    public class BinaryPropertyConfiguration : LengthPropertyConfiguration<Properties.Primitive.BinaryPropertyConfiguration>
     {
         internal BinaryPropertyConfiguration(Properties.Primitive.BinaryPropertyConfiguration configuration)
             : base(configuration)
@@ -174,36 +172,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.IsRowVersion = true;
 
             return this;
-        }
-
-        internal new Properties.Primitive.BinaryPropertyConfiguration Configuration
-        {
-            get { return (Properties.Primitive.BinaryPropertyConfiguration)base.Configuration; }
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public new Type GetType()
-        {
-            return base.GetType();
         }
     }
 }

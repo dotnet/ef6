@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private readonly NavigationPropertyConfiguration _navigationPropertyConfiguration;
 
-        internal CascadableNavigationPropertyConfiguration(
+        protected CascadableNavigationPropertyConfiguration(
             NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
             Contract.Requires(navigationPropertyConfiguration != null);

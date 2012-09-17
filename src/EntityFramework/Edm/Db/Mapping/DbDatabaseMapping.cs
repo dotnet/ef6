@@ -4,8 +4,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
-    internal class DbDatabaseMapping : DbMappingMetadataItem
+    public class DbDatabaseMapping : DbMappingMetadataItem
     {
         private readonly BackingList<DbEntityContainerMapping> entityContainerMappingsList =
             new BackingList<DbEntityContainerMapping>();
@@ -18,17 +19,18 @@ namespace System.Data.Entity.Edm.Db.Mapping
         /// <summary>
         ///     Gets or sets an <see cref="EdmModel" /> value representing the model that is being mapped.
         /// </summary>
-        internal virtual EdmModel Model { get; set; }
+        public virtual EdmModel Model { get; set; }
 
         /// <summary>
         ///     Gets or sets a <see cref="DbDatabaseMetadata" /> value representing the database that is the target of the mapping.
         /// </summary>
-        internal virtual DbDatabaseMetadata Database { get; set; }
+        public virtual DbDatabaseMetadata Database { get; set; }
 
         /// <summary>
         ///     Gets or sets the collection of <see cref="DbEntityContainerMapping" /> s that specifies how the model's entity containers are mapped to the database.
         /// </summary>
-        internal virtual IList<DbEntityContainerMapping> EntityContainerMappings
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual IList<DbEntityContainerMapping> EntityContainerMappings
         {
             get { return entityContainerMappingsList.EnsureValue(); }
             set { entityContainerMappingsList.SetValue(value); }

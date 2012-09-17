@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Linq;
     using System.Reflection;
 
-    internal class NavigationPropertyConfiguration : PropertyConfiguration
+    public class NavigationPropertyConfiguration : PropertyConfiguration
     {
         private readonly PropertyInfo _navigationProperty;
         private EdmAssociationEndKind? _endKind;

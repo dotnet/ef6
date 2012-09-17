@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Common
     /// <summary>
     /// </summary>
     [Serializable]
-    internal class DataModelErrorEventArgs : DataModelEventArgs
+    public class DataModelErrorEventArgs : DataModelEventArgs
     {
         /// <summary>
         ///     Gets an optional value indicating which property of the source item caused the event to be raised.

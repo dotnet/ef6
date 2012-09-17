@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(IEdmConventionContracts<>))]
-    internal interface IEdmConvention<TEdmDataModelItem> : IConvention
+    public interface IEdmConvention<TEdmDataModelItem> : IConvention
         where TEdmDataModelItem : EdmDataModelItem
     {
         void Apply(TEdmDataModelItem edmDataModelItem, EdmModel model);

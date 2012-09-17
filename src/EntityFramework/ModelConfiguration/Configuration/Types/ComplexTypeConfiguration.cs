@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Data.Entity.Edm;
 
-    internal class ComplexTypeConfiguration : StructuralTypeConfiguration
+    public class ComplexTypeConfiguration : StructuralTypeConfiguration
     {
         internal ComplexTypeConfiguration(Type structuralType)
             : base(structuralType)

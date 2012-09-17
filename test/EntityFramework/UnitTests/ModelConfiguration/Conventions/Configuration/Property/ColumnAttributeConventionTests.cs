@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new PrimitivePropertyConfiguration();
 
-            new ColumnAttributeConvention.ColumnAttributeConventionImpl()
+            new ColumnAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new ColumnAttribute("Foo"));
 
             Assert.Equal("Foo", propertyConfiguration.ColumnName);
@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 ColumnName = "Bar"
                                             };
 
-            new ColumnAttributeConvention.ColumnAttributeConventionImpl()
+            new ColumnAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new ColumnAttribute("Foo"));
 
             Assert.Equal("Bar", propertyConfiguration.ColumnName);

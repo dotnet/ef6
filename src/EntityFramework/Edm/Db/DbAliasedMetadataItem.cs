@@ -6,7 +6,7 @@ namespace System.Data.Entity.Edm.Db
     ///     DbAliasedMetadataItem provides the base type for all Database Metadata types that can have an optional <see
     ///      cref="DatabaseIdentifier" /> that should be used instead of the item's <see cref="DbNamedMetadataItem.Name" /> when referring to the item in the database.
     /// </summary>
-    internal abstract class DbAliasedMetadataItem
+    public abstract class DbAliasedMetadataItem
         : DbNamedMetadataItem
     {
         /// <summary>

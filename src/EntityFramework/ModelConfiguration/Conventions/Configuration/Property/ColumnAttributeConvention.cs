@@ -9,46 +9,29 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="ColumnAttribute" /> found on properties in the model
     /// </summary>
-    public sealed class ColumnAttributeConvention
-        : IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>
+    public class ColumnAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ColumnAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration> _impl
-            = new ColumnAttributeConventionImpl();
-
-        internal ColumnAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, PrimitivePropertyConfiguration configuration,
+            ColumnAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class ColumnAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ColumnAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo, PrimitivePropertyConfiguration primitivePropertyConfiguration,
-                ColumnAttribute columnAttribute)
+            if (string.IsNullOrWhiteSpace(configuration.ColumnName)
+                && !string.IsNullOrWhiteSpace(attribute.Name))
             {
-                if (string.IsNullOrWhiteSpace(primitivePropertyConfiguration.ColumnName)
-                    && !string.IsNullOrWhiteSpace(columnAttribute.Name))
-                {
-                    primitivePropertyConfiguration.ColumnName = columnAttribute.Name;
-                }
+                configuration.ColumnName = attribute.Name;
+            }
 
-                if (string.IsNullOrWhiteSpace(primitivePropertyConfiguration.ColumnType)
-                    && !string.IsNullOrWhiteSpace(columnAttribute.TypeName))
-                {
-                    primitivePropertyConfiguration.ColumnType = columnAttribute.TypeName;
-                }
+            if (string.IsNullOrWhiteSpace(configuration.ColumnType)
+                && !string.IsNullOrWhiteSpace(attribute.TypeName))
+            {
+                configuration.ColumnType = attribute.TypeName;
+            }
 
-                if ((primitivePropertyConfiguration.ColumnOrder == null)
-                    && columnAttribute.Order >= 0)
-                {
-                    primitivePropertyConfiguration.ColumnOrder = columnAttribute.Order;
-                }
+            if ((configuration.ColumnOrder == null)
+                && attribute.Order >= 0)
+            {
+                configuration.ColumnOrder = attribute.Order;
             }
         }
     }

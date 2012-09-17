@@ -4,12 +4,13 @@ namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Allows the construction and modification of a complete or partial mapping of an EDM entity type ( <see
     ///      cref="EdmEntityType" /> ) or type hierarchy to a specific database table ( <see cref="DbTableMetadata" /> ).
     /// </summary>
-    internal class DbEntityTypeMapping
+    public class DbEntityTypeMapping
         : DbMappingMetadataItem
     {
         private readonly BackingList<DbEntityTypeMappingFragment> typeMappingFragments =
@@ -31,6 +32,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         /// </summary>
         public virtual bool IsHierarchyMapping { get; set; }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEntityTypeMappingFragment> TypeMappingFragments
         {
             get { return typeMappingFragments.EnsureValue(); }

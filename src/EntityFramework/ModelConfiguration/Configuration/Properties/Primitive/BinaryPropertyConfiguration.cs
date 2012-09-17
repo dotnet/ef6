@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Diagnostics.Contracts;
 
-    internal class BinaryPropertyConfiguration : LengthPropertyConfiguration
+    public class BinaryPropertyConfiguration : LengthPropertyConfiguration
     {
         public bool? IsRowVersion { get; set; }
 
@@ -57,12 +57,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             propertyMappings
                 .Each(
                     pm =>
+                    {
+                        if (IsRowVersion != null)
                         {
-                            if (IsRowVersion != null)
-                            {
-                                pm.Item1.Column.Facets.MaxLength = null;
-                            }
-                        });
+                            pm.Item1.Column.Facets.MaxLength = null;
+                        }
+                    });
         }
 
         internal override void CopyFrom(PrimitivePropertyConfiguration other)
@@ -86,11 +86,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool InCSpace, out string errorMessage)
+        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var binaryRhs = other as BinaryPropertyConfiguration;
 
-            var baseIsCompatible = base.IsCompatible(other, InCSpace, out errorMessage);
+            var baseIsCompatible = base.IsCompatible(other, inCSpace, out errorMessage);
             var isRowVersionIsCompatible = binaryRhs == null
                                            || IsCompatible(c => c.IsRowVersion, binaryRhs, ref errorMessage);
 

@@ -12,7 +12,7 @@ namespace System.Data.Entity.Edm
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
-    internal class EdmNavigationProperty
+    public class EdmNavigationProperty
         : EdmStructuralMember
     {
         internal override EdmItemKind GetItemKind()

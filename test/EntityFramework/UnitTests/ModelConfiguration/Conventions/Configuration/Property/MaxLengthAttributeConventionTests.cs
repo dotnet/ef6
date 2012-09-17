@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new StringPropertyConfiguration();
 
-            new MaxLengthAttributeConvention.MaxLengthAttributeConventionImpl()
+            new MaxLengthAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new MaxLengthAttribute());
 
             Assert.Null(propertyConfiguration.MaxLength);
@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 IsMaxLength = false
                                             };
 
-            new MaxLengthAttributeConvention.MaxLengthAttributeConventionImpl()
+            new MaxLengthAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new MaxLengthAttribute());
 
             Assert.Null(propertyConfiguration.MaxLength);
@@ -40,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new StringPropertyConfiguration();
 
-            new MaxLengthAttributeConvention.MaxLengthAttributeConventionImpl()
+            new MaxLengthAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new MaxLengthAttribute(100));
 
             Assert.Equal(100, propertyConfiguration.MaxLength);
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 MaxLength = 200
                                             };
 
-            new MaxLengthAttributeConvention.MaxLengthAttributeConventionImpl()
+            new MaxLengthAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new MaxLengthAttribute(100));
 
             Assert.Equal(200, propertyConfiguration.MaxLength);

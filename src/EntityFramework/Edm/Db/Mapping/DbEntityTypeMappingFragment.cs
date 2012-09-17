@@ -4,8 +4,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
-    internal class DbEntityTypeMappingFragment : DbMappingMetadataItem
+    public class DbEntityTypeMappingFragment : DbMappingMetadataItem
     {
         private readonly BackingList<DbEdmPropertyMapping> propertyMappings = new BackingList<DbEdmPropertyMapping>();
         private readonly BackingList<DbColumnCondition> columnConditions = new BackingList<DbColumnCondition>();
@@ -18,6 +19,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         /// <summary>
         ///     Gets the collection of <see cref="DbEdmPropertyMapping" /> s that specifies how the type's properties are mapped to the table.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEdmPropertyMapping> PropertyMappings
         {
             get { return propertyMappings.EnsureValue(); }
@@ -28,6 +30,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         ///     Gets the collection of <see cref="DbColumnCondition" /> s that specifies the constant or null values that columns in <see
         ///      cref="Table" /> must have for this type mapping fragment to apply.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbColumnCondition> ColumnConditions
         {
             get { return columnConditions.EnsureValue(); }

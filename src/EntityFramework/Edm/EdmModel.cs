@@ -4,12 +4,14 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
     ///     EdmModel is the top-level container for namespaces and entity containers belonging to the same logical Entity Data Model (EDM) model.
     /// </summary>
-    internal class EdmModel : EdmNamedMetadataItem
+    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
+    public class EdmModel : EdmNamedMetadataItem
     {
         private readonly BackingList<EdmEntityContainer> containersList = new BackingList<EdmEntityContainer>();
         private readonly BackingList<EdmNamespace> namespacesList = new BackingList<EdmNamespace>();
@@ -32,6 +34,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the containers declared within the model.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmEntityContainer> Containers
         {
             get { return containersList.EnsureValue(); }
@@ -46,6 +49,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the namespaces declared within the model.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmNamespace> Namespaces
         {
             get { return namespacesList.EnsureValue(); }

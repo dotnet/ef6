@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockPropertyInfo = mockTypeA.GetProperty("Bs");
             var modelConfiguration = new ModelConfiguration();
 
-            new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+            new InversePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A"));
 
             var navigationPropertyConfiguration
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             mockTypeA.Property(mockTypeB.AsCollection(), "Bs");
             var modelConfiguration = new ModelConfiguration();
 
-            new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+            new InversePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             mockTypeA.Property(mockTypeB, "B");
             var modelConfiguration = new ModelConfiguration();
 
-            new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+            new InversePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("B"));
 
             var navigationPropertyConfiguration
@@ -72,7 +72,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             mockTypeA.Property(mockTypeB.AsCollection(), "Bs");
             var modelConfiguration = new ModelConfiguration();
 
-            new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+            new InversePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
@@ -93,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                 = modelConfiguration.Entity(mockTypeA).Navigation(mockPropertyInfo);
             navigationPropertyConfiguration.InverseNavigationProperty = mockTypeB.GetProperty("A2");
 
-            new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+            new InversePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A1"));
 
             Assert.NotSame(mockTypeB.GetProperty("A1"), navigationPropertyConfiguration.InverseNavigationProperty);
@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Equal(
                 Strings.InversePropertyAttributeConvention_SelfInverseDetected("A", mockTypeA.Object),
                 Assert.Throws<InvalidOperationException>(
-                    () => new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+                    () => new InversePropertyAttributeConvention()
                               .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A"))).Message);
         }
 
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Equal(
                 Strings.InversePropertyAttributeConvention_PropertyNotFound("Foo", mockTypeB.Object, "B", mockTypeA.Object),
                 Assert.Throws<InvalidOperationException>(
-                    () => new InversePropertyAttributeConvention.InversePropertyAttributeConventionImpl()
+                    () => new InversePropertyAttributeConvention()
                               .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Foo"))).Message);
         }
     }

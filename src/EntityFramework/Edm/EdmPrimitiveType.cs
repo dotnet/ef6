@@ -14,9 +14,8 @@ namespace System.Data.Entity.Edm
     ///     Represents one of the fixed set of Entity Data Model (EDM) primitive types.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal sealed class EdmPrimitiveType
+    public sealed class EdmPrimitiveType
         : EdmScalarType
-
     {
         private static readonly EdmPrimitiveType _binaryType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Binary);
         private static readonly EdmPrimitiveType _booleanType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Boolean);
@@ -38,46 +37,46 @@ namespace System.Data.Entity.Edm
         private static readonly EdmPrimitiveType _timeType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Time);
         private static readonly EdmPrimitiveType _geometryType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Geometry);
 
-        private static readonly EdmPrimitiveType _geometricPointType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricPoint);
+        private static readonly EdmPrimitiveType _geometryPointType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint);
 
-        private static readonly EdmPrimitiveType _geometricLinestringType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricLinestring);
+        private static readonly EdmPrimitiveType _geometryLineStringType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryLineString);
 
-        private static readonly EdmPrimitiveType _geometricPolygonType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricPolygon);
+        private static readonly EdmPrimitiveType _geometryPolygonType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryPolygon);
 
-        private static readonly EdmPrimitiveType _geometricMultiPointType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricMultiPoint);
+        private static readonly EdmPrimitiveType _geometryMultiPointType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint);
 
-        private static readonly EdmPrimitiveType _geometricMultiLinestringType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometricMultiLinestring);
+        private static readonly EdmPrimitiveType _geometryMultiLineStringType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString);
 
-        private static readonly EdmPrimitiveType _geometricMultiPolygonType = new EdmPrimitiveType(
-            EdmPrimitiveTypeKind.GeometricMultiPolygon);
+        private static readonly EdmPrimitiveType _geometryMultiPolygonType = new EdmPrimitiveType(
+            EdmPrimitiveTypeKind.GeometryMultiPolygon);
 
         private static readonly EdmPrimitiveType _geometryCollectionType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeometryCollection);
 
         private static readonly EdmPrimitiveType _geographyType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Geography);
 
-        private static readonly EdmPrimitiveType _geographicPointType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicPoint);
+        private static readonly EdmPrimitiveType _geographyPointType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint);
 
-        private static readonly EdmPrimitiveType _geographicLinestringType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicLinestring);
+        private static readonly EdmPrimitiveType _geographyLineStringType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyLineString);
 
-        private static readonly EdmPrimitiveType _geographicPolygonType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicPolygon);
+        private static readonly EdmPrimitiveType _geographyPolygonType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyPolygon);
 
-        private static readonly EdmPrimitiveType _geographicMultiPointType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicMultiPoint);
+        private static readonly EdmPrimitiveType _geographyMultiPointType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPoint);
 
-        private static readonly EdmPrimitiveType _geographicMultiLinestringType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicMultiLinestring);
+        private static readonly EdmPrimitiveType _geographyMultiLineStringType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiLineString);
 
-        private static readonly EdmPrimitiveType _geographicMultiPolygonType =
-            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographicMultiPolygon);
+        private static readonly EdmPrimitiveType _geographyMultiPolygonType =
+            new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPolygon);
 
         private static readonly EdmPrimitiveType _geographyCollectionType =
             new EdmPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection);
@@ -101,20 +100,20 @@ namespace System.Data.Entity.Edm
                       { EdmPrimitiveTypeKind.String, _stringType },
                       { EdmPrimitiveTypeKind.Time, _timeType },
                       { EdmPrimitiveTypeKind.Geometry, _geometryType },
-                      { EdmPrimitiveTypeKind.GeometricPoint, _geometricPointType },
-                      { EdmPrimitiveTypeKind.GeometricLinestring, _geometricLinestringType },
-                      { EdmPrimitiveTypeKind.GeometricPolygon, _geometricPolygonType },
-                      { EdmPrimitiveTypeKind.GeometricMultiPoint, _geometricMultiPointType },
-                      { EdmPrimitiveTypeKind.GeometricMultiLinestring, _geometricMultiLinestringType },
-                      { EdmPrimitiveTypeKind.GeometricMultiPolygon, _geometricMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeometryPoint, _geometryPointType },
+                      { EdmPrimitiveTypeKind.GeometryLineString, _geometryLineStringType },
+                      { EdmPrimitiveTypeKind.GeometryPolygon, _geometryPolygonType },
+                      { EdmPrimitiveTypeKind.GeometryMultiPoint, _geometryMultiPointType },
+                      { EdmPrimitiveTypeKind.GeometryMultiLineString, _geometryMultiLineStringType },
+                      { EdmPrimitiveTypeKind.GeometryMultiPolygon, _geometryMultiPolygonType },
                       { EdmPrimitiveTypeKind.GeometryCollection, _geometryCollectionType },
                       { EdmPrimitiveTypeKind.Geography, _geographyType },
-                      { EdmPrimitiveTypeKind.GeographicPoint, _geographicPointType },
-                      { EdmPrimitiveTypeKind.GeographicLinestring, _geographicLinestringType },
-                      { EdmPrimitiveTypeKind.GeographicPolygon, _geographicPolygonType },
-                      { EdmPrimitiveTypeKind.GeographicMultiPoint, _geographicMultiPointType },
-                      { EdmPrimitiveTypeKind.GeographicMultiLinestring, _geographicMultiLinestringType },
-                      { EdmPrimitiveTypeKind.GeographicMultiPolygon, _geographicMultiPolygonType },
+                      { EdmPrimitiveTypeKind.GeographyPoint, _geographyPointType },
+                      { EdmPrimitiveTypeKind.GeographyLineString, _geographyLineStringType },
+                      { EdmPrimitiveTypeKind.GeographyPolygon, _geographyPolygonType },
+                      { EdmPrimitiveTypeKind.GeographyMultiPoint, _geographyMultiPointType },
+                      { EdmPrimitiveTypeKind.GeographyMultiLineString, _geographyMultiLineStringType },
+                      { EdmPrimitiveTypeKind.GeographyMultiPolygon, _geographyMultiPolygonType },
                       { EdmPrimitiveTypeKind.GeographyCollection, _geographyCollectionType }
                   };
 
@@ -306,6 +305,7 @@ namespace System.Data.Entity.Edm
             get { return typeKind; }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public override IList<DataModelAnnotation> Annotations
         {
             get { return new DataModelAnnotation[0]; }

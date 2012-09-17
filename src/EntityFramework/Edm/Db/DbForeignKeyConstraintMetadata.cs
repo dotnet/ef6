@@ -10,7 +10,7 @@ namespace System.Data.Entity.Edm.Db
     ///     Allows the construction and modification of a foreign key constraint sourced by a <see cref="DbTableMetadata" /> instance.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class DbForeignKeyConstraintMetadata : DbConstraintMetadata
+    public class DbForeignKeyConstraintMetadata : DbConstraintMetadata
     {
         private readonly BackingList<DbTableColumnMetadata> dependentColumnsList =
             new BackingList<DbTableColumnMetadata>();
@@ -23,6 +23,7 @@ namespace System.Data.Entity.Edm.Db
         //public virtual DbUniqueConstraintMetadata PrincipalConstraint { get; set; }
         public virtual DbTableMetadata PrincipalTable { get; set; }
 
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbTableColumnMetadata> DependentColumns
         {
             get { return dependentColumnsList.EnsureValue(); }

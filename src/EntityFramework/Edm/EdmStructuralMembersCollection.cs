@@ -8,7 +8,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     Enumerates all <see cref="EdmStructuralMember" /> s declared or inherited by an <see cref="EdmStructuralType" /> .
     /// </summary>
-    internal sealed class EdmStructuralTypeMemberCollection : IEnumerable<EdmStructuralMember>
+    public sealed class EdmStructuralTypeMemberCollection : IEnumerable<EdmStructuralMember>
     {
         private readonly Func<IEnumerable<EdmStructuralMember>> getAllMembers;
 

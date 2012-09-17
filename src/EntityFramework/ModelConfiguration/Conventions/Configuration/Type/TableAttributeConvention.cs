@@ -8,37 +8,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="TableAttribute" /> found on types in the model.
     /// </summary>
-    public sealed class TableAttributeConvention : IConfigurationConvention<Type, EntityTypeConfiguration>
+    public class TableAttributeConvention :
+        AttributeConfigurationConvention<Type, EntityTypeConfiguration, TableAttribute>
     {
-        private readonly IConfigurationConvention<Type, EntityTypeConfiguration> _impl
-            = new TableAttributeConventionImpl();
-
-        internal TableAttributeConvention()
+        public override void Apply(
+            Type memberInfo, EntityTypeConfiguration configuration, TableAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<Type, EntityTypeConfiguration>.Apply(
-            Type memberInfo, Func<EntityTypeConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class TableAttributeConventionImpl :
-            AttributeConfigurationConvention<Type, EntityTypeConfiguration, TableAttribute>
-        {
-            internal override void Apply(
-                Type type, EntityTypeConfiguration entityTypeConfiguration, TableAttribute tableAttribute)
+            if (!configuration.IsTableNameConfigured)
             {
-                if (!entityTypeConfiguration.IsTableNameConfigured)
+                if (string.IsNullOrWhiteSpace(attribute.Schema))
                 {
-                    if (string.IsNullOrWhiteSpace(tableAttribute.Schema))
-                    {
-                        entityTypeConfiguration.ToTable(tableAttribute.Name);
-                    }
-                    else
-                    {
-                        entityTypeConfiguration.ToTable(tableAttribute.Name, tableAttribute.Schema);
-                    }
+                    configuration.ToTable(attribute.Name);
+                }
+                else
+                {
+                    configuration.ToTable(attribute.Name, attribute.Schema);
                 }
             }
         }

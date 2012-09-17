@@ -8,22 +8,22 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(KeyDiscoveryConventionContracts))]
-    internal abstract class KeyDiscoveryConvention : IEdmConvention<EdmEntityType>
+    public abstract class KeyDiscoveryConvention : IEdmConvention<EdmEntityType>
     {
-        void IEdmConvention<EdmEntityType>.Apply(EdmEntityType entityType, EdmModel model)
+        public void Apply(EdmEntityType edmDataModelItem, EdmModel model)
         {
-            if ((entityType.DeclaredKeyProperties.Count > 0)
-                || (entityType.BaseType != null))
+            if ((edmDataModelItem.DeclaredKeyProperties.Count > 0)
+                || (edmDataModelItem.BaseType != null))
             {
                 return;
             }
 
-            var keyProperty = MatchKeyProperty(entityType, entityType.GetDeclaredPrimitiveProperties());
+            var keyProperty = MatchKeyProperty(edmDataModelItem, edmDataModelItem.GetDeclaredPrimitiveProperties());
 
             if (keyProperty != null)
             {
                 keyProperty.PropertyType.IsNullable = false;
-                entityType.DeclaredKeyProperties.Add(keyProperty);
+                edmDataModelItem.DeclaredKeyProperties.Add(keyProperty);
             }
         }
 

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db
     /// <summary>
     ///     Indicates which Database Metadata concept is represented by a given item.
     /// </summary>
-    internal enum DbItemKind
+    public enum DbItemKind
     {
         /// <summary>
         ///     Database Kind

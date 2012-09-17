@@ -10,7 +10,7 @@ namespace System.Data.Entity.Edm.Db
     ///     Allows the construction and modification of a database schema in a <see cref="DbDatabaseMetadata" /> database model.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
-    internal class DbSchemaMetadata
+    public class DbSchemaMetadata
         : DbAliasedMetadataItem
     {
         private readonly BackingList<DbTableMetadata> tablesList = new BackingList<DbTableMetadata>();
@@ -23,6 +23,7 @@ namespace System.Data.Entity.Edm.Db
         /// <summary>
         ///     Gets or sets the collection of <see cref="DbTableMetadata" /> instances that specifies the tables declared within the schema.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbTableMetadata> Tables
         {
             get { return tablesList.EnsureValue(); }

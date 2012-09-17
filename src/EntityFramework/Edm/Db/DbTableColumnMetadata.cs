@@ -10,7 +10,7 @@ namespace System.Data.Entity.Edm.Db
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
-    internal class DbTableColumnMetadata : DbColumnMetadata
+    public class DbTableColumnMetadata : DbColumnMetadata
     {
         internal override DbItemKind GetMetadataKind()
         {

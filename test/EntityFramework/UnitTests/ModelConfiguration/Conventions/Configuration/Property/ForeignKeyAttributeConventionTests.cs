@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             navigationPropertyConfiguration.Constraint
                 = new ForeignKeyConstraintConfiguration(new[] { mockTypeB.GetProperty("AId1") });
 
-            new ForeignKeyPrimitivePropertyAttributeConvention.ForeignKeyAttributeConventionImpl()
+            new ForeignKeyPrimitivePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new ForeignKeyAttribute("AId2"));
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
@@ -53,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             inverseNavigationPropertyConfiguration.Constraint
                 = new ForeignKeyConstraintConfiguration(new[] { mockTypeB.GetProperty("AId1") });
 
-            new ForeignKeyPrimitivePropertyAttributeConvention.ForeignKeyAttributeConventionImpl()
+            new ForeignKeyPrimitivePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new ForeignKeyAttribute("AId2"));
 
             Assert.Null(navigationPropertyConfiguration.Constraint);
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var modelConfiguration = new ModelConfiguration();
 
-            new ForeignKeyPrimitivePropertyAttributeConvention.ForeignKeyAttributeConventionImpl()
+            new ForeignKeyPrimitivePropertyAttributeConvention()
                 .Apply(mockPropertyInfo, modelConfiguration, new ForeignKeyAttribute("A"));
 
             var navigationPropertyConfiguration
@@ -93,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_InvalidNavigationProperty("BId", mockTypeA.Object, "Missing"),
                 Assert.Throws<InvalidOperationException>(
-                    () => new ForeignKeyPrimitivePropertyAttributeConvention.ForeignKeyAttributeConventionImpl()
+                    () => new ForeignKeyPrimitivePropertyAttributeConvention()
                               .Apply(mockPropertyInfo, new ModelConfiguration(), new ForeignKeyAttribute("Missing"))).Message);
         }
     }

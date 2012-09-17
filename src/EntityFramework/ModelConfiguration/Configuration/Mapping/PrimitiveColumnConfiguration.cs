@@ -2,11 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    public class PrimitiveColumnConfiguration
+    public class PrimitiveColumnConfiguration : Properties.PropertyConfiguration
     {
         private readonly Properties.Primitive.PrimitivePropertyConfiguration _configuration;
 
@@ -53,31 +51,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.ColumnOrder = columnOrder;
 
             return this;
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public new Type GetType()
-        {
-            return base.GetType();
         }
     }
 }

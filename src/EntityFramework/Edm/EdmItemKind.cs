@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm
     /// <summary>
     ///     Indicates which Entity Data Model (EDM) concept is represented by a given item.
     /// </summary>
-    internal enum EdmItemKind
+    public enum EdmItemKind
     {
         /// <summary>
         ///     Association End Kind

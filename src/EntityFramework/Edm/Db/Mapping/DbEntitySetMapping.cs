@@ -4,12 +4,13 @@ namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Internal;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Allows the construction and modification of the mapping of an EDM entity set ( <see cref="EdmEntitySet" /> ) to a database ( <see
     ///      cref="DbDatabaseMetadata" /> ).
     /// </summary>
-    internal class DbEntitySetMapping
+    public class DbEntitySetMapping
         : DbMappingMetadataItem
     {
         private readonly BackingList<DbEntityTypeMapping> entityTypeMappingsList =
@@ -28,6 +29,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         /// <summary>
         ///     Gets or sets the collection of <see cref="DbEntityTypeMapping" /> s that specifies how the set's entity types are mapped to the database.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEntityTypeMapping> EntityTypeMappings
         {
             get { return entityTypeMappingsList.EnsureValue(); }

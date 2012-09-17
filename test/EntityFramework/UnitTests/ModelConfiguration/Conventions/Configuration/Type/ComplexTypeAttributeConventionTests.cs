@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var mockType = new MockType();
             var modelConfiguration = new ModelConfiguration();
 
-            new ComplexTypeAttributeConvention.ComplexTypeAttributeConventionImpl()
+            new ComplexTypeAttributeConvention()
                 .Apply(mockType, modelConfiguration, new ComplexTypeAttribute());
 
             Assert.True(modelConfiguration.IsComplexType(mockType));

@@ -25,7 +25,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Adds metadata to the given model configuration.
         /// </summary>
         /// <param name="modelConfiguration"> The model configuration. </param>
-        void IConfigurationConvention.Apply(ModelConfiguration modelConfiguration)
+        public virtual void Apply(ModelConfiguration modelConfiguration)
         {
             EdmMetadataContext.ConfigureEdmMetadata(modelConfiguration);
         }

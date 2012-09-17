@@ -10,18 +10,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     to be lower case. The default SqlClient provider is case sensitive and requires data types to be lower case. This convention
     ///     allows the <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttrbiute" /> and <see cref="DbModelBuilder" /> API to be case insensitive.
     /// </summary>
-    public sealed class ColumnTypeCasingConvention : IDbConvention<DbTableColumnMetadata>
+    public class ColumnTypeCasingConvention : IDbConvention<DbTableColumnMetadata>
     {
-        internal ColumnTypeCasingConvention()
-        {
-        }
-
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
-        void IDbConvention<DbTableColumnMetadata>.Apply(DbTableColumnMetadata tableColumn, DbDatabaseMetadata database)
+        public void Apply(DbTableColumnMetadata dbDataModelItem, DbDatabaseMetadata database)
         {
-            if (!string.IsNullOrWhiteSpace(tableColumn.TypeName))
+            if (!string.IsNullOrWhiteSpace(dbDataModelItem.TypeName))
             {
-                tableColumn.TypeName = tableColumn.TypeName.ToLowerInvariant();
+                dbDataModelItem.TypeName = dbDataModelItem.TypeName.ToLowerInvariant();
             }
         }
     }

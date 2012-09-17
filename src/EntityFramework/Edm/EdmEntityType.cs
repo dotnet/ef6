@@ -13,7 +13,7 @@ namespace System.Data.Entity.Edm
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     [DebuggerDisplay("{Name}")]
-    internal class EdmEntityType
+    public class EdmEntityType
         : EdmStructuralType
     {
         private readonly BackingList<EdmProperty> declaredPropertiesList = new BackingList<EdmProperty>();
@@ -73,6 +73,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the collection of <see cref="EdmProperty" /> s that specifies the properties declared by the entity type.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmProperty> DeclaredProperties
         {
             get { return declaredPropertiesList.EnsureValue(); }
@@ -88,13 +89,7 @@ namespace System.Data.Entity.Edm
         {
             get
             {
-                foreach (var declaringType in this.ToHierarchy().Reverse())
-                {
-                    foreach (var declaredProp in declaringType.declaredPropertiesList)
-                    {
-                        yield return declaredProp;
-                    }
-                }
+                return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredPropertiesList);
             }
         }
 
@@ -102,6 +97,7 @@ namespace System.Data.Entity.Edm
         ///     Gets or sets the collection of <see cref="EdmProperty" /> s that indicates which properties from the <see
         ///      cref="DeclaredProperties" /> collection are part of the entity key.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmProperty> DeclaredKeyProperties
         {
             get { return declaredKeyPropertiesList.EnsureValue(); }
@@ -116,6 +112,7 @@ namespace System.Data.Entity.Edm
         /// <summary>
         ///     Gets or sets the optional collection of <see cref="EdmNavigationProperty" /> s that specifies the navigation properties declared by the entity type.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmNavigationProperty> DeclaredNavigationProperties
         {
             get { return declaredNavigationPropertiesList.EnsureValue(); }
@@ -131,13 +128,7 @@ namespace System.Data.Entity.Edm
         {
             get
             {
-                foreach (var declaringType in this.ToHierarchy().Reverse())
-                {
-                    foreach (var declaredNavProp in declaringType.declaredNavigationPropertiesList)
-                    {
-                        yield return declaredNavProp;
-                    }
-                }
+                return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredNavigationPropertiesList);
             }
         }
     }

@@ -9,32 +9,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="TimestampAttribute" /> found on properties in the model.
     /// </summary>
-    public sealed class TimestampAttributeConvention
-        : IConfigurationConvention<PropertyInfo, BinaryPropertyConfiguration>
+    public class TimestampAttributeConvention
+        : AttributeConfigurationConvention<PropertyInfo, BinaryPropertyConfiguration, TimestampAttribute>
     {
-        private readonly IConfigurationConvention<PropertyInfo, BinaryPropertyConfiguration> _impl
-            = new TimestampAttributeConventionImpl();
-
-        internal TimestampAttributeConvention()
+        public override void Apply(
+            PropertyInfo memberInfo, BinaryPropertyConfiguration configuration, TimestampAttribute attribute)
         {
-        }
-
-        void IConfigurationConvention<PropertyInfo, BinaryPropertyConfiguration>.Apply(
-            PropertyInfo memberInfo, Func<BinaryPropertyConfiguration> configuration)
-        {
-            _impl.Apply(memberInfo, configuration);
-        }
-
-        internal sealed class TimestampAttributeConventionImpl
-            : AttributeConfigurationConvention<PropertyInfo, BinaryPropertyConfiguration, TimestampAttribute>
-        {
-            internal override void Apply(
-                PropertyInfo propertyInfo, BinaryPropertyConfiguration binaryPropertyConfiguration, TimestampAttribute _)
+            if (configuration.IsRowVersion == null)
             {
-                if (binaryPropertyConfiguration.IsRowVersion == null)
-                {
-                    binaryPropertyConfiguration.IsRowVersion = true;
-                }
+                configuration.IsRowVersion = true;
             }
         }
     }

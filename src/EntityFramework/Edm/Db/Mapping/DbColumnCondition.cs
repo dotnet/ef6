@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
     /// <summary>
     ///     Allows the construction and modification of a condition for a column in a database table.
     /// </summary>
-    internal class DbColumnCondition
+    public class DbColumnCondition
         : DbMappingMetadataItem
     {
         internal override DbMappingItemKind GetItemKind()

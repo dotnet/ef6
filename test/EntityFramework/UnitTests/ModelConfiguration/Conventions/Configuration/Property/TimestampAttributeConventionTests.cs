@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new BinaryPropertyConfiguration();
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 MaxLength = 8
                                             };
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 IsNullable = false
                                             };
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 ConcurrencyMode = EdmConcurrencyMode.Fixed
                                             };
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
@@ -72,7 +72,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 ColumnType = "rowversion"
                                             };
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 DatabaseGeneratedOption = DatabaseGeneratedOption.Identity
                                             };
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert.Null(propertyConfiguration.ColumnType);
@@ -100,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                                 MaxLength = 100
                                             };
 
-            new TimestampAttributeConvention.TimestampAttributeConventionImpl()
+            new TimestampAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new TimestampAttribute());
 
             Assert.Null(propertyConfiguration.ColumnType);
