@@ -227,6 +227,217 @@ namespace ProductivityApiTests
 
         #endregion
 
+        #region Tests for loading navigation properties asynchronously
+
+#if !NET40
+
+        [Fact]
+        public void Generic_reference_navigation_property_can_be_loaded_asynchronously_and_IsLoaded_is_set()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+
+                Assert.False(teamReference.IsLoaded);
+                teamReference.LoadAsync().Wait();
+                Assert.True(teamReference.IsLoaded);
+                Assert.Equal(Team.McLaren, driver.Team.Id);
+            }
+        }
+
+        [Fact]
+        public void Generic_collection_navigation_property_can_be_loaded_asynchronously_and_IsLoaded_is_set()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                Assert.False(driversCollection.IsLoaded);
+                driversCollection.LoadAsync().Wait();
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+            }
+        }
+
+        [Fact]
+        public void Non_generic_reference_navigation_property_can_be_loaded_asynchronously_and_IsLoaded_is_set()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry((object)driver).Reference("Team");
+
+                Assert.False(teamReference.IsLoaded);
+                teamReference.LoadAsync().Wait();
+                Assert.True(teamReference.IsLoaded);
+                Assert.Equal(Team.McLaren, driver.Team.Id);
+            }
+        }
+
+        [Fact]
+        public void Non_generic_collection_navigation_property_can_be_loaded_asynchronously_and_IsLoaded_is_set()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry((object)team).Collection("Drivers");
+
+                Assert.False(driversCollection.IsLoaded);
+                driversCollection.LoadAsync().Wait();
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+            }
+        }
+
+        [Fact]
+        public void Collection_navigation_property_for_many_to_many_relationship_can_be_loaded_asynchronously()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var team = context.Teams.Find(Team.McLaren);
+                var sponsorsCollection = context.Entry(team).Collection(t => t.Sponsors);
+
+                Assert.False(sponsorsCollection.IsLoaded);
+                sponsorsCollection.LoadAsync().Wait();
+                Assert.True(sponsorsCollection.IsLoaded);
+                Assert.Equal(3, team.Sponsors.Count);
+            }
+        }
+
+        [Fact]
+        public void Reference_navigation_property_can_be_reloaded_asynchronously_with_AppendOnly_semantics()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+
+                teamReference.LoadAsync().Wait();
+                Assert.True(teamReference.IsLoaded);
+
+                driver.Team.Principal = "Larry David";
+
+                Assert.True(teamReference.IsLoaded);
+                teamReference.LoadAsync().Wait();
+
+                Assert.Equal("Larry David", driver.Team.Principal);
+            }
+        }
+
+        [Fact]
+        public void Collection_navigation_property_can_be_reloaded_asynchronously_with_AppendOnly_semantics()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                // Load drivers for the first time
+                driversCollection.LoadAsync().Wait();
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+
+                // Now detach one driver from the collection and modify another one; the collection becomes unloaded
+                context.Entry(context.Drivers.Local.Single(d => d.Name == "Jenson Button")).State = EntityState.Detached;
+                context.Drivers.Local.Single(d => d.Name == "Lewis Hamilton").Wins = -1;
+
+                // Check the collection has become unloaded because of the detach.  Reload it.
+                Assert.False(driversCollection.IsLoaded);
+                Assert.Equal(2, team.Drivers.Count);
+
+                driversCollection.LoadAsync().Wait();
+
+                // The detached driver should be back and the modified driver should not have been touched
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+                Assert.Equal(-1, context.Drivers.Local.Single(d => d.Name == "Lewis Hamilton").Wins);
+            }
+        }
+
+        [Fact]
+        [AutoRollback]
+        public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded_asynchronously()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                // Load drivers for the first time
+                driversCollection.LoadAsync().Wait();
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+
+                // Add a new driver to the database
+                using (var innerContext = new F1Context())
+                {
+                    innerContext.Drivers.Add(
+                        new Driver
+                        {
+                            Name = "Larry David",
+                            TeamId = Team.McLaren
+                        });
+                    innerContext.SaveChanges();
+                }
+
+                // Now force load again
+                Assert.True(driversCollection.IsLoaded);
+                driversCollection.LoadAsync().Wait();
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(4, team.Drivers.Count);
+            }
+        }
+
+        [Fact]
+        public void Reference_navigation_property_can_be_reloaded_asynchronously_after_changing_foreign_key()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+
+                teamReference.LoadAsync().Wait();
+                Assert.True(teamReference.IsLoaded);
+
+                driver.TeamId = Team.Ferrari;
+
+                Assert.True(teamReference.IsLoaded); // Because changes have not been detected yet
+
+                teamReference = context.Entry(driver).Reference(d => d.Team); // Calls DetectChanges
+                Assert.False(teamReference.IsLoaded);
+                teamReference.LoadAsync().Wait();
+                Assert.True(teamReference.IsLoaded);
+                Assert.Equal(Team.Ferrari, driver.Team.Id);
+            }
+        }
+
+#endif
+
+        #endregion
+
         #region Tests for bad property names
 
         // Note that simple cases such as nulls that don't involve EF metadata are tested in the unit tests

@@ -112,6 +112,22 @@ namespace ProductivityApiTests
             Load_can_be_used_to_load_DbSet_implementation(c => c.Set(typeof(Product)).Load());
         }
 
+#if !NET40
+
+        [Fact]
+        public void LoadAsync_can_be_used_to_load_DbSet()
+        {
+            Load_can_be_used_to_load_DbSet_implementation(c => c.Products.LoadAsync().Wait());
+        }
+
+        [Fact]
+        public void LoadAsync_can_be_used_to_load_non_generic_DbSet()
+        {
+            Load_can_be_used_to_load_DbSet_implementation(c => c.Set(typeof(Product)).LoadAsync().Wait());
+        }
+
+#endif
+
         private void Load_can_be_used_to_load_DbSet_implementation(Action<SimpleModelContext> loadProducts)
         {
             using (var context = new SimpleModelContext())
@@ -3132,17 +3148,17 @@ namespace ProductivityApiTests
                 // to the generic Set for the proxy type.
                 Assert.Throws<InvalidOperationException>(
                     () =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                setMethod.Invoke(context, null);
-                            }
-                            catch (TargetInvocationException ex)
-                            {
-                                throw ex.InnerException;
-                            }
-                            ;
-                        }).ValidateMessage("CannotCallGenericSetWithProxyType");
+                            setMethod.Invoke(context, null);
+                        }
+                        catch (TargetInvocationException ex)
+                        {
+                            throw ex.InnerException;
+                        }
+                        ;
+                    }).ValidateMessage("CannotCallGenericSetWithProxyType");
             }
         }
 
