@@ -606,14 +606,14 @@ namespace ProductivityApiTests
         public void Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Where_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -679,14 +679,14 @@ namespace ProductivityApiTests
         public void Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Where_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -752,14 +752,14 @@ namespace ProductivityApiTests
         public void Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Where_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -825,14 +825,14 @@ namespace ProductivityApiTests
         public void Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Where_Drilldown_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -969,14 +969,14 @@ namespace ProductivityApiTests
         public void Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Select_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1041,14 +1041,14 @@ namespace ProductivityApiTests
         public void Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Select_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1183,7 +1183,15 @@ namespace ProductivityApiTests
             Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1254,8 +1262,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
-            )
+            Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1324,13 +1331,12 @@ namespace ProductivityApiTests
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void
-            Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
-            )
+            Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1467,7 +1473,15 @@ namespace ProductivityApiTests
             SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SelectMany_Compound_from_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1545,7 +1559,15 @@ namespace ProductivityApiTests
             SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SelectMany_Compound_from_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1621,7 +1643,15 @@ namespace ProductivityApiTests
             SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SelectMany_Compound_from_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1697,7 +1727,15 @@ namespace ProductivityApiTests
             SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SelectMany_from_Assignment_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1773,7 +1811,15 @@ namespace ProductivityApiTests
             SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1924,14 +1970,14 @@ namespace ProductivityApiTests
         public void Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Take_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -1994,14 +2040,14 @@ namespace ProductivityApiTests
         public void Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Take_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2073,14 +2119,14 @@ namespace ProductivityApiTests
         public void Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Skip_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2143,14 +2189,14 @@ namespace ProductivityApiTests
         public void Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Skip_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2483,14 +2529,14 @@ namespace ProductivityApiTests
         public void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2557,14 +2603,14 @@ namespace ProductivityApiTests
         public void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2631,14 +2677,14 @@ namespace ProductivityApiTests
         public void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2778,7 +2824,15 @@ namespace ProductivityApiTests
             OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            OrderByDescending_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2848,7 +2902,15 @@ namespace ProductivityApiTests
             OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            OrderByDescending_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -2916,6 +2978,14 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
+            OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
             OrderByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
             ()
         {
@@ -2977,14 +3047,14 @@ namespace ProductivityApiTests
         public void ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             ThenBy_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3115,7 +3185,15 @@ namespace ProductivityApiTests
             ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            ThenByDescending_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3178,6 +3256,14 @@ namespace ProductivityApiTests
         {
             ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            ThenByDescending_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3315,14 +3401,14 @@ namespace ProductivityApiTests
         public void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3394,14 +3480,14 @@ namespace ProductivityApiTests
         public void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3473,14 +3559,14 @@ namespace ProductivityApiTests
         public void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3552,14 +3638,14 @@ namespace ProductivityApiTests
         public void GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             GroupBy_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3719,6 +3805,14 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
+            GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
             GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             GroupBy_Comparer_Mapped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3785,14 +3879,14 @@ namespace ProductivityApiTests
         public void Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3855,14 +3949,14 @@ namespace ProductivityApiTests
         public void Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3927,14 +4021,14 @@ namespace ProductivityApiTests
         public void Union_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Union_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Union_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Union_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -3998,14 +4092,14 @@ namespace ProductivityApiTests
         public void Union_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Union_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Union_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Union_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4074,14 +4168,14 @@ namespace ProductivityApiTests
         public void Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Intersect_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4146,14 +4240,14 @@ namespace ProductivityApiTests
         public void Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Intersect_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4224,14 +4318,14 @@ namespace ProductivityApiTests
         public void Except_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Except_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Except_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Except_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4295,14 +4389,14 @@ namespace ProductivityApiTests
         public void Except_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Except_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Except_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Except_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq, CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4375,14 +4469,14 @@ namespace ProductivityApiTests
         public void ToArray_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             ToArray_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void ToArray_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             ToArray_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4451,14 +4545,14 @@ namespace ProductivityApiTests
         public void ToList_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             ToList_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void ToList_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             ToList_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4520,14 +4614,14 @@ namespace ProductivityApiTests
         public void ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             ToDictionary_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4604,14 +4698,14 @@ namespace ProductivityApiTests
         public void OfType_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             OfType_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void OfType_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             OfType_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4644,7 +4738,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region First, FirstOrDefault, ElementAt
+        #region First, FirstOrDefault, ElementAt, Single, SingleOrDefault
 
         [Fact]
         public void First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery()
@@ -4685,14 +4779,14 @@ namespace ProductivityApiTests
         public void First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             First_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4764,14 +4858,14 @@ namespace ProductivityApiTests
         public void First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             First_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4841,14 +4935,14 @@ namespace ProductivityApiTests
         public void FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             FirstOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4923,7 +5017,15 @@ namespace ProductivityApiTests
             FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -4996,6 +5098,325 @@ namespace ProductivityApiTests
                 q => null);
         }
 
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Single_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => from p in q
+                     where p.Id == 12
+                     select p,
+                q => ((IQueryable<ProductForLinq>)q).Single(),
+#if NET40
+                q => ((IQueryable<ProductForLinq>)q).Single());
+#else
+                q => ((IQueryable<ProductForLinq>)q).SingleAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Single(s => s.Id == 1),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Single(s => s.Id == 1);
+#else
+                q => ((IQueryable<NumberForLinq>)q).SingleAsync(s => s.Id == 1).Result);
+#endif
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
+        {
+            SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void SingleOrDefault_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => from p in q
+                     where p.ProductName == "Office Space"
+                     select p,
+                q => ((IQueryable<ProductForLinq>)q).SingleOrDefault(),
+#if NET40
+                q => ((IQueryable<ProductForLinq>)q).SingleOrDefault());
+#else
+                q => ((IQueryable<ProductForLinq>)q).SingleOrDefaultAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
+        {
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).SingleOrDefault(s => s.Name.Substring(0, 1) == "Q"),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).SingleOrDefault(s => s.Name.Substring(0, 1) == "Q"));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SingleOrDefaultAsync(s => s.Name.Substring(0, 1) == "Q").Result);
+#endif
+        }
+
         #endregion
 
         #region Any, All
@@ -5039,14 +5460,14 @@ namespace ProductivityApiTests
         public void Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5074,6 +5495,85 @@ namespace ProductivityApiTests
                 q => ((IQueryable<NumberForLinq>)q).Any(w => w.Name.Contains("e")));
 #else
                 q => ((IQueryable<NumberForLinq>)q).AnyAsync(w => w.Name.Contains("e")).Result);
+#endif
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => from w in q
+                     where w.Name.Contains("e")
+                     select w,
+                q => ((IQueryable<NumberForLinq>)q).Any(),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Any());
+#else
+                q => ((IQueryable<NumberForLinq>)q).AnyAsync().Result);
 #endif
         }
 
@@ -5116,14 +5616,14 @@ namespace ProductivityApiTests
         public void Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Any_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5195,14 +5695,14 @@ namespace ProductivityApiTests
         public void All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5272,14 +5772,14 @@ namespace ProductivityApiTests
         public void All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             All_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5310,6 +5810,83 @@ namespace ProductivityApiTests
                                         Category = g.Key,
                                         Products = g
                                     }, ToListExecutor, ToListAsyncExecutor);
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => n.Value),
+                q => ((IQueryable<int>)q).Contains(2),
+#if NET40
+                q => ((IQueryable<int>)q).Contains(2);
+#else
+                q => ((IQueryable<int>)q).ContainsAsync(2).Result);
+#endif
         }
 
         #endregion
@@ -5355,14 +5932,14 @@ namespace ProductivityApiTests
         public void Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Count_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5432,14 +6009,14 @@ namespace ProductivityApiTests
         public void Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Count_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5510,14 +6087,14 @@ namespace ProductivityApiTests
         public void Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Count_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5586,14 +6163,14 @@ namespace ProductivityApiTests
         public void Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Count_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5623,6 +6200,315 @@ namespace ProductivityApiTests
                                         Category = g.Key,
                                         ProductCount = g.Count()
                                     }, ToListExecutor, ToListAsyncExecutor);
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Distinct(),
+                q => ((IQueryable<NumberForLinq>)q).LongCount(),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).LongCount());
+#else
+ q => ((IQueryable<NumberForLinq>)q).LongCountAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).LongCount(n => n.Value % 2 == 1),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).LongCount(n => n.Value % 2 == 1));
+#else
+ q => ((IQueryable<NumberForLinq>)q).LongCountAsync(n => n.Value % 2 == 1).Result);
+#endif
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<CustomerForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => from c in q
+                     select new
+                     {
+                         c.Id,
+                         OrderLongCount = c.Orders.LongCount()
+                     }, ToListExecutor, ToListAsyncExecutor);
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<ProductForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => from p in q
+                     group p by p.Category
+                         into g
+                         select new
+                         {
+                             Category = g.Key,
+                             ProductLongCount = g.LongCount()
+                         }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5664,14 +6550,14 @@ namespace ProductivityApiTests
         public void Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5741,14 +6627,14 @@ namespace ProductivityApiTests
         public void Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Sum_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5776,6 +6662,1393 @@ namespace ProductivityApiTests
                 q => ((IQueryable<NumberForLinq>)q).Sum(n => n.Name.Length));
 #else
                 q => ((IQueryable<NumberForLinq>)q).SumAsync(n => n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (int?)n.Value),
+                q => ((IQueryable<int?>)q).Sum(),
+#if NET40
+                q => ((IQueryable<int?>)q).Sum());
+#else
+ q => ((IQueryable<int?>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (int?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (int?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (int?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (long)n.Value),
+                q => ((IQueryable<long>)q).Sum(),
+#if NET40
+                q => ((IQueryable<long>)q).Sum());
+#else
+ q => ((IQueryable<long>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (long)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (long)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (long)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (long?)n.Value),
+                q => ((IQueryable<long?>)q).Sum(),
+#if NET40
+                q => ((IQueryable<long?>)q).Sum());
+#else
+ q => ((IQueryable<long?>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (long?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (long?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (long?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (float)n.Value),
+                q => ((IQueryable<float>)q).Sum(),
+#if NET40
+                q => ((IQueryable<float>)q).Sum());
+#else
+ q => ((IQueryable<float>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (float)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (float)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (float)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (float?)n.Value),
+                q => ((IQueryable<float?>)q).Sum(),
+#if NET40
+                q => ((IQueryable<float?>)q).Sum());
+#else
+ q => ((IQueryable<float?>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (float?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (float?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (float?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (double)n.Value),
+                q => ((IQueryable<double>)q).Sum(),
+#if NET40
+                q => ((IQueryable<double>)q).Sum());
+#else
+ q => ((IQueryable<double>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (double)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (double)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (double)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (double?)n.Value),
+                q => ((IQueryable<double?>)q).Sum(),
+#if NET40
+                q => ((IQueryable<double?>)q).Sum());
+#else
+ q => ((IQueryable<double?>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (double?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (double?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (double?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (decimal)n.Value),
+                q => ((IQueryable<decimal>)q).Sum(),
+#if NET40
+                q => ((IQueryable<decimal>)q).Sum());
+#else
+ q => ((IQueryable<decimal>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (decimal)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (decimal)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (decimal)n.Name.Length).Result);
+#endif
+        }
+
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (decimal?)n.Value),
+                q => ((IQueryable<decimal?>)q).Sum(),
+#if NET40
+                q => ((IQueryable<decimal?>)q).Sum());
+#else
+ q => ((IQueryable<decimal?>)q).SumAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (decimal?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Sum(n => (decimal?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (decimal?)n.Name.Length).Result);
 #endif
         }
 
@@ -5818,14 +8091,14 @@ namespace ProductivityApiTests
         public void Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Sum_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5896,14 +8169,14 @@ namespace ProductivityApiTests
         public void Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -5973,14 +8246,14 @@ namespace ProductivityApiTests
         public void Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Min_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6050,14 +8323,14 @@ namespace ProductivityApiTests
         public void Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Min_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6128,14 +8401,14 @@ namespace ProductivityApiTests
         public void Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Min_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6207,14 +8480,14 @@ namespace ProductivityApiTests
         public void Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6284,14 +8557,14 @@ namespace ProductivityApiTests
         public void Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Max_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6361,14 +8634,14 @@ namespace ProductivityApiTests
         public void Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Max_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6439,14 +8712,14 @@ namespace ProductivityApiTests
         public void Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Max_Elements_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6519,14 +8792,14 @@ namespace ProductivityApiTests
         public void Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Average_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6554,6 +8827,699 @@ namespace ProductivityApiTests
                 q => ((IQueryable<int>)q).Average());
 #else
                 q => ((IQueryable<int>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (int?)n.Value),
+                q => ((IQueryable<int?>)q).Average(),
+#if NET40
+                q => ((IQueryable<int?>)q).Average());
+#else
+                q => ((IQueryable<int?>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (long)n.Value),
+                q => ((IQueryable<long>)q).Average(),
+#if NET40
+                q => ((IQueryable<long>)q).Average());
+#else
+                q => ((IQueryable<long>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (long?)n.Value),
+                q => ((IQueryable<long?>)q).Average(),
+#if NET40
+                q => ((IQueryable<long?>)q).Average());
+#else
+                q => ((IQueryable<long?>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (float)n.Value),
+                q => ((IQueryable<float>)q).Average(),
+#if NET40
+                q => ((IQueryable<float>)q).Average());
+#else
+                q => ((IQueryable<float>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (float?)n.Value),
+                q => ((IQueryable<float?>)q).Average(),
+#if NET40
+                q => ((IQueryable<float?>)q).Average());
+#else
+                q => ((IQueryable<float?>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (double)n.Value),
+                q => ((IQueryable<double>)q).Average(),
+#if NET40
+                q => ((IQueryable<double>)q).Average());
+#else
+                q => ((IQueryable<double>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (double?)n.Value),
+                q => ((IQueryable<double?>)q).Average(),
+#if NET40
+                q => ((IQueryable<double?>)q).Average());
+#else
+                q => ((IQueryable<double?>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (decimal)n.Value),
+                q => ((IQueryable<decimal>)q).Average(),
+#if NET40
+                q => ((IQueryable<decimal>)q).Average());
+#else
+				q => ((IQueryable<decimal>)q).AverageAsync().Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q.Select(n => (decimal?)n.Value),
+                q => ((IQueryable<decimal?>)q).Average(),
+#if NET40
+                q => ((IQueryable<decimal?>)q).Average());
+#else
+                q => ((IQueryable<decimal?>)q).AverageAsync().Result);
 #endif
         }
 
@@ -6596,14 +9562,14 @@ namespace ProductivityApiTests
         public void Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6633,6 +9599,717 @@ namespace ProductivityApiTests
                 q => ((IQueryable<NumberForLinq>)q).Average(n => n.Name.Length));
 #else
                 q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (int?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (int?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (int?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (long)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (long)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (long)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (long?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (long?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (long?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (float)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (float)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (float)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (float?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (float?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (float?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (double)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (double)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (double)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (double?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (double?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (double?)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (decimal)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (decimal)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (decimal)n.Name.Length).Result);
+#endif
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async_and_sync()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                RunLinqTest);
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTest));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
+        {
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        private void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+            Action<Func<IQueryable<NumberForLinq>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> runner)
+        {
+            runner(
+                q => q,
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (decimal?)n.Name.Length),
+#if NET40
+                q => ((IQueryable<NumberForLinq>)q).Average(n => (decimal?)n.Name.Length));
+#else
+                q => ((IQueryable<NumberForLinq>)q).AverageAsync(n => (decimal?)n.Name.Length).Result);
 #endif
         }
 
@@ -6675,14 +10352,14 @@ namespace ProductivityApiTests
         public void Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Average_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6772,7 +10449,7 @@ namespace ProductivityApiTests
             Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
         }
-
+        
         [Fact]
         public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
@@ -6838,14 +10515,14 @@ namespace ProductivityApiTests
         public void Concat_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Concat_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Concat_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Concat_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6909,14 +10586,14 @@ namespace ProductivityApiTests
         public void Concat_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Concat_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Concat_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Concat_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -6968,6 +10645,13 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
         public void EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             EqualAll_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6990,10 +10674,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTest));
+        }
+
+        [Fact]
         public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -7004,10 +10702,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
         public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7028,10 +10740,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_async()
+        {
+            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTest));
+        }
+
+        [Fact]
         public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
+        }
+
+        [Fact]
+        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_async()
+        {
+            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGeneric));
         }
 
         [Fact]
@@ -7042,10 +10768,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
         public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        {
+            EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         private void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7099,14 +10839,14 @@ namespace ProductivityApiTests
         public void Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7179,14 +10919,14 @@ namespace ProductivityApiTests
         public void Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7260,7 +11000,15 @@ namespace ProductivityApiTests
             Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        {
+            Cross_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
+                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7331,14 +11079,14 @@ namespace ProductivityApiTests
         public void Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery()
         {
             Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
         {
             Left_Outer_Join_with_Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
-                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<CustomerForLinq, OrderForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7419,14 +11167,14 @@ namespace ProductivityApiTests
         public void Very_simple_SelectMany_1_works_with_non_generic_CreateQuery()
         {
             Very_simple_SelectMany_1_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Very_simple_SelectMany_1_works_with_non_generic_CreateQuery_async()
         {
             Very_simple_SelectMany_1_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7494,14 +11242,14 @@ namespace ProductivityApiTests
         public void Very_simple_SelectMany_2_works_with_non_generic_CreateQuery()
         {
             Very_simple_SelectMany_2_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Very_simple_SelectMany_2_works_with_non_generic_CreateQuery_async()
         {
             Very_simple_SelectMany_2_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7569,14 +11317,14 @@ namespace ProductivityApiTests
         public void SelectMany_with_aggregate_works_with_non_generic_CreateQuery()
         {
             SelectMany_with_aggregate_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void SelectMany_with_aggregate_works_with_non_generic_CreateQuery_async()
         {
             SelectMany_with_aggregate_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7650,14 +11398,14 @@ namespace ProductivityApiTests
         public void SelectMany_with_additional_predicate_in_lambda_works_with_non_generic_CreateQuery()
         {
             SelectMany_with_additional_predicate_in_lambda_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void SelectMany_with_additional_predicate_in_lambda_works_with_non_generic_CreateQuery_async()
         {
             SelectMany_with_additional_predicate_in_lambda_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7719,14 +11467,14 @@ namespace ProductivityApiTests
         public void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_with_non_generic_CreateQuery()
         {
             SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_with_non_generic_CreateQuery_async()
         {
             SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7802,14 +11550,14 @@ namespace ProductivityApiTests
         public void SelectMany_with_use_of_second_root_in_projection_works_with_non_generic_CreateQuery()
         {
             SelectMany_with_use_of_second_root_in_projection_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void SelectMany_with_use_of_second_root_in_projection_works_with_non_generic_CreateQuery_async()
         {
             SelectMany_with_use_of_second_root_in_projection_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7875,14 +11623,14 @@ namespace ProductivityApiTests
         public void Query_with_nested_query_in_select_clause_works_with_non_generic_CreateQuery()
         {
             Query_with_nested_query_in_select_clause_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Query_with_nested_query_in_select_clause_works_with_non_generic_CreateQuery_async()
         {
             Query_with_nested_query_in_select_clause_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -7951,14 +11699,14 @@ namespace ProductivityApiTests
         public void Query_with_multiple_things_in_the_closure_works_with_non_generic_CreateQuery()
         {
             Query_with_multiple_things_in_the_closure_works_implementation(
-                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Query_with_multiple_things_in_the_closure_works_with_non_generic_CreateQuery_async()
         {
             Query_with_multiple_things_in_the_closure_works_implementation(
-                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<NumberForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -8028,14 +11776,14 @@ namespace ProductivityApiTests
         public void Query_with_nested_query_and_Contains_call_in_where_clause_works_with_non_generic_CreateQuery()
         {
             Query_with_nested_query_and_Contains_call_in_where_clause_works_implementation(
-                SyncRunnerAdapter<ProductForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
         public void Query_with_nested_query_and_Contains_call_in_where_clause_works_with_non_generic_CreateQuery_async()
         {
             Query_with_nested_query_and_Contains_call_in_where_clause_works_implementation(
-                AsyncRunnerAdapter<ProductForLinq, ProductForLinq>(RunLinqTestNonGeneric));
+                AsyncRunnerAdapter<ProductForLinq, ProductForLinq>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
@@ -8107,7 +11855,15 @@ namespace ProductivityApiTests
             Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_with_non_generic_CreateQuery()
         {
             Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_implementation(
-                SyncRunnerAdapter<ProductForLinq, NumberForLinq, int>(RunLinqTestNonGeneric));
+                SyncRunnerAdapter<ProductForLinq, NumberForLinq, int>(RunLinqTestWithNonGenericCreateQuery));
+        }
+
+        [Fact]
+        public void
+            Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_with_non_generic_CreateQuery_async()
+        {
+            Query_with_extracted_nested_query_and_Contains_call_in_where_clause_works_implementation(
+                AsyncRunnerAdapter<ProductForLinq, NumberForLinq, int>(RunLinqTestWithNonGenericCreateQuery));
         }
 
         [Fact]
