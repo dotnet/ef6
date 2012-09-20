@@ -56,6 +56,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     Message);
         }
 
+        [Fact]
+        public void AddBefore_should_add_before_existing_convention()
+        {
+            var mockConvention = new Mock<IConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { new ConventionFixture() });
+
+            conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention.Object);
+
+            Assert.Equal(2, conventionsConfiguration.Conventions.Count());
+            Assert.Same(mockConvention.Object, conventionsConfiguration.Conventions.First());
+        }
+
+        [Fact]
+        public void AddBefore_should_throw_when_before_convention_not_found()
+        {
+            var mockConvention = new Mock<IConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration();
+
+            Assert.Equal(
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ConventionFixture)),
+                Assert.Throws<InvalidOperationException>(() => conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention.Object)).
+                    Message);
+        }
+
         private class ConventionFixture : IConvention
         {
         }

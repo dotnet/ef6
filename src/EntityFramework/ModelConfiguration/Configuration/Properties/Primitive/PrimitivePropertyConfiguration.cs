@@ -301,16 +301,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
-        protected bool IsCompatible<T, TConfiguration>(Expression<Func<TConfiguration, T?>> propertyExpression, TConfiguration other, ref string errorMessage)
-            where T : struct
+        protected bool IsCompatible<TProperty, TConfiguration>(Expression<Func<TConfiguration, TProperty?>> propertyExpression, TConfiguration other, ref string errorMessage)
+            where TProperty : struct
             where TConfiguration : PrimitivePropertyConfiguration
         {
             Contract.Requires(propertyExpression != null);
             Contract.Requires(other != null);
 
             var propertyInfo = propertyExpression.GetSimplePropertyAccess().Single();
-            var thisValue = (T?)propertyInfo.GetValue(this, null);
-            var otherValue = (T?)propertyInfo.GetValue(other, null);
+            var thisValue = (TProperty?)propertyInfo.GetValue(this, null);
+            var otherValue = (TProperty?)propertyInfo.GetValue(other, null);
 
             if (IsCompatible(thisValue, otherValue))
             {
