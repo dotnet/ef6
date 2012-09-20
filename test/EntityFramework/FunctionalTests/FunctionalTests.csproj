@@ -208,6 +208,12 @@
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
+    <Compile Include="Query\FunctionTests.cs" />
+    <Compile Include="Query\GroupAggregateTests.cs" />
+    <Compile Include="Query\ModelDefinedFunctionTests.cs" />
+    <Compile Include="Query\ProductModel.cs" />
+    <Compile Include="Query\QueryEnumTests.cs" />
+    <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestHelpers\DefaultConnectionFactoryResolver.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
@@ -654,6 +660,7 @@
     <Compile Include="TestHelpers\DynamicTypeDescriptor.cs" />
     <Compile Include="TestHelpers\DbDatabaseMappingExtensions.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
