@@ -5248,7 +5248,7 @@ namespace ProductivityApiTests
                 q => q,
                 q => ((IQueryable<NumberForLinq>)q).Single(s => s.Id == 1),
 #if NET40
-                q => ((IQueryable<NumberForLinq>)q).Single(s => s.Id == 1);
+                q => ((IQueryable<NumberForLinq>)q).Single(s => s.Id == 1));
 #else
                 q => ((IQueryable<NumberForLinq>)q).SingleAsync(s => s.Id == 1).Result);
 #endif
@@ -5883,7 +5883,7 @@ namespace ProductivityApiTests
                 q => q.Select(n => n.Value),
                 q => ((IQueryable<int>)q).Contains(2),
 #if NET40
-                q => ((IQueryable<int>)q).Contains(2);
+                q => ((IQueryable<int>)q).Contains(2));
 #else
                 q => ((IQueryable<int>)q).ContainsAsync(2).Result);
 #endif
