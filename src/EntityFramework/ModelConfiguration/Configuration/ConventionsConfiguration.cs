@@ -53,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ConventionsConfiguration(this);
         }
 
-        internal void Add(params IConvention[] conventions)
+        public void Add(params IConvention[] conventions)
         {
             Contract.Requires(conventions != null);
             Contract.Assert(conventions.All(c => c != null));
@@ -74,27 +74,47 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Contract.Requires(newConvention != null);
 
-            var index = 0;
+            var index = IndexOf<TExistingConvention>();
 
-            _conventions.Each(
-                c =>
-                {
-                    if (c.GetType()
-                        == typeof(TExistingConvention))
-                    {
-                        return;
-                    }
-                    index++;
-                });
-
-            if (index < _conventions.Count)
-            {
-                _conventions.Insert(index + 1, newConvention);
-            }
-            else
+            if (index < 0)
             {
                 throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
             }
+
+            _conventions.Insert(index + 1, newConvention);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void AddBefore<TExistingConvention>(IConvention newConvention)
+            where TExistingConvention : IConvention
+        {
+            Contract.Requires(newConvention != null);
+
+            var index = IndexOf<TExistingConvention>();
+
+            if (index < 0)
+            {
+                throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
+            }
+
+            _conventions.Insert(index, newConvention);
+        }
+
+        private int IndexOf<TConvention>()
+        {
+            var index = 0;
+
+            foreach (var c in _conventions)
+            {
+                if (c.GetType() == typeof(TConvention))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
         }
 
         public void Remove(params IConvention[] conventions)

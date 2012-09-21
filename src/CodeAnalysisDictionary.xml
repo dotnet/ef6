@@ -7,11 +7,13 @@
             <Word>ce</Word>
             <Word>composable</Word>
             <Word>csdl</Word>
+            <Word>db</Word>
             <Word>edm</Word>
             <Word>edmx</Word>
             <Word>fwlink</Word>
             <Word>memberless</Word>
             <Word>memberwise</Word>
+            <Word>migrator</Word>
             <Word>msl</Word>
             <Word>multiset</Word>
             <Word>niladic</Word>
