@@ -480,22 +480,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }
-            catch (AggregateException ae)
+            catch (Exception e)
             {
-                ae.Flatten().Handle(
-                    e =>
-                        {
-                            // we should not be wrapping all exceptions
-                            if (e.RequiresContext())
-                            {
-                                throw new UpdateException(
-                                    Strings.Update_GeneralExecutionException, e,
-                                    DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
-                            }
-
-                            return false;
-                        });
-
+                // we should not be wrapping all exceptions
+                if (e.RequiresContext())
+                {
+                    throw new UpdateException(
+                        Strings.Update_GeneralExecutionException, e,
+                        DetermineStateEntriesFromSource(source).Cast<ObjectStateEntry>().Distinct());
+                }
                 throw;
             }
 

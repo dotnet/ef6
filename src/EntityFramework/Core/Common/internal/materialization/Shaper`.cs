@@ -214,9 +214,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 readSucceeded = await Reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (AggregateException ae)
+            catch (Exception e)
             {
-                ae.Flatten().Handle(HandleReaderException);
+                HandleReaderException(e);
 
                 throw;
             }

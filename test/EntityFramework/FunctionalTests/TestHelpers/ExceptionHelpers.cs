@@ -241,10 +241,9 @@ namespace System.Data.Entity
             }
             catch (AggregateException ae)
             {
-                var flattenedException = ae.Flatten();
-                if (flattenedException.InnerExceptions.Count == 1)
+                if (ae.InnerExceptions.Count == 1)
                 {
-                    throw flattenedException.InnerExceptions.Single();
+                    throw ae.InnerExceptions.Single();
                 }
                 else
                 {

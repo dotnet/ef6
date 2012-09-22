@@ -552,23 +552,16 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(
                         continueOnCapturedContext: false);
             }
-            catch (AggregateException ae)
+            catch (Exception e)
             {
-                ae.Flatten().Handle(
-                    e =>
-                        {
-                            // we should not be wrapping all exceptions
-                            if (e.IsCatchableExceptionType())
-                            {
-                                // we don't wan't folks to have to know all the various types of exceptions that can 
-                                // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
-                                // the inner exception of it.
-                                throw new EntityCommandExecutionException(
-                                    Strings.EntityClient_CommandDefinitionExecutionFailed, e);
-                            }
-
-                            return false;
-                        });
+                // we should not be wrapping all exceptions
+                if (e.IsCatchableExceptionType())
+                {
+                    // we don't wan't folks to have to know all the various types of exceptions that can 
+                    // occur, so we just rethrow a CommandDefinitionException and make whatever we caught  
+                    // the inner exception of it.
+                    throw new EntityCommandExecutionException(Strings.EntityClient_CommandDefinitionExecutionFailed, e);
+                }
 
                 throw;
             }

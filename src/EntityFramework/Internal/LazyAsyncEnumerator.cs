@@ -54,8 +54,11 @@ namespace System.Data.Entity.Internal
 
         public void Dispose()
         {
-            if (_asyncEnumeratorTask != null)
+            if (_asyncEnumeratorTask != null
+                && !_asyncEnumeratorTask.IsCanceled
+                && !_asyncEnumeratorTask.IsFaulted)
             {
+                Contract.Assert(_asyncEnumeratorTask.IsCompleted, "Task hasn't completed, this means that the tasks returned from MoveNextAsync wasn't awaited on.");
                 _asyncEnumeratorTask.Result.Dispose();
             }
         }

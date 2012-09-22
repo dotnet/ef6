@@ -477,12 +477,9 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 return await _storeDataReader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (AggregateException ae)
+            catch (Exception e)
             {
-                ae.Flatten().Handle(
-                    e => { throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e); });
-
-                throw;
+                throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
             }
         }
 

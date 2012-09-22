@@ -538,11 +538,30 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             var closeStoreConnectionOnFailure = false;
-            OpenStoreConnectionIfStoreConnectionNotOpened(
-                _storeConnection,
-                EntityRes.EntityClient_ProviderSpecificError,
-                @"Open",
-                ref closeStoreConnectionOnFailure);
+            try
+            {
+                if (_storeConnection.State
+                    != ConnectionState.Open)
+                {
+                    _storeConnection.Open();
+                    closeStoreConnectionOnFailure = true;
+                }
+
+                ResetStoreConnection(_storeConnection, originalConnection: null, closeOriginalConnection: false);
+
+                // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
+                ClearTransactions();
+            }
+            catch (Exception e)
+            {
+                if (e.IsCatchableExceptionType())
+                {
+                    var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
+                    throw new EntityException(exceptionMessage, e);
+                }
+
+                throw;
+            }
 
             // the following guards against the case when the user closes the underlying store connection
             // in the state change event handler, as a consequence of which we are in the 'Broken' state
@@ -591,19 +610,15 @@ namespace System.Data.Entity.Core.EntityClient
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
             }
-            catch (AggregateException ae)
+            catch (Exception e)
             {
-                ae.Flatten().Handle(
-                    e =>
-                        {
-                            if (e.IsCatchableExceptionType())
-                            {
-                                var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
-                                throw new EntityException(exceptionMessage, e);
-                            }
+                if (e.IsCatchableExceptionType())
+                {
+                    var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
+                    throw new EntityException(exceptionMessage, e);
+                }
 
-                            return false;
-                        });
+                throw;
             }
 
             // the following guards against the case when the user closes the underlying store connection
@@ -619,46 +634,6 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
-
-        /// <summary>
-        ///     Helper method that opens a specified store connection if it's not opened yet.
-        /// </summary>
-        /// <param name="storeConnectionToOpen"> The store connection to open </param>
-        /// <param name="closeStoreConnectionOnFailure"> A flag that is set on if the connection is opened successfully </param>
-        private void OpenStoreConnectionIfStoreConnectionNotOpened(
-            DbConnection storeConnectionToOpen,
-            string exceptionCode,
-            string attemptedOperation,
-            ref bool closeStoreConnectionOnFailure)
-        {
-            try
-            {
-                if (storeConnectionToOpen.State
-                    != ConnectionState.Open)
-                {
-                    storeConnectionToOpen.Open();
-                    closeStoreConnectionOnFailure = true;
-                }
-
-                ResetStoreConnection(storeConnectionToOpen, originalConnection: null, closeOriginalConnection: false);
-
-                // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
-                ClearTransactions();
-            }
-            catch (Exception e)
-            {
-                if (e.IsCatchableExceptionType())
-                {
-                    var exceptionMessage = string.IsNullOrEmpty(attemptedOperation)
-                                               ? EntityRes.GetString(exceptionCode)
-                                               : EntityRes.GetString(exceptionCode, attemptedOperation);
-
-                    throw new EntityException(exceptionMessage, e);
-                }
-
-                throw;
-            }
-        }
 
         /// <summary>
         ///     Create a new command object that uses this connection object.

@@ -422,20 +422,9 @@ namespace System.Data.Entity.Internal
                                   (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
                 return await ObjectContext.SaveChangesAsync(saveOptions, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (AggregateException ae)
+            catch (UpdateException ex)
             {
-                ae.Flatten().Handle(
-                    e =>
-                        {
-                            var ex = e as UpdateException;
-                            if (ex != null)
-                            {
-                                throw WrapUpdateException(ex);
-                            }
-                            return false;
-                        });
-
-                throw;
+                throw WrapUpdateException(ex);
             }
         }
 

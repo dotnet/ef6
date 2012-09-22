@@ -189,7 +189,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         (Dictionary<int, object> identifierValues,
                             List<KeyValuePair<PropagatorResult, object>> generatedValues,
                             CancellationToken cancellationToken) =>
-                            { throw new AggregateException(dbException); });
+                            { throw dbException; });
 
                 var objectStateManager = new Mock<ObjectStateManager>
                                              {

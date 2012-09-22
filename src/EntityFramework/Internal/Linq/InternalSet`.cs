@@ -257,20 +257,9 @@ namespace System.Data.Entity.Internal.Linq
             {
                 return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (AggregateException ae)
+            catch (EntitySqlException ex)
             {
-                ae.Flatten().Handle(
-                    ex =>
-                        {
-                            var ese = ex as EntitySqlException;
-                            if (ese != null)
-                            {
-                                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
-                            }
-                            return false;
-                        });
-
-                throw;
+                throw new ArgumentException(Strings.DbSet_WrongKeyValueType, keyValuesParamName, ex);
             }
         }
 
