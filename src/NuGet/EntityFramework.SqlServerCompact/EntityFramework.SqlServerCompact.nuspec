@@ -13,7 +13,7 @@
     <language>en-US</language>
     <tags>entityframework sqlservercompact</tags>
     <dependencies>
-      <dependency id="SqlServerCompact" version="4.0" />
+      <dependency id="Microsoft.SqlServer.Compact" version="4.0" />
       <dependency id="EntityFramework" version="6.0.0-alpha1" />
     </dependencies>
   </metadata>
