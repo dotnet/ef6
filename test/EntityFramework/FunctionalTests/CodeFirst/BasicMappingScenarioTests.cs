@@ -300,16 +300,28 @@ namespace FunctionalTests
         public int? Key { get; set; }
     }
 
-    public class BaseEntity
+    public abstract class AbstractBaseEntity
     {
         public long Id { get; set; }
+        public abstract string AbstractBaseClassProperty { get; set; }
+    }
+
+    public class BaseEntity : AbstractBaseEntity
+    {
         public string BaseClassProperty { get; set; }
         public virtual string VirtualBaseClassProperty { get; set; }
+        public override string AbstractBaseClassProperty { get; set; }
     }
 
     public class Unit : BaseEntity
     {
         public override string VirtualBaseClassProperty { get; set; }
+        public virtual AbstractBaseEntity Related { get; set; }
+    }
+
+    public class DifferentUnit : BaseEntity
+    {
+        public new string VirtualBaseClassProperty { get; set; }
     }
 
     public class ACrazy
@@ -1407,11 +1419,83 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Should_be_able_to_ignore_base_class_property()
+        public void Should_be_able_to_ignore_property_on_base_class()
         {
             var modelBuilder = new DbModelBuilder();
 
+            modelBuilder.Entity<BaseEntity>().Ignore(b => b.BaseClassProperty);
+            modelBuilder.Entity<BaseEntity>().Ignore(b => b.VirtualBaseClassProperty);
+            modelBuilder.Entity<Unit>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.False(
+                databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                .Any(p => p.Name == "BaseClassProperty"));
+            Assert.False(
+                databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                .Any(p => p.Name == "VirtualBaseClassProperty"));
+        }
+
+        [Fact]
+        public void Ignore_property_on_base_class_and_derived_class_throws()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<BaseEntity>().Ignore(b => b.BaseClassProperty);
+            modelBuilder.Entity<BaseEntity>().Ignore(b => b.VirtualBaseClassProperty);
+            modelBuilder.Entity<Unit>().Ignore(b => b.BaseClassProperty);
+            modelBuilder.Entity<Unit>().Ignore(b => b.VirtualBaseClassProperty);
+
+            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+               .ValidateMessage("CannotIgnoreMappedBaseProperty",
+                   "BaseClassProperty", "FunctionalTests.Unit",
+                   "FunctionalTests.BaseEntity");
+        }
+
+        [Fact]
+        public void Should_be_able_to_ignore_property_on_abstract_base_class()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<AbstractBaseEntity>().Ignore(b => b.AbstractBaseClassProperty);
+            modelBuilder.Entity<BaseEntity>();
+            modelBuilder.Entity<Unit>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.False(
+                databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                .Any(p => p.Name == "AbstractBaseClassProperty"));
+        }
+
+        [Fact]
+        public void Ignoring_mapped_base_class_property_throws()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<BaseEntity>();
             modelBuilder.Entity<Unit>().Ignore(u => u.BaseClassProperty);
+
+            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+               .ValidateMessage("CannotIgnoreMappedBaseProperty",
+                   "BaseClassProperty", "FunctionalTests.Unit",
+                   "FunctionalTests.BaseEntity");
+        }
+
+        [Fact]
+        public void Should_be_able_to_ignore_unmapped_base_class_property()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Ignore<BaseEntity>();
+            modelBuilder.Ignore<AbstractBaseEntity>();
+            modelBuilder.Entity<Unit>().Ignore(u => u.BaseClassProperty);
+            modelBuilder.Entity<Unit>().Ignore(u => u.VirtualBaseClassProperty);
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1420,22 +1504,23 @@ namespace FunctionalTests
             Assert.False(
                 databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
                     p => p.Name == "BaseClassProperty"));
-        }
-
-        [Fact]
-        public void Should_be_able_to_ignore_overriden_unmapped_base_class_property()
-        {
-            var modelBuilder = new DbModelBuilder();
-
-            modelBuilder.Entity<Unit>().Ignore(u => u.VirtualBaseClassProperty);
-
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            databaseMapping.AssertValid();
-
             Assert.False(
                 databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
                     p => p.Name == "VirtualBaseClassProperty"));
+        }
+
+        [Fact]
+        public void Ignoring_new_property_with_same_name_as_in_mapped_base_class_throws()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<BaseEntity>();
+            modelBuilder.Entity<DifferentUnit>().Ignore(u => u.VirtualBaseClassProperty);
+
+            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+               .ValidateMessage("CannotIgnoreMappedBaseProperty",
+                   "VirtualBaseClassProperty", "FunctionalTests.DifferentUnit",
+                   "FunctionalTests.BaseEntity");
         }
 
         [Fact]
@@ -1443,8 +1528,8 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<BaseEntity>();
             modelBuilder.Entity<Unit>().Ignore(u => u.VirtualBaseClassProperty);
+            modelBuilder.Entity<BaseEntity>();
 
             Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
                 .ValidateMessage(

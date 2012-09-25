@@ -217,6 +217,217 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void NotMapped_on_base_class_property_ignores_it()
+        {
+            using (var baseEntityConfiguration = new DynamicTypeDescriptionConfiguration<BaseEntity>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                baseEntityConfiguration.SetPropertyAttributes(b => b.BaseClassProperty, new NotMappedAttribute());
+                baseEntityConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Entity<Unit>();
+                modelBuilder.Entity<BaseEntity>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                        .Any(p => p.Name == "BaseClassProperty"));
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                        .Any(p => p.Name == "VirtualBaseClassProperty"));
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_base_class_property_and_overriden_property_ignores_them()
+        {
+            using (var baseEntityConfiguration = new DynamicTypeDescriptionConfiguration<BaseEntity>())
+            {
+                using (var unitConfiguration = new DynamicTypeDescriptionConfiguration<Unit>())
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    unitConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+                    baseEntityConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                    modelBuilder.Entity<Unit>();
+                    modelBuilder.Entity<BaseEntity>();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.False(
+                        databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                            .Any(p => p.Name == "VirtualBaseClassProperty"));
+                }
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_base_class_property_discovered_through_navigation_ignores_it()
+        {
+            using (var abstractBaseEntityConfiguration = new DynamicTypeDescriptionConfiguration<AbstractBaseEntity>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                abstractBaseEntityConfiguration.SetPropertyAttributes(b => b.AbstractBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Entity<Unit>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.True(databaseMapping.Model.Namespaces.Single().EntityTypes.Any(e => e.Name == "AbstractBaseEntity"));
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                        .Any(p => p.Name == "AbstractBaseClassProperty"));
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_abstract_base_class_property_ignores_it()
+        {
+            using (var abstractBaseEntityConfiguration = new DynamicTypeDescriptionConfiguration<AbstractBaseEntity>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                abstractBaseEntityConfiguration.SetPropertyAttributes(b => b.AbstractBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Entity<AbstractBaseEntity>();
+                modelBuilder.Entity<BaseEntity>();
+                modelBuilder.Entity<Unit>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                        .Any(p => p.Name == "AbstractBaseClassProperty"));
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_overriden_mapped_base_class_property_throws()
+        {
+            using (var unitConfiguration = new DynamicTypeDescriptionConfiguration<Unit>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                unitConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Ignore<DifferentUnit>();
+                modelBuilder.Entity<Unit>();
+                modelBuilder.Entity<BaseEntity>();
+
+                Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                   .ValidateMessage("CannotIgnoreMappedBaseProperty",
+                       "VirtualBaseClassProperty", "FunctionalTests.Unit",
+                       "FunctionalTests.BaseEntity");
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_unmapped_derived_property_ignores_it()
+        {
+            using (var unitConfiguration = new DynamicTypeDescriptionConfiguration<Unit>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                unitConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Ignore<AbstractBaseEntity>();
+                modelBuilder.Ignore<BaseEntity>();
+                modelBuilder.Entity<Unit>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                        p => p.Name == "VirtualBaseClassProperty"));
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_unmapped_base_class_property_and_overriden_property_ignores_it()
+        {
+            using (var unitConfiguration = new DynamicTypeDescriptionConfiguration<Unit>())
+            {
+                using (var baseEntityConfiguration = new DynamicTypeDescriptionConfiguration<BaseEntity>())
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    baseEntityConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+                    unitConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                    modelBuilder.Ignore<AbstractBaseEntity>();
+                    modelBuilder.Ignore<BaseEntity>();
+                    modelBuilder.Entity<Unit>();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.False(
+                        databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                            p => p.Name == "VirtualBaseClassProperty"));
+                }
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_unmapped_base_class_property_ignores_it()
+        {
+            using (var baseEntityConfiguration = new DynamicTypeDescriptionConfiguration<BaseEntity>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                baseEntityConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Ignore<AbstractBaseEntity>();
+                modelBuilder.Ignore<BaseEntity>();
+                modelBuilder.Entity<Unit>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                        p => p.Name == "VirtualBaseClassProperty"));
+            }
+        }
+
+        [Fact]
+        public void NotMapped_on_new_property_with_same_name_as_in_unmapped_base_class_ignores_it()
+        {
+            using (var differentUnitConfiguration = new DynamicTypeDescriptionConfiguration<DifferentUnit>())
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                differentUnitConfiguration.SetPropertyAttributes(b => b.VirtualBaseClassProperty, new NotMappedAttribute());
+
+                modelBuilder.Entity<DifferentUnit>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.False(
+                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                        p => p.Name == "VirtualBaseClassProperty"));
+            }
+        }
+
+        [Fact]
         public void MaxLength_takes_presedence_over_StringLength()
         {
             var modelBuilder = new DbModelBuilder();

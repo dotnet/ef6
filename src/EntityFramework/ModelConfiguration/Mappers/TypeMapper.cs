@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -175,9 +176,11 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     entityType.BaseType != null,
                     entityTypeConfiguration);
 
+                // If the base type was discovered through a navigation property
+                // then the inherited properties mapped afterwards need to be lifted
                 if (entityType.BaseType != null)
                 {
-                    LiftDeclaredProperties(type, entityType);
+                    LiftInheritedProperties(type, entityType);
                 }
 
                 MapDerivedTypes(type, entityType);
@@ -265,10 +268,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             _mappingContext.Model.ReplaceEntitySet(derivedEntityType, _mappingContext.Model.GetEntitySet(entityType));
 
-            LiftDeclaredProperties(derivedType, derivedEntityType);
+            LiftInheritedProperties(derivedType, derivedEntityType);
         }
 
-        private void LiftDeclaredProperties(Type type, EdmEntityType entityType)
+        private void LiftInheritedProperties(Type type, EdmEntityType entityType)
         {
             Contract.Requires(type != null);
             Contract.Requires(entityType != null);
@@ -280,12 +283,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 entityTypeConfiguration.ClearKey();
 
-                foreach (
-                    var property in
-                        type.BaseType.GetProperties(
-                            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                foreach (var property in type.BaseType.GetProperties(
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
                 {
-                    if (property.DeclaringType != type
+                    if (!_mappingContext.AttributeProvider.GetAttributes(property).OfType<NotMappedAttribute>().Any()
                         && entityTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(property)))
                     {
                         throw Error.CannotIgnoreMappedBaseProperty(property.Name, type, property.DeclaringType);
@@ -293,12 +294,12 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
             }
 
-            LiftDeclaredProperties(type, entityType.DeclaredKeyProperties, entityTypeConfiguration);
-            LiftDeclaredProperties(type, entityType.DeclaredProperties, entityTypeConfiguration);
-            LiftDeclaredProperties(type, entityType.DeclaredNavigationProperties, entityTypeConfiguration);
+            LiftInheritedProperties(type, entityType.DeclaredKeyProperties, entityTypeConfiguration);
+            LiftInheritedProperties(type, entityType.DeclaredProperties, entityTypeConfiguration);
+            LiftInheritedProperties(type, entityType.DeclaredNavigationProperties, entityTypeConfiguration);
         }
 
-        private void LiftDeclaredProperties<TProperty>(
+        private void LiftInheritedProperties<TProperty>(
             Type type, IList<TProperty> properties, EntityTypeConfiguration entityTypeConfiguration)
             where TProperty : EdmStructuralMember
         {
@@ -309,12 +310,16 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 var property = properties[i];
                 var propertyInfo = property.GetClrPropertyInfo();
-                var declaringType = propertyInfo.DeclaringType;
 
-                if (declaringType != type)
+                var declaredProperties = new PropertyFilter(_mappingContext.Model.Version)
+                    .GetProperties(
+                        type,
+                        /*declaredOnly:*/ true,
+                        _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
+                        _mappingContext.ModelConfiguration.StructuralTypes);
+
+                if (!declaredProperties.Contains(propertyInfo))
                 {
-                    Contract.Assert(declaringType.IsAssignableFrom(type));
-
                     var navigationProperty = property as EdmNavigationProperty;
 
                     if (navigationProperty != null)
