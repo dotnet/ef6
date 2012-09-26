@@ -4,12 +4,11 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
-    using System.Transactions;
     using AdvancedPatternsModel;
     using SimpleModel;
     using Xunit;
@@ -401,6 +400,24 @@ namespace ProductivityApiTests
                 (c, s) => c.Database.SqlQuery(typeof(UnMappedProduct), s).ToList<UnMappedProduct>());
         }
 
+#if !NET40
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_unmapped_types_async()
+        {
+            SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s) => c.Database.SqlQuery<UnMappedProduct>(s).ToListAsync().Result);
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_unmapped_types_async()
+        {
+            SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s) => c.Database.SqlQuery(typeof(UnMappedProduct), s).ToListAsync<UnMappedProduct>().Result);
+        }
+
+#endif
+
         private void SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
             Func<SimpleModelContext, string, List<UnMappedProduct>> query)
         {
@@ -428,6 +445,24 @@ namespace ProductivityApiTests
             SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
                 (c, s, p) => c.Database.SqlQuery(typeof(UnMappedProduct), s, p).ToList<UnMappedProduct>());
         }
+
+#if !NET40
+
+        [Fact]
+        public void SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_async()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s, p) => c.Database.SqlQuery<UnMappedProduct>(s, p).ToListAsync().Result);
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_async()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
+                (c, s, p) => c.Database.SqlQuery(typeof(UnMappedProduct), s, p).ToListAsync<UnMappedProduct>().Result);
+        }
+
+#endif
 
         private void SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
             Func<SimpleModelContext, string, object[], List<UnMappedProduct>> query)
@@ -458,6 +493,24 @@ namespace ProductivityApiTests
             }
         }
 
+#if !NET40
+
+        [Fact]
+        public void SQL_query_for_non_entity_where_columns_dont_map_throws_async()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories");
+
+                Assert.Throws<InvalidOperationException>(() => ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                    query.ToListAsync().Result)).ValidateMessage(
+                    "Materializer_InvalidCastReference", "System.String",
+                    "System.Int32");
+            }
+        }
+
+#endif
+
         [Fact]
         public void SQL_query_cannot_be_used_to_materialize_anonymous_types()
         {
@@ -467,15 +520,32 @@ namespace ProductivityApiTests
                         Id = 2,
                         Name = "Bovril",
                         CategoryId = "Foods"
-                    });
+                    }, q => q.ToList());
         }
 
-        private void SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation<TElement>(TElement _)
+#if !NET40
+
+        [Fact]
+        public void SQL_query_cannot_be_used_to_materialize_anonymous_types_async()
+        {
+            SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation(
+                new
+                {
+                    Id = 2,
+                    Name = "Bovril",
+                    CategoryId = "Foods"
+                }, q => ExceptionHelpers.UnwrapAggregateExceptions(() => q.ToListAsync().Result));
+        }
+
+#endif
+
+        private void SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation<TElement>(TElement _,
+            Func<DbRawSqlQuery<TElement>, List<TElement>> execute)
         {
             using (var context = new SimpleModelContext())
             {
                 var query = context.Database.SqlQuery<TElement>("select * from Products");
-                Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
+                Assert.Throws<InvalidOperationException>(() => execute(query)).ValidateMessage(
                     "ObjectContext_InvalidTypeForStoreQuery",
                     typeof(TElement).ToString());
             }
@@ -484,9 +554,41 @@ namespace ProductivityApiTests
         [Fact]
         public void SQL_query_can_be_used_to_materialize_value_types()
         {
+            SQL_query_can_be_used_to_materialize_value_types_implementation(
+                (c, s) => c.Database.SqlQuery<int>(s).ToList());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_value_types()
+        {
+            SQL_query_can_be_used_to_materialize_value_types_implementation(
+                (c, s) => c.Database.SqlQuery(typeof(int), s).ToList<int>());
+        }
+
+#if !NET40
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_value_types_async()
+        {
+            SQL_query_can_be_used_to_materialize_value_types_implementation(
+                (c, s) => c.Database.SqlQuery<int>(s).ToListAsync().Result);
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_value_types_async()
+        {
+            SQL_query_can_be_used_to_materialize_value_types_implementation(
+                (c, s) => c.Database.SqlQuery(typeof(int), s).ToListAsync<int>().Result);
+        }
+
+#endif
+
+        private void SQL_query_can_be_used_to_materialize_value_types_implementation(
+            Func<SimpleModelContext, string, List<int>> query)
+        {
             using (var context = new SimpleModelContext())
             {
-                var products = context.Database.SqlQuery<int>("select Id from Products").ToList();
+                var products = query(context, "select Id from Products");
 
                 Assert.Equal(7, products.Count);
                 Assert.Equal(0, context.Products.Local.Count);
@@ -498,18 +600,49 @@ namespace ProductivityApiTests
         [Fact]
         public void SQL_query_can_be_used_to_materialize_complex_types()
         {
+            SQL_query_can_be_used_to_materialize_complex_types_implementation(
+                (c, s) => c.Database.SqlQuery<SiteInfo>(s).ToList());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_complex_types()
+        {
+            SQL_query_can_be_used_to_materialize_complex_types_implementation(
+                (c, s) => c.Database.SqlQuery(typeof(SiteInfo), s).ToList<SiteInfo>());
+        }
+
+#if !NET40
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_complex_types_async()
+        {
+            SQL_query_can_be_used_to_materialize_complex_types_implementation(
+                (c, s) => c.Database.SqlQuery<SiteInfo>(s).ToListAsync().Result);
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_complex_types_async()
+        {
+            SQL_query_can_be_used_to_materialize_complex_types_implementation(
+                (c, s) => c.Database.SqlQuery(typeof(SiteInfo), s).ToListAsync<SiteInfo>().Result);
+        }
+
+#endif
+
+        private void SQL_query_can_be_used_to_materialize_complex_types_implementation(
+            Func<AdvancedPatternsMasterContext, string, List<SiteInfo>> query)
+        {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var siteInfos = context.Database.SqlQuery<SiteInfo>(
-                    @"select Address_SiteInfo_Zone as Zone, Address_SiteInfo_Environment as Environment from Buildings")
-                    .ToList();
+                var siteInfos = query(context,
+                    "select Address_SiteInfo_Zone as Zone, Address_SiteInfo_Environment as Environment from Buildings");
 
                 Assert.Equal(2, siteInfos.Count);
             }
         }
 
         [Fact]
-        public void SQL_query_for_non_entity_an_be_executed_multiple_times()
+        public void SQL_query_for_non_entity_can_be_executed_multiple_times()
         {
             using (var context = new SimpleModelContext())
             {
@@ -529,6 +662,32 @@ namespace ProductivityApiTests
                 Assert.True(query.ToList<int>().SequenceEqual(query.ToList<int>()));
             }
         }
+
+#if !NET40
+
+        [Fact]
+        public void SQL_query_for_non_entity_can_be_executed_multiple_times_async()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<int>("select Id from Products");
+
+                Assert.True(query.ToListAsync().Result.SequenceEqual(query.ToListAsync().Result));
+            }
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_for_non_entity_can_be_executed_multiple_times_async()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery(typeof(int), "select Id from Products");
+
+                Assert.True(query.ToListAsync<int>().Result.SequenceEqual(query.ToListAsync<int>().Result));
+            }
+        }
+
+#endif
 
         #endregion
 

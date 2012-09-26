@@ -33,9 +33,11 @@ namespace System.Data.Entity.Core.Objects
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Text;
+    using System.Transactions;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Transactions;
+#endif
 
     /// <summary>
     ///     ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,

@@ -889,7 +889,6 @@ namespace System.Data.Entity.Internal
         ///     has the correct signature to be used with CreateDelegate above.
         /// </summary>
         private IDbAsyncEnumerator ExecuteSqlQueryAsIDbAsyncEnumerator<TElement>(string sql, object[] parameters)
-            where TElement : class
         {
             return ExecuteSqlQueryAsync<TElement>(sql, parameters);
         }
