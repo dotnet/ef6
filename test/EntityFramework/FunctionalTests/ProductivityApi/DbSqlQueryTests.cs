@@ -697,10 +697,21 @@ namespace ProductivityApiTests
         [AutoRollback]
         public void SQL_commands_can_be_executed_against_the_database()
         {
+            SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommand(q));
+        }
+
+        [Fact]
+        [AutoRollback]
+        public void SQL_commands_can_be_executed_against_the_database_async()
+        {
+            SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommandAsync(q).Result);
+        }
+
+        private void SQL_commands_can_be_executed_against_the_database_implementation(Func<Database, string, int> execute)
+        {
             using (var context = new SimpleModelContext())
             {
-                var result =
-                    context.Database.ExecuteSqlCommand(
+                var result = execute(context.Database,
                         "update Products set Name = 'Vegemite' where Name = 'Marmite'");
 
                 Assert.Equal(1, result);
@@ -713,11 +724,23 @@ namespace ProductivityApiTests
         [AutoRollback]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database()
         {
+            SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommand(q, p));
+        }
+
+        [Fact]
+        [AutoRollback]
+        public void SQL_commands_with_parameters_can_be_executed_against_the_database_async()
+        {
+            SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommandAsync(q, p).Result);
+        }
+
+        private void SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(Func<Database, string, object[], int> execute)
+        {
             using (var context = new SimpleModelContext())
             {
-                var result = context.Database.ExecuteSqlCommand(
+                var result = execute(context.Database,
                     "update Products set Name = {0} where Name = {1}",
-                    "Vegemite", "Marmite");
+                    new object[] { "Vegemite", "Marmite" });
 
                 Assert.Equal(1, result);
 
